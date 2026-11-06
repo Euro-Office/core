@@ -1,0 +1,5301 @@
+header PPTY;v10;0;
+main table: 19 tables
+  Main(255) @161
+  App(1) @169
+  Core(2) @230
+  Presentation(3) @251
+  Themes(20) @344
+  SlideMasters(22) @10588
+  SlideLayouts(23) @25271
+  Slides(24) @30359
+  NotesSlides(26) @34431
+  NotesMasters(25) @36175
+  HandoutMasters(30) @36374
+  ImageMap(42) @36378
+  FontMap(43) @36435
+  SlideRels(40) @36484
+  SlideNotesRels(45) @36511
+  ThemeRels(41) @36538
+  NotesRels(46) @36631
+  NotesMastersRels(47) @36658
+  HandoutMastersRels(49) @36670
+main table padding: 55 zero bytes
+table Main(255) @161 span=8
+  hex 59 54 50 50 00 00 00 00
+table App(1) @169 span=61
+  #1 len=56
+    attrs [1]'Euro Office/2.5.565.0'
+    #0 len=2
+      attrs (empty)
+table Core(2) @230 span=21
+  #2 len=16
+    attrs hex 03 01 00 00 00 31 00
+    #0 len=2
+      attrs (empty)
+table Presentation(3) @251 span=93
+  #3 len=88
+    attrs (empty)
+    #0 len=36
+      #9 len=31
+        attrs (empty)
+        #3 len=0
+        #4 len=0
+        #5 len=0
+        #6 len=0
+        #7 len=4
+          count 0
+    #1 len=4
+      count 0
+    #3 len=12
+      attrs hex 00 10 a5 68 00 01 c0 86 8b 00
+    #5 len=14
+      attrs hex 00 85 cc 99 00 01 0a 83 56 00 02 08
+table Themes(20) @344 span=10244
+  count 4
+  #20 len=2537
+    attrs [0]'Lights'
+    #0 len=2504
+      #0 len=277
+        attrs [0]'Lights'
+        #0 len=13
+          #1 len=8
+            attrs hex 00 4f 01 81 02 bd
+        #1 len=13
+          #1 len=8
+            attrs hex 00 c0 01 50 02 4d
+        #2 len=13
+          #1 len=8
+            attrs hex 00 9b 01 bb 02 59
+        #3 len=13
+          #1 len=8
+            attrs hex 00 80 01 64 02 a2
+        #4 len=13
+          #1 len=8
+            attrs hex 00 4b 01 ac 02 c6
+        #5 len=13
+          #1 len=8
+            attrs hex 00 f7 01 96 02 46
+        #8 len=38
+          #4 len=33
+            attrs [0]'windowText' hex 01 00 02 00 03 00
+        #9 len=13
+          #1 len=8
+            attrs hex 00 1f 01 49 02 7d
+        #10 len=13
+          #1 len=8
+            attrs hex 00 80 01 00 02 80
+        #11 len=13
+          #1 len=8
+            attrs hex 00 00 01 00 02 ff
+        #12 len=30
+          #4 len=25
+            attrs [0]'window' hex 01 ff 02 ff 03 ff
+        #13 len=13
+          #1 len=8
+            attrs hex 00 ee 01 ec 02 e1
+      #1 len=227
+        attrs [0]'Lights'
+        #0 len=99
+          #0 len=17
+            attrs [3]'Arial'
+          #1 len=29
+            attrs [3]'DejaVu Sans'
+          #2 len=29
+            attrs [3]'DejaVu Sans'
+          #3 len=4
+            count 0
+        #1 len=99
+          #0 len=17
+            attrs [3]'Arial'
+          #1 len=29
+            attrs [3]'DejaVu Sans'
+          #2 len=29
+            attrs [3]'DejaVu Sans'
+          #3 len=4
+            count 0
+      #2 len=1985
+        attrs [0]'Lights'
+        #0 len=882
+          count 3
+          #0 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0e
+          #0 len=420
+            #4 len=415
+              attrs (empty)
+              #0 len=394
+                count 3
+                #0 len=125
+                  attrs hex 00 00 00 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 b0 ad 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 28 9a 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 b8 05 01 00
+                #0 len=125
+                  attrs hex 00 50 c3 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 28 9a 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 58 92 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 28 1d 01 00
+                #0 len=125
+                  attrs hex 00 a0 86 01 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 28 9a 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 c8 a9 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 68 3c 01 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+          #0 len=424
+            #4 len=419
+              attrs (empty)
+              #0 len=398
+                count 3
+                #0 len=125
+                  attrs hex 00 00 00 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 70 8e 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 58 92 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 30 6f 01 00
+                #0 len=127
+                  attrs hex 00 50 c3 00 00
+                  #0 len=115
+                    #3 len=110
+                      attrs hex 00 0e
+                      #0 len=101
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 a0 86 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 b0 ad 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 a0 86 01 00
+                #0 len=127
+                  attrs hex 00 a0 86 01 00
+                  #0 len=115
+                    #3 len=110
+                      attrs hex 00 0e
+                      #0 len=101
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 c0 d4 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 b8 82 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 b0 30 01 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+        #1 len=181
+          count 3
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 ce 18 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 9c 31 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 6a 4a 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+        #2 len=304
+          count 3
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 20 4e 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 70 94 00 00
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 d8 59 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 b8 88 00 00
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 d8 59 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 b8 88 00 00
+        #3 len=579
+          count 3
+          #0 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0e
+          #0 len=90
+            #3 len=85
+              #0 len=80
+                #3 len=75
+                  attrs hex 00 0e
+                  #0 len=66
+                    count 2
+                    #1 len=24
+                      attrs [0]'a:tint' hex 01 18 73 01 00
+                    #1 len=28
+                      attrs [0]'a:satMod' hex 01 10 98 02 00
+          #0 len=451
+            #4 len=446
+              attrs (empty)
+              #0 len=425
+                count 3
+                #0 len=156
+                  attrs hex 00 00 00 00 00
+                  #0 len=144
+                    #3 len=139
+                      attrs hex 00 0e
+                      #0 len=130
+                        count 4
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 70 8e 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 f0 49 02 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 48 6b 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 d0 7e 01 00
+                #0 len=156
+                  attrs hex 00 50 c3 00 00
+                  #0 len=144
+                    #3 len=139
+                      attrs hex 00 0e
+                      #0 len=130
+                        count 4
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 58 92 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 d0 fb 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 d0 7e 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 90 5f 01 00
+                #0 len=94
+                  attrs hex 00 a0 86 01 00
+                  #0 len=82
+                    #3 len=77
+                      attrs hex 00 0e
+                      #0 len=68
+                        count 2
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 c0 d4 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 18 f6 00 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+    #4 len=4
+      count 0
+  #20 len=2545
+    attrs [0]'Lights1'
+    #0 len=2510
+      #0 len=279
+        attrs [0]'Lights1'
+        #0 len=13
+          #1 len=8
+            attrs hex 00 4f 01 81 02 bd
+        #1 len=13
+          #1 len=8
+            attrs hex 00 c0 01 50 02 4d
+        #2 len=13
+          #1 len=8
+            attrs hex 00 9b 01 bb 02 59
+        #3 len=13
+          #1 len=8
+            attrs hex 00 80 01 64 02 a2
+        #4 len=13
+          #1 len=8
+            attrs hex 00 4b 01 ac 02 c6
+        #5 len=13
+          #1 len=8
+            attrs hex 00 f7 01 96 02 46
+        #8 len=38
+          #4 len=33
+            attrs [0]'windowText' hex 01 00 02 00 03 00
+        #9 len=13
+          #1 len=8
+            attrs hex 00 1f 01 49 02 7d
+        #10 len=13
+          #1 len=8
+            attrs hex 00 80 01 00 02 80
+        #11 len=13
+          #1 len=8
+            attrs hex 00 00 01 00 02 ff
+        #12 len=30
+          #4 len=25
+            attrs [0]'window' hex 01 ff 02 ff 03 ff
+        #13 len=13
+          #1 len=8
+            attrs hex 00 ee 01 ec 02 e1
+      #1 len=229
+        attrs [0]'Lights1'
+        #0 len=99
+          #0 len=17
+            attrs [3]'Arial'
+          #1 len=29
+            attrs [3]'DejaVu Sans'
+          #2 len=29
+            attrs [3]'DejaVu Sans'
+          #3 len=4
+            count 0
+        #1 len=99
+          #0 len=17
+            attrs [3]'Arial'
+          #1 len=29
+            attrs [3]'DejaVu Sans'
+          #2 len=29
+            attrs [3]'DejaVu Sans'
+          #3 len=4
+            count 0
+      #2 len=1987
+        attrs [0]'Lights1'
+        #0 len=882
+          count 3
+          #0 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0e
+          #0 len=420
+            #4 len=415
+              attrs (empty)
+              #0 len=394
+                count 3
+                #0 len=125
+                  attrs hex 00 00 00 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 b0 ad 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 28 9a 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 b8 05 01 00
+                #0 len=125
+                  attrs hex 00 50 c3 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 28 9a 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 58 92 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 28 1d 01 00
+                #0 len=125
+                  attrs hex 00 a0 86 01 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 28 9a 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 c8 a9 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 68 3c 01 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+          #0 len=424
+            #4 len=419
+              attrs (empty)
+              #0 len=398
+                count 3
+                #0 len=125
+                  attrs hex 00 00 00 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 70 8e 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 58 92 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 30 6f 01 00
+                #0 len=127
+                  attrs hex 00 50 c3 00 00
+                  #0 len=115
+                    #3 len=110
+                      attrs hex 00 0e
+                      #0 len=101
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 a0 86 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 b0 ad 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 a0 86 01 00
+                #0 len=127
+                  attrs hex 00 a0 86 01 00
+                  #0 len=115
+                    #3 len=110
+                      attrs hex 00 0e
+                      #0 len=101
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 c0 d4 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 b8 82 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 b0 30 01 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+        #1 len=181
+          count 3
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 ce 18 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 9c 31 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 6a 4a 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+        #2 len=304
+          count 3
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 20 4e 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 70 94 00 00
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 d8 59 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 b8 88 00 00
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 d8 59 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 b8 88 00 00
+        #3 len=579
+          count 3
+          #0 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0e
+          #0 len=90
+            #3 len=85
+              #0 len=80
+                #3 len=75
+                  attrs hex 00 0e
+                  #0 len=66
+                    count 2
+                    #1 len=24
+                      attrs [0]'a:tint' hex 01 18 73 01 00
+                    #1 len=28
+                      attrs [0]'a:satMod' hex 01 10 98 02 00
+          #0 len=451
+            #4 len=446
+              attrs (empty)
+              #0 len=425
+                count 3
+                #0 len=156
+                  attrs hex 00 00 00 00 00
+                  #0 len=144
+                    #3 len=139
+                      attrs hex 00 0e
+                      #0 len=130
+                        count 4
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 70 8e 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 f0 49 02 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 48 6b 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 d0 7e 01 00
+                #0 len=156
+                  attrs hex 00 50 c3 00 00
+                  #0 len=144
+                    #3 len=139
+                      attrs hex 00 0e
+                      #0 len=130
+                        count 4
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 58 92 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 d0 fb 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 d0 7e 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 90 5f 01 00
+                #0 len=94
+                  attrs hex 00 a0 86 01 00
+                  #0 len=82
+                    #3 len=77
+                      attrs hex 00 0e
+                      #0 len=68
+                        count 2
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 c0 d4 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 18 f6 00 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+    #4 len=4
+      count 0
+  #20 len=2545
+    attrs [0]'Lights2'
+    #0 len=2510
+      #0 len=279
+        attrs [0]'Lights2'
+        #0 len=13
+          #1 len=8
+            attrs hex 00 4f 01 81 02 bd
+        #1 len=13
+          #1 len=8
+            attrs hex 00 c0 01 50 02 4d
+        #2 len=13
+          #1 len=8
+            attrs hex 00 9b 01 bb 02 59
+        #3 len=13
+          #1 len=8
+            attrs hex 00 80 01 64 02 a2
+        #4 len=13
+          #1 len=8
+            attrs hex 00 4b 01 ac 02 c6
+        #5 len=13
+          #1 len=8
+            attrs hex 00 f7 01 96 02 46
+        #8 len=38
+          #4 len=33
+            attrs [0]'windowText' hex 01 00 02 00 03 00
+        #9 len=13
+          #1 len=8
+            attrs hex 00 1f 01 49 02 7d
+        #10 len=13
+          #1 len=8
+            attrs hex 00 80 01 00 02 80
+        #11 len=13
+          #1 len=8
+            attrs hex 00 00 01 00 02 ff
+        #12 len=30
+          #4 len=25
+            attrs [0]'window' hex 01 ff 02 ff 03 ff
+        #13 len=13
+          #1 len=8
+            attrs hex 00 ee 01 ec 02 e1
+      #1 len=229
+        attrs [0]'Lights2'
+        #0 len=99
+          #0 len=17
+            attrs [3]'Arial'
+          #1 len=29
+            attrs [3]'DejaVu Sans'
+          #2 len=29
+            attrs [3]'DejaVu Sans'
+          #3 len=4
+            count 0
+        #1 len=99
+          #0 len=17
+            attrs [3]'Arial'
+          #1 len=29
+            attrs [3]'DejaVu Sans'
+          #2 len=29
+            attrs [3]'DejaVu Sans'
+          #3 len=4
+            count 0
+      #2 len=1987
+        attrs [0]'Lights2'
+        #0 len=882
+          count 3
+          #0 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0e
+          #0 len=420
+            #4 len=415
+              attrs (empty)
+              #0 len=394
+                count 3
+                #0 len=125
+                  attrs hex 00 00 00 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 b0 ad 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 28 9a 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 b8 05 01 00
+                #0 len=125
+                  attrs hex 00 50 c3 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 28 9a 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 58 92 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 28 1d 01 00
+                #0 len=125
+                  attrs hex 00 a0 86 01 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 28 9a 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 c8 a9 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 68 3c 01 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+          #0 len=424
+            #4 len=419
+              attrs (empty)
+              #0 len=398
+                count 3
+                #0 len=125
+                  attrs hex 00 00 00 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 70 8e 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 58 92 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 30 6f 01 00
+                #0 len=127
+                  attrs hex 00 50 c3 00 00
+                  #0 len=115
+                    #3 len=110
+                      attrs hex 00 0e
+                      #0 len=101
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 a0 86 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 b0 ad 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 a0 86 01 00
+                #0 len=127
+                  attrs hex 00 a0 86 01 00
+                  #0 len=115
+                    #3 len=110
+                      attrs hex 00 0e
+                      #0 len=101
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 c0 d4 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 b8 82 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 b0 30 01 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+        #1 len=181
+          count 3
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 ce 18 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 9c 31 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 6a 4a 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+        #2 len=304
+          count 3
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 20 4e 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 70 94 00 00
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 d8 59 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 b8 88 00 00
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 d8 59 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 b8 88 00 00
+        #3 len=579
+          count 3
+          #0 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0e
+          #0 len=90
+            #3 len=85
+              #0 len=80
+                #3 len=75
+                  attrs hex 00 0e
+                  #0 len=66
+                    count 2
+                    #1 len=24
+                      attrs [0]'a:tint' hex 01 18 73 01 00
+                    #1 len=28
+                      attrs [0]'a:satMod' hex 01 10 98 02 00
+          #0 len=451
+            #4 len=446
+              attrs (empty)
+              #0 len=425
+                count 3
+                #0 len=156
+                  attrs hex 00 00 00 00 00
+                  #0 len=144
+                    #3 len=139
+                      attrs hex 00 0e
+                      #0 len=130
+                        count 4
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 70 8e 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 f0 49 02 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 48 6b 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 d0 7e 01 00
+                #0 len=156
+                  attrs hex 00 50 c3 00 00
+                  #0 len=144
+                    #3 len=139
+                      attrs hex 00 0e
+                      #0 len=130
+                        count 4
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 58 92 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 d0 fb 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 d0 7e 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 90 5f 01 00
+                #0 len=94
+                  attrs hex 00 a0 86 01 00
+                  #0 len=82
+                    #3 len=77
+                      attrs hex 00 0e
+                      #0 len=68
+                        count 2
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 c0 d4 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 18 f6 00 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+    #4 len=4
+      count 0
+  #20 len=2593
+    attrs [0]'User Theme: 4'
+    #0 len=2546
+      #0 len=291
+        attrs [0]'User Theme: 4'
+        #0 len=13
+          #1 len=8
+            attrs hex 00 4f 01 81 02 bd
+        #1 len=13
+          #1 len=8
+            attrs hex 00 c0 01 50 02 4d
+        #2 len=13
+          #1 len=8
+            attrs hex 00 9b 01 bb 02 59
+        #3 len=13
+          #1 len=8
+            attrs hex 00 80 01 64 02 a2
+        #4 len=13
+          #1 len=8
+            attrs hex 00 4b 01 ac 02 c6
+        #5 len=13
+          #1 len=8
+            attrs hex 00 f7 01 96 02 46
+        #8 len=38
+          #4 len=33
+            attrs [0]'windowText' hex 01 00 02 00 03 00
+        #9 len=13
+          #1 len=8
+            attrs hex 00 1f 01 49 02 7d
+        #10 len=13
+          #1 len=8
+            attrs hex 00 80 01 00 02 80
+        #11 len=13
+          #1 len=8
+            attrs hex 00 00 01 00 02 ff
+        #12 len=30
+          #4 len=25
+            attrs [0]'window' hex 01 ff 02 ff 03 ff
+        #13 len=13
+          #1 len=8
+            attrs hex 00 ee 01 ec 02 e1
+      #1 len=241
+        attrs [0]'User Theme: 4'
+        #0 len=99
+          #0 len=17
+            attrs [3]'Arial'
+          #1 len=29
+            attrs [3]'DejaVu Sans'
+          #2 len=29
+            attrs [3]'DejaVu Sans'
+          #3 len=4
+            count 0
+        #1 len=99
+          #0 len=17
+            attrs [3]'Arial'
+          #1 len=29
+            attrs [3]'DejaVu Sans'
+          #2 len=29
+            attrs [3]'DejaVu Sans'
+          #3 len=4
+            count 0
+      #2 len=1999
+        attrs [0]'User Theme: 4'
+        #0 len=882
+          count 3
+          #0 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0e
+          #0 len=420
+            #4 len=415
+              attrs (empty)
+              #0 len=394
+                count 3
+                #0 len=125
+                  attrs hex 00 00 00 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 b0 ad 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 28 9a 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 b8 05 01 00
+                #0 len=125
+                  attrs hex 00 50 c3 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 28 9a 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 58 92 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 28 1d 01 00
+                #0 len=125
+                  attrs hex 00 a0 86 01 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 28 9a 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 c8 a9 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 68 3c 01 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+          #0 len=424
+            #4 len=419
+              attrs (empty)
+              #0 len=398
+                count 3
+                #0 len=125
+                  attrs hex 00 00 00 00 00
+                  #0 len=113
+                    #3 len=108
+                      attrs hex 00 0e
+                      #0 len=99
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 70 8e 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 58 92 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 30 6f 01 00
+                #0 len=127
+                  attrs hex 00 50 c3 00 00
+                  #0 len=115
+                    #3 len=110
+                      attrs hex 00 0e
+                      #0 len=101
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 a0 86 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 b0 ad 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 a0 86 01 00
+                #0 len=127
+                  attrs hex 00 a0 86 01 00
+                  #0 len=115
+                    #3 len=110
+                      attrs hex 00 0e
+                      #0 len=101
+                        count 3
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 c0 d4 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 b8 82 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 b0 30 01 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+        #1 len=181
+          count 3
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 ce 18 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 9c 31 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+          #0 len=54
+            attrs hex 00 00 01 00 02 01 03 6a 4a 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+        #2 len=304
+          count 3
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 20 4e 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 70 94 00 00
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 d8 59 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 b8 88 00 00
+          #0 len=95
+            #0 len=90
+              #1 len=85
+                #4 len=80
+                  #1 len=75
+                    attrs hex 01 40 9c 00 00 02 c0 65 52 00 03 d8 59 00 00
+                    #0 len=53
+                      #1 len=48
+                        attrs hex 00 00 01 00 02 00
+                        #0 len=35
+                          count 1
+                          #1 len=26
+                            attrs [0]'a:alpha' hex 01 b8 88 00 00
+        #3 len=579
+          count 3
+          #0 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0e
+          #0 len=90
+            #3 len=85
+              #0 len=80
+                #3 len=75
+                  attrs hex 00 0e
+                  #0 len=66
+                    count 2
+                    #1 len=24
+                      attrs [0]'a:tint' hex 01 18 73 01 00
+                    #1 len=28
+                      attrs [0]'a:satMod' hex 01 10 98 02 00
+          #0 len=451
+            #4 len=446
+              attrs (empty)
+              #0 len=425
+                count 3
+                #0 len=156
+                  attrs hex 00 00 00 00 00
+                  #0 len=144
+                    #3 len=139
+                      attrs hex 00 0e
+                      #0 len=130
+                        count 4
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 70 8e 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 f0 49 02 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 48 6b 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 d0 7e 01 00
+                #0 len=156
+                  attrs hex 00 50 c3 00 00
+                  #0 len=144
+                    #3 len=139
+                      attrs hex 00 0e
+                      #0 len=130
+                        count 4
+                        #1 len=28
+                          attrs [0]'a:lumMod' hex 01 58 92 01 00
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 d0 fb 01 00
+                        #1 len=24
+                          attrs [0]'a:tint' hex 01 d0 7e 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 90 5f 01 00
+                #0 len=94
+                  attrs hex 00 a0 86 01 00
+                  #0 len=82
+                    #3 len=77
+                      attrs hex 00 0e
+                      #0 len=68
+                        count 2
+                        #1 len=28
+                          attrs [0]'a:satMod' hex 01 c0 d4 01 00
+                        #1 len=26
+                          attrs [0]'a:shade' hex 01 18 f6 00 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+    #4 len=4
+      count 0
+table SlideMasters(22) @10588 span=14683
+  count 3
+  #22 len=5462
+    attrs hex 00 01
+    #0 len=5333
+      attrs (empty)
+      #0 len=29
+        attrs (empty)
+        #0 len=22
+          attrs (empty)
+          #0 len=5
+            #2 len=0
+          #1 len=5
+            #1 len=0
+      #1 len=5292
+        #4 len=5287
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=5154
+            count 17
+            #0 len=309
+              #1 len=304
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 02 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=183
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 00 00 00 00 01 00 00 00 00 02 85 cc 99 00 03 0a 83 56 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=88
+                    #4 len=83
+                      attrs (empty)
+                      #0 len=64
+                        count 2
+                        #0 len=25
+                          attrs hex 00 00 00 00 00
+                          #0 len=13
+                            #1 len=8
+                              attrs hex 00 00 01 00 02 32
+                        #0 len=25
+                          attrs hex 00 a0 86 01 00
+                          #0 len=13
+                            #1 len=8
+                              attrs hex 00 f6 01 00 02 63
+                      #1 len=7
+                        attrs hex 00 40 16 40 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=264
+              #1 len=259
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 03 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 0f
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 a5 f8 15 00 02 09 52 89 00 03 f1 1a 0f 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=61
+                  #0 len=16
+                    attrs hex 01 01
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=262
+              #1 len=257
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 04 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 00
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 ab d2 27 00 02 09 52 89 00 03 f7 f4 20 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 03 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=399
+              #1 len=394
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 05 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 31 00 03 01 04 05
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 14 bf 02 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=212
+                  #0 len=16
+                    attrs hex 01 00
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=181
+                    count 1
+                    #0 len=172
+                      #1 len=17
+                        attrs hex 11 60 09 00 00
+                        #1 len=0
+                        #2 len=0
+                      #2 len=145
+                        count 1
+                        #0 len=136
+                          #2 len=131
+                            attrs [0]'{1D1B89AE-8D35-4BB5-B492-6D9BE4F23A39}' [1]'datetime1' [2]'01.01.2000'
+            #0 len=253
+              #1 len=248
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 06 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 32 00 03 02 04 06
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 88 2e 34 00 01 cc 45 4e 00 02 73 6f 31 00 03 b7 fc 05 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=66
+                  #0 len=16
+                    attrs hex 01 00
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=388
+              #1 len=383
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 07 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 33 00 03 02 04 0c
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 63 59 73 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=201
+                  #0 len=16
+                    attrs hex 01 00
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=170
+                    count 1
+                    #0 len=161
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=139
+                        count 1
+                        #0 len=130
+                          #2 len=125
+                            attrs [0]'{5CC2A059-B141-45A7-B910-B096D6D06820}' [1]'slidenum' [2]'<number>'
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 08 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 a5 f8 15 00 01 7b 7a 10 00 02 a5 f8 15 00 03 90 39 13 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 30 75 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 09 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 4f 9a 70 00 01 c6 6b 3c 00 02 a5 f8 15 00 03 90 39 13 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 30 75 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 0a 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 09 52 89 00 01 35 32 29 00 02 90 39 13 00 03 7b 7a 10 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 20 4e 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 0b 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 ed 40 fd ff 01 96 13 25 00 02 a5 f8 15 00 03 1a 99 14 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 20 4e 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 0c 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 7b 7a 10 00 02 52 fc 0a 00 03 52 fc 0a 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 20 4e 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 0d 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 00 00 00 00 01 90 39 13 00 02 52 fc 0a 00 03 52 fc 0a 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 10 27 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 0e 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 00 00 00 00 01 57 a5 4f 00 02 b9 b7 18 00 03 90 39 13 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 98 3a 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 0f 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 5b 4e 94 00 01 19 68 47 00 02 52 fc 0a 00 03 52 fc 0a 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 30 75 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 10 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 47 8f 91 00 01 88 2e 34 00 02 52 fc 0a 00 03 52 fc 0a 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 10 27 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 11 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 a1 96 7b 00 01 19 68 47 00 02 7b 7a 10 00 03 6a da 0c 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 20 4e 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 12 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 8d d7 78 00 01 6b 64 52 00 02 67 bb 0d 00 03 67 bb 0d 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 a8 61 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+    #1 len=26
+      attrs hex 06 0c 0f 08 07 0d 10 09 00 00 01 01 02 02 03 03 04 04 05 05 0b 0b 0a 0a
+    #2 len=51
+      count 1
+      #0 len=42
+        attrs [0]'2147483649' hex 01 0a 00 00 00 6c 00 72 00 49 00 64 00 31 00
+    #5 len=8
+      attrs hex 00 01 01 01 03 01
+    #6 len=15
+      #0 len=0
+      #1 len=0
+      #2 len=0
+  #22 len=5813
+    attrs hex 00 01
+    #0 len=5684
+      attrs (empty)
+      #0 len=29
+        attrs (empty)
+        #0 len=22
+          attrs (empty)
+          #0 len=5
+            #2 len=0
+          #1 len=5
+            #1 len=0
+      #1 len=5643
+        #4 len=5638
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=5505
+            count 18
+            #0 len=309
+              #1 len=304
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 02 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=183
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 00 00 00 00 01 00 00 00 00 02 85 cc 99 00 03 0a 83 56 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=88
+                    #4 len=83
+                      attrs (empty)
+                      #0 len=64
+                        count 2
+                        #0 len=25
+                          attrs hex 00 00 00 00 00
+                          #0 len=13
+                            #1 len=8
+                              attrs hex 00 00 01 00 02 32
+                        #0 len=25
+                          attrs hex 00 a0 86 01 00
+                          #0 len=13
+                            #1 len=8
+                              attrs hex 00 f6 01 00 02 63
+                      #1 len=7
+                        attrs hex 00 40 16 40 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=288
+              #1 len=283
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 03 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=162
+                  attrs (empty)
+                  #0 len=26
+                    attrs hex 00 00 00 00 00 01 00 00 00 00 02 85 cc 99 00 03 0a 83 56 00 08 01 09 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 a0 86 01 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 04 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 a5 f8 15 00 01 7b 7a 10 00 02 a5 f8 15 00 03 90 39 13 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 30 75 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 05 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 4f 9a 70 00 01 c6 6b 3c 00 02 a5 f8 15 00 03 90 39 13 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 30 75 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 06 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 09 52 89 00 01 35 32 29 00 02 90 39 13 00 03 7b 7a 10 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 20 4e 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 07 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 ed 40 fd ff 01 96 13 25 00 02 a5 f8 15 00 03 1a 99 14 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 20 4e 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 08 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 7b 7a 10 00 02 52 fc 0a 00 03 52 fc 0a 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 20 4e 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 09 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 00 00 00 00 01 90 39 13 00 02 52 fc 0a 00 03 52 fc 0a 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 10 27 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 0a 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 00 00 00 00 01 57 a5 4f 00 02 b9 b7 18 00 03 90 39 13 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 98 3a 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 0b 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 5b 4e 94 00 01 19 68 47 00 02 52 fc 0a 00 03 52 fc 0a 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 30 75 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 0c 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 47 8f 91 00 01 f0 2f 34 00 02 52 fc 0a 00 03 52 fc 0a 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 10 27 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 0d 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 a1 96 7b 00 01 19 68 47 00 02 7b 7a 10 00 03 6a da 0c 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 20 4e 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 0e 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 8d d7 78 00 01 6b 64 52 00 02 67 bb 0d 00 03 67 bb 0d 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 10 27 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=264
+              #1 len=259
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 0f 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 0f
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 9e 1e 04 00 02 09 52 89 00 03 f1 1a 0f 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=61
+                  #0 len=16
+                    attrs hex 01 01
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=320
+              #1 len=315
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 10 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 00
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=158
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 a5 f8 15 00 02 09 52 89 00 03 9d ed 36 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 50 c3 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 03 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=399
+              #1 len=394
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 11 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 34 00 03 01 04 05
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 14 bf 02 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=212
+                  #0 len=16
+                    attrs hex 01 00
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=181
+                    count 1
+                    #0 len=172
+                      #1 len=17
+                        attrs hex 11 60 09 00 00
+                        #1 len=0
+                        #2 len=0
+                      #2 len=145
+                        count 1
+                        #0 len=136
+                          #2 len=131
+                            attrs [0]'{1D1B89AE-8D35-4BB5-B492-6D9BE4F23A39}' [1]'datetime1' [2]'01.01.2000'
+            #0 len=253
+              #1 len=248
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 12 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 35 00 03 02 04 06
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 88 2e 34 00 01 cc 45 4e 00 02 73 6f 31 00 03 b7 fc 05 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=66
+                  #0 len=16
+                    attrs hex 01 00
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=388
+              #1 len=383
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 13 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 36 00 03 02 04 0c
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 63 59 73 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=201
+                  #0 len=16
+                    attrs hex 01 00
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=170
+                    count 1
+                    #0 len=161
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=139
+                        count 1
+                        #0 len=130
+                          #2 len=125
+                            attrs [0]'{5CC2A059-B141-45A7-B910-B096D6D06820}' [1]'slidenum' [2]'<number>'
+    #1 len=26
+      attrs hex 06 0c 0f 08 07 0d 10 09 00 00 01 01 02 02 03 03 04 04 05 05 0b 0b 0a 0a
+    #2 len=51
+      count 1
+      #0 len=42
+        attrs [0]'2147483650' hex 01 0a 00 00 00 6c 00 72 00 49 00 64 00 32 00
+    #5 len=8
+      attrs hex 00 01 01 01 03 01
+    #6 len=15
+      #0 len=0
+      #1 len=0
+      #2 len=0
+  #22 len=3389
+    attrs hex 00 01
+    #0 len=3260
+      attrs (empty)
+      #0 len=29
+        attrs (empty)
+        #0 len=22
+          attrs (empty)
+          #0 len=5
+            #2 len=0
+          #1 len=5
+            #1 len=0
+      #1 len=3219
+        #4 len=3214
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=3081
+            count 10
+            #0 len=309
+              #1 len=304
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 02 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=183
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 00 00 00 00 01 00 00 00 00 02 85 cc 99 00 03 0a 83 56 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=88
+                    #4 len=83
+                      attrs (empty)
+                      #0 len=64
+                        count 2
+                        #0 len=25
+                          attrs hex 00 00 00 00 00
+                          #0 len=13
+                            #1 len=8
+                              attrs hex 00 00 01 00 02 32
+                        #0 len=25
+                          attrs hex 00 a0 86 01 00
+                          #0 len=13
+                            #1 len=8
+                              attrs hex 00 f6 01 00 02 63
+                      #1 len=7
+                        attrs hex 00 40 16 40 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=288
+              #1 len=283
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 03 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=162
+                  attrs (empty)
+                  #0 len=26
+                    attrs hex 00 00 00 00 00 01 00 00 00 00 02 85 cc 99 00 03 0a 83 56 00 08 01 09 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 a0 86 01 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=284
+              #1 len=279
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 04 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=158
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 00 00 00 00 01 90 39 13 00 02 85 cc 99 00 03 7a 49 43 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 a0 86 01 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 05 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 a5 f8 15 00 01 7b 7a 10 00 02 a5 f8 15 00 03 90 39 13 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 30 75 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=290
+              #1 len=285
+                attrs (empty)
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 06 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=164
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 7b 7a 10 00 02 52 fc 0a 00 03 52 fc 0a 00
+                  #1 len=35
+                    #1 len=30
+                      attrs [0]'ellipse'
+                      #0 len=4
+                        count 0
+                  #2 len=63
+                    #3 len=58
+                      #0 len=53
+                        #1 len=48
+                          attrs hex 00 ff 01 ff 02 ff
+                          #0 len=35
+                            count 1
+                            #1 len=26
+                              attrs [0]'a:alpha' hex 01 20 4e 00 00
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=264
+              #1 len=259
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 07 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 0f
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 9e 1e 04 00 02 09 52 89 00 03 f1 1a 0f 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=61
+                  #0 len=16
+                    attrs hex 01 01
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=262
+              #1 len=257
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 08 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 00
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 a5 f8 15 00 02 09 52 89 00 03 9d ed 36 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 03 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=399
+              #1 len=394
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 09 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 37 00 03 01 04 05
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 14 bf 02 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=212
+                  #0 len=16
+                    attrs hex 01 00
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=181
+                    count 1
+                    #0 len=172
+                      #1 len=17
+                        attrs hex 11 60 09 00 00
+                        #1 len=0
+                        #2 len=0
+                      #2 len=145
+                        count 1
+                        #0 len=136
+                          #2 len=131
+                            attrs [0]'{1D1B89AE-8D35-4BB5-B492-6D9BE4F23A39}' [1]'datetime1' [2]'01.01.2000'
+            #0 len=253
+              #1 len=248
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 0a 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 38 00 03 02 04 06
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 88 2e 34 00 01 cc 45 4e 00 02 73 6f 31 00 03 b7 fc 05 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=66
+                  #0 len=16
+                    attrs hex 01 00
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=388
+              #1 len=383
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 0b 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 39 00 03 02 04 0c
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 63 59 73 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=201
+                  #0 len=16
+                    attrs hex 01 00
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=170
+                    count 1
+                    #0 len=161
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=139
+                        count 1
+                        #0 len=130
+                          #2 len=125
+                            attrs [0]'{5CC2A059-B141-45A7-B910-B096D6D06820}' [1]'slidenum' [2]'<number>'
+    #1 len=26
+      attrs hex 06 0c 0f 08 07 0d 10 09 00 00 01 01 02 02 03 03 04 04 05 05 0b 0b 0a 0a
+    #2 len=51
+      count 1
+      #0 len=42
+        attrs [0]'2147483651' hex 01 0a 00 00 00 6c 00 72 00 49 00 64 00 33 00
+    #5 len=8
+      attrs hex 00 01 01 01 03 01
+    #6 len=15
+      #0 len=0
+      #1 len=0
+      #2 len=0
+table SlideLayouts(23) @25271 span=5088
+  count 3
+  #23 len=1707
+    attrs hex 01 01
+    #0 len=1693
+      attrs [0]'Lights'
+      #1 len=1669
+        #4 len=1664
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=1531
+            count 5
+            #0 len=230
+              #1 len=225
+                attrs (empty)
+                #0 len=105
+                  #0 len=36
+                    attrs hex 00 02 00 00 00 [1]'place_holder'
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 0f
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 e1 4d 0b 00 01 f0 92 09 00 02 21 58 83 00 03 68 43 13 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=230
+              #1 len=225
+                attrs (empty)
+                #0 len=105
+                  #0 len=36
+                    attrs hex 00 03 00 00 00 [1]'place_holder'
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 00
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 e1 4d 0b 00 01 2b 11 20 00 02 21 58 83 00 03 84 ab 48 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=343
+              #1 len=338
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 04 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 31 00 03 01 04 05
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 14 bf 02 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=212
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=181
+                    count 1
+                    #0 len=172
+                      #1 len=17
+                        attrs hex 11 d0 07 00 00
+                        #1 len=0
+                        #2 len=0
+                      #2 len=145
+                        count 1
+                        #0 len=136
+                          #2 len=131
+                            attrs [0]'{1D1B89AE-8D35-4BB5-B492-6D9BE4F23A39}' [1]'datetime1' [2]'01.01.2000'
+            #0 len=282
+              #1 len=277
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 05 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 32 00 03 02 04 06
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 88 2e 34 00 01 cc 45 4e 00 02 73 6f 31 00 03 b7 fc 05 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=151
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=120
+                    count 1
+                    #0 len=111
+                      #0 len=80
+                        attrs hex 00 00
+                        #3 len=0
+                        #4 len=0
+                        #5 len=0
+                        #6 len=0
+                        #7 len=4
+                          count 0
+                        #8 len=42
+                          attrs hex 10 01 11 78 05 00 00
+                          #1 len=23
+                            #3 len=18
+                              #0 len=13
+                                #1 len=8
+                                  attrs hex 00 ff 01 ff 02 ff
+                          #2 len=0
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=417
+              #1 len=412
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 06 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 33 00 03 02 04 0c
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 63 59 73 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=286
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=255
+                    count 1
+                    #0 len=246
+                      #0 len=80
+                        attrs hex 00 05
+                        #3 len=0
+                        #4 len=0
+                        #5 len=0
+                        #6 len=0
+                        #7 len=4
+                          count 0
+                        #8 len=42
+                          attrs hex 10 01 11 78 05 00 00
+                          #1 len=23
+                            #3 len=18
+                              #0 len=13
+                                #1 len=8
+                                  attrs hex 00 ff 01 ff 02 ff
+                          #2 len=0
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=139
+                        count 1
+                        #0 len=130
+                          #2 len=125
+                            attrs [0]'{5CC2A059-B141-45A7-B910-B096D6D06820}' [1]'slidenum' [2]'<number>'
+    #1 len=0
+  #23 len=1704
+    attrs hex 01 01
+    #0 len=1690
+      attrs [0]'Lights1'
+      #1 len=1664
+        #4 len=1659
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=1526
+            count 5
+            #0 len=230
+              #1 len=225
+                attrs (empty)
+                #0 len=105
+                  #0 len=36
+                    attrs hex 00 02 00 00 00 [1]'place_holder'
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 0f
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 e1 4d 0b 00 01 f0 92 09 00 02 21 58 83 00 03 68 43 13 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=230
+              #1 len=225
+                attrs (empty)
+                #0 len=105
+                  #0 len=36
+                    attrs hex 00 03 00 00 00 [1]'place_holder'
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 00
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 e1 4d 0b 00 01 2b 11 20 00 02 21 58 83 00 03 84 ab 48 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=338
+              #1 len=333
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 04 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 34 00 03 01 04 05
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 14 bf 02 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=207
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=176
+                    count 1
+                    #0 len=167
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=145
+                        count 1
+                        #0 len=136
+                          #2 len=131
+                            attrs [0]'{1D1B89AE-8D35-4BB5-B492-6D9BE4F23A39}' [1]'datetime1' [2]'01.01.2000'
+            #0 len=282
+              #1 len=277
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 05 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 35 00 03 02 04 06
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 88 2e 34 00 01 cc 45 4e 00 02 73 6f 31 00 03 b7 fc 05 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=151
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=120
+                    count 1
+                    #0 len=111
+                      #0 len=80
+                        attrs hex 00 00
+                        #3 len=0
+                        #4 len=0
+                        #5 len=0
+                        #6 len=0
+                        #7 len=4
+                          count 0
+                        #8 len=42
+                          attrs hex 10 01 11 78 05 00 00
+                          #1 len=23
+                            #3 len=18
+                              #0 len=13
+                                #1 len=8
+                                  attrs hex 00 ff 01 ff 02 ff
+                          #2 len=0
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=417
+              #1 len=412
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 06 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 36 00 03 02 04 0c
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 63 59 73 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=286
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=255
+                    count 1
+                    #0 len=246
+                      #0 len=80
+                        attrs hex 00 05
+                        #3 len=0
+                        #4 len=0
+                        #5 len=0
+                        #6 len=0
+                        #7 len=4
+                          count 0
+                        #8 len=42
+                          attrs hex 10 01 11 78 05 00 00
+                          #1 len=23
+                            #3 len=18
+                              #0 len=13
+                                #1 len=8
+                                  attrs hex 00 ff 01 ff 02 ff
+                          #2 len=0
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=139
+                        count 1
+                        #0 len=130
+                          #2 len=125
+                            attrs [0]'{5CC2A059-B141-45A7-B910-B096D6D06820}' [1]'slidenum' [2]'<number>'
+    #1 len=0
+  #23 len=1658
+    attrs hex 01 01
+    #0 len=1644
+      attrs [0]'Lights2'
+      #1 len=1618
+        #4 len=1613
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=1480
+            count 5
+            #0 len=230
+              #1 len=225
+                attrs (empty)
+                #0 len=105
+                  #0 len=36
+                    attrs hex 00 02 00 00 00 [1]'place_holder'
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 0f
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 e1 4d 0b 00 01 f0 92 09 00 02 21 58 83 00 03 68 43 13 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=230
+              #1 len=225
+                attrs (empty)
+                #0 len=105
+                  #0 len=36
+                    attrs hex 00 03 00 00 00 [1]'place_holder'
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 00
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 e1 4d 0b 00 01 2b 11 20 00 02 21 58 83 00 03 84 ab 48 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=59
+                  #0 len=14
+                    attrs (empty)
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=338
+              #1 len=333
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 04 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 37 00 03 01 04 05
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 14 bf 02 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=207
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=176
+                    count 1
+                    #0 len=167
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=145
+                        count 1
+                        #0 len=136
+                          #2 len=131
+                            attrs [0]'{1D1B89AE-8D35-4BB5-B492-6D9BE4F23A39}' [1]'datetime1' [2]'01.01.2000'
+            #0 len=259
+              #1 len=254
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 05 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 38 00 03 02 04 06
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 88 2e 34 00 01 cc 45 4e 00 02 73 6f 31 00 03 b7 fc 05 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=128
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=97
+                    count 1
+                    #0 len=88
+                      #0 len=57
+                        attrs hex 00 00
+                        #3 len=0
+                        #4 len=0
+                        #5 len=0
+                        #6 len=0
+                        #7 len=4
+                          count 0
+                        #8 len=19
+                          attrs hex 10 01 11 78 05 00 00
+                          #1 len=0
+                          #2 len=0
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+            #0 len=394
+              #1 len=389
+                attrs (empty)
+                #0 len=65
+                  #0 len=12
+                    attrs hex 00 06 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=34
+                    attrs (empty)
+                    #0 len=13
+                      attrs hex 01 01 00 00 00 39 00 03 02 04 0c
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=44
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 63 59 73 00 01 cc 45 4e 00 02 0c b4 23 00 03 b7 fc 05 00
+                  #1 len=0
+                  #2 len=0
+                  #4 len=0
+                #3 len=263
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=232
+                    count 1
+                    #0 len=223
+                      #0 len=57
+                        attrs hex 00 05
+                        #3 len=0
+                        #4 len=0
+                        #5 len=0
+                        #6 len=0
+                        #7 len=4
+                          count 0
+                        #8 len=19
+                          attrs hex 10 01 11 78 05 00 00
+                          #1 len=0
+                          #2 len=0
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=139
+                        count 1
+                        #0 len=130
+                          #2 len=125
+                            attrs [0]'{5CC2A059-B141-45A7-B910-B096D6D06820}' [1]'slidenum' [2]'<number>'
+    #1 len=0
+table Slides(24) @30359 span=4072
+  count 4
+  #24 len=1471
+    attrs hex 00 01
+    #0 len=1457
+      attrs [0]'page1'
+      #1 len=1435
+        #4 len=1430
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=1297
+            count 2
+            #0 len=384
+              #1 len=379
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 02 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 0f
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 a0 b0 07 00 01 0e cd 15 00 02 dc 69 8a 00 03 34 72 0e 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=181
+                  #0 len=16
+                    attrs hex 01 01
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=150
+                    count 1
+                    #0 len=141
+                      #0 len=33
+                        attrs hex 00 04
+                        #3 len=0
+                        #4 len=0
+                        #5 len=0
+                        #6 len=0
+                        #7 len=4
+                          count 0
+                      #1 len=17
+                        attrs hex 11 e4 0c 00 00
+                        #1 len=0
+                        #2 len=0
+                      #2 len=76
+                        count 1
+                        #0 len=67
+                          #1 len=62
+                            attrs [0]'Test'
+                            #0 len=42
+                              attrs hex 11 e4 0c 00 00 12 0c
+                              #1 len=23
+                                #3 len=18
+                                  #0 len=13
+                                    #1 len=8
+                                      attrs hex 00 ff 01 ff 02 ff
+                              #2 len=0
+            #0 len=899
+              #1 len=894
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 03 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 00
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 a0 b0 07 00 01 86 46 21 00 02 dc 69 8a 00 03 e4 68 2b 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=696
+                  #0 len=16
+                    attrs hex 01 01
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=665
+                    count 1
+                    #0 len=656
+                      #0 len=48
+                        attrs hex 00 00 05 00 00 00 00 08 00 00 00 00 09 00 00 00 00
+                        #3 len=0
+                        #4 len=0
+                        #5 len=0
+                        #6 len=0
+                        #7 len=4
+                          count 0
+                      #1 len=17
+                        attrs hex 11 80 0c 00 00
+                        #1 len=0
+                        #2 len=0
+                      #2 len=576
+                        count 1
+                        #0 len=567
+                          #1 len=562
+                            attrs [0]'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at purus mi. Nam egestas odio ac iaculis porta. Nunc mattis sit amet purus et elementum. Sed odio sem, laoreet eu dui in, pretium semper sem. '
+                            #0 len=144
+                              attrs hex 11 80 0c 00 00 12 0c
+                              #1 len=23
+                                #3 len=18
+                                  #0 len=13
+                                    #1 len=8
+                                      attrs hex 00 ff 01 ff 02 ff
+                              #2 len=0
+                              #3 len=29
+                                attrs [3]'DejaVu Sans'
+                              #4 len=29
+                                attrs [3]'DejaVu Sans'
+                              #5 len=29
+                                attrs [3]'DejaVu Sans'
+    #1 len=0
+  #24 len=859
+    attrs hex 00 01
+    #0 len=845
+      attrs [0]'page2'
+      #1 len=823
+        #4 len=818
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=685
+            count 2
+            #0 len=384
+              #1 len=379
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 02 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 0f
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 9e 1e 04 00 02 09 52 89 00 03 f1 1a 0f 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=181
+                  #0 len=16
+                    attrs hex 01 01
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=150
+                    count 1
+                    #0 len=141
+                      #0 len=33
+                        attrs hex 00 00
+                        #3 len=0
+                        #4 len=0
+                        #5 len=0
+                        #6 len=0
+                        #7 len=4
+                          count 0
+                      #1 len=17
+                        attrs hex 11 e4 0c 00 00
+                        #1 len=0
+                        #2 len=0
+                      #2 len=76
+                        count 1
+                        #0 len=67
+                          #1 len=62
+                            attrs [0]'Test'
+                            #0 len=42
+                              attrs hex 11 e4 0c 00 00 12 0c
+                              #1 len=23
+                                #3 len=18
+                                  #0 len=13
+                                    #1 len=8
+                                      attrs hex 00 ff 01 ff 02 ff
+                              #2 len=0
+            #0 len=287
+              #2 len=282
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 03 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #2 len=99
+                  attrs (empty)
+                  #0 len=26
+                    attrs hex 00 c9 48 28 00 01 a5 f8 15 00 02 f1 3a 49 00 03 9d ed 36 00 08 00 09 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #1 len=123
+                  #1 len=118
+                    attrs (empty)
+                    #0 len=99
+                      attrs hex fb [10]'picId1' hex 02 2b 00 00 00 02 00 00 00 00 0c 00 00 00 15 07 00 00 00 fa 00 a0 86 01 00
+                      #0 len=17
+                        #15 len=12
+                          attrs hex 00 00 00 00 00 01 00 00 00 00
+                      #3 len=27
+                        attrs [0]'image1.jpg'
+                    #3 len=7
+                      #0 len=2
+                        attrs (empty)
+    #1 len=0
+  #24 len=859
+    attrs hex 00 01
+    #0 len=845
+      attrs [0]'page3'
+      #1 len=823
+        #4 len=818
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=685
+            count 2
+            #0 len=384
+              #1 len=379
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 02 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 0f
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 9e 1e 04 00 02 09 52 89 00 03 f1 1a 0f 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=181
+                  #0 len=16
+                    attrs hex 01 01
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=150
+                    count 1
+                    #0 len=141
+                      #0 len=33
+                        attrs hex 00 00
+                        #3 len=0
+                        #4 len=0
+                        #5 len=0
+                        #6 len=0
+                        #7 len=4
+                          count 0
+                      #1 len=17
+                        attrs hex 11 e4 0c 00 00
+                        #1 len=0
+                        #2 len=0
+                      #2 len=76
+                        count 1
+                        #0 len=67
+                          #1 len=62
+                            attrs [0]'Test'
+                            #0 len=42
+                              attrs hex 11 e4 0c 00 00 12 0c
+                              #1 len=23
+                                #3 len=18
+                                  #0 len=13
+                                    #1 len=8
+                                      attrs hex 00 80 01 00 02 80
+                              #2 len=0
+            #0 len=287
+              #2 len=282
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 03 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #2 len=99
+                  attrs (empty)
+                  #0 len=26
+                    attrs hex 00 61 47 28 00 01 a5 f8 15 00 02 c1 3d 49 00 03 9d ed 36 00 08 00 09 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #1 len=123
+                  #1 len=118
+                    attrs (empty)
+                    #0 len=99
+                      attrs hex fb [10]'picId2' hex 02 2b 00 00 00 02 00 00 00 00 0c 00 00 00 15 07 00 00 00 fa 00 a0 86 01 00
+                      #0 len=17
+                        #15 len=12
+                          attrs hex 00 00 00 00 00 01 00 00 00 00
+                      #3 len=27
+                        attrs [0]'image2.png'
+                    #3 len=7
+                      #0 len=2
+                        attrs (empty)
+    #1 len=0
+  #24 len=859
+    attrs hex 00 01
+    #0 len=845
+      attrs [0]'page4'
+      #1 len=823
+        #4 len=818
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=685
+            count 2
+            #0 len=384
+              #1 len=379
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 02 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 0f
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 3d 3d 08 00 01 9e 1e 04 00 02 09 52 89 00 03 f1 1a 0f 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=181
+                  #0 len=16
+                    attrs hex 01 01
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #1 len=0
+                  #2 len=150
+                    count 1
+                    #0 len=141
+                      #0 len=33
+                        attrs hex 00 00
+                        #3 len=0
+                        #4 len=0
+                        #5 len=0
+                        #6 len=0
+                        #7 len=4
+                          count 0
+                      #1 len=17
+                        attrs hex 11 e4 0c 00 00
+                        #1 len=0
+                        #2 len=0
+                      #2 len=76
+                        count 1
+                        #0 len=67
+                          #1 len=62
+                            attrs [0]'Test'
+                            #0 len=42
+                              attrs hex 11 e4 0c 00 00 12 0c
+                              #1 len=23
+                                #3 len=18
+                                  #0 len=13
+                                    #1 len=8
+                                      attrs hex 00 ff 01 ff 02 ff
+                              #2 len=0
+            #0 len=287
+              #2 len=282
+                #0 len=45
+                  #0 len=12
+                    attrs hex 00 03 00 00 00 01 00 00 00 00
+                  #1 len=2
+                    attrs (empty)
+                  #2 len=16
+                    attrs (empty)
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #2 len=99
+                  attrs (empty)
+                  #0 len=26
+                    attrs hex 00 61 47 28 00 01 a5 f8 15 00 02 c1 3d 49 00 03 9d ed 36 00 08 00 09 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #1 len=123
+                  #1 len=118
+                    attrs (empty)
+                    #0 len=99
+                      attrs hex fb [10]'picId2' hex 02 2b 00 00 00 02 00 00 00 00 0c 00 00 00 15 07 00 00 00 fa 00 a0 86 01 00
+                      #0 len=17
+                        #15 len=12
+                          attrs hex 00 00 00 00 00 01 00 00 00 00
+                      #3 len=27
+                        attrs [0]'image2.png'
+                    #3 len=7
+                      #0 len=2
+                        attrs (empty)
+    #1 len=0
+table NotesSlides(26) @34431 span=1744
+  count 4
+  #26 len=430
+    attrs (empty)
+    #0 len=418
+      attrs (empty)
+      #1 len=411
+        #4 len=406
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=273
+            count 1
+            #0 len=264
+              #1 len=259
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 02 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 00
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 52 fc 0a 00 01 19 68 47 00 02 be 60 5d 00 03 42 e6 4c 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=61
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+    #1 len=0
+  #26 len=430
+    attrs (empty)
+    #0 len=418
+      attrs (empty)
+      #1 len=411
+        #4 len=406
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=273
+            count 1
+            #0 len=264
+              #1 len=259
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 02 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 00
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 52 fc 0a 00 01 19 68 47 00 02 be 60 5d 00 03 42 e6 4c 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=61
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+    #1 len=0
+  #26 len=430
+    attrs (empty)
+    #0 len=418
+      attrs (empty)
+      #1 len=411
+        #4 len=406
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=273
+            count 1
+            #0 len=264
+              #1 len=259
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 02 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 00
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 52 fc 0a 00 01 19 68 47 00 02 be 60 5d 00 03 42 e6 4c 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=61
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+    #1 len=0
+  #26 len=430
+    attrs (empty)
+    #0 len=418
+      attrs (empty)
+      #1 len=411
+        #4 len=406
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=273
+            count 1
+            #0 len=264
+              #1 len=259
+                attrs (empty)
+                #0 len=81
+                  #0 len=12
+                    attrs hex 00 02 00 00 00 01 00 00 00 00
+                  #1 len=4
+                    attrs hex 00 01
+                  #2 len=50
+                    attrs (empty)
+                    #0 len=29
+                      attrs [1]'4294967295' hex 04 00
+                    #1 len=0
+                    #2 len=4
+                      count 0
+                #1 len=100
+                  attrs (empty)
+                  #0 len=22
+                    attrs hex 00 52 fc 0a 00 01 19 68 47 00 02 be 60 5d 00 03 42 e6 4c 00
+                  #1 len=29
+                    #1 len=24
+                      attrs [0]'rect'
+                      #0 len=4
+                        count 0
+                  #2 len=5
+                    #2 len=0
+                  #3 len=12
+                    attrs (empty)
+                    #0 len=5
+                      #2 len=0
+                  #4 len=5
+                    #1 len=0
+                #3 len=61
+                  #0 len=16
+                    attrs hex 01 04
+                    #1 len=7
+                      attrs hex 00 00 00 00 00
+                  #2 len=35
+                    count 1
+                    #0 len=26
+                      #1 len=12
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=0
+                      #2 len=4
+                        count 0
+    #1 len=0
+table NotesMasters(25) @36175 span=199
+  count 1
+  #25 len=190
+    #0 len=149
+      attrs (empty)
+      #1 len=142
+        #4 len=137
+          #0 len=59
+            #0 len=26
+              attrs hex 00 01 00 00 00 [1]'noGroup'
+            #1 len=2
+              attrs (empty)
+            #2 len=16
+              attrs (empty)
+              #1 len=0
+              #2 len=4
+                count 0
+          #1 len=59
+            attrs (empty)
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #1 len=0
+            #2 len=0
+          #2 len=4
+            count 0
+    #1 len=26
+      attrs hex 06 0c 0f 08 07 0d 10 09 00 00 01 01 02 04 03 03 04 04 05 05 0b 0b 0a 0a
+    #3 len=0
+table HandoutMasters(30) @36374 span=4
+  count 0
+table ImageMap(42) @36378 span=57
+  #42 len=52
+    attrs [0]'image1.jpg' [1]'image2.png'
+table FontMap(43) @36435 span=49
+  #43 len=44
+    attrs [0]'Arial' [1]'DejaVu Sans'
+table SlideRels(40) @36484 span=27
+  #40 len=22
+    attrs hex 00 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 02 00 00 00
+table SlideNotesRels(45) @36511 span=27
+  #45 len=22
+    attrs hex 00 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00
+table ThemeRels(41) @36538 span=93
+  bytes len=93 sha256=a84820a0e9bf6950
+table NotesRels(46) @36631 span=27
+  #46 len=22
+    attrs hex 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+table NotesMastersRels(47) @36658 span=12
+  #47 len=7
+    attrs hex 00 03 00 00 00
+table HandoutMastersRels(49) @36670 span=7
+  #49 len=2
+    attrs (empty)
+package files:
+  media/image1.jpg len=4408 sha256=d5b888a2cc94df3d
+  media/image2.png len=2943 sha256=3815d546e2eba534

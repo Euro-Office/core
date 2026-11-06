@@ -12,3 +12,8 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = "OdfFile/Test/test_odf/ExampleFiles/empty_custom_shape_formula.odp"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "Test/BinaryFormat/snapshots/**"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"

@@ -1,0 +1,799 @@
+header DOCY;v10;0;
+main table: 9 tables
+  Signature(0) @651
+  Settings(9) @657
+  App(15) @840
+  Core(16) @1072
+  Document(6) @1259
+  HdrFtr(4) @16683
+  Style(5) @16687
+  Numbering(3) @18120
+  Customs(20) @18566
+main table padding: 594 zero bytes
+table Signature(0) @651 span=6
+  (no length prefix)
+  Version(0) Long: 5
+table Settings(9) @657 span=183
+  DefaultTabStopTwips(9) len=4
+    i32 709
+  Compat(8) len=165
+    Flags1(4) len=4
+      u32 0
+    Flags2(5) len=4
+      u32 0
+    Flags3(6) len=4
+      u32 0
+    CompatSetting(0) len=133
+      CompatName(1) len=34
+        utf16 'compatibilityMode'
+      CompatUri(2) len=80
+        utf16 'http://schemas.microsoft.com/office/word'
+      CompatValue(3) len=4
+        utf16 '15'
+table App(15) @840 span=232
+  (no length prefix)
+  #1 len=227
+    (PPTY records)
+    attrs [1]'LibreOffice/25.8.5.2$Linux_X86_64 LibreOffice_project/252c20f6956e3db0b52e6e2f9dda67263513c8fc' hex 06 66 03 00 00 07 0a 00 00 00
+    #0 len=17
+      attrs hex 10 a0 13 00 00 11 05 17 00 00 16 03 00 00 00
+table Core(16) @1072 span=187
+  (no length prefix)
+  #2 len=182
+    (PPTY records)
+    attrs [2]'Euro Office/2.5.565.0' [4]'2026-02-18T09:32:31.847858238' [5]'2026-03-02T14:01:43.284286743'
+    #0 len=2
+      attrs (empty)
+table Document(6) @1259 span=15424
+  Par(0) len=1064
+    pPr(1) len=80
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=56
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+    Content(2) len=974
+      Run(5) len=969
+        rPr(1) len=56
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+        Content(8) len=903
+          run(0) len=898
+            utf16 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at purus mi. Nam egestas odio ac iaculis porta. Nunc mattis sit amet purus et elementum. Sed odio sem, laoreet eu dui in, pretium semper sem. Proin pretium, risus at placerat fermentum, dui odio egestas mauris, nec pretium ligula risus ac purus. Cras viverra dapibus odio et dictum. Praesent lacinia, mi et feugiat ultrices, risus ante vestibulum justo, ac vestibulum orci felis a metus. '
+  Par(0) len=1284
+    pPr(1) len=85
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=61
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+        Color(9) Three: hex 80 00 80
+    Content(2) len=1189
+      Run(5) len=1184
+        rPr(1) len=61
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          Color(9) Three: hex 80 00 80
+        Content(8) len=1113
+          run(0) len=1108
+            utf16 'Phasellus et nisi fermentum, euismod magna nec, suscipit felis. Nulla sed sem vehicula, posuere sem nec, luctus enim. Integer a convallis risus, eget congue velit. Nullam mattis eu lectus sed finibus. Cras interdum pretium velit, non pharetra purus. Maecenas quis orci sodales tortor feugiat convallis. Pellentesque diam libero, molestie a faucibus maximus, egestas a sapien. Quisque sodales odio augue, ac mollis augue ullamcorper a. Sed neque ex, tempor in eleifend eu, commodo ut sem. Curabitur eget sem gravida, ultricies risus vel, ultrices lectus. '
+  Par(0) len=1734
+    pPr(1) len=96
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=72
+        FontAscii(4) Variable len=30
+          utf16 'Liberation Mono'
+        FontHAnsi(5) Variable len=30
+          utf16 'Liberation Mono'
+    Content(2) len=1628
+      Run(5) len=1623
+        rPr(1) len=72
+          FontAscii(4) Variable len=30
+            utf16 'Liberation Mono'
+          FontHAnsi(5) Variable len=30
+            utf16 'Liberation Mono'
+        Content(8) len=1541
+          run(0) len=1536
+            utf16 'Praesent venenatis hendrerit aliquam. Nulla quis neque ac justo sollicitudin euismod a eget felis. Aenean et viverra mi. Aliquam bibendum nibh lorem, ut molestie elit posuere eu. Fusce vel urna pharetra, eleifend ante vitae, tristique tortor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam suscipit elit non venenatis aliquam. Duis id molestie tellus. Phasellus ullamcorper consequat libero, ac egestas ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum finibus magna at sem feugiat facilisis. Nunc semper pretium tellus, non vehicula justo euismod a. Phasellus sollicitudin purus elit, a egestas erat tempor tempor. Phasellus rhoncus tristique ante. Fusce placerat efficitur purus. '
+  Par(0) len=1358
+    pPr(1) len=101
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=77
+        FontAscii(4) Variable len=30
+          utf16 'Liberation Mono'
+        FontHAnsi(5) Variable len=30
+          utf16 'Liberation Mono'
+        Color(9) Three: hex 59 83 b0
+    Content(2) len=1247
+      Run(5) len=1242
+        rPr(1) len=77
+          FontAscii(4) Variable len=30
+            utf16 'Liberation Mono'
+          FontHAnsi(5) Variable len=30
+            utf16 'Liberation Mono'
+          Color(9) Three: hex 59 83 b0
+        Content(8) len=1155
+          run(0) len=1150
+            utf16 'Etiam vitae sollicitudin nisl. Nam lacinia arcu id ornare mollis. Suspendisse pretium tellus ut mauris sodales vehicula. Donec sagittis interdum molestie. Phasellus a urna porta mauris egestas imperdiet. Suspendisse potenti. Etiam placerat congue urna, at porttitor metus pharetra vel. Nunc vel consectetur nunc, eget consequat ligula. Mauris et accumsan urna. Nam hendrerit erat orci, ac ultrices arcu lobortis et. Donec ut ornare augue. Sed quis sodales est. Etiam vel vulputate tortor. In hac habitasse platea dictumst. Pellentesque tempus pellentesque orci in tincidunt. '
+  Par(0) len=1415
+    pPr(1) len=95
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=71
+        Bold(0) Byte: 1
+        Italic(1) Byte: 1
+        Underline(2) Byte: 12
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+        BoldCs(20) Byte: 1
+        ItalicCs(21) Byte: 1
+    Content(2) len=1310
+      Run(5) len=1305
+        rPr(1) len=71
+          Bold(0) Byte: 1
+          Italic(1) Byte: 1
+          Underline(2) Byte: 12
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          BoldCs(20) Byte: 1
+          ItalicCs(21) Byte: 1
+        Content(8) len=1224
+          run(0) len=960
+            utf16 'Fusce eu sagittis erat, sed condimentum ex. Etiam dui quam, feugiat a nunc vitae, consectetur efficitur nibh. Praesent augue dolor, tempus et nulla in, feugiat tempus diam. Donec at semper elit. Suspendisse semper tortor odio, lacinia elementum metus pretium at. Phasellus non eros iaculis, eleifend elit vitae, sollicitudin tortor. Integer mattis ornare urna, eu consectetur tellus tincidunt quis. Maecenas ac aliquam purus. Nunc nulla orci, gravida sed aliquet et, bibendum non '
+          run(0) len=254
+            utf16 'quam. Mauris consequat quis urna eget auctor. Duis convallis consectetur imperdiet. Morbi varius arcu id erat mollis ultricies.'
+  Par(0) len=590
+    pPr(1) len=80
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=56
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+    Content(2) len=500
+      Run(5) len=495
+        Content(8) len=490
+          pptxDrawing(12) len=485
+            PptxData(1) Variable len=294
+              #0 len=289
+                #1 len=284
+                  #2 len=279
+                    #0 len=59
+                      #0 len=24
+                        (PPTY records)
+                        attrs hex 00 02 00 00 00 [1]'Image1'
+                      #1 len=4
+                        (PPTY records)
+                        attrs hex 03 01
+                      #2 len=16
+                        (PPTY records)
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=4
+                          count 0
+                    #2 len=82
+                      (PPTY records)
+                      attrs (empty)
+                      #0 len=26
+                        attrs hex 00 00 00 00 00 01 00 00 00 00 02 37 22 3a 00 03 d2 9a 2b 00 08 00 09 00
+                      #1 len=29
+                        #1 len=24
+                          attrs [0]'rect'
+                          #0 len=4
+                            count 0
+                      #2 len=0
+                      #4 len=5
+                        #1 len=0
+                    #1 len=123
+                      #1 len=118
+                        (PPTY records)
+                        attrs (empty)
+                        #0 len=99
+                          attrs hex fb [10]'picId1' hex 02 2b 00 00 00 02 00 00 00 00 0c 00 00 00 15 07 00 00 00 fa 00 a0 86 01 00
+                          #0 len=17
+                            #15 len=12
+                              attrs hex 00 00 00 00 00 01 00 00 00 00
+                          #3 len=27
+                            attrs [0]'image1.jpg'
+                        #3 len=7
+                          #0 len=2
+                            attrs (empty)
+            Type(0) Byte: 1
+            AllowOverlap(2) Byte: 1
+            BehindDoc(3) Byte: 0
+            DistLEmu(33) Long: 0
+            DistTEmu(35) Long: 0
+            DistREmu(34) Long: 0
+            DistBEmu(32) Long: 0
+            LayoutInCell(9) Byte: 1
+            Locked(10) Byte: 0
+            RelativeHeight(11) Long: 2
+            BSimplePos(12) Byte: 0
+            EffectExtent(13) Variable len=24
+              LeftEmu(4) Long: 0
+              TopEmu(5) Long: 0
+              RightEmu(6) Long: 0
+              BottomEmu(7) Long: 0
+            Extent(14) Variable len=12
+              CxEmu(2) Long: 3809847
+              CyEmu(3) Long: 2857682
+            PositionH(15) Variable len=6
+              RelativeFrom(0) Byte: 1
+              Align(1) Byte: 0
+            PositionV(16) Variable len=6
+              RelativeFrom(0) Byte: 6
+              Align(1) Byte: 4
+            SimplePos(17) Variable len=12
+              XEmu(2) Long: 0
+              YEmu(3) Long: 0
+            WrapSquare(19) Variable len=3
+              #4 Byte: 1
+            GraphicFramePr(30) Variable len=0
+            DocPr(31) Variable len=26
+              Id(0) len=4
+                i32 61442
+              Name(1) len=12
+                utf16 'Image1'
+  Par(0) len=90
+    pPr(1) len=80
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=56
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+    Content(2) len=0
+  Par(0) len=1831
+    pPr(1) len=76
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=52
+        FontAscii(4) Variable len=20
+          utf16 'OpenSymbol'
+        FontHAnsi(5) Variable len=20
+          utf16 'OpenSymbol'
+    Content(2) len=1745
+      Run(5) len=1740
+        rPr(1) len=52
+          FontAscii(4) Variable len=20
+            utf16 'OpenSymbol'
+          FontHAnsi(5) Variable len=20
+            utf16 'OpenSymbol'
+        Content(8) len=1678
+          run(0) len=892
+            utf16 'Aenean nec lacus tellus. Proin semper luctus molestie. Mauris et tortor pellentesque, consequat mi suscipit, luctus dui. Nam fringilla erat ligula, eget sagittis tellus rutrum mollis. Nulla facilisi. Pellentesque elementum lacinia tempus. Quisque bibendum rutrum sem, et luctus purus commodo et. Quisque et interdum mauris. Aliquam venenatis gravida dictum. Aenean eu tristique nisl. Fusce et feugiat enim. Maecenas diam augue, ullamcorper vitae '
+          pptxDrawing(12) len=491
+            PptxData(1) Variable len=294
+              #0 len=289
+                #1 len=284
+                  #2 len=279
+                    #0 len=59
+                      #0 len=24
+                        (PPTY records)
+                        attrs hex 00 03 00 00 00 [1]'Image2'
+                      #1 len=4
+                        (PPTY records)
+                        attrs hex 03 01
+                      #2 len=16
+                        (PPTY records)
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=4
+                          count 0
+                    #2 len=82
+                      (PPTY records)
+                      attrs (empty)
+                      #0 len=26
+                        attrs hex 00 00 00 00 00 01 00 00 00 00 02 c9 20 3a 00 03 f7 97 2b 00 08 00 09 00
+                      #1 len=29
+                        #1 len=24
+                          attrs [0]'rect'
+                          #0 len=4
+                            count 0
+                      #2 len=0
+                      #4 len=5
+                        #1 len=0
+                    #1 len=123
+                      #1 len=118
+                        (PPTY records)
+                        attrs (empty)
+                        #0 len=99
+                          attrs hex fb [10]'picId2' hex 02 2b 00 00 00 02 00 00 00 00 0c 00 00 00 15 07 00 00 00 fa 00 a0 86 01 00
+                          #0 len=17
+                            #15 len=12
+                              attrs hex 00 00 00 00 00 01 00 00 00 00
+                          #3 len=27
+                            attrs [0]'image2.png'
+                        #3 len=7
+                          #0 len=2
+                            attrs (empty)
+            Type(0) Byte: 1
+            AllowOverlap(2) Byte: 1
+            BehindDoc(3) Byte: 0
+            DistLEmu(33) Long: 0
+            DistTEmu(35) Long: 0
+            DistREmu(34) Long: 0
+            DistBEmu(32) Long: 0
+            LayoutInCell(9) Byte: 1
+            Locked(10) Byte: 0
+            RelativeHeight(11) Long: 3
+            BSimplePos(12) Byte: 0
+            EffectExtent(13) Variable len=24
+              LeftEmu(4) Long: 0
+              TopEmu(5) Long: 0
+              RightEmu(6) Long: 0
+              BottomEmu(7) Long: 0
+            Extent(14) Variable len=12
+              CxEmu(2) Long: 3809481
+              CyEmu(3) Long: 2856951
+            PositionH(15) Variable len=9
+              RelativeFrom(0) Byte: 1
+              PosOffsetEmu(4) Long: -34930
+            PositionV(16) Variable len=9
+              RelativeFrom(0) Byte: 6
+              PosOffsetEmu(4) Long: 3162269
+            SimplePos(17) Variable len=12
+              XEmu(2) Long: 0
+              YEmu(3) Long: 0
+            WrapSquare(19) Variable len=3
+              #4 Byte: 1
+            GraphicFramePr(30) Variable len=0
+            DocPr(31) Variable len=26
+              Id(0) len=4
+                i32 61443
+              Name(1) len=12
+                utf16 'Image2'
+          run(0) len=280
+            utf16 'lacinia nec, cursus a nisi. Nulla facilisi. Proin mollis dapibus urna, eget viverra nisl gravida condimentum. Maecenas mattis velit sapien. '
+  Par(0) len=2277
+    pPr(1) len=80
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=56
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+    Content(2) len=2187
+      Run(5) len=2182
+        rPr(1) len=56
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+        Content(8) len=2116
+          run(0) len=1358
+            utf16 'Etiam eu facilisis elit, vitae dignissim nisi. Cras efficitur est hendrerit elementum imperdiet. Sed egestas vitae lectus vitae tincidunt. Proin at est imperdiet, condimentum diam at, mattis enim. Etiam ullamcorper aliquam tellus, vitae mattis dolor. Morbi ullamcorper nec quam ac aliquam. Sed eget nunc imperdiet elit commodo faucibus eu at est. Phasellus ut pulvinar arcu, sed blandit massa. Donec cursus non purus vel dictum. Maecenas sit amet placerat nisi, eget ornare purus. Vivamus hendrerit dolor eu quam aliquet, sed rutrum ipsum pharetra. Nam ante erat, vulputate nec velit non, faucibus malesuada ante. Sed ac nisi tellus. In luctus porttitor dolor. In sodales elit co'
+          pptxDrawing(12) len=491
+            PptxData(1) Variable len=294
+              #0 len=289
+                #1 len=284
+                  #2 len=279
+                    #0 len=59
+                      #0 len=24
+                        (PPTY records)
+                        attrs hex 00 04 00 00 00 [1]'Image3'
+                      #1 len=4
+                        (PPTY records)
+                        attrs hex 03 01
+                      #2 len=16
+                        (PPTY records)
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=4
+                          count 0
+                    #2 len=82
+                      (PPTY records)
+                      attrs (empty)
+                      #0 len=26
+                        attrs hex 00 00 00 00 00 01 00 00 00 00 02 37 22 3a 00 03 d2 9a 2b 00 08 00 09 00
+                      #1 len=29
+                        #1 len=24
+                          attrs [0]'rect'
+                          #0 len=4
+                            count 0
+                      #2 len=0
+                      #4 len=5
+                        #1 len=0
+                    #1 len=123
+                      #1 len=118
+                        (PPTY records)
+                        attrs (empty)
+                        #0 len=99
+                          attrs hex fb [10]'picId2' hex 02 2b 00 00 00 02 00 00 00 00 0c 00 00 00 15 07 00 00 00 fa 00 a0 86 01 00
+                          #0 len=17
+                            #15 len=12
+                              attrs hex 00 00 00 00 00 01 00 00 00 00
+                          #3 len=27
+                            attrs [0]'image2.png'
+                        #3 len=7
+                          #0 len=2
+                            attrs (empty)
+            Type(0) Byte: 1
+            AllowOverlap(2) Byte: 1
+            BehindDoc(3) Byte: 0
+            DistLEmu(33) Long: 0
+            DistTEmu(35) Long: 0
+            DistREmu(34) Long: 0
+            DistBEmu(32) Long: 0
+            LayoutInCell(9) Byte: 1
+            Locked(10) Byte: 0
+            RelativeHeight(11) Long: 4
+            BSimplePos(12) Byte: 0
+            EffectExtent(13) Variable len=24
+              LeftEmu(4) Long: 0
+              TopEmu(5) Long: 0
+              RightEmu(6) Long: 0
+              BottomEmu(7) Long: 0
+            Extent(14) Variable len=12
+              CxEmu(2) Long: 3809847
+              CyEmu(3) Long: 2857682
+            PositionH(15) Variable len=9
+              RelativeFrom(0) Byte: 1
+              PosOffsetEmu(4) Long: 745601
+            PositionV(16) Variable len=9
+              RelativeFrom(0) Byte: 6
+              PosOffsetEmu(4) Long: 5032400
+            SimplePos(17) Variable len=12
+              XEmu(2) Long: 0
+              YEmu(3) Long: 0
+            WrapSquare(19) Variable len=3
+              #4 Byte: 0
+            GraphicFramePr(30) Variable len=0
+            DocPr(31) Variable len=26
+              Id(0) len=4
+                i32 61444
+              Name(1) len=12
+                utf16 'Image3'
+          run(0) len=252
+            utf16 'ngue lacus imperdiet tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. '
+  Par(0) len=1556
+    pPr(1) len=80
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=56
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+    Content(2) len=1466
+      Run(5) len=1461
+        rPr(1) len=56
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+        Content(8) len=1395
+          run(0) len=1390
+            utf16 'Sed augue nisl, varius at urna eu, aliquam egestas justo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc vel sodales enim, vitae commodo enim. Praesent aliquet urna quis nunc congue convallis. Duis pellentesque est a lacus consectetur, sed auctor sem volutpat. Nulla molestie cursus nisi a sodales. Mauris ipsum nibh, rutrum et volutpat a, rutrum semper est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ornare magna vitae finibus suscipit. Vivamus nunc enim, dictum eu imperdiet vitae, pretium quis eros. Nam mattis purus sit amet leo maximus malesuada. Mauris iaculis aliquam tristique. '
+  Par(0) len=1434
+    pPr(1) len=80
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=56
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+    Content(2) len=1344
+      Run(5) len=1339
+        rPr(1) len=56
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+        Content(8) len=1273
+          run(0) len=1268
+            utf16 'Sed elementum porta accumsan. Mauris sit amet rhoncus massa. Integer sit amet lorem purus. Aenean ac rhoncus nisi. Phasellus viverra vehicula nunc vel iaculis. Vestibulum iaculis, neque ut dictum lacinia, eros turpis efficitur sem, ac pulvinar urna dolor ac eros. Mauris non placerat tortor. Nunc ultricies nisl vitae nibh commodo, ut aliquet diam accumsan. Ut hendrerit mattis commodo. Nam blandit commodo aliquet. Donec auctor lacinia congue. Nunc vel posuere lectus, non facilisis purus. Phasellus vehicula a orci id egestas. Sed auctor est at magna condimentum scelerisque. Nunc in nunc iaculis, facilisis odio a, eleifend ipsum. '
+  Par(0) len=606
+    pPr(1) len=80
+      ParaStyle(21) Variable len=12
+        utf16 'style7'
+      pPr_rPr(26) Variable len=56
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+    Content(2) len=516
+      Run(5) len=511
+        rPr(1) len=56
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+        Content(8) len=445
+          run(0) len=440
+            utf16 'Sed quis mi quis odio eleifend interdum. Donec pellentesque ex ac felis vestibulum, sit amet luctus erat dignissim. Phasellus bibendum nunc lacus, eget accumsan libero placerat sed. Proin eget libero quis ipsum accumsan '
+  sectPr(4) len=116
+    #0 len=15
+      #3 Long: 11906
+      #4 Long: 16838
+      #2 Byte: 0
+    #1 len=42
+      #6 Long: 1134
+      #7 Long: 1134
+      #8 Long: 1134
+      #9 Long: 1134
+      #10 Long: 1134
+      #11 Long: 1134
+      #12 Long: 0
+    #2 len=9
+      #0 Byte: 0
+      #1 Byte: 0
+      #2 Byte: 0
+    #8 len=30
+      #0 len=1
+        u8 1
+      #1 len=4
+        i32 1
+      #2 len=1
+        u8 0
+      #3 len=4
+        #196 Short: 0
+table HdrFtr(4) @16683 span=4
+  (empty)
+table Style(5) @16687 span=1433
+  DefpPr(0) len=239
+    WidowControl(25) Byte: 1
+    pPr_rPr(26) Variable len=230
+      FontAscii(4) Variable len=32
+        utf16 'Liberation Serif'
+      FontHAnsi(5) Variable len=32
+        utf16 'Liberation Serif'
+      FontAE(6) Variable len=34
+        utf16 'Noto Serif CJK SC'
+      FontCS(7) Variable len=40
+        utf16 'Noto Sans Devanagari'
+      FontSize(8) Long: 24
+      ColorTheme(28) Variable len=2
+        hex 00 00
+      FontSizeCs(22) Long: 24
+      Lang(25) Variable len=10
+        utf16 'en-US'
+      LangBidi(26) Variable len=10
+        utf16 'hi-IN'
+      LangEA(27) Variable len=10
+        utf16 'zh-CN'
+  Styles(2) len=1180
+    Style(0) len=309
+      Style_Id(1) len=12
+        utf16 'style2'
+      Style_Name(2) len=32
+        utf16 'DStyle_paragraph'
+      Style_Type(9) len=1
+        u8 3
+      Style_Default(8) len=1
+        u8 1
+      Style_TextPr(5) len=230
+        FontAscii(4) Variable len=32
+          utf16 'Liberation Serif'
+        FontHAnsi(5) Variable len=32
+          utf16 'Liberation Serif'
+        FontAE(6) Variable len=34
+          utf16 'Noto Serif CJK SC'
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontSize(8) Long: 24
+        ColorTheme(28) Variable len=2
+          hex 00 00
+        FontSizeCs(22) Long: 24
+        Lang(25) Variable len=10
+          utf16 'en-US'
+        LangBidi(26) Variable len=10
+          utf16 'hi-IN'
+        LangEA(27) Variable len=10
+          utf16 'zh-CN'
+      Style_ParaPr(6) len=3
+        WidowControl(25) Byte: 1
+    Style(0) len=67
+      Style_Id(1) len=12
+        utf16 'style5'
+      Style_Name(2) len=16
+        utf16 'Standard'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=12
+        utf16 'style2'
+      Style_CustomStyle(19) len=1
+        u8 1
+    Style(0) len=281
+      Style_Id(1) len=12
+        utf16 'style6'
+      Style_Name(2) len=14
+        utf16 'Heading'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=12
+        utf16 'style5'
+      Style_Next(4) len=12
+        utf16 'style7'
+      Style_TextPr(5) len=168
+        FontAscii(4) Variable len=30
+          utf16 'Liberation Sans'
+        FontHAnsi(5) Variable len=30
+          utf16 'Liberation Sans'
+        FontAE(6) Variable len=32
+          utf16 'Noto Sans CJK SC'
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontSize(8) Long: 28
+        FontSizeCs(22) Long: 28
+      Style_ParaPr(6) len=21
+        KeepNext(7) Byte: 1
+        Spacing(9) Variable len=12
+          Spacing_BeforeTwips(40) Long: 240
+          Spacing_AfterTwips(41) Long: 120
+      Style_CustomStyle(19) len=1
+        u8 1
+    Style(0) len=107
+      Style_Id(1) len=12
+        utf16 'style7'
+      Style_Name(2) len=18
+        utf16 'Text body'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=12
+        utf16 'style5'
+      Style_qFormat(10) len=1
+        u8 1
+      Style_ParaPr(6) len=27
+        Spacing(9) Variable len=21
+          Spacing_LineTwips(39) Long: 276
+          Spacing_LineRule(11) Byte: 1
+          Spacing_BeforeTwips(40) Long: 0
+          Spacing_AfterTwips(41) Long: 140
+      Style_CustomStyle(19) len=1
+        u8 1
+    Style(0) len=110
+      Style_Id(1) len=12
+        utf16 'style8'
+      Style_Name(2) len=8
+        utf16 'List'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=12
+        utf16 'style7'
+      Style_TextPr(5) len=46
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+      Style_CustomStyle(19) len=1
+        u8 1
+    Style(0) len=157
+      Style_Id(1) len=12
+        utf16 'style9'
+      Style_Name(2) len=14
+        utf16 'Caption'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=12
+        utf16 'style5'
+      Style_TextPr(5) len=64
+        Italic(1) Byte: 1
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontSize(8) Long: 24
+        ItalicCs(21) Byte: 1
+        FontSizeCs(22) Long: 24
+      Style_ParaPr(6) len=18
+        Spacing(9) Variable len=12
+          Spacing_BeforeTwips(40) Long: 120
+          Spacing_AfterTwips(41) Long: 120
+      Style_CustomStyle(19) len=1
+        u8 1
+    Style(0) len=114
+      Style_Id(1) len=14
+        utf16 'style10'
+      Style_Name(2) len=10
+        utf16 'Index'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=12
+        utf16 'style5'
+      Style_TextPr(5) len=46
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+      Style_CustomStyle(19) len=1
+        u8 1
+table Numbering(3) @18120 span=446
+  AbstractNums(0) len=415
+    AbstractNum(1) len=410
+      AbstractNum_Id(2) len=4
+        i32 1
+      AbstractNum_Lvls(4) len=396
+        Lvl(5) len=39
+          lvl_Jc(37) Byte: 10
+          lvl_Start(13) Long: 1
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          ILvl(29) Long: 0
+        Lvl(5) len=39
+          lvl_Jc(37) Byte: 10
+          lvl_Start(13) Long: 1
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          ILvl(29) Long: 1
+        Lvl(5) len=39
+          lvl_Jc(37) Byte: 10
+          lvl_Start(13) Long: 1
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          ILvl(29) Long: 2
+        Lvl(5) len=39
+          lvl_Jc(37) Byte: 10
+          lvl_Start(13) Long: 1
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          ILvl(29) Long: 3
+        Lvl(5) len=39
+          lvl_Jc(37) Byte: 10
+          lvl_Start(13) Long: 1
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          ILvl(29) Long: 4
+        Lvl(5) len=39
+          lvl_Jc(37) Byte: 10
+          lvl_Start(13) Long: 1
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          ILvl(29) Long: 5
+        Lvl(5) len=39
+          lvl_Jc(37) Byte: 10
+          lvl_Start(13) Long: 1
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          ILvl(29) Long: 6
+        Lvl(5) len=39
+          lvl_Jc(37) Byte: 10
+          lvl_Start(13) Long: 1
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          ILvl(29) Long: 7
+        Lvl(5) len=39
+          lvl_Jc(37) Byte: 10
+          lvl_Start(13) Long: 1
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          ILvl(29) Long: 8
+  Nums(17) len=17
+    Num(18) len=12
+      Num_ANumId(19) Long: 1
+      Num_NumId(20) Long: 1
+table Customs(20) @18566 span=4
+  (empty)
+package files:
+  media/image1.jpg len=4408 sha256=d5b888a2cc94df3d
+  media/image2.png len=2943 sha256=3815d546e2eba534

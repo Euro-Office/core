@@ -1,0 +1,210 @@
+header XLSY;v10;0;
+main table: 8 tables
+  App(6) @1280
+  Core(7) @1341
+  SharedStrings(1) @1362
+  Styles(2) @2326
+  Workbook(3) @2917
+  Worksheets(4) @2978
+  Other(0) @3248
+  Customs(10) @3252
+main table padding: bytes len=1228 sha256=933feab222250d5a
+table App(6) @1280 span=61
+  (no length prefix)
+  #1 len=56
+    (PPTY records)
+    attrs [1]'Euro Office/2.5.565.0'
+    #0 len=2
+      attrs (empty)
+table Core(7) @1341 span=21
+  (no length prefix)
+  #2 len=16
+    (PPTY records)
+    attrs hex 03 01 00 00 00 31 00
+    #0 len=2
+      attrs (empty)
+table SharedStrings(1) @1362 span=964
+  Si(0) len=955
+    Run(1) len=950
+      RPr(2) len=44
+        Bold(0) Byte: 0
+        Italic(3) Byte: 0
+        RFont(4) Variable len=22
+          utf16 'DejaVu Sans'
+        Sz(6) Double: 12.0
+      Text(3) len=896
+        utf16 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at purus mi. Nam egestas odio ac iaculis porta. Nunc mattis sit amet purus et elementum. Sed odio sem, laoreet eu dui in, pretium semper sem. Proin pretium, risus at placerat fermentum, dui odio egestas mauris, nec pretium ligula risus ac purus. Cras viverra dapibus odio et dictum. Praesent lacinia, mi et feugiat ultrices, risus ante vestibulum justo, ac vestibulum orci felis a metus.'
+table Styles(2) @2326 span=591
+  Borders(0) len=25
+    Border(1) len=20
+      Bottom(0) len=0
+      End(2) len=0
+      Start(4) len=0
+      Top(5) len=0
+  Fills(4) len=108
+    Fill(5) len=11
+      Pattern(0) len=6
+        PatternType(2) len=1
+          u8 17
+    Fill(5) len=11
+      Pattern(0) len=6
+        PatternType(2) len=1
+          u8 8
+    Fill(5) len=33
+      Pattern(0) len=28
+        PatternType(2) len=1
+          u8 18
+        PatternFgColor(3) len=6
+          #0 Long: -256
+        PatternBgColor(4) len=6
+          #0 Long: -256
+    Fill(5) len=33
+      Pattern(0) len=28
+        PatternType(2) len=1
+          u8 18
+        PatternFgColor(3) len=6
+          #0 Long: -8388480
+        PatternBgColor(4) len=6
+          #0 Long: -8388480
+  Fonts(6) len=163
+    Font(7) len=46
+      RFont(4) Variable len=30
+        utf16 'Liberation Sans'
+      Sz(6) Double: 10.0
+    Font(7) len=44
+      Bold(0) Byte: 0
+      Italic(3) Byte: 0
+      RFont(4) Variable len=22
+        utf16 'DejaVu Sans'
+      Sz(6) Double: 12.0
+    Font(7) len=58
+      Color(1) Variable len=6
+        #0 Long: -8388480
+      RFont(4) Variable len=30
+        utf16 'Liberation Sans'
+      Sz(6) Double: 10.0
+  NumFmts(8) len=0
+  CellStyleXfs(14) len=14
+    Xfs(3) len=9
+      ApplyNumberFormat(4) Byte: 1
+      NumFmtId(9) Long: 0
+  CellXfs(2) len=200
+    Xfs(3) len=45
+      ApplyAlignment(0) Byte: 0
+      ApplyFill(2) Byte: 1
+      ApplyFont(3) Byte: 1
+      ApplyNumberFormat(4) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+      XfId(12) Long: 0
+    Xfs(3) len=45
+      ApplyAlignment(0) Byte: 0
+      ApplyFill(2) Byte: 1
+      ApplyFont(3) Byte: 1
+      ApplyNumberFormat(4) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 1
+      NumFmtId(9) Long: 0
+      XfId(12) Long: 0
+    Xfs(3) len=45
+      ApplyAlignment(0) Byte: 0
+      ApplyFill(2) Byte: 1
+      ApplyFont(3) Byte: 1
+      ApplyNumberFormat(4) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 2
+      FontId(8) Long: 2
+      NumFmtId(9) Long: 0
+      XfId(12) Long: 0
+    Xfs(3) len=45
+      ApplyAlignment(0) Byte: 0
+      ApplyFill(2) Byte: 1
+      ApplyFont(3) Byte: 1
+      ApplyNumberFormat(4) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 3
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+      XfId(12) Long: 0
+  CellStyles(15) len=42
+    CellStyle(16) len=37
+      BuiltinId(0) len=4
+        i32 0
+      Name(4) len=14
+        utf16 'Default'
+      XfId(5) len=4
+        i32 0
+table Workbook(3) @2917 span=61
+  BookViews(1) len=44
+    WorkbookView(2) len=39
+      ActiveTab(0) Long: 0
+      ShowHorizontalScroll(4) Byte: 1
+      ShowSheetTabs(5) Byte: 1
+      ShowVerticalScroll(6) Byte: 1
+      WindowHeight(9) Long: 4593
+      WindowWidth(10) Long: 11289
+      XWindow(11) Long: 0
+      YWindow(12) Long: 0
+  FileSharing(25) len=3
+    ReadOnly(5) Byte: 0
+table Worksheets(4) @2978 span=270
+  Worksheet(0) len=261
+    WorksheetProp(1) len=27
+      Name(0) Variable len=12
+        utf16 'Sheet1'
+      SheetId(1) Long: 1
+      State(2) Byte: 2
+    Cols(2) len=60
+      Col(3) len=25
+        Max(2) Long: 5
+        Min(3) Long: 1
+        Width(5) Double: 10.682
+        CustomWidth(6) Byte: 1
+      Col(3) len=25
+        Max(2) Long: 1024
+        Min(3) Long: 6
+        Width(5) Double: 10.682
+        CustomWidth(6) Byte: 1
+    Dimension(4) len=12
+      utf16 'A1:E10'
+    SheetViews(22) len=70
+      SheetView(23) len=65
+        ShowGridLines(4) len=1
+          u8 1
+        WorkbookViewId(14) len=4
+          i32 0
+        ZoomScale(15) len=4
+          i32 100
+        ZoomScaleNormal(16) len=4
+          i32 100
+        Selection(20) len=27
+          ActiveCell(0) len=4
+            utf16 'A6'
+          ActiveCellId(1) len=4
+            i32 0
+          Sqref(2) len=4
+            utf16 'A6'
+    SheetData(9) len=9
+      XlsbPos(35) len=4
+        u32 651
+    SheetPr(24) len=0
+    HeaderFooter(27) len=48
+      EvenFooter(4) len=0
+      EvenHeader(5) len=0
+      FirstFooter(6) len=0
+      FirstHeader(7) len=0
+      OddFooter(8) len=14
+        utf16 'Page &P'
+      OddHeader(9) len=4
+        utf16 '&A'
+table Other(0) @3248 span=4
+  (empty)
+table Customs(10) @3252 span=4
+  (empty)

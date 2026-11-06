@@ -1,0 +1,681 @@
+header XLSY;v10;0;
+main table: 8 tables
+  App(6) @925
+  Core(7) @1161
+  SharedStrings(1) @1312
+  Styles(2) @2222
+  Workbook(3) @4132
+  Worksheets(4) @4262
+  Other(0) @4877
+  Customs(10) @5859
+main table padding: bytes len=873 sha256=e3893e8fc112f8fc
+table App(6) @925 span=236
+  (no length prefix)
+  #1 len=231
+    (PPTY records)
+    attrs hex 00 00 00 00 00 [1]'LibreOffice/25.8.5.2$Linux_X86_64 LibreOffice_project/252c20f6956e3db0b52e6e2f9dda67263513c8fc' [4]'15.0000' hex 05 01 00 00 00
+    #0 len=2
+      attrs (empty)
+table Core(7) @1161 span=151
+  (no length prefix)
+  #2 len=146
+    (PPTY records)
+    attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 01 00 00 00 31 00 [4]'2026-03-09T08:55:37Z' [5]'2026-03-09T08:57:35Z'
+    #0 len=27
+      attrs hex 08 00 00 00 00 [11]'en-US' hex 0d 00 00 00 00
+table SharedStrings(1) @1312 span=910
+  Si(0) len=901
+    Text(3) len=896
+      utf16 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at purus mi. Nam egestas odio ac iaculis porta. Nunc mattis sit amet purus et elementum. Sed odio sem, laoreet eu dui in, pretium semper sem. Proin pretium, risus at placerat fermentum, dui odio egestas mauris, nec pretium ligula risus ac purus. Cras viverra dapibus odio et dictum. Praesent lacinia, mi et feugiat ultrices, risus ante vestibulum justo, ac vestibulum orci felis a metus.'
+table Styles(2) @2222 span=1910
+  Borders(0) len=42
+    Border(1) len=37
+      Bottom(0) len=0
+      Diagonal(1) len=0
+      End(2) len=0
+      Start(4) len=0
+      Top(5) len=0
+      DiagonalDown(7) len=1
+        u8 0
+      DiagonalUp(8) len=1
+        u8 0
+  Fills(4) len=108
+    Fill(5) len=11
+      Pattern(0) len=6
+        PatternType(2) len=1
+          u8 17
+    Fill(5) len=11
+      Pattern(0) len=6
+        PatternType(2) len=1
+          u8 8
+    Fill(5) len=33
+      Pattern(0) len=28
+        PatternType(2) len=1
+          u8 18
+        PatternFgColor(3) len=6
+          #0 Long: -256
+        PatternBgColor(4) len=6
+          #0 Long: -256
+    Fill(5) len=33
+      Pattern(0) len=28
+        PatternType(2) len=1
+          u8 18
+        PatternFgColor(3) len=6
+          #0 Long: -8388480
+        PatternBgColor(4) len=6
+          #0 Long: -8388480
+  Fonts(6) len=210
+    Font(7) len=26
+      RFont(4) Variable len=10
+        utf16 'Arial'
+      Sz(6) Double: 10.0
+    Font(7) len=26
+      RFont(4) Variable len=10
+        utf16 'Arial'
+      Sz(6) Double: 10.0
+    Font(7) len=26
+      RFont(4) Variable len=10
+        utf16 'Arial'
+      Sz(6) Double: 10.0
+    Font(7) len=26
+      RFont(4) Variable len=10
+        utf16 'Arial'
+      Sz(6) Double: 10.0
+    Font(7) len=38
+      RFont(4) Variable len=22
+        utf16 'DejaVu Sans'
+      Sz(6) Double: 12.0
+    Font(7) len=38
+      Color(1) Variable len=6
+        #0 Long: -8388480
+      RFont(4) Variable len=10
+        utf16 'Arial'
+      Sz(6) Double: 10.0
+  NumFmts(8) len=31
+    NumFmt(9) len=26
+      FormatCode(0) Variable len=14
+        utf16 'General'
+      NumFmtId(1) Long: 164
+  CellStyleXfs(14) len=862
+    Xfs(3) len=78
+      ApplyAlignment(0) Byte: 1
+      ApplyBorder(1) Byte: 1
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 1
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 164
+      Aligment(13) Variable len=24
+        Horizontal(0) Byte: 4
+        Indent(1) Long: 0
+        ShrinkToFit(5) Byte: 0
+        TextRotation(6) Long: 0
+        Vertical(7) Byte: 0
+        WrapText(8) Byte: 0
+      Protection(14) Variable len=6
+        Hidden(0) Byte: 0
+        Locked(1) Byte: 1
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 1
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 1
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 2
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 2
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 0
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 1
+      NumFmtId(9) Long: 43
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 1
+      NumFmtId(9) Long: 41
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 1
+      NumFmtId(9) Long: 44
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 1
+      NumFmtId(9) Long: 42
+    Xfs(3) len=36
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 1
+      NumFmtId(9) Long: 9
+  CellXfs(2) len=356
+    Xfs(3) len=84
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 0
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 164
+      XfId(12) Long: 0
+      Aligment(13) Variable len=24
+        Horizontal(0) Byte: 4
+        Indent(1) Long: 0
+        ShrinkToFit(5) Byte: 0
+        TextRotation(6) Long: 0
+        Vertical(7) Byte: 0
+        WrapText(8) Byte: 0
+      Protection(14) Variable len=6
+        Hidden(0) Byte: 0
+        Locked(1) Byte: 1
+    Xfs(3) len=84
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 0
+      FontId(8) Long: 4
+      NumFmtId(9) Long: 164
+      XfId(12) Long: 0
+      Aligment(13) Variable len=24
+        Horizontal(0) Byte: 4
+        Indent(1) Long: 0
+        ShrinkToFit(5) Byte: 0
+        TextRotation(6) Long: 0
+        Vertical(7) Byte: 0
+        WrapText(8) Byte: 0
+      Protection(14) Variable len=6
+        Hidden(0) Byte: 0
+        Locked(1) Byte: 1
+    Xfs(3) len=84
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 1
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 2
+      FontId(8) Long: 5
+      NumFmtId(9) Long: 164
+      XfId(12) Long: 0
+      Aligment(13) Variable len=24
+        Horizontal(0) Byte: 4
+        Indent(1) Long: 0
+        ShrinkToFit(5) Byte: 0
+        TextRotation(6) Long: 0
+        Vertical(7) Byte: 0
+        WrapText(8) Byte: 0
+      Protection(14) Variable len=6
+        Hidden(0) Byte: 0
+        Locked(1) Byte: 1
+    Xfs(3) len=84
+      ApplyAlignment(0) Byte: 0
+      ApplyBorder(1) Byte: 0
+      ApplyFont(3) Byte: 0
+      ApplyProtection(5) Byte: 0
+      BorderId(6) Long: 0
+      FillId(7) Long: 3
+      FontId(8) Long: 0
+      NumFmtId(9) Long: 164
+      XfId(12) Long: 0
+      Aligment(13) Variable len=24
+        Horizontal(0) Byte: 4
+        Indent(1) Long: 0
+        ShrinkToFit(5) Byte: 0
+        TextRotation(6) Long: 0
+        Vertical(7) Byte: 0
+        WrapText(8) Byte: 0
+      Protection(14) Variable len=6
+        Hidden(0) Byte: 0
+        Locked(1) Byte: 1
+  CellStyles(15) len=262
+    CellStyle(16) len=35
+      BuiltinId(0) len=4
+        i32 0
+      Name(4) len=12
+        utf16 'Normal'
+      XfId(5) len=4
+        i32 0
+    CellStyle(16) len=33
+      BuiltinId(0) len=4
+        i32 3
+      Name(4) len=10
+        utf16 'Comma'
+      XfId(5) len=4
+        i32 15
+    CellStyle(16) len=41
+      BuiltinId(0) len=4
+        i32 6
+      Name(4) len=18
+        utf16 'Comma [0]'
+      XfId(5) len=4
+        i32 16
+    CellStyle(16) len=39
+      BuiltinId(0) len=4
+        i32 4
+      Name(4) len=16
+        utf16 'Currency'
+      XfId(5) len=4
+        i32 17
+    CellStyle(16) len=47
+      BuiltinId(0) len=4
+        i32 7
+      Name(4) len=24
+        utf16 'Currency [0]'
+      XfId(5) len=4
+        i32 18
+    CellStyle(16) len=37
+      BuiltinId(0) len=4
+        i32 5
+      Name(4) len=14
+        utf16 'Percent'
+      XfId(5) len=4
+        i32 19
+table Workbook(3) @4132 span=130
+  WorkbookPr(0) len=3
+    Date1904(0) Byte: 0
+  Protection(21) len=0
+  BookViews(1) len=56
+    WorkbookView(2) len=51
+      ActiveTab(0) Long: 0
+      FirstSheet(2) Long: 0
+      ShowHorizontalScroll(4) Byte: 1
+      ShowSheetTabs(5) Byte: 1
+      ShowVerticalScroll(6) Byte: 1
+      TabRatio(7) Long: 500
+      WindowHeight(9) Long: 8192
+      WindowWidth(10) Long: 16384
+      XWindow(11) Long: 0
+      YWindow(12) Long: 0
+  CalcPr(15) len=34
+    RefMode(3) len=1
+      u8 0
+    Iterate(4) len=1
+      u8 0
+    IterateCount(5) len=4
+      u32 100
+    IterateDelta(6) len=8
+      f64 0.001
+  AppName(17) len=8
+    utf16 'Calc'
+table Worksheets(4) @4262 span=615
+  Worksheet(0) len=606
+    WorksheetProp(1) len=27
+      Name(0) Variable len=12
+        utf16 'Sheet1'
+      SheetId(1) Long: 1
+      State(2) Byte: 2
+    Dimension(4) len=12
+      utf16 'A1:E10'
+    SheetViews(22) len=151
+      SheetView(23) len=146
+        ColorId(0) len=4
+          i32 64
+        DefaultGridColor(1) len=1
+          u8 1
+        RightToLeft(2) len=1
+          u8 0
+        ShowFormulas(3) len=1
+          u8 0
+        ShowGridLines(4) len=1
+          u8 1
+        ShowOutlineSymbols(5) len=1
+          u8 1
+        ShowRowColHeaders(6) len=1
+          u8 1
+        ShowZeros(9) len=1
+          u8 1
+        TabSelected(10) len=1
+          u8 1
+        TopLeftCell(11) len=4
+          utf16 'A1'
+        View(12) len=1
+          u8 0
+        WorkbookViewId(14) len=4
+          i32 0
+        ZoomScale(15) len=4
+          i32 100
+        ZoomScaleNormal(16) len=4
+          i32 100
+        ZoomScalePageLayoutView(17) len=4
+          i32 100
+        Selection(20) len=33
+          ActiveCell(0) len=4
+            utf16 'A6'
+          ActiveCellId(1) len=4
+            i32 0
+          Pane(3) len=1
+            u8 2
+          Sqref(2) len=4
+            utf16 'A6'
+    SheetFormatPr(11) len=38
+      DefaultColWidth(0) Double: 11.53515625
+      DefaultRowHeight(1) Double: 12.8
+      CustomHeight(3) Byte: 0
+      ZeroHeight(4) Byte: 0
+      OutlineLevelCol(5) Long: 0
+      OutlineLevelRow(6) Long: 0
+    PageMargins(14) len=60
+      Left(0) Double: 20.0025
+      Top(1) Double: 26.740555555555616
+      Right(2) Double: 20.0025
+      Bottom(3) Double: 26.740555555555616
+      Header(4) Double: 20.0025
+      Footer(5) Double: 20.0025
+    PageSetup(15) len=63
+      PaperSize(1) Byte: 9
+      BlackAndWhite(2) Byte: 0
+      CellComments(3) Byte: 0
+      Copies(4) Long: 1
+      Draft(5) Byte: 0
+      FirstPageNumber(7) Long: 1
+      FitToHeight(8) Long: 1
+      FitToWidth(9) Long: 1
+      HorizontalDpi(10) Long: 300
+      Orientation(0) Byte: 1
+      PageOrder(11) Byte: 0
+      Scale(15) Long: 100
+      UseFirstPageNumber(16) Byte: 1
+      VerticalDpi(18) Long: 300
+    PrintOptions(16) len=15
+      GridLines(0) Byte: 0
+      Headings(1) Byte: 0
+      GridLinesSet(2) Byte: 1
+      HorizontalCentered(3) Byte: 0
+      VerticalCentered(4) Byte: 0
+    SheetData(9) len=9
+      XlsbPos(35) len=4
+        u32 651
+    SheetPr(24) len=17
+      FilterMode(2) len=1
+        u8 0
+      PageSetUpPr(10) len=6
+        FitToPage(12) len=1
+          u8 0
+    HeaderFooter(27) len=164
+      DifferentFirst(1) len=1
+        u8 0
+      DifferentOddEven(2) len=1
+        u8 0
+      OddFooter(8) len=76
+        utf16 '&C&"Times New Roman,Regular"&12Page &P'
+      OddHeader(9) len=66
+        utf16 '&C&"Times New Roman,Regular"&12&A'
+table Other(0) @4877 span=982
+  Theme(5) len=973
+    #20 len=968
+      (PPTY records)
+      attrs [0]'Office'
+      #0 len=935
+        #0 len=245
+          attrs [0]'LibreOffice'
+          #0 len=13
+            #1 len=8
+              attrs hex 00 18 01 a3 02 03
+          #1 len=13
+            #1 len=8
+              attrs hex 00 03 01 69 02 a3
+          #2 len=13
+            #1 len=8
+              attrs hex 00 a3 01 3e 02 03
+          #3 len=13
+            #1 len=8
+              attrs hex 00 8e 01 03 02 a3
+          #4 len=13
+            #1 len=8
+              attrs hex 00 c9 01 9c 02 00
+          #5 len=13
+            #1 len=8
+              attrs hex 00 c9 01 21 02 1e
+          #8 len=13
+            #1 len=8
+              attrs hex 00 00 01 00 02 00
+          #9 len=13
+            #1 len=8
+              attrs hex 00 00 01 00 02 00
+          #10 len=13
+            #1 len=8
+              attrs hex 00 55 01 1a 02 8b
+          #11 len=13
+            #1 len=8
+              attrs hex 00 00 01 00 02 ee
+          #12 len=13
+            #1 len=8
+              attrs hex 00 ff 01 ff 02 ff
+          #13 len=13
+            #1 len=8
+              attrs hex 00 ff 01 ff 02 ff
+        #1 len=311
+          attrs [0]'Office'
+          #0 len=141
+            #0 len=31
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'Arial'
+            #1 len=43
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'DejaVu Sans'
+            #2 len=43
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'DejaVu Sans'
+            #3 len=4
+              count 0
+          #1 len=141
+            #0 len=31
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'Arial'
+            #1 len=43
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'DejaVu Sans'
+            #2 len=43
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'DejaVu Sans'
+            #3 len=4
+              count 0
+        #2 len=364
+          attrs hex 00 00 00 00 00
+          #0 len=76
+            count 3
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+          #1 len=136
+            count 3
+            #0 len=39
+              attrs hex 00 00 01 00 02 01 03 ce 18 00 00
+              #0 len=0
+              #1 len=4
+                attrs hex 00 06
+              #2 len=7
+                attrs hex 00 03 00 00 00
+            #0 len=39
+              attrs hex 00 00 01 00 02 01 03 ce 18 00 00
+              #0 len=0
+              #1 len=4
+                attrs hex 00 06
+              #2 len=7
+                attrs hex 00 03 00 00 00
+            #0 len=39
+              attrs hex 00 00 01 00 02 01 03 ce 18 00 00
+              #0 len=0
+              #1 len=4
+                attrs hex 00 06
+              #2 len=7
+                attrs hex 00 03 00 00 00
+          #2 len=49
+            count 3
+            #0 len=10
+              #0 len=5
+                #1 len=0
+            #0 len=10
+              #0 len=5
+                #1 len=0
+            #0 len=10
+              #0 len=5
+                #1 len=0
+          #3 len=76
+            count 3
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+      #4 len=4
+        count 0
+table Customs(10) @5859 span=4
+  (empty)
