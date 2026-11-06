@@ -10,8 +10,6 @@ set(OPENJPEG_ROOT_DIR "${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg")
 set(OPENJPEG_LIB_JP2 "${OPENJPEG_SOURCES_DIR}/src/lib/openjp2")
 
 set(DESKTOP_EDITOR_ROOT_DIR "../DesktopEditor")
-set(FREETYPE_VERSION_TO_USE "2.10.4")
-set(FREETYPE_SOURCES_DIR "${DESKTOP_EDITOR_ROOT_DIR}/freetype-${FREETYPE_VERSION_TO_USE}")
 set(FONT_ENGINE_SOURCES_DIR "${DESKTOP_EDITOR_ROOT_DIR}/fontengine")
 set(OFFICE_UTILS_ROOT_DIR "../OfficeUtils")
 
@@ -515,6 +513,7 @@ if(LINUX)
         ${FREETYPE_SOURCES_DIR}/src/cff/cff.c
         ${FREETYPE_SOURCES_DIR}/src/cid/type1cid.c
         ${FREETYPE_SOURCES_DIR}/src/gzip/ftgzip.c
+        ${FREETYPE_SOURCES_DIR}/src/hvf/hvf.c
         ${FREETYPE_SOURCES_DIR}/src/lzw/ftlzw.c
         ${FREETYPE_SOURCES_DIR}/src/pcf/pcf.c
         ${FREETYPE_SOURCES_DIR}/src/pfr/pfr.c
@@ -522,8 +521,10 @@ if(LINUX)
         ${FREETYPE_SOURCES_DIR}/src/pshinter/pshinter.c
         ${FREETYPE_SOURCES_DIR}/src/psnames/psnames.c
         ${FREETYPE_SOURCES_DIR}/src/raster/raster.c
+        ${FREETYPE_SOURCES_DIR}/src/sdf/sdf.c
         ${FREETYPE_SOURCES_DIR}/src/sfnt/sfnt.c
         ${FREETYPE_SOURCES_DIR}/src/smooth/smooth.c
+        ${FREETYPE_SOURCES_DIR}/src/svg/svg.c
         ${FREETYPE_SOURCES_DIR}/src/truetype/truetype.c
         ${FREETYPE_SOURCES_DIR}/src/type1/type1.c
         ${FREETYPE_SOURCES_DIR}/src/type42/type42.c
@@ -552,7 +553,7 @@ if(LINUX)
     )
 
     set_source_files_properties(${PDFFILE_FREETYPE_SOURCES} PROPERTIES
-        COMPILE_DEFINITIONS "FT2_BUILD_LIBRARY;FT_CONFIG_OPTION_SYSTEM_ZLIB"
+        COMPILE_DEFINITIONS "FT2_BUILD_LIBRARY;FT_CONFIG_OPTION_SYSTEM_ZLIB;HAVE_UNISTD_H;HAVE_FCNTL_H"
     )
 
     target_include_directories(PdfFile PRIVATE
