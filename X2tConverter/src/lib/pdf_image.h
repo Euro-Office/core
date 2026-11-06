@@ -343,7 +343,13 @@ namespace NExtractTools
 
 		std::wstring sFileDir         = NSDirectory::GetFolderPath(sFrom);
 		std::wstring sImagesDirectory = combinePath(sFileDir, L"media");
+#ifdef __EMSCRIPTEN__
+		// No doctrenderer in the browser: the editor prints to pdf.bin itself and
+		// the converter driver places it next to the input file.
+		std::wstring sPdfBinFile      = combinePath(sFileDir, L"pdf.bin");
+#else
 		std::wstring sPdfBinFile      = combinePath(convertParams.m_sTempDir, L"pdf.bin");
+#endif
 
 		NSDoctRenderer::CDoctrenderer oDoctRenderer(NULL != params.m_sAllFontsPath ? *params.m_sAllFontsPath : L"");
 		std::wstring sXml = getDoctXml(eFromType, eToType, sFrom, sPdfBinFile, sImagesDirectory, convertParams.m_sThemesDir, -1, L"", params);
@@ -414,7 +420,13 @@ namespace NExtractTools
 
 		std::wstring sFileDir         = NSDirectory::GetFolderPath(sFrom);
 		std::wstring sImagesDirectory = combinePath(sFileDir, L"media");
+#ifdef __EMSCRIPTEN__
+		// No doctrenderer in the browser: the editor prints to pdf.bin itself and
+		// the converter driver places it next to the input file.
+		std::wstring sPdfBinFile      = combinePath(sFileDir, L"pdf.bin");
+#else
 		std::wstring sPdfBinFile      = combinePath(convertParams.m_sTempDir, L"pdf.bin");
+#endif
 
 		NSDoctRenderer::CDoctrenderer oDoctRenderer(NULL != params.m_sAllFontsPath ? *params.m_sAllFontsPath : L"");
 		std::wstring sXml = getDoctXml(eFromType, eToType, sFrom, sPdfBinFile, sImagesDirectory, convertParams.m_sThemesDir, -1, L"", params);

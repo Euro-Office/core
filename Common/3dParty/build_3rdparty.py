@@ -15,6 +15,7 @@ sys.stderr.reconfigure(encoding='utf-8', line_buffering=True)
 subfolders = [
     'apple',
     'boost',
+    'boost-wasm',
     'brotli',
     'cef',
     'harfbuzz',

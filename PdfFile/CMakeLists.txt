@@ -562,13 +562,15 @@ if(LINUX)
         ${PDFFILE_BROTLI_DIR}/c/include
     )
 
-    # Keep the private FreeType, zlib and brotli out of the dynamic symbol table
-    target_link_options(PdfFile PRIVATE
-        "LINKER:--version-script=${CMAKE_CURRENT_LIST_DIR}/PdfFile.map"
-    )
-    set_property(TARGET PdfFile APPEND PROPERTY
-        LINK_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/PdfFile.map"
-    )
+    if(NOT EMSCRIPTEN) # wasm-ld has no version scripts
+        # Keep the private FreeType, zlib and brotli out of the dynamic symbol table
+        target_link_options(PdfFile PRIVATE
+            "LINKER:--version-script=${CMAKE_CURRENT_LIST_DIR}/PdfFile.map"
+        )
+        set_property(TARGET PdfFile APPEND PROPERTY
+            LINK_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/PdfFile.map"
+        )
+    endif()
 endif()
 
 if(ANDROID)

@@ -52,3 +52,6 @@ Common/3dParty/openssl/openssl/
 msvc_make.bat
 
 third_party/
+
+# x2t WebAssembly target (the generic build/ rule above would hide it)
+!X2tConverter/build/wasm/

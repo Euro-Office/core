@@ -62,11 +62,26 @@ if(ANDROID)
     set(LINUX TRUE)
 endif()
 
+# So does the WebAssembly converter build (EO_WASM_X2T): the libraries select
+# their platform code with _LINUX. The sdkjs wasm modules define it themselves.
+if(EMSCRIPTEN AND EO_WASM_X2T)
+    set(LINUX TRUE)
+endif()
+
 message("3rdparty dir: " ${EO_CORE_3RD_PARTY_DIR})
 message("workdir: " ${EO_CORE_3RD_PARTY_WORK_DIR})
 message("install: " ${EO_CORE_3RD_PARTY_INSTALL_DIR})
 
 if( EMSCRIPTEN )
+
+    set(EO_WASM_3RD_PARTY "openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm,libxml2-wasm")
+    if(EO_WASM_X2T)
+        # The converter graph additionally needs Boost (compiled filesystem),
+        # the html parsers and md4c. THIRD_PARTY_PREPARED is cached, so when
+        # EO_WASM_X2T is switched on in an existing build dir, run
+        # build_3rdparty.py --only=boost-wasm,html,md by hand or clear the cache.
+        string(APPEND EO_WASM_3RD_PARTY ",boost-wasm,html,md")
+    endif()
 
     if(NOT THIRD_PARTY_PREPARED)
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -74,7 +89,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm,libxml2-wasm"
+            "--only=${EO_WASM_3RD_PARTY}"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -139,7 +154,7 @@ else()
             endif()
 
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,boost-wasm,icu-wasm,zlib-ng-wasm,libxml2-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -495,6 +510,10 @@ else() # if( LINUX )
     set(COMMON_LINK_OPTIONS
         "-Wl,--disable-new-dtags"
     )
+    if(EMSCRIPTEN)
+        # wasm-ld has no dtags; the converter graph is built with LINUX set
+        set(COMMON_LINK_OPTIONS)
+    endif()
 
 endif()
 
@@ -657,6 +676,10 @@ function(copy_framework_to_folder target dest_dir)
 endfunction()
 
 function(copy_icu_libs artifact)
+    if( EMSCRIPTEN )
+        # ICU comes from the Emscripten port, there are no shared libs to ship
+        return()
+    endif()
     if( MSVC )
 
         file(GLOB ICU_DLLS

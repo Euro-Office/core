@@ -18,7 +18,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "1"
+    version = "2"
 )
 
 zlib_ng_src    = nc.work_dir / "zlib-ng"
@@ -91,6 +91,11 @@ def build_and_install():
             "-DCMAKE_BUILD_TYPE=Release",
             f"-DCMAKE_INSTALL_PREFIX={nc.install_dir}",
             f"-DCMAKE_PREFIX_PATH={nc.install_dir}",
+            # The Emscripten toolchain only searches its sysroot, so
+            # find_package(ZLIB) misses the zlib-ng installed above and
+            # minizip-ng then silently builds without deflate support.
+            f"-DZLIB_INCLUDE_DIR={ nc.install_dir / 'include' }",
+            f"-DZLIB_LIBRARY={ nc.install_dir / 'lib' / 'libz.a' }",
             "-DMZ_ZLIB=ON",
             "-DMZ_ZLIB_FLAVOR=zlib",
             "-DMZ_BZIP2=OFF",
@@ -116,6 +121,10 @@ def build_and_install():
         [ "cmake", "--install", str(minizip_build_dir) ],
         "Install minizip-ng",
     )
+
+    # minizip-ng installs this header only when it was built with zlib
+    if not ( nc.install_dir / "include" / "minizip" / "mz_strm_zlib.h" ).exists():
+        nc.abort_op( "minizip-ng was built without zlib (deflate) support" )
 
     nc.create_install_dir_ok_marker()
 
