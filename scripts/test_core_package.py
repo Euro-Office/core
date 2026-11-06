@@ -173,6 +173,48 @@ class CorePackageTest( unittest.TestCase ):
                  mock.patch( "sys.stderr", new_callable=io.StringIO ):
                 self.assertEqual( cp.main( args ), expected, channels )
 
+    def pending( self, running=True, packages=( "linux-amd64/server", ), channels=cp.CHANNELS ):
+        with mock.patch.object( cp, "_ci_running", return_value=running ), \
+             mock.patch( "sys.stdout", new_callable=io.StringIO ):
+            return cp.pending( self.backend, self.core, packages, channels )
+
+    def test_pending_only_with_a_package_missing_and_ci_running( self ):
+        self.assertTrue( self.pending() )
+        self.assertFalse( self.pending( running=False ) )
+        self.pack_and_publish()
+        self.assertFalse( self.pending() )
+        self.assertTrue( self.pending( packages=( "linux-amd64/server", "linux-arm64/server" ) ) )
+
+    def test_pending_for_a_release_ignores_pr_packages( self ):
+        self.pack_and_publish( "pr", 7 )
+        self.assertTrue( self.pending( channels=[ "main" ] ) )
+        self.assertFalse( self.pending() )
+
+    def test_pending_not_with_the_cache_off( self ):
+        with mock.patch.dict( os.environ, { "EO_CORE_CACHE": "off" } ):
+            self.assertFalse( self.pending() )
+
+    def test_pending_errors_mean_not_waiting( self ):
+        output = self.tmp / "output"
+        args = [ "pending", "--core", str( self.core ), "linux-amd64/server" ]
+        with mock.patch.dict( os.environ, { "GITHUB_OUTPUT": str( output ) } ), \
+             mock.patch.object( cp, "make_backend", return_value=self.backend ), \
+             mock.patch.object( cp, "_ci_running", side_effect=OSError( "no network" ) ), \
+             mock.patch( "sys.stderr", new_callable=io.StringIO ):
+            self.assertEqual( cp.main( args ), 0 )
+        self.assertEqual( output.read_text(), "pending=false\n" )
+
+    def test_ci_running_looks_only_at_build_workflows( self ):
+        def running( *runs ):
+            body = json.dumps( { "workflow_runs": [ { "path": p, "status": s } for p, s in runs ] } )
+            with mock.patch( "urllib.request.urlopen", return_value=io.BytesIO( body.encode() ) ):
+                return cp._ci_running( "abc" )
+        self.assertTrue( running( ( ".github/workflows/build-windows.yml", "in_progress" ) ) )
+        self.assertTrue( running( ( ".github/workflows/build.yml", "queued" ) ) )
+        self.assertFalse( running( ( ".github/workflows/build.yml", "completed" ) ) )
+        self.assertFalse( running( ( ".github/workflows/build-wasm.yml", "in_progress" ) ) )
+        self.assertFalse( running() )
+
     def test_corrupt_archive_is_not_used( self ):
         self.pack_and_publish()
         key = f"core/main/linux-amd64/server/{ self.tree() }.tar.gz"

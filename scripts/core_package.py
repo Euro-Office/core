@@ -28,12 +28,18 @@ Commands:
   publish   upload packed archives (needs credentials)
   prune-pr  delete all packages of a pull request (needs credentials)
   fetch     download and extract the package matching a core checkout
+  pending   tell whether core's CI is still building packages of a checkout
 
 fetch exits with 0 when the package is in place, with 3 when core has to be
 built from source, and with 1 on errors. It never takes the cache for a core
 checkout with local changes (`git status --porcelain` lists anything,
 untracked files included), so local work on core is always built, nor for
 a core directory that isn't a git checkout of its own.
+
+pending writes pending=true to GITHUB_OUTPUT when a package is missing and one
+of core's build workflows is running for the commit, so a downstream run can
+wait instead of building core. Anything else, errors included, is false: not
+waiting is always safe.
 
 A package doubles as input for other CMake projects: see
 cmake/prebuilt-core.cmake (EO_CORE_PREBUILT_DIR).
@@ -60,6 +66,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import urllib.request
 import zlib
 from pathlib import Path
 
@@ -67,6 +74,10 @@ import remote_cache
 
 FORMAT = 1
 EXIT_BUILD_FROM_SOURCE = 3
+CORE_REPOSITORY = "Euro-Office/core"
+# The workflows that publish packages
+BUILD_WORKFLOWS = tuple( f".github/workflows/{ name }.yml"
+                         for name in ( "build", "build-windows", "build-macos", "build-android" ) )
 
 CHANNELS = ( "main", "pr" )
 MARKER = ".core-package.json"
@@ -470,8 +481,58 @@ def fetch( backend, core, platform, product, dest, channels=CHANNELS, mode=None 
 
 
 # ---------------------------------------------------------------------------
+# pending
+# ---------------------------------------------------------------------------
+
+def _ci_running( commit ):
+    request = urllib.request.Request(
+        f"https://api.github.com/repos/{ CORE_REPOSITORY }/actions/runs?head_sha={ commit }&per_page=100",
+        headers={ "Accept": "application/vnd.github+json" } )
+    token = remote_cache.env( "GH_TOKEN", "GITHUB_TOKEN" )
+    if token:
+        request.add_header( "Authorization", f"Bearer { token }" )
+    with urllib.request.urlopen( request, timeout=30 ) as response:
+        runs = json.load( response )[ "workflow_runs" ]
+    return any( run[ "path" ].split( "@" )[ 0 ] in BUILD_WORKFLOWS and run[ "status" ] != "completed"
+                for run in runs )
+
+
+def pending( backend, core, packages, channels=CHANNELS ):
+    """Whether a package of the core checkout is missing while core's CI can
+    still publish it. packages are "<platform>/<product>" names."""
+    if fetch_mode() == "off" or not is_checkout( core ):
+        return False
+    tree = source_tree( core )
+    missing = []
+    for package in packages:
+        platform, product = package.split( "/" )
+        if not any( backend.exists( package_path( channel, platform, product, tree, "json" ) )
+                    for channel in channels ):
+            missing.append( package )
+    if not missing:
+        print( f"All packages of tree { tree } are published" )
+        return False
+    running = _ci_running( _git( core, "rev-parse", "HEAD" ).strip() )
+    print( f"Missing for tree { tree }: { ' '.join( missing ) }; core's CI is { '' if running else 'not ' }running" )
+    return running
+
+
+# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
+
+def _pending_command( args ):
+    try:
+        result = pending( make_backend(), args.core, args.packages,
+                          [ c for c in args.channels.split( "," ) if c ] )
+    except ( Error, remote_cache.RemoteError, OSError, ValueError, KeyError ) as e:
+        print( f"core_package: not waiting: { e }", file=sys.stderr )
+        result = False
+    if os.environ.get( "GITHUB_OUTPUT" ):
+        with open( os.environ[ "GITHUB_OUTPUT" ], "a" ) as f:
+            f.write( f"pending={ 'true' if result else 'false' }\n" )
+    return 0
+
 
 def main( argv=None ):
     parser = argparse.ArgumentParser( description=__doc__.split( "\n\n" )[ 0 ] )
@@ -503,7 +564,15 @@ def main( argv=None ):
                     help="channels to try, in order (default: EO_CORE_CHANNELS, else main,pr; "
                          "releases: main)" )
 
+    p = sub.add_parser( "pending", help="tell whether core's CI is still building packages" )
+    p.add_argument( "--core", default=".", help="core checkout (default: .)" )
+    p.add_argument( "--channels", default=remote_cache.env( "EO_CORE_CHANNELS", default="main,pr" ),
+                    help="channels to look in (default: EO_CORE_CHANNELS, else main,pr)" )
+    p.add_argument( "packages", nargs="+", help="<platform>/<product>" )
+
     args = parser.parse_args( argv )
+    if args.command == "pending":
+        return _pending_command( args )
     try:
         if args.command == "pack":
             pack( args.src, args.out, args.platform, args.product, args.core, args.toolchain )
