@@ -26,6 +26,7 @@ set(SOURCES
     ${DESKTOP_ROOT}/raster/BgraFrame.cpp
     ${DESKTOP_ROOT}/raster/Pnm/PnmFile.cpp
     ${DESKTOP_ROOT}/raster/Ras/RasFile.cpp
+    ${DESKTOP_ROOT}/raster/WebP/WebPFile.cpp
     ${DESKTOP_ROOT}/raster/ImageFileFormatChecker.cpp
     ${DESKTOP_ROOT}/raster/PICT/PICFile.cpp
 
@@ -680,6 +681,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     jpeg
     png
     tiff
+    webp
+    webpdemux
     leptonica
 )
 

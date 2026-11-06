@@ -33,6 +33,7 @@ set(SRC
     ${CORE_ROOT}/DesktopEditor/raster/BgraFrame.cpp
     ${CORE_ROOT}/DesktopEditor/raster/Pnm/PnmFile.cpp
     ${CORE_ROOT}/DesktopEditor/raster/Ras/RasFile.cpp
+    ${CORE_ROOT}/DesktopEditor/raster/WebP/WebPFile.cpp
     ${CORE_ROOT}/DesktopEditor/raster/ImageFileFormatChecker.cpp
 
     ${CORE_ROOT}/DesktopEditor/graphics/pro/js/qt/raster/pro_Fonts_empty.cpp
@@ -213,6 +214,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     jpeg
     png
     tiff
+    webp
+    webpdemux
 )
 
 # -------------------------------------------------

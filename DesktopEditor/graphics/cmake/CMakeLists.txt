@@ -125,6 +125,7 @@ add_library(graphics SHARED
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/BgraFrame.cpp
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/Pnm/PnmFile.cpp
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/Ras/RasFile.cpp
+	${DESKTOP_EDITOR_ROOT_DIR}/raster/WebP/WebPFile.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/raster/ImageFileFormatChecker.cpp
 
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/tif_xfile.cpp
@@ -834,7 +835,7 @@ target_link_libraries(graphics PUBLIC
 )
 
 target_link_libraries(graphics PUBLIC z)
-target_link_libraries(graphics PRIVATE jpeg png tiff leptonica)
+target_link_libraries(graphics PRIVATE jpeg png tiff webp webpdemux leptonica)
 
 if(WIN32)
     target_link_libraries(graphics PUBLIC

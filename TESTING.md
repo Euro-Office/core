@@ -112,9 +112,12 @@ Done:
       interlaced 2 bit gray, `CBgraFrame::Encode` and `SaveFile` of a palette image read
       back with libpng. And its TIFF codec on libtiff: uncompressed, LZW, Deflate, PackBits
       and JPEG in strips and tiles, CCITT G4, palette, 16 bit, multipage, and an IFD loop
-      that libtiff 3.9.4 never returned from. Deps: kernel, graphics, UnicodeConverter,
-      jpeg, png and tiff (to build and read the test images). `GTEST_MAIN`. No fixtures —
-      images are built in memory.
+      that libtiff 3.9.4 never returned from. And the WebP decoder (`raster/WebP`) on
+      libwebp: lossy and lossless in both channel orders, alpha (lossless and next to
+      lossy color), the first frame of an animation, `OpenFile`, and truncated input.
+      Deps: kernel, graphics, UnicodeConverter, jpeg, png, tiff, webp and webpmux (to
+      build and read the test images). `GTEST_MAIN`. No fixtures — images are built in
+      memory.
 - [x] `DesktopEditor/fontengine/test` — new suite (`fontengine_test`), not a `.pro`
       migration. Covers the FreeType based font engine in libgraphics: `CApplicationFonts`
       (font list, localized family names read from FreeType's internal sfnt name table) and

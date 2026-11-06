@@ -170,6 +170,7 @@ set(SOURCES
     ${DESKTOP_ROOT}/raster/BgraFrame.cpp
     ${DESKTOP_ROOT}/raster/Pnm/PnmFile.cpp
     ${DESKTOP_ROOT}/raster/Ras/RasFile.cpp
+    ${DESKTOP_ROOT}/raster/WebP/WebPFile.cpp
     ${DESKTOP_ROOT}/raster/ImageFileFormatChecker.cpp
     ${DESKTOP_ROOT}/graphics/Matrix.cpp
 
@@ -293,6 +294,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     jpeg    # libjpeg-turbo
     png     # libpng
     tiff    # libtiff
+    webp    # libwebp
+    webpdemux
 )
 
 # -------------------------------------------------

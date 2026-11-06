@@ -5,8 +5,9 @@
 
 // Tests for the image formats behind CBgraFrame: the PNM (raster/Pnm) and Sun
 // Raster (raster/Ras) decoders, which replaced CxImage's JasPer based decoding,
-// and CxImage's JPEG, PNG and TIFF codecs on top of libjpeg-turbo, libpng and
-// libtiff. The images are built in memory, so every expected pixel is known.
+// CxImage's JPEG, PNG and TIFF codecs on top of libjpeg-turbo, libpng and
+// libtiff, and the WebP decoder (raster/WebP) on top of libwebp. The images are
+// built in memory, so every expected pixel is known.
 
 #include "gtest/gtest.h"
 
@@ -25,6 +26,8 @@
 #include <jpeglib.h>
 #include <png.h>
 #include <tiffio.h>
+#include <webp/encode.h>
+#include <webp/mux.h>
 
 namespace
 {
@@ -1175,4 +1178,182 @@ TEST(CTiffTest, RejectsInvalidImages)
 
 	std::vector<BYTE> arBadIfd = {'I', 'I', 42, 0, 0xF0, 0xFF, 0, 0, 0, 0}; // IFD past the end
 	EXPECT_FALSE(Decode(arBadIfd, oFrame, false));
+}
+
+// WebP
+
+namespace
+{
+	// RGBA quadrants, with the alpha of each quadrant
+	std::vector<BYTE> QuadrantRgba(const int arAlpha[4])
+	{
+		std::vector<BYTE> arRgba;
+		for (int nY = 0; nY < c_nQuadImageSize; ++nY)
+		{
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				const CColor c = QuadrantColor(nX, nY);
+				arRgba.insert(arRgba.end(), {(BYTE)c.r, (BYTE)c.g, (BYTE)c.b, (BYTE)arAlpha[(nY >= 16 ? 2 : 0) + (nX >= 16 ? 1 : 0)]});
+			}
+		}
+		return arRgba;
+	}
+
+	const int c_arOpaque[4] = {255, 255, 255, 255};
+
+	std::vector<BYTE> MakeWebP(const std::vector<BYTE>& arRgba, int nWidth, int nHeight, bool bLossless)
+	{
+		uint8_t* pOut = NULL;
+		const size_t nSize = bLossless ? WebPEncodeLosslessRGBA(arRgba.data(), nWidth, nHeight, 4 * nWidth, &pOut)
+									   : WebPEncodeRGBA(arRgba.data(), nWidth, nHeight, 4 * nWidth, 100, &pOut);
+		std::vector<BYTE> arData(pOut, pOut + nSize);
+		WebPFree(pOut);
+		return arData;
+	}
+
+	// Lossless frames of c_nQuadImageSize, 100 ms each
+	std::vector<BYTE> MakeAnimatedWebP(const std::vector<std::vector<BYTE>>& arFrames)
+	{
+		WebPAnimEncoderOptions oOptions;
+		WebPAnimEncoderOptionsInit(&oOptions);
+		WebPAnimEncoder* pEncoder = WebPAnimEncoderNew(c_nQuadImageSize, c_nQuadImageSize, &oOptions);
+
+		WebPConfig oConfig;
+		WebPConfigInit(&oConfig);
+		oConfig.lossless = 1;
+
+		int nTimestamp = 0;
+		for (const std::vector<BYTE>& arRgba : arFrames)
+		{
+			WebPPicture oPicture;
+			WebPPictureInit(&oPicture);
+			oPicture.use_argb = 1;
+			oPicture.width = oPicture.height = c_nQuadImageSize;
+			WebPPictureImportRGBA(&oPicture, arRgba.data(), 4 * c_nQuadImageSize);
+			EXPECT_TRUE(WebPAnimEncoderAdd(pEncoder, &oPicture, nTimestamp, &oConfig));
+			WebPPictureFree(&oPicture);
+			nTimestamp += 100;
+		}
+		WebPAnimEncoderAdd(pEncoder, NULL, nTimestamp, NULL);
+
+		WebPData oData;
+		WebPDataInit(&oData);
+		EXPECT_TRUE(WebPAnimEncoderAssemble(pEncoder, &oData));
+		std::vector<BYTE> arData(oData.bytes, oData.bytes + oData.size);
+		WebPDataClear(&oData);
+		WebPAnimEncoderDelete(pEncoder);
+		return arData;
+	}
+
+	std::vector<BYTE> MakeQuadrantAnimation()
+	{
+		return MakeAnimatedWebP({QuadrantRgba(c_arOpaque), std::vector<BYTE>(4 * c_nQuadImageSize * c_nQuadImageSize, 255)});
+	}
+}
+
+TEST(CWebPTest, DetectsWebP)
+{
+	EXPECT_EQ(_CXIMAGE_FORMAT_WEBP, FileType(MakeWebP(QuadrantRgba(c_arOpaque), c_nQuadImageSize, c_nQuadImageSize, false)));
+	EXPECT_EQ(_CXIMAGE_FORMAT_WEBP, FileType(MakeWebP(QuadrantRgba(c_arOpaque), c_nQuadImageSize, c_nQuadImageSize, true)));
+	EXPECT_EQ(_CXIMAGE_FORMAT_WEBP, FileType(MakeQuadrantAnimation()));
+}
+
+TEST(CWebPTest, DecodesLossyInBothChannelOrders)
+{
+	const std::vector<BYTE> arData = MakeWebP(QuadrantRgba(c_arOpaque), c_nQuadImageSize, c_nQuadImageSize, false);
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+		ExpectQuadrants(oFrame, bIsRGBA);
+	}
+}
+
+TEST(CWebPTest, DecodesLosslessWithAlpha)
+{
+	const std::vector<BYTE> arRgba = {255, 0, 0, 255,   0, 255, 0, 128,
+									  0, 0, 255, 0,     10, 20, 30, 255};
+	const std::vector<BYTE> arData = MakeWebP(arRgba, 2, 2, true);
+
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+		ASSERT_EQ(2, oFrame.get_Width());
+		ASSERT_EQ(2, oFrame.get_Height());
+		EXPECT_EQ((CColor{255, 0, 0}), Pixel(oFrame, 0, 0, bIsRGBA));
+		EXPECT_EQ((CColor{10, 20, 30}), Pixel(oFrame, 1, 1, bIsRGBA));
+		EXPECT_EQ(128, Alpha(oFrame, 1, 0));
+		EXPECT_EQ(0, Alpha(oFrame, 0, 1));
+		// Not premultiplied
+		const BYTE* p = PixelData(oFrame, 1, 0);
+		EXPECT_EQ((CColor{0, 255, 0}), bIsRGBA ? (CColor{p[0], p[1], p[2]}) : (CColor{p[2], p[1], p[0]}));
+	}
+}
+
+TEST(CWebPTest, DecodesLossyWithAlpha)
+{
+	// The alpha plane is compressed losslessly next to the lossy color
+	const int arAlpha[4] = {255, 128, 255, 0};
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeWebP(QuadrantRgba(arAlpha), c_nQuadImageSize, c_nQuadImageSize, false), oFrame));
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+	EXPECT_EQ(255, Alpha(oFrame, 4, 4));
+	EXPECT_EQ(128, Alpha(oFrame, 27, 4));
+	EXPECT_EQ(255, Alpha(oFrame, 4, 27));
+	EXPECT_EQ(0, Alpha(oFrame, 27, 27));
+	ExpectNear(QuadrantColor(4, 4), Pixel(oFrame, 4, 4), 4);
+	ExpectNear(QuadrantColor(4, 27), Pixel(oFrame, 4, 27), 4);
+}
+
+TEST(CWebPTest, DecodesFirstFrameOfAnimation)
+{
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeQuadrantAnimation(), oFrame));
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+	for (int nY : {0, 4, 27, 31})
+		for (int nX : {0, 4, 27, 31})
+			EXPECT_EQ(QuadrantColor(nX, nY), Pixel(oFrame, nX, nY)) << nX << ", " << nY;
+}
+
+TEST(CWebPTest, OpensFile)
+{
+	const std::vector<BYTE> arData = MakeWebP(QuadrantRgba(c_arOpaque), c_nQuadImageSize, c_nQuadImageSize, true);
+
+	const std::wstring sPath = NSFile::CFileBinary::CreateTempFileWithUniqueName(NSFile::CFileBinary::GetTempPath(), L"webp");
+	NSFile::CFileBinary oFile;
+	ASSERT_TRUE(oFile.CreateFileW(sPath));
+	oFile.WriteFile(arData.data(), (DWORD)arData.size());
+	oFile.CloseFile();
+
+	CBgraFrame oFrame;
+	EXPECT_TRUE(oFrame.OpenFile(sPath));
+	NSFile::CFileBinary::Remove(sPath);
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+	EXPECT_EQ(QuadrantColor(27, 4), Pixel(oFrame, 27, 4));
+}
+
+TEST(CWebPTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+	for (bool bLossless : {false, true})
+	{
+		std::vector<BYTE> arData = MakeWebP(QuadrantRgba(c_arOpaque), c_nQuadImageSize, c_nQuadImageSize, bLossless);
+		arData.resize(arData.size() / 2);
+		EXPECT_FALSE(Decode(arData, oFrame)) << bLossless;
+	}
+
+	std::vector<BYTE> arAnimation = MakeQuadrantAnimation();
+	arAnimation.resize(arAnimation.size() / 2);
+	EXPECT_FALSE(Decode(arAnimation, oFrame));
+
+	// A VP8 chunk without any data
+	std::vector<BYTE> arHeaderOnly = Bytes("RIFF");
+	PutUInt32LE(arHeaderOnly, 12);
+	const std::vector<BYTE> arChunk = Bytes("WEBPVP8 ");
+	arHeaderOnly.insert(arHeaderOnly.end(), arChunk.begin(), arChunk.end());
+	PutUInt32LE(arHeaderOnly, 0);
+	ASSERT_EQ(_CXIMAGE_FORMAT_WEBP, FileType(arHeaderOnly));
+	EXPECT_FALSE(Decode(arHeaderOnly, oFrame));
 }
