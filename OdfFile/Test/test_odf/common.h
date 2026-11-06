@@ -46,6 +46,9 @@ HRESULT convert_single(std::wstring srcFileName);
 // SetUp() before any test executes.
 HRESULT GetTestEnvConvertResult();
 
+// The bytes of one file of a converted package, empty if it has none
+std::string read_package_file(const std::wstring& package, const std::wstring& path);
+
 #define CH_DIR(x) FILE_SEPARATOR_STR + _T(x)
 
 //boost::shared_ptr<cpdoccore::odf_reader::odf_document> ReadOdfDocument(const std::wstring& from, const std::wstring& temp, const std::wstring& tempUnpackedOdf);
