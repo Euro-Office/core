@@ -23,6 +23,6 @@ endif()
 add_core_gtest(
     NAME    raster_formats_test
     SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp
-    LIBS    kernel graphics UnicodeConverter
+    LIBS    kernel graphics UnicodeConverter jpeg
     GTEST_MAIN
 )

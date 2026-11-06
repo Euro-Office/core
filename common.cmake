@@ -80,7 +80,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm"
+            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -112,6 +112,15 @@ if( EMSCRIPTEN )
         INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
     )
 
+    # Setup libjpeg-turbo-wasm
+    set(LIBJPEG_TURBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libjpeg-turbo-wasm")
+    get_filename_component(LIBJPEG_TURBO_INSTALL_DIR_ABS "${LIBJPEG_TURBO_INSTALL_DIR}" ABSOLUTE)
+    add_library(jpeg STATIC IMPORTED GLOBAL)
+    set_target_properties(jpeg PROPERTIES
+        IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/libjpeg.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
+    )
+
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
@@ -127,7 +136,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng"
+                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -145,7 +154,7 @@ else()
             endif()
 
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -336,6 +345,23 @@ else()
         set_target_properties(LibXml2 PROPERTIES
             IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2.a"
             INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
+        )
+    endif()
+
+    # Setup libjpeg-turbo
+    set(LIBJPEG_TURBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libjpeg-turbo")
+    get_filename_component(LIBJPEG_TURBO_INSTALL_DIR_ABS "${LIBJPEG_TURBO_INSTALL_DIR}" ABSOLUTE)
+    add_library(jpeg STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        # libjpeg-turbo names its static MSVC library jpeg-static.lib
+        set_target_properties(jpeg PROPERTIES
+            IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/jpeg-static.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
+        )
+    else()
+        set_target_properties(jpeg PROPERTIES
+            IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/libjpeg.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
         )
     endif()
 

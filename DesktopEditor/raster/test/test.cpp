@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-// Tests for the PNM (raster/Pnm) and Sun Raster (raster/Ras) decoders behind
-// CBgraFrame, which replaced CxImage's JasPer based decoding. The images are
-// built in memory, so every expected pixel is known.
+// Tests for the image formats behind CBgraFrame: the PNM (raster/Pnm) and Sun
+// Raster (raster/Ras) decoders, which replaced CxImage's JasPer based decoding,
+// and CxImage's JPEG codec on top of libjpeg-turbo. The images are built in
+// memory, so every expected pixel is known.
 
 #include "gtest/gtest.h"
 
@@ -13,9 +14,13 @@
 #include "../ImageFileFormatChecker.h"
 #include "../../common/File.h"
 
+#include <cstdio>
 #include <cstdlib>
+#include <functional>
 #include <string>
 #include <vector>
+
+#include <jpeglib.h>
 
 namespace
 {
@@ -82,6 +87,154 @@ namespace
 		arData.insert(arData.end(), arMap.begin(), arMap.end());
 		arData.insert(arData.end(), arRaster.begin(), arRaster.end());
 		return arData;
+	}
+
+	void ExpectNear(const CColor& oExpected, const CColor& oActual, int nTolerance)
+	{
+		EXPECT_NEAR(oExpected.r, oActual.r, nTolerance) << "red";
+		EXPECT_NEAR(oExpected.g, oActual.g, nTolerance) << "green";
+		EXPECT_NEAR(oExpected.b, oActual.b, nTolerance) << "blue";
+	}
+
+	// 32x32 image of four 16x16 quadrants, so each quadrant is a whole MCU even
+	// with 4:2:0 chroma subsampling and keeps its own color
+	const CColor c_arQuadrants[4] = {{220, 30, 40}, {30, 200, 60}, {20, 40, 210}, {128, 128, 128}};
+	const int c_nQuadImageSize = 32;
+
+	CColor QuadrantColor(int nX, int nY)
+	{
+		return c_arQuadrants[(nY >= 16 ? 2 : 0) + (nX >= 16 ? 1 : 0)];
+	}
+
+	struct CJpegOptions
+	{
+		J_COLOR_SPACE eColorSpace = JCS_RGB;
+		bool bProgressive = false;
+		bool bArithmetic = false;
+	};
+
+	// Encodes a c_nQuadImageSize square at quality 100 without chroma
+	// subsampling. fSample returns the components of one pixel.
+	std::vector<BYTE> MakeJpeg(const CJpegOptions& oOptions, const std::function<std::vector<BYTE>(int, int)>& fSample)
+	{
+		jpeg_compress_struct cinfo;
+		jpeg_error_mgr jerr;
+		cinfo.err = jpeg_std_error(&jerr);
+		jpeg_create_compress(&cinfo);
+
+		unsigned char* pOut = NULL;
+		unsigned long nOutSize = 0;
+		jpeg_mem_dest(&cinfo, &pOut, &nOutSize);
+
+		cinfo.image_width = c_nQuadImageSize;
+		cinfo.image_height = c_nQuadImageSize;
+		cinfo.in_color_space = oOptions.eColorSpace;
+		cinfo.input_components = JCS_GRAYSCALE == oOptions.eColorSpace ? 1 : (JCS_CMYK == oOptions.eColorSpace ? 4 : 3);
+		jpeg_set_defaults(&cinfo);
+		jpeg_set_quality(&cinfo, 100, TRUE);
+		for (int i = 0; i < cinfo.num_components; ++i)
+			cinfo.comp_info[i].h_samp_factor = cinfo.comp_info[i].v_samp_factor = 1;
+		if (oOptions.bProgressive)
+			jpeg_simple_progression(&cinfo);
+		cinfo.arith_code = oOptions.bArithmetic ? TRUE : FALSE;
+
+		jpeg_start_compress(&cinfo, TRUE);
+		std::vector<BYTE> arRow;
+		while (cinfo.next_scanline < cinfo.image_height)
+		{
+			arRow.clear();
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				std::vector<BYTE> arPixel = fSample(nX, (int)cinfo.next_scanline);
+				arRow.insert(arRow.end(), arPixel.begin(), arPixel.end());
+			}
+			JSAMPROW pRow = arRow.data();
+			jpeg_write_scanlines(&cinfo, &pRow, 1);
+		}
+		jpeg_finish_compress(&cinfo);
+		jpeg_destroy_compress(&cinfo);
+
+		std::vector<BYTE> arData(pOut, pOut + nOutSize);
+		free(pOut);
+		return arData;
+	}
+
+	std::vector<BYTE> MakeQuadrantJpeg(const CJpegOptions& oOptions = CJpegOptions())
+	{
+		return MakeJpeg(oOptions, [](int nX, int nY) {
+			CColor c = QuadrantColor(nX, nY);
+			return std::vector<BYTE>{(BYTE)c.r, (BYTE)c.g, (BYTE)c.b};
+		});
+	}
+
+	// Left half 40, right half 230
+	std::vector<BYTE> MakeGrayJpeg()
+	{
+		CJpegOptions oOptions;
+		oOptions.eColorSpace = JCS_GRAYSCALE;
+		return MakeJpeg(oOptions, [](int nX, int) { return std::vector<BYTE>{(BYTE)(nX < 16 ? 40 : 230)}; });
+	}
+
+	void PutUInt16LE(std::vector<BYTE>& arData, unsigned int nValue)
+	{
+		arData.push_back((BYTE)nValue);
+		arData.push_back((BYTE)(nValue >> 8));
+	}
+
+	void PutUInt32LE(std::vector<BYTE>& arData, unsigned int nValue)
+	{
+		PutUInt16LE(arData, nValue & 0xFFFF);
+		PutUInt16LE(arData, nValue >> 16);
+	}
+
+	// Little-endian TIFF with one strip: a grayscale c_nQuadImageSize square
+	// JPEG (compression 7)
+	std::vector<BYTE> MakeJpegTiff(const std::vector<BYTE>& arJpeg)
+	{
+		const unsigned int arTags[][3] = {
+			// tag, type (3 short, 4 long), value
+			{256, 4, (unsigned int)c_nQuadImageSize}, // ImageWidth
+			{257, 4, (unsigned int)c_nQuadImageSize}, // ImageLength
+			{258, 3, 8},                              // BitsPerSample
+			{259, 3, 7},                              // Compression: JPEG
+			{262, 3, 1},                              // PhotometricInterpretation: BlackIsZero
+			{273, 4, 0},                              // StripOffsets, set below
+			{277, 3, 1},                              // SamplesPerPixel
+			{278, 4, (unsigned int)c_nQuadImageSize}, // RowsPerStrip
+			{279, 4, (unsigned int)arJpeg.size()}     // StripByteCounts
+		};
+		const unsigned int nTags = sizeof(arTags) / sizeof(arTags[0]);
+		const unsigned int nDataOffset = 8 + 2 + 12 * nTags + 4;
+
+		std::vector<BYTE> arData = {'I', 'I', 42, 0};
+		PutUInt32LE(arData, 8);
+		PutUInt16LE(arData, nTags);
+		for (const auto& arTag : arTags)
+		{
+			PutUInt16LE(arData, arTag[0]);
+			PutUInt16LE(arData, arTag[1]);
+			PutUInt32LE(arData, 1);
+			const unsigned int nValue = 273 == arTag[0] ? nDataOffset : arTag[2];
+			if (3 == arTag[1])
+			{
+				PutUInt16LE(arData, nValue);
+				PutUInt16LE(arData, 0);
+			}
+			else
+				PutUInt32LE(arData, nValue);
+		}
+		PutUInt32LE(arData, 0); // no next IFD
+		arData.insert(arData.end(), arJpeg.begin(), arJpeg.end());
+		return arData;
+	}
+
+	void ExpectQuadrants(CBgraFrame& oFrame, bool bIsRGBA = false)
+	{
+		ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+		ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+		for (int nY : {4, 27})
+			for (int nX : {4, 27})
+				ExpectNear(QuadrantColor(nX, nY), Pixel(oFrame, nX, nY, bIsRGBA), 4);
 	}
 }
 
@@ -297,4 +450,160 @@ TEST(CRasTest, RejectsInvalidImages)
 	std::vector<BYTE> arBadMap = MakeRas(1, 1, 8, 1, {}, {0});
 	arBadMap[31] = 200; // color map longer than the file
 	EXPECT_FALSE(Decode(arBadMap, oFrame));
+}
+
+// JPEG
+
+TEST(CJpegTest, DetectsJpeg)
+{
+	EXPECT_EQ(_CXIMAGE_FORMAT_JPG, FileType(MakeQuadrantJpeg()));
+}
+
+TEST(CJpegTest, DecodesBaselineInBothChannelOrders)
+{
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(MakeQuadrantJpeg(), oFrame, bIsRGBA));
+		EXPECT_FALSE(oFrame.IsGrayScale());
+		ExpectQuadrants(oFrame, bIsRGBA);
+	}
+}
+
+TEST(CJpegTest, DecodesProgressiveAndArithmeticCoding)
+{
+	CJpegOptions oProgressive;
+	oProgressive.bProgressive = true;
+	CBgraFrame oProgressiveFrame;
+	ASSERT_TRUE(Decode(MakeQuadrantJpeg(oProgressive), oProgressiveFrame));
+	ExpectQuadrants(oProgressiveFrame);
+
+	CJpegOptions oArithmetic;
+	oArithmetic.bArithmetic = true;
+	CBgraFrame oArithmeticFrame;
+	ASSERT_TRUE(Decode(MakeQuadrantJpeg(oArithmetic), oArithmeticFrame));
+	ExpectQuadrants(oArithmeticFrame);
+}
+
+TEST(CJpegTest, DecodesGrayscale)
+{
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeGrayJpeg(), oFrame));
+	EXPECT_TRUE(oFrame.IsGrayScale());
+	ExpectNear({40, 40, 40}, Pixel(oFrame, 4, 4), 2);
+	ExpectNear({230, 230, 230}, Pixel(oFrame, 27, 27), 2);
+}
+
+TEST(CJpegTest, DecodesJpegCompressedTiff)
+{
+	// libtiff decodes the strip with libjpeg, so both must agree on its API
+	std::vector<BYTE> arJpeg = MakeGrayJpeg();
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeJpegTiff(arJpeg), oFrame));
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+	ExpectNear({40, 40, 40}, Pixel(oFrame, 4, 4), 2);
+	ExpectNear({230, 230, 230}, Pixel(oFrame, 27, 27), 2);
+}
+
+TEST(CJpegTest, DecodesAdobeCmyk)
+{
+	// libjpeg writes CMYK with an Adobe marker. Like Photoshop's files, the
+	// samples are inverted, so CxImage takes R = C * K / 255 and so on.
+	CJpegOptions oOptions;
+	oOptions.eColorSpace = JCS_CMYK;
+	std::vector<BYTE> arData = MakeJpeg(oOptions, [](int nX, int) {
+		return nX < 16 ? std::vector<BYTE>{200, 100, 50, 255} : std::vector<BYTE>{255, 255, 255, 128};
+	});
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(arData, oFrame));
+	ExpectNear({200, 100, 50}, Pixel(oFrame, 4, 4), 4);
+	ExpectNear({128, 128, 128}, Pixel(oFrame, 27, 27), 4);
+}
+
+TEST(CJpegTest, EncodesJpeg)
+{
+	BYTE* pPixels = new BYTE[4 * c_nQuadImageSize * c_nQuadImageSize];
+	for (int nY = 0; nY < c_nQuadImageSize; ++nY)
+	{
+		for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+		{
+			BYTE* p = pPixels + 4 * (nY * c_nQuadImageSize + nX);
+			CColor c = QuadrantColor(nX, nY);
+			p[0] = (BYTE)c.b;
+			p[1] = (BYTE)c.g;
+			p[2] = (BYTE)c.r;
+			p[3] = 255;
+		}
+	}
+
+	CBgraFrame oSource;
+	oSource.put_Width(c_nQuadImageSize);
+	oSource.put_Height(c_nQuadImageSize);
+	oSource.put_Stride(4 * c_nQuadImageSize);
+	oSource.put_Data(pPixels);
+	oSource.SetJpegQuality(100);
+
+	BYTE* pEncoded = NULL;
+	int nEncodedSize = 0;
+	ASSERT_TRUE(oSource.Encode(pEncoded, nEncodedSize, _CXIMAGE_FORMAT_JPG));
+	std::vector<BYTE> arEncoded(pEncoded, pEncoded + nEncodedSize);
+	CBgraFrame::FreeEncodedMemory(pEncoded);
+
+	// Read back with libjpeg itself, not through CxImage
+	jpeg_decompress_struct cinfo;
+	jpeg_error_mgr jerr;
+	cinfo.err = jpeg_std_error(&jerr);
+	jpeg_create_decompress(&cinfo);
+	jpeg_mem_src(&cinfo, arEncoded.data(), (unsigned long)arEncoded.size());
+	ASSERT_EQ(JPEG_HEADER_OK, jpeg_read_header(&cinfo, TRUE));
+	cinfo.out_color_space = JCS_RGB;
+	jpeg_start_decompress(&cinfo);
+	ASSERT_EQ((JDIMENSION)c_nQuadImageSize, cinfo.output_width);
+	ASSERT_EQ((JDIMENSION)c_nQuadImageSize, cinfo.output_height);
+	ASSERT_EQ(3, cinfo.output_components);
+
+	std::vector<BYTE> arRow(3 * c_nQuadImageSize);
+	while (cinfo.output_scanline < cinfo.output_height)
+	{
+		const int nY = (int)cinfo.output_scanline;
+		JSAMPROW pRow = arRow.data();
+		jpeg_read_scanlines(&cinfo, &pRow, 1);
+		if (4 != nY && 27 != nY)
+			continue;
+		for (int nX : {4, 27})
+			ExpectNear(QuadrantColor(nX, nY), CColor{arRow[3 * nX], arRow[3 * nX + 1], arRow[3 * nX + 2]}, 6);
+	}
+	jpeg_finish_decompress(&cinfo);
+	jpeg_destroy_decompress(&cinfo);
+}
+
+TEST(CJpegTest, DecodesTruncatedImagePartially)
+{
+	// Like other viewers, show what is there: libjpeg pads the missing data.
+	// Cut in the middle of the scan, after all the tables.
+	std::vector<BYTE> arData = MakeQuadrantJpeg();
+	size_t nScan = 0;
+	for (size_t i = 0; i + 1 < arData.size(); ++i)
+		if (0xFF == arData[i] && 0xDA == arData[i + 1])
+			nScan = i;
+	ASSERT_NE(0u, nScan);
+	arData.resize(nScan + (arData.size() - nScan) / 2);
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(arData, oFrame));
+	EXPECT_EQ(c_nQuadImageSize, oFrame.get_Width());
+	ExpectNear(QuadrantColor(4, 4), Pixel(oFrame, 4, 4), 4);
+}
+
+TEST(CJpegTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+	std::vector<BYTE> arGarbage = {0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x02, 0x12, 0x34, 0x56, 0x78};
+	EXPECT_FALSE(Decode(arGarbage, oFrame, false));
+
+	std::vector<BYTE> arData = MakeQuadrantJpeg();
+	arData.resize(64); // header only
+	EXPECT_FALSE(Decode(arData, oFrame));
 }

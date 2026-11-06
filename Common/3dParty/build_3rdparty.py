@@ -24,6 +24,8 @@ subfolders = [
     'hyphen',
     'icu-wasm',
     'icu',
+    'libjpeg-turbo',
+    'libjpeg-turbo-wasm',
     'libxml2',
     'libxml2-wasm',
     'md',

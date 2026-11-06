@@ -204,49 +204,6 @@ set(SOURCES
     ${DESKTOP_ROOT}/cximage/CxImage/ximawbmp.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximapsd.cpp
 
-    ${DESKTOP_ROOT}/cximage/jpeg/jerror.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmarker.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdapimin.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmaster.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdapistd.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcomapi.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jutils.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdinput.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmainct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jmemmgr.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jquant1.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jquant2.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmerge.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdcolor.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdsample.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdpostct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jddctmgr.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdarith.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdhuff.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdcoefct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jmemnobs.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jidctint.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jidctfst.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jidctflt.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jaricom.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcapimin.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcparam.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcapistd.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcinit.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcmaster.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jccolor.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcmarker.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcsample.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcprepct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcdctmgr.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcarith.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jchuff.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jccoefct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcmainct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jfdctint.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jfdctfst.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jfdctflt.c
-
     ${DESKTOP_ROOT}/cximage/png/pngread.c
     ${DESKTOP_ROOT}/cximage/png/pngmem.c
     ${DESKTOP_ROOT}/cximage/png/pngerror.c
@@ -362,7 +319,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CORE_ROOT}/OfficeUtils/src
     ${ZLIBNG_WASM_INCDIR}
     ${ZLIBNG_WASM_INCDIR}/minizip
-    ${DESKTOP_ROOT}/cximage/jpeg
     ${DESKTOP_ROOT}/cximage/png
     ${DESKTOP_ROOT}/agg-2.4/include
 )
@@ -382,6 +338,7 @@ target_link_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     minizip # minizip-ng
     z       # libz-ng
+    jpeg    # libjpeg-turbo
 )
 
 # -------------------------------------------------

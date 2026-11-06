@@ -61,50 +61,6 @@ set(SRC
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximawbmp.cpp
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximapsd.cpp
 
-    # ---- jpeg ----
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jerror.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdmarker.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdapimin.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdmaster.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdapistd.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcomapi.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jutils.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdinput.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdmainct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jmemmgr.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jquant1.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jquant2.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdmerge.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdcolor.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdsample.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdpostct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jddctmgr.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdarith.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdhuff.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdcoefct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jmemnobs.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jidctint.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jidctfst.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jidctflt.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jaricom.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcapimin.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcparam.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcapistd.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcinit.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcmaster.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jccolor.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcmarker.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcsample.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcprepct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcdctmgr.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcarith.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jchuff.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jccoefct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcmainct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jfdctint.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jfdctfst.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jfdctflt.c
-
     # ---- png ----
     ${CORE_ROOT}/DesktopEditor/cximage/png/pngread.c
     ${CORE_ROOT}/DesktopEditor/cximage/png/pngmem.c
@@ -336,7 +292,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${ZLIBNG_WASM_INCDIR}
     ${ZLIBNG_WASM_INCDIR}/minizip
     ${CORE_ROOT}/OfficeUtils/src
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg
     ${CORE_ROOT}/DesktopEditor/cximage/png
     ${CORE_ROOT}/DesktopEditor/agg-2.4/include
 )
@@ -367,6 +322,7 @@ target_link_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     minizip
     z
+    jpeg
 )
 
 # -------------------------------------------------

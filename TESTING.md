@@ -105,7 +105,10 @@ Done:
       replaced CxImage's JasPer based decoding, through `CBgraFrame::Decode` /
       `OpenFile` and `CImageFileFormatChecker`: all Netpbm variants (ASCII/binary, 16 bit,
       comments, row padding), RAS at 1/8/24/32 bit, BGR and RGB types, color maps and RLE,
-      plus truncated and oversized input. Deps: kernel, graphics, UnicodeConverter.
+      plus truncated and oversized input. Also covers CxImage's JPEG codec on libjpeg-turbo:
+      baseline, progressive, arithmetic, grayscale and Adobe CMYK decoding in both channel
+      orders, partial decoding of truncated files, and `CBgraFrame::Encode` read back with
+      libjpeg. Deps: kernel, graphics, UnicodeConverter, jpeg (to build the test JPEGs).
       `GTEST_MAIN`. No fixtures — images are built in memory.
 - [x] `DesktopEditor/fontengine/test` — new suite (`fontengine_test`), not a `.pro`
       migration. Covers the FreeType based font engine in libgraphics: `CApplicationFonts`
