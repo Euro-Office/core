@@ -128,6 +128,15 @@ Done:
       `ExampleFiles/motion.odp` is working-dir-relative). The committed `common.cpp` had
       absolute Windows include paths and a `#pragma comment(lib, ...)` block; these were
       replaced with repo-relative includes (CMake links the libraries).
+      Tests that check one XML part of a converted document use the helpers in
+      `common.h`: `convert_odf_to_ooxml_dir()` (ODT/ODS/ODP → unpacked OOXML, via
+      `ConvertODF2OOXml`), `convert_ooxml_to_odf_dir()` (DOCX/XLSX/PPTX → unpacked ODF,
+      via `Oox2Odf::Converter` as x2t calls it), `read_part()` and `is_well_formed()`.
+      Both converters run in-process, not through `X2T_Convert`, so they work headless.
+      The output directories are removed by the global `TearDown()`.
+      `conversion_helpers.cpp` holds the controls: `plain_paragraph.odt` and
+      `plain_paragraph.docx` convert and the expected part is well-formed and holds the
+      text, and `is_well_formed()` rejects an unescaped `&` and broken markup.
 - [x] `DesktopEditor/xmlsec/src/test` (`xmlsec_test`) — deps: kernel, ooxmlsignature. Not a
       GoogleTest suite (unlike every other entry here) — a plain `main()` returning a real
       exit code, since it exercises `COOXMLSigner`/`COOXMLVerifier` directly rather than
