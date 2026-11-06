@@ -326,6 +326,19 @@ HRESULT convert_single(std::wstring srcFileName)
 	return nResult;
 }
 
+std::string read_package_file(const std::wstring& package, const std::wstring& path)
+{
+	BYTE* pData = NULL;
+	ULONG nSize = 0;
+	COfficeUtils oCOfficeUtils(NULL);
+	if (S_OK != oCOfficeUtils.LoadFileFromArchive(package, path, &pData, nSize))
+		return std::string();
+
+	std::string sData(reinterpret_cast<const char*>(pData), nSize);
+	RELEASEARRAYOBJECTS(pData);
+	return sData;
+}
+
 HRESULT convert_directory(std::wstring pathName)
 {
 	HRESULT hr = S_OK;
