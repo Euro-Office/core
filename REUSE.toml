@@ -12,3 +12,18 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = "OdfFile/Test/test_odf/ExampleFiles/empty_custom_shape_formula.odp"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_rules.xlsx"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_edge.xlsx"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_x14.xlsx"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
