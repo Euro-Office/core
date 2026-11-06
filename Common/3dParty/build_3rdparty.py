@@ -17,6 +17,7 @@ subfolders = [
     'boost',
     'brotli',
     'cef',
+    'freetype',
     'harfbuzz',
     'html',
     'hunspell',
