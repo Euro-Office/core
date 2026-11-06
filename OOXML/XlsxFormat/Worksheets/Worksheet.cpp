@@ -520,6 +520,7 @@ namespace OOX
 				else if(file->type() == OOX::SpreadsheetBin::FileTypes::PivotTableBin)
 				{
 					auto tempPivot = static_cast<CPivotTableFile*>(file.GetPointer());
+					tempPivot->EnsureDefinition();
 					if(tempPivot->m_oPivotTableDefinition.IsInit())
 						worksheetPtr->m_arPIVOTVIEW.push_back(tempPivot->m_oPivotTableDefinition->toXLS());
 				}
