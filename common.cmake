@@ -47,6 +47,9 @@ endif()
 # FreeType sources (Common/3dParty/freetype), compiled into each consumer
 set(FREETYPE_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/freetype")
 
+# OpenJPEG sources (Common/3dParty/openjpeg), compiled into each consumer
+set(OPENJPEG_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openjpeg")
+
 if( NOT DEFINED VCPKG_BINARY_REMOTE )
     set(VCPKG_BINARY_REMOTE "https://s3.eu-central-4.ionoscloud.com/eo-build-assets/vcpkg" CACHE STRING "Base URL for vcpkg binary package remote")
 endif()
@@ -77,7 +80,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm,libxml2-wasm"
+            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -124,7 +127,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libxml2,md,openssl,socketio,v8,zlib-ng"
+                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"

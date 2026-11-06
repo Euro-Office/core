@@ -590,33 +590,34 @@ set(SOURCES
     ${CORE_ROOT}/PdfFile/lib/xpdf/XRef.cc
     ${CORE_ROOT}/PdfFile/lib/xpdf/Zoox.cc
 
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/bio.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/cidx_manager.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/cio.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/dwt.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/event.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/function_list.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/image.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/invert.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/j2k.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/jp2.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/mct.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/mqc.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/openjpeg.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/opj_clock.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/opj_malloc.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/phix_manager.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/pi.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/ppix_manager.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/sparse_array.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/t1.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/t2.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/tcd.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/tgt.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/thix_manager.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/thread.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/tpix_manager.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/../../../../opj_bgraframe.cpp
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/bio.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/cidx_manager.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/cio.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/dwt.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/event.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/function_list.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/ht_dec.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/image.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/invert.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/j2k.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/jp2.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/mct.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/mqc.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/openjpeg.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/opj_clock.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/opj_malloc.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/phix_manager.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/pi.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/ppix_manager.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/sparse_array.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/t1.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/t2.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/tcd.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/tgt.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/thix_manager.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/thread.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/tpix_manager.c
+    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/opj_bgraframe.cpp
 
     ${CORE_ROOT}/XpsFile/XpsFile.cpp
     ${CORE_ROOT}/XpsFile/XpsLib/Document.cpp
@@ -872,7 +873,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CORE_ROOT}/PdfFile/lib/splash
     ${CORE_ROOT}/PdfFile/lib
     ${DESKTOP_ROOT}/raster/Jp2/openjpeg
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2
     ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash/include
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash/include
     ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash

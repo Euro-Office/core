@@ -51,6 +51,7 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/test" xmlsec_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/number_formats" odf_number_formats_test )
         add_subdirectory( "${CORE_ROOT_DIR}/RtfFile/Format/test" rtf_lex_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg/test" openjpeg_test )
         add_subdirectory( "${CORE_ROOT_DIR}/MsBinaryFile/PptFile/test" pptfile_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/fontengine/test" fontengine_test )
 
