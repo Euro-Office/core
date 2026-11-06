@@ -1,0 +1,154 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "github>Euro-Office/.github"
+  ],
+  "dependencyDashboard": true,
+  "ignorePaths": [
+    "Common/3dParty/**/tools/**",
+    "DesktopEditor/**",
+    "X2tConverter/build/Android/**"
+  ],
+  "customDatasources": {
+    "cef": {
+      "defaultRegistryUrlTemplate": "https://cef-builds.spotifycdn.com/index.json",
+      "transformTemplates": [
+        "{ \"releases\": [linux64.versions[channel = \"stable\"].{ \"version\": cef_version }] }"
+      ]
+    }
+  },
+  "customManagers": [
+    {
+      "description": "Third-party git pins in Common/3dParty build scripts: a commit (optionally followed by `# <tag>`) or a tag/branch next to the GitHub URL",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^Common/3dParty/[^/]+/nc-build\\.py$/"
+      ],
+      "matchStrings": [
+        "\"https://github\\.com/(?<depName>[\\w.-]+/[\\w.-]+?)\\.git\",\\s*(?:\"commit\":\\s*)?\"(?<currentDigest>[0-9a-f]{40})\"[ )},]*(?:# (?<currentValue>\\S+))?",
+        "\"(?:--branch|-b)\",\\s*\"(?<currentValue>[^\"]+)\",\\s*\"https://github\\.com/(?<depName>[\\w.-]+/[\\w.-]+?)\\.git\"",
+        "\"https://github\\.com/(?<depName>[\\w.-]+/[\\w.-]+?)\\.git\",\\s*\"(?:--branch|-b)\",\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "github-tags",
+      "versioningTemplate": "regex:^(?<compatibility>[a-z-]*?)(?<major>\\d+)[.-](?<minor>\\d+)(?:[.-](?<patch>\\d+))?$"
+    },
+    {
+      "description": "ICU release tag",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^Common/3dParty/icu(-wasm)?/nc-build\\.py$/"
+      ],
+      "matchStrings": [
+        "icu_tag = \"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "unicode-org/icu",
+      "datasourceTemplate": "github-tags",
+      "versioningTemplate": "regex:^(?<compatibility>release-)(?<major>\\d+)[.-](?<minor>\\d+)$"
+    },
+    {
+      "description": "Qt for the desktop editors, installed with aqtinstall",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^Common/3dParty/qt/nc-build\\.py$/"
+      ],
+      "matchStrings": [
+        "qt_version = \"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "qt/qtbase",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+\\.\\d+)$"
+    },
+    {
+      "description": "Prebuilt CEF from the Spotify CDN for the desktop editors",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^Common/3dParty/cef/nc-build\\.py$/"
+      ],
+      "matchStrings": [
+        "cef_version = \"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "cef",
+      "datasourceTemplate": "custom.cef",
+      "versioningTemplate": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\+"
+    },
+    {
+      "description": "hunspell version override in the vcpkg manifest",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^vcpkg\\.json$/"
+      ],
+      "matchStrings": [
+        "\"name\": \"hunspell\", \"version\": \"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "hunspell/hunspell",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "description": "vcpkg registry baseline",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^vcpkg-configuration\\.json$/"
+      ],
+      "matchStrings": [
+        "\"baseline\": \"(?<currentDigest>[0-9a-f]{40})\""
+      ],
+      "depNameTemplate": "microsoft/vcpkg",
+      "datasourceTemplate": "github-tags"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "No automerge in core: CI builds the code, but a green build does not prove the conversion output is unchanged",
+      "matchPackageNames": [
+        "*"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "Commits on a default branch move too often for a PR each, request them from the Dependency Dashboard",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchUpdateTypes": [
+        "digest"
+      ],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "The base images set the glibc baseline of the binaries, see .docker/core.bake.Dockerfile",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "rockylinux/rockylinux",
+        "ubuntu"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Also bump ICU_MAJOR_VER in common.cmake and Common/3dParty/icu/icu.pri",
+      "matchPackageNames": [
+        "unicode-org/icu"
+      ],
+      "prBodyNotes": [
+        "\u26a0\ufe0f Also update `ICU_MAJOR_VER`/`ICU_MINOR_VER` in `common.cmake` and `ICU_MAJOR_VER` in `Common/3dParty/icu/icu.pri`."
+      ]
+    },
+    {
+      "description": "Desktop-only dependencies, not built by the server CI",
+      "matchPackageNames": [
+        "qt/qtbase",
+        "cef"
+      ],
+      "prBodyNotes": [
+        "\u26a0\ufe0f Desktop-only dependency: the core CI does not build it, test with a DesktopEditors build."
+      ]
+    }
+  ]
+}
