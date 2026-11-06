@@ -87,10 +87,10 @@ namespace PdfWriter
 			m_eRenderingMode = DEF_RENDERING_MODE;
 			m_dTextRise      = DEF_RISE;
 
-			m_pFont          = NULL;
+			m_pFont          = nullptr;
 			m_dFontSize      = 0;
 
-			m_pPrev          = NULL;
+			m_pPrev          = nullptr;
 			m_unDepth        = 1;
 		}
 	}

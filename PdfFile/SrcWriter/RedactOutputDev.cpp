@@ -270,7 +270,7 @@ void SaveRGBAToStream(CDocument* pDocument, CDictObject* pDictObj, BYTE* pRGBA, 
 	oFrame.put_IsRGBA(true);
 
 	oFrame.SetJpegQuality(85.0);
-	BYTE* pBuffer = NULL;
+	BYTE* pBuffer = nullptr;
 	int nBufferSize = 0;
 	if (!oFrame.Encode(pBuffer, nBufferSize, _CXIMAGE_FORMAT_JPG))
 		return;
@@ -513,21 +513,21 @@ void ApplyRedactToGray(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 //----- constructor/destructor
 RedactOutputDev::RedactOutputDev(CPdfWriter* pRenderer, CObjectsManager* pObjMng, int nStartRefID)
 {
-	m_pXref = NULL;
+	m_pXref = nullptr;
 
 	m_pRenderer = pRenderer;
 	m_mObjManager = pObjMng;
 	m_nStartRefID = nStartRefID;
 	m_pDoc = m_pRenderer->GetDocument();
-	m_pPage = NULL;
+	m_pPage = nullptr;
 
 	m_bUpdateAll = false;
 }
 RedactOutputDev::~RedactOutputDev()
 {
-	m_pRenderer = NULL;
-	m_pDoc = NULL;
-	m_pPage = NULL;
+	m_pRenderer = nullptr;
+	m_pDoc = nullptr;
+	m_pPage = nullptr;
 }
 void RedactOutputDev::SetRedact(const std::vector<double>& arrQuadPoints)
 {
@@ -563,7 +563,7 @@ void RedactOutputDev::startPage(int nPageIndex, GfxState *pGState)
 void RedactOutputDev::endPage()
 {
 	m_pRenderer->m_oCommandManager.Flush();
-	m_pPage = NULL;
+	m_pPage = nullptr;
 }
 //----- save/restore graphics state
 void RedactOutputDev::saveState(GfxState *pGState)
@@ -613,7 +613,7 @@ void RedactOutputDev::updateAll(GfxState *pGState)
 }
 void RedactOutputDev::updateLineDash(GfxState *pGState)
 {
-	double* pDash  = NULL;
+	double* pDash  = nullptr;
 	int     nSize  = 0;
 	double  dStart = 0;
 	pGState->getLineDash(&pDash, &nSize, &dStart);
@@ -1102,14 +1102,14 @@ void RedactOutputDev::drawImageMask(GfxState *pGState, Gfx *gfx, Object *pRef, S
 	DoTransform(pGState->getCTM(), &dShiftX, &dShiftY, true);
 
 	PdfWriter::CDocument* pDocument = m_pRenderer->GetDocument();
-	PdfWriter::CObjectBase* pObj = NULL;
+	PdfWriter::CObjectBase* pObj = nullptr;
 	std::vector<CPoint> imagePolygon = GetImagePolygon(m_arrMatrix);
 	if (CheckFullRedact(m_arrQuadPoints, imagePolygon))
 		return;
 
 	bool bHasRedact = CheckPartialRedact(m_arrQuadPoints, imagePolygon);
 	if (!pRef || bInlineImage || bHasRedact)
-		pObj = CreateImage(gfx, nWidth, nHeight, STREAM_FILTER_FLATE_DECODE, 1, NULL);
+		pObj = CreateImage(gfx, nWidth, nHeight, STREAM_FILTER_FLATE_DECODE, 1, nullptr);
 	else
 		pObj = m_mObjManager->GetObj(pRef->getRefNum() + m_nStartRefID);
 
@@ -1143,7 +1143,7 @@ void RedactOutputDev::drawImage(GfxState *pGState, Gfx *gfx, Object *pRef, Strea
 	DoTransform(pGState->getCTM(), &dShiftX, &dShiftY, true);
 
 	PdfWriter::CDocument* pDocument = m_pRenderer->GetDocument();
-	PdfWriter::CObjectBase* pObj = NULL;
+	PdfWriter::CObjectBase* pObj = nullptr;
 	std::vector<CPoint> imagePolygon = GetImagePolygon(m_arrMatrix);
 	if (CheckFullRedact(m_arrQuadPoints, imagePolygon))
 		return;
@@ -1189,7 +1189,7 @@ void RedactOutputDev::drawSoftMaskedImage(GfxState *pGState, Gfx *gfx, Object *p
 	DoTransform(pGState->getCTM(), &dShiftX, &dShiftY, true);
 
 	PdfWriter::CDocument* pDocument = m_pRenderer->GetDocument();
-	PdfWriter::CObjectBase* pObj = NULL;
+	PdfWriter::CObjectBase* pObj = nullptr;
 	std::vector<CPoint> imagePolygon = GetImagePolygon(m_arrMatrix);
 	if (CheckFullRedact(m_arrQuadPoints, imagePolygon))
 		return;
@@ -1401,7 +1401,7 @@ void RedactOutputDev::drawForm(GfxState *pGState, Gfx *gfx, Ref id, const char* 
 	oForm.streamGetDict()->lookup("Resources", &resourcesObj);
 
 	PDFRectangle pBBox = { 0, 0, dXmax - dXmin, dYmax - dYmin };
-	Gfx* _gfx = new Gfx(gfx->getDoc(), pFormOutputDev, resourcesObj.isDict() ? resourcesObj.getDict() : NULL, &pBBox, NULL);
+	Gfx* _gfx = new Gfx(gfx->getDoc(), pFormOutputDev, resourcesObj.isDict() ? resourcesObj.getDict() : nullptr, &pBBox, nullptr);
 	_gfx->takeContentStreamStack(gfx);
 	Object oFormRef;
 	oFormRef.initRef(id.num, id.gen);
@@ -1881,7 +1881,7 @@ CObjectBase* RedactOutputDev::CreateImage(Gfx *gfx, int nWidth, int nHeight, uns
 }
 CResourcesDict* RedactOutputDev::GetResources(Gfx *gfx)
 {
-	PdfWriter::CResourcesDict* pResources = NULL;
+	PdfWriter::CResourcesDict* pResources = nullptr;
 	Object* pContent = gfx->getTopContentStreamStack();
 	if (pContent && pContent->isRef())
 	{
@@ -1893,7 +1893,7 @@ CResourcesDict* RedactOutputDev::GetResources(Gfx *gfx)
 			pResources = dynamic_cast<PdfWriter::CResourcesDict*>(pResourcesForm);
 			if (!pResources)
 			{
-				pResources = new PdfWriter::CResourcesDict(NULL, true, false);
+				pResources = new PdfWriter::CResourcesDict(nullptr, true, false);
 				pDictForm->Add("Resources", pResources);
 			}
 		}

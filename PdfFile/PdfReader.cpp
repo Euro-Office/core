@@ -79,7 +79,7 @@ CPdfReader::CPdfReader(NSFonts::IApplicationFonts* pAppFonts)
 {
 	m_nFileLength  = 0;
 
-	globalParams  = new GlobalParamsAdaptor(NULL);
+	globalParams  = new GlobalParamsAdaptor(nullptr);
 #ifndef _DEBUG
 	globalParams->setErrQuiet(gTrue);
 #endif
@@ -87,12 +87,12 @@ CPdfReader::CPdfReader(NSFonts::IApplicationFonts* pAppFonts)
 	// Creating a font manager with its own cache
 	m_pFontManager = InitFontManager(pAppFonts);
 #ifndef BUILDING_WASM_MODULE
-	globalParams->setupBaseFonts(NULL);
+	globalParams->setupBaseFonts(nullptr);
 	SetCMapFile(NSFile::GetProcessDirectory() + L"/cmap.bin");
 #else
 	globalParams->setDrawFormFields(gFalse);
 	globalParams->setDrawAnnotations(gFalse);
-	SetCMapMemory(NULL, 0);
+	SetCMapMemory(nullptr, 0);
 #endif
 
 	m_eError = errNone;
@@ -164,6 +164,7 @@ void CPdfReader::SetCMapFile(const std::wstring& sFile)
 
 bool CPdfReader::LoadFromFile(NSFonts::IApplicationFonts* pAppFonts, const std::wstring& wsSrcPath, const wchar_t* wsOwnerPassword, const wchar_t* wsUserPassword)
 {
+	(void)wsUserPassword;
 	Clear();
 	RELEASEINTERFACE(m_pFontManager);
 	m_pFontManager = InitFontManager(pAppFonts);
@@ -182,6 +183,7 @@ bool CPdfReader::LoadFromFile(NSFonts::IApplicationFonts* pAppFonts, const std::
 }
 bool CPdfReader::LoadFromMemory(NSFonts::IApplicationFonts* pAppFonts, BYTE* data, DWORD length, const wchar_t* wsOwnerPassword, const wchar_t* wsUserPassword)
 {
+	(void)wsUserPassword;
 	Clear();
 	RELEASEINTERFACE(m_pFontManager);
 	m_pFontManager = InitFontManager(pAppFonts);
@@ -310,7 +312,7 @@ int CPdfReader::GetError()
 }
 void CPdfReader::GetPageInfo(int _nPageIndex, double* pdWidth, double* pdHeight, double* pdDpiX, double* pdDpiY)
 {
-	PDFDoc* pDoc = NULL;
+	PDFDoc* pDoc = nullptr;
 	int nPageIndex = GetPageIndex(_nPageIndex, &pDoc);
 	if (nPageIndex < 0 || !pDoc)
 		return;
@@ -337,7 +339,7 @@ void CPdfReader::GetPageInfo(int _nPageIndex, double* pdWidth, double* pdHeight,
 }
 int CPdfReader::GetRotate(int _nPageIndex)
 {
-	PDFDoc* pDoc = NULL;
+	PDFDoc* pDoc = nullptr;
 	int nPageIndex = GetPageIndex(_nPageIndex, &pDoc);
 	if (nPageIndex < 0 || !pDoc)
 		return 0;
@@ -410,7 +412,7 @@ bool CPdfReader::ValidMetaData()
 				c = pSubStr->getChar();
 			pSubStr->getBlock(buf, 6);
 
-			Parser* parser = new Parser(NULL, new Lexer(NULL, pSubStr->getBaseStream()->makeSubStream(pSubStr->getPos(), gFalse, 0, &oDict)), gTrue);
+			Parser* parser = new Parser(nullptr, new Lexer(nullptr, pSubStr->getBaseStream()->makeSubStream(pSubStr->getPos(), gFalse, 0, &oDict)), gTrue);
 			parser->getObj(&obj1);
 			delete parser;
 			delete pSubStr;
@@ -424,7 +426,7 @@ bool CPdfReader::ValidMetaData()
 		else // xref stream
 		{
 			Stream* pSubStr = str->makeSubStream(nOffeset, gFalse, 0, &oDict);
-			Parser* parser = new Parser(NULL, new Lexer(NULL, pSubStr), gTrue);
+			Parser* parser = new Parser(nullptr, new Lexer(nullptr, pSubStr), gTrue);
 			parser->getObj(&obj1);
 			parser->getObj(&obj2);
 			parser->getObj(&obj3);
@@ -457,8 +459,8 @@ bool CPdfReader::MergePages(BYTE* pData, DWORD nLength, const wchar_t* wsPasswor
 		return false;
 	}
 
-	GString* owner_pswd = NULL;
-	GString* user_pswd  = NULL;
+	GString* owner_pswd = nullptr;
+	GString* user_pswd  = nullptr;
 	if (wsPassword)
 	{
 		owner_pswd = NSStrings::CreateString(wsPassword);
@@ -503,8 +505,8 @@ bool CPdfReader::MergePages(const std::wstring& wsFile, const wchar_t* wsPasswor
 	if (m_eError)
 			return false;
 
-	GString* owner_pswd = NULL;
-	GString* user_pswd  = NULL;
+	GString* owner_pswd = nullptr;
+	GString* user_pswd  = nullptr;
 	if (wsPassword)
 	{
 		owner_pswd = NSStrings::CreateString(wsPassword);
@@ -558,7 +560,7 @@ bool CPdfReader::RedactPage(int _nPageIndex, double* arrRedactBox, int nLengthX8
 		return false;
 	}
 
-	PDFDoc* pDoc = NULL;
+	PDFDoc* pDoc = nullptr;
 	int nPageIndex = GetPageIndex(_nPageIndex, &pDoc);
 	if (nPageIndex < 0 || !pDoc)
 	{
@@ -602,7 +604,7 @@ bool CPdfReader::CheckOwnerPassword(const wchar_t* wsPassword)
 
 	Object* pTrailerDict = xref->getTrailerDict();
 	Object encrypt;
-	SecurityHandler* secHdlr = NULL;
+	SecurityHandler* secHdlr = nullptr;
 	xref->offEncrypted();
 	if (pTrailerDict->dictLookup("Encrypt", &encrypt) && encrypt.isDict())
 		secHdlr = SecurityHandler::make(pDoc, &encrypt);
@@ -617,7 +619,7 @@ bool CPdfReader::CheckOwnerPassword(const wchar_t* wsPassword)
 
 	bool bRes = false;
 	GString* owner_pswd = NSStrings::CreateString(wsPassword);
-	if (secHdlr->checkEncryption(owner_pswd, NULL) && secHdlr->getOwnerPasswordOk())
+	if (secHdlr->checkEncryption(owner_pswd, nullptr) && secHdlr->getOwnerPasswordOk())
 	{
 		bRes = true;
 		xref->setEncryption(secHdlr->getPermissionFlags(), secHdlr->getOwnerPasswordOk(), secHdlr->getFileKey(),
@@ -647,8 +649,8 @@ bool CPdfReader::CheckPerm(int nPerm)
 }
 void CPdfReader::DrawPageOnRenderer(IRenderer* pRenderer, int _nPageIndex, bool* pbBreak)
 {
-	PDFDoc* pDoc = NULL;
-	PdfReader::CPdfFontList* pFontList = NULL;
+	PDFDoc* pDoc = nullptr;
+	PdfReader::CPdfFontList* pFontList = nullptr;
 	int nPageIndex = GetPageIndex(_nPageIndex, &pDoc, &pFontList);
 	if (nPageIndex < 0 || !pDoc || !pFontList)
 		return;
@@ -695,7 +697,7 @@ void CPdfReader::DrawPageOnRenderer(IRenderer* pRenderer, int _nPageIndex, bool*
 				ret = *((int*)pMemory);
 				pMemory += 4;
 				LONG B = ret;
-				LONG lColor = (LONG)(R | (G << 8) | (B << 16) | ((LONG)255 << 24));
+				LONG lColor = R | (G << 8) | (B << 16) | ((LONG)255 << 24);
 
 				pRenderer->PathCommandEnd();
 				pRenderer->put_BrushColor1(lColor);
@@ -762,18 +764,18 @@ std::wstring CPdfReader::ToXml(const std::wstring& wsFilePath, bool isPrintStrea
 PDFDoc* CPdfReader::GetLastPDFDocument()
 {
 	if (m_vPDFContext.empty())
-		return NULL;
+		return nullptr;
 
 	CPdfReaderContext* pPDFContext = m_vPDFContext.back();
 	if (pPDFContext)
 		return pPDFContext->m_pDocument;
-	return NULL;
+	return nullptr;
 }
 PDFDoc* CPdfReader::GetPDFDocument(int PDFIndex)
 {
 	if (PDFIndex >= 0 && PDFIndex < m_vPDFContext.size())
 		return m_vPDFContext[PDFIndex]->m_pDocument;
-	return NULL;
+	return nullptr;
 }
 
 std::wstring CPdfReader::GetInfo()
@@ -790,7 +792,7 @@ std::wstring CPdfReader::GetInfo()
 	XRef* xref = pDoc->getXRef();
 	BaseStream* str = pDoc->getBaseStream();
 	if (!xref || !str)
-		return NULL;
+		return L"";
 
 	sRes = L"{";
 
@@ -943,14 +945,14 @@ BYTE* CPdfReader::GetGIDByUnicode(const std::wstring& wsFontName)
 {
 	std::map<std::wstring, std::wstring>::const_iterator oIter = m_mFonts.find(wsFontName);
 	if (oIter == m_mFonts.end())
-		return NULL;
+		return nullptr;
 
 	NSFonts::IFontsMemoryStorage* pStorage = NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage();
 	if (!pStorage)
-		return NULL;
+		return nullptr;
 	NSFonts::IFontStream* pStream = pStorage->Get(oIter->second);
 	if (!pStream)
-		return NULL;
+		return nullptr;
 
 	std::map<unsigned int, unsigned int> mGIDbyUnicode;
 	bool bFind = false;
@@ -1004,6 +1006,7 @@ BYTE* CPdfReader::GetGIDByUnicode(const std::wstring& wsFontName)
 }
 std::wstring CPdfReader::GetFontPath(const std::wstring& wsFontName, bool bSave)
 {
+	(void)bSave;
 	std::map<std::wstring, std::wstring>::const_iterator oIter = m_mFonts.find(wsFontName);
 	return oIter == m_mFonts.end() ? std::wstring() : oIter->second;
 }
@@ -1069,7 +1072,7 @@ void getBookmarks(PDFDoc* pdfDoc, OutlineItem* pOutlineItem, NSWasm::CData& out,
 BYTE* CPdfReader::GetStructure()
 {
 	if (m_vPDFContext.empty())
-		return NULL;
+		return nullptr;
 
 	NSWasm::CData oRes;
 	oRes.SkipLen();
@@ -1118,14 +1121,14 @@ BYTE* CPdfReader::GetStructure()
 BYTE* CPdfReader::GetLinks(int _nPageIndex)
 {
 	// TODO Links should become part of Annots
-	PDFDoc* pDoc = NULL;
+	PDFDoc* pDoc = nullptr;
 	int nPageIndex = GetPageIndex(_nPageIndex, &pDoc);
 	if (nPageIndex < 0 || !pDoc || !pDoc->getCatalog())
-		return NULL;
+		return nullptr;
 
 	Page* pPage = pDoc->getCatalog()->getPage(nPageIndex);
 	if (!pPage)
-		return NULL;
+		return nullptr;
 
 	NSWasm::CPageLink oLinks;
 
@@ -1218,7 +1221,7 @@ BYTE* CPdfReader::GetLinks(int _nPageIndex)
 	// Link text
 	TextOutputControl textOutControl;
 	textOutControl.mode = textOutReadingOrder;
-	TextOutputDev* pTextOut = new TextOutputDev(NULL, &textOutControl, gFalse);
+	TextOutputDev* pTextOut = new TextOutputDev(nullptr, &textOutControl, gFalse);
 	pDoc->displayPage(pTextOut, nPageIndex, 72.0, 72.0, nRotate, gFalse, gTrue, gFalse);
 	pDoc->processLinks(pTextOut, nPageIndex);
 	TextWordList* pWordList = pTextOut->makeWordList();
@@ -1297,8 +1300,8 @@ void CPdfReader::SetFonts(int _nPageIndex)
 	if (m_vPDFContext.empty())
 		return;
 
-	PDFDoc* pDoc = NULL;
-	PdfReader::CPdfFontList* pFontList = NULL;
+	PDFDoc* pDoc = nullptr;
+	PdfReader::CPdfFontList* pFontList = nullptr;
 	GetPageIndex(_nPageIndex, &pDoc, &pFontList);
 
 	const std::map<Ref, PdfReader::TFontEntry*>& mapFonts = pFontList->GetFonts();
@@ -1346,20 +1349,20 @@ BYTE* CPdfReader::GetFonts(bool bStandart)
 BYTE* CPdfReader::VerifySign(const std::wstring& sFile, ICertificate* pCertificate, int nWidget)
 {
 	if (m_vPDFContext.empty())
-		return NULL;
+		return nullptr;
 
 	CPdfReaderContext* pPDFContext = m_vPDFContext.front();
 	if (!pPDFContext || !pPDFContext->m_pDocument || !pPDFContext->m_pDocument->getCatalog())
-		return NULL;
+		return nullptr;
 
 	AcroForm* pAcroForms = pPDFContext->m_pDocument->getCatalog()->getForm();
 	if (!pAcroForms)
-		return NULL;
+		return nullptr;
 
-	BYTE* pFileData = NULL;
+	BYTE* pFileData = nullptr;
 	DWORD nFileSize;
 	if (!NSFile::CFileBinary::ReadAllBytes(sFile, &pFileData, nFileSize))
-		return NULL;
+		return nullptr;
 
 	NSWasm::CData oRes;
 	oRes.SkipLen();
@@ -1405,7 +1408,7 @@ BYTE* CPdfReader::VerifySign(const std::wstring& sFile, ICertificate* pCertifica
 			nByteOffset += arrByteLength[j];
 		}
 
-		BYTE* pPKCS7Data = NULL;
+		BYTE* pPKCS7Data = nullptr;
 		DWORD nPKCS7Size = 0;
 		if (oObj.dictLookup("Contents", &oObj1)->isString())
 		{
@@ -1430,16 +1433,16 @@ BYTE* CPdfReader::VerifySign(const std::wstring& sFile, ICertificate* pCertifica
 }
 BYTE* CPdfReader::GetAPWidget(int nRasterW, int nRasterH, int nBackgroundColor, int _nPageIndex, int nWidget, const char* sView, const char* sButtonView)
 {
-	PDFDoc* pDoc = NULL;
-	PdfReader::CPdfFontList* pFontList = NULL;
+	PDFDoc* pDoc = nullptr;
+	PdfReader::CPdfFontList* pFontList = nullptr;
 	int nStartRefID = 0;
 	int nPageIndex = GetPageIndex(_nPageIndex, &pDoc, &pFontList, &nStartRefID);
 	if (nPageIndex < 0 || !pDoc || !pFontList || !pDoc->getCatalog())
-		return NULL;
+		return nullptr;
 
 	AcroForm* pAcroForms = pDoc->getCatalog()->getForm();
 	if (!pAcroForms)
-		return NULL;
+		return nullptr;
 
 	NSWasm::CData oRes;
 	oRes.SkipLen();
@@ -1468,16 +1471,16 @@ BYTE* CPdfReader::GetAPWidget(int nRasterW, int nRasterH, int nBackgroundColor, 
 }
 BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBase64, int nButtonWidget, const char* sIconView)
 {
-	PDFDoc* pDoc = NULL;
-	PdfReader::CPdfFontList* pFontList = NULL;
+	PDFDoc* pDoc = nullptr;
+	PdfReader::CPdfFontList* pFontList = nullptr;
 	int nStartRefID = 0;
 	int nPageIndex = GetPageIndex(_nPageIndex, &pDoc, &pFontList, &nStartRefID);
 	if (nPageIndex < 0 || !pDoc || !pDoc->getCatalog())
-		return NULL;
+		return nullptr;
 
 	AcroForm* pAcroForms = pDoc->getCatalog()->getForm();
 	if (!pAcroForms)
-		return NULL;
+		return nullptr;
 
 	NSWasm::CData oRes;
 	oRes.SkipLen();
@@ -1626,7 +1629,7 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 			int nMaskWidth  = 0;
 			int nMaskHeight = 0;
 			bool bHaveSoftMask = false;
-			GfxImageColorMap* pMaskColorMap = NULL;
+			GfxImageColorMap* pMaskColorMap = nullptr;
 
 			Object oMaskObj, oSMaskObj;
 			oImDict->lookup("Mask", &oMaskObj);
@@ -1660,7 +1663,7 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 				int nMaskBits = oBits.isInt() ? oBits.getInt() : 8;
 				oBits.free();
 
-				GfxColorSpace* maskColorSpace = NULL;
+				GfxColorSpace* maskColorSpace = nullptr;
 				Object oColorSpace;
 				if (oMaskDict->lookup("ColorSpace", &oColorSpace)->isNull())
 				{
@@ -1685,14 +1688,6 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 
 				bHaveSoftMask = true;
 			}
-			else if (oMaskObj.isArray())
-			{
-
-			}
-			else if (oMaskObj.isStream())
-			{
-
-			}
 
 			if (bBase64 && !bHaveSoftMask)
 			{
@@ -1706,7 +1701,7 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 				oLength.free();
 
 				bool bNew = false;
-				BYTE* pBuffer = NULL;
+				BYTE* pBuffer = nullptr;
 				Stream* pImage = oIm.getStream()->getUndecodedStream();
 				pImage->reset();
 				MemStream* pMemory = dynamic_cast<MemStream*>(pImage);
@@ -1726,7 +1721,7 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 						*pBufferPtr++ = (BYTE)pImage->getChar();
 				}
 
-				char* cData64 = NULL;
+				char* cData64 = nullptr;
 				int nData64Dst = 0;
 				NSFile::CBase64Converter::Encode(pBuffer, nLength, cData64, nData64Dst, NSBase64::B64_BASE64_FLAG_NOCRLF);
 
@@ -1740,7 +1735,7 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 			}
 
 			// else
-			BYTE* pBgraData = new BYTE[nWidth * nHeight * 4];
+			BYTE* pBgraData = new BYTE[(size_t)nWidth * nHeight * 4];
 			unsigned int nColor = (unsigned int)nBackgroundColor;
 			unsigned int nSize  = (unsigned int)(nWidth * nHeight);
 			unsigned int* pTemp = (unsigned int*)pBgraData;
@@ -1763,7 +1758,7 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 				oBits.free();
 			}
 
-			GfxColorSpace* colorSpace = NULL;
+			GfxColorSpace* colorSpace = nullptr;
 			Object oColorSpace;
 			if (oImDict->lookup("ColorSpace", &oColorSpace)->isNull())
 			{
@@ -1783,7 +1778,7 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 			else if (csMode == streamCSDeviceCMYK)
 				colorSpace = GfxColorSpace::create(csDeviceCMYK);
 			else
-				colorSpace = NULL;
+				colorSpace = nullptr;
 			oColorSpace.free();
 
 			Object oDecode;
@@ -1810,11 +1805,11 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 			for (int nY = 0; nY < nHeight; ++nY)
 			{
 				unsigned char* pLine = pImageStream->getLine();
-				unsigned char* pLineDst = pBgraData + 4 * nWidth * nY;
+				unsigned char* pLineDst = pBgraData + (size_t)4 * nWidth * nY;
 
 				if (!pLine)
 				{
-					memset(pLineDst, 0, 4 * nWidth);
+					memset(pLineDst, 0, (size_t)4 * nWidth);
 					continue;
 				}
 
@@ -1881,13 +1876,13 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 				oFrame.put_Stride(4 * nWidth);
 				oFrame.put_IsRGBA(true);
 
-				BYTE* pPNG = NULL;
+				BYTE* pPNG = nullptr;
 				int nPNGSize = 0;
 				oFrame.Encode(pPNG, nPNGSize, 4);
 				oFrame.ClearNoAttack();
 				RELEASEARRAYOBJECTS(pBgraData);
 
-				char* cData64 = NULL;
+				char* cData64 = nullptr;
 				int nData64Dst = 0;
 				NSFile::CBase64Converter::Encode(pPNG, nPNGSize, cData64, nData64Dst, NSBase64::B64_BASE64_FLAG_NOCRLF);
 
@@ -1958,7 +1953,7 @@ int GetPageAnnots(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, PdfReader
 		oSubtype.free(); oAnnot.free();
 
 		Object oAnnotRef;
-		PdfReader::CAnnot* pAnnot = NULL;
+		PdfReader::CAnnot* pAnnot = nullptr;
 		oAnnots.arrayGetNF(i, &oAnnotRef);
 		if (sType == "Text")
 		{
@@ -2037,19 +2032,19 @@ int GetPageAnnots(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, PdfReader
 BYTE* CPdfReader::GetAnnots(int _nPageIndex)
 {
 	if (m_vPDFContext.empty())
-		return NULL;
+		return nullptr;
 
 	NSWasm::CData oRes;
 	oRes.SkipLen();
 
 	if (_nPageIndex >= 0)
 	{
-		PDFDoc* pDoc = NULL;
-		PdfReader::CPdfFontList* pFontList = NULL;
+		PDFDoc* pDoc = nullptr;
+		PdfReader::CPdfFontList* pFontList = nullptr;
 		int nStartRefID = 0;
 		int nPageIndex = GetPageIndex(_nPageIndex, &pDoc, &pFontList, &nStartRefID);
 		if (nPageIndex < 0 || !pDoc || !pFontList || !pDoc->getCatalog())
-			return NULL;
+			return nullptr;
 
 		int nAnnots = 0;
 		int nPosAnnots = oRes.GetSize();
@@ -2086,19 +2081,19 @@ BYTE* CPdfReader::GetAnnots(int _nPageIndex)
 }
 BYTE* CPdfReader::GetAPAnnots(int nRasterW, int nRasterH, int nBackgroundColor, int _nPageIndex, int nAnnot, const char* sView)
 {
-	PDFDoc* pDoc = NULL;
-	PdfReader::CPdfFontList* pFontList = NULL;
+	PDFDoc* pDoc = nullptr;
+	PdfReader::CPdfFontList* pFontList = nullptr;
 	int nStartRefID = 0;
 	int nPageIndex = GetPageIndex(_nPageIndex, &pDoc, &pFontList, &nStartRefID);
 	if (nPageIndex < 0 || !pDoc || !pFontList || !pDoc->getCatalog())
-		return NULL;
+		return nullptr;
 
 	Object oAnnots;
 	Page* pPage = pDoc->getCatalog()->getPage(nPageIndex);
 	if (!pPage || !pPage->getAnnots(&oAnnots)->isArray())
 	{
 		oAnnots.free();
-		return NULL;
+		return nullptr;
 	}
 
 	NSWasm::CData oRes;

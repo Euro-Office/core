@@ -72,9 +72,9 @@ void CCommandManager::Flush()
         if (renderercommandtype_Text == eType)
         {
             pPage->BeginText();
-            CRendererTextCommand* pText = NULL;
+            CRendererTextCommand* pText = nullptr;
 
-            PdfWriter::CFontDict* pTextFont = NULL;
+            PdfWriter::CFontDict* pTextFont = nullptr;
             double         dTextSize = -1;
             LONG          lTextColor = 0;
             BYTE          nTextAlpha = 255;
@@ -915,8 +915,8 @@ void CBrushState::Reset()
     if (m_pShadingPoints)
         delete[] m_pShadingPoints;
 
-    m_pShadingColors      = NULL;
-    m_pShadingPoints      = NULL;
+    m_pShadingColors      = nullptr;
+    m_pShadingPoints      = nullptr;
     m_lShadingPointsCount = 0;
 
 	m_bIsScale = false;

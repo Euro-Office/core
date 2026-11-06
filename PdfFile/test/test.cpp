@@ -157,8 +157,8 @@ public:
 	}
 };
 
-CApplicationFontsWorker* CPdfFileTest::oWorker = NULL;
-NSFonts::IApplicationFonts* CPdfFileTest::pApplicationFonts = NULL;
+CApplicationFontsWorker* CPdfFileTest::oWorker = nullptr;
+NSFonts::IApplicationFonts* CPdfFileTest::pApplicationFonts = nullptr;
 std::wstring CPdfFileTest::wsTempDir;
 std::wstring CPdfFileTest::wsSrcFile;
 std::wstring CPdfFileTest::wsDstFile;
@@ -181,7 +181,7 @@ TEST_F(CPdfFileTest, GetMetaData)
 {
 	GTEST_SKIP();
 
-	BYTE* pMetaData = NULL;
+	BYTE* pMetaData = nullptr;
 	DWORD nMetaLength = 0;
 
 	if (pdfFile->GetMetaData(wsSrcFile, L"ONLYOFFICEFORM", &pMetaData, nMetaLength))
@@ -269,7 +269,7 @@ TEST_F(CPdfFileTest, PdfBinToPng)
 	EXPECT_TRUE(oFile.ReadFile(pFileContent, dwFileSize, dwReaded));
 	oFile.CloseFile();
 
-	NSOnlineOfficeBinToPdf::CMetafileToRenderterRaster imageWriter(NULL);
+	NSOnlineOfficeBinToPdf::CMetafileToRenderterRaster imageWriter(nullptr);
 	imageWriter.SetApplication(pApplicationFonts);
 	imageWriter.SetRasterFormat(4);
 	imageWriter.SetFileName(NSFile::GetProcessDirectory() + L"/resPdfBinToPng.png");
@@ -309,7 +309,7 @@ TEST_F(CPdfFileTest, PdfToPdf)
 		pdfFile->put_Width( dW / dPageDpiX * 25.4);
 		pdfFile->put_Height(dH / dPageDpiY * 25.4);
 
-		pdfFile->DrawPageOnRenderer(pdfFile, i, NULL);
+		pdfFile->DrawPageOnRenderer(pdfFile, i, nullptr);
 	}
 
 	pdfFile->SaveToFile(wsDstFile);
@@ -321,7 +321,7 @@ TEST_F(CPdfFileTest, SetMetaData)
 
 	pdfFile->CreatePdf();
 
-	BYTE* pFileData = NULL;
+	BYTE* pFileData = nullptr;
 	DWORD nFileSize;
 	std::wstring sFile = NSFile::GetProcessDirectory() + L"/ONLYOFFICEFORM.docxf";
 	EXPECT_TRUE(NSFile::CFileBinary::ReadAllBytes(sFile, &pFileData, nFileSize));
@@ -371,7 +371,7 @@ TEST_F(CPdfFileTest, Base64ConvertToRaster)
 
 	NSBase64::Base64Decode((const char*)pFileContent, dwFileSize, pBuffer, &nBufferLen);
 
-	NSOnlineOfficeBinToPdf::CMetafileToRenderterRaster imageWriter(NULL);
+	NSOnlineOfficeBinToPdf::CMetafileToRenderterRaster imageWriter(nullptr);
 	imageWriter.SetIsOnlyFirst(false);
 	imageWriter.SetMediaDirectory(NSFile::GetProcessDirectory());
 	imageWriter.SetApplication(pApplicationFonts);
@@ -401,7 +401,7 @@ TEST_F(CPdfFileTest, BinConvertToRaster)
 	oFile.ReadFile(pFileContent, dwFileSize, dwReaded);
 	oFile.CloseFile();
 
-	NSOnlineOfficeBinToPdf::CMetafileToRenderterRaster imageWriter(NULL);
+	NSOnlineOfficeBinToPdf::CMetafileToRenderterRaster imageWriter(nullptr);
 	imageWriter.SetIsOnlyFirst(true);
 	imageWriter.SetMediaDirectory(NSFile::GetProcessDirectory());
 	imageWriter.SetApplication(pApplicationFonts);
@@ -433,8 +433,8 @@ TEST_F(CPdfFileTest, SplitPdf)
 
 	LoadFromFile();
 
-	int nBufferLen = NULL;
-	BYTE* pBuffer = NULL;
+	int nBufferLen = 0;
+	BYTE* pBuffer = nullptr;
 	NSFile::CFileBinary oFile;
 	if (oFile.OpenFile(NSFile::GetProcessDirectory() + L"/base64.txt"))
 	{
@@ -463,7 +463,7 @@ TEST_F(CPdfFileTest, SplitPdf)
 
 	std::vector<int> arrPages = { 1 };
 	BYTE* pFile = pdfFile->SplitPages(arrPages.data(), arrPages.size(), pBuffer, nBufferLen);
-	ASSERT_TRUE(pFile != NULL);
+	ASSERT_TRUE(pFile != nullptr);
 
 	std::wstring wsSplitFile = NSFile::GetProcessDirectory() + L"/test_split.pdf";
 	if (oFile.CreateFileW(wsSplitFile))
@@ -681,7 +681,7 @@ TEST_F(CPdfFileTest, EditPdfSign)
 		ICertificate* pCertificate = GetCertificate();
 		ASSERT_TRUE(pCertificate);
 
-		BYTE* pDataFile = NULL;
+		BYTE* pDataFile = nullptr;
 		DWORD dwDataLength = 0;
 
 		NSFile::CFileBinary::ReadAllBytes(wsDstFile, &pDataFile, dwDataLength);
@@ -698,7 +698,7 @@ TEST_F(CPdfFileTest, EditPdfSign)
 
 		RELEASEARRAYOBJECTS(pDataFile);
 
-		BYTE* pDatatoWrite = NULL;
+		BYTE* pDatatoWrite = nullptr;
 		unsigned int dwLenDatatoWrite = 0;
 		pCertificate->SignPKCS7(pDataToSign, dwDataSignLength, pDatatoWrite, dwLenDatatoWrite);
 		RELEASEARRAYOBJECTS(pDataToSign);

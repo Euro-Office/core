@@ -99,7 +99,7 @@ namespace PdfWriter
     class CEncrypt::Impl
     {
     public:
-        Impl() : m_nCryptAlgorithm(2), aesEncryption(NULL), rc4Encryption(NULL), streamEncryption(NULL)
+        Impl() : m_nCryptAlgorithm(2), aesEncryption(nullptr), rc4Encryption(nullptr), streamEncryption(nullptr)
 		{
 			m_unEncryptionKeyLength = 32;
 			MemSet(m_anEncryptionKey, 0, m_unEncryptionKeyLength);

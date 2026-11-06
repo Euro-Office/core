@@ -34,7 +34,7 @@ namespace NSImageReSaver
 {
     static void CorrectImage(const wchar_t* wsFileName, BYTE*& pBuffer, int& nBufferSize, unsigned int& unWidth, unsigned int& unHeight)
     {
-        pBuffer = NULL;
+        pBuffer = nullptr;
         nBufferSize = 0;
 
         CImageFileFormatChecker oChecker(wsFileName);
@@ -97,11 +97,11 @@ namespace PdfWriter
 	}
     void CImageDict::LoadJpeg(const wchar_t* wsFilePath, unsigned int unWidth, unsigned int unHeight, bool bGrayScale)
 	{
-        BYTE* pCorrectBuffer = NULL;
+        BYTE* pCorrectBuffer = nullptr;
         int nBufferSize = 0;
         NSImageReSaver::CorrectImage(wsFilePath, pCorrectBuffer, nBufferSize, unWidth, unHeight);
 
-        if (pCorrectBuffer != NULL)
+        if (pCorrectBuffer != nullptr)
         {
             this->LoadJpeg(pCorrectBuffer, nBufferSize, unWidth, unHeight, false);
             free(pCorrectBuffer);
