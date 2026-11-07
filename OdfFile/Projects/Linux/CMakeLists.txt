@@ -477,6 +477,7 @@ endif()
 
 target_include_directories(OdfFormatLib PRIVATE
 	${ODF_FILE_ROOT_DIR}/Common
+	${CRYPTOPP_INCLUDE_DIR} # object_package.cpp; linked by x2t through CryptoPPLib
 )
 
 target_precompile_headers(OdfFormatLib PRIVATE
