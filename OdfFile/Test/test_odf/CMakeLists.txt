@@ -56,6 +56,7 @@ add_core_gtest(
             odt2docx_keep_next.cpp
             odt2docx_links.cpp
             odp2pptx_line_height.cpp
+            odt2docx_default_tab_stop.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )

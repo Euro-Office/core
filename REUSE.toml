@@ -118,3 +118,11 @@ path = [
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/default_tab_stop_1251cm.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/default_tab_stop_2cm.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
