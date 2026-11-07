@@ -454,7 +454,7 @@ void bookmark_ref::add_child_element(xml::sax* Reader, const std::wstring& Ns, c
 }
 void bookmark_ref::docx_convert(oox::docx_conversion_context& Context)
 {
-	std::wstring field_name = (ref_name_ ? L"REF " + *ref_name_ : L"REF") + L" \\h";
+	std::wstring field_name = (ref_name_ ? L"REF " + XmlUtils::EncodeXmlString(*ref_name_) : L"REF") + L" \\h";
 
 	if (reference_format_)
 	{
@@ -1508,7 +1508,7 @@ void sequence_ref::docx_convert(oox::docx_conversion_context & Context)
 	if (!ref_name_) return;
 
 	Context.finish_run();
-	Context.output_stream() << L"<w:fldSimple w:instr=\" REF " << *ref_name_ << L" \\h\">";
+	Context.output_stream() << L"<w:fldSimple w:instr=\" REF " << XmlUtils::EncodeXmlString(*ref_name_) << L" \\h\">";
 	Context.add_new_run();
 	if (text_)
 		text_->docx_convert(Context);

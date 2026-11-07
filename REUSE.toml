@@ -23,8 +23,10 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/field_bookmark_ref_ampersand.odt",
     "OdfFile/Test/test_odf/ExampleFiles/field_drop_down_ampersand.odt",
     "OdfFile/Test/test_odf/ExampleFiles/field_expression_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/field_sequence_ref_ampersand.odt",
     "OdfFile/Test/test_odf/ExampleFiles/field_text_input_ampersand.odt",
     "OdfFile/Test/test_odf/ExampleFiles/field_variable_input_ampersand.odt",
 ]

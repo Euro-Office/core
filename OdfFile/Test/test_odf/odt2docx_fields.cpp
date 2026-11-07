@@ -3,9 +3,10 @@
 
 // ODT -> DOCX conversion of text fields. Each fixture holds one paragraph
 // "INPUT <field> END" whose field text (and, where the field has them, list
-// item value or variable name) contains an ampersand. The converter must
-// escape these values: an unescaped '&' makes word/document.xml not
-// well-formed, and the editor then drops everything from the field onwards.
+// item value, variable name or referenced name) contains an ampersand. The
+// converter must escape these values: an unescaped '&' makes
+// word/document.xml not well-formed, and the editor then drops everything
+// from the field onwards.
 
 #include "gtest/gtest.h"
 
@@ -53,6 +54,8 @@ const FieldCase kFieldCases[] = {
     { L"field_expression_ampersand.odt", L"<w:t>A &amp; B</w:t>", "Expression" },
     { L"field_drop_down_ampersand.odt", L"w:value=\"A &amp; B\"", "DropDown" },
     { L"field_variable_input_ampersand.odt", L"REF &quot;v&amp;w&quot;", "VariableInput" },
+    { L"field_bookmark_ref_ampersand.odt", L"<w:instrText>REF v&amp;w \\h</w:instrText>", "BookmarkRef" },
+    { L"field_sequence_ref_ampersand.odt", L"w:instr=\" REF v&amp;w \\h\"", "SequenceRef" },
 };
 
 std::string CaseName(const ::testing::TestParamInfo<FieldCase>& info)
