@@ -126,3 +126,11 @@ path = [
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/custom_geometry_quad_bezier.pptx",
+    "OdfFile/Test/test_odf/ExampleFiles/quad_bezier_enhanced_path.odp",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
