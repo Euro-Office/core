@@ -1,7 +1,7 @@
 #include "CPattern.h"
 #include <iostream>
 
-#include "../../../graphics/pro/Graphics.h"
+#include "../../../../graphics/pro/Graphics.h"
 
 namespace SVG
 {

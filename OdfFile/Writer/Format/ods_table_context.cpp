@@ -491,30 +491,24 @@ void ods_table_context::add_defined_range(const std::wstring & name, const std::
 	named_range->table_cell_range_address_ = odf_range;
 	
 	if (printable)
-	{
 		named_range->table_range_usable_as_ = L"print-range";
-
-		XmlUtils::replace_all( odf_range, L"[", L"");
-		XmlUtils::replace_all( odf_range, L"]", L"");
-		XmlUtils::replace_all( odf_range, L";", L" ");
-
-		table_state_list_[sheet_id]->set_table_print_ranges(odf_range);
-	}
 	
 	if (false == odf_base_cell.empty())
 		named_range->table_base_cell_address_ = odf_base_cell;
 
 	table_defined_expressions_.elements.push_back(elm);
 	
-	if (sheet_id >=0)
+	if (sheet_id >= 0 && sheet_id < (int)table_state_list_.size())
 	{
-		for (size_t i = 0; i < table_state_list_.size(); ++i)
+		table_state_list_[sheet_id]->add_definded_expression(elm);
+
+		if (printable)
 		{
-			if (i == sheet_id)
-			{
-				table_state_list_[i]->add_definded_expression(elm);
-				break;
-			}
+			XmlUtils::replace_all( odf_range, L"[", L"");
+			XmlUtils::replace_all( odf_range, L"]", L"");
+			XmlUtils::replace_all( odf_range, L";", L" ");
+
+			table_state_list_[sheet_id]->set_table_print_ranges(odf_range);
 		}
 	}
 	else

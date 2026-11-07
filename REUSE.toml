@@ -14,9 +14,42 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = ["DesktopEditor/fontengine/test/fonts/EOTestTrueType.ttf", "DesktopEditor/fontengine/test/fonts/EOTestTrueType.woff2", "DesktopEditor/fontengine/test/fonts/EOTestCFF.otf"]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "Common/3dParty/freetype/patch/freetype.patch"
+SPDX-FileCopyrightText = ["1996-2026 David Turner, Robert Wilhelm, and Werner Lemberg", "2026 Euro-Office contributors"]
+SPDX-License-Identifier = "FTL OR GPL-2.0-or-later"
+
+[[annotations]]
+path = "Common/3dParty/libtiff/patch/libtiff.patch"
+SPDX-FileCopyrightText = ["1988-1997 Sam Leffler", "1991-1997 Silicon Graphics, Inc."]
+SPDX-License-Identifier = "libtiff"
+
+[[annotations]]
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/plain_paragraph.docx",
     "OdfFile/Test/test_odf/ExampleFiles/plain_paragraph.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_date.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_datetime.xlsx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/print_area_bad_local_sheet.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/print_area_local_sheet.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/print_area_local_sheet_past_end.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/print_area_no_local_sheet.xlsx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
