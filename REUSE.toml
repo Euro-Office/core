@@ -159,3 +159,14 @@ path = [
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/meta_generator_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/meta_template_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/meta_template_href_only.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/meta_template_no_generator.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/meta_template_with_generator.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"

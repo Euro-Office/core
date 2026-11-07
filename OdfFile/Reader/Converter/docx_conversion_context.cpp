@@ -866,7 +866,7 @@ std::wstring  docx_conversion_context::dump_settings_app()
 			{
 				CP_XML_NODE(L"Template")
 				{
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().template_;
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().template_);
 				}
 			}
 			if (odf_document_->odf_context().DocProps().revision_)
@@ -880,7 +880,7 @@ std::wstring  docx_conversion_context::dump_settings_app()
 			{
 				if (!odf_document_->odf_context().DocProps().application_.empty())
 				{
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().application_;
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().application_);
 				}
 				else
 				{
