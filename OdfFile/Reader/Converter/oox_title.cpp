@@ -63,7 +63,7 @@ void oox_title::oox_content_serialize(std::wostream & _Wostream, odf_reader::cha
 
 				CP_XML_NODE(L"a:t")
 				{
-					CP_XML_CONTENT(content.content_);
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(content.content_);
 				}
 			}
 		}
