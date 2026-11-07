@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 // ODF chart -> DrawingML chart part: the cached series names (c:tx) and
-// category names (c:cat) are text taken from the chart's data table. They
-// have to be escaped, or a name with "&" or "<" makes the whole chart part
-// unreadable.
+// category names (c:cat) are text taken from the chart's data table; titles,
+// formulas and the pivot source name come from the chart and the sheet names.
+// They have to be escaped, or a name with "&" or "<" makes the whole chart
+// part unreadable.
 
 #include "gtest/gtest.h"
 
@@ -60,4 +61,47 @@ TEST(OdfToOoxmlChart, LiteralSeriesNameIsEscaped)
 
 	EXPECT_TRUE(is_well_formed(xml)) << xml;
 	EXPECT_NE(xml.find(L"<c:tx><c:v>R&amp;D &lt;total&gt;</c:v></c:tx>"), std::wstring::npos) << xml;
+}
+
+// A spreadsheet chart on the sheet "R&D" with the title "Sales & <costs>" and
+// the category axis title "Region & area".
+TEST(OdfToOoxmlChart, TitlesAreEscaped)
+{
+	const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/chart_sheet_name_ampersand.ods");
+	ASSERT_FALSE(dir.empty()) << "ODS -> XLSX conversion failed";
+
+	const std::wstring xml = read_part(dir, L"xl/charts/chart1.xml");
+	ASSERT_FALSE(xml.empty()) << "xl/charts/chart1.xml is missing";
+	EXPECT_TRUE(is_well_formed(xml));
+	EXPECT_NE(xml.find(L"<a:t>Sales &amp; &lt;costs&gt;</a:t>"), std::wstring::npos);
+	EXPECT_NE(xml.find(L"<a:t>Region &amp; area</a:t>"), std::wstring::npos);
+	EXPECT_EQ(xml.find(L"&amp;amp;"), std::wstring::npos);
+}
+
+// The same chart: its ranges refer to the sheet "R&D", so the sheet name is
+// part of every c:f formula.
+TEST(OdfToOoxmlChart, FormulasWithSheetNameAreEscaped)
+{
+	const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/chart_sheet_name_ampersand.ods");
+	ASSERT_FALSE(dir.empty()) << "ODS -> XLSX conversion failed";
+
+	const std::wstring xml = read_part(dir, L"xl/charts/chart1.xml");
+	ASSERT_FALSE(xml.empty()) << "xl/charts/chart1.xml is missing";
+	EXPECT_TRUE(is_well_formed(xml));
+	EXPECT_NE(xml.find(L"<c:f>&apos;R&amp;D&apos;!$A$2:$A$3</c:f>"), std::wstring::npos); // c:strRef
+	EXPECT_NE(xml.find(L"<c:f>&apos;R&amp;D&apos;!$B$2:$B$3</c:f>"), std::wstring::npos); // c:numRef
+	EXPECT_EQ(xml.find(L"&amp;amp;"), std::wstring::npos);
+}
+
+// An embedded chart whose loext:data-pilot-source is "R&D <pivot>": the name
+// is written to c:pivotSource/c:name.
+TEST(OdfToOoxmlChart, PivotSourceNameIsEscaped)
+{
+	const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/chart_pivot_source_ampersand.odt");
+	ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+	const std::wstring xml = read_part(dir, L"word/charts/chart1.xml");
+	ASSERT_FALSE(xml.empty()) << "word/charts/chart1.xml is missing";
+	EXPECT_TRUE(is_well_formed(xml));
+	EXPECT_NE(xml.find(L"<c:name>R&amp;D &lt;pivot&gt;</c:name>"), std::wstring::npos);
 }
