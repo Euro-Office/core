@@ -29,6 +29,11 @@ SPDX-FileCopyrightText = ["2002 Leon Bottou and Yann Le Cun", "2001 AT&T", "2026
 SPDX-License-Identifier = "GPL-2.0-or-later"
 
 [[annotations]]
+path = ["DjVuFile/test/data/bilevel.djvu", "DjVuFile/test/data/color.djvu", "DjVuFile/test/data/document.djvu"]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = "Common/3dParty/libtiff/patch/libtiff.patch"
 SPDX-FileCopyrightText = ["1988-1997 Sam Leffler", "1991-1997 Silicon Graphics, Inc."]
 SPDX-License-Identifier = "libtiff"
