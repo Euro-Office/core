@@ -1016,7 +1016,9 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPictureWorksheet *oox_background)
 	fill_image->xlink_attlist_->actuate_	= odf_types::xlink_actuate::OnLoad;	
 	fill_image->xlink_attlist_->href_		= href;
 
-	odf_writer::style_page_layout_properties* page_props = ods_context->page_layout_context()->last_layout()->get_properties();
+	odf_writer::style_page_layout_properties* page_props = ods_context->page_layout_context()->get_properties();
+	if (!page_props) return;
+
 	page_props->add_child_element(fill_image_element);
 }
 void XlsxConverter::convert(OOX::Spreadsheet::CTable *oox_table_part)

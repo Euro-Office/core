@@ -31,6 +31,9 @@ set(SRC
     ${CORE_ROOT}/DesktopEditor/graphics/Matrix.cpp
     ${CORE_ROOT}/DesktopEditor/graphics/GraphicsPath.cpp
     ${CORE_ROOT}/DesktopEditor/raster/BgraFrame.cpp
+    ${CORE_ROOT}/DesktopEditor/raster/Pnm/PnmFile.cpp
+    ${CORE_ROOT}/DesktopEditor/raster/Ras/RasFile.cpp
+    ${CORE_ROOT}/DesktopEditor/raster/WebP/WebPFile.cpp
     ${CORE_ROOT}/DesktopEditor/raster/ImageFileFormatChecker.cpp
 
     ${CORE_ROOT}/DesktopEditor/graphics/pro/js/qt/raster/pro_Fonts_empty.cpp
@@ -52,109 +55,12 @@ set(SRC
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximatran.cpp
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximatif.cpp
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/tif_xfile.cpp
-    ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximajas.cpp
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximagif.cpp
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximaico.cpp
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximatga.cpp
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximapcx.cpp
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximawbmp.cpp
-    ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximamng.cpp
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximapsd.cpp
-    ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximaska.cpp
-    ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximaraw.cpp
-
-    # ---- jpeg ----
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jerror.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdmarker.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdapimin.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdmaster.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdapistd.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcomapi.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jutils.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdinput.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdmainct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jmemmgr.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jquant1.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jquant2.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdmerge.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdcolor.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdsample.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdpostct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jddctmgr.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdarith.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdhuff.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jdcoefct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jmemnobs.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jidctint.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jidctfst.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jidctflt.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jaricom.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcapimin.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcparam.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcapistd.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcinit.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcmaster.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jccolor.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcmarker.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcsample.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcprepct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcdctmgr.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcarith.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jchuff.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jccoefct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jcmainct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jfdctint.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jfdctfst.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg/jfdctflt.c
-
-    # ---- png ----
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngread.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngmem.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngerror.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/png.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngrio.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngtrans.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngget.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngrutil.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngrtran.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngset.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngwrite.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngwio.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngwutil.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngwtran.c
-
-    # ---- tiff ----
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_close.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_dir.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_aux.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_getimage.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_strip.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_open.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_tile.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_error.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_read.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_flush.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_dirinfo.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_compress.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_warning.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_swab.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_color.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_dirread.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_write.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_codec.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_luv.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_dirwrite.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_dumpmode.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_fax3.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_ojpeg.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_jpeg.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_next.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_thunder.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_packbits.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_lzw.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_zip.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_fax3sm.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_predict.c
 
     # ---- Metafile ----
     ${CORE_ROOT}/DesktopEditor/raster/Metafile/MetaFile.cpp
@@ -205,76 +111,9 @@ set(SRC
 
 
     ### These are part of full build    
-    # ---- jasper ----
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_init.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_stream.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_malloc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_image.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_cm.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_seq.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_string.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_icc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_debug.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_iccdata.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_tvp.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/base/jas_version.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/mif/mif_cod.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/pnm/pnm_dec.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/pnm/pnm_enc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/pnm/pnm_cod.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/bmp/bmp_dec.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/bmp/bmp_enc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/bmp/bmp_cod.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/ras/ras_dec.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/ras/ras_enc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jp2/jp2_dec.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jp2/jp2_enc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jp2/jp2_cod.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_cs.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_enc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_dec.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_t1cod.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_math.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_util.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_tsfb.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_mct.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_t1enc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_t1dec.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_bs.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_t2cod.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_t2enc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_t2dec.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_tagtree.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_mqenc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_mqdec.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_mqcod.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpc/jpc_qmfb.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpg/jpg_val.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/jpg/jpg_dummy.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/pgx/pgx_dec.c
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/pgx/pgx_enc.c
-
     # ---- jp2 ----
     ${CORE_ROOT}/DesktopEditor/raster/Jp2/J2kFile.cpp
     ${CORE_ROOT}/DesktopEditor/raster/Jp2/Reader.cpp
-
-    # ---- mng ----
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_hlapi.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_callback_xs.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_prop_xs.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_object_prc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_zlib.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_jpeg.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_pixels.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_read.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_error.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_display.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_write.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_chunk_io.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_cms.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_filter.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_chunk_prc.c
-    ${CORE_ROOT}/DesktopEditor/cximage/mng/libmng_chunk_xs.c
 
     # ---- libpsd ----
     ${CORE_ROOT}/DesktopEditor/cximage/libpsd/psd.c
@@ -319,72 +158,7 @@ set(SRC
     ${CORE_ROOT}/DesktopEditor/cximage/libpsd/stroke.c
     ${CORE_ROOT}/DesktopEditor/cximage/libpsd/pattern_overlay.c
 
-    # ---- raw ----
-    ${CORE_ROOT}/DesktopEditor/cximage/raw/libdcr.c
-
     # ---- jbig ----
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/JBig2File.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/Encoder/jbig2enc.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/Encoder/jbig2arith.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/Encoder/jbig2sym.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pixconv.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/writefile.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/scale.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pix1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pix2.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pix3.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pix4.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pix5.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/grayquant.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/grayquantlow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/seedfill.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/jbclass.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pixabasic.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/numabasic.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/morphseq.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/binexpandlow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/ptabasic.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/rop.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/colormap.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pngiostub.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/lepton_utils.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/scalelow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/enhance.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/jpegio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/jpegiostub.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/spixio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/webpio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/webpiostub.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/psio2.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/gifio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/gifiostub.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pnmio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/tiffio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/tiffiostub.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/bmpio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/binexpand.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/compare.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/boxbasic.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/conncomp.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pixafunc1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/boxfunc1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/ptafunc1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/binreduce.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/seedfilllow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/sel1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/morphapp.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/correlscore.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/sarray.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/morph.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/roplow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/fpix1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/stack.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pixacc.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pixarith.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/convolve.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/binreducelow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/convolvelow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/arithlow.cpp
 
 )
 
@@ -408,9 +182,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${ZLIBNG_WASM_INCDIR}
     ${ZLIBNG_WASM_INCDIR}/minizip
     ${CORE_ROOT}/OfficeUtils/src
-    ${CORE_ROOT}/DesktopEditor/cximage/jasper/include
-    ${CORE_ROOT}/DesktopEditor/cximage/jpeg
-    ${CORE_ROOT}/DesktopEditor/cximage/png
     ${CORE_ROOT}/DesktopEditor/agg-2.4/include
 )
 
@@ -419,14 +190,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # -------------------------------------------------
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     __linux__ _LINUX UNIX _QT
-    EXCLUDE_JPG_SUPPORT
     METAFILE_SUPPORT_WMF_EMF
-    MNG_SUPPORT_DISPLAY
-    MNG_SUPPORT_READ
-    MNG_SUPPORT_WRITE
-    MNG_ACCESS_CHUNKS
-    MNG_STORE_CHUNKS
-    MNG_ERROR_TELLTALE
     HAVE_UNISTD_H HAVE_FCNTL_H _ARM_ALIGN_
     CXIMAGE_DISABLE_SUPPORT_MNG
     CXIMAGE_DISABLE_SUPPORT_ADDITIONS
@@ -447,6 +211,11 @@ target_link_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     minizip
     z
+    jpeg
+    png
+    tiff
+    webp
+    webpdemux
 )
 
 # -------------------------------------------------

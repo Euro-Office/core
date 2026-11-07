@@ -44,8 +44,8 @@ add_library(XpsFile SHARED
 set_default_options(XpsFile)
 
 target_include_directories(XpsFile PRIVATE
-    ${CORE_ROOT_DIR}/DesktopEditor/freetype-2.10.4/include
-    ${CORE_ROOT_DIR}/DesktopEditor/freetype-2.10.4/include/freetype
+    ${FREETYPE_SOURCES_DIR}/include
+    ${FREETYPE_SOURCES_DIR}/include/freetype
 )
 
 target_compile_definitions(XpsFile PRIVATE
