@@ -80,6 +80,11 @@ Done:
       output file, so the post-conversion comparisons fail. The CTest run is disabled
       (`set_tests_properties(ooxml_test PROPERTIES DISABLED TRUE)`) pending diagnosis of the headless
       conversion by someone able to run X2T locally.
+- [x] `X2tConverter/test/TestOOOXml2Odf` (`ooxml2odf_math_test`) — 45 cases for
+      `StarMath::COOXml2Odf`, which converts OOXML math (`m:oMath`) to StarMath/MathML when
+      OdfFormatLib writes ODF. It has a `.pro` but was missed by the first migration. Links
+      the static format libraries in a group, like `test_odf`. `GTEST_MAIN` (`main.cpp` has
+      no `main()`). No fixtures: the OOXML math is parsed from strings.
 - [x] `OfficeUtils/tests` — deps: kernel, UnicodeConverter. The committed `tests/zip/`
       fixtures are staged next to the binary: the suite resolves fixtures relative to the
       process directory (`<binary dir>/../zip`), and writes its `unzip`/`temp` output dirs
