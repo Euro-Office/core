@@ -1,7 +1,7 @@
 #ifndef CTEXT_H
 #define CTEXT_H
 
-#include "../../../graphics/pro/Fonts.h"
+#include "../../../../graphics/pro/Fonts.h"
 
 #include "CPath.h"
 #include "CContainer.h"
