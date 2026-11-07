@@ -16,7 +16,7 @@
 // The bin-format CSV reader (OOXML/Binary/Sheets/Reader/CSVReader.cpp) is
 // exercised by every CSV/TXT import in the stack and had no test coverage --
 // which is how the #160 ghost-row bug shipped undetected (an empty row was
-// added for UTF-8 files ending in a line break; fixed in this PR). This suite
+// added for UTF-8 files ending in a line break; fixed in #170). This suite
 // covers the reader's public API directly: content is generated in-test,
 // written to the GoogleTest temp dir, read back, and asserted against the
 // in-memory CXlsx the reader produces. No fixtures.
@@ -144,7 +144,7 @@ TEST(CsvReader, Utf8BasicRowsAndCells)
 // Regression for #160: UTF-8 content ending in a line break produced a
 // trailing empty row, because the reader's converted buffer was not shrunk
 // to the converted length and the NUL padding made the final "leftover text"
-// check pass. This is the case the fix in this PR carries.
+// check pass. This is the regression case for the fix in #170.
 TEST(CsvReader, Utf8TrailingLineBreakAddsNoEmptyRow)
 {
     std::wstring sPath = TempPath("utf8_trailing.csv");
@@ -172,6 +172,7 @@ TEST(CsvReader, TrailingCarriageReturnOnly)
 
     OOX::Spreadsheet::CSheetData& oData = Sheet(oXlsx);
     ASSERT_EQ(oData.m_arrItems.size(), 2u);
+    ASSERT_EQ(oData.m_arrItems[1]->m_arrItems.size(), 2u);
     EXPECT_EQ(CellText(oData.m_arrItems[1]->m_arrItems[1]), L"d");
 }
 
@@ -221,6 +222,7 @@ TEST(CsvReader, Utf16LeWithBom)
 
     OOX::Spreadsheet::CSheetData& oData = Sheet(oXlsx);
     ASSERT_EQ(oData.m_arrItems.size(), 2u);
+    ASSERT_EQ(oData.m_arrItems[1]->m_arrItems.size(), 2u);
     EXPECT_EQ(CellText(oData.m_arrItems[1]->m_arrItems[1]), L"d");
 }
 
@@ -239,6 +241,7 @@ TEST(CsvReader, Utf32LeWithoutBom)
 
     OOX::Spreadsheet::CSheetData& oData = Sheet(oXlsx);
     ASSERT_EQ(oData.m_arrItems.size(), 2u);
+    ASSERT_EQ(oData.m_arrItems[1]->m_arrItems.size(), 2u);
     EXPECT_EQ(CellText(oData.m_arrItems[1]->m_arrItems[1]), L"d");
 }
 
@@ -254,6 +257,7 @@ TEST(CsvReader, AnsiCodePage)
 
     OOX::Spreadsheet::CSheetData& oData = Sheet(oXlsx);
     ASSERT_EQ(oData.m_arrItems.size(), 1u);
+    ASSERT_EQ(oData.m_arrItems[0]->m_arrItems.size(), 2u);
     EXPECT_EQ(CellText(oData.m_arrItems[0]->m_arrItems[1]), L"world");
 }
 
@@ -288,6 +292,7 @@ TEST(CsvReader, DelimiterFromArgument)
 
     OOX::Spreadsheet::CSheetData& oData = Sheet(oXlsx);
     ASSERT_EQ(oData.m_arrItems.size(), 2u);
+    ASSERT_EQ(oData.m_arrItems[1]->m_arrItems.size(), 2u);
     EXPECT_EQ(CellText(oData.m_arrItems[1]->m_arrItems[1]), L"d");
 }
 
@@ -322,6 +327,7 @@ TEST(CsvReader, QuotedFieldWithEmbeddedNewline)
 
     OOX::Spreadsheet::CSheetData& oData = Sheet(oXlsx);
     ASSERT_EQ(oData.m_arrItems.size(), 1u); // the embedded break must not split the row
+    ASSERT_EQ(oData.m_arrItems[0]->m_arrItems.size(), 2u);
     EXPECT_EQ(CellText(oData.m_arrItems[0]->m_arrItems[0]), L"line1\nline2");
 }
 

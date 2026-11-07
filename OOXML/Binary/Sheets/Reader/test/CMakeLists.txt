@@ -54,8 +54,10 @@ target_include_directories(csv_reader_test PRIVATE
 # std::bad_cast from a mixed-runtime use_facet lookup. Linking the system
 # runtime as the FIRST dependency of the executable wins the symbol race
 # and restores a single consistent C++ runtime. The root cause in the ICU
-# build is to be reported separately.
-target_link_options(csv_reader_test PRIVATE
-    "-Wl,--no-as-needed"
-    "-lstdc++"
-)
+# build is tracked in #173. Guarded to Linux: Apple's linker rejects
+# --no-as-needed, and only Linux needs the workaround (same as rtf_lex_test).
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_link_options(csv_reader_test PRIVATE
+        "-Wl,--no-as-needed" "-lstdc++"
+    )
+endif()
