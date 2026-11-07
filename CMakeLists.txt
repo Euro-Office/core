@@ -52,6 +52,10 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/test" xmlsec_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/number_formats" odf_number_formats_test )
         add_subdirectory( "${CORE_ROOT_DIR}/RtfFile/Format/test" rtf_lex_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg/test" openjpeg_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/MsBinaryFile/PptFile/test" pptfile_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/raster/test" raster_formats_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/fontengine/test" fontengine_test )
 
         # doctrenderer (V8) gtest suites. The V8 monolith is built in CI by
         # common.cmake (build_3rdparty.py) and is self-contained at run time:
@@ -62,12 +66,15 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/json" doctrenderer_json_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/js_internal" doctrenderer_jsinternal_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/embed/internal/hash" doctrenderer_hash_test )
+        # The JS engine embedding itself: run these first after updating V8
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/engine" doctrenderer_engine_test )
 
         # PdfFile/test runs headless with its single fixture-dependent case
         # (CPdfFileTest.EditPdfFromBase64) excluded via GTEST_FILTER; all other
         # cases self-skip. See PdfFile/test/CMakeLists.txt and TESTING.md for the
         # missing fixtures needed to fully enable it.
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test" pdffile_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test/jbig2" pdf_jbig2_test )
     endif()
 
 endif()

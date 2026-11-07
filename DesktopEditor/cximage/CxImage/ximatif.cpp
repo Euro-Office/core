@@ -19,7 +19,7 @@
 
 #define FIX_16BPP_DARKIMG // + VK: if uncomment, dark 16bpp images are fixed
 
-#include "../tiff/tiffio.h"
+#include <tiffio.h>
 
 #define CVT(x)			(((x) * 255L) / ((1L<<16)-1))
 #define	SCALE(x)		(((x)*((1L<<16)-1))/255)
@@ -45,16 +45,16 @@ bool CxImageTIF::Decode(CxFile * hFile)
 	// m_tif = TIFFOpen(imageFileName,"rb");
 	TIFF* m_tif = _TIFFOpenEx(hFile, "rb");
 
-	uint32 height=0;
-	uint32 width=0;
-	uint16 bitspersample=1;
-	uint16 samplesperpixel=1;
-	uint32 rowsperstrip=(uint32_t)-1;
-	uint16 photometric=0;
-	uint16 compression=1;
-	uint16 orientation=ORIENTATION_TOPLEFT; //<vho>
-	uint16 res_unit; //<Trifon>
-	uint32 x, y;
+	uint32_t height=0;
+	uint32_t width=0;
+	uint16_t bitspersample=1;
+	uint16_t samplesperpixel=1;
+	uint32_t rowsperstrip=(uint32_t)-1;
+	uint16_t photometric=0;
+	uint16_t compression=1;
+	uint16_t orientation=ORIENTATION_TOPLEFT; //<vho>
+	uint16_t res_unit; //<Trifon>
+	uint32_t x, y;
 	float resolution, offset;
 	BOOL isRGB;
 	uint8_t *bits;		//pointer to source data
@@ -68,10 +68,10 @@ bool CxImageTIF::Decode(CxFile * hFile)
 
 	// <Robert Abram> - 12/2002 : get NumFrames directly, instead of looping
 	// info.nNumFrames=0;
-	// while(TIFFSetDirectory(m_tif,(uint16)info.nNumFrames)) info.nNumFrames++;
+	// while(TIFFSetDirectory(m_tif,(uint16_t)info.nNumFrames)) info.nNumFrames++;
 	info.nNumFrames = TIFFNumberOfDirectories(m_tif);
 
-	if (!TIFFSetDirectory(m_tif, (uint16)info.nFrame))
+	if (!TIFFSetDirectory(m_tif, (uint16_t)info.nFrame))
 		cx_throw("Error: page not present in TIFF file");			
 
 	//get image info
@@ -165,10 +165,10 @@ bool CxImageTIF::Decode(CxFile * hFile)
 	if (isRGB) {
 		// Read the whole image into one big RGBA buffer using
 		// the traditional TIFFReadRGBAImage() API that we trust.
-		uint32* raster;		// retrieve RGBA image
-		uint32 *row;
+		uint32_t* raster;		// retrieve RGBA image
+		uint32_t *row;
 
-		raster = (uint32*)_TIFFmalloc(width * height * sizeof (uint32));
+		raster = (uint32_t*)_TIFFmalloc(width * height * sizeof (uint32_t));
 		if (raster == NULL) cx_throw("No space for raster buffer");
 			
 		// Read the image in one chunk into an RGBA array
@@ -238,9 +238,9 @@ bool CxImageTIF::Decode(CxFile * hFile)
 				}
 				break;
 			case PHOTOMETRIC_PALETTE:	// color map indexed
-				uint16 *red;
-				uint16 *green;
-				uint16 *blue;
+				uint16_t *red;
+				uint16_t *green;
+				uint16_t *blue;
 				TIFFGetField(m_tif, TIFFTAG_COLORMAP, &red, &green, &blue); 
 
 				// Is the palette 16 or 8 bits ?
@@ -276,8 +276,8 @@ bool CxImageTIF::Decode(CxFile * hFile)
 		}
 
 		// read the tiff lines and save them in the DIB
-		uint32 nrow;
-		uint32 ys;
+		uint32_t nrow;
+		uint32_t ys;
 		int32_t line = CalculateLine(width, bitspersample * samplesperpixel);
 		
 		int32_t bitsize = TIFFStripSize(m_tif);
@@ -291,7 +291,7 @@ bool CxImageTIF::Decode(CxFile * hFile)
 			bitsize *= (bitspersample + 7)/8; 
 
 		int32_t tiled_image = TIFFIsTiled(m_tif);
-		uint32 tw=0, tl=0;
+		uint32_t tw=0, tl=0;
 		uint8_t* tilebuf=NULL;
 		if (tiled_image){
 			TIFFGetField(m_tif, TIFFTAG_TILEWIDTH, &tw);
@@ -336,13 +336,13 @@ bool CxImageTIF::Decode(CxFile * hFile)
 			nrow = (ys + rowsperstrip > height ? height - ys : rowsperstrip);
 
 			if (tiled_image){
-				uint32 imagew = TIFFScanlineSize(m_tif);
-				uint32 tilew  = TIFFTileRowSize(m_tif);
+				uint32_t imagew = TIFFScanlineSize(m_tif);
+				uint32_t tilew  = TIFFTileRowSize(m_tif);
 				int32_t iskew = imagew - tilew;
-				uint8* bufp = (uint8*) bits;
+				uint8_t* bufp = (uint8_t*) bits;
 
-				uint32 colb = 0;
-				for (uint32 col = 0; col < width; col += tw) {
+				uint32_t colb = 0;
+				for (uint32_t col = 0; col < width; col += tw) {
 					if (TIFFReadTile(m_tif, tilebuf, col, ys, 0, 0) < 0){
 						free(tilebuf);
 						free(bits);
@@ -350,8 +350,8 @@ bool CxImageTIF::Decode(CxFile * hFile)
 					}
 
 					if (colb + tw > imagew) {
-						uint32 owidth = imagew - colb;
-						uint32 oskew = tilew - owidth;
+						uint32_t owidth = imagew - colb;
+						uint32_t oskew = tilew - owidth;
 						TileToStrip(bufp + colb, tilebuf, nrow, owidth, oskew + iskew, oskew );
 					} else {
 						TileToStrip(bufp + colb, tilebuf, nrow, tilew, iskew, 0);
@@ -382,7 +382,7 @@ bool CxImageTIF::Decode(CxFile * hFile)
 						int32_t the_shift;
 						uint8_t hi_byte, hi_max=0;
 						uint32_t xi;
-						for (xi=0;xi<(uint32)line;xi++) {
+						for (xi=0;xi<(uint32_t)line;xi++) {
 							hi_byte = bits16[xi*2+offset16+1];
 							if(hi_byte>hi_max)
 								hi_max = hi_byte;
@@ -395,10 +395,10 @@ bool CxImageTIF::Decode(CxFile * hFile)
 							}
 						row_shifts[height-ys-nrow+y] = the_shift;
 						the_shift = 8 - the_shift;
-						for (xi=0;xi<(uint32)line;xi++) 
+						for (xi=0;xi<(uint32_t)line;xi++) 
 							bits[xi+offset]= ((bits16[xi*2+offset16+1]<<8) | bits16[xi*2+offset16]) >> the_shift;
 #else
-						for (uint32_t xi=0;xi<(uint32)line;xi++) 
+						for (uint32_t xi=0;xi<(uint32_t)line;xi++) 
 							bits[xi+offset]=bits16[xi*2+offset16+1];
 #endif
 					} else {
@@ -449,7 +449,7 @@ bool CxImageTIF::Decode(CxFile * hFile)
 					}
 
 					int32_t xi=0;
-					uint32 ii=0;
+					uint32_t ii=0;
 					int32_t yi=height-ys-nrow+y;
 					RGBQUAD c;
 					int32_t l,a,b,bitsoffset;
@@ -644,16 +644,16 @@ bool CxImageTIF::Encode(CxFile * hFile, CxImage ** pImages, int32_t pagecount)
 ////////////////////////////////////////////////////////////////////////////////
 bool CxImageTIF::EncodeBody(TIFF *m_tif, bool multipage, int32_t page, int32_t pagecount)
 {
-	uint32 height=head.biHeight;
-	uint32 width=head.biWidth;
-	uint16 bitcount=head.biBitCount;
-	uint16 bitspersample;
-	uint16 samplesperpixel;
-	uint16 photometric=0;
-	uint16 compression;
-//	uint16 pitch;
+	uint32_t height=head.biHeight;
+	uint32_t width=head.biWidth;
+	uint16_t bitcount=head.biBitCount;
+	uint16_t bitspersample;
+	uint16_t samplesperpixel;
+	uint16_t photometric=0;
+	uint16_t compression;
+//	uint16_t pitch;
 //	int32_t line;
-	uint32 x, y;
+	uint32_t x, y;
 
 	samplesperpixel = ((bitcount == 24) || (bitcount == 32)) ? (uint8_t)3 : (uint8_t)1;
 #if CXIMAGE_SUPPORT_ALPHA
@@ -708,7 +708,7 @@ bool CxImageTIF::EncodeBody(TIFF *m_tif, bool multipage, int32_t page, int32_t p
 #endif //CXIMAGE_SUPPORT_ALPHA
 
 //	line = CalculateLine(width, bitspersample * samplesperpixel);
-//	pitch = (uint16)CalculatePitch(line);
+//	pitch = (uint16_t)CalculatePitch(line);
 
 	//prepare the palette struct
 	RGBQUAD pal[256];
@@ -729,7 +729,7 @@ bool CxImageTIF::EncodeBody(TIFF *m_tif, bool multipage, int32_t page, int32_t p
 	TIFFSetField(m_tif, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);	// single image plane 
 	TIFFSetField(m_tif, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
 
-	uint32 rowsperstrip = TIFFDefaultStripSize(m_tif, (uint32) -1);  //<REC> gives better compression
+	uint32_t rowsperstrip = TIFFDefaultStripSize(m_tif, (uint32_t) -1);  //<REC> gives better compression
 	TIFFSetField(m_tif, TIFFTAG_ROWSPERSTRIP, rowsperstrip);
 
 	// handle metrics
@@ -754,15 +754,15 @@ bool CxImageTIF::EncodeBody(TIFF *m_tif, bool multipage, int32_t page, int32_t p
 
 	// palettes (image colormaps are automatically scaled to 16-bits)
 	if (photometric == PHOTOMETRIC_PALETTE) {
-		uint16 *r, *g, *b;
-		r = (uint16 *) _TIFFmalloc(sizeof(uint16) * 3 * 256);
+		uint16_t *r, *g, *b;
+		r = (uint16_t *) _TIFFmalloc(sizeof(uint16_t) * 3 * 256);
 		g = r + 256;
 		b = g + 256;
 
 		for (int32_t i = 255; i >= 0; i--) {
-			b[i] = (uint16)SCALE((uint16)pal[i].rgbRed);
-			g[i] = (uint16)SCALE((uint16)pal[i].rgbGreen);
-			r[i] = (uint16)SCALE((uint16)pal[i].rgbBlue);
+			b[i] = (uint16_t)SCALE((uint16_t)pal[i].rgbRed);
+			g[i] = (uint16_t)SCALE((uint16_t)pal[i].rgbGreen);
+			r[i] = (uint16_t)SCALE((uint16_t)pal[i].rgbBlue);
 		}
 
 		TIFFSetField(m_tif, TIFFTAG_COLORMAP, r, g, b);
@@ -900,10 +900,10 @@ bool CxImageTIF::EncodeBody(TIFF *m_tif, bool multipage, int32_t page, int32_t p
 ////////////////////////////////////////////////////////////////////////////////
 #endif // CXIMAGE_SUPPORT_ENCODE
 ////////////////////////////////////////////////////////////////////////////////
-void CxImageTIF::TileToStrip(uint8* out, uint8* in,	uint32 rows, uint32 cols, int32_t outskew, int32_t inskew)
+void CxImageTIF::TileToStrip(uint8_t* out, uint8_t* in,	uint32_t rows, uint32_t cols, int32_t outskew, int32_t inskew)
 {
 	while (rows-- > 0) {
-		uint32 j = cols;
+		uint32_t j = cols;
 		while (j-- > 0)
 			*out++ = *in++;
 		out += outskew;
@@ -924,8 +924,8 @@ void CxImageTIF::TIFFCloseEx(TIFF* tif)
 ////////////////////////////////////////////////////////////////////////////////
 void CxImageTIF::MoveBits( uint8_t* dest, uint8_t* from, int32_t count, int32_t bpp )
 {	int32_t offbits = 0;
-	uint16 w;
-	uint32 d;
+	uint16_t w;
+	uint32_t d;
 	if (bpp <= 8) {
 		while (count-- > 0) {
 			if (offbits + bpp <= 8)
@@ -955,7 +955,7 @@ void CxImageTIF::MoveBits( uint8_t* dest, uint8_t* from, int32_t count, int32_t 
 	} else if (bpp < 32) {
 		while (count-- > 0) {
 			d = (*from << 24) | (from[1]<<16) | (from[2]<<8) | from[3];
-			//d = *(uint32*)from;
+			//d = *(uint32_t*)from;
 			*dest++ = (uint8_t) ( d >> (offbits + bpp - 8) );
 			offbits += bpp;
 			while (offbits >= 8) {
@@ -965,7 +965,7 @@ void CxImageTIF::MoveBits( uint8_t* dest, uint8_t* from, int32_t count, int32_t 
 		}
 	} else {
 		while (count-- > 0) {
-			d = *(uint32*)from;
+			d = *(uint32_t*)from;
 			*dest++ = (uint8_t) (d >> 24);
 			from += 4;
 		}
@@ -974,13 +974,13 @@ void CxImageTIF::MoveBits( uint8_t* dest, uint8_t* from, int32_t count, int32_t 
 ////////////////////////////////////////////////////////////////////////////////
 void CxImageTIF::MoveBitsPal( uint8_t* dest, uint8_t*from, int32_t count, int32_t bpp, RGBQUAD* pal )
 {	int32_t offbits = 0;
-	uint32 d;
-	uint16 palidx;
+	uint32_t d;
+	uint16_t palidx;
 	while (count-- > 0) {
 		d = (*from << 24) | ( *( from + 1 ) << 16 )
 						  | ( *( from + 2 ) << 8 )
 						  | ( *( from + 3 ) );
-		palidx = (uint16) (d >> (32 - offbits - bpp));
+		palidx = (uint16_t) (d >> (32 - offbits - bpp));
 		if (bpp < 16) {
 			palidx <<= 16-bpp;
 			palidx = (palidx >> 8) | (palidx <<8);

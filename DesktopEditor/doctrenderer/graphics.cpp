@@ -1262,7 +1262,10 @@ namespace NSGraphics
 
 			std::wstring sName = strImage.substr(0, strImage.rfind(L'.') + 1);
 			std::wstring sExt = src.substr(src.rfind(L'.') + 1);
-			if (sExt == L"svg")
+			// The raster of a metafile is kept next to it: converting it again for each draw is slow
+			if (sExt == L"svg" && NSFile::CFileBinary::Exists(sName + L"texture.png"))
+				sName += L"texture.png";
+			else if (sExt == L"svg")
 			{
 				if (NSFile::CFileBinary::Exists(sName + L"wmf") && src.find(L"display") == 0)
 					strImage = sName + L"wmf";
@@ -1275,7 +1278,7 @@ namespace NSGraphics
 				double x = 0, y = 0, w = 0, h = 0;
 				pMetafile->GetBounds(&x, &y, &w, &h);
 
-				sName += L"png";
+				sName += L"texture.png";
 				MetaFile::ConvertToRasterMaxSize(pMetafile, sName.c_str(), 4, 1000);
 
 				RELEASEOBJECT(pMetafile);

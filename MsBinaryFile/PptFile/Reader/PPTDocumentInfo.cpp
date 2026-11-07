@@ -112,7 +112,12 @@ std::wstring CPPTDocumentInfo::GetBinFromStg(const std::wstring& name, _UINT32 n
             StreamUtils::StreamSeek(offset_stream, m_pStream);
 
             SRecordHeader oHeader;
-            oHeader.ReadFromStream(m_pStream);
+            // The offset comes out of the persistence table, so the record it
+            // points at may not be there at all. Without a header there is no
+            // length to hand to the reader, and reading on would size a buffer
+            // from whatever the stream happened to hold.
+            if (!oHeader.ReadFromStream(m_pStream))
+                return result;
 
             CRecordExObjStg* pExObjStg = new CRecordExObjStg(name, m_pCommonInfo->tempPath);
 

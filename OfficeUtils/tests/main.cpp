@@ -388,6 +388,58 @@ TEST_F(COfficeUtilsTest, other_win)
 	EXPECT_EQ(wstr, L"123 321");
 }
 
+static void CollectEntryName(const std::wstring& file_name, BYTE* pData, const long& nSize, void* pParam)
+{
+	static_cast<std::vector<std::wstring>*>(pParam)->push_back(file_name);
+}
+
+// traversal_linux holds ok.txt and "/abs_ok.txt" next to "../escape.txt",
+// "/../../escape_abs.txt" and the directory entry "../escape_dir/". Only the two
+// files inside may be extracted, "/abs_ok.txt" relative to the archive root.
+TEST_F(COfficeUtilsTest, traversal_linux)
+{
+	std::wstring zip_filename = L"traversal_linux";
+	std::wstring zip_path = zipDirectory + wsep + zip_filename;
+	std::wstring unzip_folder = unzipDirectory + wsep + zip_filename;
+
+	std::wstring escape_file = unzipDirectory + wsep + L"escape.txt";
+	std::wstring escape_abs_file = unzipDirectory + wsep + L".." + wsep + L"escape_abs.txt";
+	std::wstring escape_dir = unzipDirectory + wsep + L"escape_dir";
+
+	NSFile::CFileBinary::Remove(escape_file);
+	NSFile::CFileBinary::Remove(escape_abs_file);
+	if(NSDirectory::Exists(escape_dir))
+		NSDirectory::DeleteDirectory(escape_dir);
+
+	if(NSDirectory::Exists(unzip_folder))
+		NSDirectory::DeleteDirectory(unzip_folder);
+
+	NSDirectory::CreateDirectories(unzip_folder);
+
+	// the bad entries are skipped, the good ones still count as extracted files
+	HRESULT error_code = utils.ExtractToDirectory(zip_path, unzip_folder, NULL, false);
+	EXPECT_EQ(error_code, S_OK);
+
+	EXPECT_FALSE(NSFile::CFileBinary::Exists(escape_file));
+	EXPECT_FALSE(NSFile::CFileBinary::Exists(escape_abs_file));
+	EXPECT_FALSE(NSDirectory::Exists(escape_dir));
+
+	std::vector<std::wstring> unzip_files = NSDirectory::GetFiles(unzip_folder, true);
+	std::vector<std::wstring> expected;
+	expected.push_back(unzip_folder + wsep + L"ok.txt");
+	expected.push_back(unzip_folder + wsep + L"abs_ok.txt");
+	EXPECT_TRUE(IsFilesPathsEqual(unzip_files, expected));
+
+	std::vector<std::wstring> names;
+	bool result = false;
+	utils.ExtractFilesToMemory(zip_path, CollectEntryName, &names, &result);
+	EXPECT_TRUE(result);
+	std::vector<std::wstring> expected_names;
+	expected_names.push_back(L"ok.txt");
+	expected_names.push_back(L"abs_ok.txt");
+	EXPECT_TRUE(IsFilesPathsEqual(names, expected_names));
+}
+
 TEST_F(COfficeUtilsTest, time_file)
 {
 	// creating file
