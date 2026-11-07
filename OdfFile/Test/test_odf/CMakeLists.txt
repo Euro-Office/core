@@ -60,6 +60,7 @@ add_core_gtest(
             enhanced_path_quadratic_bezier.cpp
             pptx2odp_bullet_size.cpp
             chart_vary_colors.cpp
+            odt2docx_first_body_element.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
