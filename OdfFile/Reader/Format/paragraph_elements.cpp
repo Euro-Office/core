@@ -753,7 +753,7 @@ void a::docx_convert(oox::docx_conversion_context & Context)
 	Context.finish_run();    
 	
 	std::wostream& _Wostream = Context.output_stream();
-	if (Context.is_table_content() || office_target_frame_name_ || ref[0] == L'#')
+	if (Context.is_table_content() || ref[0] == L'#')
 	{
 		size_t pos_outline = ref.find(L"|outline");
 		if (std::wstring::npos != pos_outline)//without #
@@ -784,7 +784,14 @@ void a::docx_convert(oox::docx_conversion_context & Context)
 		std::wstring rId;
 		rId = Context.add_hyperlink(ref, false);
 
-		_Wostream << L"<w:hyperlink r:id=\"" << rId << L"\">";
+		_Wostream << L"<w:hyperlink r:id=\"" << rId << L"\"";
+		if (office_target_frame_name_)
+		{
+			std::wstringstream frame;
+			frame << *office_target_frame_name_;
+			_Wostream << L" w:tgtFrame=\"" << XmlUtils::EncodeXmlString(frame.str()) << L"\"";
+		}
+		_Wostream << L">";
 	}
 
     style_instance * styleInst = NULL;
