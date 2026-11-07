@@ -204,21 +204,6 @@ set(SOURCES
     ${DESKTOP_ROOT}/cximage/CxImage/ximawbmp.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximapsd.cpp
 
-    ${DESKTOP_ROOT}/cximage/png/pngread.c
-    ${DESKTOP_ROOT}/cximage/png/pngmem.c
-    ${DESKTOP_ROOT}/cximage/png/pngerror.c
-    ${DESKTOP_ROOT}/cximage/png/png.c
-    ${DESKTOP_ROOT}/cximage/png/pngrio.c
-    ${DESKTOP_ROOT}/cximage/png/pngtrans.c
-    ${DESKTOP_ROOT}/cximage/png/pngget.c
-    ${DESKTOP_ROOT}/cximage/png/pngrutil.c
-    ${DESKTOP_ROOT}/cximage/png/pngrtran.c
-    ${DESKTOP_ROOT}/cximage/png/pngset.c
-    ${DESKTOP_ROOT}/cximage/png/pngwrite.c
-    ${DESKTOP_ROOT}/cximage/png/pngwio.c
-    ${DESKTOP_ROOT}/cximage/png/pngwutil.c
-    ${DESKTOP_ROOT}/cximage/png/pngwtran.c
-
     ${DESKTOP_ROOT}/cximage/tiff/tif_close.c
     ${DESKTOP_ROOT}/cximage/tiff/tif_dir.c
     ${DESKTOP_ROOT}/cximage/tiff/tif_aux.c
@@ -319,7 +304,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CORE_ROOT}/OfficeUtils/src
     ${ZLIBNG_WASM_INCDIR}
     ${ZLIBNG_WASM_INCDIR}/minizip
-    ${DESKTOP_ROOT}/cximage/png
     ${DESKTOP_ROOT}/agg-2.4/include
 )
 
@@ -339,6 +323,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     minizip # minizip-ng
     z       # libz-ng
     jpeg    # libjpeg-turbo
+    png     # libpng
 )
 
 # -------------------------------------------------
