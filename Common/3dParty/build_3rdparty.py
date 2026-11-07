@@ -26,6 +26,8 @@ subfolders = [
     'icu',
     'libjpeg-turbo',
     'libjpeg-turbo-wasm',
+    'libwebp',
+    'libwebp-wasm',
     'libxml2',
     'libxml2-wasm',
     'md',

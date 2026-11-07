@@ -39,5 +39,6 @@
 - libjpeg-turbo ([IJG](https://raw.githubusercontent.com/libjpeg-turbo/libjpeg-turbo/main/LICENSE.md))
 - libpng ([libpng-2.0](https://raw.githubusercontent.com/pnggroup/libpng/master/LICENSE))
 - libtiff ([libtiff](https://gitlab.com/libtiff/libtiff/-/raw/master/LICENSE.md))
+- libwebp ([BSD-3-Clause](https://raw.githubusercontent.com/webmproject/libwebp/main/COPYING))
 - leptonica ([2-clause BSD License](https://raw.githubusercontent.com/DanBloomberg/leptonica/master/leptonica-license.txt))
 - jbig2enc ([Apache-2.0](https://raw.githubusercontent.com/agl/jbig2enc/master/COPYING))

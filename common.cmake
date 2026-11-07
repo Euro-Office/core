@@ -80,7 +80,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm,jbig2enc"
+            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm,jbig2enc"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -140,6 +140,27 @@ if( EMSCRIPTEN )
         INTERFACE_LINK_LIBRARIES jpeg
     )
 
+    # Setup libwebp-wasm
+    set(LIBWEBP_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libwebp-wasm")
+    get_filename_component(LIBWEBP_INSTALL_DIR_ABS "${LIBWEBP_INSTALL_DIR}" ABSOLUTE)
+    add_library(sharpyuv STATIC IMPORTED GLOBAL)
+    set_target_properties(sharpyuv PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libsharpyuv.a"
+    )
+    add_library(webp STATIC IMPORTED GLOBAL)
+    set_target_properties(webp PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libwebp.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBWEBP_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES sharpyuv
+    )
+    foreach(LIBWEBP_COMPONENT webpdemux webpmux)
+        add_library(${LIBWEBP_COMPONENT} STATIC IMPORTED GLOBAL)
+        set_target_properties(${LIBWEBP_COMPONENT} PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/lib${LIBWEBP_COMPONENT}.a"
+            INTERFACE_LINK_LIBRARIES webp
+        )
+    endforeach()
+
     # Setup leptonica-wasm
     set(LEPTONICA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/leptonica-wasm")
     get_filename_component(LEPTONICA_INSTALL_DIR_ABS "${LEPTONICA_INSTALL_DIR}" ABSOLUTE)
@@ -164,7 +185,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff,leptonica,jbig2enc"
+                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff,libwebp,leptonica,jbig2enc"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -182,7 +203,7 @@ else()
             endif()
 
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -422,6 +443,43 @@ else()
         INTERFACE_INCLUDE_DIRECTORIES "${LIBTIFF_INSTALL_DIR_ABS}/include"
         INTERFACE_LINK_LIBRARIES "jpeg;z"
     )
+
+    # Setup libwebp (MSVC builds are named like the others, libwebp.lib)
+    set(LIBWEBP_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libwebp")
+    get_filename_component(LIBWEBP_INSTALL_DIR_ABS "${LIBWEBP_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(LIBWEBP_LIB_SUFFIX ".lib")
+        set(LIBWEBP_DEP_LIBS "")
+    elseif( ANDROID )
+        set(LIBWEBP_LIB_SUFFIX ".a")
+        add_library(cpufeatures-webp STATIC IMPORTED GLOBAL)
+        set_target_properties(cpufeatures-webp PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libcpufeatures-webp.a"
+            INTERFACE_LINK_LIBRARIES dl
+        )
+        set(LIBWEBP_DEP_LIBS "cpufeatures-webp;m")
+    else()
+        set(LIBWEBP_LIB_SUFFIX ".a")
+        set(LIBWEBP_DEP_LIBS m)
+    endif()
+    add_library(sharpyuv STATIC IMPORTED GLOBAL)
+    set_target_properties(sharpyuv PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libsharpyuv${LIBWEBP_LIB_SUFFIX}"
+        INTERFACE_LINK_LIBRARIES "${LIBWEBP_DEP_LIBS}"
+    )
+    add_library(webp STATIC IMPORTED GLOBAL)
+    set_target_properties(webp PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libwebp${LIBWEBP_LIB_SUFFIX}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBWEBP_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES "sharpyuv;${LIBWEBP_DEP_LIBS}"
+    )
+    foreach(LIBWEBP_COMPONENT webpdemux webpmux)
+        add_library(${LIBWEBP_COMPONENT} STATIC IMPORTED GLOBAL)
+        set_target_properties(${LIBWEBP_COMPONENT} PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/lib${LIBWEBP_COMPONENT}${LIBWEBP_LIB_SUFFIX}"
+            INTERFACE_LINK_LIBRARIES webp
+        )
+    endforeach()
 
     # Setup leptonica
     set(LEPTONICA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/leptonica")

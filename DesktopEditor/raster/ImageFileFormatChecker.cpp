@@ -656,6 +656,10 @@ bool CImageFileFormatChecker::isImageFile(BYTE* buffer, DWORD sizeRead)
 	{
 		eFileType = _CXIMAGE_FORMAT_WB;
 	}
+	if (isWebPFile(buffer, sizeRead))
+	{
+		eFileType = _CXIMAGE_FORMAT_WEBP;
+	}
 	if (isPsdFile(buffer, sizeRead))
 	{
 		eFileType = _CXIMAGE_FORMAT_PSD;
