@@ -224,37 +224,17 @@ Done:
   `icudtl.dat`), so no external V8 runtime data files need to be staged next to the test
   binaries. The `doctrenderer` shared library these suites link is already built in CI
   (the `docbuilder` app links it), so the suites run headless without extra provisioning.
-- [x] `PdfFile/test` — deps: UnicodeConverter, kernel, graphics, PdfFile, DjVuFile,
-      ooxmlsignature (all six are existing CMake targets — no dep porting needed). Builds,
-      links and runs in CI **with one case excluded via `GTEST_FILTER`**. The runtime
-      fixtures are still not committed (see below), so this is a build-only/non-failing
-      registration: every test case self-`GTEST_SKIP()`s except
-      `CPdfFileTest.EditPdfFromBase64` (its skip is commented out), which would hard-fail
-      without `test.pdf`/`base64.txt`; that single case is filtered out to keep CI green.
-      To **fully** enable: commit the missing fixtures (see below), stage them next to the
-      binary (`WORKING_DIRECTORY` / `POST_BUILD copy_directory`, since the suite reads from
-      `NSFile::GetProcessDirectory()`), remove the `GTEST_FILTER`, and un-`GTEST_SKIP()` the
-      cases you want to exercise.
-
-      Fixture catalogue (none present anywhere in the repo):
-      - `test.pdf` — **input**, source PDF loaded by `LoadFromFile()`; used by the majority
-        of cases and by the only non-skipped one.
-      - `base64.txt` — **input**, base64-encoded document binary
-        (`EditPdfFromBase64`, `PdfFromBase64`, `Base64ConvertToRaster`, `SplitPdf`).
-      - `pdf.bin` — **input**, raw document binary
-        (`PdfBinToPng`, `PdfFromBin`, `SetMetaData`, `BinConvertToRaster`).
-      - `pfx.pfx` — **input**, PKCS#12 cert (password `123456`) for `VerifySign` /
-        `EditPdfSign`.
-      - `test.djvu` — **input** for `DjVuToPdf`.
-      - `changes.bin` — **input** for `EditPdfFromBin`.
-      - `test.jpeg` — **input** image stamped by `EditPdfSign` (also missing; not in the
-        original blocker list).
-      - `ONLYOFFICEFORM.docxf` — **intermediate**: produced by `GetMetaData`, consumed by
-        `SetMetaData`.
-      - `resI/` (input images) — required by `ImgDiff` for pixel comparison; not committed.
-      - `test2.pdf` (`wsDstFile`), `test3.pdf`, `test_split.pdf`, `pdftemp/`, `resO/`,
-        `resD/`, `fonts_cache/`, `resPdfBinToPng.png` — **outputs** generated at runtime,
-        not required inputs.
+- [x] `PdfFile/test` (`pdffile_test`) — deps: UnicodeConverter, kernel, graphics, PdfFile,
+      DjVuFile, ooxmlsignature. Covers `CPdfFile`: writing and reading (page sizes, colours
+      read back by rendering), loading from memory, document info, metadata
+      (`ONLYOFFICEFORM`), passwords and `ChangePassword`, editing (rotate, delete, move,
+      add, draw), `SplitPages`, `MergePages`, copying pages through the renderer, and
+      signing and verifying with a generated RSA certificate. `GTEST_MAIN`. No fixtures:
+      every test writes the PDFs it needs with `CPdfFile` itself, in its own directory.
+      It replaces ONLYOFFICE's scratchpad, whose cases mostly asserted nothing, depended on
+      each other's output files and needed fixtures that were never published, among them
+      editor binaries (`pdf.bin`, `changes.bin`, `base64.txt`) only sdkjs produces. Not
+      covered yet: DjVu to PDF, the editor binary formats, redaction and printing.
 - [x] `MsBinaryFile/PptFile/test` (`pptfile_test`) — new suite, not a `.pro` migration.
       Regression cases for `CRecordExObjStg`, the reader of embedded OLE objects and
       `vbaProject.bin` in `.ppt` files: a compressed record too short to hold its size field,

@@ -1,946 +1,525 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
- *
- * This program is a free software product. You can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
- *
- * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
- *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU AGPL version 3.
- *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
- *
+ * SPDX-FileCopyrightText: 2026 Euro-Office contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
+// CPdfFile: writing, reading, editing, splitting, merging, passwords,
+// metadata and signatures. Every test builds the PDFs it needs with CPdfFile's
+// own writer, so there are no fixtures. A page is recognised by its size and
+// by the colour of a rectangle covering it, read back by rendering the page.
 
 #include "gtest/gtest.h"
 #include "../../DesktopEditor/common/File.h"
 #include "../../DesktopEditor/common/Directory.h"
-#include "../../DesktopEditor/fontengine/ApplicationFontsWorker.h"
+#include "../../DesktopEditor/graphics/pro/Fonts.h"
 #include "../../DesktopEditor/xmlsec/src/include/CertificateCommon.h"
-#include "../../DesktopEditor/graphics/MetafileToGraphicsRenderer.h"
-#include "../../DesktopEditor/raster/BgraFrame.h"
-#include "../../DjVuFile/DjVu.h"
 #include "../PdfFile.h"
 
 #include <algorithm>
+#include <cstring>
+#include <map>
+#include <memory>
+#include <vector>
 
-// GoogleTest only defines the HRESULT assertion macros on Windows
-// (GTEST_OS_WINDOWS). The PdfFile API returns an HRESULT that is >= 0 on
-// success on every platform, so provide the macros here so the suite compiles
-// on Linux/macOS too.
-#ifndef EXPECT_HRESULT_SUCCEEDED
-#define EXPECT_HRESULT_SUCCEEDED(expr) EXPECT_GE((HRESULT)(expr), (HRESULT)0)
-#define ASSERT_HRESULT_SUCCEEDED(expr) ASSERT_GE((HRESULT)(expr), (HRESULT)0)
-#define EXPECT_HRESULT_FAILED(expr)    EXPECT_LT((HRESULT)(expr), (HRESULT)0)
-#define ASSERT_HRESULT_FAILED(expr)    ASSERT_LT((HRESULT)(expr), (HRESULT)0)
-#endif
+namespace
+{
+	struct PageSpec
+	{
+		double dWidthMM;
+		double dHeightMM;
+		LONG lColor; // renderer colour, 0xBBGGRR
+	};
+
+	// Distinct colours, far apart in every channel combination
+	const LONG c_lRed   = 0x0000FF;
+	const LONG c_lGreen = 0x00FF00;
+	const LONG c_lBlue  = 0xFF0000;
+	const LONG c_lBlack = 0x000000;
+
+	const PageSpec c_oA4       = { 210.0, 297.0, c_lRed };
+	const PageSpec c_oLandscape = { 297.0, 210.0, c_lGreen };
+	const PageSpec c_oLetter   = { 215.9, 279.4, c_lBlue };
+
+	// VerifySign() result bits (ICertificate::VerifyPKCS7)
+	const int c_nSignIntact   = 1 << 0; // the signed bytes are unchanged
+	const int c_nSignVerified = 1 << 1; // and the certificate verifies
+
+	// Reads 4-byte little-endian ints from the length-prefixed buffers
+	// CPdfFile returns.
+	int ReadInt(const BYTE* p)
+	{
+		return p[0] | (p[1] << 8) | (p[2] << 16) | (p[3] << 24);
+	}
+}
 
 class CPdfFileTest : public testing::Test
 {
 protected:
-	static CApplicationFontsWorker* oWorker;
-	static NSFonts::IApplicationFonts* pApplicationFonts;
-	static std::wstring wsTempDir;
-	static std::wstring wsSrcFile;
-	static std::wstring wsDstFile;
+	static NSFonts::IApplicationFonts* m_pFonts;
+	std::wstring m_wsDir;
 
-	static std::wstring strDirIn;
-	static std::wstring strDirOut;
-	static std::wstring strDiffs;
-
-public:
-	CPdfFile* pdfFile;
-
-public:
 	static void SetUpTestSuite()
 	{
-		oWorker = new CApplicationFontsWorker();
-
-		oWorker->m_sDirectory = NSFile::GetProcessDirectory() + L"/fonts_cache";
-		oWorker->m_bIsNeedThumbnails = false;
-
-		if (!NSDirectory::Exists(oWorker->m_sDirectory))
-			NSDirectory::CreateDirectory(oWorker->m_sDirectory);
-
-		pApplicationFonts = oWorker->Check();
-
-		wsTempDir = NSFile::GetProcessDirectory() + L"/pdftemp";
-		wsSrcFile = NSFile::GetProcessDirectory() + L"/test.pdf";
-		wsDstFile = NSFile::GetProcessDirectory() + L"/test2.pdf";
-
-		strDirIn  = NSFile::GetProcessDirectory() + L"/resI";
-		strDirOut = NSFile::GetProcessDirectory() + L"/resO";
-		strDiffs  = NSFile::GetProcessDirectory() + L"/resD";
-
-		if (NSDirectory::Exists(wsTempDir))
-			NSDirectory::DeleteDirectory(wsTempDir);
-		NSDirectory::CreateDirectory(wsTempDir);
-
-		if (!NSDirectory::Exists(strDirOut))
-			NSDirectory::CreateDirectory(strDirOut);
+		// The pages hold only paths: no system fonts needed
+		m_pFonts = NSFonts::NSApplication::Create();
+		std::vector<std::wstring> arFiles;
+		m_pFonts->InitializeFromArrayFiles(arFiles);
 	}
 	static void TearDownTestSuite()
 	{
-		RELEASEINTERFACE(pApplicationFonts);
-		RELEASEOBJECT(oWorker);
+		RELEASEINTERFACE(m_pFonts);
 	}
 
-	void LoadFromFile(const std::wstring& _wsSrcFile = L"")
+	void SetUp() override
 	{
-		bool bResult = pdfFile->LoadFromFile(_wsSrcFile.empty() ? wsSrcFile : _wsSrcFile);
-		if (!bResult)
+		const testing::TestInfo* pInfo = testing::UnitTest::GetInstance()->current_test_info();
+		m_wsDir = NSFile::GetProcessDirectory() + L"/pdffile_test_out/" + UTF8_TO_U(std::string(pInfo->name()));
+		if (NSDirectory::Exists(m_wsDir))
+			NSDirectory::DeleteDirectory(m_wsDir);
+		NSDirectory::CreateDirectories(m_wsDir);
+	}
+	void TearDown() override
+	{
+		if (!HasFailure())
+			NSDirectory::DeleteDirectory(m_wsDir);
+	}
+
+	std::wstring Path(const std::wstring& wsName) { return m_wsDir + L"/" + wsName; }
+
+	std::unique_ptr<CPdfFile> NewPdf()
+	{
+		std::unique_ptr<CPdfFile> pPdf(new CPdfFile(m_pFonts));
+		std::wstring wsTemp = Path(L"temp");
+		NSDirectory::CreateDirectory(wsTemp);
+		pPdf->SetTempDirectory(wsTemp);
+		return pPdf;
+	}
+
+	void AddPage(CPdfFile& oPdf, const PageSpec& oPage)
+	{
+		oPdf.NewPage();
+		oPdf.put_Width(oPage.dWidthMM);
+		oPdf.put_Height(oPage.dHeightMM);
+
+		oPdf.put_BrushType(c_BrushTypeSolid);
+		oPdf.put_BrushColor1(oPage.lColor);
+		oPdf.put_BrushAlpha1(255);
+		oPdf.PathCommandStart();
+		oPdf.PathCommandMoveTo(0, 0);
+		oPdf.PathCommandLineTo(oPage.dWidthMM, 0);
+		oPdf.PathCommandLineTo(oPage.dWidthMM, oPage.dHeightMM);
+		oPdf.PathCommandLineTo(0, oPage.dHeightMM);
+		oPdf.PathCommandClose();
+		oPdf.DrawPath(c_nWindingFillMode);
+		oPdf.PathCommandEnd();
+	}
+
+	// Writes a PDF with these pages. Set up the writer further with prepare.
+	template<typename F>
+	void WritePdf(const std::wstring& wsPath, const std::vector<PageSpec>& arrPages, F prepare)
+	{
+		std::unique_ptr<CPdfFile> pPdf = NewPdf();
+		pPdf->CreatePdf();
+		prepare(*pPdf);
+		for (const PageSpec& oPage : arrPages)
+			AddPage(*pPdf, oPage);
+		ASSERT_EQ(0, pPdf->SaveToFile(wsPath));
+	}
+	void WritePdf(const std::wstring& wsPath, const std::vector<PageSpec>& arrPages)
+	{
+		WritePdf(wsPath, arrPages, [](CPdfFile&) {});
+	}
+
+	std::unique_ptr<CPdfFile> Load(const std::wstring& wsPath, const wchar_t* wsPassword = NULL)
+	{
+		std::unique_ptr<CPdfFile> pPdf = NewPdf();
+		EXPECT_TRUE(pPdf->LoadFromFile(wsPath, L"", wsPassword, wsPassword)) << U_TO_UTF8(wsPath);
+		return pPdf;
+	}
+
+	// Page size in mm
+	void PageSize(CPdfFile& oPdf, int nPage, double& dW, double& dH)
+	{
+		double dDpiX = 0, dDpiY = 0;
+		oPdf.GetPageInfo(nPage, &dW, &dH, &dDpiX, &dDpiY);
+		dW = dW / dDpiX * 25.4;
+		dH = dH / dDpiY * 25.4;
+	}
+
+	// Colour in the middle of the rendered page, as 0xBBGGRR
+	LONG PageColor(CPdfFile& oPdf, int nPage)
+	{
+		const int w = 40, h = 40;
+		BYTE* pPixels = oPdf.ConvertToPixels(nPage, w, h, true);
+		if (!pPixels)
+			return -1;
+		const BYTE* p = pPixels + ((h / 2) * w + w / 2) * 4;
+		LONG lColor = (LONG)p[0] | ((LONG)p[1] << 8) | ((LONG)p[2] << 16);
+		delete[] pPixels;
+		return lColor;
+	}
+
+	// Checks the pages by size and colour, in this order
+	void ExpectPages(CPdfFile& oPdf, const std::vector<PageSpec>& arrPages)
+	{
+		ASSERT_EQ((int)arrPages.size(), oPdf.GetPagesCount());
+		for (size_t i = 0; i < arrPages.size(); ++i)
 		{
-			std::wstring wsPassword = L"123456";
-			bResult = pdfFile->LoadFromFile(_wsSrcFile.empty() ? wsSrcFile : _wsSrcFile, L"", wsPassword.c_str(), wsPassword.c_str());
+			double dW = 0, dH = 0;
+			PageSize(oPdf, (int)i, dW, dH);
+			EXPECT_NEAR(arrPages[i].dWidthMM, dW, 0.5) << "page " << i;
+			EXPECT_NEAR(arrPages[i].dHeightMM, dH, 0.5) << "page " << i;
+			EXPECT_EQ(arrPages[i].lColor, PageColor(oPdf, (int)i)) << "page " << i;
 		}
-
-		ASSERT_TRUE(bResult);
-	}
-	void DrawSmth()
-	{
-		pdfFile->PathCommandStart();
-		pdfFile->PathCommandMoveTo(10, 10);
-		pdfFile->PathCommandLineTo(20, 20);
-		pdfFile->PathCommandCurveTo(70, 30, 30, 20, 50, 50);
-		pdfFile->PathCommandClose();
-		pdfFile->put_BrushColor1(0xFF0000);
-		pdfFile->put_PenColor(0x0000FF);
-		pdfFile->put_PenSize(1);
-		pdfFile->DrawPath(c_nStroke | c_nWindingFillMode);
-		pdfFile->PathCommandEnd();
-	}
-	ICertificate* GetCertificate()
-	{
-		std::wstring wsCertificateFile = NSFile::GetProcessDirectory() + L"/pfx.pfx";
-		std::wstring wsPrivateKeyFile  = L"";
-		std::string sCertificateFilePassword = "123456";
-		std::string sPrivateFilePassword = "";
-
-		return NSCertificate::FromFiles(wsPrivateKeyFile, sPrivateFilePassword, wsCertificateFile, sCertificateFilePassword);
-	}
-	ICertificate* GenerateCertificateECDSA512()
-	{
-		std::map<std::wstring, std::wstring> properties;
-		properties.insert(std::make_pair(L"DNS", L"8.8.8.8"));
-		properties.insert(std::make_pair(L"email", L"sign@onlyoffice.com"));
-
-		return NSCertificate::GenerateByAlg("ecdsa512", properties);
-	}
-	ICertificate* GenerateCertificateRSA2048()
-	{
-		std::map<std::wstring, std::wstring> properties;
-		properties.insert(std::make_pair(L"DNS", L"8.8.8.8"));
-		properties.insert(std::make_pair(L"email", L"sign@onlyoffice.com"));
-
-		return NSCertificate::GenerateByAlg("rsa2048", properties);
 	}
 
-	virtual void SetUp() override
+	std::vector<BYTE> ReadAll(const std::wstring& wsPath)
 	{
-		pdfFile = new CPdfFile(pApplicationFonts);
-		pdfFile->SetTempDirectory(wsTempDir);
-	}
-	virtual void TearDown() override
-	{
-		RELEASEOBJECT(pdfFile);
+		BYTE* pData = NULL;
+		DWORD dwSize = 0;
+		std::vector<BYTE> arrRes;
+		if (NSFile::CFileBinary::ReadAllBytes(wsPath, &pData, dwSize))
+			arrRes.assign(pData, pData + dwSize);
+		RELEASEARRAYOBJECTS(pData);
+		return arrRes;
 	}
 };
 
-CApplicationFontsWorker* CPdfFileTest::oWorker = NULL;
-NSFonts::IApplicationFonts* CPdfFileTest::pApplicationFonts = NULL;
-std::wstring CPdfFileTest::wsTempDir;
-std::wstring CPdfFileTest::wsSrcFile;
-std::wstring CPdfFileTest::wsDstFile;
-std::wstring CPdfFileTest::strDirIn;
-std::wstring CPdfFileTest::strDirOut;
-std::wstring CPdfFileTest::strDiffs;
+NSFonts::IApplicationFonts* CPdfFileTest::m_pFonts = NULL;
 
-TEST_F(CPdfFileTest, DjVuToPdf)
+TEST_F(CPdfFileTest, WriteAndRead)
 {
-	GTEST_SKIP();
+	std::wstring wsFile = Path(L"three.pdf");
+	WritePdf(wsFile, { c_oA4, c_oLandscape, c_oLetter });
 
-	CDjVuFile* pDjVu = new CDjVuFile(pApplicationFonts);
-	pDjVu->LoadFromFile(NSFile::GetProcessDirectory() + L"/test.djvu");
-	pDjVu->ConvertToPdf(wsDstFile);
+	std::vector<BYTE> arrData = ReadAll(wsFile);
+	ASSERT_GE(arrData.size(), 5u);
+	EXPECT_EQ(0, memcmp(arrData.data(), "%PDF-", 5));
 
-	RELEASEOBJECT(pDjVu);
+	std::unique_ptr<CPdfFile> pPdf = Load(wsFile);
+	EXPECT_EQ(PdfFile::errorNone, pPdf->GetError());
+	ExpectPages(*pPdf, { c_oA4, c_oLandscape, c_oLetter });
 }
 
-TEST_F(CPdfFileTest, GetMetaData)
+TEST_F(CPdfFileTest, LoadFromMemory)
 {
-	GTEST_SKIP();
+	std::wstring wsFile = Path(L"one.pdf");
+	WritePdf(wsFile, { c_oLetter });
 
-	BYTE* pMetaData = NULL;
-	DWORD nMetaLength = 0;
-
-	if (pdfFile->GetMetaData(wsSrcFile, L"ONLYOFFICEFORM", &pMetaData, nMetaLength))
-	{
-		NSFile::CFileBinary oFile;
-		if (oFile.CreateFileW(NSFile::GetProcessDirectory() + L"/ONLYOFFICEFORM.docxf"))
-			oFile.WriteFile(pMetaData, nMetaLength);
-		oFile.CloseFile();
-
-		EXPECT_TRUE(pMetaData);
-	}
-	RELEASEARRAYOBJECTS(pMetaData);
+	std::vector<BYTE> arrData = ReadAll(wsFile);
+	std::unique_ptr<CPdfFile> pPdf = NewPdf();
+	ASSERT_TRUE(pPdf->LoadFromMemory(arrData.data(), (DWORD)arrData.size()));
+	ExpectPages(*pPdf, { c_oLetter });
 }
 
-TEST_F(CPdfFileTest, PdfType)
+TEST_F(CPdfFileTest, NotAPdf)
 {
-	GTEST_SKIP();
+	std::wstring wsFile = Path(L"text.pdf");
+	NSFile::CFileBinary::SaveToFile(wsFile, L"this is not a PDF");
 
-	NSFile::CFileBinary oFile;
-	ASSERT_TRUE(oFile.OpenFile(wsSrcFile));
+	std::unique_ptr<CPdfFile> pPdf = NewPdf();
+	EXPECT_FALSE(pPdf->LoadFromFile(wsFile));
+	EXPECT_NE(PdfFile::errorNone, pPdf->GetError());
+}
 
-	int nSize = 4096;
-	BYTE* pBuffer = new BYTE[nSize];
-	if (!pBuffer)
+TEST_F(CPdfFileTest, DocumentInfo)
+{
+	std::wstring wsFile = Path(L"info.pdf");
+	WritePdf(wsFile, { c_oA4 }, [](CPdfFile& oPdf)
 	{
-		oFile.CloseFile();
-		return;
+		oPdf.SetDocumentInfo(L"Quarterly report", L"Euro-Office test", L"Subject line", L"alpha, beta");
+	});
+
+	std::unique_ptr<CPdfFile> pPdf = Load(wsFile);
+	std::string sInfo = U_TO_UTF8(pPdf->GetInfo());
+	EXPECT_NE(std::string::npos, sInfo.find("Quarterly report")) << sInfo;
+	EXPECT_NE(std::string::npos, sInfo.find("Subject line")) << sInfo;
+	EXPECT_NE(std::string::npos, sInfo.find("alpha, beta")) << sInfo;
+}
+
+TEST_F(CPdfFileTest, MetaData)
+{
+	// Docxf forms keep their source document in the PDF this way
+	std::string sMeta = "PK\x03\x04 form source with a \0 byte";
+	sMeta.push_back('\0');
+	sMeta += "and more";
+
+	std::wstring wsFile = Path(L"meta.pdf");
+	WritePdf(wsFile, { c_oA4 }, [&](CPdfFile& oPdf)
+	{
+		oPdf.AddMetaData(L"ONLYOFFICEFORM", (BYTE*)sMeta.data(), (DWORD)sMeta.size());
+	});
+
+	BYTE* pData = NULL;
+	DWORD dwLength = 0;
+	ASSERT_TRUE(CPdfFile::GetMetaData(wsFile, L"ONLYOFFICEFORM", &pData, dwLength));
+	EXPECT_EQ(std::string((char*)pData, dwLength), sMeta);
+	RELEASEARRAYOBJECTS(pData);
+
+	EXPECT_FALSE(CPdfFile::GetMetaData(wsFile, L"OTHERNAME", &pData, dwLength));
+	RELEASEARRAYOBJECTS(pData);
+
+	std::wstring wsPlain = Path(L"plain.pdf");
+	WritePdf(wsPlain, { c_oA4 });
+	EXPECT_FALSE(CPdfFile::GetMetaData(wsPlain, L"ONLYOFFICEFORM", &pData, dwLength));
+	RELEASEARRAYOBJECTS(pData);
+}
+
+TEST_F(CPdfFileTest, Password)
+{
+	std::wstring wsFile = Path(L"locked.pdf");
+	WritePdf(wsFile, { c_oA4, c_oLetter }, [](CPdfFile& oPdf)
+	{
+		oPdf.SetPassword(L"s3cret");
+	});
+
+	std::unique_ptr<CPdfFile> pLocked = NewPdf();
+	EXPECT_FALSE(pLocked->LoadFromFile(wsFile));
+	EXPECT_EQ(PdfFile::errorEncrypted, pLocked->GetError());
+
+	std::unique_ptr<CPdfFile> pWrong = NewPdf();
+	EXPECT_FALSE(pWrong->LoadFromFile(wsFile, L"", L"wrong", L"wrong"));
+
+	std::unique_ptr<CPdfFile> pPdf = Load(wsFile, L"s3cret");
+	ExpectPages(*pPdf, { c_oA4, c_oLetter });
+}
+
+TEST_F(CPdfFileTest, ChangePassword)
+{
+	std::wstring wsFile = Path(L"open.pdf");
+	WritePdf(wsFile, { c_oLandscape });
+
+	std::wstring wsLocked = Path(L"locked.pdf");
+	{
+		std::unique_ptr<CPdfFile> pPdf = Load(wsFile);
+		EXPECT_GE(pPdf->ChangePassword(wsLocked, L"new-pass"), 0);
+	}
+	{
+		std::unique_ptr<CPdfFile> pPdf = NewPdf();
+		EXPECT_FALSE(pPdf->LoadFromFile(wsLocked));
 	}
 
-	DWORD dwReadBytes = 0;
-	oFile.ReadFile(pBuffer, nSize, dwReadBytes);
-	oFile.CloseFile();
-
-	char* pData = (char*)pBuffer;
-	bool bPDF = false;
-	for (int i = 0; i < nSize - 5; ++i)
+	std::wstring wsUnlocked = Path(L"unlocked.pdf");
 	{
-		int nPDF = strncmp(&pData[i], "%PDF-", 5);
-		if (!nPDF)
+		std::unique_ptr<CPdfFile> pPdf = Load(wsLocked, L"new-pass");
+		ExpectPages(*pPdf, { c_oLandscape });
+		EXPECT_GE(pPdf->ChangePassword(wsUnlocked), 0);
+	}
+	std::unique_ptr<CPdfFile> pPdf = Load(wsUnlocked);
+	ExpectPages(*pPdf, { c_oLandscape });
+}
+
+TEST_F(CPdfFileTest, EditDeleteAddMoveRotate)
+{
+	std::wstring wsFile = Path(L"source.pdf");
+	WritePdf(wsFile, { c_oA4, c_oLandscape, c_oLetter });
+
+	std::wstring wsEdited = Path(L"edited.pdf");
+	{
+		std::unique_ptr<CPdfFile> pPdf = Load(wsFile);
+		ASSERT_TRUE(pPdf->EditPdf(wsEdited));
+		// EditPage() takes the page's index in the source document,
+		// MovePage() its current position: rotate before reordering.
+		ASSERT_TRUE(pPdf->EditPage(2));
+		pPdf->RotatePage(90);                              // Letter rotated
+		ASSERT_TRUE(pPdf->DeletePage(1));                  // A4, Letter
+		ASSERT_TRUE(pPdf->MovePage(1, 0));                 // Letter, A4
+		ASSERT_TRUE(pPdf->AddPage(2));                     // Letter, A4, new
+		pPdf->put_Width(c_oLandscape.dWidthMM);
+		pPdf->put_Height(c_oLandscape.dHeightMM);
+		pPdf->Close();
+	}
+
+	std::unique_ptr<CPdfFile> pPdf = Load(wsEdited);
+	ASSERT_EQ(3, pPdf->GetPagesCount());
+	EXPECT_EQ(c_lBlue, PageColor(*pPdf, 0));
+	EXPECT_EQ(c_lRed, PageColor(*pPdf, 1));
+	EXPECT_EQ(90, pPdf->GetRotate(0));
+	EXPECT_EQ(0, pPdf->GetRotate(1));
+
+	// The source is unchanged
+	std::unique_ptr<CPdfFile> pSource = Load(wsFile);
+	ExpectPages(*pSource, { c_oA4, c_oLandscape, c_oLetter });
+}
+
+TEST_F(CPdfFileTest, DrawOnPage)
+{
+	std::wstring wsFile = Path(L"source.pdf");
+	WritePdf(wsFile, { c_oA4, c_oLetter });
+
+	std::wstring wsEdited = Path(L"edited.pdf");
+	{
+		std::unique_ptr<CPdfFile> pPdf = Load(wsFile);
+		ASSERT_TRUE(pPdf->EditPdf(wsEdited));
+		ASSERT_TRUE(pPdf->EditPage(0));
+		// A black square over the middle of the page
+		pPdf->put_BrushType(c_BrushTypeSolid);
+		pPdf->put_BrushColor1(c_lBlack);
+		pPdf->put_BrushAlpha1(255);
+		pPdf->PathCommandStart();
+		pPdf->PathCommandMoveTo(80, 120);
+		pPdf->PathCommandLineTo(130, 120);
+		pPdf->PathCommandLineTo(130, 180);
+		pPdf->PathCommandLineTo(80, 180);
+		pPdf->PathCommandClose();
+		pPdf->DrawPath(c_nWindingFillMode);
+		pPdf->PathCommandEnd();
+		pPdf->Close();
+	}
+
+	std::unique_ptr<CPdfFile> pPdf = Load(wsEdited);
+	ASSERT_EQ(2, pPdf->GetPagesCount());
+	EXPECT_EQ(c_lBlack, PageColor(*pPdf, 0));
+	EXPECT_EQ(c_lBlue, PageColor(*pPdf, 1));
+}
+
+TEST_F(CPdfFileTest, SplitPages)
+{
+	std::wstring wsFile = Path(L"source.pdf");
+	WritePdf(wsFile, { c_oA4, c_oLandscape, c_oLetter });
+
+	std::unique_ptr<CPdfFile> pPdf = Load(wsFile);
+	std::vector<int> arrPages = { 0, 2 };
+	BYTE* pSplit = pPdf->SplitPages(arrPages.data(), (unsigned int)arrPages.size());
+	ASSERT_NE(nullptr, pSplit);
+
+	// [length including these 4 bytes][PDF]
+	int nLength = ReadInt(pSplit);
+	ASSERT_GT(nLength, 4);
+	std::vector<BYTE> arrPdf(pSplit + 4, pSplit + nLength);
+	RELEASEARRAYOBJECTS(pSplit);
+
+	std::unique_ptr<CPdfFile> pPart = NewPdf();
+	ASSERT_TRUE(pPart->LoadFromMemory(arrPdf.data(), (DWORD)arrPdf.size()));
+	ExpectPages(*pPart, { c_oA4, c_oLetter });
+}
+
+TEST_F(CPdfFileTest, MergePages)
+{
+	std::wstring wsFirst = Path(L"first.pdf");
+	std::wstring wsSecond = Path(L"second.pdf");
+	WritePdf(wsFirst, { c_oA4 });
+	WritePdf(wsSecond, { c_oLandscape, c_oLetter });
+
+	std::wstring wsMerged = Path(L"merged.pdf");
+	{
+		std::unique_ptr<CPdfFile> pPdf = Load(wsFirst);
+		ASSERT_TRUE(pPdf->EditPdf(wsMerged));
+		ASSERT_TRUE(pPdf->MergePages(wsSecond));
+		pPdf->Close();
+	}
+
+	std::unique_ptr<CPdfFile> pPdf = Load(wsMerged);
+	ExpectPages(*pPdf, { c_oA4, c_oLandscape, c_oLetter });
+}
+
+TEST_F(CPdfFileTest, CopyPagesThroughRenderer)
+{
+	std::wstring wsFile = Path(L"source.pdf");
+	WritePdf(wsFile, { c_oLandscape, c_oA4 });
+
+	std::wstring wsCopy = Path(L"copy.pdf");
+	{
+		std::unique_ptr<CPdfFile> pSource = Load(wsFile);
+		std::unique_ptr<CPdfFile> pCopy = NewPdf();
+		pCopy->CreatePdf();
+		for (int i = 0; i < pSource->GetPagesCount(); ++i)
 		{
-			bPDF = true;
-			break;
+			double dW = 0, dH = 0;
+			PageSize(*pSource, i, dW, dH);
+			pCopy->NewPage();
+			pCopy->put_Width(dW);
+			pCopy->put_Height(dH);
+			pSource->DrawPageOnRenderer(pCopy.get(), i, NULL);
 		}
+		ASSERT_EQ(0, pCopy->SaveToFile(wsCopy));
 	}
 
-	ASSERT_TRUE(bPDF);
-
-	RELEASEARRAYOBJECTS(pBuffer);
+	std::unique_ptr<CPdfFile> pPdf = Load(wsCopy);
+	ExpectPages(*pPdf, { c_oLandscape, c_oA4 });
 }
 
-TEST_F(CPdfFileTest, GetEmbeddedFont)
+class CPdfSignTest : public CPdfFileTest
 {
-	GTEST_SKIP();
-
-	LoadFromFile();
-
-	std::wcout << pdfFile->GetEmbeddedFontPath(L"Symbol") << std::endl;
-}
-
-TEST_F(CPdfFileTest, ValidMetaData)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-
-	std::cout << "ValidMetaData " << (pdfFile->ValidMetaData() ? "true" : "false") << std::endl;
-}
-
-TEST_F(CPdfFileTest, PdfBinToPng)
-{
-	GTEST_SKIP();
-
-	NSFile::CFileBinary oFile;
-	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/pdf.bin"));
-
-	DWORD dwFileSize = oFile.GetFileSize();
-	BYTE* pFileContent = new BYTE[dwFileSize];
-	if (!pFileContent)
+protected:
+	// Signs page 0 of wsFile into wsSigned with a new certificate; returns it
+	ICertificate* SignInto(const std::wstring& wsFile, const std::wstring& wsSigned)
 	{
-		oFile.CloseFile();
-		FAIL();
+		std::map<std::wstring, std::wstring> mapProps;
+		mapProps.insert(std::make_pair(L"email", L"test@euro-office.example"));
+		ICertificate* pCertificate = NSCertificate::GenerateByAlg("rsa2048", mapProps);
+		EXPECT_NE(nullptr, pCertificate);
+		if (!pCertificate)
+			return NULL;
+
+		std::unique_ptr<CPdfFile> pPdf = Load(wsFile);
+		EXPECT_TRUE(pPdf->EditPdf(wsSigned));
+		EXPECT_TRUE(pPdf->EditPage(0));
+		pPdf->Sign(10, 10, 60, 20);
+		// Signing needs EditClose() first, then the byte range is prepared
+		pPdf->EditClose();
+		EXPECT_TRUE(pPdf->PrepareSignature(wsSigned));
+
+		std::vector<BYTE> arrFile = ReadAll(wsSigned);
+		std::vector<BYTE> arrToSign = SignedBytes(arrFile);
+		EXPECT_FALSE(arrToSign.empty());
+
+		BYTE* pSignature = NULL;
+		unsigned int nSignature = 0;
+		EXPECT_TRUE(pCertificate->SignPKCS7(arrToSign.data(), (unsigned int)arrToSign.size(), pSignature, nSignature));
+		EXPECT_TRUE(pPdf->FinalizeSignature(pSignature, nSignature));
+		RELEASEARRAYOBJECTS(pSignature);
+		pPdf->Close();
+		return pCertificate;
 	}
 
-	DWORD dwReaded = 0;
-	EXPECT_TRUE(oFile.ReadFile(pFileContent, dwFileSize, dwReaded));
-	oFile.CloseFile();
-
-	NSOnlineOfficeBinToPdf::CMetafileToRenderterRaster imageWriter(NULL);
-	imageWriter.SetApplication(pApplicationFonts);
-	imageWriter.SetRasterFormat(4);
-	imageWriter.SetFileName(NSFile::GetProcessDirectory() + L"/resPdfBinToPng.png");
-
-	imageWriter.ConvertBuffer(pFileContent, dwFileSize);
-}
-
-TEST_F(CPdfFileTest, PdfFromBin)
-{
-	GTEST_SKIP();
-
-	pdfFile->CreatePdf();
-	EXPECT_HRESULT_SUCCEEDED(pdfFile->OnlineWordToPdfFromBinary(NSFile::GetProcessDirectory() + L"/pdf.bin", wsDstFile));
-}
-
-TEST_F(CPdfFileTest, PdfFromBase64)
-{
-	GTEST_SKIP();
-
-	pdfFile->CreatePdf();
-	EXPECT_HRESULT_SUCCEEDED(pdfFile->OnlineWordToPdf(NSFile::GetProcessDirectory() + L"/base64.txt", wsDstFile));
-}
-
-TEST_F(CPdfFileTest, PdfToPdf)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-	pdfFile->CreatePdf();
-
-	double dPageDpiX, dPageDpiY, dW, dH;
-	for (int i = 0; i < pdfFile->GetPagesCount(); i++)
+	// The bytes /ByteRange [a b c d] covers
+	std::vector<BYTE> SignedBytes(const std::vector<BYTE>& arrFile)
 	{
-		pdfFile->NewPage();
-
-		pdfFile->GetPageInfo(i, &dW, &dH, &dPageDpiX, &dPageDpiY);
-		pdfFile->put_Width( dW / dPageDpiX * 25.4);
-		pdfFile->put_Height(dH / dPageDpiY * 25.4);
-
-		pdfFile->DrawPageOnRenderer(pdfFile, i, NULL);
+		const std::string sKey = "/ByteRange";
+		size_t nPos = std::string((const char*)arrFile.data(), arrFile.size()).rfind(sKey);
+		if (std::string::npos == nPos)
+			return std::vector<BYTE>();
+		nPos += sKey.size();
+		long arrRange[4] = { 0 };
+		if (4 != sscanf((const char*)arrFile.data() + nPos, " [ %ld %ld %ld %ld", &arrRange[0], &arrRange[1], &arrRange[2], &arrRange[3]))
+			return std::vector<BYTE>();
+		if (arrRange[0] + arrRange[1] > (long)arrFile.size() || arrRange[2] + arrRange[3] > (long)arrFile.size())
+			return std::vector<BYTE>();
+		std::vector<BYTE> arrRes(arrFile.begin() + arrRange[0], arrFile.begin() + arrRange[0] + arrRange[1]);
+		arrRes.insert(arrRes.end(), arrFile.begin() + arrRange[2], arrFile.begin() + arrRange[2] + arrRange[3]);
+		return arrRes;
 	}
 
-	pdfFile->SaveToFile(wsDstFile);
-}
-
-TEST_F(CPdfFileTest, SetMetaData)
-{
-	GTEST_SKIP();
-
-	pdfFile->CreatePdf();
-
-	BYTE* pFileData = NULL;
-	DWORD nFileSize;
-	std::wstring sFile = NSFile::GetProcessDirectory() + L"/ONLYOFFICEFORM.docxf";
-	EXPECT_TRUE(NSFile::CFileBinary::ReadAllBytes(sFile, &pFileData, nFileSize));
-	pdfFile->AddMetaData(L"ONLYOFFICEFORM", pFileData, nFileSize);
-	RELEASEARRAYOBJECTS(pFileData);
-
-	EXPECT_HRESULT_SUCCEEDED(pdfFile->OnlineWordToPdfFromBinary(NSFile::GetProcessDirectory() + L"/pdf.bin", wsDstFile));
-}
-
-TEST_F(CPdfFileTest, ConvertToRaster)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-
-	double dPageDpiX, dPageDpiY, dWidth, dHeight;
-	int i = 0;
-	//for (i = 0; i < pdfFile->GetPagesCount(); i++)
+	// (widget, result) pairs from VerifySign
+	std::vector<std::pair<int, int>> Verify(const std::wstring& wsFile, ICertificate* pCertificate)
 	{
-		pdfFile->GetPageInfo(i, &dWidth, &dHeight, &dPageDpiX, &dPageDpiY);
-		pdfFile->ConvertToRaster(i, NSFile::GetProcessDirectory() + L"/resO/res" + std::to_wstring(i) + L".png", 4, dWidth, dHeight, true, pdfFile->GetFontManager());
+		std::vector<std::pair<int, int>> arrRes;
+		std::unique_ptr<CPdfFile> pPdf = Load(wsFile);
+		BYTE* pResult = pPdf->VerifySign(wsFile, pCertificate);
+		if (!pResult)
+			return arrRes;
+		int nLength = ReadInt(pResult);
+		for (int i = 4; i + 8 <= nLength; i += 8)
+			arrRes.push_back(std::make_pair(ReadInt(pResult + i), ReadInt(pResult + i + 4)));
+		RELEASEARRAYOBJECTS(pResult);
+		return arrRes;
 	}
-}
+};
 
-TEST_F(CPdfFileTest, Base64ConvertToRaster)
+TEST_F(CPdfSignTest, SignAndVerify)
 {
-	GTEST_SKIP();
+	std::wstring wsFile = Path(L"source.pdf");
+	WritePdf(wsFile, { c_oA4, c_oLetter });
 
-	// reading and converting binary
-	NSFile::CFileBinary oFile;
-	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/base64.txt"));
-
-	DWORD dwFileSize = oFile.GetFileSize();
-	BYTE* pFileContent = new BYTE[dwFileSize];
-	if (!pFileContent)
-	{
-		oFile.CloseFile();
-		FAIL();
-	}
-
-	DWORD dwReaded;
-	oFile.ReadFile(pFileContent, dwFileSize, dwReaded);
-	oFile.CloseFile();
-
-	int nBufferLen = NSBase64::Base64DecodeGetRequiredLength(dwFileSize);
-	BYTE* pBuffer = new BYTE[nBufferLen];
-
-	NSBase64::Base64Decode((const char*)pFileContent, dwFileSize, pBuffer, &nBufferLen);
-
-	NSOnlineOfficeBinToPdf::CMetafileToRenderterRaster imageWriter(NULL);
-	imageWriter.SetIsOnlyFirst(false);
-	imageWriter.SetMediaDirectory(NSFile::GetProcessDirectory());
-	imageWriter.SetApplication(pApplicationFonts);
-	imageWriter.SetRasterFormat(4);
-	imageWriter.SetFileName(NSFile::GetProcessDirectory() + L"/resO/res.png");
-
-	imageWriter.ConvertBuffer(pBuffer, nBufferLen);
-}
-
-TEST_F(CPdfFileTest, BinConvertToRaster)
-{
-	GTEST_SKIP();
-
-	// reading and converting binary
-	NSFile::CFileBinary oFile;
-	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/pdf.bin"));
-
-	DWORD dwFileSize = oFile.GetFileSize();
-	BYTE* pFileContent = new BYTE[dwFileSize];
-	if (!pFileContent)
-	{
-		oFile.CloseFile();
-		FAIL();
-	}
-
-	DWORD dwReaded;
-	oFile.ReadFile(pFileContent, dwFileSize, dwReaded);
-	oFile.CloseFile();
-
-	NSOnlineOfficeBinToPdf::CMetafileToRenderterRaster imageWriter(NULL);
-	imageWriter.SetIsOnlyFirst(true);
-	imageWriter.SetMediaDirectory(NSFile::GetProcessDirectory());
-	imageWriter.SetApplication(pApplicationFonts);
-	imageWriter.SetRasterFormat(4);
-	imageWriter.SetFileName(NSFile::GetProcessDirectory() + L"/resO/res.png");
-
-	imageWriter.ConvertBuffer(pFileContent, dwFileSize);
-}
-
-TEST_F(CPdfFileTest, VerifySign)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-
-	ICertificate* pCertificate = GetCertificate();
+	std::wstring wsSigned = Path(L"signed.pdf");
+	std::unique_ptr<ICertificate> pCertificate(SignInto(wsFile, wsSigned));
 	ASSERT_TRUE(pCertificate);
 
-	BYTE* pWidgets = pdfFile->VerifySign(wsSrcFile, pCertificate);
-	EXPECT_TRUE(pWidgets);
-
-	RELEASEARRAYOBJECTS(pWidgets);
-	RELEASEOBJECT(pCertificate);
-}
-
-TEST_F(CPdfFileTest, SplitPdf)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-
-	int nBufferLen = NULL;
-	BYTE* pBuffer = NULL;
-	NSFile::CFileBinary oFile;
-	if (oFile.OpenFile(NSFile::GetProcessDirectory() + L"/base64.txt"))
-	{
-		DWORD dwFileSize = oFile.GetFileSize();
-		BYTE* pFileContent = new BYTE[dwFileSize];
-		if (!pFileContent)
-		{
-			oFile.CloseFile();
-			FAIL();
-		}
-
-		DWORD dwReaded;
-		EXPECT_TRUE(oFile.ReadFile(pFileContent, dwFileSize, dwReaded));
-
-		nBufferLen = NSBase64::Base64DecodeGetRequiredLength(dwFileSize);
-		pBuffer = new BYTE[nBufferLen];
-		if (!pBuffer)
-		{
-			RELEASEARRAYOBJECTS(pFileContent);
-			FAIL();
-		}
-
-		EXPECT_TRUE(NSBase64::Base64Decode((const char*)pFileContent, dwFileSize, pBuffer, &nBufferLen));
-	}
-	oFile.CloseFile();
-
-	std::vector<int> arrPages = { 1 };
-	BYTE* pFile = pdfFile->SplitPages(arrPages.data(), arrPages.size(), pBuffer, nBufferLen);
-	ASSERT_TRUE(pFile != NULL);
-
-	std::wstring wsSplitFile = NSFile::GetProcessDirectory() + L"/test_split.pdf";
-	if (oFile.CreateFileW(wsSplitFile))
-	{
-		int nLength = pFile[0] | pFile[1] << 8 | pFile[2] << 16 | pFile[3] << 24;
-		oFile.WriteFile(pFile + 4, nLength - 4);
-	}
-	oFile.CloseFile();
-
-	RELEASEARRAYOBJECTS(pFile);
-	RELEASEARRAYOBJECTS(pBuffer);
-}
-
-TEST_F(CPdfFileTest, MergePdf)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-
-	ASSERT_TRUE(pdfFile->EditPdf(wsDstFile));
-
-	std::wstring wsSplitFile = NSFile::GetProcessDirectory() + L"/test_split.pdf";
-	pdfFile->MergePages(wsSplitFile, 0, L"");
-
-	pdfFile->Close();
-}
-
-TEST_F(CPdfFileTest, RedactPdf)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-	ASSERT_TRUE(pdfFile->EditPdf(wsDstFile));
-
-	pdfFile->SetEditType(1);
-
-	EXPECT_TRUE(pdfFile->EditPage(0));
-	{
-		DrawSmth();
-	}
-
-	pdfFile->Close();
-}
-
-TEST_F(CPdfFileTest, EditPdf)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-	ASSERT_TRUE(pdfFile->EditPdf(wsDstFile));
-
-	EXPECT_TRUE(pdfFile->EditPage(0));
-	{
-		DrawSmth();
-		pdfFile->RotatePage(90);
-	}
-
-	pdfFile->DeletePage(1);
-
-	pdfFile->AddPage(2);
-
-	pdfFile->Close();
-}
-
-TEST_F(CPdfFileTest, EditPdfFromBase64)
-{
-	//GTEST_SKIP();
-
-	NSFonts::NSApplicationFontStream::SetGlobalMemoryStorage(NSFonts::NSApplicationFontStream::CreateDefaultGlobalMemoryStorage());
-
-	LoadFromFile();
-	ASSERT_TRUE(pdfFile->EditPdf(wsDstFile));
-
-	// reading and converting binary
-	NSFile::CFileBinary oFile;
-	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/base64.txt"));
-
-	DWORD dwFileSize = oFile.GetFileSize();
-	BYTE* pFileContent = new BYTE[dwFileSize];
-	if (!pFileContent)
-	{
-		oFile.CloseFile();
-		FAIL();
-	}
-
-	DWORD dwReaded;
-	EXPECT_TRUE(oFile.ReadFile(pFileContent, dwFileSize, dwReaded));
-	oFile.CloseFile();
-
-	int nBufferLen = NSBase64::Base64DecodeGetRequiredLength(dwFileSize);
-	BYTE* pBuffer = new BYTE[nBufferLen];
-	if (!pBuffer)
-	{
-		RELEASEARRAYOBJECTS(pFileContent);
-		FAIL();
-	}
-
-	EXPECT_TRUE(NSBase64::Base64Decode((const char*)pFileContent, dwFileSize, pBuffer, &nBufferLen));
-	CConvertFromBinParams* pParams = new CConvertFromBinParams();
-	pParams->m_sMediaDirectory = NSFile::GetProcessDirectory();
-	pdfFile->AddToPdfFromBinary(pBuffer + 4, nBufferLen - 4, pParams);
-
-	RELEASEOBJECT(pParams);
-	RELEASEARRAYOBJECTS(pBuffer);
-	RELEASEARRAYOBJECTS(pFileContent);
-
-	pdfFile->Close();
-}
-
-TEST_F(CPdfFileTest, EditPdfFromBin)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-	ASSERT_TRUE(pdfFile->EditPdf(wsDstFile));
-
-	// reading binary
-	NSFile::CFileBinary oFile;
-	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/changes.bin"));
-
-	DWORD dwFileSize = oFile.GetFileSize();
-	BYTE* pFileContent = new BYTE[dwFileSize];
-	if (!pFileContent)
-	{
-		oFile.CloseFile();
-		FAIL();
-	}
-
-	DWORD dwReaded;
-	EXPECT_TRUE(oFile.ReadFile(pFileContent, dwFileSize, dwReaded));
-	oFile.CloseFile();
-
-	CConvertFromBinParams* pParams = new CConvertFromBinParams();
-	pParams->m_sMediaDirectory = NSFile::GetProcessDirectory();
-	pdfFile->AddToPdfFromBinary(pFileContent + 4, dwReaded - 4, pParams);
-
-	RELEASEOBJECT(pParams);
-	RELEASEARRAYOBJECTS(pFileContent);
-
-	pdfFile->Close();
-}
-
-bool ParseByteRange(const BYTE* pData, DWORD dwLength, DWORD outRange[4])
-{
-	const BYTE pPattern[] = "ByteRange";
-	const size_t nPatternLen = 9;
-
-	const BYTE* it = std::find_end(pData, pData + dwLength, pPattern, pPattern + nPatternLen);
-	if (it == pData + dwLength)
-		return false;
-
-	it += nPatternLen;
-
-	while (it < pData + dwLength && *it != '[')
-	{
-		if (*it != ' ' && *it != '\t' && *it != '\r' && *it != '\n')
-			return false;
-		++it;
-	}
-	if (it >= pData + dwLength)
-		return false;
-
-	++it;
-
-	for (int i = 0; i < 4; ++i)
-	{
-		while (it < pData + dwLength && (*it == ' ' || *it == '\t'))
-			++it;
-		if (it >= pData + dwLength)
-			return false;
-
-		if (*it < '0' || *it > '9')
-			return false;
-
-		DWORD nValue = 0;
-		while (it < pData + dwLength && *it >= '0' && *it <= '9')
-		{
-			nValue = nValue * 10 + (*it - '0');
-			++it;
-		}
-		outRange[i] = nValue;
-	}
-
-	while (it < pData + dwLength && (*it == ' ' || *it == '\t'))
-		++it;
-	if (it >= pData + dwLength || *it != ']')
-		return false;
-
-	return true;
-}
-
-TEST_F(CPdfFileTest, EditPdfSign)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-	ASSERT_TRUE(pdfFile->EditPdf(wsDstFile));
-
-	EXPECT_TRUE(pdfFile->EditPage(0));
-	{
-		pdfFile->Sign(10, 10, 100, 100, NSFile::GetProcessDirectory() + L"/test.jpeg");
-		pdfFile->Sign(10, 150, 100, 100, NSFile::GetProcessDirectory() + L"/test.jpeg");
-		pdfFile->Sign(10, 300, 100, 100, NSFile::GetProcessDirectory() + L"/test.jpeg");
-	}
-
-	// For a digital signature, it is important to first pdfFile->EditClose, in other cases pdfFile->Close() will do the same
-	pdfFile->EditClose();
-
-	// EditPdf & EditClose || CreatePdf & SaveToFile
-	// And only after preparing the data for signing, we sign and record the signature
-	for (int i = 0; i < 3; ++i)
-	{
-		pdfFile->PrepareSignature(wsDstFile);
-
-		ICertificate* pCertificate = GetCertificate();
-		ASSERT_TRUE(pCertificate);
-
-		BYTE* pDataFile = NULL;
-		DWORD dwDataLength = 0;
-
-		NSFile::CFileBinary::ReadAllBytes(wsDstFile, &pDataFile, dwDataLength);
-
-		DWORD aByteRange[4] = {0};
-		ASSERT_TRUE(ParseByteRange(pDataFile, dwDataLength, aByteRange));
-		ASSERT_TRUE(aByteRange[0] + aByteRange[1] <= dwDataLength);
-		ASSERT_TRUE(aByteRange[2] + aByteRange[3] <= dwDataLength);
-
-		DWORD dwDataSignLength = aByteRange[1] + aByteRange[3];
-		BYTE* pDataToSign = new BYTE[dwDataSignLength];
-		memcpy(pDataToSign, pDataFile + aByteRange[0], aByteRange[1]);
-		memcpy(pDataToSign + aByteRange[1], pDataFile + aByteRange[2], aByteRange[3]);
-
-		RELEASEARRAYOBJECTS(pDataFile);
-
-		BYTE* pDatatoWrite = NULL;
-		unsigned int dwLenDatatoWrite = 0;
-		pCertificate->SignPKCS7(pDataToSign, dwDataSignLength, pDatatoWrite, dwLenDatatoWrite);
-		RELEASEARRAYOBJECTS(pDataToSign);
-
-		// FinalizeSignature is required - it will either fill in the data or make the signature empty
-		pdfFile->FinalizeSignature(pDatatoWrite, dwLenDatatoWrite);
-
-		RELEASEARRAYOBJECTS(pDatatoWrite);
-		RELEASEOBJECT(pCertificate);
-	}
-
-	pdfFile->Close();
-}
-
-TEST_F(CPdfFileTest, PrintPdf)
-{
-	GTEST_SKIP();
-
-	LoadFromFile(wsDstFile);
-
-	int nPages = pdfFile->GetPagesCount();
-	std::vector<bool> arrPages;
-	for (int i = 0; i < nPages; ++i)
-		arrPages.push_back(false);
-	arrPages[0] = true;
-
-	ASSERT_TRUE(pdfFile->PrintPages(arrPages, 2));
-
-	pdfFile->SaveToFile(NSFile::GetProcessDirectory() + L"/test3.pdf");
-	pdfFile->Close();
-}
-
-TEST_F(CPdfFileTest, ChangePasswordToEmpty)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-	EXPECT_HRESULT_SUCCEEDED(pdfFile->ChangePassword(wsDstFile));
-}
-
-TEST_F(CPdfFileTest, ChangePasswordToPassword)
-{
-	GTEST_SKIP();
-
-	LoadFromFile();
-	EXPECT_HRESULT_SUCCEEDED(pdfFile->ChangePassword(wsDstFile, L"123456"));
-}
-
-TEST_F(CPdfFileTest, ImgDiff)
-{
-	GTEST_SKIP();
-
-	if (NSDirectory::Exists(strDirIn))
-		NSDirectory::DeleteDirectory(strDirIn);
-	NSDirectory::CreateDirectory(strDirIn);
-	if (NSDirectory::Exists(strDirOut))
-		NSDirectory::DeleteDirectory(strDirOut);
-	NSDirectory::CreateDirectory(strDirOut);
-	if (NSDirectory::Exists(strDiffs))
-		NSDirectory::DeleteDirectory(strDiffs);
-	NSDirectory::CreateDirectory(strDiffs);
-
-	LoadFromFile();
-
-	int nCountInPages = pdfFile->GetPagesCount();
-	for (int nPage = 0; nPage < nCountInPages; ++nPage)
-	{
-		std::wstring sPageI = strDirIn + L"/res" + std::to_wstring(nPage) + L".png";
-		std::wstring sPageO = strDirOut + L"/res" + std::to_wstring(nPage) + L".png";
-		std::wstring sPageDiff = strDiffs + L"/res" + std::to_wstring(nPage) + L".png";
-
-		CBgraFrame frameI;
-		frameI.OpenFile(sPageI);
-
-		CBgraFrame frameO;
-		frameO.OpenFile(sPageO);
-
-		int nW_I = frameI.get_Width();
-		int nH_I = frameI.get_Height();
-
-		int nW_O = frameO.get_Width();
-		int nH_O = frameO.get_Height();
-
-		if (nW_I != nW_O || nH_I != nH_O)
-		{
-			if (!NSDirectory::Exists(strDiffs))
-				NSDirectory::CreateDirectories(CorrectPathW(strDiffs));
-
-			std::wstring sFilePagesDiff = sPageDiff;
-			NSFile::CFileBinary oFile;
-			oFile.CreateFileW(sPageDiff);
-			oFile.WriteStringUTF8(L"sizes!");
-			oFile.CloseFile();
-			continue;
-		}
-
-		BYTE* pDataI = frameI.get_Data();
-		BYTE* pDataO = frameO.get_Data();
-		size_t sizeMemory = 4 * nW_I * nH_I;
-
-		if (0 == memcmp(pDataI, pDataO, sizeMemory))
-			continue;
-
-		int nEpsilonEps = 3;
-		int nEpsilonNatural = 5;
-
-		int nDivExist = 0;
-		for (int indexPixH = 0; indexPixH < nH_I; indexPixH++)
-		{
-			for (int indexPixW = 0; indexPixW < nW_I; indexPixW++)
-			{
-				if (pDataI[0] != pDataO[0] || pDataI[1] != pDataO[1] || pDataI[2] != pDataO[2])
-				{
-					// test epsilon natural
-					if ((abs(pDataI[0] - pDataO[0]) < nEpsilonNatural) &&
-							(abs(pDataI[1] - pDataO[1]) < nEpsilonNatural) &&
-							(abs(pDataI[2] - pDataO[2]) < nEpsilonNatural))
-					{
-						pDataI += 4;
-						pDataO += 4;
-						continue;
-					}
-
-					// test epsilon left, right, top, bottom
-					int nEpsUp = nEpsilonEps;
-					if (indexPixH > 0)
-					{
-						BYTE* pByteI = frameI.get_Data() + 4 * (indexPixH - 1) * nW_I + 4 * indexPixW;
-
-						if ((abs(pByteI[0] - pDataO[0]) < nEpsilonEps) &&
-								(abs(pByteI[1] - pDataO[1]) < nEpsilonEps) &&
-								(abs(pByteI[2] - pDataO[2]) < nEpsilonEps))
-						{
-							nEpsUp = nEpsilonEps - 1;
-						}
-					}
-
-					int nEpsDown = nEpsilonEps;
-					if (indexPixH < (nH_I - 1))
-					{
-						BYTE* pByteI = frameI.get_Data() + 4 * (indexPixH + 1) * nW_I + 4 * indexPixW;
-
-						if ((abs(pByteI[0] - pDataO[0]) < nEpsilonEps) &&
-								(abs(pByteI[1] - pDataO[1]) < nEpsilonEps) &&
-								(abs(pByteI[2] - pDataO[2]) < nEpsilonEps))
-						{
-							nEpsDown = nEpsilonEps - 1;
-						}
-					}
-
-					int nEpsLeft = nEpsilonEps;
-					if (indexPixW > 0)
-					{
-						BYTE* pByteI = pDataI - 4;
-
-						if ((abs(pByteI[0] - pDataO[0]) < nEpsilonEps) &&
-								(abs(pByteI[1] - pDataO[1]) < nEpsilonEps) &&
-								(abs(pByteI[2] - pDataO[2]) < nEpsilonEps))
-						{
-							nEpsLeft = nEpsilonEps - 1;
-						}
-					}
-
-					int nEpsRight = nEpsilonEps;
-					if (indexPixW < (nW_I - 1))
-					{
-						BYTE* pByteI = pDataI + 4;
-
-						if ((abs(pByteI[0] - pDataO[0]) < nEpsilonEps) &&
-								(abs(pByteI[1] - pDataO[1]) < nEpsilonEps) &&
-								(abs(pByteI[2] - pDataO[2]) < nEpsilonEps))
-						{
-							nEpsRight = nEpsilonEps - 1;
-						}
-					}
-
-					if ((nEpsLeft < nEpsilonEps) ||
-							(nEpsRight < nEpsilonEps) ||
-							(nEpsUp < nEpsilonEps) ||
-							(nEpsDown < nEpsilonEps))
-					{
-						pDataI += 4;
-						pDataO += 4;
-						continue;
-					}
-
-					++nDivExist;
-
-					if (pDataO[0] == 0x00 && pDataO[1] == 0x00 && pDataO[2] == 0xFF)
-					{
-						pDataO[0] = 0xFF;
-						pDataO[1] = 0x00;
-						pDataO[2] = 0x00;
-					}
-					else
-					{
-						pDataO[0] = 0x00;
-						pDataO[1] = 0x00;
-						pDataO[2] = 0xFF;
-					}
-				}
-				pDataI += 4;
-				pDataO += 4;
-			}
-		}
-
-		if (nDivExist > 7)
-		{
-			if (!NSDirectory::Exists(strDiffs))
-				NSDirectory::CreateDirectories(CorrectPathW(strDiffs));
-
-			CBgraFrame frameOSrc;
-			frameOSrc.OpenFile(sPageO);
-
-			BYTE* pData1 = frameI.get_Data();
-			BYTE* pData2 = frameOSrc.get_Data();
-			BYTE* pData3 = frameO.get_Data();
-
-			int nRowW = 4 * nW_I;
-			BYTE* pDataAll = new BYTE[3 * nRowW * nH_I];
-			BYTE* pDataAllSrc = pDataAll;
-			for (int j = 0; j < nH_I; j++)
-			{
-				memcpy(pDataAll, pData1, nRowW);
-				pDataAll += nRowW;
-				pData1 += nRowW;
-
-				memcpy(pDataAll, pData2, nRowW);
-				pDataAll += nRowW;
-				pData2 += nRowW;
-
-				memcpy(pDataAll, pData3, nRowW);
-				pDataAll += nRowW;
-				pData3 += nRowW;
-			}
-
-			CBgraFrame oFrameAll;
-			oFrameAll.put_Data(pDataAllSrc);
-			oFrameAll.put_Width(3 * nW_I);
-			oFrameAll.put_Height(nH_I);
-			oFrameAll.put_Stride(-3 * nRowW);
-			oFrameAll.SaveFile(sPageDiff, 4);
-		}
-	}
+	std::vector<std::pair<int, int>> arrResults = Verify(wsSigned, pCertificate.get());
+	ASSERT_EQ(1u, arrResults.size());
+	EXPECT_EQ(c_nSignIntact | c_nSignVerified, arrResults[0].second);
+
+	// Signing keeps the pages
+	std::unique_ptr<CPdfFile> pPdf = Load(wsSigned);
+	ExpectPages(*pPdf, { c_oA4, c_oLetter });
 }
