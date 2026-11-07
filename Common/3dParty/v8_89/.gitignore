@@ -1,6 +1,0 @@
-.cipd
-.gclient*
-.gcs*
-v8
-depot_tools
-v8.data
