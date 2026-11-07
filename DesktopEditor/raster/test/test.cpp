@@ -1479,3 +1479,129 @@ TEST(CHeifTest, RejectsInvalidImages)
 		EXPECT_FALSE(Decode(arData, oFrame)) << sName;
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////
+// ICO
+
+namespace
+{
+	// Header and one directory entry for an image of nSize bytes right after it
+	std::vector<BYTE> IcoHeader(int nWidth, int nHeight, unsigned int nSize)
+	{
+		std::vector<BYTE> arData;
+		PutUInt16LE(arData, 0);
+		PutUInt16LE(arData, 1);  // icon
+		PutUInt16LE(arData, 1);  // one image
+		arData.push_back((BYTE)(nWidth & 0xFF));
+		arData.push_back((BYTE)(nHeight & 0xFF));
+		arData.push_back(0);     // no palette
+		arData.push_back(0);
+		PutUInt16LE(arData, 1);  // planes
+		PutUInt16LE(arData, 32); // bits per pixel
+		PutUInt32LE(arData, nSize);
+		PutUInt32LE(arData, 22);
+		return arData;
+	}
+
+	// The quadrants as a 32 bit bitmap icon: bottom-up BGRA rows, then an empty
+	// AND mask
+	std::vector<BYTE> MakeBitmapIco()
+	{
+		std::vector<BYTE> arImage;
+		PutUInt32LE(arImage, 40);
+		PutUInt32LE(arImage, c_nQuadImageSize);
+		PutUInt32LE(arImage, 2 * c_nQuadImageSize); // color and mask
+		PutUInt16LE(arImage, 1);
+		PutUInt16LE(arImage, 32);
+		PutUInt32LE(arImage, 0);                                    // uncompressed
+		PutUInt32LE(arImage, 4 * c_nQuadImageSize * c_nQuadImageSize); // size of the color data
+		for (int i = 0; i < 4; ++i)
+			PutUInt32LE(arImage, 0);
+		for (int nY = c_nQuadImageSize - 1; nY >= 0; --nY)
+		{
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				const CColor c = QuadrantColor(nX, nY);
+				arImage.insert(arImage.end(), {(BYTE)c.b, (BYTE)c.g, (BYTE)c.r, 255});
+			}
+		}
+		arImage.insert(arImage.end(), c_nQuadImageSize * 4, 0);
+
+		std::vector<BYTE> arData = IcoHeader(c_nQuadImageSize, c_nQuadImageSize, (unsigned int)arImage.size());
+		arData.insert(arData.end(), arImage.begin(), arImage.end());
+		return arData;
+	}
+
+	// The quadrants as a PNG compressed icon, like the 256 pixel ones (always
+	// 32 bit RGBA)
+	std::vector<BYTE> MakePngIco()
+	{
+		CPngImage oImage;
+		oImage.nWidth = oImage.nHeight = c_nQuadImageSize;
+		oImage.nColorType = PNG_COLOR_TYPE_RGB_ALPHA;
+		for (int nY = 0; nY < c_nQuadImageSize; ++nY)
+		{
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				const CColor c = QuadrantColor(nX, nY);
+				oImage.arRows.insert(oImage.arRows.end(), {(BYTE)c.r, (BYTE)c.g, (BYTE)c.b, 255});
+			}
+		}
+		const std::vector<BYTE> arPng = MakePng(oImage);
+
+		std::vector<BYTE> arData = IcoHeader(c_nQuadImageSize, c_nQuadImageSize, (unsigned int)arPng.size());
+		arData.insert(arData.end(), arPng.begin(), arPng.end());
+		return arData;
+	}
+}
+
+TEST(CIcoTest, DetectsBitmapAndPngIcons)
+{
+	EXPECT_EQ(_CXIMAGE_FORMAT_ICO, FileType(MakeBitmapIco()));
+	EXPECT_EQ(_CXIMAGE_FORMAT_ICO, FileType(MakePngIco()));
+
+	// A cursor has the same layout
+	std::vector<BYTE> arCursor = MakeBitmapIco();
+	arCursor[2] = 2;
+	EXPECT_EQ(_CXIMAGE_FORMAT_ICO, FileType(arCursor));
+}
+
+TEST(CIcoTest, DecodesBitmapAndPngIcons)
+{
+	for (const std::vector<BYTE>& arData : {MakeBitmapIco(), MakePngIco()})
+	{
+		for (bool bIsRGBA : {false, true})
+		{
+			CBgraFrame oFrame;
+			ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+			for (int nY : {4, 27})
+				for (int nX : {4, 27})
+					EXPECT_EQ(QuadrantColor(nX, nY), Pixel(oFrame, nX, nY, bIsRGBA)) << nX << ", " << nY;
+		}
+	}
+}
+
+TEST(CIcoTest, RejectsOtherData)
+{
+	// The directory entry's width does not match the image
+	std::vector<BYTE> arData = MakeBitmapIco();
+	arData[6] = 16;
+	EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(arData));
+
+	// The image offset points past the end
+	arData = MakeBitmapIco();
+	arData[21] = 0x7F;
+	EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(arData));
+
+	// No images
+	arData = MakeBitmapIco();
+	arData[4] = 0;
+	EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(arData));
+
+	// Short buffers starting with zeros, like ISO media boxes
+	for (size_t nSize : {16, 22, 30, 39})
+		EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(std::vector<BYTE>(nSize, 0))) << nSize;
+}
+
