@@ -126,6 +126,10 @@ Done:
       And the HEIF decoder (`raster/heif`) on libheif: HEIC and AVIF detection (also by
       file name, as before inserting a file), HEIC in both channel orders, AVIF with
       alpha and at 10 bits, rotation from `irot`, `OpenFile`, and truncated input.
+      And ICO and PSD: detection of bitmap, PNG and cursor icons and of PSD (not PSB),
+      icons of both kinds in both channel orders, PSD raw and RLE at 8 and 16 bits, with
+      transparency, with a layer section that is skipped, and truncated or corrupt RLE
+      data.
       Deps: kernel, graphics, UnicodeConverter, jpeg, png, tiff, webp and webpmux (to
       build and read the test images). `GTEST_MAIN`. Images are built in memory, except
       the HEIF ones: core cannot encode HEIF, so `heif/` holds small fixtures from

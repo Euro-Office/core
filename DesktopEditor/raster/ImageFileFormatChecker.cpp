@@ -37,20 +37,6 @@
 #define MIN_SIZE_BUFFER 4096
 #define MAX_SIZE_BUFFER 102400
 
-typedef struct ___tagBITMAPINFOHEADER {
-	DWORD      biSize;
-	LONG       biWidth;
-	LONG       biHeight;
-	WORD       biPlanes;
-	WORD       biBitCount;
-	DWORD      biCompression;
-	DWORD      biSizeImage;
-	LONG       biXPelsPerMeter;
-	LONG       biYPelsPerMeter;
-	DWORD      biClrUsed;
-	DWORD      biClrImportant;
-} ___BITMAPINFOHEADER;
-
 CImageFileFormatChecker::CImageFileFormatChecker()
 {
 	eFileType = _CXIMAGE_FORMAT_UNKNOWN;
@@ -231,27 +217,36 @@ bool CImageFileFormatChecker::isWbFile(BYTE* pBuffer,DWORD dwBytes)
 bool CImageFileFormatChecker::isIcoFile(BYTE* pBuffer,DWORD dwBytes)
 {
 	if (eFileType)return false;
-	
-	// The header (6 bytes) and the first directory entry (16 bytes), which ends
-	// with the offset of the image
-	if ( (22 <= dwBytes) && (0x00 == pBuffer[0] && 0x00 == pBuffer[1]))
+
+	// The header (6 bytes: reserved 0, type 1 for icons or 2 for cursors, image
+	// count) and the first directory entry (16 bytes), which ends with the
+	// offset of the image
+	if ( (22 <= dwBytes) && (0x00 == pBuffer[0] && 0x00 == pBuffer[1] && (0x01 == pBuffer[2] || 0x02 == pBuffer[2]) && 0x00 == pBuffer[3]
+							 && (0x00 != pBuffer[4] || 0x00 != pBuffer[5])))
 	{
-		long width = pBuffer [6];
-		long height = pBuffer [7];
+		DWORD width = pBuffer[6];
+		if (width == 0)
+			width = 256;
 
-		if (width==0)width =256;
-		if (height==0)height =256;
+		const DWORD offset_image = pBuffer[18] | (pBuffer[19] << 8) | (pBuffer[20] << 16) | ((DWORD)pBuffer[21] << 24);
+		if (offset_image > dwBytes)
+			return false;
+		const BYTE* image = pBuffer + offset_image;
+		const DWORD image_bytes = dwBytes - offset_image;
 
-		DWORD offset_image = *(DWORD*)(pBuffer+18);
-
-		if (offset_image <= dwBytes && dwBytes - offset_image >= sizeof(___BITMAPINFOHEADER))
+		// A PNG image: the width is in the IHDR chunk, big-endian
+		if (24 <= image_bytes && 0x89 == image[0] && 'P' == image[1] && 'N' == image[2] && 'G' == image[3])
 		{
-			___BITMAPINFOHEADER *image_header=0;//bmp or png
-			image_header = (___BITMAPINFOHEADER *)(pBuffer + offset_image);
+			const DWORD png_width = ((DWORD)image[16] << 24) | (image[17] << 16) | (image[18] << 8) | image[19];
+			return width == png_width;
+		}
 
-			if (width == image_header->biWidth
-					/*height == image_header->biHeight*/) // the header may have interlaced height
-				return true;
+		// A bitmap: the width follows the size of the BITMAPINFOHEADER (the
+		// height counts the AND mask too, so it is twice the icon's)
+		if (8 <= image_bytes && 40 == (image[0] | (image[1] << 8) | (image[2] << 16) | ((DWORD)image[3] << 24)))
+		{
+			const DWORD bmp_width = image[4] | (image[5] << 8) | (image[6] << 16) | ((DWORD)image[7] << 24);
+			return width == bmp_width;
 		}
 	}
 
@@ -262,9 +257,11 @@ bool CImageFileFormatChecker::isPsdFile(BYTE* pBuffer,DWORD dwBytes)
 {
 	if (eFileType)return false;
 
+	// "8BPS", version 1 (2 is the large document format), 6 reserved zero bytes
 	if ( (12 <= dwBytes) && (0x38 == pBuffer[0] && 0x42 == pBuffer[1]  && 0x50 == pBuffer[2]  && 0x53 == pBuffer[3]
-							 && 0x00 == pBuffer[6] && 0x00 == pBuffer[7]  && 0x18 == pBuffer[8]
-							 && 0x00 == pBuffer[9] && 0x00 == pBuffer[10]  && 0x18 == pBuffer[11]))
+							 && 0x00 == pBuffer[4] && 0x01 == pBuffer[5]
+							 && 0x00 == pBuffer[6] && 0x00 == pBuffer[7]  && 0x00 == pBuffer[8]
+							 && 0x00 == pBuffer[9] && 0x00 == pBuffer[10]  && 0x00 == pBuffer[11]))
 		return true;
 
 	return false;
