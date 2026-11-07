@@ -1975,9 +1975,9 @@ void OoxConverter::convert_list_level(PPTX::Logic::TextParagraphPr	*oox_para_pro
 		if (buSzPts.val.IsInit())
 		{
 			if (text_properties)
-				text_properties->fo_font_size_ = odf_types::length(*buSzPts.val, odf_types::length::pt);
+				text_properties->fo_font_size_ = odf_types::length(*buSzPts.val / 100., odf_types::length::pt);
 			else if (odf_list_type == 1000)
-				odf_context()->styles_context()->lists_styles().set_bullet_image_size(*buSzPts.val);
+				odf_context()->styles_context()->lists_styles().set_bullet_image_size(*buSzPts.val / 100.);
 		}
 	}
 	else
