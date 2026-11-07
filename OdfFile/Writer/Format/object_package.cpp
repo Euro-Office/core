@@ -34,7 +34,7 @@
 #include "../../../DesktopEditor/common/SystemUtils.h"
 
 #include "../../../OOXML/SystemUtility/SystemUtility.h"
-#include "../../../Common/3dParty/cryptopp/osrng.h"
+#include <cryptopp/osrng.h>
 
 namespace cpdoccore 
 {

@@ -464,11 +464,6 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 		current->set_stock_loss_marker(stock_loss_marker_);
 		current->set_stock_range_line(stock_range_line_);
 
-		if (1 == series_.size())
-		{
-			current->varyColors_ = false;
-		}
-
 		current->set_properties(plot_area_.properties_);
 		current->set_graphic_properties(graphic_properties_);
 	

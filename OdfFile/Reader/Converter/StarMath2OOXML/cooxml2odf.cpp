@@ -1484,8 +1484,8 @@ namespace StarMath
 		}
 		m_pXmlWrite->WriteNodeBegin(wsNode,true);
 		pBarPr.m_enPos == SimpleTypes::ETopBot::tbTop ? m_pXmlWrite->WriteAttribute(L"accent",L"true"): m_pXmlWrite->WriteAttribute(L"accentunder",L"true");
-		ConversionElement(pBar->m_oElement.GetPointer());
 		m_pXmlWrite->WriteNodeEnd(L"w",true,false);
+		ConversionElement(pBar->m_oElement.GetPointer());
 		m_pXmlWrite->WriteNodeBegin(L"mo",false);
 		pBarPr.m_enPos == SimpleTypes::ETopBot::tbTop ? m_pXmlWrite->WriteString(L"\u203E"):m_pXmlWrite->WriteString(L"\u005F");
 		m_pXmlWrite->WriteNodeEnd(L"mo",false,false);
