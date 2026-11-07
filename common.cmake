@@ -44,6 +44,12 @@ if( NOT DEFINED EO_CORE_3RD_PARTY_INSTALL_DIR )
     set(EO_CORE_3RD_PARTY_INSTALL_DIR "${DEFAULT_EO_CORE_3RD_PARTY_INSTALL_DIR}" CACHE PATH "3rd party install dir.")
 endif()
 
+# FreeType sources (Common/3dParty/freetype), compiled into each consumer
+set(FREETYPE_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/freetype")
+
+# OpenJPEG sources (Common/3dParty/openjpeg), compiled into each consumer
+set(OPENJPEG_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openjpeg")
+
 if( NOT DEFINED VCPKG_BINARY_REMOTE )
     set(VCPKG_BINARY_REMOTE "https://s3.eu-central-4.ionoscloud.com/eo-build-assets/vcpkg" CACHE STRING "Base URL for vcpkg binary package remote")
 endif()
@@ -74,7 +80,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm,libxml2-wasm"
+            "--only=openssl-hash,hunspell,brotli,cryptopp,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm,jbig2enc"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -106,6 +112,64 @@ if( EMSCRIPTEN )
         INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
     )
 
+    # Setup libjpeg-turbo-wasm
+    set(LIBJPEG_TURBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libjpeg-turbo-wasm")
+    get_filename_component(LIBJPEG_TURBO_INSTALL_DIR_ABS "${LIBJPEG_TURBO_INSTALL_DIR}" ABSOLUTE)
+    add_library(jpeg STATIC IMPORTED GLOBAL)
+    set_target_properties(jpeg PROPERTIES
+        IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/libjpeg.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
+    )
+
+    # Setup libpng-wasm
+    set(LIBPNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libpng-wasm")
+    get_filename_component(LIBPNG_INSTALL_DIR_ABS "${LIBPNG_INSTALL_DIR}" ABSOLUTE)
+    add_library(png STATIC IMPORTED GLOBAL)
+    set_target_properties(png PROPERTIES
+        IMPORTED_LOCATION "${LIBPNG_INSTALL_DIR_ABS}/lib/libpng16.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBPNG_INSTALL_DIR_ABS}/include"
+    )
+
+    # Setup libtiff-wasm
+    set(LIBTIFF_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libtiff-wasm")
+    get_filename_component(LIBTIFF_INSTALL_DIR_ABS "${LIBTIFF_INSTALL_DIR}" ABSOLUTE)
+    add_library(tiff STATIC IMPORTED GLOBAL)
+    set_target_properties(tiff PROPERTIES
+        IMPORTED_LOCATION "${LIBTIFF_INSTALL_DIR_ABS}/lib/libtiff.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBTIFF_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES jpeg
+    )
+
+    # Setup libwebp-wasm
+    set(LIBWEBP_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libwebp-wasm")
+    get_filename_component(LIBWEBP_INSTALL_DIR_ABS "${LIBWEBP_INSTALL_DIR}" ABSOLUTE)
+    add_library(sharpyuv STATIC IMPORTED GLOBAL)
+    set_target_properties(sharpyuv PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libsharpyuv.a"
+    )
+    add_library(webp STATIC IMPORTED GLOBAL)
+    set_target_properties(webp PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libwebp.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBWEBP_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES sharpyuv
+    )
+    foreach(LIBWEBP_COMPONENT webpdemux webpmux)
+        add_library(${LIBWEBP_COMPONENT} STATIC IMPORTED GLOBAL)
+        set_target_properties(${LIBWEBP_COMPONENT} PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/lib${LIBWEBP_COMPONENT}.a"
+            INTERFACE_LINK_LIBRARIES webp
+        )
+    endforeach()
+
+    # Setup leptonica-wasm
+    set(LEPTONICA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/leptonica-wasm")
+    get_filename_component(LEPTONICA_INSTALL_DIR_ABS "${LEPTONICA_INSTALL_DIR}" ABSOLUTE)
+    add_library(leptonica STATIC IMPORTED GLOBAL)
+    set_target_properties(leptonica PROPERTIES
+        IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/libleptonica.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+    )
+
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
@@ -121,7 +185,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,harfbuzz,html,hyphen,icu,libxml2,md,openssl,socketio,v8,zlib-ng"
+                "--only=apple,boost,brotli,cryptopp,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff,libwebp,leptonica,jbig2enc"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -139,7 +203,7 @@ else()
             endif()
 
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -333,7 +397,123 @@ else()
         )
     endif()
 
+    # Setup libjpeg-turbo
+    set(LIBJPEG_TURBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libjpeg-turbo")
+    get_filename_component(LIBJPEG_TURBO_INSTALL_DIR_ABS "${LIBJPEG_TURBO_INSTALL_DIR}" ABSOLUTE)
+    add_library(jpeg STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        # libjpeg-turbo names its static MSVC library jpeg-static.lib
+        set_target_properties(jpeg PROPERTIES
+            IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/jpeg-static.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
+        )
+    else()
+        set_target_properties(jpeg PROPERTIES
+            IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/libjpeg.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
+        )
+    endif()
+
+    # Setup libpng
+    set(LIBPNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libpng")
+    get_filename_component(LIBPNG_INSTALL_DIR_ABS "${LIBPNG_INSTALL_DIR}" ABSOLUTE)
+    add_library(png STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set(LIBPNG_LIB_NAME "libpng16_static.lib")
+    else()
+        set(LIBPNG_LIB_NAME "libpng16.a")
+    endif()
+    set_target_properties(png PROPERTIES
+        IMPORTED_LOCATION "${LIBPNG_INSTALL_DIR_ABS}/lib/${LIBPNG_LIB_NAME}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBPNG_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES z
+    )
+
+    # Setup libtiff
+    set(LIBTIFF_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libtiff")
+    get_filename_component(LIBTIFF_INSTALL_DIR_ABS "${LIBTIFF_INSTALL_DIR}" ABSOLUTE)
+    add_library(tiff STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set(LIBTIFF_LIB_NAME "tiff.lib")
+    else()
+        set(LIBTIFF_LIB_NAME "libtiff.a")
+    endif()
+    set_target_properties(tiff PROPERTIES
+        IMPORTED_LOCATION "${LIBTIFF_INSTALL_DIR_ABS}/lib/${LIBTIFF_LIB_NAME}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBTIFF_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES "jpeg;z"
+    )
+
+    # Setup libwebp (MSVC builds are named like the others, libwebp.lib)
+    set(LIBWEBP_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libwebp")
+    get_filename_component(LIBWEBP_INSTALL_DIR_ABS "${LIBWEBP_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(LIBWEBP_LIB_SUFFIX ".lib")
+        set(LIBWEBP_DEP_LIBS "")
+    elseif( ANDROID )
+        set(LIBWEBP_LIB_SUFFIX ".a")
+        add_library(cpufeatures-webp STATIC IMPORTED GLOBAL)
+        set_target_properties(cpufeatures-webp PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libcpufeatures-webp.a"
+            INTERFACE_LINK_LIBRARIES dl
+        )
+        set(LIBWEBP_DEP_LIBS "cpufeatures-webp;m")
+    else()
+        set(LIBWEBP_LIB_SUFFIX ".a")
+        set(LIBWEBP_DEP_LIBS m)
+    endif()
+    add_library(sharpyuv STATIC IMPORTED GLOBAL)
+    set_target_properties(sharpyuv PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libsharpyuv${LIBWEBP_LIB_SUFFIX}"
+        INTERFACE_LINK_LIBRARIES "${LIBWEBP_DEP_LIBS}"
+    )
+    add_library(webp STATIC IMPORTED GLOBAL)
+    set_target_properties(webp PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libwebp${LIBWEBP_LIB_SUFFIX}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBWEBP_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES "sharpyuv;${LIBWEBP_DEP_LIBS}"
+    )
+    foreach(LIBWEBP_COMPONENT webpdemux webpmux)
+        add_library(${LIBWEBP_COMPONENT} STATIC IMPORTED GLOBAL)
+        set_target_properties(${LIBWEBP_COMPONENT} PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/lib${LIBWEBP_COMPONENT}${LIBWEBP_LIB_SUFFIX}"
+            INTERFACE_LINK_LIBRARIES webp
+        )
+    endforeach()
+
+    # Setup leptonica
+    set(LEPTONICA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/leptonica")
+    get_filename_component(LEPTONICA_INSTALL_DIR_ABS "${LEPTONICA_INSTALL_DIR}" ABSOLUTE)
+    add_library(leptonica STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set_target_properties(leptonica PROPERTIES
+            IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/leptonica-1.87.0.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+            INTERFACE_LINK_LIBRARIES "user32;gdi32"
+        )
+    else()
+        set_target_properties(leptonica PROPERTIES
+            IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/libleptonica.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+            INTERFACE_LINK_LIBRARIES m
+        )
+    endif()
+
 endif()
+
+# Crypto++ is fetched as sources and compiled by core (Common/3dParty/cryptopp).
+# Include it as <cryptopp/...>.
+set(CRYPTOPP_INCLUDE_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cryptopp")
+set(CRYPTOPP_SOURCES_DIR "${CRYPTOPP_INCLUDE_DIR}/cryptopp")
+
+# jbig2enc is compiled into the targets that use it (source-only dependency)
+set(JBIG2ENC_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/jbig2enc/src")
+set(JBIG2ENC_SOURCES
+    "${JBIG2ENC_SOURCES_DIR}/jbig2arith.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2comparator.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2enc.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2sym.cc"
+)
 
 # Do NOT auto-add absolute link directories to RPATH
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
