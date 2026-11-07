@@ -134,7 +134,9 @@ namespace utils////////////////////////////////////////// GENERAL helpers .. pul
 		static const boost::wregex iso_date_time(
 			L"((\\d{4})-(\\d{2})-(\\d{2})(T(\\d{2}):(\\d{2})(:(\\d{2})(\\.\\d+)?)?)?)Z?");
 		boost::wsmatch iso_match;
-		if (boost::regex_match(oox_date_time, iso_match, iso_date_time))
+		// cheap pre-check: serial numbers (the common case) never get to the regex
+		if (oox_date_time.size() >= 10 && oox_date_time[4] == L'-' &&
+			boost::regex_match(oox_date_time, iso_match, iso_date_time))
 		{
 			bool valid = true;
 			try
