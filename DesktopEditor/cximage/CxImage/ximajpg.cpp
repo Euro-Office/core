@@ -9,12 +9,6 @@
 
 #if CXIMAGE_SUPPORT_JPG
 
-#ifdef _LINUX
- #include <jmorecfg.h>
-#else
- #include "../jpeg/jmorecfg.h"
-#endif
-
 #include "ximaiter.h"
 
 #include <setjmp.h>
@@ -437,11 +431,6 @@ bool CxImageJPG::Encode(CxFile * hFile)
 	if ((dwCodecOptions & ENCODE_PROGRESSIVE) != 0)
 		jpeg_simple_progression(&cinfo);
 //#endif
-
-#ifdef C_LOSSLESS_SUPPORTED
-	if ((dwCodecOptions & ENCODE_LOSSLESS) != 0)
-		jpeg_simple_lossless(&cinfo, m_nPredictor, m_nPointTransform);
-#endif
 
 	//SetCodecOption(ENCODE_SUBSAMPLE_444 | GetCodecOption(CXIMAGE_FORMAT_JPG),CXIMAGE_FORMAT_JPG);
 

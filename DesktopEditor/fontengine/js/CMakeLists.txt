@@ -38,45 +38,48 @@ set(SOURCES
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/dec/state.c
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/dec/static_init.c
 
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftdebug.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/autofit/autofit.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/bdf/bdf.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/cff/cff.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbase.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbitmap.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftfstype.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftgasp.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/cache/ftcache.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftglyph.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/gzip/ftgzip.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftinit.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/lzw/ftlzw.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftstroke.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftsystem.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/smooth.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbbox.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbdf.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftcid.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftmm.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftpfr.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftsynth.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/fttype1.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftwinfnt.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftgxval.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftotval.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftpatent.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/pcf/pcf.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/pfr/pfr.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/psaux/psaux.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/pshinter/pshinter.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/psnames/psmodule.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/raster/raster.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/sfnt.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/truetype/truetype.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/type1/type1.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/cid/type1cid.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/type42/type42.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/winfonts/winfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftdebug.c
+    ${FREETYPE_SOURCES_DIR}/src/autofit/autofit.c
+    ${FREETYPE_SOURCES_DIR}/src/bdf/bdf.c
+    ${FREETYPE_SOURCES_DIR}/src/cff/cff.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbase.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbitmap.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftfstype.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftgasp.c
+    ${FREETYPE_SOURCES_DIR}/src/cache/ftcache.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftglyph.c
+    ${FREETYPE_SOURCES_DIR}/src/gzip/ftgzip.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftinit.c
+    ${FREETYPE_SOURCES_DIR}/src/lzw/ftlzw.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftstroke.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftsystem.c
+    ${FREETYPE_SOURCES_DIR}/src/smooth/smooth.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbbox.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbdf.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftcid.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftmm.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftpfr.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftsynth.c
+    ${FREETYPE_SOURCES_DIR}/src/base/fttype1.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftwinfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftgxval.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftotval.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftpatent.c
+    ${FREETYPE_SOURCES_DIR}/src/pcf/pcf.c
+    ${FREETYPE_SOURCES_DIR}/src/pfr/pfr.c
+    ${FREETYPE_SOURCES_DIR}/src/psaux/psaux.c
+    ${FREETYPE_SOURCES_DIR}/src/pshinter/pshinter.c
+    ${FREETYPE_SOURCES_DIR}/src/psnames/psmodule.c
+    ${FREETYPE_SOURCES_DIR}/src/raster/raster.c
+    ${FREETYPE_SOURCES_DIR}/src/sfnt/sfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/truetype/truetype.c
+    ${FREETYPE_SOURCES_DIR}/src/type1/type1.c
+    ${FREETYPE_SOURCES_DIR}/src/cid/type1cid.c
+    ${FREETYPE_SOURCES_DIR}/src/type42/type42.c
+    ${FREETYPE_SOURCES_DIR}/src/winfonts/winfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/hvf/hvf.c
+    ${FREETYPE_SOURCES_DIR}/src/sdf/sdf.c
+    ${FREETYPE_SOURCES_DIR}/src/svg/svg.c
     ${DESKTOP_ROOT}/graphics/GraphicsPath.cpp
 
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-aat-layout.cc
@@ -165,6 +168,9 @@ set(SOURCES
 
     ${DESKTOP_ROOT}/graphics/Image.cpp
     ${DESKTOP_ROOT}/raster/BgraFrame.cpp
+    ${DESKTOP_ROOT}/raster/Pnm/PnmFile.cpp
+    ${DESKTOP_ROOT}/raster/Ras/RasFile.cpp
+    ${DESKTOP_ROOT}/raster/WebP/WebPFile.cpp
     ${DESKTOP_ROOT}/raster/ImageFileFormatChecker.cpp
     ${DESKTOP_ROOT}/graphics/Matrix.cpp
 
@@ -192,106 +198,12 @@ set(SOURCES
     ${DESKTOP_ROOT}/cximage/CxImage/ximatran.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximatif.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/tif_xfile.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximajas.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximagif.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximaico.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximatga.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximapcx.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximawbmp.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximamng.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximapsd.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximaska.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximaraw.cpp
-
-    ${DESKTOP_ROOT}/cximage/jpeg/jerror.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmarker.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdapimin.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmaster.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdapistd.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcomapi.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jutils.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdinput.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmainct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jmemmgr.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jquant1.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jquant2.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmerge.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdcolor.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdsample.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdpostct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jddctmgr.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdarith.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdhuff.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdcoefct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jmemnobs.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jidctint.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jidctfst.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jidctflt.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jaricom.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcapimin.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcparam.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcapistd.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcinit.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcmaster.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jccolor.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcmarker.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcsample.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcprepct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcdctmgr.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcarith.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jchuff.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jccoefct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcmainct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jfdctint.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jfdctfst.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jfdctflt.c
-
-    ${DESKTOP_ROOT}/cximage/png/pngread.c
-    ${DESKTOP_ROOT}/cximage/png/pngmem.c
-    ${DESKTOP_ROOT}/cximage/png/pngerror.c
-    ${DESKTOP_ROOT}/cximage/png/png.c
-    ${DESKTOP_ROOT}/cximage/png/pngrio.c
-    ${DESKTOP_ROOT}/cximage/png/pngtrans.c
-    ${DESKTOP_ROOT}/cximage/png/pngget.c
-    ${DESKTOP_ROOT}/cximage/png/pngrutil.c
-    ${DESKTOP_ROOT}/cximage/png/pngrtran.c
-    ${DESKTOP_ROOT}/cximage/png/pngset.c
-    ${DESKTOP_ROOT}/cximage/png/pngwrite.c
-    ${DESKTOP_ROOT}/cximage/png/pngwio.c
-    ${DESKTOP_ROOT}/cximage/png/pngwutil.c
-    ${DESKTOP_ROOT}/cximage/png/pngwtran.c
-
-    ${DESKTOP_ROOT}/cximage/tiff/tif_close.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dir.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_aux.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_getimage.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_strip.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_open.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_tile.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_error.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_read.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_flush.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dirinfo.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_compress.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_warning.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_swab.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_color.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dirread.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_write.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_codec.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_luv.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dirwrite.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dumpmode.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_fax3.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_ojpeg.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_jpeg.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_next.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_thunder.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_packbits.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_lzw.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_zip.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_fax3sm.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_predict.c
 
     ${DESKTOP_ROOT}/raster/Metafile/MetaFile.cpp
     ${DESKTOP_ROOT}/raster/Metafile/Common/MetaFileTypes.cpp
@@ -335,10 +247,8 @@ set(SOURCES
 set_source_files_properties(${SOURCES} PROPERTIES GENERATED TRUE)
 
 set_source_files_properties(
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/smooth.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/ftgrays.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/sfnt.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/ttcmap.c
+    # sfnt.c includes ttcmap.c, which uses try/catch (freetype.patch)
+    ${FREETYPE_SOURCES_DIR}/src/sfnt/sfnt.c
     PROPERTIES LANGUAGE CXX
 )
 
@@ -351,9 +261,9 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # Include paths
 # -------------------------------------------------
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${DESKTOP_ROOT}/freetype-2.10.4/include
-    ${DESKTOP_ROOT}/freetype-2.10.4/include/freetype
-    ${DESKTOP_ROOT}/freetype-2.10.4/include/freetype/internal
+    ${FREETYPE_SOURCES_DIR}/include
+    ${FREETYPE_SOURCES_DIR}/include/freetype
+    ${FREETYPE_SOURCES_DIR}/include/freetype/internal
     ${DESKTOP_ROOT}/graphics/pro/js/wasm/src/lib
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/include
@@ -363,9 +273,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CORE_ROOT}/OfficeUtils/src
     ${ZLIBNG_WASM_INCDIR}
     ${ZLIBNG_WASM_INCDIR}/minizip
-    ${DESKTOP_ROOT}/cximage/jasper/include
-    ${DESKTOP_ROOT}/cximage/jpeg
-    ${DESKTOP_ROOT}/cximage/png
     ${DESKTOP_ROOT}/agg-2.4/include
 )
 
@@ -384,6 +291,11 @@ target_link_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     minizip # minizip-ng
     z       # libz-ng
+    jpeg    # libjpeg-turbo
+    png     # libpng
+    tiff    # libtiff
+    webp    # libwebp
+    webpdemux
 )
 
 # -------------------------------------------------
