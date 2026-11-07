@@ -26,3 +26,9 @@ add_core_gtest(
     LIBS    kernel graphics UnicodeConverter jpeg png tiff webp webpmux
     GTEST_MAIN
 )
+
+# HEIF fixtures are read in place: heif/ (from heif/generate.py). Core only
+# decodes HEIF, so the test cannot build them in memory like the others.
+target_compile_definitions(raster_formats_test PRIVATE
+    RASTER_TEST_HEIF_DIR="${CMAKE_CURRENT_SOURCE_DIR}/heif"
+)
