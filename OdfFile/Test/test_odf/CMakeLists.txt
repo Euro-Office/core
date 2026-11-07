@@ -52,6 +52,7 @@ add_core_gtest(
             docx2odt_page_background.cpp
             math_bar.cpp
             chart_title.cpp
+            odt2docx_underline.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
