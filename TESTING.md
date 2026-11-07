@@ -274,6 +274,8 @@ Done:
       pulls into the default build — `osign` has no non-test consumer, so it is reached
       only through the test's guarded `add_subdirectory` and nothing changes when
       `EO_BUILD_TESTS` is OFF.
+      `certificate.cpp` was written for OpenSSL 1.1 and was ported to the OpenSSL 4 API
+      (opaque `ASN1_STRING`, const `X509_get_subject_name`/`X509_get_ext`) for this.
 
 ### gtest suites to migrate
 
