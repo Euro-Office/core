@@ -142,3 +142,12 @@ path = [
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/chart_bar_two_series.ods",
+    "OdfFile/Test/test_odf/ExampleFiles/chart_pie_one_series.ods",
+    "OdfFile/Test/test_odf/ExampleFiles/chart_ring_one_series.ods",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
