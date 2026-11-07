@@ -1135,11 +1135,12 @@ std::wstring  docx_conversion_context::dump_settings_document()
 
 			_CP_OPT(double) tabDistance = root()->odf_context().Settings().get_tab_distance();
 
-			if (tabDistance)
+			if (tabDistance && *tabDistance >= 0)
 			{
 				CP_XML_NODE(L"w:defaultTabStop")
 				{
-					CP_XML_ATTR(L"w:val", *tabDistance);
+					// ST_TwipsMeasure: whole twips, rounded
+					CP_XML_ATTR(L"w:val", static_cast<int>(*tabDistance + 0.5));
 				}
 			}
 			
