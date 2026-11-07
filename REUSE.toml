@@ -25,6 +25,7 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/print_area_bad_local_sheet.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/print_area_local_sheet.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/print_area_local_sheet_past_end.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/print_area_no_local_sheet.xlsx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
