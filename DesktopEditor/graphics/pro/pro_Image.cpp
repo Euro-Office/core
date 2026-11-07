@@ -46,8 +46,8 @@ namespace NSImages
     }
 }
 
-#include "../../raster/JBig2/source/Encoder/jbig2enc.h"
-#include "../../raster/JBig2/source/LeptonLib/allheaders.h"
+#include <jbig2enc.h>
+#include <leptonica/allheaders.h>
 namespace NSImages
 {
     class CPixJbig2_private

@@ -742,7 +742,7 @@ void odf_document::Impl::parse_meta(office_element *element)
 	
 	meta_template * meta_template_ = dynamic_cast<meta_template*>(meta->meta_template_.get());
 	if (meta_template_)
-		context_->DocProps().template_ = meta_generator_->content_;
+		context_->DocProps().template_ = meta_template_->xlink_title_;
 
 	meta_creation_date * meta_creation_date_ = dynamic_cast<meta_creation_date*>(meta->meta_creation_date_.get());
 	if (meta_creation_date_)
