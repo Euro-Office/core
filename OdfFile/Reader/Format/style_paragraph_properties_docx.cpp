@@ -228,7 +228,7 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 
 			if (!jc.empty()) CP_XML_NODE(L"w:jc"){CP_XML_ATTR(L"w:val", jc );}
 		}
-		else if (fo_keep_with_next_) //&& Context.get_drop_cap_context().state() != 2
+		if (fo_keep_with_next_ && Context.get_drop_cap_context().state() != 2)
 		{
 			std::wstring val; 
 			if (fo_keep_with_next_->get_type() == keep_together::Always)

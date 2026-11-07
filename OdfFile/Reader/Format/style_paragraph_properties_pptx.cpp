@@ -186,9 +186,11 @@ void paragraph_format_properties::xlsx_convert(std::wostream & strm, bool in_dra
 						w_line = std::to_wstring( (int)( 0.5 + percent *1000. ) );
 						w_lineRule = L"a:spcPct";
 					}
-					//else if(fo_line_height_->get_type() == line_width::Normal) 
-					//{
-					//}
+					else if (fo_line_height_->get_type() == line_width::Normal)
+					{
+						w_line = L"100000";
+						w_lineRule = L"a:spcPct";
+					}
 					else if (fo_line_height_->get_type() == line_width::PositiveLength)
 					{
 						w_line = std::to_wstring((int)(0.5 + 100.0 * fo_line_height_->get_positive_length().get_value_unit(length::pt)));
@@ -206,13 +208,16 @@ void paragraph_format_properties::xlsx_convert(std::wostream & strm, bool in_dra
 					w_line = std::to_wstring( (int)(0.5 + 240.0 + 100.0 * style_line_spacing_->get_value_unit(length::pt)) );
 			
 				}
-				CP_XML_NODE(L"a:lnSpc")
+				if (!w_lineRule.empty())
 				{
-					CP_XML_NODE(w_lineRule)
+					CP_XML_NODE(L"a:lnSpc")
 					{
-						CP_XML_ATTR(L"val",w_line);
+						CP_XML_NODE(w_lineRule)
+						{
+							CP_XML_ATTR(L"val",w_line);
+						}
 					}
-				}	
+				}
 			}
 			if (fo_margin_top_/* || fo_margin_*/)
 			{
@@ -443,9 +448,11 @@ void paragraph_format_properties::pptx_convert(oox::pptx_conversion_context & Co
 					w_line = std::to_wstring( (int)( 0.5 + percent *1000. ) );
 					w_lineRule = L"a:spcPct";
 				}
-				//else if(fo_line_height_->get_type() == line_width::Normal) 
-				//{
-				//}
+				else if (fo_line_height_->get_type() == line_width::Normal)
+				{
+					w_line = L"100000";
+					w_lineRule = L"a:spcPct";
+				}
 				else if (fo_line_height_->get_type() == line_width::PositiveLength)
 				{
 					w_line = std::to_wstring((int)(0.5 + 100.0 * fo_line_height_->get_positive_length().get_value_unit(length::pt)));
@@ -463,13 +470,16 @@ void paragraph_format_properties::pptx_convert(oox::pptx_conversion_context & Co
 				w_line = std::to_wstring( (int)(0.5 + 240.0 + 100.0 * style_line_spacing_->get_value_unit(length::pt)) );
 		
 			}
-			CP_XML_NODE(L"a:lnSpc")
+			if (!w_lineRule.empty())
 			{
-				CP_XML_NODE(w_lineRule)
+				CP_XML_NODE(L"a:lnSpc")
 				{
-					CP_XML_ATTR(L"val",w_line);
+					CP_XML_NODE(w_lineRule)
+					{
+						CP_XML_ATTR(L"val",w_line);
+					}
 				}
-			}	
+			}
 		}
 		if (fo_margin_top_)
 		{

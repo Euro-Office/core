@@ -454,7 +454,7 @@ void bookmark_ref::add_child_element(xml::sax* Reader, const std::wstring& Ns, c
 }
 void bookmark_ref::docx_convert(oox::docx_conversion_context& Context)
 {
-	std::wstring field_name = (ref_name_ ? L"REF " + *ref_name_ : L"REF") + L" \\h";
+	std::wstring field_name = (ref_name_ ? L"REF " + XmlUtils::EncodeXmlString(*ref_name_) : L"REF") + L" \\h";
 
 	if (reference_format_)
 	{
@@ -753,7 +753,7 @@ void a::docx_convert(oox::docx_conversion_context & Context)
 	Context.finish_run();    
 	
 	std::wostream& _Wostream = Context.output_stream();
-	if (Context.is_table_content() || office_target_frame_name_ || ref[0] == L'#')
+	if (Context.is_table_content() || ref[0] == L'#')
 	{
 		size_t pos_outline = ref.find(L"|outline");
 		if (std::wstring::npos != pos_outline)//without #
@@ -784,7 +784,14 @@ void a::docx_convert(oox::docx_conversion_context & Context)
 		std::wstring rId;
 		rId = Context.add_hyperlink(ref, false);
 
-		_Wostream << L"<w:hyperlink r:id=\"" << rId << L"\">";
+		_Wostream << L"<w:hyperlink r:id=\"" << rId << L"\"";
+		if (office_target_frame_name_)
+		{
+			std::wstringstream frame;
+			frame << *office_target_frame_name_;
+			_Wostream << L" w:tgtFrame=\"" << XmlUtils::EncodeXmlString(frame.str()) << L"\"";
+		}
+		_Wostream << L">";
 	}
 
     style_instance * styleInst = NULL;
@@ -1508,7 +1515,7 @@ void sequence_ref::docx_convert(oox::docx_conversion_context & Context)
 	if (!ref_name_) return;
 
 	Context.finish_run();
-	Context.output_stream() << L"<w:fldSimple w:instr=\" REF " << *ref_name_ << L" \\h\">";
+	Context.output_stream() << L"<w:fldSimple w:instr=\" REF " << XmlUtils::EncodeXmlString(*ref_name_) << L" \\h\">";
 	Context.add_new_run();
 	if (text_)
 		text_->docx_convert(Context);
@@ -1642,7 +1649,7 @@ void expression::docx_convert(oox::docx_conversion_context & Context)
 	strm << L"<w:r><w:fldChar w:fldCharType=\"begin\"></w:fldChar></w:r>";
 	strm << L"<w:r><w:instrText>FORMTEXT</w:instrText></w:r>";
 	strm << L"<w:r><w:fldChar w:fldCharType=\"separate\"/></w:r>";
-	strm << L"<w:r><w:t>" << text_ << L"</w:t></w:r>";
+	strm << L"<w:r><w:t>" << XmlUtils::EncodeXmlString(text_) << L"</w:t></w:r>";
     strm << L"<w:r><w:fldChar w:fldCharType=\"end\"/></w:r>";
 }
 //------------------------------------------------------------------------------------------------------------
@@ -1671,7 +1678,7 @@ void text_input::docx_convert(oox::docx_conversion_context & Context)
 	strm << L"<w:r><w:fldChar w:fldCharType=\"begin\"></w:fldChar></w:r>";
 	strm << L"<w:r><w:instrText>FORMTEXT</w:instrText></w:r>";
 	strm << L"<w:r><w:fldChar w:fldCharType=\"separate\"/></w:r>";
-	strm << L"<w:r><w:t>" << text_ << L"</w:t></w:r>";
+	strm << L"<w:r><w:t>" << XmlUtils::EncodeXmlString(text_) << L"</w:t></w:r>";
     strm << L"<w:r><w:fldChar w:fldCharType=\"end\"/></w:r>";
 }
 //-------------------------------------------------------------------------------------------------------------------
@@ -1731,7 +1738,7 @@ void text_drop_down::docx_convert(oox::docx_conversion_context & Context)
 		content_[i]->docx_convert(Context);
 	}
 	strm << L"</w:dropDownList></w:sdtPr><w:sdtEndPr/><w:sdtContent>";
-	strm << L"<w:r><w:t>" << text_ << L"</w:t></w:r>";
+	strm << L"<w:r><w:t>" << XmlUtils::EncodeXmlString(text_) << L"</w:t></w:r>";
 	strm << L"</w:sdtContent></w:sdt>";
 }
 //-------------------------------------------------------------------------------------------------------------------
@@ -1746,7 +1753,8 @@ void text_label::docx_convert(oox::docx_conversion_context & Context)
 {
     std::wostream & strm = Context.output_stream();
 	
-	strm << L"<w:listItem w:value=\"" << text_value_.get_value_or(L"") << L"\" w:displayText=\"" << text_value_.get_value_or(L"") << L"\"/>";
+	const std::wstring value = XmlUtils::EncodeXmlString(text_value_.get_value_or(L""));
+	strm << L"<w:listItem w:value=\"" << value << L"\" w:displayText=\"" << value << L"\"/>";
 }
 //-------------------------------------------------------------------------------------------------------------------
 const wchar_t * sheet_name::ns = L"text";
