@@ -99,67 +99,7 @@ set(SOURCES
 
 
     ${DESKTOP_ROOT}/raster/JBig2/source/JBig2File.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/Encoder/jbig2enc.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/Encoder/jbig2arith.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/Encoder/jbig2sym.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pixconv.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/writefile.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/scale.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pix1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pix2.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pix3.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pix4.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pix5.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/grayquant.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/grayquantlow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/seedfill.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/jbclass.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pixabasic.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/numabasic.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/morphseq.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/binexpandlow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/ptabasic.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/rop.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/colormap.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pngiostub.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/lepton_utils.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/scalelow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/enhance.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/jpegio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/jpegiostub.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/spixio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/webpio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/webpiostub.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/psio2.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/gifio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/gifiostub.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pnmio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/tiffio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/tiffiostub.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/bmpio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/binexpand.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/compare.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/boxbasic.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/conncomp.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pixafunc1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/boxfunc1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/ptafunc1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/binreduce.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/seedfilllow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/sel1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/morphapp.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/correlscore.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/sarray.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/morph.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/roplow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/fpix1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/stack.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pixacc.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pixarith.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/convolve.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/binreducelow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/convolvelow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/arithlow.cpp
+    ${JBIG2ENC_SOURCES}
 
     ${DESKTOP_ROOT}/graphics/GraphicsRenderer.cpp
     ${DESKTOP_ROOT}/graphics/pro/pro_Graphics.cpp
@@ -718,7 +658,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash/include
     ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash
     ${CORE_ROOT}/DocxRenderer
+    ${JBIG2ENC_SOURCES_DIR}
 )
+
+# jbig2enc reports its version through jbig2_version()
+set_source_files_properties(${JBIG2ENC_SOURCES} PROPERTIES COMPILE_DEFINITIONS "VERSION=\"0.32\"")
 
 # -------------------------------------------------
 # link libraries
@@ -736,6 +680,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     jpeg
     png
     tiff
+    leptonica
 )
 
 # -------------------------------------------------

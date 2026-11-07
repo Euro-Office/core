@@ -159,37 +159,11 @@ add_library(graphics SHARED
     # !disable_cximage_all {
         ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jbig/jbig_tab.c
         ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jbig/jbig.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/Encoder/jbig2arith.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/Encoder/jbig2enc.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/Encoder/jbig2sym.cpp
         ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/JBig2File.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/boxbasic.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/ccbord.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/dwacomb.2.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/dwacomblow.2.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/fhmtgen.1.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/fliphmtgen.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/fmorphauto.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/fmorphgen.1.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/numabasic.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/pix5.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/pixabasic.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/pixafunc1.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/pixcomp.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/ptabasic.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/ptra.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/ropiplow.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/roplow.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/rotateam.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/rotateshear.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/sarray.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/sel1.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/sel2.cpp
-        ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/LeptonLib/skew.cpp
+        ${JBIG2ENC_SOURCES}
         ${DESKTOP_EDITOR_ROOT_DIR}/raster/Jp2/J2kFile.cpp
         ${DESKTOP_EDITOR_ROOT_DIR}/raster/Jp2/Reader.cpp
         ${DESKTOP_EDITOR_ROOT_DIR}/raster/PICT/PICFile.cpp
-        ${GRAPHICS_ROOT_DIR}/pro/lepton_lib_all.cpp
         ${GRAPHICS_ROOT_DIR}/pro/libpsd_pri.c
         ${GRAPHICS_ROOT_DIR}/pro/libpsd_pri2.c
         ${GRAPHICS_ROOT_DIR}/pro/libpsd_pri3.c
@@ -805,7 +779,12 @@ target_include_directories(graphics PRIVATE
 
     # brotli.pri
     ${BROTLI_INSTALL_DIR_ABS}/c/include
+
+    ${JBIG2ENC_SOURCES_DIR}
 )
+
+# jbig2enc reports its version through jbig2_version()
+set_source_files_properties(${JBIG2ENC_SOURCES} PROPERTIES COMPILE_DEFINITIONS "VERSION=\"0.32\"")
 
 if( MSVC )
     target_include_directories(graphics PRIVATE
@@ -855,7 +834,7 @@ target_link_libraries(graphics PUBLIC
 )
 
 target_link_libraries(graphics PUBLIC z)
-target_link_libraries(graphics PRIVATE jpeg png tiff)
+target_link_libraries(graphics PRIVATE jpeg png tiff leptonica)
 
 if(WIN32)
     target_link_libraries(graphics PUBLIC

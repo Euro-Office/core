@@ -131,6 +131,14 @@ Done:
       decode back exactly: J2K/JP2 with 1/3/4 components, tiled multi-resolution, the
       unflipped (bottom-up) row order, and an image above the 5 MP strip-decoding limit.
       Plus non-JPEG 2000, truncated and corrupted input (must return, not crash).
+- [x] `PdfFile/test/jbig2` — new suite (`pdf_jbig2_test`), not a `.pro` migration. Covers
+      JBIG2 encoding on jbig2enc and Leptonica: `CPdfFile::DrawImage1bpp` (DjVu pages, symbol
+      mode with shared `JBIG2Globals`, also across the writer's five-image dictionary
+      limit), `DrawImageWith1bppMask` (DjVu color pages) and `CBgraFrame::SaveFile` with
+      type 21 (a generic region, wrapped into a hand-built PDF). Every result is decoded
+      again by xpdf's JBIG2 decoder through `ConvertToPixels` at 1:1 and compared with the
+      source pixels. Deps: UnicodeConverter, kernel, graphics, PdfFile. `GTEST_MAIN`. No
+      fixtures — pages are built in memory.
 - [x] `RtfFile/Format/test` — new suite (`rtf_lex_test`), not a `.pro` migration. First
       coverage for the RTF tokenizer that fronts every RTF import (`RtfLex`, rtf2docx).
       Deps: links the existing `x2tlib` target; `RtfLex.cpp`, `RtfToken.cpp` and
