@@ -20,7 +20,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "1"
+    version = "2"
 )
 
 libtiff_src = nc.work_dir / "libtiff"
@@ -58,6 +58,9 @@ def cmake_dependency_args() -> list[str]:
         f"-DZLIB_LIBRARY={ ( zlib_install_dir / 'lib' / zlib_lib ).as_posix() }",
         f"-DJPEG_INCLUDE_DIR={ ( jpeg_install_dir / 'include' ).as_posix() }",
         f"-DJPEG_LIBRARY={ ( jpeg_install_dir / 'lib' / jpeg_lib ).as_posix() }",
+        # Otherwise libtiff first looks for a libjpeg-turbo CMake package and
+        # ignores the paths above, e.g. picks Homebrew's on macOS
+        "-Djpeg-prefer-standard=ON",
     ]
 
 def fetch_and_patch():
