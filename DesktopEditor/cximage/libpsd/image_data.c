@@ -538,6 +538,12 @@ psd_status psd_get_image_data(psd_context * context)
 			psd_assert(0);
 			break;
 	}
+	// The decoded channels and the merged image must fit in memory (same
+	// limit as CxImage), and their sizes in a psd_int
+	if(context->width <= 0 || context->height <= 0 || context->channels <= 0 ||
+		(long long)context->width * context->height * 4 > 1073741824 ||
+		(long long)context->width * context->height * (context->depth == 16 ? 2 : 1) * context->channels > 1073741824)
+		return psd_status_image_data_error;
 	context->per_channel_length = length;
 	length *= context->channels;
 
@@ -566,7 +572,8 @@ psd_status psd_get_image_data(psd_context * context)
 	{
 		// Raw image data
 		case 0:
-			psd_assert(length <= left_size);
+			if(length > left_size)
+				return psd_status_image_data_error;
 			psd_stream_get(context, image_data, length);
 			break;
 
@@ -577,6 +584,13 @@ psd_status psd_get_image_data(psd_context * context)
 		// used by the Macintosh ROM routine PackBits, and the TIFF standard.
 		case 1:
 			psd_assert(context->depth == 8 || context->depth == 16);
+			// The data must hold the row byte counts, and no run may read past
+			// the data or write past the image
+			if((long long)context->height * context->channels * 2 > left_size)
+			{
+				psd_freeif(compress_data);
+				return psd_status_image_data_error;
+			}
 			count_data = compress_data;
 			pixel_data = compress_data + context->height * context->channels * 2;
 			channel_data = image_data;
@@ -588,12 +602,22 @@ psd_status psd_get_image_data(psd_context * context)
 					byte_count = PSD_CHAR_TO_SHORT(count_data);
 					for(k = 0; k < byte_count;)
 					{
+						if(pixel_data >= compress_data + left_size)
+						{
+							psd_freeif(compress_data);
+							return psd_status_image_data_error;
+						}
 						len = *pixel_data;
 						pixel_data ++;
 						k ++;
 						if(len < 128)
 						{
 							len ++;
+							if(len > compress_data + left_size - pixel_data || len > image_data + length - channel_data)
+							{
+								psd_freeif(compress_data);
+								return psd_status_image_data_error;
+							}
 							pixel_count += len;
 							memcpy(channel_data, pixel_data, len);
 							channel_data += len;
@@ -606,6 +630,11 @@ psd_status psd_get_image_data(psd_context * context)
 							// (Interpret len as a negative 8-bit psd_int.)
 							len ^= 0xff;
 							len += 2;
+							if(pixel_data >= compress_data + left_size || len > image_data + length - channel_data)
+							{
+								psd_freeif(compress_data);
+								return psd_status_image_data_error;
+							}
 							pixel_count += len;
 							memset(channel_data, *pixel_data, len);
 							channel_data += len;
