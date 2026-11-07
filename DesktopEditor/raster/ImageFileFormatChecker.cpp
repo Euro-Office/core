@@ -257,9 +257,11 @@ bool CImageFileFormatChecker::isPsdFile(BYTE* pBuffer,DWORD dwBytes)
 {
 	if (eFileType)return false;
 
+	// "8BPS", version 1 (2 is the large document format), 6 reserved zero bytes
 	if ( (12 <= dwBytes) && (0x38 == pBuffer[0] && 0x42 == pBuffer[1]  && 0x50 == pBuffer[2]  && 0x53 == pBuffer[3]
-							 && 0x00 == pBuffer[6] && 0x00 == pBuffer[7]  && 0x18 == pBuffer[8]
-							 && 0x00 == pBuffer[9] && 0x00 == pBuffer[10]  && 0x18 == pBuffer[11]))
+							 && 0x00 == pBuffer[4] && 0x01 == pBuffer[5]
+							 && 0x00 == pBuffer[6] && 0x00 == pBuffer[7]  && 0x00 == pBuffer[8]
+							 && 0x00 == pBuffer[9] && 0x00 == pBuffer[10]  && 0x00 == pBuffer[11]))
 		return true;
 
 	return false;
