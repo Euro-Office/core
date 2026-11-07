@@ -140,7 +140,6 @@ add_library(graphics SHARED
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximaico.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximainfo.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximaint.cpp
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximajbg.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximajpg.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximalpha.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximalyr.cpp
@@ -159,8 +158,6 @@ add_library(graphics SHARED
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/xmemfile.cpp
 
     # !disable_cximage_all {
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jbig/jbig_tab.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jbig/jbig.c
         ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/JBig2File.cpp
         ${JBIG2ENC_SOURCES}
         ${DESKTOP_EDITOR_ROOT_DIR}/raster/Jp2/J2kFile.cpp

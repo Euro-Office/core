@@ -27,7 +27,6 @@ mkdir -p "$LOCAL_BUILD_DIR"
 # Dependencies array: NAME|VERSION
 DEPS=(
     "cef|5414"
-    "libvlc|3.0.18"
     "boost|1.72"
     "qt|5.9.9"
 )

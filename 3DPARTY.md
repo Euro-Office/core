@@ -23,7 +23,6 @@
 - ixwebsocket ([BSD 3-clause](https://github.com/nicojust/IXWebSocket/blob/main/LICENSE))
 - libheif ([LGPL-3.0-or-later](https://raw.githubusercontent.com/strukturag/libheif/master/COPYING))
 - libde265 ([LGPL-3.0-or-later](https://raw.githubusercontent.com/strukturag/libde265/master/COPYING))
-- libvlc ([LGPL-2.1-or-later](https://raw.githubusercontent.com/nicojust/vlc/master/COPYING.LGPL))
 - md4c ([MIT](https://github.com/nicojust/md4c/blob/master/LICENSE.md))
 - pole ([BSD 3-clause](https://github.com/nicojust/pole/blob/master/LICENSE))
 - socketrocket ([Apache-2.0](https://github.com/nicojust/SocketRocket/blob/master/LICENSE))
