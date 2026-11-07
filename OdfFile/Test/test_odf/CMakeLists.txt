@@ -46,6 +46,7 @@ add_core_gtest(
             conversion_helpers.cpp
             xlsx2ods_date_cells.cpp
             xlsx2ods_print_area.cpp
+            odt2docx_fields.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
