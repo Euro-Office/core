@@ -204,38 +204,6 @@ set(SOURCES
     ${DESKTOP_ROOT}/cximage/CxImage/ximawbmp.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximapsd.cpp
 
-    ${DESKTOP_ROOT}/cximage/tiff/tif_close.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dir.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_aux.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_getimage.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_strip.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_open.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_tile.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_error.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_read.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_flush.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dirinfo.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_compress.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_warning.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_swab.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_color.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dirread.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_write.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_codec.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_luv.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dirwrite.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dumpmode.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_fax3.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_ojpeg.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_jpeg.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_next.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_thunder.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_packbits.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_lzw.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_zip.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_fax3sm.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_predict.c
-
     ${DESKTOP_ROOT}/raster/Metafile/MetaFile.cpp
     ${DESKTOP_ROOT}/raster/Metafile/Common/MetaFileTypes.cpp
     ${DESKTOP_ROOT}/raster/Metafile/Common/MetaFileUtils.cpp
@@ -324,6 +292,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     z       # libz-ng
     jpeg    # libjpeg-turbo
     png     # libpng
+    tiff    # libtiff
 )
 
 # -------------------------------------------------

@@ -37,9 +37,11 @@ subfolders = [
     'v8',
     'zlib-ng',
     'zlib-ng-wasm',
-    # Link against zlib-ng, so they come after it
+    # Link against zlib-ng (libtiff also against libjpeg-turbo), so they come after it
     'libpng',
     'libpng-wasm',
+    'libtiff',
+    'libtiff-wasm',
 ]
 
 known_targets = [ 'android-arm64', 'android-x64' ]

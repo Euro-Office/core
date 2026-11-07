@@ -5,8 +5,8 @@
 
 // Tests for the image formats behind CBgraFrame: the PNM (raster/Pnm) and Sun
 // Raster (raster/Ras) decoders, which replaced CxImage's JasPer based decoding,
-// and CxImage's JPEG and PNG codecs on top of libjpeg-turbo and libpng. The
-// images are built in memory, so every expected pixel is known.
+// and CxImage's JPEG, PNG and TIFF codecs on top of libjpeg-turbo, libpng and
+// libtiff. The images are built in memory, so every expected pixel is known.
 
 #include "gtest/gtest.h"
 
@@ -14,6 +14,7 @@
 #include "../ImageFileFormatChecker.h"
 #include "../../common/File.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -23,6 +24,7 @@
 
 #include <jpeglib.h>
 #include <png.h>
+#include <tiffio.h>
 
 namespace
 {
@@ -200,21 +202,21 @@ namespace
 		PutUInt16LE(arData, nValue >> 16);
 	}
 
-	// Little-endian TIFF with one strip: a grayscale c_nQuadImageSize square
-	// JPEG (compression 7)
-	std::vector<BYTE> MakeJpegTiff(const std::vector<BYTE>& arJpeg)
+	// Little-endian TIFF with one strip of an 8 bit grayscale square image.
+	// bLoop makes the IFD its own successor.
+	std::vector<BYTE> MakeGrayTiff(unsigned int nSize, unsigned int nCompression, const std::vector<BYTE>& arStrip, bool bLoop = false)
 	{
 		const unsigned int arTags[][3] = {
 			// tag, type (3 short, 4 long), value
-			{256, 4, (unsigned int)c_nQuadImageSize}, // ImageWidth
-			{257, 4, (unsigned int)c_nQuadImageSize}, // ImageLength
-			{258, 3, 8},                              // BitsPerSample
-			{259, 3, 7},                              // Compression: JPEG
-			{262, 3, 1},                              // PhotometricInterpretation: BlackIsZero
-			{273, 4, 0},                              // StripOffsets, set below
-			{277, 3, 1},                              // SamplesPerPixel
-			{278, 4, (unsigned int)c_nQuadImageSize}, // RowsPerStrip
-			{279, 4, (unsigned int)arJpeg.size()}     // StripByteCounts
+			{256, 4, nSize},                       // ImageWidth
+			{257, 4, nSize},                       // ImageLength
+			{258, 3, 8},                           // BitsPerSample
+			{259, 3, nCompression},                // Compression
+			{262, 3, 1},                           // PhotometricInterpretation: BlackIsZero
+			{273, 4, 0},                           // StripOffsets, set below
+			{277, 3, 1},                           // SamplesPerPixel
+			{278, 4, nSize},                       // RowsPerStrip
+			{279, 4, (unsigned int)arStrip.size()} // StripByteCounts
 		};
 		const unsigned int nTags = sizeof(arTags) / sizeof(arTags[0]);
 		const unsigned int nDataOffset = 8 + 2 + 12 * nTags + 4;
@@ -236,9 +238,15 @@ namespace
 			else
 				PutUInt32LE(arData, nValue);
 		}
-		PutUInt32LE(arData, 0); // no next IFD
-		arData.insert(arData.end(), arJpeg.begin(), arJpeg.end());
+		PutUInt32LE(arData, bLoop ? 8 : 0); // next IFD
+		arData.insert(arData.end(), arStrip.begin(), arStrip.end());
 		return arData;
+	}
+
+	// A grayscale c_nQuadImageSize square JPEG in TIFF (compression 7)
+	std::vector<BYTE> MakeJpegTiff(const std::vector<BYTE>& arJpeg)
+	{
+		return MakeGrayTiff(c_nQuadImageSize, 7, arJpeg);
 	}
 
 	void ExpectQuadrants(CBgraFrame& oFrame, bool bIsRGBA = false)
@@ -342,6 +350,139 @@ namespace
 		std::vector<BYTE> arData(pData, pData + nSize);
 		delete[] pData;
 		return arData;
+	}
+
+	// libtiff writes into memory through these
+	struct CMemoryTiff
+	{
+		std::vector<BYTE> arData;
+		size_t nPos = 0;
+	};
+
+	tmsize_t MemTiffRead(thandle_t h, void* pBuf, tmsize_t nSize)
+	{
+		CMemoryTiff* p = (CMemoryTiff*)h;
+		const size_t nCount = std::min((size_t)nSize, p->arData.size() - std::min(p->nPos, p->arData.size()));
+		memcpy(pBuf, p->arData.data() + p->nPos, nCount);
+		p->nPos += nCount;
+		return (tmsize_t)nCount;
+	}
+
+	tmsize_t MemTiffWrite(thandle_t h, void* pBuf, tmsize_t nSize)
+	{
+		CMemoryTiff* p = (CMemoryTiff*)h;
+		if (p->nPos + nSize > p->arData.size())
+			p->arData.resize(p->nPos + nSize);
+		memcpy(p->arData.data() + p->nPos, pBuf, (size_t)nSize);
+		p->nPos += (size_t)nSize;
+		return nSize;
+	}
+
+	toff_t MemTiffSeek(thandle_t h, toff_t nOff, int nWhence)
+	{
+		CMemoryTiff* p = (CMemoryTiff*)h;
+		p->nPos = (size_t)nOff + (SEEK_CUR == nWhence ? p->nPos : (SEEK_END == nWhence ? p->arData.size() : 0));
+		return p->nPos;
+	}
+
+	int MemTiffClose(thandle_t) { return 0; }
+	toff_t MemTiffSize(thandle_t h) { return ((CMemoryTiff*)h)->arData.size(); }
+	int MemTiffMap(thandle_t, void**, toff_t*) { return 0; }
+	void MemTiffUnmap(thandle_t, void*, toff_t) {}
+
+	TIFF* MemTiffOpen(CMemoryTiff& oMemory, const char* sMode)
+	{
+		return TIFFClientOpen("memory", sMode, (thandle_t)&oMemory, MemTiffRead, MemTiffWrite, MemTiffSeek,
+							  MemTiffClose, MemTiffSize, MemTiffMap, MemTiffUnmap);
+	}
+
+	struct CTiffPage
+	{
+		int nWidth = 0;
+		int nHeight = 0;
+		int nBitsPerSample = 8;
+		int nSamplesPerPixel = 3;
+		int nPhotometric = PHOTOMETRIC_RGB;
+		int nCompression = COMPRESSION_NONE;
+		int nTileSize = 0;              // 0: strips
+		std::vector<uint16_t> arColorMap; // red, green and blue entries, 16 bit
+		std::vector<BYTE> arRows;       // packed rows
+	};
+
+	std::vector<BYTE> MakeTiff(const std::vector<CTiffPage>& arPages)
+	{
+		CMemoryTiff oMemory;
+		TIFF* pTiff = MemTiffOpen(oMemory, "w");
+		if (!pTiff)
+			return std::vector<BYTE>();
+		for (const CTiffPage& oPage : arPages)
+		{
+			TIFFSetField(pTiff, TIFFTAG_IMAGEWIDTH, oPage.nWidth);
+			TIFFSetField(pTiff, TIFFTAG_IMAGELENGTH, oPage.nHeight);
+			TIFFSetField(pTiff, TIFFTAG_BITSPERSAMPLE, oPage.nBitsPerSample);
+			TIFFSetField(pTiff, TIFFTAG_SAMPLESPERPIXEL, oPage.nSamplesPerPixel);
+			TIFFSetField(pTiff, TIFFTAG_PHOTOMETRIC, oPage.nPhotometric);
+			TIFFSetField(pTiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
+			TIFFSetField(pTiff, TIFFTAG_COMPRESSION, oPage.nCompression);
+			if (COMPRESSION_JPEG == oPage.nCompression)
+				TIFFSetField(pTiff, TIFFTAG_JPEGQUALITY, 100);
+			if (!oPage.arColorMap.empty())
+			{
+				const size_t nColors = oPage.arColorMap.size() / 3;
+				TIFFSetField(pTiff, TIFFTAG_COLORMAP, oPage.arColorMap.data(), oPage.arColorMap.data() + nColors,
+							 oPage.arColorMap.data() + 2 * nColors);
+			}
+
+			const tmsize_t nRowBytes = (oPage.nWidth * oPage.nSamplesPerPixel * oPage.nBitsPerSample + 7) / 8;
+			if (oPage.nTileSize)
+			{
+				TIFFSetField(pTiff, TIFFTAG_TILEWIDTH, oPage.nTileSize);
+				TIFFSetField(pTiff, TIFFTAG_TILELENGTH, oPage.nTileSize);
+				const int nPixelBytes = oPage.nSamplesPerPixel * oPage.nBitsPerSample / 8;
+				std::vector<BYTE> arTile(TIFFTileSize(pTiff));
+				for (int nTileY = 0; nTileY < oPage.nHeight; nTileY += oPage.nTileSize)
+				{
+					for (int nTileX = 0; nTileX < oPage.nWidth; nTileX += oPage.nTileSize)
+					{
+						std::fill(arTile.begin(), arTile.end(), 0);
+						for (int nY = 0; nY < oPage.nTileSize && nTileY + nY < oPage.nHeight; ++nY)
+						{
+							const int nCount = std::min(oPage.nTileSize, oPage.nWidth - nTileX);
+							memcpy(arTile.data() + nY * oPage.nTileSize * nPixelBytes,
+								   oPage.arRows.data() + (nTileY + nY) * nRowBytes + nTileX * nPixelBytes, nCount * nPixelBytes);
+						}
+						TIFFWriteTile(pTiff, arTile.data(), nTileX, nTileY, 0, 0);
+					}
+				}
+			}
+			else
+			{
+				TIFFSetField(pTiff, TIFFTAG_ROWSPERSTRIP, COMPRESSION_JPEG == oPage.nCompression ? 16 : 3);
+				for (int nY = 0; nY < oPage.nHeight; ++nY)
+					TIFFWriteScanline(pTiff, (void*)(oPage.arRows.data() + nY * nRowBytes), nY, 0);
+			}
+			TIFFWriteDirectory(pTiff);
+		}
+		TIFFClose(pTiff);
+		return oMemory.arData;
+	}
+
+	// c_nQuadImageSize square of the quadrant colors, 8 bit RGB
+	CTiffPage QuadrantTiffPage(int nCompression = COMPRESSION_NONE, int nTileSize = 0)
+	{
+		CTiffPage oPage;
+		oPage.nWidth = oPage.nHeight = c_nQuadImageSize;
+		oPage.nCompression = nCompression;
+		oPage.nTileSize = nTileSize;
+		for (int nY = 0; nY < c_nQuadImageSize; ++nY)
+		{
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				CColor c = QuadrantColor(nX, nY);
+				oPage.arRows.insert(oPage.arRows.end(), {(BYTE)c.r, (BYTE)c.g, (BYTE)c.b});
+			}
+		}
+		return oPage;
 	}
 }
 
@@ -916,4 +1057,122 @@ TEST(CPngTest, RejectsInvalidImages)
 	std::vector<BYTE> arBadCrc = arValid;
 	arBadCrc[29] ^= 0xFF; // IHDR CRC
 	EXPECT_FALSE(Decode(arBadCrc, oFrame));
+}
+
+// TIFF
+
+TEST(CTiffTest, DetectsTiff)
+{
+	EXPECT_EQ(_CXIMAGE_FORMAT_TIF, FileType(MakeTiff({QuadrantTiffPage()})));
+}
+
+TEST(CTiffTest, DecodesLosslessCompressions)
+{
+	// The codecs the bundled libtiff 3.9.4 had, minus CCITT (1 bit only)
+	for (int nCompression : {COMPRESSION_NONE, COMPRESSION_LZW, COMPRESSION_ADOBE_DEFLATE, COMPRESSION_PACKBITS})
+	{
+		for (int nTileSize : {0, 16})
+		{
+			CBgraFrame oFrame;
+			ASSERT_TRUE(Decode(MakeTiff({QuadrantTiffPage(nCompression, nTileSize)}), oFrame)) << nCompression << ", " << nTileSize;
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+			for (int nY : {0, 4, 27, 31})
+				for (int nX : {0, 4, 27, 31})
+					EXPECT_EQ(QuadrantColor(nX, nY), Pixel(oFrame, nX, nY)) << nCompression << ", " << nTileSize << ": " << nX << ", " << nY;
+		}
+	}
+}
+
+TEST(CTiffTest, DecodesJpegCompression)
+{
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeTiff({QuadrantTiffPage(COMPRESSION_JPEG)}), oFrame));
+	ExpectQuadrants(oFrame);
+}
+
+TEST(CTiffTest, DecodesFaxCompressedBitmap)
+{
+	// 1 bit, white is zero, as fax machines and scanners write them
+	CTiffPage oPage;
+	oPage.nWidth = 16;
+	oPage.nHeight = 4;
+	oPage.nBitsPerSample = 1;
+	oPage.nSamplesPerPixel = 1;
+	oPage.nPhotometric = PHOTOMETRIC_MINISWHITE;
+	oPage.nCompression = COMPRESSION_CCITTFAX4;
+	oPage.arRows = {0xF0, 0x0F,  0xF0, 0x0F,  0x00, 0x00,  0xFF, 0xFF};
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeTiff({oPage}), oFrame));
+	ASSERT_EQ(16, oFrame.get_Width());
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 0, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 4, 0));
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 15, 1));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 7, 2));
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 7, 3));
+}
+
+TEST(CTiffTest, DecodesPaletteAnd16Bit)
+{
+	CTiffPage oPalette;
+	oPalette.nWidth = 3;
+	oPalette.nHeight = 1;
+	oPalette.nSamplesPerPixel = 1;
+	oPalette.nPhotometric = PHOTOMETRIC_PALETTE;
+	oPalette.arColorMap.assign(3 * 256, 0);
+	const uint16_t arColors[3][3] = {{0xFFFF, 0, 0}, {0, 0x8080, 0}, {0x1010, 0x2020, 0x3030}};
+	for (int i = 0; i < 3; ++i)
+		for (int c = 0; c < 3; ++c)
+			oPalette.arColorMap[c * 256 + i] = arColors[i][c];
+	oPalette.arRows = {0, 1, 2};
+
+	CBgraFrame oPaletteFrame;
+	ASSERT_TRUE(Decode(MakeTiff({oPalette}), oPaletteFrame));
+	EXPECT_EQ((CColor{255, 0, 0}), Pixel(oPaletteFrame, 0, 0));
+	EXPECT_EQ((CColor{0, 128, 0}), Pixel(oPaletteFrame, 1, 0));
+	EXPECT_EQ((CColor{16, 32, 48}), Pixel(oPaletteFrame, 2, 0));
+
+	// 16 bit samples (native byte order): multiples of 257 map exactly to 8 bit
+	CTiffPage oDeep;
+	oDeep.nWidth = 2;
+	oDeep.nHeight = 1;
+	oDeep.nBitsPerSample = 16;
+	const uint16_t arSamples[6] = {257 * 200, 257 * 100, 0, 0xFFFF, 257 * 1, 257 * 128};
+	oDeep.arRows.assign((const BYTE*)arSamples, (const BYTE*)arSamples + sizeof(arSamples));
+
+	CBgraFrame oDeepFrame;
+	ASSERT_TRUE(Decode(MakeTiff({oDeep}), oDeepFrame));
+	EXPECT_EQ((CColor{200, 100, 0}), Pixel(oDeepFrame, 0, 0));
+	EXPECT_EQ((CColor{255, 1, 128}), Pixel(oDeepFrame, 1, 0));
+}
+
+TEST(CTiffTest, DecodesFirstPage)
+{
+	CTiffPage oSecond = QuadrantTiffPage();
+	oSecond.nWidth = oSecond.nHeight = 8;
+	oSecond.arRows.resize(3 * 8 * 8);
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeTiff({QuadrantTiffPage(COMPRESSION_LZW), oSecond}), oFrame));
+	ExpectQuadrants(oFrame);
+}
+
+TEST(CTiffTest, StopsAtIfdLoop)
+{
+	// The next IFD is the same one again. libtiff 3.9.4 never returned.
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeGrayTiff(2, 1, {0, 85, 170, 255}, true), oFrame));
+	EXPECT_EQ((CColor{85, 85, 85}), Pixel(oFrame, 1, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 1, 1));
+}
+
+TEST(CTiffTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+	std::vector<BYTE> arHeaderOnly = {'I', 'I', 42, 0, 8, 0, 0, 0};
+	EXPECT_FALSE(Decode(arHeaderOnly, oFrame, false));
+
+	std::vector<BYTE> arBadIfd = {'I', 'I', 42, 0, 0xF0, 0xFF, 0, 0, 0, 0}; // IFD past the end
+	EXPECT_FALSE(Decode(arBadIfd, oFrame, false));
 }

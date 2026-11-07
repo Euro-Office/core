@@ -127,44 +127,6 @@ add_library(graphics SHARED
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/Ras/RasFile.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/raster/ImageFileFormatChecker.cpp
 
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_stream.cxx
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_aux.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_close.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_codec.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_color.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_compress.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_dir.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_dirinfo.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_dirread.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_dirwrite.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_dumpmode.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_error.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_extension.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_fax3.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_fax3sm.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_flush.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_getimage.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_jbig.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_jpeg.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_luv.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_lzw.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_next.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_ojpeg.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_open.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_packbits.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_pixarlog.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_predict.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_print.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_read.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_strip.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_swab.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_thunder.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_tile.c
-    # ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_unix.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_version.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_warning.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_write.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_zip.c
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/tif_xfile.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximabmp.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximadsp.cpp
@@ -893,7 +855,7 @@ target_link_libraries(graphics PUBLIC
 )
 
 target_link_libraries(graphics PUBLIC z)
-target_link_libraries(graphics PRIVATE jpeg png)
+target_link_libraries(graphics PRIVATE jpeg png tiff)
 
 if(WIN32)
     target_link_libraries(graphics PUBLIC

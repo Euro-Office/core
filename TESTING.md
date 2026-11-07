@@ -110,8 +110,11 @@ Done:
       orders, partial decoding of truncated files, and `CBgraFrame::Encode` read back with
       libjpeg. And its PNG codec on libpng: RGBA, 16 bit, palette and gray transparency,
       interlaced 2 bit gray, `CBgraFrame::Encode` and `SaveFile` of a palette image read
-      back with libpng. Deps: kernel, graphics, UnicodeConverter, jpeg and png (to build and
-      read the test images). `GTEST_MAIN`. No fixtures — images are built in memory.
+      back with libpng. And its TIFF codec on libtiff: uncompressed, LZW, Deflate, PackBits
+      and JPEG in strips and tiles, CCITT G4, palette, 16 bit, multipage, and an IFD loop
+      that libtiff 3.9.4 never returned from. Deps: kernel, graphics, UnicodeConverter,
+      jpeg, png and tiff (to build and read the test images). `GTEST_MAIN`. No fixtures —
+      images are built in memory.
 - [x] `DesktopEditor/fontengine/test` — new suite (`fontengine_test`), not a `.pro`
       migration. Covers the FreeType based font engine in libgraphics: `CApplicationFonts`
       (font list, localized family names read from FreeType's internal sfnt name table) and
