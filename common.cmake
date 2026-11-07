@@ -80,7 +80,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,cryptopp,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm,jbig2enc"
+            "--only=openssl-hash,hunspell,brotli,cryptopp,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm,jbig2enc,djvulibre"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -185,7 +185,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,cryptopp,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff,libwebp,leptonica,jbig2enc"
+                "--only=apple,boost,brotli,cryptopp,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff,libwebp,leptonica,jbig2enc,djvulibre"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -514,6 +514,92 @@ set(JBIG2ENC_SOURCES
     "${JBIG2ENC_SOURCES_DIR}/jbig2enc.cc"
     "${JBIG2ENC_SOURCES_DIR}/jbig2sym.cc"
 )
+
+# DjVuLibre's libdjvu is compiled into the targets that use it (source-only
+# dependency). It only builds with autotools, so DJVULIBRE_DEFINITIONS sets
+# what its configure script would. No HAVE_NAMESPACES: core uses the classes
+# without the DJVU:: namespace.
+set(DJVULIBRE_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/djvulibre/libdjvu")
+set(DJVULIBRE_SOURCES
+    "${DJVULIBRE_SOURCES_DIR}/Arrays.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/BSByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/BSEncodeByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/ByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DataPool.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/debug.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmDir.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmDir0.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmDoc.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmNav.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuAnno.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuDocEditor.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuDocument.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuDumpHelper.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuErrorList.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuFile.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuFileCache.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuGlobal.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuGlobalMemory.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuImage.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuInfo.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuMessage.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuMessageLite.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuNavDir.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuPalette.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuPort.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuText.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuToPS.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GBitmap.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GContainer.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GException.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GIFFManager.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GMapAreas.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GOS.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GPixmap.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GRect.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GScaler.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GSmartPointer.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GString.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GThreads.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GUnicode.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GURL.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/IFFByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/IW44EncodeCodec.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/IW44Image.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/JB2EncodeCodec.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/JB2Image.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/JPEGDecoder.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/MMRDecoder.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/MMX.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/UnicodeByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/XMLParser.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/XMLTags.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/ZPCodec.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/atomic.cpp"
+)
+if(WIN32)
+    # Compiled in, not imported from libdjvulibre.dll
+    set(DJVULIBRE_DEFINITIONS "DJVUAPI=")
+else()
+    set(DJVULIBRE_DEFINITIONS
+        UNIX
+        HAVE_PTHREAD=1
+        HAVE_STDINCLUDES
+        HAVE_STDINT_H
+        HAS_WCHAR
+        HAVE_WCHAR_H
+        HAVE_MBSTATE_T
+        HAVE_SNPRINTF=1
+        # Without it GString formats with vsprintf() into a fixed buffer
+        USE_VSNPRINTF=vsnprintf
+    )
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        list(APPEND DJVULIBRE_DEFINITIONS HAVE_INTEL_ATOMIC_BUILTINS=1)
+    endif()
+    if(ANDROID)
+        list(APPEND DJVULIBRE_DEFINITIONS HAS_MBSTATE=1)
+    endif()
+endif()
 
 # Do NOT auto-add absolute link directories to RPATH
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)

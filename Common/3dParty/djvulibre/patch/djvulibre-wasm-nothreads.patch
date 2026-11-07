@@ -1,0 +1,19 @@
+diff --git a/libdjvu/GThreads.cpp b/libdjvu/GThreads.cpp
+index ff4a44c..d5ebc07 100644
+--- a/libdjvu/GThreads.cpp
++++ b/libdjvu/GThreads.cpp
+@@ -429,7 +429,13 @@ GThread::create(void (*entry)(void*), void *arg)
+     return -1;
+   xentry = entry;
+   xarg = arg;
+-#if DCETHREADS
++#if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
++  // WebAssembly without thread support: pthread_create() always fails.
++  // Run the thread function right away, like the NOTHREADS model that
++  // DjVuLibre had until 3.5.25 (monitors are no-ops without threads).
++  start((void*)this);
++  int ret = 0;
++#elif DCETHREADS
+   int ret = pthread_create(&hthr, pthread_attr_default, GThread::start, (void*)this);
+   if (ret >= 0)
+     pthread_detach(hthr);

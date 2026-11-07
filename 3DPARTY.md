@@ -42,3 +42,4 @@
 - libwebp ([BSD-3-Clause](https://raw.githubusercontent.com/webmproject/libwebp/main/COPYING))
 - leptonica ([2-clause BSD License](https://raw.githubusercontent.com/DanBloomberg/leptonica/master/leptonica-license.txt))
 - jbig2enc ([Apache-2.0](https://raw.githubusercontent.com/agl/jbig2enc/master/COPYING))
+- djvulibre ([GPL-2.0-or-later](https://sourceforge.net/p/djvu/djvulibre-git/ci/master/tree/COPYING))
