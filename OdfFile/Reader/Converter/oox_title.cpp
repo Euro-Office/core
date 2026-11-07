@@ -36,7 +36,7 @@ namespace oox {
 
 void oox_title::oox_content_serialize(std::wostream & _Wostream, odf_reader::chart::title & content)
 {
-	if (content_.content_.empty()) return;
+	if (content.content_.empty()) return;
 
 	_CP_OPT(int) rotateVal;
 	if (content.properties_)
@@ -63,7 +63,7 @@ void oox_title::oox_content_serialize(std::wostream & _Wostream, odf_reader::cha
 
 				CP_XML_NODE(L"a:t")
 				{
-					CP_XML_CONTENT(content.content_);
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(content.content_);
 				}
 			}
 		}

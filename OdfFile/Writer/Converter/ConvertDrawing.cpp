@@ -2911,7 +2911,7 @@ void OoxConverter::convert(PPTX::Logic::QuadBezTo *oox_geom_path)
 	
 	std::wstring path_elm = oox_geom_path->x[0] + L" " + oox_geom_path->y[0] + L" " + oox_geom_path->x[1] + L" " + oox_geom_path->y[1];
 	
-	odf_context()->drawing_context()->add_path_element(std::wstring(L"S"), path_elm);
+	odf_context()->drawing_context()->add_path_element(std::wstring(L"Q"), path_elm);
 
 }
 void OoxConverter::convert(PPTX::Logic::CubicBezTo *oox_geom_path)

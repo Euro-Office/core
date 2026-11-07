@@ -2101,17 +2101,21 @@ void variable_input::docx_convert(oox::docx_conversion_context & Context)
     std::wostream & strm = Context.output_stream();
 	Context.finish_run();
 	
+	const std::wstring field_name = XmlUtils::EncodeXmlString(name_.get_value_or(L""));
+	const std::wstring field_text = XmlUtils::EncodeXmlString(text_);
+
 	strm << L"<w:r><w:fldChar w:fldCharType=\"begin\"/></w:r>";
-	strm << L"<w:r><w:instrText>ASK &quot;" << name_.get_value_or(L"") << L"&quot; " << description_.get_value_or(L"") << L" \\d ";
-	strm << text_;
+	strm << L"<w:r><w:instrText>ASK &quot;" << field_name << L"&quot; "
+		<< XmlUtils::EncodeXmlString(description_.get_value_or(L"")) << L" \\d ";
+	strm << field_text;
 	strm << L"</w:instrText></w:r>";
 	strm << L"<w:r><w:fldChar w:fldCharType=\"separate\"/></w:r>";
     strm << L"<w:r><w:fldChar w:fldCharType=\"end\"/></w:r>";
 
 	strm << L"<w:r><w:fldChar w:fldCharType=\"begin\"/></w:r>";
-	strm << L"<w:r><w:instrText>REF &quot;" << name_.get_value_or(L"") << L"&quot; </w:instrText></w:r>";
+	strm << L"<w:r><w:instrText>REF &quot;" << field_name << L"&quot; </w:instrText></w:r>";
 	strm << L"<w:r><w:fldChar w:fldCharType=\"separate\"/></w:r>";
-	strm << L"<w:r><w:t>" << text_ << L"</w:t></w:r>";
+	strm << L"<w:r><w:t>" << field_text << L"</w:t></w:r>";
 	strm << L"<w:r><w:fldChar w:fldCharType=\"end\"/></w:r>";
 
 }
