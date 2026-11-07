@@ -185,7 +185,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,cryptopp,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff,libwebp,leptonica,jbig2enc"
+                "--only=apple,boost,brotli,cryptopp,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff,libwebp,libde265,libaom,libheif,leptonica,jbig2enc"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -480,6 +480,48 @@ else()
             INTERFACE_LINK_LIBRARIES webp
         )
     endforeach()
+
+    # Setup libheif with libde265 (HEIC) and libaom (AVIF), decoding only.
+    # Not in the wasm builds (CXIMAGE_SUPPORT_HEIF is off there).
+    set(LIBDE265_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libde265")
+    get_filename_component(LIBDE265_INSTALL_DIR_ABS "${LIBDE265_INSTALL_DIR}" ABSOLUTE)
+    set(LIBAOM_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libaom")
+    get_filename_component(LIBAOM_INSTALL_DIR_ABS "${LIBAOM_INSTALL_DIR}" ABSOLUTE)
+    set(LIBHEIF_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libheif")
+    get_filename_component(LIBHEIF_INSTALL_DIR_ABS "${LIBHEIF_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(LIBDE265_LIBRARY "${LIBDE265_INSTALL_DIR_ABS}/lib/libde265.lib")
+        set(LIBAOM_LIBRARY "${LIBAOM_INSTALL_DIR_ABS}/lib/aom.lib")
+        set(LIBHEIF_LIBRARY "${LIBHEIF_INSTALL_DIR_ABS}/lib/heif.lib")
+        set(LIBHEIF_DEP_LIBS "")
+    else()
+        set(LIBDE265_LIBRARY "${LIBDE265_INSTALL_DIR_ABS}/lib/libde265.a")
+        set(LIBAOM_LIBRARY "${LIBAOM_INSTALL_DIR_ABS}/lib/libaom.a")
+        set(LIBHEIF_LIBRARY "${LIBHEIF_INSTALL_DIR_ABS}/lib/libheif.a")
+        # libde265 decodes on its own threads
+        if( ANDROID OR APPLE )
+            set(LIBHEIF_DEP_LIBS m)
+        else()
+            set(LIBHEIF_DEP_LIBS "m;pthread")
+        endif()
+    endif()
+    add_library(de265 STATIC IMPORTED GLOBAL)
+    set_target_properties(de265 PROPERTIES
+        IMPORTED_LOCATION "${LIBDE265_LIBRARY}"
+        INTERFACE_LINK_LIBRARIES "${LIBHEIF_DEP_LIBS}"
+    )
+    add_library(aom STATIC IMPORTED GLOBAL)
+    set_target_properties(aom PROPERTIES
+        IMPORTED_LOCATION "${LIBAOM_LIBRARY}"
+        INTERFACE_LINK_LIBRARIES "${LIBHEIF_DEP_LIBS}"
+    )
+    add_library(heif STATIC IMPORTED GLOBAL)
+    set_target_properties(heif PROPERTIES
+        IMPORTED_LOCATION "${LIBHEIF_LIBRARY}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBHEIF_INSTALL_DIR_ABS}/include"
+        INTERFACE_COMPILE_DEFINITIONS LIBHEIF_STATIC_BUILD
+        INTERFACE_LINK_LIBRARIES "de265;aom"
+    )
 
     # Setup leptonica
     set(LEPTONICA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/leptonica")
