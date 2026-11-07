@@ -39,8 +39,6 @@ jobs:
             - UnicodeConverter/icubuilds-mac
             - DesktopEditor/agg-2.4
             - DesktopEditor/cximage
-            - DesktopEditor/freetype-2.10.4
-            - DesktopEditor/freetype-2.5.2
             - DesktopEditor/freetype_names
             - DesktopEditor/xml/libxml2
             - DesktopEditor/raster/Jp2/openjpeg
