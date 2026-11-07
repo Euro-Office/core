@@ -21,6 +21,8 @@
 //   - newlines inside text runs are dropped; a bare tab survives as text
 //   - control bytes between tokens are skipped
 //   - SetSource rejects files under 5 bytes (error contract)
+//   - StringStream: ungetc undoes a getc, and is a no-op after a getc that
+//     returned EOF (a truncated file never re-reads its last byte)
 //
 // Note: SetSource refuses files under 5 bytes, so every fixture below is
 // padded with a minimal {\rtf1 ...} envelope -- the behavior under test is
@@ -28,6 +30,7 @@
 
 #include <gtest/gtest.h>
 
+#include <cstdio>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -342,5 +345,86 @@ TEST(RtfLex, EofAtEndOfStream)
     EXPECT_EQ(RtfToken::Eof, oLex.NextToken().Type);  // first Eof
     EXPECT_EQ(RtfToken::Eof, oLex.NextToken().Type);  // Eof persists
     oLex.CloseSource();
+    NSFile::CFileBinary::Remove(sPath);
+}
+
+TEST(RtfLex, TruncatedKeywordAtEofIsNotReread)
+{
+    // A file cut off right after a control word: the keyword ends at EOF
+    // and nothing follows it -- no part of it is read a second time.
+    const std::vector<RtfToken> ar = LexAll("{\\rtf1 abc\\par");
+
+    ASSERT_EQ(4u, ar.size());
+    ASSERT_EQ(RtfToken::Text, ar[2].Type);
+    EXPECT_EQ("abc", ar[2].Key);
+    ASSERT_EQ(RtfToken::Keyword, ar[3].Type);
+    EXPECT_EQ("par", ar[3].Key);
+    EXPECT_FALSE(ar[3].HasParameter);
+}
+
+TEST(RtfLex, TruncatedParameterAtEofIsNotReread)
+{
+    // Same for a keyword parameter that ends at EOF: the full parameter is
+    // kept and no trailing digit is read again as text.
+    const std::vector<RtfToken> ar = LexAll("{\\rtf1 x\\fs24");
+
+    ASSERT_EQ(4u, ar.size());
+    ASSERT_EQ(RtfToken::Keyword, ar[3].Type);
+    EXPECT_EQ("fs", ar[3].Key);
+    EXPECT_TRUE(ar[3].HasParameter);
+    EXPECT_EQ(24, ar[3].Parameter);
+}
+
+TEST(RtfLex, TrailingBackslashAtEofEndsTheStream)
+{
+    // A lone backslash at EOF is a control sequence cut off by the end of
+    // the file: the lexer reports Eof instead of a token for it.
+    const std::vector<RtfToken> ar = LexAll("{\\rtf1 abc\\");
+
+    ASSERT_EQ(3u, ar.size());
+    EXPECT_EQ(RtfToken::GroupStart, ar[0].Type);
+    ASSERT_EQ(RtfToken::Keyword, ar[1].Type);
+    EXPECT_EQ("rtf", ar[1].Key);
+    ASSERT_EQ(RtfToken::Text, ar[2].Type);
+    EXPECT_EQ("abc", ar[2].Key);
+}
+
+TEST(StringStream, UngetcAfterNormalGetcStepsBack)
+{
+    const std::wstring sPath = WriteFixture("abcde");
+    StringStream oStream;
+    ASSERT_TRUE(oStream.SetSource(sPath));
+
+    EXPECT_EQ('a', oStream.getc());
+    EXPECT_EQ('b', oStream.getc());
+    oStream.ungetc();
+    EXPECT_EQ(0, oStream.getCurPosition());
+    EXPECT_EQ('b', oStream.getc());
+
+    oStream.Clear();
+    NSFile::CFileBinary::Remove(sPath);
+}
+
+TEST(StringStream, UngetcAfterEofDoesNotStepBack)
+{
+    const std::wstring sPath = WriteFixture("abcde");
+    StringStream oStream;
+    ASSERT_TRUE(oStream.SetSource(sPath));
+
+    for (char c : std::string("abcde"))
+        EXPECT_EQ(c, oStream.getc());
+    EXPECT_EQ(4, oStream.getCurPosition());
+
+    // The lexer peeks with getc + ungetc; at EOF the pair must leave the
+    // position on the last byte, however often it repeats.
+    for (int i = 0; i < 2; i++)
+    {
+        EXPECT_EQ(EOF, oStream.getc());
+        oStream.ungetc();
+        EXPECT_EQ(4, oStream.getCurPosition());
+    }
+    EXPECT_EQ(EOF, oStream.getc());
+
+    oStream.Clear();
     NSFile::CFileBinary::Remove(sPath);
 }
