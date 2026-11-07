@@ -232,7 +232,9 @@ bool CImageFileFormatChecker::isIcoFile(BYTE* pBuffer,DWORD dwBytes)
 {
 	if (eFileType)return false;
 	
-	if ( (16 <= dwBytes) && (0x00 == pBuffer[0] && 0x00 == pBuffer[1]))
+	// The header (6 bytes) and the first directory entry (16 bytes), which ends
+	// with the offset of the image
+	if ( (22 <= dwBytes) && (0x00 == pBuffer[0] && 0x00 == pBuffer[1]))
 	{
 		long width = pBuffer [6];
 		long height = pBuffer [7];
@@ -242,7 +244,7 @@ bool CImageFileFormatChecker::isIcoFile(BYTE* pBuffer,DWORD dwBytes)
 
 		DWORD offset_image = *(DWORD*)(pBuffer+18);
 
-		if (offset_image < dwBytes-40)
+		if (offset_image <= dwBytes && dwBytes - offset_image >= sizeof(___BITMAPINFOHEADER))
 		{
 			___BITMAPINFOHEADER *image_header=0;//bmp or png
 			image_header = (___BITMAPINFOHEADER *)(pBuffer + offset_image);

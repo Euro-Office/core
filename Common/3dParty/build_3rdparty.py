@@ -48,6 +48,10 @@ subfolders = [
     'leptonica',
     'leptonica-wasm',
     'jbig2enc',
+    # The HEIF decoders, then libheif on top of them
+    'libde265',
+    'libaom',
+    'libheif',
 ]
 
 known_targets = [ 'android-arm64', 'android-x64' ]

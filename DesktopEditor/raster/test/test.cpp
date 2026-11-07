@@ -6,8 +6,10 @@
 // Tests for the image formats behind CBgraFrame: the PNM (raster/Pnm) and Sun
 // Raster (raster/Ras) decoders, which replaced CxImage's JasPer based decoding,
 // CxImage's JPEG, PNG and TIFF codecs on top of libjpeg-turbo, libpng and
-// libtiff, and the WebP decoder (raster/WebP) on top of libwebp. The images are
-// built in memory, so every expected pixel is known.
+// libtiff, the WebP decoder (raster/WebP) on top of libwebp, and the HEIF
+// decoder (raster/heif) on top of libheif. The images are built in memory, so
+// every expected pixel is known; only the HEIF ones are fixtures, since core
+// cannot encode HEIF.
 
 #include "gtest/gtest.h"
 
@@ -1356,4 +1358,124 @@ TEST(CWebPTest, RejectsInvalidImages)
 	PutUInt32LE(arHeaderOnly, 0);
 	ASSERT_EQ(_CXIMAGE_FORMAT_WEBP, FileType(arHeaderOnly));
 	EXPECT_FALSE(Decode(arHeaderOnly, oFrame));
+}
+
+//////////////////////////////////////////////////////////////////////////
+// HEIF (HEIC and AVIF)
+
+namespace
+{
+	// Fixtures from heif/generate.py, read in place
+	std::wstring HeifFixturePath(const std::string& sName)
+	{
+		const std::string sPath = std::string(RASTER_TEST_HEIF_DIR) + "/" + sName;
+		return NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)sPath.c_str(), (LONG)sPath.length());
+	}
+
+	std::vector<BYTE> ReadHeifFixture(const std::string& sName)
+	{
+		BYTE* pData = NULL;
+		DWORD nSize = 0;
+		EXPECT_TRUE(NSFile::CFileBinary::ReadAllBytes(HeifFixturePath(sName), &pData, nSize)) << sName;
+		std::vector<BYTE> arData(pData, pData + nSize);
+		RELEASEARRAYOBJECTS(pData);
+		return arData;
+	}
+
+	const char* const c_arHeifFixtures[] = {"quad.heic", "quad_alpha.avif", "quad_10bit.avif", "wide_rot.heic"};
+}
+
+TEST(CHeifTest, DetectsHeicAndAvif)
+{
+	for (const char* sName : c_arHeifFixtures)
+	{
+		EXPECT_EQ(_CXIMAGE_FORMAT_HEIF, FileType(ReadHeifFixture(sName))) << sName;
+
+		// The check before inserting a file in the desktop editors
+		CImageFileFormatChecker oChecker;
+		EXPECT_TRUE(oChecker.isImageFile(HeifFixturePath(sName))) << sName;
+		EXPECT_EQ(_CXIMAGE_FORMAT_HEIF, oChecker.eFileType) << sName;
+	}
+
+	// The same box structure, but an MP4 video
+	std::vector<BYTE> arMp4;
+	PutUInt32BE(arMp4, 24);
+	const std::vector<BYTE> arBrands = Bytes(std::string("ftypisom\0\0\0\0isommp41", 20));
+	arMp4.insert(arMp4.end(), arBrands.begin(), arBrands.end());
+	EXPECT_NE(_CXIMAGE_FORMAT_HEIF, FileType(arMp4));
+}
+
+TEST(CHeifTest, DecodesHeicInBothChannelOrders)
+{
+	const std::vector<BYTE> arData = ReadHeifFixture("quad.heic");
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+		ExpectQuadrants(oFrame, bIsRGBA);
+	}
+}
+
+TEST(CHeifTest, DecodesAvifWithAlpha)
+{
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(ReadHeifFixture("quad_alpha.avif"), oFrame, bIsRGBA));
+		ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+		ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+		EXPECT_NEAR(255, Alpha(oFrame, 4, 4), 2);
+		EXPECT_NEAR(128, Alpha(oFrame, 27, 4), 2);
+		EXPECT_NEAR(255, Alpha(oFrame, 4, 27), 2);
+		EXPECT_NEAR(0, Alpha(oFrame, 27, 27), 2);
+		ExpectNear(QuadrantColor(4, 4), Pixel(oFrame, 4, 4, bIsRGBA), 4);
+		ExpectNear(QuadrantColor(4, 27), Pixel(oFrame, 4, 27, bIsRGBA), 4);
+		// Not premultiplied
+		const BYTE* p = PixelData(oFrame, 27, 4);
+		ExpectNear(QuadrantColor(27, 4), bIsRGBA ? (CColor{p[0], p[1], p[2]}) : (CColor{p[2], p[1], p[0]}), 4);
+	}
+}
+
+TEST(CHeifTest, Decodes10BitAvifTo8Bit)
+{
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(ReadHeifFixture("quad_10bit.avif"), oFrame));
+	ExpectQuadrants(oFrame);
+}
+
+TEST(CHeifTest, AppliesRotation)
+{
+	// Stored 32x16 with QUADRANTS[0] left and [1] right, shown rotated by 90
+	// degrees clockwise: 16x32 with [0] on top
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(ReadHeifFixture("wide_rot.heic"), oFrame));
+	ASSERT_EQ(16, oFrame.get_Width());
+	ASSERT_EQ(32, oFrame.get_Height());
+	ExpectNear(c_arQuadrants[0], Pixel(oFrame, 8, 4), 4);
+	ExpectNear(c_arQuadrants[1], Pixel(oFrame, 8, 27), 4);
+}
+
+TEST(CHeifTest, OpensFile)
+{
+	for (const char* sName : {"quad.heic", "quad_10bit.avif"})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(oFrame.OpenFile(HeifFixturePath(sName))) << sName;
+		ExpectQuadrants(oFrame);
+	}
+}
+
+TEST(CHeifTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+	for (const char* sName : c_arHeifFixtures)
+	{
+		std::vector<BYTE> arData = ReadHeifFixture(sName);
+		arData.resize(arData.size() / 2);
+		EXPECT_FALSE(Decode(arData, oFrame)) << sName;
+
+		// Just the file type box
+		arData.resize(12);
+		EXPECT_FALSE(Decode(arData, oFrame)) << sName;
+	}
 }
