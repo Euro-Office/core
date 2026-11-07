@@ -926,9 +926,13 @@ void process_build_object::visit(chart_title& val)
 void process_build_object::visit(chart_subtitle & val)
 {
 	title t;
-	std::wstringstream v;
-	val.text_p_->text_to_stream(v, false);
-	t.content_ = v.str();
+
+	if (val.text_p_)
+	{
+		std::wstringstream v;
+		val.text_p_->text_to_stream(v, false);
+		t.content_ = v.str();
+	}
 
 	ApplyTextProperties(val.attlist_.common_attlist_.chart_style_name_.get_value_or(L""), t.text_properties_);
 	ApplyGraphicProperties(val.attlist_.common_attlist_.chart_style_name_.get_value_or(L""), t.graphic_properties_, t.fill_);
@@ -936,6 +940,9 @@ void process_build_object::visit(chart_subtitle & val)
 	if (val.attlist_.common_draw_position_attlist_.svg_x_)
     {
         t.pos_x = val.attlist_.common_draw_position_attlist_.svg_x_->get_value_unit(length::pt);
+	}
+	if (val.attlist_.common_draw_position_attlist_.svg_y_)
+	{
 		t.pos_y = val.attlist_.common_draw_position_attlist_.svg_y_->get_value_unit(length::pt);
 	}
 	t.bEnabled = true;
