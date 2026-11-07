@@ -27,3 +27,11 @@ SPDX-License-Identifier = "FTL OR GPL-2.0-or-later"
 path = "Common/3dParty/libtiff/patch/libtiff.patch"
 SPDX-FileCopyrightText = ["1988-1997 Sam Leffler", "1991-1997 Silicon Graphics, Inc."]
 SPDX-License-Identifier = "libtiff"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/plain_paragraph.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/plain_paragraph.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
