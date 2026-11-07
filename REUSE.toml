@@ -65,3 +65,13 @@ path = [
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/chart_local_table_category_ampersand.ods",
+    "OdfFile/Test/test_odf/ExampleFiles/chart_pivot_source_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/chart_series_name_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/chart_sheet_name_ampersand.ods",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
