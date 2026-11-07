@@ -23,8 +23,12 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_checkbox_12pt.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_checkbox_no_styles.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_short_value_newline.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_text_12pt.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_text_no_styles.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_value_newline.docx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

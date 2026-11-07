@@ -667,7 +667,7 @@ void DocxConverter::convert(OOX::Logic::CSdt *oox_sdt)
 		}
 		if ((false == value.empty()) && (value.back() == L'\n'))
 		{
-			value.erase(value.back());
+			value.pop_back();
 		}
 		odt_context->controls_context()->set_value(value);
 
