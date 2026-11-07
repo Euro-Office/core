@@ -24,10 +24,6 @@ LIBS += -lgdi32 \
         -lshell32
 }
 
-INCLUDEPATH += \
-	$$CORE_ROOT_DIR/DesktopEditor/freetype-2.10.4/include \
-	$$CORE_ROOT_DIR/DesktopEditor/freetype-2.10.4/include/freetype
-
 HEADERS += \
 	OFDFile.h \
 	src/Annotation.h \

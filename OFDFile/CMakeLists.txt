@@ -87,8 +87,8 @@ set_default_options(OFDFile)
 
 target_include_directories(OFDFile PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CORE_ROOT_DIR}/DesktopEditor/freetype-2.10.4/include
-    ${CORE_ROOT_DIR}/DesktopEditor/freetype-2.10.4/include/freetype
+    ${FREETYPE_SOURCES_DIR}/include
+    ${FREETYPE_SOURCES_DIR}/include/freetype
 )
 
 target_compile_definitions(OFDFile PRIVATE
