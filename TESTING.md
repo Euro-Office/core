@@ -80,6 +80,12 @@ Done:
       output file, so the post-conversion comparisons fail. The CTest run is disabled
       (`set_tests_properties(ooxml_test PROPERTIES DISABLED TRUE)`) pending diagnosis of the headless
       conversion by someone able to run X2T locally.
+- [x] `OdfFile/Test/Test` (`odf_regression_test`) — 54 regression cases named after bug
+      numbers (44363, 57197, 61364: ODT → DOCX; 59708: DOCX → ODT; 69238: PPTX → ODP),
+      inspecting the converted document through the converters' models. Only a Visual
+      Studio project existed and the suite had never built as committed (a duplicate global
+      in `Test57197.cpp`). Links the static format libraries in a group, like `test_odf`;
+      own `main()`. Fixtures under `ExampleFiles/` are staged in the working directory.
 - [x] `OfficeUtils/tests` — deps: kernel, UnicodeConverter. The committed `tests/zip/`
       fixtures are staged next to the binary: the suite resolves fixtures relative to the
       process directory (`<binary dir>/../zip`), and writes its `unzip`/`temp` output dirs
