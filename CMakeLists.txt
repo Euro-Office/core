@@ -46,12 +46,16 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/OOXML/test" ooxml_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OOXML/DocxFormat/test" docx_numbering_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OfficeUtils/tests" officeutils_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OfficeCryptReader/tests" officecrypt_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Reader/Converter/SMCustomShape2OOXML/TestSMCustomShape" starmath_smcustomshape_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/test_odf" test_odf )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/test" xmlsec_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/number_formats" odf_number_formats_test )
         add_subdirectory( "${CORE_ROOT_DIR}/RtfFile/Format/test" rtf_lex_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg/test" openjpeg_test )
         add_subdirectory( "${CORE_ROOT_DIR}/MsBinaryFile/PptFile/test" pptfile_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/raster/test" raster_formats_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/fontengine/test" fontengine_test )
 
         # doctrenderer (V8) gtest suites. The V8 monolith is built in CI by
         # common.cmake (build_3rdparty.py) and is self-contained at run time:
@@ -70,6 +74,7 @@ else()
         # cases self-skip. See PdfFile/test/CMakeLists.txt and TESTING.md for the
         # missing fixtures needed to fully enable it.
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test" pdffile_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test/jbig2" pdf_jbig2_test )
     endif()
 
 endif()
