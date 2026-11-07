@@ -132,7 +132,6 @@ core_windows {
 }
 
 include($$PWD/../Common/3dParty/brotli/brotli.pri)
-include($$PWD/../DesktopEditor/graphics/pro/freetype.pri)
 
 HEADERS += \
     SrcWriter/AcroForm.h \
