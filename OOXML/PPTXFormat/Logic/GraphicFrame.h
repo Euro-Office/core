@@ -65,6 +65,7 @@ namespace PPTX
 
 			void ReadAttributes2(XmlUtils::CXmlLiteReader& oReader);
 			void ReadAttributes3(XmlUtils::CXmlLiteReader& oReader);
+			void ReadAttributesLink(XmlUtils::CXmlLiteReader& oReader);
 			
 			virtual std::wstring toXML() const;
 					std::wstring toXML2() const;

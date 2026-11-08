@@ -241,7 +241,8 @@ namespace PPTX
 					pOleObject = pContainer->Get<OOX::OleObject>(oRId);
 			}
 			
-			if (pOleObject.IsInit())
+			// CMediaManager copies this path into the media output, so a link target must never reach it.
+			if (pOleObject.IsInit() && !pOleObject->isLink())
 				return pOleObject->filename().m_strFilename;
 			
 			return L"";
