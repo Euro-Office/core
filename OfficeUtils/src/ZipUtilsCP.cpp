@@ -23,6 +23,8 @@
  *
  */
 #include "ZipUtilsCP.h"
+#include <mz.h>
+#include <mz_zip.h>
 #include <memory>
 #include <algorithm>
 #include "../../DesktopEditor/common/Directory.h"
@@ -120,6 +122,9 @@ namespace ZLibZipUtils
 		zipFile zf = zipOpen( (char*)pUtf8, APPEND_STATUS_CREATE );
 		delete [] pUtf8;
 #endif
+		// Write CRC and sizes into the seekable output's local headers.
+		if (zf)
+			mz_zip_set_data_descriptor(zipGetHandle_MZ(zf), 0);
 		return zf;
 	}
 	unzFile unzOpenHelp(const wchar_t* filename)
