@@ -1073,7 +1073,7 @@ void style_page_layout_properties_attlist::add_attributes( const xml::attributes
     CP_APPLY_ATTR(L"style:print",					style_print_);
     CP_APPLY_ATTR(L"style:print-page-order",		style_print_page_order_);
     CP_APPLY_ATTR(L"style:scale-to",				style_scale_to_);
-    CP_APPLY_ATTR(L"style:scale-to_pages",			style_scale_to_pages_);
+    CP_APPLY_ATTR(L"style:scale-to-pages",			style_scale_to_pages_);
     CP_APPLY_ATTR(L"style:table-centering",			style_table_centering_);
     CP_APPLY_ATTR(L"style:footnote-max-height",		style_footnote_max_height_);
     
@@ -1087,8 +1087,36 @@ void style_page_layout_properties_attlist::add_attributes( const xml::attributes
     CP_APPLY_ATTR(L"style:layout-grid-ruby-below",	style_layout_grid_ruby_below_);  
     CP_APPLY_ATTR(L"style:layout-grid-print",		style_layout_grid_print_);
     CP_APPLY_ATTR(L"style:layout-grid-display",		style_layout_grid_display_);
+	CP_APPLY_ATTR(L"style:scale-to-X",				style_scale_to_X_);
+	CP_APPLY_ATTR(L"style:scale-to-Y",				style_scale_to_Y_);
 	CP_APPLY_ATTR(L"loext:scale-to-X",				loext_scale_to_X_);
 	CP_APPLY_ATTR(L"loext:scale-to-Y",				loext_scale_to_Y_);
+}
+
+bool style_page_layout_properties_attlist::get_fit_to_pages(unsigned int & width, unsigned int & height) const
+{
+	// style:scale-to-X/-Y (ODF 1.3), or loext:scale-to-X/-Y in files from before ODF 1.3;
+	// the values are positive integers, anything else counts as no limit
+	auto pages = [](const _CP_OPT(int) & value, const _CP_OPT(int) & fallback)
+	{
+		const int count = value ? *value : fallback.get_value_or(0);
+		return count > 0 ? (unsigned int)count : 0u;
+	};
+	width	= pages(style_scale_to_X_, loext_scale_to_X_);
+	height	= pages(style_scale_to_Y_, loext_scale_to_Y_);
+
+	if (width > 0 || height > 0)
+		return true;
+
+	// style:scale-to-pages is a page count in total, which XLSX does not have;
+	// one page wide and that many pages high, as LibreOffice exports it
+	if (style_scale_to_pages_ && *style_scale_to_pages_ > 0)
+	{
+		width	= 1;
+		height	= (unsigned int)*style_scale_to_pages_;
+		return true;
+	}
+	return false;
 }
 
 bool style_page_layout_properties_attlist::compare( const style_page_layout_properties_attlist & attlst )
@@ -1560,8 +1588,11 @@ void style_page_layout_properties::xlsx_serialize(std::wostream & strm, oox::xls
 				else CP_XML_ATTR(L"footer", 0.7875);
 			}
 		}
+		unsigned int fit_width = 0, fit_height = 0;
+		const bool fit_to_pages = attlist_.get_fit_to_pages(fit_width, fit_height);
+
 		if (attlist_.fo_page_width_ || attlist_.fo_page_height_ || attlist_.style_print_orientation_ || 
-			attlist_.style_scale_to_ || attlist_.loext_scale_to_X_ || attlist_.loext_scale_to_Y_ || 
+			attlist_.style_scale_to_ || fit_to_pages ||
 			attlist_.common_page_number_attlist_.style_first_page_number_)
 		{
 			CP_XML_NODE(L"pageSetup")
@@ -1595,17 +1626,17 @@ void style_page_layout_properties::xlsx_serialize(std::wostream & strm, oox::xls
 				{
 					CP_XML_ATTR(L"scale", (int)attlist_.style_scale_to_->get_value());
 				}		
-				if (attlist_.loext_scale_to_X_)
+				if (fit_to_pages)
 				{
-					CP_XML_ATTR(L"fitToWidth", *attlist_.loext_scale_to_X_);
+					CP_XML_ATTR(L"fitToWidth", fit_width);
 				}
 				if (attlist_.common_page_number_attlist_.style_first_page_number_)
 				{
 					CP_XML_ATTR(L"firstPageNumber", *attlist_.common_page_number_attlist_.style_first_page_number_);
 				}	
-				if (attlist_.loext_scale_to_Y_)
+				if (fit_to_pages)
 				{
-					CP_XML_ATTR(L"fitToHeight", *attlist_.loext_scale_to_Y_);
+					CP_XML_ATTR(L"fitToHeight", fit_height);
 				}
 				if (attlist_.style_print_orientation_)
 				{
