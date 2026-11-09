@@ -866,7 +866,7 @@ std::wstring  docx_conversion_context::dump_settings_app()
 			{
 				CP_XML_NODE(L"Template")
 				{
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().template_;
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().template_);
 				}
 			}
 			if (odf_document_->odf_context().DocProps().revision_)
@@ -880,7 +880,7 @@ std::wstring  docx_conversion_context::dump_settings_app()
 			{
 				if (!odf_document_->odf_context().DocProps().application_.empty())
 				{
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().application_;
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().application_);
 				}
 				else
 				{
@@ -1135,11 +1135,12 @@ std::wstring  docx_conversion_context::dump_settings_document()
 
 			_CP_OPT(double) tabDistance = root()->odf_context().Settings().get_tab_distance();
 
-			if (tabDistance)
+			if (tabDistance && *tabDistance >= 0)
 			{
 				CP_XML_NODE(L"w:defaultTabStop")
 				{
-					CP_XML_ATTR(L"w:val", *tabDistance);
+					// ST_TwipsMeasure: whole twips, rounded
+					CP_XML_ATTR(L"w:val", static_cast<int>(*tabDistance + 0.5));
 				}
 			}
 			

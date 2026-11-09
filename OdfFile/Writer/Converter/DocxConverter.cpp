@@ -2342,9 +2342,12 @@ void DocxConverter::convert(OOX::Logic::CBgPict *oox_bg_pict, int type)
 	{
 		convert(oox_bg_pict->m_oBackground.GetPointer());
 	}
-	odf_writer::style_page_layout_properties *current_layout_properties = odt_context->page_layout_context()->last_layout()->get_properties();
+	// get_properties() creates the element when no page size or margin did
+	odf_writer::style_page_layout_properties *current_layout_properties = odt_context->page_layout_context()->get_properties();
+	odf_types::common_draw_fill_attlist no_layout_fill; // no page layout at all: the fill is dropped
 
-	odt_context->drawing_context()->end_drawing_background(current_layout_properties->attlist_.common_draw_fill_attlist_);
+	odt_context->drawing_context()->end_drawing_background(current_layout_properties ?
+		current_layout_properties->attlist_.common_draw_fill_attlist_ : no_layout_fill);
 	odt_context->drawing_context()->set_background_state(false);
 	odt_context->end_drawing_context();
 }
@@ -2372,9 +2375,12 @@ void DocxConverter::convert(OOX::Logic::CBackground *oox_background, int type)
 	{
 		convert(oox_background->m_oBackground.GetPointer());
 	}
-	odf_writer::style_page_layout_properties * current_layout_properties = odt_context->page_layout_context()->last_layout()->get_properties();
+	// get_properties() creates the element when no page size or margin did
+	odf_writer::style_page_layout_properties *current_layout_properties = odt_context->page_layout_context()->get_properties();
+	odf_types::common_draw_fill_attlist no_layout_fill; // no page layout at all: the fill is dropped
 
-	odt_context->drawing_context()->end_drawing_background(current_layout_properties->attlist_.common_draw_fill_attlist_);
+	odt_context->drawing_context()->end_drawing_background(current_layout_properties ?
+		current_layout_properties->attlist_.common_draw_fill_attlist_ : no_layout_fill);
 	odt_context->drawing_context()->set_background_state(false);
 	odt_context->end_drawing_context();
 }

@@ -397,7 +397,7 @@ namespace StarMath
 	}
 	std::wstring COOXml2Odf::ConversionType(OOX::Logic::CType *pType)
 	{
-		if(pType == nullptr)
+		if(pType == nullptr || pType->m_val.GetPointer() == nullptr)
 			return L"";
 		std::wstring wsType = pType->m_val->ToString();
 		return wsType;
@@ -690,7 +690,7 @@ namespace StarMath
 	//annotation?
 	std::wstring COOXml2Odf::ConversionChr(OOX::Logic::CChr *pChr)
 	{
-		if(pChr == nullptr) return L"";
+		if(pChr == nullptr || pChr->m_val.GetPointer() == nullptr) return L"";
 		return pChr->m_val->GetValue();
 	}
 	std::wstring COOXml2Odf::ToStringChr(const std::wstring &wsChr)
@@ -786,7 +786,11 @@ namespace StarMath
 	}
 	void COOXml2Odf::ConversionAcc(OOX::Logic::CAcc *pAcc)
 	{
-		std::wstring wsSymbol = pAcc->m_oAccPr->m_oChr.IsInit() ? pAcc->m_oAccPr->m_oChr.get().m_val->GetValue() : L"\u005E",wsSign;
+		if(pAcc == nullptr)
+			return;
+		std::wstring wsSymbol = L"\u005E",wsSign;
+		if(pAcc->m_oAccPr.IsInit() && pAcc->m_oAccPr->m_oChr.IsInit() && pAcc->m_oAccPr->m_oChr->m_val.IsInit())
+			wsSymbol = pAcc->m_oAccPr->m_oChr->m_val->GetValue();
 		wsSign = TranslationDiacritSign(wsSymbol);
 		if(wsSign.empty())
 		{
@@ -931,7 +935,8 @@ namespace StarMath
 	{
 		if(pMRpr == nullptr)
 			return ;
-		if(pMRpr->m_oSty.GetPointer() != nullptr && pMRpr->m_oSty.GetPointer()->m_val.GetPointer()->GetValue() != SimpleTypes::EStyle::stylePlain)
+		if(pMRpr->m_oSty.GetPointer() != nullptr && pMRpr->m_oSty->m_val.GetPointer() != nullptr &&
+			pMRpr->m_oSty.GetPointer()->m_val.GetPointer()->GetValue() != SimpleTypes::EStyle::stylePlain)
 		{
 			if(pValue == nullptr)
 				pValue = new StValuePr;
@@ -1451,11 +1456,11 @@ namespace StarMath
 		StValuePr stGroupPr;
 		if(pGroupPr == nullptr)
 			return stGroupPr;
-		if(pGroupPr->m_oChr.GetPointer()!= nullptr)
+		if(pGroupPr->m_oChr.GetPointer()!= nullptr && pGroupPr->m_oChr->m_val.GetPointer() != nullptr)
 			stGroupPr.m_wsChr = pGroupPr->m_oChr.GetPointer()->m_val.GetPointer()->GetValue();
-		if(pGroupPr->m_oPos.GetPointer() != nullptr)
+		if(pGroupPr->m_oPos.GetPointer() != nullptr && pGroupPr->m_oPos->m_val.GetPointer() != nullptr)
 			stGroupPr.m_enPos = pGroupPr->m_oPos.GetPointer()->m_val.GetPointer()->GetValue();
-		if(pGroupPr->m_oVertJc.GetPointer() != nullptr)
+		if(pGroupPr->m_oVertJc.GetPointer() != nullptr && pGroupPr->m_oVertJc->m_val.GetPointer() != nullptr)
 			stGroupPr.m_enVert = pGroupPr->m_oVertJc.GetPointer()->m_val.GetPointer()->GetValue();
 		return stGroupPr;
 	}
@@ -1484,8 +1489,8 @@ namespace StarMath
 		}
 		m_pXmlWrite->WriteNodeBegin(wsNode,true);
 		pBarPr.m_enPos == SimpleTypes::ETopBot::tbTop ? m_pXmlWrite->WriteAttribute(L"accent",L"true"): m_pXmlWrite->WriteAttribute(L"accentunder",L"true");
-		ConversionElement(pBar->m_oElement.GetPointer());
 		m_pXmlWrite->WriteNodeEnd(L"w",true,false);
+		ConversionElement(pBar->m_oElement.GetPointer());
 		m_pXmlWrite->WriteNodeBegin(L"mo",false);
 		pBarPr.m_enPos == SimpleTypes::ETopBot::tbTop ? m_pXmlWrite->WriteString(L"\u203E"):m_pXmlWrite->WriteString(L"\u005F");
 		m_pXmlWrite->WriteNodeEnd(L"mo",false,false);

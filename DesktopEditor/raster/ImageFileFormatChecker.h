@@ -94,6 +94,7 @@ public:
 
 	bool isIcoFile(BYTE* pBuffer,DWORD dwBytes);
 	bool isRasFile(BYTE* pBuffer,DWORD dwBytes);
+	bool isPnmFile(BYTE* pBuffer,DWORD dwBytes);
 	bool isPsdFile(BYTE* pBuffer,DWORD dwBytes);
 	bool isSvmFile(BYTE* pBuffer,DWORD dwBytes);
 	bool isSwfFile(BYTE* pBuffer,DWORD dwBytes);
