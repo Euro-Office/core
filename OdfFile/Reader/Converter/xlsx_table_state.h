@@ -160,6 +160,9 @@ public:
 	std::wstring current_row_style			() const;
     std::wstring default_row_cell_style		() const;
     std::wstring default_column_cell_style	() const;
+	std::wstring default_column_cell_style	(unsigned int column) const;
+	// true if the columns first .. end - 1 (those of the table) have the same default cell style
+	bool same_default_column_cell_style		(unsigned int first, unsigned int end) const;
 
 	void start_table_row_group(bool collapsed);
 	void end_table_row_group();
@@ -251,6 +254,7 @@ private:
     std::wstring						table_row_style_;
     std::wstring						cell_style_;
     std::vector<std::wstring>			column_default_cell_style_name_;
+	mutable std::vector<size_t>			column_default_cell_style_end_; // per column: the next one with another default cell style
     std::wstring						row_default_cell_style_name_;
    
 	int									current_table_column_;

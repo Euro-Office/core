@@ -74,6 +74,7 @@ add_core_gtest(
             motion.cpp
             audio.cpp
             interactions.cpp
+            ods2xlsx_trailing_cell_style.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
