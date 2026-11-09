@@ -28,11 +28,19 @@ add_core_gtest(
 
 # DocFormatLib's MemoryStream logs through Log::warning, which XlsFormatLib
 # provides, so both static libraries go into one linker group.
+# Apple's ld has no groups; it resolves across static libraries anyway.
+if(APPLE)
+    set(_doc_fkp_test_group_begin "")
+    set(_doc_fkp_test_group_end "")
+else()
+    set(_doc_fkp_test_group_begin "-Wl,--start-group")
+    set(_doc_fkp_test_group_end "-Wl,--end-group")
+endif()
 target_link_libraries(doc_fkp_test PRIVATE
-    -Wl,--start-group
+    ${_doc_fkp_test_group_begin}
     DocFormatLib
     XlsFormatLib
-    -Wl,--end-group
+    ${_doc_fkp_test_group_end}
     kernel
     UnicodeConverter
 )
