@@ -176,8 +176,12 @@ Done:
 - [x] `OdfFile/Test/test_odf` — deps: OdfFormatLib (for `ConvertODF2OOXml`), kernel,
       graphics, UnicodeConverter; `OfficeFileFormatChecker2.cpp`, `pole.cpp` and
       `unicode_util.cpp` are compiled into the target (as `x2tTester` does). Owns its
-      `main()` (so no `GTEST_MAIN`). Builds only `test.cpp` + `common.cpp` — the
-      entrance/motion/audio/interactions modules are commented out in the `.pro`. The
+      `main()` (so no `GTEST_MAIN`). The `.pro` built only `test.cpp` + `common.cpp`;
+      the CMake target also builds the entrance/motion/audio/interactions modules (144
+      cases), which convert their `.odp`/`.pptx` fixtures in both directions and inspect
+      the converters' animation trees. Their environments in `common.cpp` read the
+      fixtures working-dir-relative. `columns.cpp` stays out: `columns.pptx` was never
+      committed. The
       global `TestEnv` exercises an `.odp -> .pptx` conversion in its `SetUp()`, and
       `ODP2PPTX.EmptyCustomShapeFormula` converts `empty_custom_shape_formula.odp`, a
       regression fixture for a custom-shape equation with an empty `draw:formula`. Fixtures under `ExampleFiles/` are
