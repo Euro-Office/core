@@ -84,10 +84,11 @@ jobs:
         HCL
 
     - name: Restore ccache
+      id: ccache
       uses: actions/cache/restore@v4
       with:
         path: ccache-seed
-        key: ccache-android-${{ matrix.abi }}-${{ github.run_id }}
+        key: ccache-android-${{ matrix.abi }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
         restore-keys: ccache-android-${{ matrix.abi }}-
 
     - name: Build core for Android (x2t and its libraries)
@@ -110,11 +111,14 @@ jobs:
         df -h
         docker system df
 
+    # A PR that started from main's cache doesn't save its own: the repo's
+    # 10 GB of caches would evict main's, which every new PR starts from.
     - name: Save ccache
+      if: ${{ !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-')) }}
       uses: actions/cache/save@v4
       with:
         path: ccache-seed
-        key: ccache-android-${{ matrix.abi }}-${{ github.run_id }}
+        key: ccache-android-${{ matrix.abi }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
 
     # What the apps load: x2t's JNI library, the editor engine's doctrenderer
     # (with V8) and the libraries they link

@@ -234,10 +234,11 @@ jobs:
       # 8. ccache: build.ps1 installs it and sets up the rest
       # ------------------------------------------------------------------ #
       - name: Restore ccache
+        id: ccache
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ccache-windows-${{ matrix.arch }}-${{ github.run_id }}
+          key: ccache-windows-${{ matrix.arch }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
           restore-keys: ccache-windows-${{ matrix.arch }}-
 
       # ------------------------------------------------------------------ #
@@ -266,13 +267,15 @@ jobs:
           path: ${{ github.workspace }}/.cache/vcpkg
           key: ${{ steps.vcpkg-key.outputs.prefix }}${{ github.run_id }}
 
-      # Even when the build fails or is cancelled, so the next run reuses it
+      # Even when the build fails or is cancelled, so the next run reuses it.
+      # A PR that started from main's cache doesn't save its own: the repo's
+      # 10 GB of caches would evict main's, which every new PR starts from.
       - name: Save ccache
-        if: always()
+        if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
         uses: actions/cache/save@v4
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ccache-windows-${{ matrix.arch }}-${{ github.run_id }}
+          key: ccache-windows-${{ matrix.arch }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
 
       # ------------------------------------------------------------------ #
       # 10. Upload build artifacts
