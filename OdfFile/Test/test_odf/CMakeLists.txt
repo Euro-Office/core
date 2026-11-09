@@ -48,6 +48,7 @@ add_core_gtest(
             common.cpp
             number_styles.cpp
             conversion_helpers.cpp
+            docx2odt_content_controls.cpp
             xlsx2ods_date_cells.cpp
             xlsx2ods_print_area.cpp
             odt2docx_fields.cpp
