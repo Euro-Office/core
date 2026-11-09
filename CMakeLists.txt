@@ -3,6 +3,10 @@
 
 cmake_minimum_required(VERSION 3.10)
 
+# Else CMAKE_MSVC_RUNTIME_LIBRARY is ignored: a core package would have the
+# static runtime, and the desktop build that links it the DLL one
+cmake_policy(SET CMP0091 NEW)
+
 project(core)
 
 set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
@@ -34,6 +38,9 @@ else()
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/app_builder" docbuilder )
     add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/Resources/CMapMemory" cmapbin )
     add_subdirectory( "${CORE_ROOT_DIR}/Test/Applications/x2tTester" x2ttester )
+
+    eo_core_converter_assembly()
+    include( "${CORE_ROOT_DIR}/cmake/core-package.cmake" )
 
     if(EO_BUILD_TESTS)
         enable_testing()

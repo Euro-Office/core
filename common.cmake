@@ -30,6 +30,17 @@ if(NOT IS_ABSOLUTE "${EO_CORE_TOOLS_DIR}")
     cmake_path(ABSOLUTE_PATH EO_CORE_TOOLS_DIR BASE_DIRECTORY "${CMAKE_BINARY_DIR}" NORMALIZE)
 endif()
 
+# Static and Windows import libraries of a core package (see
+# cmake/core-package.cmake). Only used by core's own top-level build.
+if( NOT DEFINED EO_CORE_LIB_DIR )
+    cmake_path( APPEND DEFAULT_EO_CORE_LIB_DIR "${CMAKE_BINARY_DIR}" "package" "lib" )
+    set(EO_CORE_LIB_DIR "${DEFAULT_EO_CORE_LIB_DIR}" CACHE PATH "Where to place the static and import libraries of a core package")
+endif()
+file(TO_CMAKE_PATH "${EO_CORE_LIB_DIR}" EO_CORE_LIB_DIR)
+if(NOT IS_ABSOLUTE "${EO_CORE_LIB_DIR}")
+    cmake_path(ABSOLUTE_PATH EO_CORE_LIB_DIR BASE_DIRECTORY "${CMAKE_BINARY_DIR}" NORMALIZE)
+endif()
+
 if( NOT DEFINED EO_CORE_3RD_PARTY_DIR )
     set(EO_CORE_3RD_PARTY_DIR "${DEFAULT_EO_CORE_3RD_PARTY_DIR}" CACHE PATH "Where to place and build 3rd party projects (absolute path recommended)")
 endif()
@@ -202,8 +213,14 @@ else()
                 set(PLATFORM_EXCLUDE ",qt")
             endif()
 
+            set(PREBUILT_EXCLUDE "")
+            if(EO_CORE_PREBUILT_DIR)
+                # Only doctrenderer links V8, and the package has it built in
+                set(PREBUILT_EXCLUDE ",v8")
+            endif()
+
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}${PREBUILT_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -231,9 +248,6 @@ else()
 
     if(MSVC)
         set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" CACHE STRING "" FORCE)
-        foreach(flag_var CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS CMAKE_C_FLAGS_RELEASE)
-            string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-        endforeach()
     endif()
 
     if(BUILD_DESKTOP)
@@ -1038,3 +1052,40 @@ function( add_cpp_sources_from_dir_recurive TARGET DIR )
         ${DIR}
     )
 endfunction()
+
+# Windows: the core DLLs load each other through the private "converter"
+# side-by-side assembly, converter.manifest next to them (DesktopEditors
+# installs them in converter\). Call after the core targets exist; targets
+# that aren't built here (missing or IMPORTED) are skipped.
+set(_EO_CORE_DIR "${CMAKE_CURRENT_LIST_DIR}")
+function(eo_core_converter_assembly)
+    if(NOT WIN32)
+        return()
+    endif()
+    string(TOLOWER "${CMAKE_CXX_COMPILER_ARCHITECTURE_ID}" _arch)
+    if(_arch STREQUAL "x64" OR _arch STREQUAL "")
+        set(_arch amd64)
+    endif()
+    foreach(_t doctrenderer DocxRenderer kernel kernel_network graphics
+               UnicodeConverter PdfFile DjVuFile XpsFile ooxmlsignature
+               Fb2File EpubFile HtmlFile2 OFDFile IWorkFile HWPFile
+               StarMathConverter)
+        if(TARGET ${_t})
+            get_target_property(_imported ${_t} IMPORTED)
+            if(NOT _imported)
+                target_link_options(${_t} PRIVATE
+                    "/MANIFESTDEPENDENCY:type='win32' name='converter' version='1.0.0.0' processorArchitecture='${_arch}'")
+            endif()
+        endif()
+    endforeach()
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+        "${_EO_CORE_DIR}/Common/msvc/converter.manifest")
+    file(READ "${_EO_CORE_DIR}/Common/msvc/converter.manifest" _manifest)
+    string(REPLACE "processorArchitecture=\"amd64\"" "processorArchitecture=\"${_arch}\"" _manifest "${_manifest}")
+    file(WRITE "${EO_CORE_OUTPUT_DIR}/converter.manifest" "${_manifest}")
+endfunction()
+
+# A core package instead of building core, see cmake/prebuilt-core.cmake
+if(EO_CORE_PREBUILT_DIR)
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake/prebuilt-core.cmake")
+endif()
