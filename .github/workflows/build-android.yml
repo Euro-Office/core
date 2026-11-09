@@ -102,6 +102,14 @@ jobs:
         # The build log is cut off long before the statistics
         cat ccache-seed/last-stats.txt
 
+    # The build tree with debug info, ccache and the outputs share the
+    # runner's disk
+    - name: Disk usage
+      if: failure()
+      run: |
+        df -h
+        docker system df
+
     - name: Save ccache
       uses: actions/cache/save@v4
       with:
