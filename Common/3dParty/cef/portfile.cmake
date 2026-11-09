@@ -1,4 +1,6 @@
-set(VCPKG_BINARY_REMOTE "https://cloud.nextcloud.com/public.php/dav/files/n9KYBcFYyLLCgEw")
+if(NOT DEFINED VCPKG_BINARY_REMOTE)
+    set(VCPKG_BINARY_REMOTE "https://s3.eu-central-4.ionoscloud.com/eo-build-assets/vcpkg")
+endif()
 
 # 1. Setup hashes for each architecture (Vcpkg requires these)
 set(CEF_HASH "NOTFOUND")

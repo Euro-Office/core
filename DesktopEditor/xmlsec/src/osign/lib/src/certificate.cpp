@@ -36,15 +36,15 @@ namespace OSign
 		}
 	}
 
-	tm ASN1_GetTimeT(ASN1_TIME* time)
+	tm ASN1_GetTimeT(const ASN1_TIME* time)
 	{
 		struct tm t;
-		const char* str = (const char*) time->data;
+		const char* str = (const char*) ASN1_STRING_get0_data(time);
 		size_t i = 0;
 
 		memset(&t, 0, sizeof(t));
 
-		if (time->type == V_ASN1_UTCTIME)
+		if (ASN1_STRING_type(time) == V_ASN1_UTCTIME)
 		{
 			/* two digit year */
 			t.tm_year = (str[i++] - '0') * 10;
@@ -52,7 +52,7 @@ namespace OSign
 			if (t.tm_year < 70)
 				t.tm_year += 100;
 		}
-		else if (time->type == V_ASN1_GENERALIZEDTIME)
+		else if (ASN1_STRING_type(time) == V_ASN1_GENERALIZEDTIME)
 		{
 			/* four digit year */
 			t.tm_year = (str[i++] - '0') * 1000;
@@ -154,8 +154,8 @@ namespace OSign
 					ASN1_INTEGER_set(serialNumber, 1);
 			}
 
-			X509_gmtime_adj(X509_get_notBefore(m_cert), 0);
-			X509_gmtime_adj(X509_get_notAfter(m_cert), 31536000L);
+			X509_gmtime_adj(X509_getm_notBefore(m_cert), 0);
+			X509_gmtime_adj(X509_getm_notAfter(m_cert), 31536000L);
 
 			if (X509_set_pubkey(m_cert, m_key) == 0)
 			{
@@ -164,13 +164,17 @@ namespace OSign
 				return false;
 			}
 
-			X509_NAME* name_record = X509_get_subject_name(m_cert);
+			// X509_get_subject_name returns a const name since OpenSSL 4: build
+			// the name separately and set it as both subject and issuer.
+			X509_NAME* name_record = X509_NAME_new();
 
 			X509_NAME_add_entry_by_txt(name_record, "C", MBSTRING_ASC, (unsigned char *)c_record_country, -1, -1, 0);
 			X509_NAME_add_entry_by_txt(name_record, "O",  MBSTRING_ASC, (unsigned char *)c_record_organization_name, -1, -1, 0);
 			X509_NAME_add_entry_by_txt(name_record, "CN", MBSTRING_ASC, (unsigned char *)c_record_common_name, -1, -1, 0);
 
+			X509_set_subject_name(m_cert, name_record);
 			X509_set_issuer_name(m_cert, name_record);
+			X509_NAME_free(name_record);
 
 			if (!props.empty())
 			{
@@ -243,11 +247,11 @@ namespace OSign
 		// date
 		if (true)
 		{
-			ASN1_TIME* _time1 = X509_get_notBefore(m_internal->m_cert);
+			const ASN1_TIME* _time1 = X509_get0_notBefore(m_internal->m_cert);
 			struct tm t1 = ASN1_GetTimeT(_time1);
 			std::string sTimeBefore = std::to_string(t1.tm_mday) + "/" + std::to_string(t1.tm_mon + 1) + "/" + std::to_string(t1.tm_year + 1900);
 
-			ASN1_TIME* _time2 = X509_get_notAfter(m_internal->m_cert);
+			const ASN1_TIME* _time2 = X509_get0_notAfter(m_internal->m_cert);
 			struct tm t2 = ASN1_GetTimeT(_time2);
 			std::string sTimeAfter = std::to_string(t2.tm_mday) + "/" + std::to_string(t2.tm_mon + 1) + "/" + std::to_string(t2.tm_year + 1900);
 
@@ -258,7 +262,7 @@ namespace OSign
 		// names
 		if (true)
 		{
-			X509_NAME* pSubjectName = X509_get_subject_name(m_internal->m_cert);
+			const X509_NAME* pSubjectName = X509_get_subject_name(m_internal->m_cert);
 			char buffer[10000];
 			memset(buffer, 0, 10000);
 
@@ -282,10 +286,10 @@ namespace OSign
 			int subjectAltNameLoc = X509_get_ext_by_NID(m_internal->m_cert, NID_subject_alt_name, -1);
 			if(subjectAltNameLoc != -1)
 			{
-				X509_EXTENSION* ext = X509_get_ext(m_internal->m_cert, subjectAltNameLoc);
-				ASN1_OCTET_STRING* oData = X509_EXTENSION_get_data(ext);
+				const X509_EXTENSION* ext = X509_get_ext(m_internal->m_cert, subjectAltNameLoc);
+				const ASN1_OCTET_STRING* oData = X509_EXTENSION_get_data(ext);
 
-				std::string sDataString = std::string((char*)oData->data, oData->length);
+				std::string sDataString = std::string((const char*)ASN1_STRING_get0_data(oData), ASN1_STRING_length(oData));
 				std::string::size_type posStart = 0;
 				std::string::size_type posEnd = sDataString.find(';');
 

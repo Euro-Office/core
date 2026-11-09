@@ -43,6 +43,28 @@ add_core_gtest(
     SOURCES test.cpp
             common.cpp
             number_styles.cpp
+            conversion_helpers.cpp
+            xlsx2ods_date_cells.cpp
+            xlsx2ods_print_area.cpp
+            odt2docx_fields.cpp
+            chart_series_name.cpp
+            xlsx2ods_sheet_background.cpp
+            docx2odt_page_background.cpp
+            math_bar.cpp
+            chart_title.cpp
+            odt2docx_underline.cpp
+            odt2docx_keep_next.cpp
+            odt2docx_links.cpp
+            odp2pptx_line_height.cpp
+            odt2docx_default_tab_stop.cpp
+            enhanced_path_quadratic_bezier.cpp
+            pptx2odp_bullet_size.cpp
+            chart_vary_colors.cpp
+            odt2docx_first_body_element.cpp
+            odt2docx_meta_template.cpp
+            chart_subtitle.cpp
+            math_property_values.cpp
+            pptx2odp_table_styles.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
@@ -50,8 +72,16 @@ add_core_gtest(
 # The OOXML/MS format static libraries reference one another, so wrap them in a
 # linker group; the remaining converter libraries are shared and linked after.
 # This mirrors the static + dynamic lib lists of target_link_libraries(x2tlib).
+# Apple's ld has no groups; it resolves across static libraries anyway.
+if(APPLE)
+    set(_test_odf_group_begin "")
+    set(_test_odf_group_end "")
+else()
+    set(_test_odf_group_begin "-Wl,--start-group")
+    set(_test_odf_group_end "-Wl,--end-group")
+endif()
 target_link_libraries(test_odf PRIVATE
-    -Wl,--start-group
+    ${_test_odf_group_begin}
     OdfFormatLib
     DocFormatLib
     PptFormatLib
@@ -65,7 +95,7 @@ target_link_libraries(test_odf PRIVATE
     VbaFormatLib
     CompoundFileLib
     CryptoPPLib
-    -Wl,--end-group
+    ${_test_odf_group_end}
     graphics
     kernel
     UnicodeConverter

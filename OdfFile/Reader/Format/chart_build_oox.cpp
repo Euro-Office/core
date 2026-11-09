@@ -464,11 +464,6 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 		current->set_stock_loss_marker(stock_loss_marker_);
 		current->set_stock_range_line(stock_range_line_);
 
-		if (1 == series_.size())
-		{
-			current->varyColors_ = false;
-		}
-
 		current->set_properties(plot_area_.properties_);
 		current->set_graphic_properties(graphic_properties_);
 	
@@ -931,9 +926,13 @@ void process_build_object::visit(chart_title& val)
 void process_build_object::visit(chart_subtitle & val)
 {
 	title t;
-	std::wstringstream v;
-	val.text_p_->text_to_stream(v, false);
-	t.content_ = v.str();
+
+	if (val.text_p_)
+	{
+		std::wstringstream v;
+		val.text_p_->text_to_stream(v, false);
+		t.content_ = v.str();
+	}
 
 	ApplyTextProperties(val.attlist_.common_attlist_.chart_style_name_.get_value_or(L""), t.text_properties_);
 	ApplyGraphicProperties(val.attlist_.common_attlist_.chart_style_name_.get_value_or(L""), t.graphic_properties_, t.fill_);
@@ -941,6 +940,9 @@ void process_build_object::visit(chart_subtitle & val)
 	if (val.attlist_.common_draw_position_attlist_.svg_x_)
     {
         t.pos_x = val.attlist_.common_draw_position_attlist_.svg_x_->get_value_unit(length::pt);
+	}
+	if (val.attlist_.common_draw_position_attlist_.svg_y_)
+	{
 		t.pos_y = val.attlist_.common_draw_position_attlist_.svg_y_->get_value_unit(length::pt);
 	}
 	t.bEnabled = true;

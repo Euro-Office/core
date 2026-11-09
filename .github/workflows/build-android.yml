@@ -7,21 +7,30 @@ on:
   pull_request:
   workflow_dispatch:
 
+# A new push to a pull request cancels its previous run. Other runs (manual
+# ones included) are never cancelled, they wait instead.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     # The build tree and the third-party builds (V8 takes hours) stay in a
     # BuildKit cache mount on the runner's Docker daemon, so later runs only
-    # build what changed; with the Nextcloud secrets, third-party builds come
-    # from the remote cache otherwise.
+    # build what changed; third-party builds come from the remote cache
+    # otherwise.
     runs-on: self-hosted
     strategy:
       fail-fast: false
       matrix:
         abi: [arm64-v8a, x86_64]
     name: build (android, ${{ matrix.abi }})
+    environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
     env:
-      NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
-      NEXTCLOUD_PASS: ${{ secrets.NEXTCLOUD_PASS }}
+      # Only set on a manual run, through the build-assets environment: that
+      # run uploads missing third-party builds, every other run only reads.
+      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
 
     steps:
     # The Dockerfile copies core from its context's core/, as in MobileEditors
@@ -42,8 +51,8 @@ jobs:
         target "android-ndk" {
           dockerfile-inline = <<EOT
         FROM ubuntu:24.04
-        ARG ANDROID_NDK_RELEASE=r28c
-        ARG ANDROID_NDK_VERSION=28.2.13676358
+        ARG ANDROID_NDK_RELEASE=r30
+        ARG ANDROID_NDK_VERSION=30.0.16248370
         RUN apt-get update && \
             apt-get install -y --no-install-recommends \
                 ca-certificates curl unzip git python3 python-is-python3 \
@@ -66,7 +75,7 @@ jobs:
           target     = "core-android"
           args       = { ANDROID_ABI = ABI }
           contexts   = { android-ndk = "target:android-ndk" }
-          secret     = ["id=nextcloud_user,env=NEXTCLOUD_USER", "id=nextcloud_pass,env=NEXTCLOUD_PASS"]
+          secret     = ["id=remote_cache_s3_access_key,env=REMOTE_CACHE_S3_ACCESS_KEY", "id=remote_cache_s3_secret_key,env=REMOTE_CACHE_S3_SECRET_KEY"]
           output     = ["type=local,dest=out/${ABI}"]
         }
         HCL

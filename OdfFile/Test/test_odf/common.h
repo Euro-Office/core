@@ -42,6 +42,31 @@
 
 HRESULT convert_single(std::wstring srcFileName);
 
+// Result of the TestEnv conversion run by ODT2DOCX_ConversionEnvironment::
+// SetUp() before any test executes.
+HRESULT GetTestEnvConvertResult();
+
+// Conversion helpers for tests that check one XML part of the converted
+// package. Fixture paths are working-dir-relative ("ExampleFiles/x.odt").
+// The returned directories are removed by the global environment's
+// TearDown(), so tests do not clean up after them.
+
+// ODF (.odt/.ods/.odp, packed or flat) -> unpacked OOXML directory, via
+// ConvertODF2OOXml(). Returns the directory, or an empty string on failure.
+std::wstring convert_odf_to_ooxml_dir(const std::wstring& srcFileName);
+
+// OOXML (.docx/.xlsx/.pptx) -> unpacked ODF directory, via
+// Oox2Odf::Converter::convert() + write(), the calls x2t makes. Returns the
+// directory, or an empty string on failure.
+std::wstring convert_ooxml_to_odf_dir(const std::wstring& srcFileName);
+
+// One part of an unpacked package ("word/document.xml", "content.xml", ...),
+// decoded from UTF-8. Empty if the part does not exist.
+std::wstring read_part(const std::wstring& packageDir, const std::wstring& partName);
+
+// True if the text is a well-formed XML document.
+bool is_well_formed(const std::wstring& xml);
+
 #define CH_DIR(x) FILE_SEPARATOR_STR + _T(x)
 
 //boost::shared_ptr<cpdoccore::odf_reader::odf_document> ReadOdfDocument(const std::wstring& from, const std::wstring& temp, const std::wstring& tempUnpackedOdf);

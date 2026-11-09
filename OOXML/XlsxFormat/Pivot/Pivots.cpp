@@ -7799,6 +7799,9 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 xmlItem.toXML(writer);
                 recordsCount--;
             }
+            writer.WriteString(L"</pivotCacheRecords>");
+            m_strOutputXml = writer.GetData();
+            writer.Clear();
         }
     }
 	XLS::BaseObjectPtr CPivotCacheRecords::toBin()

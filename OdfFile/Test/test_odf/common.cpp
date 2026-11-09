@@ -232,69 +232,106 @@
 #include "Common/OfficeFileFormatChecker.h"
 #include "OfficeUtils/src/OfficeUtils.h"
 #include "DesktopEditor/common/Directory.h"
+#include "DesktopEditor/common/File.h"
+#include "DesktopEditor/xml/include/xmlutils.h"
 #include "OdfFile/Reader/Converter/ConvertOO2OOX.h"
+#include "OdfFile/Writer/Converter/Oox2OdfConverter.h"
 #include "OdfFile/Common/logging.h"
 
-HRESULT convert_single(std::wstring srcFileName)
+// Packages and directories written by the conversion helpers during this run,
+// so the global environment TearDown() can remove them: the suite must not
+// leave generated files behind in the build directory.
+static std::vector<std::wstring> g_arTestEnvOutputs;
+
+// Extension of the OOXML package an ODF file type converts to, or empty if
+// the type is not ODF.
+static std::wstring ooxml_extension_for(int nFileType)
 {
-	int nResult = 0;
-
-	COfficeFileFormatChecker fileChecker(srcFileName);
-
-	std::wstring dstPath = srcFileName;// + ; //xlsx pptx docx
-	switch (fileChecker.nFileType)
+	switch (nFileType)
 	{
 		case AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT:
 		case AVS_OFFICESTUDIO_FILE_DOCUMENT_OTT:
-		case AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT_FLAT:		dstPath += L"-tmp.docx"; break;
+		case AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT_FLAT:		return L"docx";
 
 		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS:
 		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS:
-		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS_FLAT:	dstPath += L"-tmp.xlsx"; break;
+		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS_FLAT:	return L"xlsx";
 
 		case AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP:
 		case AVS_OFFICESTUDIO_FILE_PRESENTATION_OTP:
-		case AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP_FLAT:	dstPath += L"-tmp.pptx"; break;
+		case AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP_FLAT:	return L"pptx";
 
-		default:
-			return -1;
+		default:											return L"";
 	}
-	//---------------------------------------------------------------------------------------------------
-	COfficeUtils oCOfficeUtils(NULL);
+}
 
-	std::wstring outputDir = NSDirectory::GetFolderPath(dstPath);
-	std::wstring dstTempPath = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
-	std::wstring srcTempPath;
-	std::wstring srcTempPath2 = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
+// Converts an ODF file into the existing directory dstDir as unpacked OOXML.
+// Packed files are extracted first; flat files are read in place.
+static HRESULT convert_odf_into_dir(const std::wstring& srcFileName, int nFileType, const std::wstring& dstDir)
+{
+	const bool bFlat = nFileType == AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT_FLAT ||
+		nFileType == AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS_FLAT ||
+		nFileType == AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP_FLAT;
 
-	if (fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT ||
-		fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS ||
-		fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP ||
-		fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_DOCUMENT_OTT ||
-		fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS ||
-		fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_PRESENTATION_OTP)
+	const std::wstring outputDir = NSDirectory::GetFolderPath(dstDir);
+	std::wstring srcTempPath = srcFileName;
+
+	if (!bFlat)
 	{
 		srcTempPath = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
 
+		COfficeUtils oCOfficeUtils(NULL);
 		if (S_OK != oCOfficeUtils.ExtractToDirectory(srcFileName.c_str(), srcTempPath.c_str(), NULL, 0))
+		{
+			NSDirectory::DeleteDirectory(srcTempPath);
 			return -2;
+		}
 	}
-	else // flat
-	{
-		srcTempPath = srcFileName;
-	}
+	const std::wstring tempPath = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
 	_CP_LOG << L"[info] " << srcFileName << std::endl;
 
-	nResult = ConvertODF2OOXml(srcTempPath, dstTempPath, L"C:\\Windows\\Fonts", srcTempPath2, L"");
+	// The hardcoded Windows font directory never exists on Linux/macOS and is
+	// silently ignored by the converter there. Keep the Windows path and pass
+	// an empty directory elsewhere, matching the historical animation
+	// environments that used set_font_directory(L"").
+#if defined(_WIN32) || defined(_WIN64)
+	const std::wstring sFontsDirectory = L"C:\\Windows\\Fonts";
+#else
+	const std::wstring sFontsDirectory = L"";
+#endif
+	const HRESULT nResult = ConvertODF2OOXml(srcTempPath, dstDir, sFontsDirectory, tempPath, L"");
 
-	if (srcTempPath != srcFileName)
-	{
+	if (!bFlat)
 		NSDirectory::DeleteDirectory(srcTempPath);
-	}
-	NSDirectory::DeleteDirectory(srcTempPath2);
+	NSDirectory::DeleteDirectory(tempPath);
+
+	return nResult;
+}
+
+HRESULT convert_single(std::wstring srcFileName)
+{
+	COfficeFileFormatChecker fileChecker(srcFileName);
+
+	const std::wstring sExtension = ooxml_extension_for(fileChecker.nFileType);
+	if (sExtension.empty())
+		return -1;
+
+	const std::wstring dstPath = srcFileName + L"-tmp." + sExtension;
+	g_arTestEnvOutputs.push_back(dstPath);
+
+	//---------------------------------------------------------------------------------------------------
+	// A package left behind by an earlier run would satisfy the structural
+	// checks of the suite even if THIS conversion fails, so remove the
+	// destination first: the test must fail when the conversion fails.
+	NSFile::CFileBinary::Remove(dstPath);
+
+	const std::wstring dstTempPath = NSDirectory::CreateDirectoryWithUniqueName(NSDirectory::GetFolderPath(dstPath));
+
+	HRESULT nResult = convert_odf_into_dir(srcFileName, fileChecker.nFileType, dstTempPath);
 
 	if (nResult == 0)
 	{
+		COfficeUtils oCOfficeUtils(NULL);
 		if (S_OK != oCOfficeUtils.CompressFileOrDirectory(dstTempPath, dstPath, true))
 			nResult = -2;
 	}
@@ -302,6 +339,104 @@ HRESULT convert_single(std::wstring srcFileName)
 	NSDirectory::DeleteDirectory(dstTempPath);
 
 	return nResult;
+}
+
+std::wstring convert_odf_to_ooxml_dir(const std::wstring& srcFileName)
+{
+	COfficeFileFormatChecker fileChecker(srcFileName);
+	if (ooxml_extension_for(fileChecker.nFileType).empty())
+		return L"";
+
+	const std::wstring dstDir = NSDirectory::CreateDirectoryWithUniqueName(NSDirectory::GetFolderPath(srcFileName));
+	if (dstDir.empty())
+		return L"";
+	g_arTestEnvOutputs.push_back(dstDir);
+
+	return convert_odf_into_dir(srcFileName, fileChecker.nFileType, dstDir) == 0 ? dstDir : L"";
+}
+
+std::wstring convert_ooxml_to_odf_dir(const std::wstring& srcFileName)
+{
+	// Oox2Odf::Converter document types, as X2tConverter/src/lib/odf.h passes them.
+	std::wstring sType;
+	switch (COfficeFileFormatChecker(srcFileName).nFileType)
+	{
+		case AVS_OFFICESTUDIO_FILE_DOCUMENT_DOCX:		sType = L"text"; break;
+		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX:	sType = L"spreadsheet"; break;
+		case AVS_OFFICESTUDIO_FILE_PRESENTATION_PPTX:	sType = L"presentation"; break;
+		default:										return L"";
+	}
+
+	const std::wstring outputDir = NSDirectory::GetFolderPath(srcFileName);
+	const std::wstring dstDir = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
+	if (dstDir.empty())
+		return L"";
+	g_arTestEnvOutputs.push_back(dstDir);
+
+	const std::wstring srcTempPath = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
+	const std::wstring tempPath = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
+	_CP_LOG << L"[info] " << srcFileName << std::endl;
+
+	bool bResult = false;
+	COfficeUtils oCOfficeUtils(NULL);
+	if (S_OK == oCOfficeUtils.ExtractToDirectory(srcFileName, srcTempPath, NULL, 0))
+	{
+		// x2t catches everything the writer throws and reports a failed
+		// conversion; do the same so a test sees an empty result.
+		try
+		{
+			Oox2Odf::Converter converter(srcTempPath, sType, L"", false, tempPath);
+			bResult = converter.convert() && converter.write(dstDir, tempPath, L"", L"");
+		}
+		catch (...)
+		{
+			bResult = false;
+		}
+	}
+
+	NSDirectory::DeleteDirectory(srcTempPath);
+	NSDirectory::DeleteDirectory(tempPath);
+
+	return bResult ? dstDir : L"";
+}
+
+std::wstring read_part(const std::wstring& packageDir, const std::wstring& partName)
+{
+	std::wstring sXml;
+	if (!NSFile::CFileBinary::ReadAllTextUtf8(packageDir + FILE_SEPARATOR_STR + partName, sXml))
+		return L"";
+	return sXml;
+}
+
+bool is_well_formed(const std::wstring& xml)
+{
+	// XmlUtils::CXmlNode::FromXmlString() is no use here: it keeps the nodes
+	// parsed before an error and still reports success. Walk the whole
+	// document instead. The reader stops at the first error, so the input is
+	// well-formed only if the walk got as far as the end of the root element.
+	XmlUtils::CXmlLiteReader oReader;
+	if (xml.empty() || !oReader.FromString(xml))
+		return false;
+
+	bool bRootClosed = false;
+	XmlUtils::XmlNodeType eType = XmlUtils::XmlNodeType_None;
+	while (oReader.Read(eType))
+	{
+		if (0 != oReader.GetDepth())
+			continue;
+
+		if (eType == XmlUtils::XmlNodeType_Element)
+		{
+			if (bRootClosed)
+				return false;
+			bRootClosed = oReader.IsEmptyElement();
+		}
+		else if (eType == XmlUtils::XmlNodeType_EndElement)
+		{
+			bRootClosed = true;
+		}
+	}
+	return bRootClosed;
 }
 
 HRESULT convert_directory(std::wstring pathName)
@@ -322,12 +457,35 @@ ODT2DOCX_ConversionEnvironment::ODT2DOCX_ConversionEnvironment(const std::wstrin
 {
 }
 
+// Result of the TestEnv conversion performed by
+// ODT2DOCX_ConversionEnvironment::SetUp() (the global environment runs
+// before any test), exposed so tests can assert on it instead of only
+// reading the log.
+// (-1: the same failure idiom convert_single() itself returns; E_FAIL
+// is not declared in this translation unit, S_OK is available.)
+static HRESULT g_nTestEnvConvertResult = -1;
+
+HRESULT GetTestEnvConvertResult()
+{
+	return g_nTestEnvConvertResult;
+}
+
 void ODT2DOCX_ConversionEnvironment::SetUp()
 {
-	convert_single(mFilename);
+	g_nTestEnvConvertResult = convert_single(mFilename);
 }
 
 void ODT2DOCX_ConversionEnvironment::TearDown()
 {
-
+	// Clean up after the suite: remove every package and directory the
+	// conversion helpers wrote during the run (including direct calls from
+	// tests).
+	for (size_t i = 0; i < g_arTestEnvOutputs.size(); ++i)
+	{
+		if (NSDirectory::Exists(g_arTestEnvOutputs[i]))
+			NSDirectory::DeleteDirectory(g_arTestEnvOutputs[i]);
+		else
+			NSFile::CFileBinary::Remove(g_arTestEnvOutputs[i]);
+	}
+	g_arTestEnvOutputs.clear();
 }
