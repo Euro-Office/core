@@ -72,14 +72,15 @@ Done:
       chain; adds only the dylib entry point `X2tConverter/src/dylib/x2t.cpp` to the test
       (x2tlib already compiles `cextracttools.cpp`, `ASCConverters.cpp`,
       `OfficeFileFormatChecker2.cpp`, so they are not duplicated). Compiled with
-      `BUILD_X2T_AS_LIBRARY_DYLIB`. Conversion fixtures under `test/ExampleFiles/`
-      (`xlsb2xlsx/`, `xlsx2xlsb/`) are staged under a run root and the `WORKING_DIRECTORY`
-      is nested four levels deep so the suite's `absolute("../../../../") + OOXML/test/ExampleFiles`
-      lookup resolves to the staged copy. **Build-only / quarantined:** the target compiles and
-      links, but the 41 conversion cases fail at runtime in headless CI — `X2T_Convert` produces no
-      output file, so the post-conversion comparisons fail. The CTest run is disabled
-      (`set_tests_properties(ooxml_test PROPERTIES DISABLED TRUE)`) pending diagnosis of the headless
-      conversion by someone able to run X2T locally.
+      `BUILD_X2T_AS_LIBRARY_DYLIB`. Converts the fixtures under `test/ExampleFiles/`
+      (`xlsb2xlsx/`, `xlsx2xlsb/`, staged in the working directory) and compares the
+      result with the same workbook saved by Microsoft Excel. The comparison is semantic
+      (`workbook_facts.cpp`): sheets, defined names, cell values and formulas, cell
+      formatting, merges, comments, tables, pivots, slicers and chart sheets. Byte
+      comparison cannot work: x2t and Excel write the same content differently. For
+      XLSX → XLSB both XLSB files are converted back to XLSX first. A category the
+      workbook doesn't have is skipped. `Pivots` and `Slicers` of `xlsx2xlsb_simple2` are
+      filtered out until #266 (flags never set in the XLSB writer) is fixed.
 - [x] `OfficeUtils/tests` — deps: kernel, UnicodeConverter. The committed `tests/zip/`
       fixtures are staged next to the binary: the suite resolves fixtures relative to the
       process directory (`<binary dir>/../zip`), and writes its `unzip`/`temp` output dirs
