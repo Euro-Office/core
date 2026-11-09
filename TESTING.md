@@ -236,6 +236,11 @@ Done:
       `NSFile::GetProcessDirectory()`), remove the `GTEST_FILTER`, and un-`GTEST_SKIP()` the
       cases you want to exercise.
 
+      `CPdfFileTest.DrawTextInsideRedaction` is fixture-free and runs in CI. It covers the
+      redaction early-return in `CPdfWriter::DrawText` (#224) by driving `AddRedact` +
+      `CommandDrawText` through the writer directly. It checks the path succeeds; it does not
+      measure the heap, so it would not catch the leak on its own.
+
       Fixture catalogue (none present anywhere in the repo):
       - `test.pdf` — **input**, source PDF loaded by `LoadFromFile()`; used by the majority
         of cases and by the only non-skipped one.
