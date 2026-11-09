@@ -59,12 +59,11 @@ target_include_directories(pdffile_test PRIVATE
     ${CORE_ROOT_DIR}/PdfFile/lib/goo
     ${CORE_ROOT_DIR}/PdfFile/lib/fofi
     ${CORE_ROOT_DIR}/PdfFile/lib/splash
-    ${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2
     ${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg
-    ${CORE_ROOT_DIR}/DesktopEditor/freetype-2.10.4/include
-    ${CORE_ROOT_DIR}/DesktopEditor/freetype-2.10.4/include/freetype
-    ${CORE_ROOT_DIR}/third_party/install/zlib-ng/include
+    ${FREETYPE_SOURCES_DIR}/include
+    ${FREETYPE_SOURCES_DIR}/include/freetype
+    ${ZLIBNG_INCLUDEDIR_ABS}
     ${CORE_ROOT_DIR}/OfficeUtils/src
-    ${CORE_ROOT_DIR}/Common/3dParty/brotli/brotli/c/include
-    ${CORE_ROOT_DIR}/third_party/install/brotli/c/include
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/include
 )
