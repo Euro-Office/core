@@ -24,6 +24,16 @@ SPDX-FileCopyrightText = ["1996-2026 David Turner, Robert Wilhelm, and Werner Le
 SPDX-License-Identifier = "FTL OR GPL-2.0-or-later"
 
 [[annotations]]
+path = "Common/3dParty/djvulibre/patch/djvulibre-wasm-nothreads.patch"
+SPDX-FileCopyrightText = ["2002 Leon Bottou and Yann Le Cun", "2001 AT&T", "2026 Euro-Office contributors"]
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+[[annotations]]
+path = ["DjVuFile/test/data/bilevel.djvu", "DjVuFile/test/data/color.djvu", "DjVuFile/test/data/document.djvu"]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = "Common/3dParty/libtiff/patch/libtiff.patch"
 SPDX-FileCopyrightText = ["1988-1997 Sam Leffler", "1991-1997 Silicon Graphics, Inc."]
 SPDX-License-Identifier = "libtiff"
@@ -32,6 +42,18 @@ SPDX-License-Identifier = "libtiff"
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/plain_paragraph.docx",
     "OdfFile/Test/test_odf/ExampleFiles/plain_paragraph.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_checkbox_12pt.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_checkbox_no_styles.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_short_value_newline.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_text_12pt.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_text_no_styles.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_value_newline.docx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

@@ -39,6 +39,15 @@
 #include "SrcWriter/States.h"
 #include "SrcWriter/Annotation.h"
 
+#if !defined(PDFFILE_DECL_EXPORT)
+#if defined(PDFFILE_USE_DYNAMIC_LIBRARY)
+#include "../DesktopEditor/common/base_export.h"
+#define PDFFILE_DECL_EXPORT Q_DECL_EXPORT
+#else
+#define PDFFILE_DECL_EXPORT
+#endif
+#endif
+
 namespace PdfWriter
 {
 	class CDocument;
@@ -57,7 +66,7 @@ namespace Aggplus
 	class CImage;
 }
 
-class CPdfWriter
+class PDFFILE_DECL_EXPORT CPdfWriter
 {
 public:
 	CPdfWriter(NSFonts::IApplicationFonts* pAppFonts, bool isPDFA = false, IRenderer* pRenderer = NULL, bool bCreate = true, const std::wstring& wsTempDirectory = L"");

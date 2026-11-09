@@ -48,6 +48,7 @@ subfolders = [
     'leptonica',
     'leptonica-wasm',
     'jbig2enc',
+    'djvulibre',
 ]
 
 known_targets = [ 'android-arm64', 'android-x64' ]

@@ -44,7 +44,6 @@ jobs:
             - DesktopEditor/raster/Jp2/openjpeg
             - DesktopEditor/raster/JBig2/source
             - PdfFile/lib
-            - DjVuFile/libdjvu
 
 
     - name: Perform CodeQL Analysis
