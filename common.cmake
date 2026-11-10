@@ -378,7 +378,11 @@ else()
         set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a")
     else()
         set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib64/libssl.a")
-        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a")
+        # The static libcrypto calls dlopen() and pthread functions. Before
+        # glibc 2.34 (RHEL/Rocky 8) those are in libdl and libpthread, so
+        # linking an executable against it needs both.
+        find_package(Threads REQUIRED)
+        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a" ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
     endif()
 
     # Setup zlib-ng
