@@ -20,17 +20,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The release images (.docker/core.bake.Dockerfile): Rocky Linux 9,
-        # except desktop arm64 on Ubuntu 24.04. Desktop amd64 uses the server
-        # image, so the server amd64 leg covers it. The arm64 legs run
+        # The release images (.docker/core.bake.Dockerfile): Rocky Linux 8
+        # for both products. The desktop image only adds the -devel packages
+        # for Qt and the desktop app, which core doesn't use, so the server
+        # legs build the core packages for both products. The arm64 leg runs
         # natively on GitHub's hosted arm runners (V8 is far too slow under
         # QEMU); swap in a self-hosted arm label if you have one.
         include:
-          # packages: the core packages this leg publishes. On amd64 the
-          # desktop image is the server image, so its build serves both.
-          - { product: server,  distro: rocky9, arch: amd64, platform: linux-amd64, packages: server desktop, runner: self-hosted }
-          - { product: server,  distro: rocky9, arch: arm64, platform: linux-arm64, packages: server, runner: ubuntu-24.04-arm }
-          - { product: desktop, distro: ubuntu, arch: arm64, platform: linux-arm64, packages: desktop, runner: ubuntu-24.04-arm }
+          # packages: the core packages this leg publishes
+          - { product: server,  distro: rocky8, arch: amd64, platform: linux-amd64, packages: server desktop, runner: self-hosted }
+          - { product: server,  distro: rocky8, arch: arm64, platform: linux-arm64, packages: server desktop, runner: ubuntu-24.04-arm }
     name: build (${{ matrix.product }}, ${{ matrix.distro }}, ${{ matrix.arch }})
     environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
     env:
