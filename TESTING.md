@@ -81,6 +81,11 @@ Done:
       XLSX → XLSB both XLSB files are converted back to XLSX first. A category the
       workbook doesn't have is skipped. `Pivots` and `Slicers` of `xlsx2xlsb_simple2` are
       filtered out until #266 (flags never set in the XLSB writer) is fixed.
+- [x] `X2tConverter/test/TestOOOXml2Odf` (`ooxml2odf_math_test`) — 45 cases for
+      `StarMath::COOXml2Odf`, which converts OOXML math (`m:oMath`) to StarMath/MathML when
+      OdfFormatLib writes ODF. It has a `.pro` but was missed by the first migration. Links
+      the static format libraries in a group, like `test_odf`. `GTEST_MAIN` (`main.cpp` has
+      no `main()`). No fixtures: the OOXML math is parsed from strings.
 - [x] `OdfFile/Test/Test` (`odf_regression_test`) — 54 regression cases named after bug
       numbers (44363, 57197, 61364: ODT → DOCX; 59708: DOCX → ODT; 69238: PPTX → ODP),
       inspecting the converted document through the converters' models. Only a Visual
