@@ -40,7 +40,7 @@ namespace NSDrawingFileEmbed
 	FUNCTION_WRAPPER_V8_1(_CheckOwnerPassword, CheckOwnerPassword)
 	FUNCTION_WRAPPER_V8_1(_CheckPerm, CheckPerm)
 
-	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
+	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);

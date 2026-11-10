@@ -66,25 +66,10 @@ FROM rockylinux/rockylinux:9 AS core-base-server
     # needed.
     RUN pip3 install --no-cache-dir "cmake>=4" && cmake --version
 
-    # Clang/LLVM 13.0.1 (required for V8 9.x), pinned from the Rocky 9.0 vault.
-    # Current Rocky 9.x ships a much newer clang. On el9 the binaries are
-    # unversioned (/usr/bin/clang IS 13.0.1), so no update-alternatives needed.
-    RUN printf '%s\n' \
-        '[rocky90-appstream]' \
-        'name=Rocky 9.0 AppStream (vault)' \
-        'baseurl=https://dl.rockylinux.org/vault/rocky/9.0/AppStream/$basearch/os/' \
-        'enabled=0' \
-        'gpgcheck=1' \
-        'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-9' \
-        > /etc/yum.repos.d/rocky90-vault.repo && \
-        dnf install -y \
-            --enablerepo=rocky90-appstream \
-            --setopt=rocky90-appstream.module_hotfixes=1 \
-            clang-13.0.1 clang-libs-13.0.1 clang-devel-13.0.1 \
-            llvm-13.0.1 llvm-libs-13.0.1 llvm-devel-13.0.1 \
-            lld-13.0.1 \
-            compiler-rt-13.0.1 \
-        && dnf clean all
+    # Clang/LLVM for V8 (core itself builds with gcc). V8 14.x needs a recent
+    # clang; AppStream's current one (21.x on Rocky 9.8) is new enough. On el9
+    # the binaries are unversioned, so no update-alternatives needed.
+    RUN dnf install -y clang lld llvm compiler-rt && dnf clean all
 
 
 #### DESKTOP BASE (Rocky Linux 9 on amd64, Ubuntu 24.04 on arm64) ####
@@ -109,26 +94,26 @@ FROM ubuntu:24.04 AS core-base-desktop-arm64
             gn \
         && rm -rf /var/lib/apt/lists/*
 
-    # clang-13 required for V8 9.x. apt.llvm.org's jammy-13 repo also installs
-    # cleanly on the noble (24.04) arm64 desktop base.
+    # Clang/LLVM for V8. apt.llvm.org needs a pinned major; the Rocky 9 server
+    # base can't pin one, AppStream only has its current clang. libclang-rt
+    # has the builtins library V8's build links.
     RUN mkdir -p /etc/apt/keyrings && \
         wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | \
         gpg --dearmor -o /etc/apt/keyrings/llvm-snapshot.gpg && \
-        echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-13 main" \
-        > /etc/apt/sources.list.d/llvm-13.list && \
+        echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/noble/ llvm-toolchain-noble-21 main" \
+        > /etc/apt/sources.list.d/llvm-21.list && \
         apt-get update && apt-get install -yq --no-install-recommends \
-            clang-13 lld-13 llvm-13-dev llvm-13 \
-            libc++-13-dev libc++abi-13-dev \
+            clang-21 lld-21 llvm-21 libclang-rt-21-dev \
             qemu-user-static binfmt-support && \
         rm -rf /var/lib/apt/lists/*
 
-    # set clang 13 as standard
-    RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-13 100 && \
-        update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-13 100 && \
-        update-alternatives --install /usr/bin/llvm-ar llvm-ar /usr/bin/llvm-ar-13 100 && \
-        update-alternatives --install /usr/bin/llvm-nm llvm-nm /usr/bin/llvm-nm-13 100 && \
-        update-alternatives --install /usr/bin/llvm-ranlib llvm-ranlib /usr/bin/llvm-ranlib-13 100 && \
-        update-alternatives --install /usr/bin/lld lld /usr/bin/lld-13 100
+    # set clang 21 as standard
+    RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 100 && \
+        update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100 && \
+        update-alternatives --install /usr/bin/llvm-ar llvm-ar /usr/bin/llvm-ar-21 100 && \
+        update-alternatives --install /usr/bin/llvm-nm llvm-nm /usr/bin/llvm-nm-21 100 && \
+        update-alternatives --install /usr/bin/llvm-ranlib llvm-ranlib /usr/bin/llvm-ranlib-21 100 && \
+        update-alternatives --install /usr/bin/lld lld /usr/bin/lld-21 100
 
 FROM core-base-desktop-${TARGETARCH} AS core-base-desktop
 
@@ -166,24 +151,19 @@ FROM core-base AS core
     # Common/3dParty/build_3rdparty_common.py). The optional
     # remote_cache_s3_access_key/remote_cache_s3_secret_key secrets also
     # upload the ones missing there.
+    # CORE_CCACHE compiles through ccache, for runners whose BuildKit cache
+    # doesn't survive the job: they fill and save the mount core-ccache.
+    ARG CORE_CCACHE
     RUN --mount=type=cache,target=/build-cache \
         --mount=type=cache,target=/nuget-cache,id=vcpkg-binary-cache \
+        --mount=type=cache,target=/ccache,id=core-ccache \
         --mount=type=secret,id=remote_cache_s3_access_key \
         --mount=type=secret,id=remote_cache_s3_secret_key \
         export REMOTE_CACHE_S3_ACCESS_KEY="$(cat /run/secrets/remote_cache_s3_access_key 2>/dev/null)" && \
         export REMOTE_CACHE_S3_SECRET_KEY="$(cat /run/secrets/remote_cache_s3_secret_key 2>/dev/null)" && \
+        export CCACHE_DIR=/ccache CCACHE_MAXSIZE=2G && \
         mkdir -p ${BUILD_ROOT} && \
-        cd /build-cache && \
-        cmake -GNinja \
-        -DVCPKG_MANIFEST_MODE=ON \
-        -DVCPKG_MANIFEST_DIR=/core \
-        -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake \
-        -DPYTHON_BIN=${CORE_PYTHON} \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_CXX_FLAGS_RELEASE="-O3 -w" \
-        -DCMAKE_C_FLAGS_RELEASE="-O3 -w" \
-        -DEO_CORE_OUTPUT_DIR=/build-cache/package/bin \
-        -DEO_CORE_TOOLS_DIR=/build-cache/package/tools \
-        /core && \
-        cmake --build . && \
-        cp -r package/* ${BUILD_ROOT}
+        ${CORE_CCACHE:+ccache --zero-stats} && \
+        /core/scripts/build.sh --build-dir /build-cache --output /build-cache/package ${CORE_CCACHE:+--ccache} && \
+        ${CORE_CCACHE:+ccache --show-stats} && \
+        cp -r /build-cache/package/* ${BUILD_ROOT}

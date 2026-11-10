@@ -1,18 +1,32 @@
-name: Build (Windows x64)
+name: Build (Windows)
 
 on:
   pull_request:
+  push:
+    branches: [main, 'stable-*']
   workflow_dispatch:
 
-# A new push to a pull request cancels its previous run. Other runs (manual
-# ones included) are never cancelled, they wait instead.
+# A new push to a pull request cancels its previous run, which also keeps an
+# older run from publishing its core package after a newer one. Other runs
+# (manual ones included) get a group of their own: GitHub keeps only one
+# pending run per group, so queued commits on main would lose their package.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
-    runs-on: windows-2022
+    # arm64 builds natively on an arm64 runner (it used to be cross-compiled)
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The arm64 image has only Visual Studio 2026, with the v143
+          # toolset of Visual Studio 2022 (14.44) and no Windows 10 SDK
+          - { arch: x64,   runner: windows-2022,   sdk: 10.0.19041.0, vc_tools: '' }
+          - { arch: arm64, runner: windows-11-arm, sdk: 10.0.22621.0, vc_tools: '14.44' }
+    name: build (windows, ${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
     environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
 
     env:
@@ -21,6 +35,8 @@ jobs:
       # run uploads missing third-party builds, every other run only reads.
       REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
       REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+      CCACHE_DIR: ${{ github.workspace }}/.cache/ccache
+      CCACHE_MAXSIZE: 2G
 
     steps:
       # ------------------------------------------------------------------ #
@@ -98,14 +114,28 @@ jobs:
           "CYGWIN_ROOT=$cyg"   | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       # ------------------------------------------------------------------ #
-      # 4. Install Windows SDK 10.0.19041.0
+      # 4. The v143 toolset (Visual Studio 2022) on both arches: V8's build
+      #    supports VS up to 2022 only, and the uploaded third-party builds
+      #    must stay linkable by consumers built with VS 2022
+      #    (DesktopEditors). On arm64 it comes with Visual Studio 2026.
       # ------------------------------------------------------------------ #
-      - name: Install Windows SDK 10.0.19041.0
+      - name: Locate Visual Studio
         shell: pwsh
         run: |
-          $vsWhere     = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          . scripts/msvc-env.ps1
+          $installPath = Find-VisualStudio -VcToolsVersion '${{ matrix.vc_tools }}'
+          Write-Host "Visual Studio: $installPath"
+          "VSPATH=$installPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      # ------------------------------------------------------------------ #
+      # 5. Install Windows SDK 10.0.19041.0
+      # ------------------------------------------------------------------ #
+      - name: Install Windows SDK 10.0.19041.0
+        if: matrix.arch == 'x64'
+        shell: pwsh
+        run: |
           $vsInstaller = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vs_installer.exe"
-          $installPath = & $vsWhere -latest -products * -property installationPath
+          $installPath = $env:VSPATH
           Write-Host "VS install path: $installPath"
           & $vsInstaller modify `
             --installPath $installPath `
@@ -116,7 +146,7 @@ jobs:
           }
 
       # ------------------------------------------------------------------ #
-      # 5. Verify tool resolution — Get-Command shows exactly which binary
+      # 6. Verify tool resolution — Get-Command shows exactly which binary
       #    each bare name resolves to, so failures are self-explanatory.
       # ------------------------------------------------------------------ #
       - name: Verify tool versions
@@ -170,108 +200,142 @@ jobs:
           #   C:\cygwin64\bin\bash.exe -lc 'python3 --version'
 
       # ------------------------------------------------------------------ #
-      # 6. Set up vcpkg  (matches the Linux workflow)
+      # 7. Set up vcpkg  (matches the Linux workflow)
       # ------------------------------------------------------------------ #
       - name: Set up vcpkg
         uses: lukka/run-vcpkg@v11
 
-      # ------------------------------------------------------------------ #
-      # 7. CMake Configure
-      #    vcvars64.bat is located via vswhere so the VS edition (Enterprise/
-      #    Professional/Community) and future image changes don't matter.
-      # ------------------------------------------------------------------ #
-      - name: CMake Configure
-        shell: cmd
+      # vcpkg's own GitHub cache backend (x-gha) is gone: keep its binary
+      # cache in a directory. A new runner image (compiler) starts a new key.
+      # Each save gets a new key, as with ccache: a key can't be overwritten,
+      # so an exact one would keep an empty or stale cache for good.
+      - name: vcpkg cache key
+        id: vcpkg-key
+        shell: pwsh
         run: |
-          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
-          echo Using VS at: %VSPATH%
-          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
-          if errorlevel 1 exit /b 1
+          $hash = '${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}'
+          "prefix=vcpkg-windows-${{ matrix.arch }}-$env:ImageVersion-$hash-" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
-          set PYTHONUTF8=1
+      - name: Restore vcpkg binary cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ github.workspace }}/.cache/vcpkg
+          key: ${{ steps.vcpkg-key.outputs.prefix }}${{ github.run_id }}
+          restore-keys: ${{ steps.vcpkg-key.outputs.prefix }}
 
-          cmake -G "Visual Studio 17 2022" ^
-            -DCMAKE_BUILD_TYPE=Release ^
-            -DVCPKG_MANIFEST=ON ^
-            -DVCPKG_MANIFEST_DIR=. ^
-            -DCMAKE_TOOLCHAIN_FILE="%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake" ^
-            -DEO_CORE_OUTPUT_DIR=.\package\bin ^
-            -DEO_CORE_TOOLS_DIR=.\package\tools
-
-      # ------------------------------------------------------------------ #
-      # 8. CMake Build
-      # ------------------------------------------------------------------ #
-      - name: CMake Build
-        shell: cmd
+      # What was restored, so the save only happens when vcpkg built something
+      - name: Hash restored vcpkg binary cache
+        id: vcpkg-restored
+        shell: pwsh
         run: |
-          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
-          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
-          if errorlevel 1 exit /b 1
-
-          set PYTHONUTF8=1
-
-          cmake --build . --config Release --parallel ^
-            -- /p:UseMultiToolTask=true /p:EnforceProcessCountAcrossBuilds=true
-
+          "hash=${{ hashFiles('.cache/vcpkg/**') }}" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       # ------------------------------------------------------------------ #
-      # 9. Upload build artifacts
+      # 8. ccache: build.ps1 installs it and sets up the rest
+      # ------------------------------------------------------------------ #
+      - name: Restore ccache
+        id: ccache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-windows-${{ matrix.arch }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
+          restore-keys: ccache-windows-${{ matrix.arch }}-
+
+      # ------------------------------------------------------------------ #
+      # 9. Build: the MSVC environment of the toolset of step 4, Ninja,
+      #    as in DesktopEditors
+      # ------------------------------------------------------------------ #
+      - name: Build
+        shell: pwsh
+        run: |
+          # Here, not in env: run-vcpkg sets it for the later steps
+          $vcpkgCache = '${{ github.workspace }}/.cache/vcpkg'
+          New-Item -ItemType Directory -Force -Path $vcpkgCache | Out-Null
+          $env:VCPKG_BINARY_SOURCES = "clear;files,$vcpkgCache,readwrite"
+          scripts/build.ps1 -Arch ${{ matrix.arch }} -SdkVersion ${{ matrix.sdk }} -VcToolsVersion '${{ matrix.vc_tools }}' -Ccache
+
+      - name: ccache statistics
+        if: always()
+        shell: pwsh
+        run: ccache --show-stats --verbose
+
+      # Only when vcpkg added packages: not empty, not what was restored
+      - name: Save vcpkg binary cache
+        if: always() && steps.vcpkg-key.outputs.prefix != '' && hashFiles('.cache/vcpkg/**') != '' && hashFiles('.cache/vcpkg/**') != steps.vcpkg-restored.outputs.hash
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.cache/vcpkg
+          key: ${{ steps.vcpkg-key.outputs.prefix }}${{ github.run_id }}
+
+      # Even when the build fails or is cancelled, so the next run reuses it.
+      # A PR that started from main's cache doesn't save its own: the repo's
+      # 10 GB of caches would evict main's, which every new PR starts from.
+      - name: Save ccache
+        if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-windows-${{ matrix.arch }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
+
+      # ------------------------------------------------------------------ #
+      # 10. Upload build artifacts
       # ------------------------------------------------------------------ #
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
-          name: build-output-windows
+          name: build-output-windows-${{ matrix.arch }}
           path: |
-            package/bin/
-            package/tools/
+            build/package/bin/
+            build/package/tools/
           if-no-files-found: warn
-  # Windows arm64 V8/OpenSSL, cross-compiled on an x64 host (as in
-  # DesktopEditors), so the arm64 desktop builds can download them. Only on
-  # manual runs: it exists to fill the remote cache, and V8 takes hours.
-  crosscompile-3rdparty-arm64:
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: windows-2022
-    environment: build-assets
-    env:
-      PYTHONUTF8: "1"
-      DEPOT_TOOLS_WIN_TOOLCHAIN: "0" # V8: use the locally installed VS, not Google's toolchain
-      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
-      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+
+      - name: Pack core
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        shell: pwsh
+        run: |
+          python scripts/core_package.py pack `
+            --from build/package --out core-package `
+            --platform windows-${{ matrix.arch }} --product desktop `
+            --toolchain "VS $env:VSPATH"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Upload core package
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-package-windows-${{ matrix.arch }}-desktop
+          path: core-package/
+          retention-days: 1
+          compression-level: 0
+
+  # Publishes the packages of the legs that passed
+  publish:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
+    uses: ./.github/workflows/core-package-publish.yml
+    secrets: inherit
+
+  prune-ccache:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/ccache-prune.yml
+
+  build-summary:
+    # Aggregate job: the branch rules for main require a check called "build",
+    # and this keeps it on the Windows builds, both architectures.
+    name: build
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      # windows-2022 doesn't always ship the ARM64 target tools: clang-cl (V8)
-      # needs the arm64 SDK libs, cl.exe (OpenSSL) the amd64_arm64 toolset
-      - name: Add ARM64 build tools to Visual Studio
-        shell: pwsh
+      - name: Check build result
         run: |
-          $vsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          $vsInstaller = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vs_installer.exe"
-          $installPath = & $vsWhere -latest -products * -property installationPath
-          & $vsInstaller modify `
-            --installPath $installPath `
-            --add Microsoft.VisualStudio.Component.VC.Tools.ARM64 `
-            --add Microsoft.VisualStudio.Component.VC.ATL.ARM64 `
-            --add Microsoft.VisualStudio.Component.VC.MFC.ARM64 `
-            --quiet --norestart --force
-          if ($LASTEXITCODE -notin @(0, 3010)) {
-            Write-Warning "vs_installer returned $LASTEXITCODE - components may already be present, continuing."
-          }
-
-      # Sets VSCMD_ARG_TGT_ARCH=arm64, which openssl, v8 and the cache tag
-      # (win32-ARM64) key off
-      - name: Set up arm64 cross MSVC environment
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: amd64_arm64
-
-      - name: Cross-compile arm64 third-party (V8, OpenSSL)
-        shell: pwsh
-        run: |
-          python Common\3dParty\build_3rdparty.py `
-            --only=v8,openssl `
-            "${{ github.workspace }}\workdir" `
-            "${{ github.workspace }}\installdir"
+          result="${{ needs.build.result }}"
+          echo "Windows build result: $result"
+          if [ "$result" = "success" ]; then
+            exit 0
+          fi
+          echo "Windows build failed (result: $result)."
+          exit 1

@@ -64,9 +64,10 @@ const cpdoccore::oox::pptx_animation_context::Impl::_par_animation_ptr& ODP2OOX_
 
 const cpdoccore::oox::pptx_animation_context::Impl::_seq_animation_ptr& ODP2OOX_EntranceAnimationTest::GetMainSequence()
 {
+	static const cpdoccore::oox::pptx_animation_context::Impl::_seq_animation_ptr empty;
 	if(mAnimationContext->get_root_par_animation()->AnimSeq.size())
 		return mAnimationContext->get_root_par_animation()->AnimSeq[0];
-	return nullptr;
+	return empty;
 }
 
 const cpdoccore::oox::pptx_animation_context::Impl::_par_animation_array& ODP2OOX_EntranceAnimationTest::GetMainSequenceArray()

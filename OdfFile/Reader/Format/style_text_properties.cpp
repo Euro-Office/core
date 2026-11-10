@@ -724,7 +724,7 @@ void text_format_properties::docx_serialize(std::wostream & _rPr, fonts_containe
 				underline = L"single";
 				break;
 			case line_type::Double:
-				underline = L"dbl";
+				underline = L"double";
 				break;
 			}
 		}
@@ -771,9 +771,9 @@ void text_format_properties::docx_serialize(std::wostream & _rPr, fonts_containe
 				if (underlineBold)
 					underline = L"wavyHeavy"; 
 				else if (style_text_underline_type_.get_value_or( line_type(line_type::Single) ).get_type() == line_type::Double)
-					underline = L"wavyDbl"; 
+					underline = L"wavyDouble";
 				else
-					underline = L"wavy"; 
+					underline = L"wave";
 				break;
 			}
 		}
@@ -1169,7 +1169,7 @@ void text_format_properties::docx_convert(oox::docx_conversion_context & Context
                 underline = L"single";
                 break;
             case line_type::Double:
-                underline = L"dbl";
+                underline = L"double";
                 break;
             }
         }
@@ -1216,9 +1216,9 @@ void text_format_properties::docx_convert(oox::docx_conversion_context & Context
                 if (underlineBold)
                     underline = L"wavyHeavy"; 
                 else if (style_text_underline_type_.get_value_or( line_type(line_type::Single) ).get_type() == line_type::Double)
-                    underline = L"wavyDbl"; 
+                    underline = L"wavyDouble";
                 else
-                    underline = L"wavy"; 
+                    underline = L"wave";
                 break;
             }
         }

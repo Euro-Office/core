@@ -735,7 +735,10 @@ HRESULT CPdfWriter::CommandDrawText(const std::wstring& wsUnicodeText, const dou
 			UpdateFont();
 			m_oFont.SetName(L"DjvuEmptyFont");
 			if (!m_pFont)
+			{
+				RELEASEARRAYOBJECTS(pCodes);
 				return S_FALSE;
+			}
 		}
 
 		double dFontSize = MM_2_PT(dH);
@@ -3474,12 +3477,18 @@ PdfWriter::CImageDict* CPdfWriter::DrawImage(Aggplus::CImage* pImage, const doub
 bool CPdfWriter::DrawText(unsigned char* pCodes, const unsigned int& unLen, const double& dX, const double& dY, const std::string& sPUA)
 {
 	if (!pCodes || !unLen)
+	{
+		RELEASEARRAYOBJECTS(pCodes);
 		return false;
+	}
 
 	// TODO should be checking the center position, not the origin point
 	// TODO Many characters come here at a time, and only those outside the editing areas need to be drawn
 	if (SkipRedact(dX, dY))
+	{
+		RELEASEARRAYOBJECTS(pCodes);
 		return true;
+	}
 
 	CTransform& t = m_oTransform;
 	m_oCommandManager.SetTransform(t.m11, -t.m12, -t.m21, t.m22, MM_2_PT(t.dx + t.m21 * m_dPageHeight), MM_2_PT(m_dPageHeight - m_dPageHeight * t.m22 - t.dy));
@@ -3722,6 +3731,9 @@ bool CPdfWriter::GetFontPath(const std::wstring &wsFontName, const bool &bBold, 
 		oFontSelect.bItalic = new INT(bItalic ? 1 : 0);
 		oFontSelect.bBold   = new INT(bBold ? 1 : 0);
 		NSFonts::CFontInfo* pFontInfo = m_pFontManager->GetFontInfoByParams(oFontSelect, false);
+		// No installed font at all
+		if (!pFontInfo)
+			return false;
 		if (!NSFonts::CFontInfo::CanEmbedForPreviewAndPrint(pFontInfo->m_usType))
 		{
 			return false;

@@ -3,6 +3,10 @@
 
 cmake_minimum_required(VERSION 3.10)
 
+# Else CMAKE_MSVC_RUNTIME_LIBRARY is ignored: a core package would have the
+# static runtime, and the desktop build that links it the DLL one
+cmake_policy(SET CMP0091 NEW)
+
 project(core)
 
 set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
@@ -35,6 +39,9 @@ else()
     add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/Resources/CMapMemory" cmapbin )
     add_subdirectory( "${CORE_ROOT_DIR}/Test/Applications/x2tTester" x2ttester )
 
+    eo_core_converter_assembly()
+    include( "${CORE_ROOT_DIR}/cmake/core-package.cmake" )
+
     if(EO_BUILD_TESTS)
         enable_testing()
         find_package(GTest CONFIG REQUIRED)
@@ -45,13 +52,21 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Reader/Converter/StarMath2OOXML/TestEQNtoOOXML" starmath_eqntoooxml_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OOXML/test" ooxml_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OOXML/DocxFormat/test" docx_numbering_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OOXML/Binary/Sheets/Reader/test" csv_reader_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OfficeUtils/tests" officeutils_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OfficeCryptReader/tests" officecrypt_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Reader/Converter/SMCustomShape2OOXML/TestSMCustomShape" starmath_smcustomshape_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/test_odf" test_odf )
+        add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/test/TestOOOXml2Odf" ooxml2odf_math_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/Test" odf_regression_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/test" xmlsec_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/number_formats" odf_number_formats_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/MsBinaryFile/DocFile/test" doc_fkp_test )
         add_subdirectory( "${CORE_ROOT_DIR}/RtfFile/Format/test" rtf_lex_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg/test" openjpeg_test )
         add_subdirectory( "${CORE_ROOT_DIR}/MsBinaryFile/PptFile/test" pptfile_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/raster/test" raster_formats_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/fontengine/test" fontengine_test )
 
         # doctrenderer (V8) gtest suites. The V8 monolith is built in CI by
         # common.cmake (build_3rdparty.py) and is self-contained at run time:
@@ -62,12 +77,13 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/json" doctrenderer_json_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/js_internal" doctrenderer_jsinternal_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/embed/internal/hash" doctrenderer_hash_test )
+        # The JS engine embedding itself: run these first after updating V8
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/engine" doctrenderer_engine_test )
 
-        # PdfFile/test runs headless with its single fixture-dependent case
-        # (CPdfFileTest.EditPdfFromBase64) excluded via GTEST_FILTER; all other
-        # cases self-skip. See PdfFile/test/CMakeLists.txt and TESTING.md for the
-        # missing fixtures needed to fully enable it.
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test" pdffile_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test/jbig2" pdf_jbig2_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DjVuFile/test" djvu_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/osign/test" osign_test )
     endif()
 
 endif()

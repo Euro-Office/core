@@ -1,0 +1,126 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+name: Build (macOS arm64)
+
+on:
+  pull_request:
+  push:
+    branches: [main, 'stable-*']
+  workflow_dispatch:
+
+# A new push to a pull request cancels its previous run, which also keeps an
+# older run from publishing its core package after a newer one. Other runs
+# (manual ones included) get a group of their own: GitHub keeps only one
+# pending run per group, so queued commits on main would lose their package.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: build (macos, arm64)
+    runs-on: macos-15
+    # Only on a manual run, through the build-assets environment: that run
+    # uploads missing third-party builds, every other run only reads.
+    environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
+    env:
+      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CCACHE_MAXSIZE: 2G
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    # The build scripts need Python >= 3.11 (depot_tools for V8)
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Homebrew build prerequisites
+      run: brew install ninja autoconf automake libtool pkg-config ccache llvm lld
+
+    # Core builds with Xcode's clang, V8 with Homebrew's LLVM and lld
+    # against Xcode's SDK
+    - name: Show toolchain
+      run: |
+        xcodebuild -version
+        clang --version
+        "$(brew --prefix llvm)/bin/clang" --version
+
+    - name: Set up vcpkg
+      uses: lukka/run-vcpkg@v11
+
+    - name: Restore ccache
+      id: ccache
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-macos-arm64-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
+        restore-keys: ccache-macos-arm64-
+
+    # Builds the third-party libraries missing from the remote cache too
+    - name: Build
+      run: ccache --zero-stats && scripts/build.sh --tests --ccache
+      env:
+        CORE_PYTHON: python3
+
+    - name: Unit tests (CTest)
+      run: ctest --test-dir build --output-on-failure
+
+    - name: ccache statistics
+      if: always()
+      run: ccache --show-stats || true
+
+    # Even when the build fails or is cancelled, so the next run reuses it.
+    # A PR that started from main's cache doesn't save its own: the repo's
+    # 10 GB of caches would evict main's, which every new PR starts from.
+    - name: Save ccache
+      if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-macos-arm64-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
+
+    - name: Upload build output
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output-macos-arm64
+        path: |
+          build/package/bin/
+          build/package/tools/
+        if-no-files-found: warn
+
+    - name: Pack core
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+      run: |
+        python3 scripts/core_package.py pack \
+          --from build/package --out core-package \
+          --platform macos-arm64 --product desktop \
+          --toolchain "$(xcodebuild -version | head -1)"
+
+    - name: Upload core package
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+      uses: actions/upload-artifact@v4
+      with:
+        name: core-package-macos-arm64-desktop
+        path: core-package/
+        retention-days: 1
+        compression-level: 0
+
+  # Publishes the packages of the legs that passed
+  publish:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
+    uses: ./.github/workflows/core-package-publish.yml
+    secrets: inherit
+
+  prune-ccache:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/ccache-prune.yml

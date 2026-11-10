@@ -2230,10 +2230,13 @@ void PptxConverter::convert(PPTX::Logic::TableProperties *oox_table_pr)
 		if (pFind == odp_context->map_table_styles_.end())
 		{
 			smart_ptr<PPTX::TableStyles> table_styles_ptr = presentation->Get(OOX::Presentation::FileTypes::TableStyles).smart_dynamic_cast<PPTX::TableStyles>();
-			std::map<std::wstring, PPTX::Logic::TableStyle>::iterator pFind1 = table_styles_ptr->Styles.find(oox_table_pr->TableStyleId.get());		
-			
-			if (pFind1 != table_styles_ptr->Styles.end())
-				convert(pFind1->first, dynamic_cast<PPTX::Logic::TableStyle*>(&pFind1->second));
+			if (table_styles_ptr.IsInit())
+			{
+				std::map<std::wstring, PPTX::Logic::TableStyle>::iterator pFind1 = table_styles_ptr->Styles.find(oox_table_pr->TableStyleId.get());
+
+				if (pFind1 != table_styles_ptr->Styles.end())
+					convert(pFind1->first, dynamic_cast<PPTX::Logic::TableStyle*>(&pFind1->second));
+			}
 
 			pFind = odp_context->map_table_styles_.find(oox_table_pr->TableStyleId.get());
 		}

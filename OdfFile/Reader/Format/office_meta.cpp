@@ -114,6 +114,11 @@ const wchar_t * meta_creation_date::name = L"creation-date";
 const wchar_t * meta_template::ns = L"meta";
 const wchar_t * meta_template::name = L"template";
 
+void meta_template::add_attributes(const xml::attributes_wc_ptr & Attributes)
+{
+	CP_APPLY_ATTR(L"xlink:title", xlink_title_, std::wstring(L""));
+}
+
 const wchar_t * meta_keyword::ns = L"meta";
 const wchar_t * meta_keyword::name = L"keyword";
 
