@@ -55,24 +55,24 @@
 
 OOXParagraphReader::OOXParagraphReader (OOX::Logic::CParagraph *ooxParagraph)
 {
-    m_ooxElement		= NULL;
+    m_ooxElement		= nullptr;
     m_ooxParagraph		= ooxParagraph;
-    m_drawingParagraph	= NULL;
+    m_drawingParagraph	= nullptr;
 
     m_oCharProperty.SetDefault();
 }
 OOXParagraphReader::OOXParagraphReader (PPTX::Logic::Paragraph *ooxParagraph)
 {
-    m_ooxElement		= NULL;
-    m_ooxParagraph		= NULL;
+    m_ooxElement		= nullptr;
+    m_ooxParagraph		= nullptr;
     m_drawingParagraph	= ooxParagraph;
 
     m_oCharProperty.SetDefault();
 }
 OOXParagraphReader::OOXParagraphReader (OOX::WritingElementWithChilds<OOX::WritingElement> *ooxElement)
 {
-    m_drawingParagraph	= NULL;
-    m_ooxParagraph		= NULL;
+    m_drawingParagraph	= nullptr;
+    m_ooxParagraph		= nullptr;
     m_ooxElement		= ooxElement;
 }
 bool OOXParagraphReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagraph, CcnfStyle oConditionalTableStyle )
@@ -95,7 +95,7 @@ bool OOXParagraphReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputPa
 
 		return true;		
 	}	
-	if (m_ooxParagraph == NULL) return false;
+	if (m_ooxParagraph == nullptr) return false;
 
 	//need to apply the default style before OOXParagraphReader
 	////apply default
@@ -116,7 +116,7 @@ bool OOXParagraphReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputPa
 	else
 	{
 		oResultTableStyle = oConditionalTableStyle.ApplyTableStyle( oParam.poTableStyle );
-		if( NULL != oResultTableStyle )
+		if( nullptr != oResultTableStyle )
 		{
 			oOutputParagraph.m_oProperty.Merge( oResultTableStyle->m_oParProp );
 			oOutputParagraph.m_oProperty.m_oCharProperty.Merge( oResultTableStyle->m_oCharProp );
@@ -124,17 +124,17 @@ bool OOXParagraphReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputPa
 	}
 	//creating an external style for nested elements
 	RtfCharStylePtr poExternalStyle;
-	if( NULL != oResultTableStyle || PROP_DEF != oOutputParagraph.m_oProperty.m_nStyle )
+	if( nullptr != oResultTableStyle || PROP_DEF != oOutputParagraph.m_oProperty.m_nStyle )
 	{
 		poExternalStyle = RtfCharStylePtr( new RtfCharStyle() );
 		
-		if( NULL != oResultTableStyle )
+		if( nullptr != oResultTableStyle )
 			poExternalStyle->Merge( oResultTableStyle );
 		
 		if( PROP_DEF != oOutputParagraph.m_oProperty.m_nStyle )
 		{
 			RtfStylePtr oTempStyle;
-			if( true == oParam.oRtf->m_oStyleTable.GetStyle(oOutputParagraph.m_oProperty.m_nStyle, oTempStyle) )
+			if( oParam.oRtf->m_oStyleTable.GetStyle(oOutputParagraph.m_oProperty.m_nStyle, oTempStyle) )
 			{
 				RtfStylePtr oResultStyle = oParam.oRtf->m_oStyleTable.GetStyleResulting( oTempStyle );
 				poExternalStyle->Merge( oResultStyle );
@@ -152,7 +152,7 @@ bool OOXParagraphReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputPa
 }
 bool OOXParagraphReader::Parse2( ReaderParameter oParam , RtfParagraph& oOutputParagraph, CcnfStyle oConditionalTableStyle, RtfStylePtr poStyle )
 {
-	if (m_ooxElement == NULL) return false;
+	if (m_ooxElement == nullptr) return false;
 	
     for (std::vector<OOX::WritingElement*>::iterator it = m_ooxElement->m_arrItems.begin(); it != m_ooxElement->m_arrItems.end(); ++it)
 	{
@@ -162,7 +162,7 @@ bool OOXParagraphReader::Parse2( ReaderParameter oParam , RtfParagraph& oOutputP
 }
 bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputParagraph, CcnfStyle oConditionalTableStyle, RtfStylePtr poStyle, OOX::WritingElement* m_ooxElement)
 {	
-	if (m_ooxElement == NULL) return false;
+	if (m_ooxElement == nullptr) return false;
 
 	RtfStylePtr poExternalStyle;
 	switch (m_ooxElement->getType())
@@ -284,7 +284,7 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 
 			if( pHyperlink->m_oId.IsInit() )
 			{
-				std::wstring sTarget, sLocation;
+				std::wstring sTarget;
 				
 				if (oParam.oReader->m_currentContainer)
 				{ 
@@ -442,7 +442,7 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
             for (size_t i = 0; i < pSmartTag->m_arrItems.size(); ++i)
 			{
 				OOX::Logic::CRun * pRun = dynamic_cast<OOX::Logic::CRun*>(pSmartTag->m_arrItems[i]);
-				if (pRun == NULL) continue;
+				if (pRun == nullptr) continue;
 
 				OOXRunReader oRunReader(pRun);
 				oRunReader.m_oCharProperty = m_oCharProperty;
@@ -461,7 +461,7 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 			oMathReader.m_oCharProperty = m_oCharProperty;
 			oMathReader.m_oCharProperty.Merge(oOutputParagraph.m_oProperty.m_oCharProperty);
 
-			if (true == oMathReader.Parse( oParam, (*oNewMath) ) )
+			if (oMathReader.Parse( oParam, (*oNewMath) ) )
 				oOutputParagraph.AddItem( oNewMath );
 		}break;
 		case OOX::et_m_oMathPara:
@@ -475,7 +475,7 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 			oMathReader.m_oCharProperty = m_oCharProperty;
 			oMathReader.m_oCharProperty.Merge(oOutputParagraph.m_oProperty.m_oCharProperty);
 
-			if (true == oMathReader.Parse( oParam, (*oNewMath) ) )
+			if (oMathReader.Parse( oParam, (*oNewMath) ) )
 				oOutputParagraph.AddItem( oNewMath );
 		}break;
 		case OOX::et_w_sdt:
@@ -616,14 +616,14 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 
 OOXRunReader::OOXRunReader(OOX::Logic::CRun *ooxRun)
 {
-    m_drawingRun	= NULL;
+    m_drawingRun	= nullptr;
     m_ooxRun		= ooxRun;
     m_oCharProperty.SetDefault();
 }
 OOXRunReader::OOXRunReader(PPTX::Logic::Run *ooxRun)
 {
     m_drawingRun	= ooxRun;
-    m_ooxRun		= NULL;
+    m_ooxRun		= nullptr;
     m_oCharProperty.SetDefault();
 }
 bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagraph, RtfStylePtr poStyle, RtfCharProperty& oNewProperty, OOX::WritingElement* ooxItem )
@@ -837,7 +837,7 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 					pNewShape->m_oCharProperty = oNewProperty;
 					
 					OOXShapeGroupReader oShapeGroupReader(pGroup);
-					if( true == oShapeGroupReader.Parse( oParam, pNewShape ) )
+					if( oShapeGroupReader.Parse( oParam, pNewShape ) )
 						 oOutputParagraph.AddItem( pNewShape );
 				}		
 				else 
@@ -845,7 +845,7 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 					RtfShapePtr pNewShape ( new RtfShape() );
 					pNewShape->m_oCharProperty = oNewProperty;
 					
-					OOXShapeReader* pShapeReader = NULL;
+					OOXShapeReader* pShapeReader = nullptr;
 					
 					if (ooxPicture->m_oShapeType.IsInit())
 					{	
@@ -853,7 +853,7 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 						if(pShapeReader)
 						{
 							pShapeReader->Parse( oParam, pNewShape );
-							delete pShapeReader; pShapeReader = NULL;
+							delete pShapeReader; pShapeReader = nullptr;
 						}
 					}					
 					if (ooxPicture->m_oShapeElement.IsInit())
@@ -861,7 +861,7 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 					
 					if (pShapeReader)
 					{
-						if( true == pShapeReader->Parse( oParam, pNewShape ) )
+						if( pShapeReader->Parse( oParam, pNewShape ) )
 							 oOutputParagraph.AddItem( pNewShape );		
 						delete pShapeReader;
 					}
@@ -964,11 +964,11 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 		{
 			bool res = false;
 			OOX::Logic::CAlternateContent *ooxAlt = dynamic_cast<OOX::Logic::CAlternateContent* >(ooxItem);
-            for (size_t i = 0; res == false && i < ooxAlt->m_arrChoiceItems.size(); i++)
+            for (size_t i = 0; !res && i < ooxAlt->m_arrChoiceItems.size(); i++)
             {
                 res = Parse(oParam, oOutputParagraph, poStyle, oNewProperty, ooxAlt->m_arrChoiceItems[i]);
             }
-			for (size_t i = 0; res == false && i < ooxAlt->m_arrFallbackItems.size(); i++)
+			for (size_t i = 0; !res && i < ooxAlt->m_arrFallbackItems.size(); i++)
 			{
 				res = Parse(oParam, oOutputParagraph, poStyle, oNewProperty, ooxAlt->m_arrFallbackItems[i]);
 			}			
@@ -993,9 +993,8 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 				//	sChar = sChar.Right( 3 );
 				
 				int nChar = ooxSym->m_oChar->GetValue();
-                std::wstring sCharUnicode; sCharUnicode += nChar;
 				RtfFont oCurFont;
-				if( false == oParam.oRtf->m_oFontTable.GetFont( sFont, oCurFont ) )
+				if( !oParam.oRtf->m_oFontTable.GetFont( sFont, oCurFont ) )
 				{
 					oCurFont.m_nID = oParam.oRtf->m_oFontTable.GetCount() + 1;
 					oCurFont.m_sName = sFont;
@@ -1034,7 +1033,7 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 }
 bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagraph, RtfStylePtr poStyle )
 {
-	if (m_ooxRun == NULL && m_drawingRun == NULL) return false;
+	if (m_ooxRun == nullptr && m_drawingRun == nullptr) return false;
 	
 	if (m_drawingRun)
 	{
@@ -1067,7 +1066,7 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 		oNewProperty.Merge( oOutputParagraph.m_oProperty.m_oCharProperty, false );
 		oNewProperty.Merge( m_oCharProperty );
 
-		if( NULL != poStyle && TYPE_RTF_PROPERTY_STYLE_CHAR == poStyle->GetType() )
+		if( nullptr != poStyle && TYPE_RTF_PROPERTY_STYLE_CHAR == poStyle->GetType() )
 		{
 			RtfCharStylePtr oCharStyle = boost::static_pointer_cast<RtfCharStyle, RtfStyle>( poStyle );
 			oNewProperty.Merge( oCharStyle->m_oCharProp );
@@ -1092,21 +1091,21 @@ OOXpPrReader::OOXpPrReader(OOX::Logic::CParagraphProperty *ooxParaProps)
 {
 	m_bDefStyle			= true;
 	m_ooxParaProps		= ooxParaProps;
-	m_drawingParaProps	= NULL;
+	m_drawingParaProps	= nullptr;
 }
 OOXpPrReader::OOXpPrReader(PPTX::Logic::TextParagraphPr *ooxParaProps)
 {
 	m_bDefStyle			= true;
-	m_ooxParaProps		= NULL;
+	m_ooxParaProps		= nullptr;
 	m_drawingParaProps	= ooxParaProps;
 }
 bool OOXpPrReader::Parse( ReaderParameter oParam, RtfParagraphProperty& oOutputProperty, CcnfStyle& oConditionalTableStyle )
 {
 	if (m_drawingParaProps) return ParseDrawing( oParam, oOutputProperty);
 
-	if (m_ooxParaProps == NULL) return false;
+	if (m_ooxParaProps == nullptr) return false;
 	//apply external style
-	if( NULL != oParam.poTableStyle )
+	if( nullptr != oParam.poTableStyle )
 	{
 		if( m_ooxParaProps->m_oCnfStyle.IsInit() )
 		{
@@ -1118,13 +1117,13 @@ bool OOXpPrReader::Parse( ReaderParameter oParam, RtfParagraphProperty& oOutputP
 		}
 	}
 	RtfTableStylePtr oResultStyle = oConditionalTableStyle.ApplyTableStyle( oParam.poTableStyle );
-	if( NULL != oResultStyle )
+	if( nullptr != oResultStyle )
 	{
 		oOutputProperty.Merge( oResultStyle->m_oParProp );
 		oOutputProperty.m_oCharProperty.Merge( oResultStyle->m_oCharProp );
 	}
 	//apply the default style if its own isn't defined
-	if(( m_ooxParaProps->m_oPStyle.IsInit() == false ) && (true == m_bDefStyle && NULL != oParam.oReader->m_oDefParStyle ))
+	if(( !m_ooxParaProps->m_oPStyle.IsInit() ) && (m_bDefStyle && nullptr != oParam.oReader->m_oDefParStyle ))
 	{
 		oOutputProperty.Merge( oParam.oReader->m_oDefParStyle->m_oParProp );
 		oOutputProperty.m_nStyle = oParam.oReader->m_oDefParStyle->m_nID;
@@ -1135,7 +1134,7 @@ bool OOXpPrReader::Parse( ReaderParameter oParam, RtfParagraphProperty& oOutputP
 	{
 		std::wstring sStyleName = *m_ooxParaProps->m_oPStyle->m_sVal;
 		RtfStylePtr oCurStyle;
-		if( true == oParam.oRtf->m_oStyleTable.GetStyle(sStyleName, oCurStyle) )
+		if( oParam.oRtf->m_oStyleTable.GetStyle(sStyleName, oCurStyle) )
 		{
 			if( oCurStyle->GetType() == TYPE_RTF_PROPERTY_STYLE_PARAGRAPH )
 			{
@@ -1319,15 +1318,15 @@ bool OOXpPrReader::Parse( ReaderParameter oParam, RtfParagraphProperty& oOutputP
 			//apply direct properties of a list to a paragraph
 			RtfListOverrideProperty oListOverrideProperty;
 			//search by override table
-			if( true == oParam.oRtf->m_oListOverrideTable.GetList( oOutputProperty.m_nListId, oListOverrideProperty ) )
+			if( oParam.oRtf->m_oListOverrideTable.GetList( oOutputProperty.m_nListId, oListOverrideProperty ) )
 			{
 				RtfListProperty oListProperty;
 				//Search by List Table
-				if( true == oParam.oRtf->m_oListTable.GetList( oListOverrideProperty.m_nListID, oListProperty) )
+				if( oParam.oRtf->m_oListTable.GetList( oListOverrideProperty.m_nListID, oListProperty) )
 				{
 					//add the properties of the paragraph firstIndent Indent
 					RtfListLevelProperty poLevelProp ;
-					if( true == oListProperty.GetItem( poLevelProp , oOutputProperty.m_nListLevel ) )
+					if( oListProperty.GetItem( poLevelProp , oOutputProperty.m_nListLevel ) )
 					{
 						if( PROP_DEF != poLevelProp.m_nFirstIndent )
 							oOutputProperty.m_nIndFirstLine = poLevelProp.m_nFirstIndent;
@@ -1352,40 +1351,40 @@ bool OOXpPrReader::Parse( ReaderParameter oParam, RtfParagraphProperty& oOutputP
 		if( m_ooxParaProps->m_oPBdr->m_oTop.IsInit() )
 		{
 			OOXBorderReader oBorderReader(m_ooxParaProps->m_oPBdr->m_oTop.GetPointer());
-			if( true ==  oBorderReader.Parse( oParam, oNewBorder) )
+			if( oBorderReader.Parse( oParam, oNewBorder) )
 				oOutputProperty.m_oBorderTop = oNewBorder;
 		}
 		if( m_ooxParaProps->m_oPBdr->m_oBottom.IsInit() )
 		{
 			OOXBorderReader oBorderReader(m_ooxParaProps->m_oPBdr->m_oBottom.GetPointer());
-			if( true ==  oBorderReader.Parse( oParam, oNewBorder) )
+			if( oBorderReader.Parse( oParam, oNewBorder) )
 				oOutputProperty.m_oBorderBottom = oNewBorder;
 		}
 		if( m_ooxParaProps->m_oPBdr->m_oLeft.IsInit() )
 		{
 			OOXBorderReader oBorderReader(m_ooxParaProps->m_oPBdr->m_oLeft.GetPointer());
-			if( true ==  oBorderReader.Parse( oParam, oNewBorder) )
+			if( oBorderReader.Parse( oParam, oNewBorder) )
 				oOutputProperty.m_oBorderLeft = oNewBorder;
 		}
 
 		if( m_ooxParaProps->m_oPBdr->m_oRight.IsInit() )
 		{
 			OOXBorderReader oBorderReader(m_ooxParaProps->m_oPBdr->m_oRight.GetPointer());
-			if( true ==  oBorderReader.Parse( oParam, oNewBorder) )
+			if( oBorderReader.Parse( oParam, oNewBorder) )
 				oOutputProperty.m_oBorderRight = oNewBorder;
 		}
 
 		if( m_ooxParaProps->m_oPBdr->m_oBetween.IsInit() )
 		{
 			OOXBorderReader oBorderReader(m_ooxParaProps->m_oPBdr->m_oBetween.GetPointer());
-			if( true ==  oBorderReader.Parse( oParam, oNewBorder) )
+			if( oBorderReader.Parse( oParam, oNewBorder) )
 				oOutputProperty.m_oBorderBox = oNewBorder;
 		}
 
 		if( m_ooxParaProps->m_oPBdr->m_oBar.IsInit() )
 		{
 			OOXBorderReader oBorderReader(m_ooxParaProps->m_oPBdr->m_oBar.GetPointer());
-			if( true ==  oBorderReader.Parse( oParam, oNewBorder) )
+			if( oBorderReader.Parse( oParam, oNewBorder) )
 				oOutputProperty.m_oBorderBar = oNewBorder;
 		}
 	}
@@ -1448,7 +1447,7 @@ bool OOXpPrReader::Parse( ReaderParameter oParam, RtfParagraphProperty& oOutputP
 }
 bool OOXpPrReader::ParseDrawing( ReaderParameter oParam, RtfParagraphProperty& oOutputProperty)
 {
-	if (m_drawingParaProps == NULL) return false;
+	if (m_drawingParaProps == nullptr) return false;
 
 	if (m_drawingParaProps->lvl.IsInit())
 		oOutputProperty.m_nOutlinelevel = m_drawingParaProps->lvl.get();
@@ -1546,23 +1545,23 @@ OOXrPrReader::OOXrPrReader(OOX::Logic::CRunProperty *ooxRunProps)
 {
 	m_bDefStyle			= true;
 	m_ooxRunProps		= ooxRunProps;
-	m_drawingRunProps	= NULL;
+	m_drawingRunProps	= nullptr;
 }
 OOXrPrReader::OOXrPrReader(PPTX::Logic::RunProperties *ooxRunProps)
 {
 	m_bDefStyle			= true;
-	m_ooxRunProps		= NULL;
+	m_ooxRunProps		= nullptr;
 	m_drawingRunProps	= ooxRunProps;
 }
 bool OOXrPrReader::Parse( ReaderParameter oParam, RtfCharProperty& oOutputProperty)
 {
 	if (m_drawingRunProps) ParseDrawing( oParam, oOutputProperty );
 
-	if (m_ooxRunProps == NULL) return false;
+	if (m_ooxRunProps == nullptr) return false;
 
 	//first apply styles
 	//apply the default style if its own isn't defined
-	if(( m_ooxRunProps->m_oRStyle.IsInit() == false) && (true == m_bDefStyle && NULL != oParam.oReader->m_oDefCharStyle ))
+	if(( !m_ooxRunProps->m_oRStyle.IsInit()) && (m_bDefStyle && nullptr != oParam.oReader->m_oDefCharStyle ))
 	{
 		oOutputProperty.Merge( oParam.oReader->m_oDefCharStyle->m_oCharProp );
 	}
@@ -1585,7 +1584,7 @@ bool OOXrPrReader::Parse( ReaderParameter oParam, RtfCharProperty& oOutputProper
 	{
 		std::wstring sStyleID = *m_ooxRunProps->m_oRStyle->m_sVal;
 		RtfStylePtr oCurStyle;
-		if( true == oParam.oRtf->m_oStyleTable.GetStyle(sStyleID, oCurStyle)) 
+		if( oParam.oRtf->m_oStyleTable.GetStyle(sStyleID, oCurStyle))
 		{
 			if( oCurStyle->GetType() == TYPE_RTF_PROPERTY_STYLE_CHAR )
 			{
@@ -1623,11 +1622,9 @@ bool OOXrPrReader::Parse( ReaderParameter oParam, RtfCharProperty& oOutputProper
 
 	if( m_ooxRunProps->m_oFitText.IsInit() && m_ooxRunProps->m_oFitText->m_oVal.IsInit())
 	{
-		int iID = m_ooxRunProps->m_oFitText->m_oID.IsInit();
-	
 			int nValue = m_ooxRunProps->m_oFitText->m_oVal->ToTwips();
 
-			if(m_ooxRunProps->m_oFitText->m_oID.IsInit() == false )
+			if(!m_ooxRunProps->m_oFitText->m_oID.IsInit() )
 			{
 				oOutputProperty.m_nFitText = -1;
 			}
@@ -1724,7 +1721,7 @@ bool OOXrPrReader::Parse( ReaderParameter oParam, RtfCharProperty& oOutputProper
 	{
 		OOXColorReader oColorReader;
 		RtfColor oColor;
-		if( true == oColorReader.Parse( oParam, m_ooxRunProps->m_oColor.get2(), oColor ) )
+		if( oColorReader.Parse( oParam, m_ooxRunProps->m_oColor.get2(), oColor ) )
 		{
 			oOutputProperty.m_nForeColor = oParam.oRtf->m_oColorTable.AddItem( oColor );
 		}
@@ -1833,7 +1830,7 @@ bool OOXrPrReader::Parse( ReaderParameter oParam, RtfCharProperty& oOutputProper
 }
 bool OOXrPrReader::ParseDrawing(ReaderParameter oParam, RtfCharProperty& oOutputProperty)
 {
-	if (m_drawingRunProps == NULL) return false;
+	if (m_drawingRunProps == nullptr) return false;
 
 
 	if (m_drawingRunProps->b.IsInit())
@@ -1943,9 +1940,9 @@ OOXpPrFrameReader::OOXpPrFrameReader(ComplexTypes::Word::CFramePr *ooxFramePr)
 {
 	m_ooxFramePr = ooxFramePr;
 }
-bool OOXpPrFrameReader::Parse( ReaderParameter oParam ,RtfFrame& oOutputProperty)
+bool OOXpPrFrameReader::Parse( ReaderParameter  /*oParam*/ ,RtfFrame& oOutputProperty)
 {
-	if (m_ooxFramePr == NULL) return false;
+	if (m_ooxFramePr == nullptr) return false;
 
 	oOutputProperty.m_nWidth	= m_ooxFramePr->m_oW.IsInit() ? m_ooxFramePr->m_oW->ToTwips() : PROP_DEF;//TODO twips??? pt ???
 	oOutputProperty.m_nHeight	= m_ooxFramePr->m_oH.IsInit() ? m_ooxFramePr->m_oH->ToTwips() : PROP_DEF;
@@ -2019,7 +2016,7 @@ bool OOXpPrFrameReader::Parse( ReaderParameter oParam ,RtfFrame& oOutputProperty
 		{
 			case SimpleTypes::dropcapDrop   : oOutputProperty.m_DropcapType = 1; break;
 			case SimpleTypes::dropcapMargin : oOutputProperty.m_DropcapType = 2; break;
-			case SimpleTypes::dropcapNone   : break;
+			case SimpleTypes::dropcapNone   :
             default: break;
         }
 	}
@@ -2052,7 +2049,7 @@ OOXSectionPropertyReader::OOXSectionPropertyReader(OOX::Logic::CSectionProperty 
 }
 bool OOXSectionPropertyReader::Parse( ReaderParameter oParam , RtfSectionProperty& oOutput)
 {
-	if (m_ooxSectionProperty == NULL) return false;
+	if (m_ooxSectionProperty == nullptr) return false;
 	
 	oOutput.SetDefaultOOX();
 
@@ -2137,7 +2134,6 @@ bool OOXSectionPropertyReader::Parse( ReaderParameter oParam , RtfSectionPropert
 		{
 			if (m_ooxSectionProperty->m_oEndnotePr->m_oNumFmt->m_oVal.IsInit())
 			{
-				int enumVal = m_ooxSectionProperty->m_oEndnotePr->m_oNumFmt->m_oVal->GetValue();
 				//todo
 			}
 			oOutput.m_eEndnotesRestart = RtfSectionProperty::er_saftnrestart;
@@ -2153,7 +2149,7 @@ bool OOXSectionPropertyReader::Parse( ReaderParameter oParam , RtfSectionPropert
 			case SimpleTypes::ftnposBeneathText : oOutput.m_eFootnotesJust = RtfSectionProperty::fj_sftntj; break;
 			case SimpleTypes::ftnposDocEnd      : break;// TODO !!!
 			case SimpleTypes::ftnposPageBottom  : oOutput.m_eFootnotesJust = RtfSectionProperty::fj_sftnbj; break;
-			case SimpleTypes::ftnposSectEnd     : break;// TODO !!!
+			case SimpleTypes::ftnposSectEnd     : // TODO !!!
             default: break;
             }
 		}
@@ -2174,8 +2170,6 @@ bool OOXSectionPropertyReader::Parse( ReaderParameter oParam , RtfSectionPropert
 		}
 		if(m_ooxSectionProperty->m_oFootnotePr->m_oNumFmt.IsInit())
 		{
-			if (m_ooxSectionProperty->m_oFootnotePr->m_oNumFmt->m_oVal.IsInit())
-				int enumVal = m_ooxSectionProperty->m_oFootnotePr->m_oNumFmt->m_oVal->GetValue();
 			//todo
 			oOutput.m_eFootnotesRestart = RtfSectionProperty::fr_sftnrstpg;
 		}
@@ -2267,7 +2261,7 @@ bool OOXSectionPropertyReader::Parse( ReaderParameter oParam , RtfSectionPropert
 		{
 			case SimpleTypes::textdirectionLr  : oOutput.m_nTextFollow = 0; break;
 			case SimpleTypes::textdirectionLrV : oOutput.m_nTextFollow = 4; break;
-			case SimpleTypes::textdirectionRl  : oOutput.m_nTextFollow = 3; break;
+			case SimpleTypes::textdirectionRl  :
 			case SimpleTypes::textdirectionRlV : oOutput.m_nTextFollow = 3; break;
 			case SimpleTypes::textdirectionTb  : oOutput.m_nTextFollow = 0; break;
 			case SimpleTypes::textdirectionTbV : oOutput.m_nTextFollow = 5; break;
@@ -2293,7 +2287,7 @@ bool OOXSectionPropertyReader::Parse( ReaderParameter oParam , RtfSectionPropert
             switch(m_ooxSectionProperty->m_oPgBorders->m_oZOrder->GetValue())
             {
             case SimpleTypes::pageborderzorderBack  : oOutput.m_nBorderMeasure = oOutput.m_nBorderMeasure | 8; break;
-            case SimpleTypes::pageborderzorderFront : break;
+            case SimpleTypes::pageborderzorderFront :
             default: break;
             }
         }
@@ -2302,7 +2296,7 @@ bool OOXSectionPropertyReader::Parse( ReaderParameter oParam , RtfSectionPropert
 			switch(m_ooxSectionProperty->m_oPgBorders->m_oOffsetFrom->GetValue())
 			{
 			case SimpleTypes::pageborderoffsetPage : oOutput.m_nBorderMeasure = oOutput.m_nBorderMeasure | 32; break;
-			case SimpleTypes::pageborderoffsetText : break;
+			case SimpleTypes::pageborderoffsetText :
             default: break;
             }
 		}

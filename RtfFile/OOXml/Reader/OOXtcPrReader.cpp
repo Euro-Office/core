@@ -33,10 +33,10 @@ OOXtcPrReader::OOXtcPrReader(OOX::Logic::CTableCellProperties* ooxTableCellProps
 }
 bool OOXtcPrReader::Parse( ReaderParameter oParam ,RtfCellProperty& oOutputProperty,  CcnfStyle& oConditionalTableStyle, int nCurCell, int nCellCount, int nCurRow, int nRowCount  )
 {
-	if (m_ooxTableCellProps == NULL) return false;
+	if (m_ooxTableCellProps == nullptr) return false;
 
 	//look for cnfStyle and apply the external style
-	if( NULL != oParam.poTableStyle )
+	if( nullptr != oParam.poTableStyle )
 	{
 		if( m_ooxTableCellProps->m_oCnfStyle.IsInit() )
 		{
@@ -48,7 +48,7 @@ bool OOXtcPrReader::Parse( ReaderParameter oParam ,RtfCellProperty& oOutputPrope
 		}
 	}
 	RtfTableStylePtr oResultStyle = oConditionalTableStyle.ApplyTableStyle( oParam.poTableStyle );
-	if( NULL != oResultStyle )
+	if( nullptr != oResultStyle )
 		oOutputProperty.Merge( oResultStyle->m_oCellProp );
 	oConditionalTableStyle.ApplyTableStyleToCellBorder( oParam.poTableStyle, oOutputProperty, nCurCell, nCellCount, nCurRow, nRowCount );
 
@@ -198,10 +198,10 @@ bool OOXtcPrReader::Parse( ReaderParameter oParam ,RtfCellProperty& oOutputPrope
 void OOXtcPrReader::Parse(ComplexTypes::Word::CTblWidth* margin, int& type, int& value, bool full )
 {
 	if (!margin) return;
-	if (false == margin->m_oType.IsInit())	return;
-	if (false == margin->m_oW.IsInit())		return;
+	if (!margin->m_oType.IsInit())	return;
+	if (!margin->m_oW.IsInit())		return;
 	
-	if (full == true)
+	if (full)
 	{
 		switch (margin->m_oType->GetValue())
 		{

@@ -49,7 +49,7 @@ OOXDocumentReader::~OOXDocumentReader()
 }
 bool OOXDocumentReader::Parse(ReaderParameter oParam)
 {
-	if (m_ooxDocument == NULL) return false;
+	if (m_ooxDocument == nullptr) return false;
 
 	m_poReader = oParam.oReader;
 	m_poDocument = oParam.oRtf;
@@ -61,7 +61,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 		oBackgroundReader.Parse(oParam, m_poDocument->m_pBackground);
 	}
 
-	if (false == m_ooxDocument->m_arrSections.empty())
+	if (!m_ooxDocument->m_arrSections.empty())
 	{
 		for (size_t i = 0; i < m_ooxDocument->m_arrSections.size(); ++i)
 		{
@@ -74,7 +74,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 			section.end_para = m_ooxDocument->m_arrSections[i].end_elm;
 
 			OOXSectionPropertyReader oSectReader(dynamic_cast<OOX::Logic::CSectionProperty*>(m_ooxDocument->m_arrSections[i].sect));
-			if (true == oSectReader.Parse(oParam, section.props->m_oProperty))
+			if (oSectReader.Parse(oParam, section.props->m_oProperty))
 			{
 				m_poDocument->AddItem(section);
 			}
@@ -87,7 +87,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 		//Count the number of sections and fill in their properties..
 		for (size_t i = 0; i < m_ooxDocument->m_arrItems.size(); ++i)
 		{
-			if (m_ooxDocument->m_arrItems[i] == NULL) continue;
+			if (m_ooxDocument->m_arrItems[i] == nullptr) continue;
 
 			if (m_ooxDocument->m_arrItems[i]->getType() == OOX::et_w_p)
 			{
@@ -108,7 +108,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 						section.props->m_oProperty.SetDefaultOOX();
 
 						OOXSectionPropertyReader oSectReader(para->m_oParagraphProperty->m_oSectPr.GetPointer());
-						if (true == oSectReader.Parse(oParam, section.props->m_oProperty))
+						if (oSectReader.Parse(oParam, section.props->m_oProperty))
 						{
 							m_poDocument->AddItem(section);
 						}
@@ -156,13 +156,13 @@ bool OOXSettingsReader::Parse(ReaderParameter oParam)
 {
 	//oParam.oRtf->m_oColorSchemeMapping.SetDefaultOOX();
 
-	if (m_ooxSettings == NULL) return false;
+	if (m_ooxSettings == nullptr) return false;
 
 	if (m_ooxSettings->m_oMathPr.IsInit())
 	{
 		oParam.oRtf->m_pMathProp = RtfMathPtr(new RtfMath());
 
-		OOXMathReader oMathReader(NULL);
+		OOXMathReader oMathReader(nullptr);
 		oMathReader.ParseElement(oParam, m_ooxSettings->m_oMathPr.GetPointer(), oParam.oRtf->m_pMathProp);
 	}
 

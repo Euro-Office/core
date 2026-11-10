@@ -59,7 +59,7 @@ std::wstring OOXRelsWriter::CreateXml()
 		sResult += _T("\" Target=\"");
 		sResult += m_aTargets[i];
 		sResult += _T("\"");
-		if( false == m_aModes[i] )
+		if( !m_aModes[i] )
 			sResult += _T(" TargetMode=\"External\"");
 		sResult += _T("/>");
 	}
@@ -74,7 +74,7 @@ bool OOXRelsWriter::Save( std::wstring sFolder )
 	NSDirectory::CreateDirectory(pathRels) ;
 
 	NSFile::CFileBinary file;
-	if (false == file.CreateFile(pathRels + FILE_SEPARATOR_STR + m_sFileName + _T(".rels"))) return false;
+	if (!file.CreateFile(pathRels + FILE_SEPARATOR_STR + m_sFileName + _T(".rels"))) return false;
 
 	std::wstring sXml = CreateXml();
 

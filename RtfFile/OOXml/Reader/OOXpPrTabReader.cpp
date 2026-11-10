@@ -30,15 +30,15 @@ OOXpPrTabReader::OOXpPrTabReader( OOX::Logic::CTabs *ooxTabs)
 {
 	m_ooxTabs = ooxTabs;
 }
-bool OOXpPrTabReader::Parse( ReaderParameter oParam, RtfTabs& oOutputProperty)
+bool OOXpPrTabReader::Parse( ReaderParameter  /*oParam*/, RtfTabs& oOutputProperty)
 {
-	if (m_ooxTabs == NULL) return false;
+	if (m_ooxTabs == nullptr) return false;
 
 	oOutputProperty.SetDefault();
 
 	for (size_t i = 0; i < m_ooxTabs->m_arrTabs.size() ; i++ )
 	{
-		if (m_ooxTabs->m_arrTabs[i] == NULL) continue;
+		if (m_ooxTabs->m_arrTabs[i] == nullptr) continue;
 
 		RtfTab oCurTab;
 

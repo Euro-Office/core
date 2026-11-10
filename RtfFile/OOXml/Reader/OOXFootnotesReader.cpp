@@ -28,13 +28,13 @@
 
 OOXFootnotesReader::OOXFootnotesReader(OOX::CEndnotes * ooxNotes)
 {
-	m_ooxFootNotes	= NULL;
+	m_ooxFootNotes	= nullptr;
 	m_ooxEndNotes	= ooxNotes;
 }
 OOXFootnotesReader::OOXFootnotesReader(OOX::CFootnotes * ooxNotes)
 {
 	m_ooxFootNotes	= ooxNotes;
-	m_ooxEndNotes	= NULL;
+	m_ooxEndNotes	= nullptr;
 }
 bool OOXFootnotesReader::Parse( ReaderParameter oParam)
 {
@@ -113,8 +113,8 @@ bool OOXFootnotesReader::Parse( ReaderParameter oParam)
 }
 bool OOXFootnotesReader::ParseOne(OOX::CFtnEdn* ooxFtnEdn, ReaderParameter & oParam, bool bFootnote, int nSeparatorId, int nContinueId)
 {
-	if (ooxFtnEdn == NULL) return false;
-	if (ooxFtnEdn->m_oId.IsInit() == false) return false;
+	if (ooxFtnEdn == nullptr) return false;
+	if (!ooxFtnEdn->m_oId.IsInit()) return false;
 
 	int nId = ooxFtnEdn->m_oId->GetValue();
 	OOXTextItemReader oTextItemReader;
@@ -126,9 +126,9 @@ bool OOXFootnotesReader::ParseOne(OOX::CFtnEdn* ooxFtnEdn, ReaderParameter & oPa
 			TextItemContainerPtr oNewTextItem ( new TextItemContainer() );
 			oTextItemReader.m_oTextItems = oNewTextItem;
 
-			if( true == oTextItemReader.Parse( ooxFtnEdn->m_arrItems[i], oParam ) )
+			if( oTextItemReader.Parse( ooxFtnEdn->m_arrItems[i], oParam ) )
 			{
-				if( true == bFootnote )
+				if( bFootnote )
 					oParam.oRtf->m_oFootnoteSep = oNewTextItem;
 				else
 					oParam.oRtf->m_oEndnoteSep = oNewTextItem;
@@ -139,9 +139,9 @@ bool OOXFootnotesReader::ParseOne(OOX::CFtnEdn* ooxFtnEdn, ReaderParameter & oPa
 			TextItemContainerPtr oNewTextItem ( new TextItemContainer() );
 			oTextItemReader.m_oTextItems = oNewTextItem;
 
-			if( true == oTextItemReader.Parse( ooxFtnEdn->m_arrItems[i], oParam ) )
+			if( oTextItemReader.Parse( ooxFtnEdn->m_arrItems[i], oParam ) )
 			{
-				if( true == bFootnote )
+				if( bFootnote )
 					oParam.oRtf->m_oFootnoteCon = oNewTextItem;
 				else
 					oParam.oRtf->m_oEndnoteCon = oNewTextItem;
@@ -152,9 +152,9 @@ bool OOXFootnotesReader::ParseOne(OOX::CFtnEdn* ooxFtnEdn, ReaderParameter & oPa
 			TextItemContainerPtr oNewTextItem ( new TextItemContainer() );
 			oTextItemReader.m_oTextItems = oNewTextItem;
 
-			if( true == oTextItemReader.Parse( ooxFtnEdn->m_arrItems[i], oParam ) )
+			if( oTextItemReader.Parse( ooxFtnEdn->m_arrItems[i], oParam ) )
 			{
-				if( true == bFootnote )
+				if( bFootnote )
 					oParam.oReader->m_mapFootnotes[ nId] = oNewTextItem;
 				else
 					oParam.oReader->m_mapEndnotes[ nId] = oNewTextItem;

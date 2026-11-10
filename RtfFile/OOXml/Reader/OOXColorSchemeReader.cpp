@@ -32,7 +32,7 @@ OOXColorSchemeReader::OOXColorSchemeReader(PPTX::nsTheme::ClrScheme * ooxColorSc
 }
 bool OOXColorSchemeReader::Parse( ReaderParameter oParam )
 {
-	if (m_ooxColorScheme == NULL) return false;
+	if (m_ooxColorScheme == nullptr) return false;
 
 	RtfColor		oNewColor;
 	OOXColorReader	oColorReader(m_ooxColorScheme);

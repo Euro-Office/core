@@ -40,8 +40,8 @@ OOXReader::OOXReader( RtfDocument& oDocument, std::wstring  path ): m_oDocument(
 	m_nCurOleChartId = 0;
 	m_nCurFittextId = 0;
 
-	m_convertationManager = NULL;
-	m_currentContainer = NULL;
+	m_convertationManager = nullptr;
+	m_currentContainer = nullptr;
 }
 bool OOXReader::Parse()
 {

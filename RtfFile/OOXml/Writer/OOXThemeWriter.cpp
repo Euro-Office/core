@@ -27,7 +27,7 @@
 #include "../../../DesktopEditor/common/Directory.h"
 #include "../../../OOXML/Base/Base.h"
 
-OOXThemeWriter::OOXThemeWriter(OOXWriter& oWriter,RtfDocument& oDocument ):m_oWriter(oWriter)
+OOXThemeWriter::OOXThemeWriter(OOXWriter& oWriter,RtfDocument&  /*oDocument*/ ):m_oWriter(oWriter)
 {
 }
 bool OOXThemeWriter::Save( std::wstring sFolder ) //todo finish cleaning the error field

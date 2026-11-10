@@ -39,12 +39,12 @@ OOXtblPrReader::OOXtblPrReader(OOX::Logic::CTableProperty* ooxTableProps)
 }
 bool OOXtblPrReader::Parse( ReaderParameter oParam , RtfTableProperty& oOutputProperty)
 {
-	if (m_ooxTableProps == NULL) return false;
+	if (m_ooxTableProps == nullptr) return false;
 
 	//first apply styles
 
 	//apply the default style if its own isn't defined
-	if( m_ooxTableProps->m_oTblStyle.IsInit() == false && true == m_bDefStyle && NULL != oParam.oReader->m_oDefTableStyle )
+	if( !m_ooxTableProps->m_oTblStyle.IsInit() && m_bDefStyle && nullptr != oParam.oReader->m_oDefTableStyle )
 	{
 		oOutputProperty.Merge( oParam.oReader->m_oDefTableStyle->m_oTableProp );
 		oOutputProperty.m_nStyle = oParam.oReader->m_oDefTableStyle->m_nID;
@@ -54,7 +54,7 @@ bool OOXtblPrReader::Parse( ReaderParameter oParam , RtfTableProperty& oOutputPr
 	{
 		std::wstring sStyle = *m_ooxTableProps->m_oTblStyle->m_sVal;
 		RtfStylePtr oStyle;
-		if( true == oParam.oRtf->m_oStyleTable.GetStyle(sStyle, oStyle) )
+		if( oParam.oRtf->m_oStyleTable.GetStyle(sStyle, oStyle) )
 		{
 			RtfStylePtr oResultStyle = oParam.oRtf->m_oStyleTable.GetStyleResulting( oStyle );
 			RtfTableStylePtr oTableStyle = boost::static_pointer_cast<RtfTableStyle, RtfStyle>( oResultStyle );

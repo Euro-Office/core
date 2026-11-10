@@ -30,13 +30,13 @@ OOXHeaderReader::OOXHeaderReader(ComplexTypes::Word::CHdrFtrRef* ref)
 {
 	m_ref = ref;
 }
-bool OOXHeaderReader::Parse( ReaderParameter oParam, std::wstring sRID, TextItemContainerPtr& oOutput, bool bHeader )
+bool OOXHeaderReader::Parse( ReaderParameter oParam, std::wstring  /*sRID*/, TextItemContainerPtr& oOutput, bool  /*bHeader*/ )
 {
-	if (m_ref == NULL) return false;
-	if (m_ref->m_oId.IsInit() == false ) return false;
+	if (m_ref == nullptr) return false;
+	if (!m_ref->m_oId.IsInit() ) return false;
 
 	OOX::CHdrFtr    *pHdrFtr = oParam.oDocx->GetHeaderOrFooter(m_ref->m_oId->GetValue());
-	if (pHdrFtr == NULL) return false;	
+	if (pHdrFtr == nullptr) return false;
 
 	oParam.oReader->m_currentContainer = dynamic_cast<OOX::IFileContainer*>(pHdrFtr);
 	
