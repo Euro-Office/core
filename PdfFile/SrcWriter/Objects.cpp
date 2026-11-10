@@ -927,13 +927,7 @@ namespace PdfWriter
 			return;
 		}
 
-		// In case of an error, the object needs to be disposed
 		TXrefEntry* pEntry = new TXrefEntry;
-		if (nullptr == pEntry)
-		{
-			RELEASE_OBJECT(pObject);
-			return;
-		}
 
 		m_arrEntries.push_back(pEntry);
 
@@ -958,13 +952,7 @@ namespace PdfWriter
 			return;
 		}
 
-		// In case of an error, the object needs to be disposed
 		TXrefEntry* pEntry = new TXrefEntry;
-		if (nullptr == pEntry)
-		{
-			RELEASE_OBJECT(pObject);
-			return;
-		}
 
 		m_arrEntries.push_back(pEntry);
 

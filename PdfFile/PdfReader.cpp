@@ -1880,7 +1880,7 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 				int nPNGSize = 0;
 				oFrame.Encode(pPNG, nPNGSize, 4);
 				oFrame.ClearNoAttack();
-				RELEASEARRAYOBJECTS(pBgraData);
+				delete[] pBgraData;
 
 				char* cData64 = nullptr;
 				int nData64Dst = 0;
