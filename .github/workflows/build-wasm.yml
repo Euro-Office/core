@@ -2,58 +2,34 @@ name: Build WASM
 
 on:
   pull_request:
+  push:
+    branches: [main, 'stable-*']
+  workflow_dispatch:
 
-# A new push to a pull request cancels its previous run. Other runs (manual
-# ones included) are never cancelled, they wait instead.
+# A new push to a pull request cancels its previous run, which also keeps an
+# older run from publishing its core package after a newer one. Other runs
+# (manual ones included) get a group of their own, so queued commits on main
+# don't lose their package.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      wasm: ${{ steps.filter.outputs.wasm }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Detect relevant changes
-        uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            wasm:
-              - '**/wasm/**'
-              - 'DesktopEditor/graphics/pro/js/**'
-              - 'DesktopEditor/fontengine/js/**'
-              - 'DesktopEditor/doctrenderer/**'
-              - 'OfficeUtils/js/**'
-              - '**/CMakeLists.txt'
-              - '**/*.cmake'
-              - '.github/workflows/build-wasm.yml'
-
+  # Runs for every commit, not only wasm changes: downstream repos look up the
+  # package by core's tree, and ccache makes an unchanged build quick.
   build-wasm:
-    needs: changes
-    if: needs.changes.outputs.wasm == 'true'
     runs-on: [ubuntu-latest, self-hosted]
     container:
         image: ghcr.io/euro-office/emsdk:5.0.4
+    environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
+    env:
+      # Only set on a manual run, through the build-assets environment: that
+      # run uploads missing third-party builds, every other run only reads.
+      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+      CCACHE_MAXSIZE: 1G
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          submodules: recursive
-          path: core/
-
-      - name: Checkout sdkjs repository
-        uses: actions/checkout@v6
-        with:
-          repository: Euro-Office/sdkjs
-          ref: main
-          path: sdkjs/
-
       - name: Install system dependencies
         run: |
           apt-get update
@@ -68,22 +44,85 @@ jobs:
             libssl-dev \
             autoconf \
             automake \
-            libtool
+            libtool \
+            ccache \
+            ninja-build
 
-      - name: Verify Emscripten
-        run: emcc -v
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
 
-      - name: Build with Emscripten
+      # The container runs as root, the checkout belongs to the runner's user.
+      # ${{ github.workspace }} is the host's path, so the ccache path is set
+      # here and kept relative in the cache steps: it must be the same on every runner.
+      - name: Prepare container
         run: |
-          mkdir -p ../build-wasm-dir
-          cd ../build-wasm-dir
-          /bin/bash -c "emcmake cmake -S $GITHUB_WORKSPACE/core -B . -DEO_CORE_OUTPUT_DIR=$GITHUB_WORKSPACE/package -DEO_NO_WARNINGS=ON && cmake --build ."
-        shell: bash
+          git config --global --add safe.directory '*'
+          echo "CCACHE_DIR=$GITHUB_WORKSPACE/.cache/ccache" >> "$GITHUB_ENV"
+          emcc -v
+
+      - name: Restore ccache
+        id: ccache
+        uses: actions/cache/restore@v4
+        with:
+          path: .cache/ccache
+          key: ccache-wasm-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
+          restore-keys: ccache-wasm-
+
+      # The same script builds the wasm modules in .docker/core-wasm.bake.Dockerfile,
+      # so the package can replace that build
+      - name: Build with Emscripten
+        run: ccache --zero-stats && scripts/build.sh --wasm --ccache -- -DEO_NO_WARNINGS=ON
+
+      - name: ccache statistics
+        if: always()
+        run: ccache --show-stats || true
+
+      # A PR that started from main's cache doesn't save its own: the repo's
+      # 10 GB of caches would evict main's, which every new PR starts from
+      - name: Save ccache
+        if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
+        uses: actions/cache/save@v4
+        with:
+          path: .cache/ccache
+          key: ccache-wasm-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
+
+      # Published by the publish job for pushes to main and same-repo PRs that
+      # are up to date with their base
+      - name: Pack core
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        run: |
+          python3 scripts/core_package.py pack \
+            --from build/package --out build/core-package \
+            --platform wasm --product engine \
+            --toolchain "emsdk $(emcc -dumpversion)"
+
+      - name: Upload core package
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-package-wasm-engine
+          path: build/core-package/
+          retention-days: 1
+          compression-level: 0
+
+  publish:
+    needs: build-wasm
+    if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
+    uses: ./.github/workflows/core-package-publish.yml
+    secrets: inherit
+
+  prune-ccache:
+    needs: build-wasm
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/ccache-prune.yml
 
   build-wasm-summary:
-    # Aggregate job so branch protection can require a single, always-reported
-    # check regardless of whether the build actually ran for this PR.
-    needs: [changes, build-wasm]
+    # Aggregate job, kept so branch protection that requires it still works
+    needs: build-wasm
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -91,9 +130,7 @@ jobs:
         run: |
           result="${{ needs.build-wasm.result }}"
           echo "build-wasm result: $result"
-          # Pass when the build succeeded or was skipped (no relevant changes).
-          if [ "$result" = "success" ] || [ "$result" = "skipped" ]; then
-            echo "WASM build did not fail."
+          if [ "$result" = "success" ]; then
             exit 0
           fi
           echo "WASM build failed (result: $result)."

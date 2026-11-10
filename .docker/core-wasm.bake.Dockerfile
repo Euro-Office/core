@@ -4,39 +4,34 @@
 # docker-bake.hcl files in the parent monorepos.
 #
 # REQUIRED CONTEXTS:
-# - sdkjs: files from sdkjs
+# - core: the core checkout
 # ==============================================================================
 
 #### CORE WASM ####
 FROM ghcr.io/euro-office/emsdk:5.0.4 AS core-wasm
     ARG BUILD_ROOT
     ARG CACHE_BUST
-    ARG NUGET_SOURCE_PATH
 
     ENV BUILD_ROOT=${BUILD_ROOT}
-    ENV EM_CACHE=/em-cache
-    RUN apt-get update && apt-get install -y --no-install-recommends ccache && rm -rf /var/lib/apt/lists/*
+    RUN apt-get update && apt-get install -y --no-install-recommends ccache ninja-build && rm -rf /var/lib/apt/lists/*
     COPY core /core
 
-    # hash wasm has one dependency in sdkjs which we must copy here (TODO: fix this)
-    COPY sdkjs/common/stringserialize.js /sdkjs/common/stringserialize.js
-
+    # The same build as core's CI (scripts/build.sh --wasm), whose packages
+    # downstream repos can use instead of this stage. Prebuilt third-party libs
+    # come from the remote cache; the optional remote_cache_s3_* secrets also
+    # upload the ones missing there. Emscripten's own cache (the system
+    # libraries) stays in the image: the emsdk image ships it prebuilt.
     RUN --mount=type=cache,id=wasm-build-cache-${CACHE_BUST},target=/build-cache-wasm \
         --mount=type=cache,id=wasm-ccache,target=/ccache \
-        --mount=type=cache,id=wasm-em-cache,target=/em-cache \
-        --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw <<EOF
+        --mount=type=secret,id=remote_cache_s3_access_key \
+        --mount=type=secret,id=remote_cache_s3_secret_key <<EOF
         set -e
-        export CCACHE_DIR=/ccache
-        cd /build-cache-wasm
-        emcmake cmake -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-                      -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-                      -DEO_CORE_OUTPUT_DIR=/build-cache-wasm/dist /core
-        cmake --build . -- -j$(nproc)
+        export REMOTE_CACHE_S3_ACCESS_KEY="$(cat /run/secrets/remote_cache_s3_access_key 2>/dev/null)"
+        export REMOTE_CACHE_S3_SECRET_KEY="$(cat /run/secrets/remote_cache_s3_secret_key 2>/dev/null)"
+        export CCACHE_DIR=/ccache CCACHE_MAXSIZE=1G
+        ccache --zero-stats
+        /core/scripts/build.sh --wasm --ccache --build-dir /build-cache-wasm --output /build-cache-wasm/dist
         ccache --show-stats
-        echo "=== CCACHE ON DISK ==="
-        du -sh /ccache || true
-        find /ccache -type f | wc -l || true
-        echo "=== EM CACHE ON DISK ==="
-        du -sh /em-cache || true
+        mkdir -p ${BUILD_ROOT}
         cp -a /build-cache-wasm/dist/. ${BUILD_ROOT}/
 EOF
