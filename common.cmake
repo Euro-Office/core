@@ -783,10 +783,12 @@ endif()
 # are fixed.
 option(EO_NO_WARNINGS "Compile without warnings" OFF)
 if(EO_NO_WARNINGS)
-    list(FILTER COMMON_CXX_FLAGS EXCLUDE REGEX "^[-/][Ww]")
-    list(FILTER COMMON_C_FLAGS EXCLUDE REGEX "^[-/][Ww]")
+    # -w and /w don't touch the errors, so the flags that turn errors into
+    # warnings or off (-Wno-register for ISO C++17's register) stay
     if(MSVC)
-        # Else cl warns that /w overrides the default /W3, on every source
+        # Else cl warns on every source that /w overrides /W4 and /W3
+        list(FILTER COMMON_CXX_FLAGS EXCLUDE REGEX "^/W[0-4]$")
+        list(FILTER COMMON_C_FLAGS EXCLUDE REGEX "^/W[0-4]$")
         foreach(flags CMAKE_C_FLAGS CMAKE_CXX_FLAGS)
             string(REGEX REPLACE "/W[0-4]" "" ${flags} "${${flags}}")
         endforeach()
