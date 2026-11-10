@@ -20,7 +20,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "1"
+    version = "2"
 )
 
 libaom_src = nc.work_dir / "aom"
@@ -95,7 +95,7 @@ def build_and_install():
             "-DENABLE_TESTDATA=OFF",
             "-DENABLE_TESTS=OFF",
             "-DENABLE_TOOLS=OFF",
-            *( [ "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded" ] if nc.is_windows() else [] ),
+            *( [ "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL" ] if nc.is_windows() else [] ),
         ],
         "Configure libaom",
     )

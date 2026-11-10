@@ -20,7 +20,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "1"
+    version = "2"
 )
 
 libheif_src = nc.work_dir / "libheif"
@@ -146,7 +146,7 @@ def build_and_install():
             "-DWITH_GDK_PIXBUF=OFF",
             "-DBUILD_TESTING=OFF",
             "-DBUILD_DOCUMENTATION=OFF",
-            *( [ "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded" ] if nc.is_windows() else [] ),
+            *( [ "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL" ] if nc.is_windows() else [] ),
         ],
         "Configure libheif",
         env = windows_static_env(),
