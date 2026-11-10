@@ -80,10 +80,6 @@ else()
         # The JS engine embedding itself: run these first after updating V8
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/engine" doctrenderer_engine_test )
 
-        # PdfFile/test runs headless with its single fixture-dependent case
-        # (CPdfFileTest.EditPdfFromBase64) excluded via GTEST_FILTER; all other
-        # cases self-skip. See PdfFile/test/CMakeLists.txt and TESTING.md for the
-        # missing fixtures needed to fully enable it.
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test" pdffile_test )
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test/jbig2" pdf_jbig2_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DjVuFile/test" djvu_test )
