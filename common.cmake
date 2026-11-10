@@ -205,7 +205,7 @@ else()
             )
         else()
             if(NOT BUILD_DESKTOP)
-                set(NO_DESKTOP_EXCLUDE ",cef,qt")
+                set(NO_DESKTOP_EXCLUDE ",cef,qt,sparkle,winsparkle")
             endif()
 
             set(PLATFORM_EXCLUDE "")
@@ -306,6 +306,19 @@ else()
         # everything here uses the DLL runtime (CMAKE_MSVC_RUNTIME_LIBRARY above).
         set(CEF_RUNTIME_LIBRARY_FLAG "/MD" CACHE STRING "MSVC runtime for CEF targets")
         find_package(CEF REQUIRED)
+
+        # Updaters, fetched only on their platform: desktop-apps embeds
+        # SPARKLE_ROOT/Sparkle.framework and links winsparkle.
+        set(SPARKLE_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/sparkle")
+        set(WINSPARKLE_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/winsparkle")
+        if(WIN32 AND NOT TARGET winsparkle)
+            add_library(winsparkle SHARED IMPORTED GLOBAL)
+            set_target_properties(winsparkle PROPERTIES
+                IMPORTED_LOCATION "${WINSPARKLE_ROOT}/bin/WinSparkle.dll"
+                IMPORTED_IMPLIB "${WINSPARKLE_ROOT}/lib/WinSparkle.lib"
+                INTERFACE_INCLUDE_DIRECTORIES "${WINSPARKLE_ROOT}/include"
+            )
+        endif()
 
     endif()
 

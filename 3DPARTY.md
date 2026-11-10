@@ -37,3 +37,5 @@
 - leptonica ([2-clause BSD License](https://raw.githubusercontent.com/DanBloomberg/leptonica/master/leptonica-license.txt))
 - jbig2enc ([Apache-2.0](https://raw.githubusercontent.com/agl/jbig2enc/master/COPYING))
 - djvulibre ([GPL-2.0-or-later](https://sourceforge.net/p/djvu/djvulibre-git/ci/master/tree/COPYING))
+- Sparkle ([MIT](https://raw.githubusercontent.com/sparkle-project/Sparkle/2.x/LICENSE))
+- WinSparkle ([MIT](https://raw.githubusercontent.com/vslavik/winsparkle/master/COPYING))
