@@ -31,6 +31,11 @@ TEST(ShortenPath, keeps_consecutive_parent_references)
 	EXPECT_EQ(L"../..", NSSystemPath::ShortenPath(L"../.."));
 }
 
+TEST(ShortenPath, collapses_a_parent_chain_to_a_bare_parent)
+{
+	EXPECT_EQ(L"..", NSSystemPath::ShortenPath(L"../b/.."));
+}
+
 TEST(ShortenPath, does_not_crash_on_bare_parent_when_removing_external_path)
 {
 	EXPECT_EQ(L"", NSSystemPath::ShortenPath(L"..", true));
