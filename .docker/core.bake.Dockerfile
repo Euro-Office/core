@@ -3,23 +3,22 @@
 # This file is not meant to be built standalone. It is consumed by the
 # docker-bake.hcl files in the parent monorepos.
 #
-# BUILD BASE PER PRODUCT / ARCH
+# BUILD BASE
 #
-#               amd64           arm64
-#   server      Rocky Linux 9   Rocky Linux 9
-#   desktop     Rocky Linux 9   Ubuntu 24.04
+# Rocky Linux 8 (glibc 2.28) for both products and both arches. A binary
+# runs on any glibc at least as new as the one it was built against, so the
+# result runs on RHEL/Rocky/Alma 8 and newer, Debian 11+, Ubuntu 20.04+.
 #
-# Server: the deploy target is Rocky 9 (glibc 2.34). The toolchain emits a
-#   reference to __libc_single_threaded (glibc 2.32), so the build glibc must
-#   be in [2.32, 2.34]. Ubuntu 20.04 (2.31) is below that window, Ubuntu 22.04
-#   (2.35) is above it; building on Rocky 9 itself matches the target exactly.
+# Toolchain: el8's own gcc 8 is too old for C++20, so core builds with
+#   gcc-toolset-13. Its libstdc++ links the parts that el8's libstdc++.so.6
+#   lacks statically (libstdc++_nonshared.a), so the binaries need nothing
+#   beyond a stock el8. clang/LLVM 21 from AppStream builds V8; it is pointed
+#   at the same gcc-toolset-13 (see below). GCC 13 also keeps the cached
+#   third-party archives linkable on hosts with GCC 13 or newer.
 #
-# Desktop: the prebuilt Qt host tools fetched via aqt need glibc >= 2.38 on
-#   arm64 (Qt builds its arm64 Linux binaries on Ubuntu 24.04), so arm64
-#   desktop must build on 24.04. amd64 Qt binaries only need glibc 2.34, so
-#   amd64 desktop reuses the Rocky 9 server base: building on 22.04 (2.35) leaks
-#   GLIBC_2.35 symbols (e.g. hypotf) into the binaries and the app then fails
-#   to start on RHEL/Rocky/Alma 9. Rocky 9 (2.34) cannot run the arm64 Qt tools.
+# Desktop: Qt is built from source on this base (Common/3dParty/qt), because
+#   Qt's prebuilt Linux binaries need glibc 2.34 (amd64) and 2.38 (arm64).
+#   The desktop base adds the -devel packages Qt's build needs.
 #
 # vcpkg binary cache: plain vcpkg "files" provider. The directory keeps the
 # historical /nuget-cache path because desktop-apps.bake.Dockerfile mounts
@@ -31,95 +30,93 @@ ARG PRODUCT=server
 ARG TARGETARCH
 
 
-#### SERVER BASE (Rocky Linux 9, both arches) ####
-FROM rockylinux/rockylinux:9 AS core-base-server
+#### SERVER BASE (Rocky Linux 8, both arches) ####
+FROM rockylinux/rockylinux:8 AS core-base-server
+
+    ARG TARGETARCH
 
     # Skip mirrors slower than 200 kB/s. The mirrorlist can hand out one that
     # serves ~10-80 kB/s, which stretches this stage to one or two hours.
     RUN printf 'minrate=200k\ntimeout=30\nmax_parallel_downloads=10\n' >> /etc/dnf/dnf.conf
 
-    # EPEL + CRB provide ninja-build, ccache, python3-httplib2 and several
-    # -devel packages not in the base channels.
+    # EPEL + PowerTools provide several -devel packages that are not in the
+    # base channels.
     RUN dnf install -y dnf-plugins-core epel-release && \
-        dnf config-manager --set-enabled crb && \
+        dnf config-manager --set-enabled powertools && \
         dnf install -y \
-            ca-certificates git zip unzip tar \
-            sudo wget gnupg2 openssh-clients ccache \
-            gcc gcc-c++ libstdc++-static libatomic make ninja-build pkgconf-pkg-config \
+            ca-certificates git zip unzip tar curl \
+            sudo wget gnupg2 openssh-clients \
+            gcc-toolset-13-gcc gcc-toolset-13-gcc-c++ gcc-toolset-13-binutils \
+            gcc-toolset-13-libatomic-devel gcc-toolset-13-libstdc++-devel \
+            libatomic libatomic-static make pkgconf-pkg-config \
             glib2-devel \
-            python3 python3-pip python3-setuptools python3-httplib2 \
             python3.12 python3.12-pip python3.12-setuptools \
-            python-unversioned-command \
             autoconf automake libtool findutils \
-            perl perl-FindBin perl-IPC-Cmd perl-Data-Dumper \
+            perl perl-IPC-Cmd perl-Data-Dumper \
             diffutils which file xz bzip2 patch \
         && dnf clean all
 
-    # rockylinux:9 ships curl-minimal; --allowerasing swaps in the full curl
-    # CLI (needed by some bootstrap scripts).
-    RUN dnf install -y --allowerasing curl && dnf clean all
+    # gcc-toolset-13 first on PATH, as "scl enable gcc-toolset-13" would set it
+    ENV PATH="/opt/rh/gcc-toolset-13/root/usr/bin:${PATH}"
 
-    # The core build scripts need Python >= 3.10 (PEP 604 "X | None" hints).
-    # el9's /usr/bin/python3 is 3.9 and must stay that way (dnf depends on it),
-    # so the build is pointed at the AppStream python3.12 instead via
-    # -DPYTHON_BIN (see core stage).
+    # The core build scripts need Python >= 3.10 (PEP 604 "X | None" hints),
+    # and depot_tools/V8 call a bare "python3". On el8 /usr/bin/python3 is an
+    # alternatives link (dnf itself uses /usr/libexec/platform-python), so it
+    # can point at 3.12 safely. pip installs CMake (vcpkg needs a newer one
+    # than el8's 3.26), Ninja (el8 has 1.8.2) and httplib2 for that python.
+    RUN alternatives --set python3 /usr/bin/python3.12 && \
+        alternatives --set python /usr/bin/python3
     ENV CORE_PYTHON=/usr/bin/python3.12
+    RUN python3.12 -m pip install --no-cache-dir "cmake>=4" ninja httplib2 && \
+        cmake --version && ninja --version && python3 --version
 
-    # vcpkg requires a newer CMake than el9 ships (3.20-3.26). The PyPI wheel
-    # ships a prebuilt cmake binary, so no Kitware repo or GitHub access is
-    # needed.
-    RUN pip3 install --no-cache-dir "cmake>=4" && cmake --version
+    # ccache 4 (EPEL 8 has 3.7, which lacks the compiler type and PCH handling
+    # scripts/build.sh relies on). Upstream's static binaries, pinned by hash.
+    ARG CCACHE_VERSION=4.14.2
+    RUN case "${TARGETARCH}" in \
+            amd64) a=x86_64;  h=b20ff6415151226ac5a10dfd6839700c694bd67d1871c8fddb266d366ff25bfb ;; \
+            arm64) a=aarch64; h=b1b583cd76980b291c4a25b95d8cb2cf1637b4a58083b9c53014780c7548f8d0 ;; \
+            *) echo "unsupported arch ${TARGETARCH}" >&2; exit 1 ;; \
+        esac && \
+        f="ccache-${CCACHE_VERSION}-linux-${a}-musl-static" && \
+        curl -fsSLo /tmp/ccache.tar.xz "https://github.com/ccache/ccache/releases/download/v${CCACHE_VERSION}/${f}.tar.xz" && \
+        echo "${h}  /tmp/ccache.tar.xz" | sha256sum -c - && \
+        tar -xJf /tmp/ccache.tar.xz -C /tmp && \
+        install -m 0755 "/tmp/${f}/ccache" /usr/local/bin/ccache && \
+        rm -rf /tmp/ccache.tar.xz "/tmp/${f}" && \
+        ccache --version | head -1
 
-    # Clang/LLVM for V8 (core itself builds with gcc). V8 14.x needs a recent
-    # clang; AppStream's current one (21.x on Rocky 9.8) is new enough. On el9
-    # the binaries are unversioned, so no update-alternatives needed.
-    RUN dnf install -y clang lld llvm compiler-rt && dnf clean all
+    # Clang/LLVM for V8 (core itself builds with gcc). AppStream's clang 21 is
+    # recent enough. Its config files (/etc/clang/*.cfg) pin the newest
+    # gcc-toolset it depends on (15) as the GCC installation; point them at
+    # gcc-toolset-13 instead, so V8 and core use the same libstdc++.
+    RUN dnf install -y clang lld llvm compiler-rt && dnf clean all && \
+        sed -i -E 's#gcc-toolset-[0-9]+/root/+usr/lib/gcc/([^/ ]+)/[0-9]+#gcc-toolset-13/root/usr/lib/gcc/\1/13#' /etc/clang/*.cfg && \
+        clang++ -v 2>&1 | grep -q 'Selected GCC installation: /opt/rh/gcc-toolset-13/' && \
+        echo | clang -dM -E - | grep -q __clang_major__
 
 
-#### DESKTOP BASE (Rocky Linux 9 on amd64, Ubuntu 24.04 on arm64) ####
-FROM core-base-server AS core-base-desktop-amd64
+#### DESKTOP BASE (Rocky Linux 8, both arches) ####
+FROM core-base-server AS core-base-desktop
 
-FROM ubuntu:24.04 AS core-base-desktop-arm64
-
-    # 24.04 ships Python 3.12, which is new enough.
-    ENV CORE_PYTHON=/usr/bin/python3
-    ENV TZ=Etc/UTC
-    ENV DEBIAN_FRONTEND=noninteractive
-
-    RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
-        apt-get update && apt-get install -yq --no-install-recommends \
-            ca-certificates git curl zip unzip tar \
-            sudo wget ssh gpg ccache \
-            build-essential make cmake ninja-build pkg-config \
-            libglib2.0-dev \
-            python3 python-is-python3 python3-venv python3-setuptools \
-            python3-httplib2 \
-            lsb-release autoconf automake libtool findutils \
-            gn \
-        && rm -rf /var/lib/apt/lists/*
-
-    # Clang/LLVM for V8. apt.llvm.org needs a pinned major; the Rocky 9 server
-    # base can't pin one, AppStream only has its current clang. libclang-rt
-    # has the builtins library V8's build links.
-    RUN mkdir -p /etc/apt/keyrings && \
-        wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | \
-        gpg --dearmor -o /etc/apt/keyrings/llvm-snapshot.gpg && \
-        echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/noble/ llvm-toolchain-noble-21 main" \
-        > /etc/apt/sources.list.d/llvm-21.list && \
-        apt-get update && apt-get install -yq --no-install-recommends \
-            clang-21 lld-21 llvm-21 libclang-rt-21-dev \
-            qemu-user-static binfmt-support && \
-        rm -rf /var/lib/apt/lists/*
-
-    # set clang 21 as standard
-    RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 100 && \
-        update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100 && \
-        update-alternatives --install /usr/bin/llvm-ar llvm-ar /usr/bin/llvm-ar-21 100 && \
-        update-alternatives --install /usr/bin/llvm-nm llvm-nm /usr/bin/llvm-nm-21 100 && \
-        update-alternatives --install /usr/bin/llvm-ranlib llvm-ranlib /usr/bin/llvm-ranlib-21 100 && \
-        update-alternatives --install /usr/bin/lld lld /usr/bin/lld-21 100
-
-FROM core-base-desktop-${TARGETARCH} AS core-base-desktop
+    # What building Qt (Common/3dParty/qt) needs: X11/xcb and Wayland
+    # platform plugins, OpenGL/EGL, fonts, the GTK platform theme, DBus,
+    # accessibility, and audio for Qt Multimedia. nasm is for FFmpeg's
+    # assembly, which Qt Multimedia's FFmpeg backend uses.
+    RUN dnf install -y \
+            libX11-devel libXext-devel libXrender-devel libXi-devel libXrandr-devel \
+            libxcb-devel xcb-util-devel xcb-util-cursor-devel xcb-util-image-devel \
+            xcb-util-keysyms-devel xcb-util-renderutil-devel xcb-util-wm-devel \
+            libxkbcommon-devel libxkbcommon-x11-devel libxshmfence-devel \
+            wayland-devel wayland-protocols-devel \
+            mesa-libGL-devel mesa-libEGL-devel mesa-libgbm-devel libdrm-devel \
+            vulkan-headers vulkan-loader-devel \
+            fontconfig-devel freetype-devel \
+            gtk3-devel dbus-devel at-spi2-core-devel cups-devel \
+            openssl3-devel libzstd-devel \
+            pulseaudio-libs-devel alsa-lib-devel \
+            nasm \
+        && dnf clean all
 
 
 #### CORE BASE (shared tail for both products) ####
@@ -157,8 +154,11 @@ FROM core-base AS core
     # upload the ones missing there.
     # CORE_CCACHE compiles through ccache, for runners whose BuildKit cache
     # doesn't survive the job: they fill and save the mount core-ccache.
+    # The build tree holds the third-party installs, so it is per base image:
+    # objects from the old Rocky 9 base would leak glibc 2.34 symbols in.
     ARG CORE_CCACHE
-    RUN --mount=type=cache,target=/build-cache \
+    ARG TARGETARCH
+    RUN --mount=type=cache,target=/build-cache,id=core-build-el8-${TARGETARCH} \
         --mount=type=cache,target=/nuget-cache,id=vcpkg-binary-cache \
         --mount=type=cache,target=/ccache,id=core-ccache \
         --mount=type=secret,id=remote_cache_s3_access_key \
