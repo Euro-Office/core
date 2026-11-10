@@ -50,3 +50,20 @@ add_core_gtest(
     GTEST_MAIN
     GTEST_FILTER "-CPdfFileTest.EditPdfFromBase64"
 )
+
+# test.cpp includes PdfWriter.h for the pCodes regression case. That header
+# pulls its dependencies through ../../ relative to PdfFile/, so the test needs
+# the same include directories the PdfFile target uses.
+target_include_directories(pdffile_test PRIVATE
+    ${CORE_ROOT_DIR}/PdfFile/lib
+    ${CORE_ROOT_DIR}/PdfFile/lib/goo
+    ${CORE_ROOT_DIR}/PdfFile/lib/fofi
+    ${CORE_ROOT_DIR}/PdfFile/lib/splash
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2
+    ${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg
+    ${FREETYPE_SOURCES_DIR}/include
+    ${FREETYPE_SOURCES_DIR}/include/freetype
+    ${ZLIBNG_INCLUDEDIR_ABS}
+    ${CORE_ROOT_DIR}/OfficeUtils/src
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/include
+)

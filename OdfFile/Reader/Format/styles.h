@@ -857,6 +857,9 @@ public:
 	bool compare( const style_page_layout_properties_attlist & attlist );
 	void add_attributes( const xml::attributes_wc_ptr & Attributes );
 
+	// Fit to pages as XLSX fitToWidth/fitToHeight (0 = no limit in that direction).
+	bool get_fit_to_pages(unsigned int & width, unsigned int & height) const;
+
 	void docx_convert_serialize(std::wostream & strm, oox::docx_conversion_context & Context, _CP_OPT(odf_types::length_or_percent) margin_left, 
 																								_CP_OPT(odf_types::length_or_percent) margin_right);
     void pptx_convert(oox::pptx_conversion_context & Context);
@@ -886,7 +889,7 @@ public:
     _CP_OPT(odf_types::style_print)			style_print_;
     _CP_OPT(odf_types::direction)			style_print_page_order_;
     _CP_OPT(odf_types::percent)				style_scale_to_;
-    _CP_OPT(unsigned int)					style_scale_to_pages_;
+    _CP_OPT(int)							style_scale_to_pages_;	// signed: a negative value is invalid, not huge
     _CP_OPT(odf_types::table_centering)		style_table_centering_;
     _CP_OPT(odf_types::length)				style_footnote_max_height_;
     odf_types::common_writing_mode_attlist	common_writing_mode_attlist_;
@@ -898,8 +901,10 @@ public:
     _CP_OPT(bool)							style_layout_grid_ruby_below_;  
 	_CP_OPT(bool)							style_layout_grid_print_;
     _CP_OPT(bool)							style_layout_grid_display_;
-	_CP_OPT(unsigned int)					loext_scale_to_X_;
-	_CP_OPT(unsigned int)					loext_scale_to_Y_;
+	_CP_OPT(int)							style_scale_to_X_;
+	_CP_OPT(int)							style_scale_to_Y_;
+	_CP_OPT(int)							loext_scale_to_X_;
+	_CP_OPT(int)							loext_scale_to_Y_;
 
 };
 

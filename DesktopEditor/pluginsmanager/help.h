@@ -86,7 +86,8 @@ L"                         The symbol = can be skipped for all parameters.\n" \
 L"                         Must be first on the command line.\n\n" \
 
 L"  --marketplace        = Optional parameter. Set plugins marketplace URL in quotes.\n" \
-L"                         Default is https://onlyoffice.github.io\n\n" \
+L"                         Optionally append the release repository after a semicolon: \"<url>;<repo>\".\n" \
+L"                         Default is https://euro-office.github.io/plugins;https://github.com/Euro-Office/plugins\n\n" \
 
 L"  --print-installed    = Optional parameter without value. Print installed plugins.\n\n" \
 
