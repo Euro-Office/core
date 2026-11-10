@@ -41,6 +41,7 @@ FROM android-ndk AS core-android-build
     ARG ANDROID_ABI
     ARG ANDROID_API_LEVEL
     ARG CORE_CCACHE
+    ARG CORE_NO_WARNINGS=OFF
 
     COPY core /core
 
@@ -62,7 +63,8 @@ FROM android-ndk AS core-android-build
         /core/scripts/build.sh --build-dir /build-cache/core --output /out \
             --android ${ANDROID_ABI} --android-api ${ANDROID_API_LEVEL} \
             ${CORE_CCACHE:+--ccache} \
-            -- -UTHIRD_PARTY_PREPARED -DEO_CORE_3RD_PARTY_DIR=/build-cache/3rd
+            -- -UTHIRD_PARTY_PREPARED -DEO_CORE_3RD_PARTY_DIR=/build-cache/3rd \
+            -DEO_NO_WARNINGS=${CORE_NO_WARNINGS}
         if [ -n "${CORE_CCACHE}" ]; then
             ccache --show-stats | tee /ccache/last-stats.txt
         fi

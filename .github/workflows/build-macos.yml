@@ -64,7 +64,7 @@ jobs:
 
     # Builds the third-party libraries missing from the remote cache too
     - name: Build
-      run: ccache --zero-stats && scripts/build.sh --tests --ccache
+      run: ccache --zero-stats && scripts/build.sh --tests --ccache -- -DEO_NO_WARNINGS=ON
       env:
         CORE_PYTHON: python3
 
