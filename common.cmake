@@ -297,6 +297,14 @@ else()
         # Setup cef
         set(CEF_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cef")
         list(APPEND CMAKE_MODULE_PATH "${CEF_ROOT}/cmake")
+        # CEF only recognizes arm64 by the macOS/MSVC names and would build
+        # libcef_dll_wrapper with x86-64 flags for Linux aarch64.
+        if(NOT DEFINED PROJECT_ARCH AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|ARM64)$")
+            set(PROJECT_ARCH "arm64")
+        endif()
+        # CEF builds libcef_dll_wrapper with the static runtime (/MT) by default;
+        # everything here uses the DLL runtime (CMAKE_MSVC_RUNTIME_LIBRARY above).
+        set(CEF_RUNTIME_LIBRARY_FLAG "/MD" CACHE STRING "MSVC runtime for CEF targets")
         find_package(CEF REQUIRED)
 
     endif()
