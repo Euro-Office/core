@@ -54,7 +54,7 @@ public:
 	std::string sType;
 	CAction* pNext;
 protected:
-	CAction() : pNext(NULL) {}
+	CAction() : pNext(nullptr) {}
 };
 struct CActionGoTo       final : public CAction
 {
@@ -558,7 +558,7 @@ public:
 		int nLength;
 		bool bFree;
 
-		CEmbeddedFile() : pFile(NULL), nLength(0), bFree(true) {}
+		CEmbeddedFile() : pFile(nullptr), nLength(0), bFree(true) {}
 		~CEmbeddedFile() { if (bFree) RELEASEARRAYOBJECTS(pFile); }
 	};
 
@@ -570,7 +570,7 @@ public:
 		CEmbeddedFile* m_pMac;
 		CEmbeddedFile* m_pUnix;
 
-		CEmbeddedFiles() : m_pF(NULL), m_pUF(NULL), m_pDOS(NULL), m_pMac(NULL), m_pUnix(NULL) {}
+		CEmbeddedFiles() : m_pF(nullptr), m_pUF(nullptr), m_pDOS(nullptr), m_pMac(nullptr), m_pUnix(nullptr) {}
 		~CEmbeddedFiles()
 		{
 			RELEASEOBJECT(m_pF);

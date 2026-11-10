@@ -87,7 +87,7 @@ namespace PdfWriter
 			unsigned int nFlags = 0;
 			UIntChangeBit(nFlags, 5);
 			pFontDescriptor->Add("Flags", nFlags);
-			m_pFontFileDict = NULL;
+			m_pFontFileDict = nullptr;
 		}
 
 	}
@@ -116,12 +116,12 @@ namespace PdfWriter
 			return;
 
 		DWORD dwFileSize;
-		FT_Byte* pFaceMemory = NULL;
+		FT_Byte* pFaceMemory = nullptr;
 		NSFile::CFileBinary::ReadAllBytes(m_wsFontPath, &pFaceMemory, dwFileSize);
 		if (!pFaceMemory)
 			return;
 
-		FT_Face pFace = NULL;
+		FT_Face pFace = nullptr;
 		FT_New_Memory_Face(pLibrary, pFaceMemory, dwFileSize, m_unFontIndex, &pFace);
 
 		if (!pFace)
