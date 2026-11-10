@@ -57,6 +57,8 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/OfficeCryptReader/tests" officecrypt_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Reader/Converter/SMCustomShape2OOXML/TestSMCustomShape" starmath_smcustomshape_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/test_odf" test_odf )
+        add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/test/TestOOOXml2Odf" ooxml2odf_math_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/Test" odf_regression_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/test" xmlsec_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/number_formats" odf_number_formats_test )
         add_subdirectory( "${CORE_ROOT_DIR}/MsBinaryFile/DocFile/test" doc_fkp_test )
@@ -78,10 +80,6 @@ else()
         # The JS engine embedding itself: run these first after updating V8
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/engine" doctrenderer_engine_test )
 
-        # PdfFile/test runs headless with its single fixture-dependent case
-        # (CPdfFileTest.EditPdfFromBase64) excluded via GTEST_FILTER; all other
-        # cases self-skip. See PdfFile/test/CMakeLists.txt and TESTING.md for the
-        # missing fixtures needed to fully enable it.
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test" pdffile_test )
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test/jbig2" pdf_jbig2_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DjVuFile/test" djvu_test )
