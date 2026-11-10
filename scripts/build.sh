@@ -117,8 +117,20 @@ fi
 
 # Android: only x2t and the libraries it and the editor engine load
 cmake --build "$build_dir" --target x2tlib
-cp "$build_dir"/unstripped/*.so "$output"/
-find "$build_dir" -path "$output" -prune -o -name libx2t.so -exec cp {} "$output"/ \;
-# The NDK's toolchain always adds -g: the build tree keeps the unstripped ones
-"$ANDROID_NDK_ROOT"/toolchains/llvm/prebuilt/*/bin/llvm-strip --strip-unneeded "$output"/*.so
+# The NDK's toolchain always adds -g: the build tree keeps the unstripped
+# libraries, the output gets stripped ones. Strip from the linker's output, not
+# from the copy in unstripped/: lld writes through mmap and the copy is taken
+# right after the link, and on the CI runners such a copy sometimes came out
+# with zeroed section headers ("invalid sh_type for string table section").
+# The ICU libraries are only in unstripped/ (copied from the third-party tree).
+strip_tool=( "$ANDROID_NDK_ROOT"/toolchains/llvm/prebuilt/*/bin/llvm-strip )
+for lib in "$build_dir"/unstripped/*.so; do
+    name="$(basename "$lib")"
+    src="$(find "$build_dir" \( -path "$build_dir/unstripped" -o -path "$output" \) -prune \
+        -o -name "$name" -type f -print -quit)"
+    src="${src:-$lib}"
+    # llvm-strip doesn't name the file when it can't read it
+    "${strip_tool[0]}" --strip-unneeded -o "$output/$name" "$src" \
+        || { echo "llvm-strip failed on $src" >&2; exit 1; }
+done
 ls -1 "$output"
