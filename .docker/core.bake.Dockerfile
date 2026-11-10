@@ -34,6 +34,10 @@ ARG TARGETARCH
 #### SERVER BASE (Rocky Linux 9, both arches) ####
 FROM rockylinux/rockylinux:9 AS core-base-server
 
+    # Skip mirrors slower than 200 kB/s. The mirrorlist can hand out one that
+    # serves ~10-80 kB/s, which stretches this stage to one or two hours.
+    RUN printf 'minrate=200k\ntimeout=30\nmax_parallel_downloads=10\n' >> /etc/dnf/dnf.conf
+
     # EPEL + CRB provide ninja-build, ccache, python3-httplib2 and several
     # -devel packages not in the base channels.
     RUN dnf install -y dnf-plugins-core epel-release && \
