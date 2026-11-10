@@ -25,6 +25,8 @@
 
 #include "RtfLex.h"
 
+#include <cstring>
+
 StringStream::StringStream()
 {
 	m_aBuffer = NULL;
@@ -363,8 +365,7 @@ void RtfLex::parseText(int car, RtfToken& token)
 	{
 		if( nTempBufPos >= m_nReadBufSize )
 		{
-			m_caReadBuffer[nTempBufPos++] = '\0';
-			token.Key += m_caReadBuffer ;
+			token.Key.append( m_caReadBuffer, strnlen( m_caReadBuffer, nTempBufPos ) );
 			nTempBufPos = 0;
 		}
 		m_caReadBuffer[nTempBufPos++] = (char)c;
@@ -380,8 +381,7 @@ void RtfLex::parseText(int car, RtfToken& token)
 	}
 	if( nTempBufPos > 0 )
 	{
-		m_caReadBuffer[nTempBufPos++] = '\0';
-		token.Key += m_caReadBuffer ;
+		token.Key.append( m_caReadBuffer, strnlen( m_caReadBuffer, nTempBufPos ) );
 	}
 }
 bool RtfLex::GetNextChar( int& nChar )

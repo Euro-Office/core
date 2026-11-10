@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <cstdint>
+#include <memory>
 
 #include "gtest/gtest.h"
 
@@ -438,6 +440,86 @@ TEST_F(COfficeUtilsTest, traversal_linux)
 	expected_names.push_back(L"ok.txt");
 	expected_names.push_back(L"abs_ok.txt");
 	EXPECT_TRUE(IsFilesPathsEqual(names, expected_names));
+}
+
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// Package a single ODT mimetype entry and validate its ZIP representation:
+// first and uncompressed, with matching CRC and sizes in the local and central
+// headers, and no trailing data descriptor. Check the stored content as well.
+TEST_F(COfficeUtilsTest, odt_mimetype_zip_headers_are_consistent)
+{
+	// Arrange
+	const std::string mimetype_content = "application/vnd.oasis.opendocument.text";
+	const uint32_t expected_mimetype_crc = 204654174;
+	const std::wstring source_folder = NSDirectory::CreateDirectoryWithUniqueName(tempDirectory);
+	ASSERT_FALSE(source_folder.empty());
+	const std::wstring zip_path = source_folder + L".odt";
+	struct TemporaryPackageCleanup
+	{
+		std::wstring source_folder, zip_path;
+		~TemporaryPackageCleanup()
+		{
+			NSFile::CFileBinary::Remove(zip_path);
+			NSDirectory::DeleteDirectory(source_folder);
+		}
+	} cleanup{source_folder, zip_path};
+
+	NSFile::CFileBinary mimetype_file;
+	ASSERT_TRUE(mimetype_file.CreateFileW(source_folder + wsep + L"mimetype"));
+	ASSERT_TRUE(mimetype_file.WriteFile(mimetype_content.data(), static_cast<DWORD>(mimetype_content.size())));
+	mimetype_file.CloseFile();
+
+	// Act
+	const HRESULT error_code = utils.CompressFileOrDirectory(source_folder, zip_path);
+
+	// Assert
+	ASSERT_EQ(error_code, S_OK);
+
+	BYTE* zip_bytes = nullptr;
+	DWORD zip_size = 0;
+	const bool read_success = NSFile::CFileBinary::ReadAllBytes(zip_path, &zip_bytes, zip_size);
+	std::unique_ptr<BYTE[]> zip_contents(zip_bytes);
+	ASSERT_TRUE(read_success);
+	ASSERT_GE(zip_size, 30u + 8u + mimetype_content.size() + 46u + 8u + 22u);
+	const auto read_uint16_le = [&](size_t offset) -> uint16_t
+	{
+		return static_cast<uint16_t>(zip_bytes[offset]) |
+			(static_cast<uint16_t>(zip_bytes[offset + 1]) << 8);
+	};
+	const auto read_uint32_le = [&](size_t offset) -> uint32_t
+	{
+		return static_cast<uint32_t>(read_uint16_le(offset)) |
+			(static_cast<uint32_t>(read_uint16_le(offset + 2)) << 16);
+	};
+
+	ASSERT_EQ(read_uint32_le(0), 0x04034b50u);
+	EXPECT_EQ(read_uint16_le(8), 0u); // ODT requires mimetype to be first and uncompressed.
+	ASSERT_EQ(read_uint16_le(26), 8u);
+	EXPECT_EQ(read_uint16_le(28), 0u);
+	EXPECT_EQ(std::string(reinterpret_cast<char*>(zip_bytes + 30), 8), "mimetype");
+	const size_t mimetype_data_offset = 30u + read_uint16_le(26) + read_uint16_le(28);
+	ASSERT_LE(mimetype_data_offset + mimetype_content.size(), zip_size);
+	EXPECT_EQ(std::string(reinterpret_cast<char*>(zip_bytes + mimetype_data_offset), mimetype_content.size()),
+		mimetype_content);
+
+	// The local header must provide CRC and sizes without a data descriptor.
+	EXPECT_EQ(read_uint16_le(6) & 0x0008u, 0u);
+	EXPECT_EQ(read_uint32_le(14), expected_mimetype_crc);
+	EXPECT_EQ(read_uint32_le(18), mimetype_content.size());
+	EXPECT_EQ(read_uint32_le(22), mimetype_content.size());
+
+	ASSERT_EQ(read_uint32_le(zip_size - 22), 0x06054b50u);
+	ASSERT_EQ(read_uint16_le(zip_size - 12), 1u);
+	const size_t central_directory_offset = read_uint32_le(zip_size - 6);
+	ASSERT_LE(central_directory_offset, zip_size - 46u);
+	ASSERT_EQ(read_uint32_le(central_directory_offset), 0x02014b50u);
+	EXPECT_EQ(read_uint16_le(central_directory_offset + 8) & 0x0008u, 0u);
+	EXPECT_EQ(read_uint16_le(central_directory_offset + 10), 0u);
+	EXPECT_EQ(read_uint32_le(central_directory_offset + 16), expected_mimetype_crc);
+	EXPECT_EQ(read_uint32_le(central_directory_offset + 20), mimetype_content.size());
+	EXPECT_EQ(read_uint32_le(central_directory_offset + 24), mimetype_content.size());
+	EXPECT_EQ(central_directory_offset, mimetype_data_offset + mimetype_content.size())
+		<< "The STORED mimetype entry must not have a trailing data descriptor";
 }
 
 TEST_F(COfficeUtilsTest, time_file)

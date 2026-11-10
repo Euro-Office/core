@@ -410,64 +410,9 @@ set(SOURCES
     ${CORE_ROOT}/XpsFile/XpsLib/WString.cpp
     ${CORE_ROOT}/XpsFile/XpsLib/ContextState.cpp
 
-    ${CORE_ROOT}/DjVuFile/libdjvu/../DjVu.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/../DjVuFileImplementation.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/Arrays.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/BSByteStream.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/BSEncodeByteStream.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/ByteStream.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DataPool.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/debug.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVmDir.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVmDir0.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVmDoc.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVmNav.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuAnno.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuDocEditor.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuDocument.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuDumpHelper.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuErrorList.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuFile.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuFileCache.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuGlobal.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuGlobalMemory.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuImage.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuInfo.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuMessageLite.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuNavDir.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuPalette.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuPort.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuText.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuToPS.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GBitmap.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GContainer.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GException.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GIFFManager.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GMapAreas.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GPixmap.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GRect.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GScaler.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GSmartPointer.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GString.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GThreads.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GUnicode.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/IFFByteStream.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/IW44EncodeCodec.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/IW44Image.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/JB2EncodeCodec.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/JB2Image.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/JPEGDecoder.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/MMRDecoder.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/MMX.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/UnicodeByteStream.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/XMLParser.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/XMLTags.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/ZPCodec.cpp
-
-    ${CORE_ROOT}/DjVuFile/wasm/libdjvu/atomic.cpp
-    ${CORE_ROOT}/DjVuFile/wasm/libdjvu/DjVuMessage.cpp
-    ${CORE_ROOT}/DjVuFile/wasm/libdjvu/GOS.cpp
-    ${CORE_ROOT}/DjVuFile/wasm/libdjvu/GURL.cpp
+    ${CORE_ROOT}/DjVuFile/DjVu.cpp
+    ${CORE_ROOT}/DjVuFile/DjVuFileImplementation.cpp
+    ${DJVULIBRE_SOURCES}
 
     ${DESKTOP_ROOT}/graphics/pro/officedrawingfile.cpp
 
@@ -664,6 +609,15 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 # jbig2enc reports its version through jbig2_version()
 set_source_files_properties(${JBIG2ENC_SOURCES} PROPERTIES COMPILE_DEFINITIONS "VERSION=\"0.32\"")
+
+# DjVuLibre's headers (e.g. GString.h) must not shadow xpdf's in other sources
+set(DJVU_SOURCES
+    ${CORE_ROOT}/DjVuFile/DjVu.cpp
+    ${CORE_ROOT}/DjVuFile/DjVuFileImplementation.cpp
+    ${DJVULIBRE_SOURCES}
+)
+set_property(SOURCE ${DJVU_SOURCES} APPEND PROPERTY INCLUDE_DIRECTORIES ${DJVULIBRE_SOURCES_DIR})
+set_property(SOURCE ${DJVU_SOURCES} APPEND PROPERTY COMPILE_DEFINITIONS ${DJVULIBRE_DEFINITIONS})
 
 # -------------------------------------------------
 # link libraries

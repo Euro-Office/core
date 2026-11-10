@@ -33,6 +33,7 @@ namespace DocFileFormat
   class FormattedDiskPageCHPX: public FormattedDiskPage
   {
     friend class WordDocument;
+    friend struct FkpTestAccess;
   
     private:
 	  /// An array of bytes where each unsigned char is the word offset of a CHPX.
