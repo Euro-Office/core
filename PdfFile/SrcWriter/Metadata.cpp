@@ -211,7 +211,7 @@ namespace PdfWriter
 				pStream->WriteEscapeName(oIter.first.c_str());
 				pStream->WriteChar(' ');
 				nBegin = pStream->Tell();
-				pStream->Write(pObject, NULL);
+				pStream->Write(pObject, nullptr);
 				nEnd = pStream->Tell();
 				pStream->WriteStr("\012");
 				if (oIter.first == "Length")
@@ -227,7 +227,7 @@ namespace PdfWriter
 		int nCurrent = pStream->Tell();
 
 		pStream->Seek(m_nLengthBegin, EWhenceMode::SeekSet);
-		pStream->Write(Get("Length"), NULL);
+		pStream->Write(Get("Length"), nullptr);
 
 		int nEnd = pStream->Tell();
 		if (nEnd < m_nLengthEnd)

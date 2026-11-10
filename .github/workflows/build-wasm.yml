@@ -73,7 +73,7 @@ jobs:
       # The same script builds the wasm modules in .docker/core-wasm.bake.Dockerfile,
       # so the package can replace that build
       - name: Build with Emscripten
-        run: ccache --zero-stats && scripts/build.sh --wasm --ccache
+        run: ccache --zero-stats && scripts/build.sh --wasm --ccache -- -DEO_NO_WARNINGS=ON
 
       - name: ccache statistics
         if: always()

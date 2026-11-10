@@ -74,7 +74,7 @@ void GlobalParamsAdaptor::AddNameToUnicode(const char* sFile)
 	while (getLine(buf, sizeof(buf), f))
 	{
 		tok1 = strtok(buf, " \t\r\n");
-		tok2 = strtok(NULL, " \t\r\n");
+		tok2 = strtok(nullptr, " \t\r\n");
 		if (tok1 && tok2)
 		{
 			sscanf(tok1, "%x", &u);
@@ -119,7 +119,7 @@ void GlobalParamsAdaptor::AddCMapFolder(const char* sCollection, GString* sFolde
 }
 void GlobalParamsAdaptor::SetCMapFile(const std::wstring &wsFile)
 {
-    AddAllCMap(NULL);
+    AddAllCMap(nullptr);
 
 #ifndef BUILDING_WASM_MODULE
 	NSFile::CFileBinary::ReadAllBytes(wsFile, &m_bCMapData, m_nCMapDataLength);
@@ -127,7 +127,7 @@ void GlobalParamsAdaptor::SetCMapFile(const std::wstring &wsFile)
 }
 void GlobalParamsAdaptor::SetCMapMemory(BYTE* pData, DWORD nSizeData)
 {
-    AddAllCMap(NULL);
+    AddAllCMap(nullptr);
 
     if (pData)
     {
@@ -449,7 +449,7 @@ void XMLConverter::ParseDicts()
 
 			if (oTemp.isDict() || oTemp.isStream())
 			{
-				Dict* pDict = NULL;
+				Dict* pDict = nullptr;
 				if (oTemp.isDict())
 					pDict = oTemp.getDict();
 				else if (oTemp.isStream())

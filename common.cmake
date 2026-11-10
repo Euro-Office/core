@@ -779,6 +779,26 @@ else() # if( LINUX )
 
 endif()
 
+# The CI builds turn this on: the warnings filled most of their logs (some
+# 380,000 on Linux), which made them unreadable. Remove once the warnings
+# are fixed.
+option(EO_NO_WARNINGS "Compile without warnings" OFF)
+if(EO_NO_WARNINGS)
+    # -w and /w don't touch the errors, so the flags that turn errors into
+    # warnings or off (-Wno-register for ISO C++17's register) stay
+    if(MSVC)
+        # Else cl warns on every source that /w overrides /W4 and /W3
+        list(FILTER COMMON_CXX_FLAGS EXCLUDE REGEX "^/W[0-4]$")
+        list(FILTER COMMON_C_FLAGS EXCLUDE REGEX "^/W[0-4]$")
+        foreach(flags CMAKE_C_FLAGS CMAKE_CXX_FLAGS)
+            string(REGEX REPLACE "/W[0-4]" "" ${flags} "${${flags}}")
+        endforeach()
+        add_compile_options(/w)
+    else()
+        add_compile_options(-w)
+    endif()
+endif()
+
 
 function(set_default_options target)
     if(NOT TARGET "${target}")

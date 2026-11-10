@@ -130,7 +130,7 @@ protected:
 		WritePdf(wsPath, arrPages, [](CPdfFile&) {});
 	}
 
-	std::unique_ptr<CPdfFile> Load(const std::wstring& wsPath, const wchar_t* wsPassword = NULL)
+	std::unique_ptr<CPdfFile> Load(const std::wstring& wsPath, const wchar_t* wsPassword = nullptr)
 	{
 		std::unique_ptr<CPdfFile> pPdf = NewPdf();
 		EXPECT_TRUE(pPdf->LoadFromFile(wsPath, L"", wsPassword, wsPassword)) << U_TO_UTF8(wsPath);
@@ -175,7 +175,7 @@ protected:
 
 	std::vector<BYTE> ReadAll(const std::wstring& wsPath)
 	{
-		BYTE* pData = NULL;
+		BYTE* pData = nullptr;
 		DWORD dwSize = 0;
 		std::vector<BYTE> arrRes;
 		if (NSFile::CFileBinary::ReadAllBytes(wsPath, &pData, dwSize))
@@ -185,7 +185,7 @@ protected:
 	}
 };
 
-NSFonts::IApplicationFonts* CPdfFileTest::m_pFonts = NULL;
+NSFonts::IApplicationFonts* CPdfFileTest::m_pFonts = nullptr;
 
 TEST_F(CPdfFileTest, WriteAndRead)
 {
@@ -250,7 +250,7 @@ TEST_F(CPdfFileTest, MetaData)
 		oPdf.AddMetaData(L"ONLYOFFICEFORM", (BYTE*)sMeta.data(), (DWORD)sMeta.size());
 	});
 
-	BYTE* pData = NULL;
+	BYTE* pData = nullptr;
 	DWORD dwLength = 0;
 	ASSERT_TRUE(CPdfFile::GetMetaData(wsFile, L"ONLYOFFICEFORM", &pData, dwLength));
 	EXPECT_EQ(std::string((char*)pData, dwLength), sMeta);
@@ -430,7 +430,7 @@ TEST_F(CPdfFileTest, CopyPagesThroughRenderer)
 			pCopy->NewPage();
 			pCopy->put_Width(dW);
 			pCopy->put_Height(dH);
-			pSource->DrawPageOnRenderer(pCopy.get(), i, NULL);
+			pSource->DrawPageOnRenderer(pCopy.get(), i, nullptr);
 		}
 		ASSERT_EQ(0, pCopy->SaveToFile(wsCopy));
 	}
@@ -450,7 +450,7 @@ protected:
 		ICertificate* pCertificate = NSCertificate::GenerateByAlg("rsa2048", mapProps);
 		EXPECT_NE(nullptr, pCertificate);
 		if (!pCertificate)
-			return NULL;
+			return nullptr;
 
 		std::unique_ptr<CPdfFile> pPdf = Load(wsFile);
 		EXPECT_TRUE(pPdf->EditPdf(wsSigned));
@@ -464,7 +464,7 @@ protected:
 		std::vector<BYTE> arrToSign = SignedBytes(arrFile);
 		EXPECT_FALSE(arrToSign.empty());
 
-		BYTE* pSignature = NULL;
+		BYTE* pSignature = nullptr;
 		unsigned int nSignature = 0;
 		EXPECT_TRUE(pCertificate->SignPKCS7(arrToSign.data(), (unsigned int)arrToSign.size(), pSignature, nSignature));
 		EXPECT_TRUE(pPdf->FinalizeSignature(pSignature, nSignature));

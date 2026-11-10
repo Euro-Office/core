@@ -67,7 +67,7 @@ public:
         m_nLen        = nLen;
         m_dX          = dX;
         m_dY          = dY;
-        m_pFont       = NULL;
+        m_pFont       = nullptr;
         m_dSize       = -1;
 		m_nType       = PdfWriter::EFontType::fontUnknownType;
         m_lColor      = 0;
@@ -319,7 +319,7 @@ public:
 
     CPenState()
     {
-        m_pDashPattern = NULL;
+        m_pDashPattern = nullptr;
         Reset();
     }
     ~CPenState()
@@ -416,7 +416,7 @@ public:
         if (m_pDashPattern)
         {
             delete[] m_pDashPattern;
-            m_pDashPattern = NULL;
+            m_pDashPattern = nullptr;
         }
 
         m_lDashPatternSize = 0;
@@ -424,7 +424,7 @@ public:
         if (!pPattern || !lSize)
         {
             m_lDashPatternSize = 0;
-            m_pDashPattern     = NULL;
+            m_pDashPattern     = nullptr;
         }
         else
         {
@@ -520,7 +520,7 @@ public:
 
         m_nDashStyle       = Aggplus::DashStyleSolid;
         m_lDashPatternSize = 0;
-        m_pDashPattern     = NULL;
+        m_pDashPattern     = nullptr;
 		m_dDashOffset      = 0;
 
 		m_nColor2Size = 0;
@@ -625,8 +625,8 @@ public:
 public:
     CBrushState()
     {
-        m_pShadingColors      = NULL;
-        m_pShadingPoints      = NULL;
+        m_pShadingColors      = nullptr;
+        m_pShadingPoints      = nullptr;
         m_lShadingPointsCount = 0;
         Reset();
     }
@@ -724,13 +724,13 @@ public:
         if (m_pShadingColors)
         {
             delete[] m_pShadingColors;
-            m_pShadingColors = NULL;
+            m_pShadingColors = nullptr;
         }
 
         if (m_pShadingPoints)
         {
             delete[] m_pShadingPoints;
-            m_pShadingPoints = NULL;
+            m_pShadingPoints = nullptr;
         }
 
         if (!pColors || !pPoints || !lCount)
@@ -1659,7 +1659,7 @@ struct TDestinationInfo
 {
     TDestinationInfo(PdfWriter::CPage* page, const double& x, const double& y, const double& w, const double& h, const double& dx, const double& dy, const unsigned int& undpage)
     {
-		pDest      = NULL;
+		pDest      = nullptr;
         pPage      = page;
         dX         = x;
         dY         = y;
@@ -1672,7 +1672,7 @@ struct TDestinationInfo
 	TDestinationInfo(PdfWriter::CDestination* dest, const unsigned int& undpage)
 	{
 		pDest      = dest;
-		pPage      = NULL;
+		pPage      = nullptr;
 		unDestPage = undpage;
 	}
 
@@ -1691,8 +1691,8 @@ class CMultiLineTextManager
 public:
     CMultiLineTextManager()
     {
-        m_pCodes       = NULL;
-        m_pWidths      = NULL;
+        m_pCodes       = nullptr;
+        m_pWidths      = nullptr;
         m_unLen        = 0;
         m_ushSpaceCode = 0;
         m_unLineHeight = 0;
@@ -1712,8 +1712,8 @@ public:
     }
     void Clear()
     {
-        m_pCodes         = NULL;
-        m_pWidths        = NULL;
+        m_pCodes         = nullptr;
+        m_pWidths        = nullptr;
         m_unLen          = 0;
         m_ushSpaceCode   = 0;
         m_ushNewLineCode = 0;

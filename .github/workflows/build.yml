@@ -131,7 +131,7 @@ jobs:
     # V8, etc.) missing from the remote cache.
     - name: Build core (x2t, docbuilder, etc.)
       run: |
-        "$RUNNER_TEMP/in-build-image" 'ccache --zero-stats && scripts/build.sh --tests --ccache'
+        "$RUNNER_TEMP/in-build-image" 'ccache --zero-stats && scripts/build.sh --tests --ccache -- -DEO_NO_WARNINGS=ON'
 
     - name: ccache statistics
       if: always()
