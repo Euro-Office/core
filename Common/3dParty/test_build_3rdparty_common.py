@@ -64,6 +64,11 @@ class RemoteCacheTest( unittest.TestCase ):
         self.assertEqual( nc._remote_file_path( ( 2, 34 ) ),
                           "3rdparty/linux-x86_64/v8/3/v8-glibc2.34.tar.bz2" )
 
+    def test_wasm_has_its_own_folder_without_glibc( self ):
+        with mock.patch.object( nc, "CROSS_TARGET", "wasm" ):
+            self.assertEqual( nc._cache_tag_platform(), "wasm" )
+            self.assertIsNone( nc._local_glibc() )
+
     def test_picks_newest_compatible_glibc( self ):
         d = "3rdparty/linux-x86_64/v8/3"
         self.use_backend( FakeBackend( [ f"{ d }/v8-glibc2.28.tar.bz2",

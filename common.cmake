@@ -91,6 +91,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
+            "--target=wasm"
             "--only=openssl-hash,hunspell,brotli,cryptopp,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm,jbig2enc,djvulibre"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result

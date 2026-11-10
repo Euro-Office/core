@@ -88,6 +88,10 @@ def is_android() -> bool:
     checks keep describing the HOST, so dep scripts test is_android() first."""
     return CROSS_TARGET.startswith( "android-" )
 
+def is_wasm() -> bool:
+    """True for the Emscripten build of core (--target=wasm)."""
+    return CROSS_TARGET == "wasm"
+
 def is_linux() -> bool:
     return sys.platform.startswith("linux")
 
@@ -396,8 +400,9 @@ else:
 
 def _cache_tag_platform() -> str:
     # Cross builds get their own folder, so they never reuse or overwrite host
-    # archives, e.g. "android-arm64".
-    if is_android():
+    # archives, e.g. "android-arm64". WebAssembly doesn't depend on the host,
+    # so every host shares the "wasm" folder.
+    if is_android() or is_wasm():
         return CROSS_TARGET
     return f"{ sys.platform }-{ _cache_tag_arch() }"
 
@@ -447,8 +452,8 @@ def _cache_key():
 # ---------------------------------------------------------------------------
 
 def _local_glibc():
-    # Android binaries link against bionic, not the host glibc.
-    if not sys.platform.startswith( "linux" ) or is_android():
+    # Android binaries link against bionic, WebAssembly against no libc of the host.
+    if not sys.platform.startswith( "linux" ) or is_android() or is_wasm():
         return None
     name, version = platform.libc_ver()
     if name != "glibc" or not version:
