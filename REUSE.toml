@@ -215,3 +215,11 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = "OdfFile/Test/test_odf/ExampleFiles/section_columns.odt"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/chapter_fields.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/styleref_fields.docx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"

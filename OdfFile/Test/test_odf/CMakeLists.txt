@@ -76,6 +76,7 @@ add_core_gtest(
             interactions.cpp
             ods2xlsx_fit_to_page.cpp
             odt2docx_section_columns.cpp
+            odt2docx_chapter_field.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
