@@ -27,7 +27,6 @@ jobs:
       # run uploads missing third-party builds, every other run only reads.
       REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
       REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
-      CCACHE_DIR: ${{ github.workspace }}/.cache/ccache
       CCACHE_MAXSIZE: 1G
 
     steps:
@@ -54,14 +53,20 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Verify Emscripten
-        run: emcc -v
+      # The container runs as root, the checkout belongs to the runner's user.
+      # ${{ github.workspace }} is the host's path, so the ccache path is set
+      # here and kept relative in the cache steps: it must be the same on every runner.
+      - name: Prepare container
+        run: |
+          git config --global --add safe.directory '*'
+          echo "CCACHE_DIR=$GITHUB_WORKSPACE/.cache/ccache" >> "$GITHUB_ENV"
+          emcc -v
 
       - name: Restore ccache
         id: ccache
         uses: actions/cache/restore@v4
         with:
-          path: ${{ env.CCACHE_DIR }}
+          path: .cache/ccache
           key: ccache-wasm-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
           restore-keys: ccache-wasm-
 
@@ -80,7 +85,7 @@ jobs:
         if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
         uses: actions/cache/save@v4
         with:
-          path: ${{ env.CCACHE_DIR }}
+          path: .cache/ccache
           key: ccache-wasm-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
 
       # Published by the publish job for pushes to main and same-repo PRs that
