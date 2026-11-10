@@ -1479,3 +1479,325 @@ TEST(CHeifTest, RejectsInvalidImages)
 		EXPECT_FALSE(Decode(arData, oFrame)) << sName;
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////
+// ICO
+
+namespace
+{
+	// Header and one directory entry for an image of nSize bytes right after it
+	std::vector<BYTE> IcoHeader(int nWidth, int nHeight, unsigned int nSize)
+	{
+		std::vector<BYTE> arData;
+		PutUInt16LE(arData, 0);
+		PutUInt16LE(arData, 1);  // icon
+		PutUInt16LE(arData, 1);  // one image
+		arData.push_back((BYTE)(nWidth & 0xFF));
+		arData.push_back((BYTE)(nHeight & 0xFF));
+		arData.push_back(0);     // no palette
+		arData.push_back(0);
+		PutUInt16LE(arData, 1);  // planes
+		PutUInt16LE(arData, 32); // bits per pixel
+		PutUInt32LE(arData, nSize);
+		PutUInt32LE(arData, 22);
+		return arData;
+	}
+
+	// The quadrants as a 32 bit bitmap icon: bottom-up BGRA rows, then an empty
+	// AND mask
+	std::vector<BYTE> MakeBitmapIco()
+	{
+		std::vector<BYTE> arImage;
+		PutUInt32LE(arImage, 40);
+		PutUInt32LE(arImage, c_nQuadImageSize);
+		PutUInt32LE(arImage, 2 * c_nQuadImageSize); // color and mask
+		PutUInt16LE(arImage, 1);
+		PutUInt16LE(arImage, 32);
+		PutUInt32LE(arImage, 0);                                    // uncompressed
+		PutUInt32LE(arImage, 4 * c_nQuadImageSize * c_nQuadImageSize); // size of the color data
+		for (int i = 0; i < 4; ++i)
+			PutUInt32LE(arImage, 0);
+		for (int nY = c_nQuadImageSize - 1; nY >= 0; --nY)
+		{
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				const CColor c = QuadrantColor(nX, nY);
+				arImage.insert(arImage.end(), {(BYTE)c.b, (BYTE)c.g, (BYTE)c.r, 255});
+			}
+		}
+		arImage.insert(arImage.end(), c_nQuadImageSize * 4, 0);
+
+		std::vector<BYTE> arData = IcoHeader(c_nQuadImageSize, c_nQuadImageSize, (unsigned int)arImage.size());
+		arData.insert(arData.end(), arImage.begin(), arImage.end());
+		return arData;
+	}
+
+	// The quadrants as a PNG compressed icon, like the 256 pixel ones (always
+	// 32 bit RGBA)
+	std::vector<BYTE> MakePngIco()
+	{
+		CPngImage oImage;
+		oImage.nWidth = oImage.nHeight = c_nQuadImageSize;
+		oImage.nColorType = PNG_COLOR_TYPE_RGB_ALPHA;
+		for (int nY = 0; nY < c_nQuadImageSize; ++nY)
+		{
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				const CColor c = QuadrantColor(nX, nY);
+				oImage.arRows.insert(oImage.arRows.end(), {(BYTE)c.r, (BYTE)c.g, (BYTE)c.b, 255});
+			}
+		}
+		const std::vector<BYTE> arPng = MakePng(oImage);
+
+		std::vector<BYTE> arData = IcoHeader(c_nQuadImageSize, c_nQuadImageSize, (unsigned int)arPng.size());
+		arData.insert(arData.end(), arPng.begin(), arPng.end());
+		return arData;
+	}
+}
+
+TEST(CIcoTest, DetectsBitmapAndPngIcons)
+{
+	EXPECT_EQ(_CXIMAGE_FORMAT_ICO, FileType(MakeBitmapIco()));
+	EXPECT_EQ(_CXIMAGE_FORMAT_ICO, FileType(MakePngIco()));
+
+	// A cursor has the same layout
+	std::vector<BYTE> arCursor = MakeBitmapIco();
+	arCursor[2] = 2;
+	EXPECT_EQ(_CXIMAGE_FORMAT_ICO, FileType(arCursor));
+}
+
+TEST(CIcoTest, DecodesBitmapAndPngIcons)
+{
+	for (const std::vector<BYTE>& arData : {MakeBitmapIco(), MakePngIco()})
+	{
+		for (bool bIsRGBA : {false, true})
+		{
+			CBgraFrame oFrame;
+			ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+			for (int nY : {4, 27})
+				for (int nX : {4, 27})
+					EXPECT_EQ(QuadrantColor(nX, nY), Pixel(oFrame, nX, nY, bIsRGBA)) << nX << ", " << nY;
+		}
+	}
+}
+
+TEST(CIcoTest, RejectsOtherData)
+{
+	// The directory entry's width does not match the image
+	std::vector<BYTE> arData = MakeBitmapIco();
+	arData[6] = 16;
+	EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(arData));
+
+	// The image offset points past the end
+	arData = MakeBitmapIco();
+	arData[21] = 0x7F;
+	EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(arData));
+
+	// No images
+	arData = MakeBitmapIco();
+	arData[4] = 0;
+	EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(arData));
+
+	// Short buffers starting with zeros, like ISO media boxes
+	for (size_t nSize : {16, 22, 30, 39})
+		EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(std::vector<BYTE>(nSize, 0))) << nSize;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// PSD
+
+namespace
+{
+	struct CPsdOptions
+	{
+		unsigned int nVersion = 1;
+		int nDepth = 8;                       // 8 or 16 bits per channel
+		bool bRle = false;
+		bool bAlpha = false;                  // a fourth channel: 255, 128, 255, 0 per quadrant
+		std::vector<BYTE> arLayerSection;     // contents of the layer and mask section
+	};
+
+	// PackBits, one literal run per row (at most 128 bytes, enough here)
+	std::vector<BYTE> PackBitsRow(const std::vector<BYTE>& arRow)
+	{
+		std::vector<BYTE> arPacked;
+		for (size_t i = 0; i < arRow.size(); i += 128)
+		{
+			const size_t nCount = std::min<size_t>(128, arRow.size() - i);
+			arPacked.push_back((BYTE)(nCount - 1));
+			arPacked.insert(arPacked.end(), arRow.begin() + i, arRow.begin() + i + nCount);
+		}
+		return arPacked;
+	}
+
+	// The quadrants as an RGB Photoshop file: the merged image, one plane per
+	// channel. 16 bit samples are the 8 bit ones times 257.
+	std::vector<BYTE> MakePsd(const CPsdOptions& oOptions = CPsdOptions())
+	{
+		std::vector<BYTE> arData = Bytes("8BPS");
+		arData.push_back(0);
+		arData.push_back((BYTE)oOptions.nVersion);
+		arData.insert(arData.end(), 6, 0);        // reserved
+		const int nChannels = oOptions.bAlpha ? 4 : 3;
+		arData.push_back(0);
+		arData.push_back((BYTE)nChannels);
+		PutUInt32BE(arData, c_nQuadImageSize);    // height
+		PutUInt32BE(arData, c_nQuadImageSize);    // width
+		arData.push_back(0);
+		arData.push_back((BYTE)oOptions.nDepth);
+		arData.push_back(0);
+		arData.push_back(3);                      // RGB
+		PutUInt32BE(arData, 0);                   // color mode data
+		PutUInt32BE(arData, 0);                   // image resources
+		PutUInt32BE(arData, (unsigned int)oOptions.arLayerSection.size());
+		arData.insert(arData.end(), oOptions.arLayerSection.begin(), oOptions.arLayerSection.end());
+
+		std::vector<std::vector<BYTE>> arRows;    // per channel, top row first
+		const int arAlpha[4] = {255, 128, 255, 0};
+		for (int nChannel = 0; nChannel < nChannels; ++nChannel)
+		{
+			for (int nY = 0; nY < c_nQuadImageSize; ++nY)
+			{
+				std::vector<BYTE> arRow;
+				for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+				{
+					const CColor c = QuadrantColor(nX, nY);
+					const BYTE nValue = (BYTE)(0 == nChannel ? c.r : (1 == nChannel ? c.g : (2 == nChannel ? c.b
+										: arAlpha[(nY >= 16 ? 2 : 0) + (nX >= 16 ? 1 : 0)])));
+					arRow.push_back(nValue);
+					if (16 == oOptions.nDepth)
+						arRow.push_back(nValue);  // big-endian nValue * 257
+				}
+				arRows.push_back(arRow);
+			}
+		}
+
+		arData.push_back(0);
+		arData.push_back(oOptions.bRle ? 1 : 0);  // compression
+		if (oOptions.bRle)
+		{
+			std::vector<std::vector<BYTE>> arPacked;
+			for (const std::vector<BYTE>& arRow : arRows)
+				arPacked.push_back(PackBitsRow(arRow));
+			for (const std::vector<BYTE>& arRow : arPacked)
+			{
+				arData.push_back((BYTE)(arRow.size() >> 8));
+				arData.push_back((BYTE)arRow.size());
+			}
+			for (const std::vector<BYTE>& arRow : arPacked)
+				arData.insert(arData.end(), arRow.begin(), arRow.end());
+		}
+		else
+		{
+			for (const std::vector<BYTE>& arRow : arRows)
+				arData.insert(arData.end(), arRow.begin(), arRow.end());
+		}
+		return arData;
+	}
+
+	void ExpectPsdQuadrants(const std::vector<BYTE>& arData)
+	{
+		for (bool bIsRGBA : {false, true})
+		{
+			CBgraFrame oFrame;
+			ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+			// The corners too: the top and bottom rows were once lost
+			for (int nY : {0, 4, 27, 31})
+				for (int nX : {0, 4, 27, 31})
+					EXPECT_EQ(QuadrantColor(nX, nY), Pixel(oFrame, nX, nY, bIsRGBA)) << nX << ", " << nY;
+		}
+	}
+}
+
+TEST(CPsdTest, DetectsPsd)
+{
+	EXPECT_EQ(_CXIMAGE_FORMAT_PSD, FileType(MakePsd()));
+
+	// The large document format (PSB) is not supported
+	CPsdOptions oPsb;
+	oPsb.nVersion = 2;
+	EXPECT_NE(_CXIMAGE_FORMAT_PSD, FileType(MakePsd(oPsb)));
+}
+
+TEST(CPsdTest, DecodesRawAndRle)
+{
+	ExpectPsdQuadrants(MakePsd());
+
+	CPsdOptions oRle;
+	oRle.bRle = true;
+	ExpectPsdQuadrants(MakePsd(oRle));
+}
+
+TEST(CPsdTest, Decodes16Bit)
+{
+	// Samples of 0x8000 and above used to turn into negative numbers
+	for (bool bRle : {false, true})
+	{
+		CPsdOptions oOptions;
+		oOptions.nDepth = 16;
+		oOptions.bRle = bRle;
+		ExpectPsdQuadrants(MakePsd(oOptions));
+	}
+}
+
+TEST(CPsdTest, DecodesTransparency)
+{
+	// The transparency is the fourth channel, after the colors
+	for (int nDepth : {8, 16})
+	{
+		CPsdOptions oOptions;
+		oOptions.nDepth = nDepth;
+		oOptions.bAlpha = true;
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(MakePsd(oOptions), oFrame)) << nDepth;
+		ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+		EXPECT_EQ(255, Alpha(oFrame, 4, 4)) << nDepth;
+		EXPECT_EQ(128, Alpha(oFrame, 27, 4)) << nDepth;
+		EXPECT_EQ(255, Alpha(oFrame, 4, 27)) << nDepth;
+		EXPECT_EQ(0, Alpha(oFrame, 27, 27)) << nDepth;
+		EXPECT_EQ(QuadrantColor(4, 4), Pixel(oFrame, 4, 4)) << nDepth;
+		EXPECT_EQ(QuadrantColor(4, 27), Pixel(oFrame, 4, 27)) << nDepth;
+	}
+}
+
+TEST(CPsdTest, SkipsLayers)
+{
+	// Only the merged image is decoded; the layer section is skipped whatever
+	// it holds
+	CPsdOptions oOptions;
+	oOptions.arLayerSection = Bytes("not a layer section libpsd could parse");
+	ExpectPsdQuadrants(MakePsd(oOptions));
+}
+
+TEST(CPsdTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+
+	// Raw data cut short
+	std::vector<BYTE> arData = MakePsd();
+	arData.resize(arData.size() - 100);
+	EXPECT_FALSE(Decode(arData, oFrame));
+
+	// Compressed data cut short
+	CPsdOptions oRle;
+	oRle.bRle = true;
+	arData = MakePsd(oRle);
+	arData.resize(arData.size() - 100);
+	EXPECT_FALSE(Decode(arData, oFrame));
+
+	// A run that would write past the image: 0x81 repeats the next byte 128
+	// times, in every row
+	arData = MakePsd(oRle);
+	const size_t nCounts = arData.size() - 3 * c_nQuadImageSize * (c_nQuadImageSize + 1) - 3 * c_nQuadImageSize * 2;
+	const size_t nRows = nCounts + 3 * c_nQuadImageSize * 2;
+	for (size_t i = nRows; i + 1 < arData.size(); i += c_nQuadImageSize + 1)
+	{
+		arData[i] = 0x81;
+		arData[i + 1] = 0x55;
+	}
+	EXPECT_FALSE(Decode(arData, oFrame));
+}
