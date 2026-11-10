@@ -275,6 +275,17 @@ def _cmake_module( module : str, prefix : Path, args : list[ str ] ):
     nc.run_command( [ "cmake", "--install", "." ], f"Install { module }", build )
 
 
+def _patch_source( module : str, relative : str, old : str, new : str ):
+    # Idempotent: the work dir with the unpacked sources is reused across builds
+    path = nc.work_dir / "src" / f"{ module }-everywhere-src-{ qt_version }" / relative
+    text = path.read_text()
+    if new in text:
+        return
+    if old not in text:
+        nc.abort_op( f"Can't patch { path }: expected text not found" )
+    path.write_text( text.replace( old, new, 1 ) )
+
+
 def _openssl3_args() -> list[ str ]:
     # Qt loads OpenSSL at runtime (libssl.so.3) and only needs its headers to
     # build. On el8 they come from EPEL's openssl3-devel, which installs
@@ -344,6 +355,12 @@ def build_from_source():
         "-DFEATURE_qev=OFF",
     ] )
 
+    # Qt Multimedia builds its test helper library whenever QtTest exists, even
+    # without tests, and it needs linux/udmabuf.h (kernel 5.0 headers, el8 has
+    # 4.18). Nothing here uses it.
+    _patch_source( "qtmultimedia", "src/CMakeLists.txt",
+                   "if(QT_FEATURE_testlib AND TARGET Qt::Test)\n    add_subdirectory(multimediatestlib)",
+                   "if(FALSE) # Euro-Office: no multimediatestlib\n    add_subdirectory(multimediatestlib)" )
     _cmake_module( "qtmultimedia", prefix, [
         "-DFEATURE_ffmpeg=ON",
         f"-DFFMPEG_DIR={ prefix }",
