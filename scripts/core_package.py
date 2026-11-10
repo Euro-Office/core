@@ -77,7 +77,7 @@ EXIT_BUILD_FROM_SOURCE = 3
 CORE_REPOSITORY = "Euro-Office/core"
 # The workflows that publish packages
 BUILD_WORKFLOWS = tuple( f".github/workflows/{ name }.yml"
-                         for name in ( "build", "build-windows", "build-macos", "build-android" ) )
+                         for name in ( "build", "build-windows", "build-macos", "build-android", "build-wasm" ) )
 
 CHANNELS = ( "main", "pr" )
 MARKER = ".core-package.json"
@@ -541,8 +541,8 @@ def main( argv=None ):
     p = sub.add_parser( "pack", help="archive a build output directory" )
     p.add_argument( "--from", dest="src", required=True, help="build output directory" )
     p.add_argument( "--out", required=True, help="directory for the archive and manifest" )
-    p.add_argument( "--platform", required=True, help="e.g. linux-amd64, windows-x64, android-arm64-v8a" )
-    p.add_argument( "--product", required=True, help="e.g. server, desktop, android" )
+    p.add_argument( "--platform", required=True, help="e.g. linux-amd64, windows-x64, android-arm64-v8a, wasm" )
+    p.add_argument( "--product", required=True, help="e.g. server, desktop, android, engine (wasm)" )
     p.add_argument( "--core", default=".", help="core checkout (default: .)" )
     p.add_argument( "--toolchain", default="", help="free text recorded in the manifest" )
 

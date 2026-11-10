@@ -212,7 +212,8 @@ class CorePackageTest( unittest.TestCase ):
         self.assertTrue( running( ( ".github/workflows/build-windows.yml", "in_progress" ) ) )
         self.assertTrue( running( ( ".github/workflows/build.yml", "queued" ) ) )
         self.assertFalse( running( ( ".github/workflows/build.yml", "completed" ) ) )
-        self.assertFalse( running( ( ".github/workflows/build-wasm.yml", "in_progress" ) ) )
+        self.assertFalse( running( ( ".github/workflows/codeql.yaml", "in_progress" ) ) )
+        self.assertTrue( running( ( ".github/workflows/build-wasm.yml", "in_progress" ) ) )
         self.assertFalse( running() )
 
     def test_corrupt_archive_is_not_used( self ):
