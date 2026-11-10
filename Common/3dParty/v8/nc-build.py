@@ -279,8 +279,23 @@ def prepare_clang_base() -> tuple[ Path, str ]:
     if not builtins.is_file():
         nc.abort_op( f"clang builtins { builtins } not found. Is compiler-rt installed?" )
 
-    # On macOS against the SDK's libc++, like core, not Homebrew's
-    return _make_clang_base( bin_dir, { wanted: builtins }, link_tools = nc.is_apple_silicon() )
+    if nc.is_apple_silicon():
+        # On macOS against the SDK's libc++, like core, not Homebrew's
+        return _make_clang_base( bin_dir, { wanted: builtins }, link_tools = True )
+
+    # On Linux against the libstdc++ of the GCC that builds core (the g++ on
+    # PATH, gcc-toolset-13 on Rocky 8). Clang finds a GCC by itself only in
+    # the default places (/usr/lib/gcc), and the distro config files that
+    # name another one (/etc/clang/<triple>-clang++.cfg on Rocky) don't apply:
+    # V8 passes --target with Chromium's triple. Clang also reads
+    # <triple>-<driver>.cfg from its own bin/, so put one there.
+    clang_base, major = _make_clang_base( bin_dir, { wanted: builtins }, link_tools = True )
+    gcc_install_dir = Path( nc.capture_process_output( [ "g++", "-print-libgcc-file-name" ] ).strip() ).parent
+    if not ( gcc_install_dir / "crtbegin.o" ).is_file():
+        nc.abort_op( f"g++ reports { gcc_install_dir } as its installation, which has no crtbegin.o" )
+    for driver in ( "clang", "clang++" ):
+        ( clang_base / "bin" / f"{ triple_dir }-{ driver }.cfg" ).write_text( f"--gcc-install-dir={ gcc_install_dir }\n" )
+    return clang_base, major
 
 def _homebrew_prefix( formula : str ) -> Path | None:
     for prefix in ( "/opt/homebrew/opt", "/usr/local/opt" ):

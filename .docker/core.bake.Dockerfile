@@ -12,8 +12,8 @@
 # Toolchain: el8's own gcc 8 is too old for C++20, so core builds with
 #   gcc-toolset-13. Its libstdc++ links the parts that el8's libstdc++.so.6
 #   lacks statically (libstdc++_nonshared.a), so the binaries need nothing
-#   beyond a stock el8. clang/LLVM 21 from AppStream builds V8; it is pointed
-#   at the same gcc-toolset-13 (see below). GCC 13 also keeps the cached
+#   beyond a stock el8. clang/LLVM 21 from AppStream builds V8 against the
+#   same gcc-toolset-13 libstdc++. GCC 13 also keeps the cached
 #   third-party archives linkable on hosts with GCC 13 or newer.
 #
 # Desktop: Qt is built from source on this base (Common/3dParty/qt), because
@@ -87,13 +87,10 @@ FROM rockylinux/rockylinux:8 AS core-base-server
         ccache --version | head -1
 
     # Clang/LLVM for V8 (core itself builds with gcc). AppStream's clang 21 is
-    # recent enough. Its config files (/etc/clang/*.cfg) pin the newest
-    # gcc-toolset it depends on (15) as the GCC installation; point them at
-    # gcc-toolset-13 instead, so V8 and core use the same libstdc++.
-    RUN dnf install -y clang lld llvm compiler-rt && dnf clean all && \
-        sed -i -E 's#gcc-toolset-[0-9]+/root/+usr/lib/gcc/([^/ ]+)/[0-9]+#gcc-toolset-13/root/usr/lib/gcc/\1/13#' /etc/clang/*.cfg && \
-        clang++ -v 2>&1 | grep -q 'Selected GCC installation: /opt/rh/gcc-toolset-13/' && \
-        echo | clang -dM -E - | grep -q __clang_major__
+    # recent enough. It pulls in gcc-toolset-15, but V8's build points it at
+    # the GCC on PATH (Common/3dParty/v8/nc-build.py), so V8 and core use the
+    # same libstdc++.
+    RUN dnf install -y clang lld llvm compiler-rt && dnf clean all
 
 
 #### DESKTOP BASE (Rocky Linux 8, both arches) ####
