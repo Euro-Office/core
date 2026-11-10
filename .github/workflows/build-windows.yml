@@ -252,7 +252,7 @@ jobs:
           $vcpkgCache = '${{ github.workspace }}/.cache/vcpkg'
           New-Item -ItemType Directory -Force -Path $vcpkgCache | Out-Null
           $env:VCPKG_BINARY_SOURCES = "clear;files,$vcpkgCache,readwrite"
-          scripts/build.ps1 -Arch ${{ matrix.arch }} -SdkVersion ${{ matrix.sdk }} -VcToolsVersion '${{ matrix.vc_tools }}' -Ccache
+          scripts/build.ps1 -Arch ${{ matrix.arch }} -SdkVersion ${{ matrix.sdk }} -VcToolsVersion '${{ matrix.vc_tools }}' -Ccache '-DEO_NO_WARNINGS=ON'
 
       - name: ccache statistics
         if: always()

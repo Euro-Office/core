@@ -77,7 +77,7 @@ jobs:
         run: |
           mkdir -p ../build-wasm-dir
           cd ../build-wasm-dir
-          /bin/bash -c "emcmake cmake -S $GITHUB_WORKSPACE/core -B . -DEO_CORE_OUTPUT_DIR=$GITHUB_WORKSPACE/package && cmake --build ."
+          /bin/bash -c "emcmake cmake -S $GITHUB_WORKSPACE/core -B . -DEO_CORE_OUTPUT_DIR=$GITHUB_WORKSPACE/package -DEO_NO_WARNINGS=ON && cmake --build ."
         shell: bash
 
   build-wasm-summary:

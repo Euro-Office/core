@@ -778,6 +778,24 @@ else() # if( LINUX )
 
 endif()
 
+# The CI builds turn this on: the warnings filled most of their logs (some
+# 380,000 on Linux), which made them unreadable. Remove once the warnings
+# are fixed.
+option(EO_NO_WARNINGS "Compile without warnings" OFF)
+if(EO_NO_WARNINGS)
+    list(FILTER COMMON_CXX_FLAGS EXCLUDE REGEX "^[-/][Ww]")
+    list(FILTER COMMON_C_FLAGS EXCLUDE REGEX "^[-/][Ww]")
+    if(MSVC)
+        # Else cl warns that /w overrides the default /W3, on every source
+        foreach(flags CMAKE_C_FLAGS CMAKE_CXX_FLAGS)
+            string(REGEX REPLACE "/W[0-4]" "" ${flags} "${${flags}}")
+        endforeach()
+        add_compile_options(/w)
+    else()
+        add_compile_options(-w)
+    endif()
+endif()
+
 
 function(set_default_options target)
     if(NOT TARGET "${target}")

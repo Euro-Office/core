@@ -76,7 +76,7 @@ jobs:
           context    = "."
           dockerfile = "core/.docker/core-android.bake.Dockerfile"
           target     = "core-android-ci"
-          args       = { ANDROID_ABI = ABI, CORE_CCACHE = "1" }
+          args       = { ANDROID_ABI = ABI, CORE_CCACHE = "1", CORE_NO_WARNINGS = "ON" }
           contexts   = { android-ndk = "target:android-ndk", ccache-seed = "ccache-seed" }
           secret     = ["id=remote_cache_s3_access_key,env=REMOTE_CACHE_S3_ACCESS_KEY", "id=remote_cache_s3_secret_key,env=REMOTE_CACHE_S3_SECRET_KEY"]
           output     = ["type=local,dest=out"]
