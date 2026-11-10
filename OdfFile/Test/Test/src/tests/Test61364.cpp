@@ -36,7 +36,9 @@ TEST_F(Test61364, settings_default_tab_stop)
 	ASSERT_TRUE(tabStop.m_oVal.IsInit());
 	const SimpleTypes::CTwipsMeasure& tabStopValue = tabStop.m_oVal.get();
 
-	const int expected_tab_stop_in_twips = 282;
+	// 0.499cm is 282.9 twips; w:defaultTabStop is written as whole twips,
+	// rounded (01a809081).
+	const int expected_tab_stop_in_twips = 283;
 
 	EXPECT_EQ(tabStopValue.ToTwips(), expected_tab_stop_in_twips);
 }

@@ -260,8 +260,8 @@ public:
 	CPluginsManager()
 	{
 		m_sPluginsDir = L"";
-		m_sMarketplaceUrl = L"https://onlyoffice.github.io";
-		m_sMarketplaceRepo = L"https://github.com/ONLYOFFICE/onlyoffice.github.io";
+		m_sMarketplaceUrl = L"https://euro-office.github.io/plugins";
+		m_sMarketplaceRepo = L"https://github.com/Euro-Office/plugins";
 
 		m_sSettingsDir = NSSystemUtils::GetAppDataDir() + L"/pluginsmanager";
 
@@ -318,26 +318,13 @@ public:
 
 		if ( sUrl.length() )
 		{
-			if (0 == sUrl.find(L"https://onlyoffice.github.io"))
+			m_sMarketplaceUrl = sUrl;
+			m_sMarketplaceRepo = L"";
+			std::wstring::size_type posDelimeter = m_sMarketplaceUrl.find(';');
+			if (posDelimeter != std::wstring::npos)
 			{
-				m_sMarketplaceUrl = L"https://onlyoffice.github.io";
-				m_sMarketplaceRepo = L"https://github.com/ONLYOFFICE/onlyoffice.github.io";
-			}
-			else if (0 == sUrl.find(L"https://onlyoffice-plugins.github.io/onlyoffice.github.io"))
-			{
-				m_sMarketplaceUrl = L"https://onlyoffice-plugins.github.io/onlyoffice.github.io";
-				m_sMarketplaceRepo = L"https://github.com/ONLYOFFICE-PLUGINS/onlyoffice.github.io";
-			}
-			else
-			{
-				m_sMarketplaceUrl = sUrl;
-				m_sMarketplaceRepo = L"";
-				std::wstring::size_type posDelimeter = m_sMarketplaceUrl.find(';');
-				if (posDelimeter != std::wstring::npos)
-				{
-					m_sMarketplaceUrl = sUrl.substr(0, posDelimeter);
-					m_sMarketplaceRepo = sUrl.substr(posDelimeter + 1);
-				}
+				m_sMarketplaceUrl = sUrl.substr(0, posDelimeter);
+				m_sMarketplaceRepo = sUrl.substr(posDelimeter + 1);
 			}
 
 			bResult = true;

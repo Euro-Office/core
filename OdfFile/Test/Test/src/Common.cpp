@@ -25,12 +25,13 @@
 // *
 // */
 //
-#pragma once
 
 #include "Common.h"
 
 #include <stdio.h>
+#if defined(_WIN32) || defined (_WIN64)
 #include <tchar.h>
+#endif
 
 #include "../../../../Common/OfficeFileFormatChecker.h"
 #include "../../../../OfficeUtils/src/OfficeUtils.h"
@@ -194,7 +195,12 @@ boost::optional<std::wstring> convert_odf_to_ooxml(const std::wstring& srcFileNa
 	}
 	_CP_LOG << L"[info] " << srcFileName << std::endl;
 
-	nResult = ConvertODF2OOXml(srcTempPath, dstTempPath, L"C:\\Windows\\Fonts", srcTempPath2, L"");
+	#if defined(_WIN32) || defined (_WIN64)
+	const std::wstring fontsPath = L"C:\\Windows\\Fonts";
+#else
+	const std::wstring fontsPath = L"";
+#endif
+	nResult = ConvertODF2OOXml(srcTempPath, dstTempPath, fontsPath, srcTempPath2, L"");
 
 	if (srcTempPath != srcFileName)
 		NSDirectory::DeleteDirectory(srcTempPath);
@@ -256,9 +262,12 @@ void ODT2DOCX_ConversionEnvironment::SetUp()
 
 void ODT2DOCX_ConversionEnvironment::TearDown()
 {
+	if (!mDocx)
+		return;
 	NSDirectory::DeleteDirectory(mDocx->m_sDocumentPath);
 
 	delete mDocx;
+	mDocx = nullptr;
 }
 
 DOCX2ODT_ConvertsionEnvironment::DOCX2ODT_ConvertsionEnvironment(const std::wstring& filename)

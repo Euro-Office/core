@@ -1,6 +1,5 @@
 import sys
 import re
-import http.client
 import shutil
 import stat
 import subprocess
@@ -10,6 +9,10 @@ import platform
 import tarfile
 import tempfile
 from pathlib import Path
+
+# Shared with the core package cache in <core>/scripts
+sys.path.insert( 0, str( Path( __file__ ).resolve().parents[ 2 ] / "scripts" ) )
+import remote_cache
 
 _original_rmtree = shutil.rmtree
 
@@ -358,13 +361,7 @@ class MeasurementObj:
 # (build locally only).
 # ===========================================================================
 
-def _env( *names, default="" ):
-    # First non-empty variable out of names.
-    for nm in names:
-        value = os.environ.get( nm, "" ).strip()
-        if value:
-            return value
-    return default
+_env = remote_cache.env
 
 REMOTE_CACHE_TYPE      = _env( "REMOTE_CACHE_TYPE", default="s3" ).lower()
 BASE_REMOTE_PATH       = _env( "BASE_REMOTE_PATH", default="3rdparty" ).strip( "/" )
@@ -373,26 +370,18 @@ REMOTE_CACHE_READ_ONLY = _env( "REMOTE_CACHE_READ_ONLY" ).lower() in ( "1", "tru
 NEXTCLOUD_USER   = _env( "NEXTCLOUD_USER" )
 NEXTCLOUD_PASS   = _env( "NEXTCLOUD_PASS" )
 NEXTCLOUD_REMOTE = _env( "NEXTCLOUD_REMOTE",
-                         default="https://cloud.nextcloud.com/remote.php/dav/files" ).rstrip( "/" )
+                         default=remote_cache.DEFAULT_NEXTCLOUD_REMOTE ).rstrip( "/" )
 
 S3_URL           = _env( "REMOTE_CACHE_S3_URL",
-                         default="https://s3.eu-central-4.ionoscloud.com/eo-build-assets" ).rstrip( "/" )
+                         default=remote_cache.DEFAULT_S3_URL ).rstrip( "/" )
 S3_ACCESS_KEY    = _env( "REMOTE_CACHE_S3_ACCESS_KEY" )
 S3_SECRET_KEY    = _env( "REMOTE_CACHE_S3_SECRET_KEY" )
 S3_SESSION_TOKEN = _env( "REMOTE_CACHE_S3_SESSION_TOKEN" )
 
-def _s3_region( url ):
-    host = url.split( "://", 1 )[ -1 ].split( "/", 1 )[ 0 ]
-    m = re.match( r"s3[.-]([a-z]{2}(?:-[a-z]+)+-\d+)\.", host )
-    return m.group( 1 ) if m else "us-east-1"
-
-def _valid_s3_url( url ):
-    return re.fullmatch( r"https?://[^/?#]+/[^/?#]+", url ) is not None
-
-S3_REGION = _env( "REMOTE_CACHE_S3_REGION", default=_s3_region( S3_URL ) )
+S3_REGION = _env( "REMOTE_CACHE_S3_REGION", default=remote_cache.s3_region( S3_URL ) )
 
 if REMOTE_CACHE_TYPE == "s3":
-    USE_REMOTE_CACHE = _valid_s3_url( S3_URL )
+    USE_REMOTE_CACHE = remote_cache.valid_s3_url( S3_URL )
     if not USE_REMOTE_CACHE:
         print( "  [WARN]  REMOTE_CACHE_S3_URL must look like https://<endpoint>/<bucket>, remote cache disabled" )
     if not ( S3_ACCESS_KEY and S3_SECRET_KEY ):
@@ -488,167 +477,19 @@ def _remote_file_path( glibc=None ):
     return f"{ _remote_dir_path() }/{ name }.tar.bz2"
 
 
-# ---------------------------------------------------------------------------
-# Backends. Each one takes paths relative to the cache root and implements:
-#   exists( path ) -> bool
-#   list( dir )    -> str   (raw listing; only searched for archive names)
-#   get( path, dest_file ) -> bool
-#   put( src_file, path )  -> bool
-# ---------------------------------------------------------------------------
-
-class _WebDavBackend:
-    def __init__( self ):
-        self.root = ( f"{ NEXTCLOUD_REMOTE }/{ NEXTCLOUD_USER }"
-                      if NEXTCLOUD_USER else NEXTCLOUD_REMOTE )
-
-    def _url( self, path ):
-        return f"{ self.root }/{ path }"
-
-    def _curl( self, *args ):
-        auth = ( [ "-u", f"{ NEXTCLOUD_USER }:{ NEXTCLOUD_PASS }" ]
-                 if NEXTCLOUD_USER and NEXTCLOUD_PASS else [] )
-        return subprocess.run(
-            [ "curl", "-s", *auth, *args ],
-            text=True, capture_output=True,
-        )
-
-    def exists( self, path ):
-        # HEAD request: True only on a 2xx status code.
-        r = self._curl( "-o", os.devnull, "-w", "%{http_code}", "--head", self._url( path ) )
-        return r.stdout.strip().startswith( "2" )
-
-    def list( self, dir ):
-        # WebDAV PROPFIND, depth 1. A missing folder simply yields no entries.
-        r = self._curl( "-X", "PROPFIND", "-H", "Depth: 1", self._url( dir ) + "/" )
-        return r.stdout if r.returncode == 0 else ""
-
-    def get( self, path, dest_file ):
-        return self._curl( "-f", "-o", dest_file, self._url( path ) ).returncode == 0
-
-    def put( self, src_file, path ):
-        # WebDAV does not create intermediate collections, so MKCOL each level
-        # (MKCOL on an existing collection just 405s, which we ignore).
-        parts = path.split( "/" )[ :-1 ]
-        for i in range( 1, len( parts ) + 1 ):
-            self._curl( "-X", "MKCOL", self._url( "/".join( parts[ :i ] ) ) )
-        self._curl( "-X", "DELETE", self._url( path ) )
-        return self._curl( "-f", "-T", src_file, self._url( path ) ).returncode == 0
-
-
-class _S3Backend:
-    # Plain urllib + AWS Signature V4, so no boto3 / aws cli is needed.
-
-    _EMPTY_SHA256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-
-    def __init__( self ):
-        from urllib.parse import urlsplit
-        url = urlsplit( S3_URL )
-        self.scheme = url.scheme
-        self.host   = url.netloc
-        self.prefix = url.path
-
-    def _request( self, method, key="", query=None, body=None, size=0 ):
-        import datetime, hashlib, hmac
-        from urllib.parse import quote
-        from urllib.request import Request
-
-        uri = quote( f"{ self.prefix }/{ key }", safe="/-_.~" )
-        qs  = "&".join( f"{ quote( k, safe='-_.~' ) }={ quote( v, safe='-_.~' ) }"
-                        for k, v in sorted( ( query or {} ).items() ) )
-        payload_hash = "UNSIGNED-PAYLOAD" if body is not None else self._EMPTY_SHA256
-
-        headers = { "host": self.host, "x-amz-content-sha256": payload_hash }
-        if body is not None:
-            headers[ "content-length" ] = str( size )
-
-        if S3_ACCESS_KEY and S3_SECRET_KEY:
-            now   = datetime.datetime.now( datetime.timezone.utc )
-            stamp = now.strftime( "%Y%m%dT%H%M%SZ" )
-            day   = stamp[ :8 ]
-            headers[ "x-amz-date" ] = stamp
-            if S3_SESSION_TOKEN:
-                headers[ "x-amz-security-token" ] = S3_SESSION_TOKEN
-
-            signed    = ";".join( sorted( headers ) )
-            canonical = "\n".join( [
-                method, uri, qs,
-                "".join( f"{ k }:{ headers[ k ].strip() }\n" for k in sorted( headers ) ),
-                signed, payload_hash,
-            ] )
-            scope = f"{ day }/{ S3_REGION }/s3/aws4_request"
-            to_sign = "\n".join( [ "AWS4-HMAC-SHA256", stamp, scope,
-                                   hashlib.sha256( canonical.encode() ).hexdigest() ] )
-
-            def _hmac( k, msg ):
-                return hmac.new( k, msg.encode(), hashlib.sha256 ).digest()
-            k = _hmac( f"AWS4{ S3_SECRET_KEY }".encode(), day )
-            for part in ( S3_REGION, "s3", "aws4_request" ):
-                k = _hmac( k, part )
-            signature = hmac.new( k, to_sign.encode(), hashlib.sha256 ).hexdigest()
-            headers[ "authorization" ] = ( f"AWS4-HMAC-SHA256 Credential={ S3_ACCESS_KEY }/{ scope }, "
-                                           f"SignedHeaders={ signed }, Signature={ signature }" )
-
-        url = f"{ self.scheme }://{ self.host }{ uri }" + ( f"?{ qs }" if qs else "" )
-        headers.pop( "host" )  # urllib sets it from the URL
-        return Request( url, data=body, method=method, headers=headers )
-
-    def _open( self, req ):
-        # Response on 2xx, None on any HTTP or network error. Anything but a
-        # 404 is reported, so a broken setup doesn't look like a cache miss.
-        from urllib.request import urlopen
-        from urllib.error import HTTPError, URLError
-        try:
-            return urlopen( req, timeout=120 )
-        except HTTPError as e:
-            if e.code != 404:
-                print( f"  [WARN]  S3 { req.get_method() } failed: HTTP { e.code } { e.reason }" )
-        except ( URLError, OSError, http.client.HTTPException ) as e:
-            print( f"  [WARN]  S3 { req.get_method() } failed: { e }" )
-        return None
-
-    def exists( self, path ):
-        r = self._open( self._request( "HEAD", path ) )
-        if r is None:
-            return False
-        r.close()
-        return True
-
-    def list( self, dir ):
-        r = self._open( self._request( "GET", query={ "list-type": "2", "prefix": dir + "/" } ) )
-        if r is None:
-            return ""
-        with r:
-            return r.read().decode( "utf-8", "replace" )
-
-    def get( self, path, dest_file ):
-        r = self._open( self._request( "GET", path ) )
-        if r is None:
-            return False
-        try:
-            with r, open( dest_file, "wb" ) as f:
-                shutil.copyfileobj( r, f, 1024 * 1024 )
-                expected = r.headers.get( "Content-Length" )
-                # urllib doesn't raise when the connection drops early
-                return expected is None or f.tell() == int( expected )
-        except ( OSError, http.client.HTTPException ):
-            return False
-
-    def put( self, src_file, path ):
-        with open( src_file, "rb" ) as f:
-            size = os.fstat( f.fileno() ).st_size
-            r = self._open( self._request( "PUT", path, body=f, size=size ) )
-        if r is None:
-            return False
-        r.close()
-        return True
-
+# Backends: see remote_cache.py
 
 _backend_instance = None
 
 def _backend():
     global _backend_instance
     if _backend_instance is None:
-        _backend_instance = _S3Backend() if REMOTE_CACHE_TYPE == "s3" else _WebDavBackend()
+        if REMOTE_CACHE_TYPE == "s3":
+            _backend_instance = remote_cache.S3Backend( S3_URL, S3_REGION, S3_ACCESS_KEY,
+                                                        S3_SECRET_KEY, S3_SESSION_TOKEN )
+        else:
+            _backend_instance = remote_cache.WebDavBackend( NEXTCLOUD_REMOTE, NEXTCLOUD_USER,
+                                                            NEXTCLOUD_PASS )
     return _backend_instance
 
 

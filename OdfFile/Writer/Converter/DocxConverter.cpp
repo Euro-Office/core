@@ -667,7 +667,7 @@ void DocxConverter::convert(OOX::Logic::CSdt *oox_sdt)
 		}
 		if ((false == value.empty()) && (value.back() == L'\n'))
 		{
-			value.erase(value.back());
+			value.pop_back();
 		}
 		odt_context->controls_context()->set_value(value);
 
@@ -678,7 +678,8 @@ void DocxConverter::convert(OOX::Logic::CSdt *oox_sdt)
 
 		if (!width)
 		{
-			odf_context()->calculate_font_metrix(L"Arial", current_font_size.back(), false, false, true);
+			double font_size = current_font_size.empty() ? 0. : current_font_size.back(); // below 1 means default
+			odf_context()->calculate_font_metrix(L"Arial", font_size, false, false, true);
 			std::pair<double, double> font_metrix = odf_context()->font_metrix();
 
 			width = font_metrix.first * value.length();

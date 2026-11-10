@@ -14,10 +14,10 @@ SOURCES += $$X2T_DIR/src/dylib/x2t.cpp
 
 SOURCES += main.cpp\
            common.cpp\
-           xlsb2xlsx/conversion.cpp\
-           xlsx2xlsb/conversion.cpp\
+           conversion.cpp\
+           workbook_facts.cpp\
 
-HEADERS += common.h
+HEADERS += common.h workbook_facts.h
 
 DESTDIR = $$CORE_BUILDS_BINARY_PATH
 

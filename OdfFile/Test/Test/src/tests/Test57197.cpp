@@ -1,6 +1,6 @@
 #include "Test57197.h"
 
-TestEnv57197* g_TestEnv44363 = (TestEnv57197*)testing::AddGlobalTestEnvironment(new TestEnv57197);
+TestEnv57197* g_TestEnv57197 = (TestEnv57197*)testing::AddGlobalTestEnvironment(new TestEnv57197);
 
 TestEnv57197::TestEnv57197()
 	: ODT2DOCX_ConversionEnvironment(L"ExampleFiles/57197.odt")
@@ -8,7 +8,7 @@ TestEnv57197::TestEnv57197()
 
 void Test57197::SetUp()
 {
-	Docx = g_TestEnv44363->GetDocument();
+	Docx = g_TestEnv57197->GetDocument();
 }
 
 TEST_F(Test57197, Docx)
@@ -107,7 +107,7 @@ TEST_F(Test57197, document_section_page_size_width)
 
 	const int expected_width_in_twips = 12240;
 
-	EXPECT_TRUE(pageSize.m_oW->ToTwips(), expected_width_in_twips);
+	EXPECT_EQ(pageSize.m_oW->ToTwips(), expected_width_in_twips);
 }
 
 TEST_F(Test57197, document_section_page_size_height)
@@ -117,5 +117,5 @@ TEST_F(Test57197, document_section_page_size_height)
 
 	const int expected_height_in_twips = 15840;
 
-	EXPECT_TRUE(pageSize.m_oH->ToTwips(), expected_height_in_twips);
+	EXPECT_EQ(pageSize.m_oH->ToTwips(), expected_height_in_twips);
 }

@@ -13,6 +13,7 @@
 #include "../../DesktopEditor/graphics/pro/Fonts.h"
 #include "../../DesktopEditor/xmlsec/src/include/CertificateCommon.h"
 #include "../PdfFile.h"
+#include "../PdfWriter.h"
 
 #include <algorithm>
 #include <cstring>
@@ -522,4 +523,35 @@ TEST_F(CPdfSignTest, SignAndVerify)
 	// Signing keeps the pages
 	std::unique_ptr<CPdfFile> pPdf = Load(wsSigned);
 	ExpectPages(*pPdf, { c_oA4, c_oLetter });
+}
+
+// Covers the redaction early-return in CPdfWriter::DrawText (#224). Text that
+// lands inside a redaction area returns before CRendererTextCommand takes
+// ownership of the buffer, so DrawText has to free it. This case drives that
+// path and checks it succeeds; it does not measure the heap.
+TEST_F(CPdfFileTest, DrawTextInsideRedaction)
+{
+	ASSERT_NE(m_pFonts, nullptr);
+
+	std::wstring wsTemp = Path(L"temp");
+	NSDirectory::CreateDirectory(wsTemp);
+	CPdfWriter writer(m_pFonts, false, nullptr, true, wsTemp);
+	ASSERT_EQ(S_OK, writer.NewPage());
+
+	// Bundled Base14 font: no dependency on system fonts.
+	writer.put_FontName(L"Embedded: Helvetica");
+	writer.put_FontSize(12);
+
+	// Quad (page coords in points, y from top) big enough that the text
+	// origin (10,10) always falls inside it, so SkipRedact() returns true.
+	ASSERT_EQ(S_OK, writer.AddRedact({
+		-10000.0, -10000.0,
+		 10000.0, -10000.0,
+		 10000.0,  10000.0,
+		-10000.0,  10000.0
+	}));
+
+	const std::wstring wsText(256, L'A');
+	for (int i = 0; i < 100; ++i)
+		ASSERT_EQ(S_OK, writer.CommandDrawText(wsText, 10, 10, 100, 20));
 }
