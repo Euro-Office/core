@@ -25,14 +25,6 @@
 
 #include "./../include/websocket.h"
 
-#ifdef USE_IXWEBSOCKET
-#include "./ixwebsocket/ixwebsocket_internal.h"
-#endif
-
-#ifdef USE_SOCKETROCKET
-#include "./socketrocket/socketRocket_internal.h"
-#endif
-
 #ifdef USE_IOWEBSOCKET
 #include "./socketio/socketio_internal.h"
 #endif
@@ -45,23 +37,8 @@ namespace NSNetwork
 	    {
             std::string sType = type;
             if (sType.empty())
-            {
-                // TODO: default engine for platform
-                sType = "ixwebsocket";
-            }
+                sType = "socketio";
 
-#ifdef USE_IXWEBSOCKET
-            if (sType == "ixwebsocket")
-		    {
-                return std::make_shared<CIXWebSocket>(url, listener);
-		    }
-#endif
-#ifdef USE_SOCKETROCKET
-            if (sType == "socketRocket")
-            {
-                return std::make_shared<CSocketRocket>(url, listener);
-            }
-#endif
 #ifdef USE_IOWEBSOCKET
             if (sType == "socketio")
             {
