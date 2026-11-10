@@ -25,6 +25,7 @@
 
 #include "paragraph_elements.h"
 
+#include <algorithm>
 #include <ostream>
 #include <string>
 
@@ -1168,6 +1169,8 @@ std::wostream & chapter::text_to_stream(std::wostream & _Wostream, bool bXmlEnco
 void chapter::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     CP_APPLY_ATTR(L"text:fixed", text_fixed_);
+    CP_APPLY_ATTR(L"text:display", text_display_);
+    CP_APPLY_ATTR(L"text:outline-level", text_outline_level_);
 }
 void chapter::add_text(const std::wstring & Text)
 {
@@ -1175,7 +1178,19 @@ void chapter::add_text(const std::wstring & Text)
 }
 void chapter::docx_convert(oox::docx_conversion_context & Context)
 {
- 	docx_serialize_field(L"BIBLIOGRAPHY", text_, Context);
+	// WordprocessingML has no chapter field: STYLEREF to the heading style of the outline
+	// level shows its name, with \n its number (LibreOffice's DOCX export writes STYLEREF
+	// "Heading N" too). Number and name together need two fields; the name is kept, the
+	// cached result keeps both. Both attributes are required; without them, number-and-name
+	// of level 1 is assumed.
+	const int level = (std::max)(1, text_outline_level_.get_value_or(1));
+	const std::wstring display = text_display_.get_value_or(L"number-and-name");
+
+	std::wstring instr = L" STYLEREF \"Heading " + std::to_wstring(level) + L"\"";
+	if (display == L"number" || display == L"plain-number")
+		instr += L" \\n";
+
+	docx_serialize_field(instr + L" ", text_, Context);
 }
 
 void chapter::xlsx_convert(oox::xlsx_conversion_context & Context)

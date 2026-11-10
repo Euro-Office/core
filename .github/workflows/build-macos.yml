@@ -55,15 +55,16 @@ jobs:
       uses: lukka/run-vcpkg@v11
 
     - name: Restore ccache
+      id: ccache
       uses: actions/cache/restore@v4
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-macos-arm64-${{ github.run_id }}
+        key: ccache-macos-arm64-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
         restore-keys: ccache-macos-arm64-
 
     # Builds the third-party libraries missing from the remote cache too
     - name: Build
-      run: ccache --zero-stats && scripts/build.sh --tests --ccache
+      run: ccache --zero-stats && scripts/build.sh --tests --ccache -- -DEO_NO_WARNINGS=ON
       env:
         CORE_PYTHON: python3
 
@@ -74,13 +75,15 @@ jobs:
       if: always()
       run: ccache --show-stats || true
 
-    # Even when the build fails or is cancelled, so the next run reuses it
+    # Even when the build fails or is cancelled, so the next run reuses it.
+    # A PR that started from main's cache doesn't save its own: the repo's
+    # 10 GB of caches would evict main's, which every new PR starts from.
     - name: Save ccache
-      if: always()
+      if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
       uses: actions/cache/save@v4
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-macos-arm64-${{ github.run_id }}
+        key: ccache-macos-arm64-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
 
     - name: Upload build output
       uses: actions/upload-artifact@v4

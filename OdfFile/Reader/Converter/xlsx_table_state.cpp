@@ -552,16 +552,26 @@ double charsToSize(unsigned int charsCount, double maxDigitSize)
 	return 1.0 * int((maxDigitSize * charsCount + 5.0) / maxDigitSize * 256.0) / 256.0;
 }
 
+namespace
+{
+	// The page layout of the sheet's master page, or NULL.
+	odf_reader::page_layout_instance * sheet_page_layout(odf_reader::odf_read_context & odfContext,
+														const std::wstring & table_style)
+	{
+		_CP_OPT(std::wstring) masterPageName = odfContext.styleContainer().master_page_name_by_name(table_style);
+		if (!masterPageName) return NULL;
+
+		odf_reader::style_master_page* master_style_ = odfContext.pageLayoutContainer().master_page_by_name(*masterPageName);
+		if (!master_style_) return NULL;
+		if (!master_style_->attlist_.style_page_layout_name_) return NULL;
+
+		return odfContext.pageLayoutContainer().page_layout_by_name(*master_style_->attlist_.style_page_layout_name_);
+	}
+}
+
 void xlsx_table_state::serialize_page_properties (std::wostream & strm)
 {
-	_CP_OPT(std::wstring) masterPageName = context_->root()->odf_context().styleContainer().master_page_name_by_name(table_style_);
-	if (!masterPageName) return;
-
-	odf_reader::style_master_page* master_style_ = context_->root()->odf_context().pageLayoutContainer().master_page_by_name(*masterPageName);
-	if (!master_style_) return;
-	if (!master_style_->attlist_.style_page_layout_name_) return;
-
-	odf_reader::page_layout_instance * page_layout = context_->root()->odf_context().pageLayoutContainer().page_layout_by_name(*master_style_->attlist_.style_page_layout_name_);
+	odf_reader::page_layout_instance * page_layout = sheet_page_layout(context_->root()->odf_context(), table_style_);
 	if (!page_layout) return;
 
 	page_layout->xlsx_serialize(strm, *context_);
@@ -667,19 +677,33 @@ void xlsx_table_state::serialize_table_format (std::wostream & strm)
 		if ((tableStyle) && (tableStyle->content()))
 			table_prop = tableStyle->content()->get_style_table_properties();
 
-		if (table_prop)
+		bool fit_to_pages = false;
+		odf_reader::page_layout_instance * page_layout = sheet_page_layout(odfContext, table_style_);
+		if (page_layout && page_layout->properties())
+		{
+			unsigned int width = 0, height = 0;
+			fit_to_pages = page_layout->properties()->attlist_.get_fit_to_pages(width, height);
+		}
+
+		if (table_prop || fit_to_pages)
 		{
 			CP_XML_NODE(L"sheetPr")
 			{
 				//at filterMode="false">
-				if (table_prop->content().tableooo_tab_color_)
+				if (table_prop && table_prop->content().tableooo_tab_color_)
 				{
 					CP_XML_NODE(L"tabColor")
 					{
 						CP_XML_ATTR(L"rgb", table_prop->content().tableooo_tab_color_->get_hex_value());	
 					}
 				}
-				//<pageSetUpPr fitToPage="true"/>
+				if (fit_to_pages)
+				{
+					CP_XML_NODE(L"pageSetUpPr")
+					{
+						CP_XML_ATTR(L"fitToPage", 1);
+					}
+				}
 			}
 		}
 		int columns = (std::max)(current_table_column_, (int)columns_count_);

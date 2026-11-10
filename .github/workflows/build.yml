@@ -118,10 +118,11 @@ jobs:
           vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-
 
     - name: Restore ccache
+      id: ccache
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/.cache/ccache
-        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.run_id }}
+        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
         restore-keys: |
           ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-
 
@@ -130,7 +131,7 @@ jobs:
     # V8, etc.) missing from the remote cache.
     - name: Build core (x2t, docbuilder, etc.)
       run: |
-        "$RUNNER_TEMP/in-build-image" 'ccache --zero-stats && scripts/build.sh --tests --ccache'
+        "$RUNNER_TEMP/in-build-image" 'ccache --zero-stats && scripts/build.sh --tests --ccache -- -DEO_NO_WARNINGS=ON'
 
     - name: ccache statistics
       if: always()
@@ -178,12 +179,15 @@ jobs:
         path: ${{ github.workspace }}/.cache/vcpkg
         key: vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', '.docker/core.bake.Dockerfile') }}
 
+    # Even when the build fails or is cancelled, so the next run reuses it.
+    # A PR that started from main's cache doesn't save its own: the repo's
+    # 10 GB of caches would evict main's, which every new PR starts from.
     - name: Save ccache
-      if: always()
+      if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
       uses: actions/cache/save@v4
       with:
         path: ${{ github.workspace }}/.cache/ccache
-        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.run_id }}
+        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
 
 
     # ─────────────────────────────────────────────────────────────

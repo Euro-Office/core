@@ -23,6 +23,7 @@
  *
  */
 
+#include <algorithm>
 #include <iostream>
 
 #include <xml/utils.h>
@@ -1519,6 +1520,98 @@ void docx_conversion_context::start_process_style_content()
     styles_context_.start();
 }
 
+namespace
+{
+int twips(double points)
+{
+	return (int)(points * 20 + (points < 0 ? -0.5 : 0.5));
+}
+
+// Text width in points of a page layout (page width less the page margins), 0 if unknown.
+// Section margins are left out: a section of its own gets them neither in its w:pgMar.
+double text_width(odf_reader::page_layout_container & layouts, const std::wstring & page_layout_name)
+{
+	// a percentage has no defined base for a horizontal page margin; it counts as 0
+	auto points = [](const _CP_OPT(odf_types::length_or_percent) & margin)
+	{
+		return margin && margin->get_type() == odf_types::length_or_percent::Length
+			? margin->get_length().get_value_unit(odf_types::length::pt) : 0.;
+	};
+
+	const odf_reader::page_layout_instance * layout = page_layout_name.empty() ? NULL : layouts.page_layout_by_name(page_layout_name);
+	if (!layout)
+		layout = layouts.page_layout_first();
+	if (!layout || !layout->properties() || !layout->properties()->attlist_.fo_page_width_)
+		return 0;
+
+	const odf_reader::style_page_layout_properties_attlist & page = layout->properties()->attlist_;
+	const _CP_OPT(odf_types::length_or_percent) & left = page.common_horizontal_margin_attlist_.fo_margin_left_
+		? page.common_horizontal_margin_attlist_.fo_margin_left_ : page.common_margin_attlist_.fo_margin_;
+	const _CP_OPT(odf_types::length_or_percent) & right = page.common_horizontal_margin_attlist_.fo_margin_right_
+		? page.common_horizontal_margin_attlist_.fo_margin_right_ : page.common_margin_attlist_.fo_margin_;
+
+	return page.fo_page_width_->get_value_unit(odf_types::length::pt) - points(left) - points(right);
+}
+
+// True if the style:column elements (if any) have the same rel-width, up to LibreOffice's
+// rounding (it writes 32767* and 32768* for two equal columns): a relative tolerance, so that
+// small rel-widths such as 1* and 4* stay unequal.
+bool equal_rel_widths(const odf_reader::style_columns & columns)
+{
+	double low = 0, high = 0;
+	for (size_t i = 0; i < columns.style_columns_.size(); i++)
+	{
+		const odf_reader::style_column * col = dynamic_cast<const odf_reader::style_column *>(columns.style_columns_[i].get());
+		const double rel = col && col->style_rel_width_ ? col->style_rel_width_->get_value() : 0;
+		if (i == 0 || rel < low) low = rel;
+		if (i == 0 || rel > high) high = rel;
+	}
+	return high - low <= 0.001 * high;
+}
+
+// Text width and space to the next column of each style:column, in twips; empty if they
+// can't be computed.
+std::vector<std::pair<int, int>> column_widths(const odf_reader::style_columns & columns, double width)
+{
+	// ODF 1.4 §17.12/§17.13: a style:column gets rel-width / (sum of all rel-widths) of the
+	// width, its start and end indents included (style:rel-width is relative, not a percentage);
+	// in OOXML w:w is the text width of a column and w:space the gap to the next one.
+	std::vector<std::pair<int, int>> result;
+	if (width <= 0)
+		return result;
+
+	std::vector<const odf_reader::style_column *> cols;
+	double rel_sum = 0;
+	for (size_t i = 0; i < columns.style_columns_.size(); i++)
+	{
+		const odf_reader::style_column * col = dynamic_cast<const odf_reader::style_column *>(columns.style_columns_[i].get());
+		if (!col || !col->style_rel_width_ || col->style_rel_width_->get_value() <= 0)
+			return result;
+		rel_sum += col->style_rel_width_->get_value();
+		cols.push_back(col);
+	}
+
+	auto indent = [](const _CP_OPT(odf_types::length) & value)
+	{
+		return value ? value->get_value_unit(odf_types::length::pt) : 0.;
+	};
+
+	for (size_t i = 0; i < cols.size(); i++)
+	{
+		const double text = width * cols[i]->style_rel_width_->get_value() / rel_sum
+			- indent(cols[i]->fo_start_indent_) - indent(cols[i]->fo_end_indent_);
+		const double space = i + 1 < cols.size()
+			? indent(cols[i]->fo_end_indent_) + indent(cols[i + 1]->fo_start_indent_) : 0;
+
+		if (twips(text) <= 0)
+			return std::vector<std::pair<int, int>>();
+
+		result.push_back(std::make_pair(twips(text), (std::max)(0, twips(space))));
+	}
+	return result;
+}
+}
+
 void docx_conversion_context::process_section(std::wostream & strm, odf_reader::style_columns *columns_page)//from page layout
 {
 	if (root()->odf_context().pageLayoutContainer().linenumbering())
@@ -1530,6 +1623,9 @@ void docx_conversion_context::process_section(std::wostream & strm, odf_reader::
 	bool sep_columns = false;
 
 	oox::section_context::_section & section = get_section_context().get_last();
+
+	// the section's page layout, read before remove_section() drops the section
+	const std::wstring page_layout_name = get_page_properties();
 
 	odf_reader::style_columns *columns = columns_page;
 	//if (!columns)
@@ -1553,7 +1649,9 @@ void docx_conversion_context::process_section(std::wostream & strm, odf_reader::
 		}
 	}
 	
-	std::vector<std::pair<double, double>> width_space;
+	// text width (w:w) and space to the next column (w:space) of each column, in twips
+	std::vector<std::pair<int, int>> width_space;
+	int column_space = 708;
 	if (columns)
 	{
 		if (columns->fo_column_count_)
@@ -1565,60 +1663,18 @@ void docx_conversion_context::process_section(std::wostream & strm, odf_reader::
 			if (columns_sep->style_style_ != _T("none"))
 				sep_columns = true;
 		}
-
-		if (!columns->style_columns_.empty())
+		// fo:column-gap applies to columns without style:column elements (ODF 1.4 §19.233);
+		// LibreOffice writes it next to style:column elements of equal width, which then become
+		// equal columns with that gap, as in its DOCX export. Otherwise the style:column elements
+		// give each column's width and spacing (LibreOffice makes any columns with a gap equal).
+		const bool equal_columns = columns->fo_column_gap_ && equal_rel_widths(*columns);
+		if (count_columns > 1 && !equal_columns && columns->style_columns_.size() == (size_t)count_columns)
 		{
-			double page_width = 0;
-			const odf_reader::page_layout_instance * pp = root()->odf_context().pageLayoutContainer().page_layout_first();
-			
-			if ((pp) && (pp->properties()))
-			{
-				odf_reader::style_page_layout_properties_attlist & attr_page = pp->properties()->attlist_;
-				if (attr_page.fo_page_width_)
-				{
-					page_width = attr_page.fo_page_width_->get_value_unit(odf_types::length::pt);
-				}
-				if (attr_page.common_horizontal_margin_attlist_.fo_margin_left_)
-				{
-					page_width -= attr_page.common_horizontal_margin_attlist_.fo_margin_left_->get_length().get_value_unit(odf_types::length::pt);
-				}
-				if (attr_page.common_horizontal_margin_attlist_.fo_margin_right_)
-				{
-					page_width -= attr_page.common_horizontal_margin_attlist_.fo_margin_right_->get_length().get_value_unit(odf_types::length::pt);
-				}
-			}		
-			for (size_t i = 0; page_width > 0, i < columns->style_columns_.size(); i++)
-			{
-				odf_reader::style_column *col = dynamic_cast<odf_reader::style_column*>( columns->style_columns_[i].get());
-				if (!col) continue;
-
-				double percent = col->style_rel_width_ ? col->style_rel_width_->get_value() : 0;
-				if (percent > 0x7FFE)
-				{
-					//auto
-					break;
-				}
-				else
-				{
-					if (percent > 1000.) percent /= 100.;
-
-					double width = page_width * percent / 100.;
-
-					double space_end = col->fo_end_indent_ ? col->fo_end_indent_->get_value_unit(odf_types::length::pt) : 0;
-					double space_start = col->fo_start_indent_ ? col->fo_start_indent_->get_value_unit(odf_types::length::pt) : 0;
-
-					width -= space_end;
-					width -= space_start;
-
-					if (i < columns->style_columns_.size() - 1)
-					{
-						col = dynamic_cast<odf_reader::style_column*>(columns->style_columns_[i + 1].get());
-						space_start = col->fo_start_indent_ ? col->fo_start_indent_->get_value_unit(odf_types::length::pt) : 0;
-					}
-
-					width_space.push_back(std::make_pair(width, space_start + space_end));
-				}
-			}
+			width_space = column_widths(*columns, text_width(root()->odf_context().pageLayoutContainer(), page_layout_name));
+		}
+		if (count_columns > 1 && columns->fo_column_gap_ && width_space.empty())
+		{
+			column_space = (std::max)(0, twips(columns->fo_column_gap_->get_value_unit(odf_types::length::pt)));
 		}
 	}
 
@@ -1629,14 +1685,17 @@ void docx_conversion_context::process_section(std::wostream & strm, odf_reader::
 			CP_XML_ATTR(L"w:equalWidth", width_space.empty());
 			CP_XML_ATTR(L"w:num", count_columns);
 			CP_XML_ATTR(L"w:sep", sep_columns);
-			CP_XML_ATTR(L"w:space", 708);
+			CP_XML_ATTR(L"w:space", column_space);
 
 			for (size_t i = 0; i < width_space.size(); i++)
 			{
 				CP_XML_NODE(L"w:col")
 				{
-					CP_XML_ATTR(L"w:w", (int)(width_space[i].first * 20));	
-					CP_XML_ATTR(L"w:space", (int)(width_space[i].second * 20));	
+					CP_XML_ATTR(L"w:w", width_space[i].first);
+					if (i + 1 < width_space.size())
+					{
+						CP_XML_ATTR(L"w:space", width_space[i].second);
+					}
 				}
 			}
 		}

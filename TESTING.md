@@ -81,6 +81,17 @@ Done:
       XLSX → XLSB both XLSB files are converted back to XLSX first. A category the
       workbook doesn't have is skipped. `Pivots` and `Slicers` of `xlsx2xlsb_simple2` are
       filtered out until #266 (flags never set in the XLSB writer) is fixed.
+- [x] `X2tConverter/test/TestOOOXml2Odf` (`ooxml2odf_math_test`) — 45 cases for
+      `StarMath::COOXml2Odf`, which converts OOXML math (`m:oMath`) to StarMath/MathML when
+      OdfFormatLib writes ODF. It has a `.pro` but was missed by the first migration. Links
+      the static format libraries in a group, like `test_odf`. `GTEST_MAIN` (`main.cpp` has
+      no `main()`). No fixtures: the OOXML math is parsed from strings.
+- [x] `OdfFile/Test/Test` (`odf_regression_test`) — 54 regression cases named after bug
+      numbers (44363, 57197, 61364: ODT → DOCX; 59708: DOCX → ODT; 69238: PPTX → ODP),
+      inspecting the converted document through the converters' models. Only a Visual
+      Studio project existed and the suite had never built as committed (a duplicate global
+      in `Test57197.cpp`). Links the static format libraries in a group, like `test_odf`;
+      own `main()`. Fixtures under `ExampleFiles/` are staged in the working directory.
 - [x] `OfficeUtils/tests` — deps: kernel, UnicodeConverter. The committed `tests/zip/`
       fixtures are staged next to the binary: the suite resolves fixtures relative to the
       process directory (`<binary dir>/../zip`), and writes its `unzip`/`temp` output dirs
@@ -236,42 +247,19 @@ Done:
   `icudtl.dat`), so no external V8 runtime data files need to be staged next to the test
   binaries. The `doctrenderer` shared library these suites link is already built in CI
   (the `docbuilder` app links it), so the suites run headless without extra provisioning.
-- [x] `PdfFile/test` — deps: UnicodeConverter, kernel, graphics, PdfFile, DjVuFile,
-      ooxmlsignature (all six are existing CMake targets — no dep porting needed). Builds,
-      links and runs in CI **with one case excluded via `GTEST_FILTER`**. The runtime
-      fixtures are still not committed (see below), so this is a build-only/non-failing
-      registration: every test case self-`GTEST_SKIP()`s except
-      `CPdfFileTest.EditPdfFromBase64` (its skip is commented out), which would hard-fail
-      without `test.pdf`/`base64.txt`; that single case is filtered out to keep CI green.
-      To **fully** enable: commit the missing fixtures (see below), stage them next to the
-      binary (`WORKING_DIRECTORY` / `POST_BUILD copy_directory`, since the suite reads from
-      `NSFile::GetProcessDirectory()`), remove the `GTEST_FILTER`, and un-`GTEST_SKIP()` the
-      cases you want to exercise.
-
-      `CPdfFileTest.DrawTextInsideRedaction` is fixture-free and runs in CI. It covers the
-      redaction early-return in `CPdfWriter::DrawText` (#224) by driving `AddRedact` +
-      `CommandDrawText` through the writer directly. It checks the path succeeds; it does not
-      measure the heap, so it would not catch the leak on its own.
-
-      Fixture catalogue (none present anywhere in the repo):
-      - `test.pdf` — **input**, source PDF loaded by `LoadFromFile()`; used by the majority
-        of cases and by the only non-skipped one.
-      - `base64.txt` — **input**, base64-encoded document binary
-        (`EditPdfFromBase64`, `PdfFromBase64`, `Base64ConvertToRaster`, `SplitPdf`).
-      - `pdf.bin` — **input**, raw document binary
-        (`PdfBinToPng`, `PdfFromBin`, `SetMetaData`, `BinConvertToRaster`).
-      - `pfx.pfx` — **input**, PKCS#12 cert (password `123456`) for `VerifySign` /
-        `EditPdfSign`.
-      - `test.djvu` — **input** for `DjVuToPdf`.
-      - `changes.bin` — **input** for `EditPdfFromBin`.
-      - `test.jpeg` — **input** image stamped by `EditPdfSign` (also missing; not in the
-        original blocker list).
-      - `ONLYOFFICEFORM.docxf` — **intermediate**: produced by `GetMetaData`, consumed by
-        `SetMetaData`.
-      - `resI/` (input images) — required by `ImgDiff` for pixel comparison; not committed.
-      - `test2.pdf` (`wsDstFile`), `test3.pdf`, `test_split.pdf`, `pdftemp/`, `resO/`,
-        `resD/`, `fonts_cache/`, `resPdfBinToPng.png` — **outputs** generated at runtime,
-        not required inputs.
+- [x] `PdfFile/test` (`pdffile_test`) — deps: UnicodeConverter, kernel, graphics, PdfFile,
+      DjVuFile, ooxmlsignature. Covers `CPdfFile`: writing and reading (page sizes, colours
+      read back by rendering), loading from memory, document info, metadata
+      (`ONLYOFFICEFORM`), passwords and `ChangePassword`, editing (rotate, delete, move,
+      add, draw), `SplitPages`, `MergePages`, copying pages through the renderer, and
+      signing and verifying with a generated RSA certificate. `GTEST_MAIN`. No fixtures:
+      every test writes the PDFs it needs with `CPdfFile` itself, in its own directory.
+      `DrawTextInsideRedaction` drives the redaction early-return in `CPdfWriter::DrawText`
+      (#224); it checks the path succeeds, not the heap, so it would not catch the leak alone.
+      It replaces ONLYOFFICE's scratchpad, whose cases mostly asserted nothing, depended on
+      each other's output files and needed fixtures that were never published, among them
+      editor binaries (`pdf.bin`, `changes.bin`, `base64.txt`) only sdkjs produces. Not
+      covered yet: DjVu to PDF, the editor binary formats, applying redactions and printing.
 - [x] `MsBinaryFile/DocFile/test` (`doc_fkp_test`) — new suite, not a `.pro` migration.
       Regression tests for the bounds checks in the `.doc` Formatted Disk Page parsers
       (`FormattedDiskPageCHPX`/`PAPX`). Each case writes a hand-built 512 byte FKP into a

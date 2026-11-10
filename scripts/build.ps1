@@ -9,7 +9,8 @@ script, so they get the same binaries. Linux, macOS and Android: build.sh.
 
 .DESCRIPTION
 Run it from a Developer PowerShell, or let it load the MSVC environment of
-Visual Studio 2022 itself. Needs VCPKG_ROOT. CORE_PYTHON sets the Python for
+Visual Studio 2022 itself (or, with -VcToolsVersion, of the newest Visual
+Studio that has that toolset). Needs VCPKG_ROOT. CORE_PYTHON sets the Python for
 the third-party builds (default: the one CMake finds). -Ccache compiles through
 ccache, which it installs (install-ccache.ps1); otherwise sccache is used when
 it is on PATH.
@@ -32,6 +33,7 @@ param(
     [switch]$Tests,
     [switch]$Ccache,
     [string]$SdkVersion = '10.0.19041.0',
+    [string]$VcToolsVersion = '',   # e.g. 14.44; empty = newest in Visual Studio 2022
     [Parameter(ValueFromRemainingArguments)]
     [string[]]$CMakeArgs = @()
 )
@@ -46,7 +48,7 @@ function Assert-LastExit([string]$What) {
 . "$PSScriptRoot\msvc-env.ps1"
 
 if (-not $env:VCPKG_ROOT) { throw 'VCPKG_ROOT must point at vcpkg' }
-if (-not $env:VCINSTALLDIR) { Import-VcVars -Arch $Arch -SdkVersion $SdkVersion }
+if (-not $env:VCINSTALLDIR) { Import-VcVars -Arch $Arch -SdkVersion $SdkVersion -VcToolsVersion $VcToolsVersion }
 
 $BuildDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($BuildDir)
 if (-not $OutputDir) { $OutputDir = Join-Path $BuildDir 'package' }
