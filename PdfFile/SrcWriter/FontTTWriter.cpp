@@ -479,7 +479,8 @@ namespace PdfWriter
 					int nCurGlyfLen = pLocaTable[i].nLen;
 					pLocaTable[i].nLen = 0;
 
-					if (1 == pUseGlyfs[i])
+					// pLocaTable has one entry more than the font has glyphs: the end of the last glyph.
+					if (i < m_nGlyphs && 1 == pUseGlyfs[i])
 					{
 						pLocaTable[i].nLen = nCurGlyfLen;
 

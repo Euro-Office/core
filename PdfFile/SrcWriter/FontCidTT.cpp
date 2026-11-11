@@ -363,7 +363,9 @@ namespace PdfWriter
 		{
 			for (auto oIt : m_mGlyphs)
 			{
-				pGlyphs[oIt.first] = 1;
+				// A text command can name a glyph the font doesn't have: it is not in the subset.
+				if (oIt.first < m_nGlyphsCount)
+					pGlyphs[oIt.first] = 1;
 			}
 		}
 
@@ -516,6 +518,10 @@ namespace PdfWriter
 		}
 
 		if (!OpenFontFace())
+			return 0;
+
+		// A glyph the font doesn't have takes no code: the caller draws it through the renderer.
+		if (unGID >= (unsigned int)m_nGlyphsCount)
 			return 0;
 
 		unsigned short ushCode = m_ushCodesCount++;
