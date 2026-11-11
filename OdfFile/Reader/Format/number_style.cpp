@@ -257,6 +257,37 @@ void number_embedded_text::add_space(const std::wstring & Text)
 void number_embedded_text::oox_convert(oox::num_format_context & Context)
 {
 }
+// number:fill-character
+//////////////////////////////////////////////////////////////////////////////////////////////////
+const wchar_t * number_fill_character::ns = L"number";
+const wchar_t * number_fill_character::name = L"fill-character";
+
+void number_fill_character::add_attributes( const xml::attributes_wc_ptr & Attributes )
+{
+}
+
+void number_fill_character::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)
+{
+    CP_NOT_APPLICABLE_ELM();
+}
+
+void number_fill_character::add_text(const std::wstring & Text)
+{
+    text_ += Text;
+}
+
+void number_fill_character::add_space(const std::wstring & Text)
+{
+    text_ += Text;
+}
+
+// The character repeats to fill the cell width: "*" and the character in a spreadsheet format code.
+// An empty element fills nothing, as in LibreOffice.
+void number_fill_character::oox_convert(oox::num_format_context & Context)
+{
+    if (!text_.empty())
+        Context.output() << L'*' << text_[0];
+}
 // number:number
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * number_number::ns = L"number";
