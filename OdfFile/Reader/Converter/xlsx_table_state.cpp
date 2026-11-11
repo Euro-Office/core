@@ -361,6 +361,8 @@ void xlsx_table_state::set_row_break_after()
 void xlsx_table_state::non_empty_row()
 {
     empty_row_= false;
+	last_used_row_ = current_table_row_;
+	last_used_column_ = (std::max)(last_used_column_, current_table_column_);
 }
 
 bool xlsx_table_state::is_empty_row() const
