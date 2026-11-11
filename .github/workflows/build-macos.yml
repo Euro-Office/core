@@ -18,7 +18,8 @@ concurrency:
 
 jobs:
   build:
-    name: build (macos, arm64)
+    # A manual run only builds the third-party libraries
+    name: ${{ github.event_name == 'workflow_dispatch' && 'third-party' || 'build' }} (macos, arm64)
     runs-on: macos-15
     # Only on a manual run of main or stable-* (build-assets accepts only
     # protected branches), through that environment: that run
