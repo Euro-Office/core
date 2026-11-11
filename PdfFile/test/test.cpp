@@ -555,3 +555,31 @@ TEST_F(CPdfFileTest, DrawTextInsideRedaction)
 	for (int i = 0; i < 100; ++i)
 		ASSERT_EQ(S_OK, writer.CommandDrawText(wsText, 10, 10, 100, 20));
 }
+
+// A text command can name a glyph id the font doesn't have, for example when the
+// text was laid out with another font. Saving the PDF wrote a "used" mark for that
+// glyph past the end of the font's glyph array, which corrupted the heap and
+// crashed the conversion now and then. This case draws such a glyph and checks the
+// PDF is written and readable; it does not measure the heap (run it under valgrind
+// to see the out-of-bounds write without the fix).
+TEST_F(CPdfFileTest, GlyphIdOutsideTheFont)
+{
+	const std::wstring wsFont = UTF8_TO_U(std::string(PDFFILE_TEST_TRUETYPE_FONT));
+	ASSERT_TRUE(NSFile::CFileBinary::Exists(wsFont)) << PDFFILE_TEST_TRUETYPE_FONT;
+
+	const std::wstring wsPdf = Path(L"glyphs.pdf");
+	std::unique_ptr<CPdfFile> pPdf = NewPdf();
+	pPdf->CreatePdf();
+	pPdf->NewPage();
+	pPdf->put_Width(c_oA4.dWidthMM);
+	pPdf->put_Height(c_oA4.dHeightMM);
+	pPdf->put_FontPath(wsFont);
+	pPdf->put_FontSize(12);
+	// The test font has 5 glyphs: 1 is in it, 4000 is not.
+	EXPECT_EQ(S_OK, pPdf->CommandDrawTextExCHAR(L'A', 1, 10, 10, 10, 10));
+	EXPECT_EQ(S_OK, pPdf->CommandDrawTextExCHAR(L'B', 4000, 20, 10, 10, 10));
+	ASSERT_EQ(0, pPdf->SaveToFile(wsPdf));
+
+	std::unique_ptr<CPdfFile> pRead = Load(wsPdf);
+	EXPECT_EQ(1, pRead->GetPagesCount());
+}
