@@ -36,7 +36,7 @@ param(
     [switch]$Tests,
     [switch]$Ccache,
     [switch]$ThirdPartyOnly,
-    [string]$SdkVersion = '10.0.19041.0',
+    [string]$SdkVersion = '10.0.22621.0',
     [string]$VcToolsVersion = '',   # e.g. 14.44; empty = newest in Visual Studio 2022
     [Parameter(ValueFromRemainingArguments)]
     [string[]]$CMakeArgs = @()
