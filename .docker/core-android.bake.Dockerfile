@@ -25,6 +25,9 @@
 # The context ccache-seed holds the ccache directory to start from, and stage
 # core-android-ci outputs the libraries in <ABI>/ and the new one in ccache/.
 #
+# OPTIONAL: the build argument CORE_THIRD_PARTY_ONLY only builds the
+# third-party libraries (build.sh --third-party-only); the output is empty.
+#
 # OPTIONAL SECRETS (as core.bake.Dockerfile): remote_cache_s3_access_key,
 # remote_cache_s3_secret_key to upload third-party builds missing from the
 # remote cache (Common/3dParty/build_3rdparty_common.py). Downloads need none.
@@ -42,6 +45,7 @@ FROM android-ndk AS core-android-build
     ARG ANDROID_API_LEVEL
     ARG CORE_CCACHE
     ARG CORE_NO_WARNINGS=OFF
+    ARG CORE_THIRD_PARTY_ONLY
 
     COPY core /core
 
@@ -62,7 +66,7 @@ FROM android-ndk AS core-android-build
         # so new deps in common.cmake are built into the cached tree
         /core/scripts/build.sh --build-dir /build-cache/core --output /out \
             --android ${ANDROID_ABI} --android-api ${ANDROID_API_LEVEL} \
-            ${CORE_CCACHE:+--ccache} \
+            ${CORE_CCACHE:+--ccache} ${CORE_THIRD_PARTY_ONLY:+--third-party-only} \
             -- -UTHIRD_PARTY_PREPARED -DEO_CORE_3RD_PARTY_DIR=/build-cache/3rd \
             -DEO_NO_WARNINGS=${CORE_NO_WARNINGS}
         if [ -n "${CORE_CCACHE}" ]; then

@@ -24,8 +24,12 @@
 #   --android-api N    minimum Android API level (default: 26)
 #   --wasm             build the WebAssembly modules of the editors (fonts,
 #                      drawingfile, zlib, hash, spell); needs emcmake (emsdk)
+#   --third-party-only only build the third-party libraries (and upload the
+#                      ones missing from the remote cache, given its
+#                      credentials), not core; add -DBUILD_DESKTOP=ON for the
+#                      desktop app's (Qt, CEF)
 #
-# Environment: VCPKG_ROOT (not for Android or WebAssembly); CORE_PYTHON, the
+# Environment: VCPKG_ROOT (not for Android, WebAssembly or --third-party-only); CORE_PYTHON, the
 # Python for the third-party builds (default: the one CMake finds).
 
 set -euo pipefail
@@ -38,6 +42,7 @@ ccache=
 abi=
 api=26
 wasm=
+third_party_only=
 
 usage() { sed -n '/^# Usage/,/^# Environment/p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit "$1"; }
 
@@ -50,6 +55,7 @@ while [ $# -gt 0 ]; do
         --android)     abi="$2"; shift 2 ;;
         --android-api) api="$2"; shift 2 ;;
         --wasm)        wasm=1; shift ;;
+        --third-party-only) third_party_only=1; shift ;;
         -h|--help)     usage 0 ;;
         --)            shift; break ;;
         *)             echo "unknown option: $1" >&2; usage 1 ;;
@@ -76,6 +82,7 @@ args=( -G Ninja -S "$core" -B "$build_dir" )
 # built with NDEBUG
 [ -z "$wasm" ] && args+=( -DCMAKE_BUILD_TYPE=Release )
 [ -n "${CORE_PYTHON:-}" ] && args+=( -DPYTHON_BIN="$CORE_PYTHON" )
+[ -n "$third_party_only" ] && args+=( -DEO_THIRD_PARTY_ONLY=ON )
 if [ -n "$ccache" ] && [ -n "$wasm" ]; then
     # emcc runs clang through ccache. A launcher would wrap em++, a script
     # that stays the same across Emscripten versions, so ccache would reuse
@@ -110,11 +117,16 @@ elif [ -n "$abi" ]; then
         -DEO_CORE_OUTPUT_DIR="$build_dir/unstripped"
     )
 else
-    : "${VCPKG_ROOT:?VCPKG_ROOT must point at vcpkg}"
+    # The third-party libraries don't use vcpkg's
+    if [ -z "$third_party_only" ]; then
+        : "${VCPKG_ROOT:?VCPKG_ROOT must point at vcpkg}"
+        args+=(
+            -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
+            -DVCPKG_MANIFEST_MODE=ON
+            -DVCPKG_MANIFEST_DIR="$core"
+        )
+    fi
     args+=(
-        -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
-        -DVCPKG_MANIFEST_MODE=ON
-        -DVCPKG_MANIFEST_DIR="$core"
         -DEO_CORE_OUTPUT_DIR="$output/bin"
         -DEO_CORE_TOOLS_DIR="$output/tools"
         -DEO_CORE_LIB_DIR="$output/lib"
@@ -134,6 +146,9 @@ if [ -n "$wasm" ]; then
 else
     cmake "${args[@]}" "$@"
 fi
+
+# Configuring built the third-party libraries
+[ -n "$third_party_only" ] && exit 0
 
 if [ -z "$abi" ]; then
     cmake --build "$build_dir"

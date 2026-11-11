@@ -55,6 +55,7 @@ jobs:
       uses: lukka/run-vcpkg@v11
 
     - name: Restore ccache
+      if: github.event_name != 'workflow_dispatch'
       id: ccache
       uses: actions/cache/restore@v4
       with:
@@ -62,30 +63,42 @@ jobs:
         key: ccache-macos-arm64-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
         restore-keys: ccache-macos-arm64-
 
-    # Builds the third-party libraries missing from the remote cache too
+    # Builds the third-party libraries missing from the remote cache too,
+    # without uploading them
     - name: Build
+      if: github.event_name != 'workflow_dispatch'
       run: ccache --zero-stats && scripts/build.sh --tests --ccache -- -DEO_NO_WARNINGS=ON
       env:
         CORE_PYTHON: python3
 
+    # A manual run only builds the third-party libraries, the desktop app's
+    # (CEF) included, and uploads the ones missing from the remote cache
+    - name: Build the third-party libraries
+      if: github.event_name == 'workflow_dispatch'
+      run: scripts/build.sh --third-party-only -- -DBUILD_DESKTOP=ON
+      env:
+        CORE_PYTHON: python3
+
     - name: Unit tests (CTest)
+      if: github.event_name != 'workflow_dispatch'
       run: ctest --test-dir build --output-on-failure
 
     - name: ccache statistics
-      if: always()
+      if: always() && github.event_name != 'workflow_dispatch'
       run: ccache --show-stats || true
 
     # Even when the build fails or is cancelled, so the next run reuses it.
     # A PR that started from main's cache doesn't save its own: the repo's
     # 10 GB of caches would evict main's, which every new PR starts from.
     - name: Save ccache
-      if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
+      if: always() && github.event_name != 'workflow_dispatch' && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
       uses: actions/cache/save@v4
       with:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-macos-arm64-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
 
     - name: Upload build output
+      if: github.event_name != 'workflow_dispatch'
       uses: actions/upload-artifact@v4
       with:
         name: build-output-macos-arm64

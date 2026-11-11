@@ -234,6 +234,7 @@ jobs:
       # 8. ccache: build.ps1 installs it and sets up the rest
       # ------------------------------------------------------------------ #
       - name: Restore ccache
+        if: github.event_name != 'workflow_dispatch'
         id: ccache
         uses: actions/cache/restore@v4
         with:
@@ -246,6 +247,7 @@ jobs:
       #    as in DesktopEditors
       # ------------------------------------------------------------------ #
       - name: Build
+        if: github.event_name != 'workflow_dispatch'
         shell: pwsh
         run: |
           # Here, not in env: run-vcpkg sets it for the later steps
@@ -254,8 +256,16 @@ jobs:
           $env:VCPKG_BINARY_SOURCES = "clear;files,$vcpkgCache,readwrite"
           scripts/build.ps1 -Arch ${{ matrix.arch }} -SdkVersion ${{ matrix.sdk }} -VcToolsVersion '${{ matrix.vc_tools }}' -Ccache '-DEO_NO_WARNINGS=ON'
 
+      # A manual run only builds the third-party libraries, the desktop app's
+      # (Qt, CEF) included, and uploads the ones missing from the remote cache
+      - name: Build the third-party libraries
+        if: github.event_name == 'workflow_dispatch'
+        shell: pwsh
+        run: |
+          scripts/build.ps1 -Arch ${{ matrix.arch }} -SdkVersion ${{ matrix.sdk }} -VcToolsVersion '${{ matrix.vc_tools }}' -ThirdPartyOnly '-DBUILD_DESKTOP=ON'
+
       - name: ccache statistics
-        if: always()
+        if: always() && github.event_name != 'workflow_dispatch'
         shell: pwsh
         run: ccache --show-stats --verbose
 
@@ -271,7 +281,7 @@ jobs:
       # A PR that started from main's cache doesn't save its own: the repo's
       # 10 GB of caches would evict main's, which every new PR starts from.
       - name: Save ccache
-        if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
+        if: always() && github.event_name != 'workflow_dispatch' && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
         uses: actions/cache/save@v4
         with:
           path: ${{ env.CCACHE_DIR }}
@@ -281,6 +291,7 @@ jobs:
       # 10. Upload build artifacts
       # ------------------------------------------------------------------ #
       - name: Upload build output
+        if: github.event_name != 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: build-output-windows-${{ matrix.arch }}

@@ -109,6 +109,11 @@ if( EMSCRIPTEN )
         endif()
     endif()
 
+    # Third-party only (build.sh --third-party-only): stop after building them
+    if(EO_THIRD_PARTY_ONLY)
+        return()
+    endif()
+
     # Setup openssl
     set(OPENSSL_WASM_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash")
     get_filename_component(OPENSSL_WASM_INSTALL_DIR_ABS "${OPENSSL_WASM_INSTALL_DIR}" ABSOLUTE)
@@ -255,6 +260,11 @@ else()
             message(STATUS "Python script output: ${output}")
             set(THIRD_PARTY_PREPARED TRUE CACHE INTERNAL "Third party prepared")
         endif()
+    endif()
+
+    # Third-party only (build.sh --third-party-only): stop after building them
+    if(EO_THIRD_PARTY_ONLY)
+        return()
     endif()
 
     if(MSVC)
