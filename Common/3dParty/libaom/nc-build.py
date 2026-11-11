@@ -20,7 +20,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "2"
+    version = "3"
 )
 
 libaom_src = nc.work_dir / "aom"

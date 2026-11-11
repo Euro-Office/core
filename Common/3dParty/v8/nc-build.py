@@ -24,12 +24,15 @@ V8_VERSION = "14.6.202.34"
 # pinned. 2026-10-30, verified with V8_VERSION above. Bump together with it.
 DEPOT_TOOLS_REVISION = "a20039648c0de69d8156906b18052bd47e9bf230"
 
+# Bump to rebuild the same V8 version, e.g. after a build environment change
+V8_BUILD = "2"
+
 nc.init_for_dep(
     depname = "V8",
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = V8_VERSION
+    version = f"{ V8_VERSION }-{ V8_BUILD }"
 )
 
 depot_tools_path = nc.work_dir / "depot_tools"
