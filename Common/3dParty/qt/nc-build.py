@@ -201,7 +201,10 @@ def build_ffmpeg( prefix : Path ):
         # The DLLs and their import libraries go to bin/, next to Qt's DLLs
         # (desktop-apps installs bin/av*.dll and sw*.dll). As in Qt's CI,
         # arm64 has no assembly (FFmpeg's needs gas-preprocessor with MSVC).
-        options += [ "--toolchain=msvc", f"--prefix={ _msys_path( prefix ) }" ]
+        # No D3D12 video acceleration: it needs a newer Windows SDK than x64's
+        # 10.0.19041 (ID3D12Resource::GetDesc's C interface changed), and Qt
+        # Multimedia decodes in hardware through D3D11 (d3d11va)
+        options += [ "--toolchain=msvc", f"--prefix={ _msys_path( prefix ) }", "--disable-d3d12va" ]
         if nc.is_arm64():
             options += [ "--arch=arm64", "--disable-asm" ]
         bash = _msys2_bash()
