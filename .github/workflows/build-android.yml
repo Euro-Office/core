@@ -27,7 +27,8 @@ jobs:
       fail-fast: false
       matrix:
         abi: [arm64-v8a, x86_64]
-    name: build (android, ${{ matrix.abi }})
+    # A manual run only builds the third-party libraries
+    name: ${{ github.event_name == 'workflow_dispatch' && 'third-party' || 'build' }} (android, ${{ matrix.abi }})
     environment: ${{ github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/stable-')) && 'build-assets' || '' }}
     env:
       # Only set on a manual run of main or stable-* (build-assets accepts only
