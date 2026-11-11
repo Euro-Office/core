@@ -134,6 +134,8 @@ namespace OOX
 						}
 					}
 				}
+				if (m_nComplements < 0 && L"XFComplements" == oBag.sType)
+					m_nComplements = (int)m_arrBags.size();
 				m_arrBags.push_back(oBag);
 			}
 		}
@@ -141,16 +143,10 @@ namespace OOX
 		{
 			// xfComplement i -> XFComplements/MappedFeaturePropertyBags[i] -> XFComplement
 			// -> XFControls -> CellControl -> bag type "Checkbox"
-			const Bag* pComplements = NULL;
-			for (size_t i = 0; i < m_arrBags.size(); ++i)
-			{
-				if (L"XFComplements" == m_arrBags[i].sType)
-				{
-					pComplements = &m_arrBags[i];
-					break;
-				}
-			}
-			if (NULL == pComplements || nIndex < 0 || nIndex >= (int)pComplements->arrMappedBagIds.size())
+			if (m_nComplements < 0)
+				return false;
+			const Bag* pComplements = &m_arrBags[m_nComplements];
+			if (nIndex < 0 || nIndex >= (int)pComplements->arrMappedBagIds.size())
 				return false;
 
 			int nComplementId = pComplements->arrMappedBagIds[nIndex];
