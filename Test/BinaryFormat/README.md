@@ -67,7 +67,7 @@ named.
 
 ```bash
 python3 Test/BinaryFormat/run_snapshots.py templates
-python3 Test/BinaryFormat/run_snapshots.py x2t --package build/package
+python3 Test/BinaryFormat/run_snapshots.py x2t --package build/package --tester build/x2ttester/x2ttester
 python3 Test/BinaryFormat/binformat_dump.py path/to/Editor.bin    # inspect one file
 ```
 
