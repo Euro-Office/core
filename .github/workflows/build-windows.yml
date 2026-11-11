@@ -25,7 +25,8 @@ jobs:
           # toolset of Visual Studio 2022 (14.44) and no Windows 10 SDK
           - { arch: x64,   runner: windows-2022,   sdk: 10.0.19041.0, vc_tools: '' }
           - { arch: arm64, runner: windows-11-arm, sdk: 10.0.22621.0, vc_tools: '14.44' }
-    name: build (windows, ${{ matrix.arch }})
+    # A manual run only builds the third-party libraries
+    name: ${{ github.event_name == 'workflow_dispatch' && 'third-party' || 'build' }} (windows, ${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
     environment: ${{ github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/stable-')) && 'build-assets' || '' }}
 

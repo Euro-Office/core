@@ -18,6 +18,8 @@ jobs:
   # Runs for every commit, not only wasm changes: downstream repos look up the
   # package by core's tree, and ccache makes an unchanged build quick.
   build-wasm:
+    # A manual run only builds the third-party libraries
+    name: ${{ github.event_name == 'workflow_dispatch' && 'third-party (wasm)' || 'build-wasm' }}
     runs-on: [ubuntu-latest, self-hosted]
     container:
         image: ghcr.io/euro-office/emsdk:5.0.4
