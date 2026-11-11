@@ -411,6 +411,9 @@ use_clang_modules=false
 use_allocator_shim=false
 use_partition_alloc_as_malloc=false
 enable_backup_ref_ptr_support=false
+# Nor PartitionAlloc inside V8, as Node.js builds it: on Linux arm64 it needs
+# glibc 2.30's <sys/ifunc.h>, newer than Rocky 8's 2.28
+v8_enable_partition_alloc=false
 
 # Symbol and debug settings
 symbol_level=0
