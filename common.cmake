@@ -267,7 +267,7 @@ else()
             # GUI needs it, so skip fetching/requiring it on Apple entirely.
             # Setup qt
             # Priority: explicit QT6_ROOT override > path recorded by the fetch script >
-            # glob of aqt's <version>/<arch> layout.
+            # glob of the <version>/<arch> layout of qt/nc-build.py.
             if(DEFINED ENV{QT6_ROOT})
                 set(QT_ROOT "$ENV{QT6_ROOT}")
             else()
@@ -278,7 +278,7 @@ else()
                     string(STRIP "${QT_ROOT}" QT_ROOT)
                     message(STATUS "Found qt6 root: " ${QT_ROOT})
                 else()
-                    # Fallback: find the prefix aqt extracted (arch folder varies by platform)
+                    # Fallback: find the prefix (arch folder varies by platform)
                     file(GLOB _qt6_cfg "${_qt_install}/*/*/lib/cmake/Qt6/Qt6Config.cmake")
                     if(_qt6_cfg)
                         list(GET _qt6_cfg 0 _qt6_cfg)
