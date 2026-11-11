@@ -21,7 +21,8 @@ rerun with --update, or copy the uploaded dumps into the snapshot folder.
 
 Usage:
   run_snapshots.py templates [--update]
-  run_snapshots.py x2t --package build/package [--update] [--missing fail|warn] [--print-new]
+  run_snapshots.py x2t --package build/package [--tester build/x2ttester/x2ttester] [--update]
+                   [--missing fail|warn] [--print-new]
   run_snapshots.py --import-log job-log.txt     # take printed snapshots from a CI log
 """
 
@@ -58,12 +59,23 @@ def template_cases():
     return [(f"templates/{p.name}.txt", p) for p in sorted((ROOT / "Common/empty").glob("*.bin"))]
 
 
-def x2t_cases(package, work):
+def find_tester(package, explicit):
+    """x2ttester: as given, else next to x2t, in tools/, or in the build tree (build/x2ttester)."""
+    if explicit:
+        return Path(explicit).resolve()
+    for candidate in (package / "x2ttester", package / "tools" / "x2ttester",
+                      package.parent / "x2ttester" / "x2ttester"):
+        if candidate.is_file():
+            return candidate
+    sys.exit(f"x2ttester not found next to {package}; pass --tester")
+
+
+def x2t_cases(package, work, tester=None):
     """Convert the x2tTester inputs to Editor.bin with x2ttester; return (snapshot, file) pairs."""
     package = Path(package).resolve()
-    tester = package / "x2ttester"
-    if not tester.exists():
-        sys.exit(f"x2ttester not found in {package}")
+    # The release layout keeps x2t and the core libraries in bin/.
+    x2t_dir = package / "bin" if (package / "bin" / "x2t").exists() else package
+    tester = find_tester(package, tester)
     inputs = work / "input"
     output = work / "output"
     inputs.mkdir(parents=True)
@@ -79,10 +91,12 @@ def x2t_cases(package, work):
         f"  <reportPath>{work / 'report'}</reportPath>\n"
         f"  <inputDirectory>{inputs}</inputDirectory>\n"
         f"  <outputDirectory>{output}</outputDirectory>\n"
-        f"  <x2tPath>{package}/</x2tPath>\n"
+        f"  <x2tPath>{x2t_dir}/</x2tPath>\n"
         f"  <output>{' '.join(X2T_OUTPUT_EXTS)}</output>\n"
         "  <cores>2</cores>\n  <timestamp>0</timestamp>\n</settings>\n", encoding="utf-8")
-    r = subprocess.run([str(tester), str(config)], capture_output=True, text=True)
+    env = dict(os.environ)
+    env["LD_LIBRARY_PATH"] = os.pathsep.join(p for p in (str(x2t_dir), env.get("LD_LIBRARY_PATH")) if p)
+    r = subprocess.run([str(tester), str(config)], capture_output=True, text=True, env=env)
     if r.returncode != 0:
         print(r.stdout[-4000:], r.stderr[-4000:], sep="\n")
         sys.exit(f"x2ttester failed with exit code {r.returncode}")
@@ -217,7 +231,8 @@ def run(cases, update, missing, out_dir, work=None, print_new=False):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("suite", nargs="?", choices=["templates", "x2t"])
-    ap.add_argument("--package", help="build package folder with x2t and x2ttester (x2t suite)")
+    ap.add_argument("--package", help="build package folder with x2t, directly or in bin/ (x2t suite)")
+    ap.add_argument("--tester", help="x2ttester binary (default: next to x2t, in tools/, or build/x2ttester/)")
     ap.add_argument("--update", action="store_true", help="rewrite the snapshots instead of comparing")
     ap.add_argument("--missing", choices=["fail", "warn"], default="fail",
                     help="what a case without a snapshot does (default: fail)")
@@ -240,7 +255,8 @@ def main():
         ap.error("the x2t suite needs --package")
     work = Path(tempfile.mkdtemp(prefix="binformat-"))
     try:
-        return run(x2t_cases(args.package, work), args.update, args.missing, args.out, work, args.print_new)
+        return run(x2t_cases(args.package, work, args.tester), args.update, args.missing, args.out, work,
+                   args.print_new)
     finally:
         shutil.rmtree(work, ignore_errors=True)
 

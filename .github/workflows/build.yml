@@ -171,7 +171,7 @@ jobs:
     - name: Binary format snapshots
       if: matrix.product == 'server' && matrix.arch == 'amd64'
       run: |
-        "$RUNNER_TEMP/in-build-image" 'python3 Test/BinaryFormat/run_snapshots.py x2t --package build/package --print-new --out build/binformat-dumps'
+        "$RUNNER_TEMP/in-build-image" 'python3 Test/BinaryFormat/run_snapshots.py x2t --package build/package --tester build/x2ttester/x2ttester --print-new --out build/binformat-dumps'
 
     - name: Upload binary format dumps
       if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
