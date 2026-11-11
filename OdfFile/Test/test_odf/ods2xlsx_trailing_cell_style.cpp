@@ -29,6 +29,12 @@ namespace
 	//   ce1 to the end
 	// 7 "DataStyle": 1024 columns; A "a", then ce3 (a fill and the number format
 	//   "0.00") on B..AMJ
+	// 8 "RepeatedGaps": 1024 columns; one row repeated 3000 times, 250 empty
+	//   cells without a style, then ce1 to the end
+	// 9 "RepeatedFewGaps": 1024 columns; one row repeated 3 times, 2 empty cells
+	//   without a style, then ce1 to the end
+	// As in files saved by LibreOffice, the columns have the default cell style
+	// "Default" (except the last one of sheet 4), and ce1..ce3 inherit from it.
 	std::wstring converted_part(const std::wstring& part)
 	{
 		static const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/sheet_trailing_cell_style.ods");
@@ -249,4 +255,40 @@ TEST(OdsToXlsx, TrailingCellStyleWithNumberFormat)
 	const size_t format = styles.find(L"<numFmt numFmtId=\"" + numFmtId + L"\"");
 	ASSERT_NE(format, std::wstring::npos) << "numFmtId " << numFmtId;
 	EXPECT_EQ(attribute(start_tag(styles.substr(format)), L"formatCode"), L"0.00");
+}
+
+// The empty cells without a style count once per repetition of the row: 250
+// cells in a row repeated 3000 times would be 750000 cells, so the row is
+// converted as before.
+TEST(OdsToXlsx, TrailingCellStyleOnRepeatedRowsWithManyEmptyCells)
+{
+	const std::wstring sheet = sheet_xml(8);
+	ASSERT_FALSE(sheet.empty()) << "ODS -> XLSX conversion failed";
+	EXPECT_TRUE(is_well_formed(sheet));
+
+	EXPECT_EQ(attribute(start_tag(row_xml(sheet, 1)), L"customFormat"), L"(none)");
+	size_t count = 0;
+	for (size_t pos = 0; (pos = sheet.find(L"<c ", pos)) != std::wstring::npos; ++pos)
+		++count;
+	EXPECT_LT(count, 1000u);
+}
+
+// A few empty cells in a repeated row stay within the limit: every repetition
+// gets the row format and its own default-format cells.
+TEST(OdsToXlsx, TrailingCellStyleOnRepeatedRowsWithFewEmptyCells)
+{
+	const std::wstring sheet = sheet_xml(9);
+	ASSERT_FALSE(sheet.empty()) << "ODS -> XLSX conversion failed";
+
+	for (int r = 1; r <= 3; ++r)
+	{
+		const std::wstring row = row_xml(sheet, r);
+		ASSERT_FALSE(row.empty()) << "row " << r << " missing";
+		EXPECT_EQ(attribute(start_tag(row), L"customFormat"), L"1") << "row " << r;
+		EXPECT_NE(attribute(start_tag(row), L"s"), L"0") << "row " << r;
+		const std::vector<std::wstring> row_cells = cells(row);
+		ASSERT_EQ(row_cells.size(), 2u) << "row " << r;
+		EXPECT_EQ(attribute(row_cells[1], L"r"), L"B" + std::to_wstring(r));
+		EXPECT_EQ(attribute(row_cells[1], L"s"), L"0") << "row " << r;
+	}
 }

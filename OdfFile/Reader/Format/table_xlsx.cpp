@@ -813,9 +813,11 @@ bool table_table_row::trailing_cells_format(oox::xlsx_conversion_context & Conte
 
 	// Only a table as wide as a sheet (256 columns in OpenOffice.org, 1024 or 16384 in LibreOffice) is formatted
 	// to the end of the row. The run must also be at least as long as the cells before it. Those that are empty
-	// and have no style are then written with the default format, one cell per column, so that they don't take
-	// the row's: at most 256 of them, about as many cells as a run of 199 to 299 styled cells gave before.
-	if (columns < 256 || start + repeated < columns || repeated < start || unstyled > 256)
+	// and have no style are then written with the default format, one cell per column and per repetition of the
+	// row, so that they don't take the row's: at most 256 of them in all, about as many cells as a run of 199 to
+	// 299 styled cells gave before.
+	const unsigned long long default_cells = (unsigned long long)unstyled * attlist_.table_number_rows_repeated_;
+	if (columns < 256 || start + repeated < columns || repeated < start || default_cells > 256)
 		return false;
 
 	// every cell of the run must get the same format, so their columns must share one default cell style
