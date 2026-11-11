@@ -583,6 +583,7 @@ enum ElementType
     typeNumberText,
     typeNumberNumber,
     typeNumberEmbeddedText,
+    typeNumberFillCharacter,
     typeNumberScientificNumber,
     typeNumberFraction,
 	typeNumberBoolean,
