@@ -63,6 +63,41 @@ std::wstring delete_apostroph_in_name(std::wstring value)
 	return value;
 }
 
+namespace {
+
+// fo:font-family holds a CSS font family list, for example "'Liberation Sans Narrow', sans-serif":
+// names with spaces are quoted. OOXML takes one font name, without quotes, so keep the first family
+// and drop its quotes.
+void first_font_family(_CP_OPT(std::wstring) & family)
+{
+	if (!family)
+		return;
+
+	const std::wstring & value = *family;
+	size_t begin = value.find_first_not_of(L" \t");
+	if (begin == std::wstring::npos)
+		return;
+
+	std::wstring name;
+	if (value[begin] == L'\'' || value[begin] == L'"')
+	{
+		// An unterminated quote runs to the end of the value.
+		const size_t end = value.find(value[begin], begin + 1);
+		name = value.substr(begin + 1, end == std::wstring::npos ? std::wstring::npos : end - begin - 1);
+	}
+	else
+	{
+		const size_t end = value.find(L',', begin);
+		name = value.substr(begin, end == std::wstring::npos ? std::wstring::npos : end - begin);
+		const size_t last = name.find_last_not_of(L" \t");
+		name.erase(last == std::wstring::npos ? 0 : last + 1);
+	}
+	if (!name.empty())
+		family = name;
+}
+
+}
+
 void text_format_properties::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     CP_APPLY_ATTR(L"fo:font-variant",					fo_font_variant_);
@@ -143,6 +178,8 @@ void text_format_properties::add_attributes( const xml::attributes_wc_ptr & Attr
 
     CP_APPLY_ATTR(L"text:display",						text_display_);
     CP_APPLY_ATTR(L"text:condition",					text_condition_);
+
+    first_font_family(fo_font_family_);
 }
 
 
