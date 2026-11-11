@@ -106,6 +106,11 @@ def build_and_install():
             *( [ "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded" ] if nc.is_windows() else [] ),
         ],
         "Configure zlib-ng",
+        # zlib-ng builds with /WX, and the Windows 10.0.19041 SDK's winbase.h
+        # (included on arm64 only) warns with the conforming preprocessor of
+        # C11 mode (C5105, fixed in later SDKs). CFLAGS adds to CMake's
+        # default flags rather than replacing them.
+        env = { "CFLAGS": f"{ os.environ.get( 'CFLAGS', '' ) } /wd5105".strip() } if nc.is_windows() else None,
     )
 
     nc.run_command(

@@ -24,6 +24,9 @@ set(ZLIBNG_WASM_LIBDIR "${ZLIBNG_WASM_DIR}/lib")
 set(SOURCES
 
     ${DESKTOP_ROOT}/raster/BgraFrame.cpp
+    ${DESKTOP_ROOT}/raster/Pnm/PnmFile.cpp
+    ${DESKTOP_ROOT}/raster/Ras/RasFile.cpp
+    ${DESKTOP_ROOT}/raster/WebP/WebPFile.cpp
     ${DESKTOP_ROOT}/raster/ImageFileFormatChecker.cpp
     ${DESKTOP_ROOT}/raster/PICT/PICFile.cpp
 
@@ -41,175 +44,17 @@ set(SOURCES
     ${DESKTOP_ROOT}/cximage/CxImage/ximatran.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximatif.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/tif_xfile.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximajas.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximagif.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximaico.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximatga.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximapcx.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximawbmp.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximamng.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximapsd.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximaska.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximaraw.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximaint.cpp
-
-    ${DESKTOP_ROOT}/cximage/jpeg/jerror.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmarker.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdapimin.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmaster.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdapistd.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcomapi.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jutils.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdinput.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmainct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jmemmgr.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jquant1.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jquant2.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdmerge.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdcolor.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdsample.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdpostct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jddctmgr.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdarith.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdhuff.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jdcoefct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jmemnobs.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jidctint.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jidctfst.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jidctflt.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jaricom.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcapimin.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcparam.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcapistd.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcinit.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcmaster.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jccolor.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcmarker.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcsample.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcprepct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcdctmgr.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcarith.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jchuff.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jccoefct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jcmainct.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jfdctint.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jfdctfst.c
-    ${DESKTOP_ROOT}/cximage/jpeg/jfdctflt.c
-
-    ${DESKTOP_ROOT}/cximage/png/pngread.c
-    ${DESKTOP_ROOT}/cximage/png/pngmem.c
-    ${DESKTOP_ROOT}/cximage/png/pngerror.c
-    ${DESKTOP_ROOT}/cximage/png/png.c
-    ${DESKTOP_ROOT}/cximage/png/pngrio.c
-    ${DESKTOP_ROOT}/cximage/png/pngtrans.c
-    ${DESKTOP_ROOT}/cximage/png/pngget.c
-    ${DESKTOP_ROOT}/cximage/png/pngrutil.c
-    ${DESKTOP_ROOT}/cximage/png/pngrtran.c
-    ${DESKTOP_ROOT}/cximage/png/pngset.c
-    ${DESKTOP_ROOT}/cximage/png/pngwrite.c
-    ${DESKTOP_ROOT}/cximage/png/pngwio.c
-    ${DESKTOP_ROOT}/cximage/png/pngwutil.c
-    ${DESKTOP_ROOT}/cximage/png/pngwtran.c
-
-    ${DESKTOP_ROOT}/cximage/tiff/tif_close.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dir.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_aux.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_getimage.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_strip.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_open.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_tile.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_error.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_read.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_flush.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dirinfo.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_compress.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_warning.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_swab.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_color.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dirread.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_write.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_codec.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_luv.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dirwrite.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_dumpmode.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_fax3.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_ojpeg.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_jpeg.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_next.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_thunder.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_packbits.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_lzw.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_zip.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_fax3sm.c
-    ${DESKTOP_ROOT}/cximage/tiff/tif_predict.c
-
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_init.c
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_stream.c
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_malloc.c
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_image.c
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_cm.c
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_seq.c
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_string.c
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_icc.c
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_debug.c
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_iccdata.c
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_tvp.c
-    ${DESKTOP_ROOT}/cximage/jasper/base/jas_version.c
-    ${DESKTOP_ROOT}/cximage/jasper/mif/mif_cod.c
-    ${DESKTOP_ROOT}/cximage/jasper/pnm/pnm_dec.c
-    ${DESKTOP_ROOT}/cximage/jasper/pnm/pnm_enc.c
-    ${DESKTOP_ROOT}/cximage/jasper/pnm/pnm_cod.c
-    ${DESKTOP_ROOT}/cximage/jasper/bmp/bmp_dec.c
-    ${DESKTOP_ROOT}/cximage/jasper/bmp/bmp_enc.c
-    ${DESKTOP_ROOT}/cximage/jasper/bmp/bmp_cod.c
-    ${DESKTOP_ROOT}/cximage/jasper/ras/ras_dec.c
-    ${DESKTOP_ROOT}/cximage/jasper/ras/ras_enc.c
-    ${DESKTOP_ROOT}/cximage/jasper/jp2/jp2_dec.c
-    ${DESKTOP_ROOT}/cximage/jasper/jp2/jp2_enc.c
-    ${DESKTOP_ROOT}/cximage/jasper/jp2/jp2_cod.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_cs.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_enc.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_dec.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_t1cod.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_math.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_util.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_tsfb.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_mct.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_t1enc.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_t1dec.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_bs.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_t2cod.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_t2enc.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_t2dec.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_tagtree.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_mqenc.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_mqdec.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_mqcod.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpc/jpc_qmfb.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpg/jpg_val.c
-    ${DESKTOP_ROOT}/cximage/jasper/jpg/jpg_dummy.c
-    ${DESKTOP_ROOT}/cximage/jasper/pgx/pgx_dec.c
-    ${DESKTOP_ROOT}/cximage/jasper/pgx/pgx_enc.c
 
     ${DESKTOP_ROOT}/raster/Jp2/J2kFile.cpp
     ${DESKTOP_ROOT}/raster/Jp2/Reader.cpp
 
-    ${DESKTOP_ROOT}/cximage/mng/libmng_hlapi.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_callback_xs.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_prop_xs.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_object_prc.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_zlib.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_jpeg.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_pixels.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_read.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_error.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_display.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_write.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_chunk_io.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_cms.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_filter.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_chunk_prc.c
-    ${DESKTOP_ROOT}/cximage/mng/libmng_chunk_xs.c
 
     ${DESKTOP_ROOT}/cximage/libpsd/psd.c
     ${DESKTOP_ROOT}/cximage/libpsd/file_header.c
@@ -253,70 +98,9 @@ set(SOURCES
     ${DESKTOP_ROOT}/cximage/libpsd/stroke.c
     ${DESKTOP_ROOT}/cximage/libpsd/pattern_overlay.c
 
-    ${DESKTOP_ROOT}/cximage/raw/libdcr.c
 
     ${DESKTOP_ROOT}/raster/JBig2/source/JBig2File.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/Encoder/jbig2enc.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/Encoder/jbig2arith.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/Encoder/jbig2sym.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pixconv.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/writefile.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/scale.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pix1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pix2.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pix3.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pix4.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pix5.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/grayquant.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/grayquantlow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/seedfill.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/jbclass.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pixabasic.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/numabasic.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/morphseq.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/binexpandlow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/ptabasic.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/rop.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/colormap.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pngiostub.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/lepton_utils.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/scalelow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/enhance.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/jpegio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/jpegiostub.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/spixio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/webpio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/webpiostub.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/psio2.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/gifio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/gifiostub.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pnmio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/tiffio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/tiffiostub.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/bmpio.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/binexpand.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/compare.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/boxbasic.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/conncomp.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pixafunc1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/boxfunc1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/ptafunc1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/binreduce.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/seedfilllow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/sel1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/morphapp.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/correlscore.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/sarray.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/morph.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/roplow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/fpix1.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/stack.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pixacc.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/pixarith.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/convolve.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/binreducelow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/convolvelow.cpp
-    ${DESKTOP_ROOT}/raster/JBig2/source/LeptonLib/arithlow.cpp
+    ${JBIG2ENC_SOURCES}
 
     ${DESKTOP_ROOT}/graphics/GraphicsRenderer.cpp
     ${DESKTOP_ROOT}/graphics/pro/pro_Graphics.cpp
@@ -363,95 +147,94 @@ set(SOURCES
     ${DESKTOP_ROOT}/common/StringUTF32.cpp
     ${DESKTOP_ROOT}/common/StringBuilder.cpp
 
-    ${CORE_ROOT}/Common/3dParty/cryptopp/cryptlib.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/cpu.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/integer.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/3way.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/adler32.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/algebra.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/algparam.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/allocate.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/arc4.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/aria.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/aria_simd.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/ariatab.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/asn.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/authenc.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/base32.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/base64.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/basecode.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/bfinit.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/blake2.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/blake2s_simd.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/blake2b_simd.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/blowfish.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/blumshub.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/camellia.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/cast.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/casts.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/cbcmac.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/ccm.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/chacha.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/chacha_simd.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/chacha_avx.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/chachapoly.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/cham.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/cham_simd.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/channels.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/cmac.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/crc.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/crc_simd.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/darn.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/default.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/des.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/dessp.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/dh.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/dh2.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/dll.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/donna_32.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/donna_64.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/donna_sse.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/dsa.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/eax.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/ec2n.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/ecp.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/eccrypto.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/eprecomp.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/elgamal.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/emsa2.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/esign.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/files.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/filters.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/fips140.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/gcm.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/gcm_simd.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/gf256.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/gf2_32.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/gf2n.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/gf2n_simd.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/gfpcrypt.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/gost.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/gzip.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/hc128.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/hc256.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/hex.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/hight.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/hmac.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/hrtimer.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/ida.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/idea.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/iterhash.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/kalyna.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/md5.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/randpool.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/osrng.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/rijndael.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/modes.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/misc.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/rdtables.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/sha.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/mqueue.cpp
-    ${CORE_ROOT}/Common/3dParty/cryptopp/queue.cpp
+    ${CRYPTOPP_SOURCES_DIR}/cryptlib.cpp
+    ${CRYPTOPP_SOURCES_DIR}/cpu.cpp
+    ${CRYPTOPP_SOURCES_DIR}/integer.cpp
+    ${CRYPTOPP_SOURCES_DIR}/3way.cpp
+    ${CRYPTOPP_SOURCES_DIR}/adler32.cpp
+    ${CRYPTOPP_SOURCES_DIR}/algebra.cpp
+    ${CRYPTOPP_SOURCES_DIR}/algparam.cpp
+    ${CRYPTOPP_SOURCES_DIR}/allocate.cpp
+    ${CRYPTOPP_SOURCES_DIR}/arc4.cpp
+    ${CRYPTOPP_SOURCES_DIR}/aria.cpp
+    ${CRYPTOPP_SOURCES_DIR}/ariatab.cpp
+    ${CRYPTOPP_SOURCES_DIR}/asn.cpp
+    ${CRYPTOPP_SOURCES_DIR}/authenc.cpp
+    ${CRYPTOPP_SOURCES_DIR}/base32.cpp
+    ${CRYPTOPP_SOURCES_DIR}/base64.cpp
+    ${CRYPTOPP_SOURCES_DIR}/basecode.cpp
+    ${CRYPTOPP_SOURCES_DIR}/bfinit.cpp
+    ${CRYPTOPP_SOURCES_DIR}/blake2.cpp
+    ${CRYPTOPP_SOURCES_DIR}/blake2s_simd.cpp
+    ${CRYPTOPP_SOURCES_DIR}/blake2b_simd.cpp
+    ${CRYPTOPP_SOURCES_DIR}/blowfish.cpp
+    ${CRYPTOPP_SOURCES_DIR}/blumshub.cpp
+    ${CRYPTOPP_SOURCES_DIR}/camellia.cpp
+    ${CRYPTOPP_SOURCES_DIR}/cast.cpp
+    ${CRYPTOPP_SOURCES_DIR}/casts.cpp
+    ${CRYPTOPP_SOURCES_DIR}/cbcmac.cpp
+    ${CRYPTOPP_SOURCES_DIR}/ccm.cpp
+    ${CRYPTOPP_SOURCES_DIR}/chacha.cpp
+    ${CRYPTOPP_SOURCES_DIR}/chacha_simd.cpp
+    ${CRYPTOPP_SOURCES_DIR}/chacha_avx.cpp
+    ${CRYPTOPP_SOURCES_DIR}/chachapoly.cpp
+    ${CRYPTOPP_SOURCES_DIR}/cham.cpp
+    ${CRYPTOPP_SOURCES_DIR}/cham_simd.cpp
+    ${CRYPTOPP_SOURCES_DIR}/channels.cpp
+    ${CRYPTOPP_SOURCES_DIR}/cmac.cpp
+    ${CRYPTOPP_SOURCES_DIR}/crc.cpp
+    ${CRYPTOPP_SOURCES_DIR}/crc_simd.cpp
+    ${CRYPTOPP_SOURCES_DIR}/darn.cpp
+    ${CRYPTOPP_SOURCES_DIR}/default.cpp
+    ${CRYPTOPP_SOURCES_DIR}/des.cpp
+    ${CRYPTOPP_SOURCES_DIR}/dessp.cpp
+    ${CRYPTOPP_SOURCES_DIR}/dh.cpp
+    ${CRYPTOPP_SOURCES_DIR}/dh2.cpp
+    ${CRYPTOPP_SOURCES_DIR}/dll.cpp
+    ${CRYPTOPP_SOURCES_DIR}/donna_32.cpp
+    ${CRYPTOPP_SOURCES_DIR}/donna_64.cpp
+    ${CRYPTOPP_SOURCES_DIR}/donna_sse.cpp
+    ${CRYPTOPP_SOURCES_DIR}/dsa.cpp
+    ${CRYPTOPP_SOURCES_DIR}/eax.cpp
+    ${CRYPTOPP_SOURCES_DIR}/ec2n.cpp
+    ${CRYPTOPP_SOURCES_DIR}/ecp.cpp
+    ${CRYPTOPP_SOURCES_DIR}/eccrypto.cpp
+    ${CRYPTOPP_SOURCES_DIR}/eprecomp.cpp
+    ${CRYPTOPP_SOURCES_DIR}/elgamal.cpp
+    ${CRYPTOPP_SOURCES_DIR}/emsa2.cpp
+    ${CRYPTOPP_SOURCES_DIR}/esign.cpp
+    ${CRYPTOPP_SOURCES_DIR}/files.cpp
+    ${CRYPTOPP_SOURCES_DIR}/filters.cpp
+    ${CRYPTOPP_SOURCES_DIR}/fips140.cpp
+    ${CRYPTOPP_SOURCES_DIR}/gcm.cpp
+    ${CRYPTOPP_SOURCES_DIR}/gcm_simd.cpp
+    ${CRYPTOPP_SOURCES_DIR}/gf256.cpp
+    ${CRYPTOPP_SOURCES_DIR}/gf2_32.cpp
+    ${CRYPTOPP_SOURCES_DIR}/gf2n.cpp
+    ${CRYPTOPP_SOURCES_DIR}/gf2n_simd.cpp
+    ${CRYPTOPP_SOURCES_DIR}/gfpcrypt.cpp
+    ${CRYPTOPP_SOURCES_DIR}/gost.cpp
+    ${CRYPTOPP_SOURCES_DIR}/gzip.cpp
+    ${CRYPTOPP_SOURCES_DIR}/hc128.cpp
+    ${CRYPTOPP_SOURCES_DIR}/hc256.cpp
+    ${CRYPTOPP_SOURCES_DIR}/hex.cpp
+    ${CRYPTOPP_SOURCES_DIR}/hight.cpp
+    ${CRYPTOPP_SOURCES_DIR}/hmac.cpp
+    ${CRYPTOPP_SOURCES_DIR}/hrtimer.cpp
+    ${CRYPTOPP_SOURCES_DIR}/ida.cpp
+    ${CRYPTOPP_SOURCES_DIR}/idea.cpp
+    ${CRYPTOPP_SOURCES_DIR}/iterhash.cpp
+    ${CRYPTOPP_SOURCES_DIR}/kalyna.cpp
+    ${CRYPTOPP_SOURCES_DIR}/md5.cpp
+    ${CRYPTOPP_SOURCES_DIR}/randpool.cpp
+    ${CRYPTOPP_SOURCES_DIR}/osrng.cpp
+    ${CRYPTOPP_SOURCES_DIR}/rijndael.cpp
+    ${CRYPTOPP_SOURCES_DIR}/modes.cpp
+    ${CRYPTOPP_SOURCES_DIR}/misc.cpp
+    ${CRYPTOPP_SOURCES_DIR}/rdtables.cpp
+    ${CRYPTOPP_SOURCES_DIR}/sha.cpp
+    ${CRYPTOPP_SOURCES_DIR}/mqueue.cpp
+    ${CRYPTOPP_SOURCES_DIR}/queue.cpp
 
     ${CORE_ROOT}/OfficeUtils/src/OfficeUtils.cpp
     ${CORE_ROOT}/OfficeUtils/src/ZipBuffer.cpp
@@ -590,33 +373,34 @@ set(SOURCES
     ${CORE_ROOT}/PdfFile/lib/xpdf/XRef.cc
     ${CORE_ROOT}/PdfFile/lib/xpdf/Zoox.cc
 
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/bio.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/cidx_manager.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/cio.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/dwt.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/event.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/function_list.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/image.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/invert.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/j2k.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/jp2.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/mct.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/mqc.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/openjpeg.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/opj_clock.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/opj_malloc.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/phix_manager.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/pi.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/ppix_manager.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/sparse_array.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/t1.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/t2.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/tcd.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/tgt.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/thix_manager.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/thread.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/tpix_manager.c
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2/../../../../opj_bgraframe.cpp
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/bio.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/cidx_manager.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/cio.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/dwt.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/event.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/function_list.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/ht_dec.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/image.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/invert.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/j2k.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/jp2.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/mct.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/mqc.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/openjpeg.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/opj_clock.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/opj_malloc.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/phix_manager.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/pi.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/ppix_manager.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/sparse_array.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/t1.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/t2.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/tcd.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/tgt.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/thix_manager.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/thread.c
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2/tpix_manager.c
+    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/opj_bgraframe.cpp
 
     ${CORE_ROOT}/XpsFile/XpsFile.cpp
     ${CORE_ROOT}/XpsFile/XpsLib/Document.cpp
@@ -626,64 +410,9 @@ set(SOURCES
     ${CORE_ROOT}/XpsFile/XpsLib/WString.cpp
     ${CORE_ROOT}/XpsFile/XpsLib/ContextState.cpp
 
-    ${CORE_ROOT}/DjVuFile/libdjvu/../DjVu.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/../DjVuFileImplementation.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/Arrays.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/BSByteStream.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/BSEncodeByteStream.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/ByteStream.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DataPool.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/debug.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVmDir.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVmDir0.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVmDoc.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVmNav.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuAnno.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuDocEditor.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuDocument.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuDumpHelper.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuErrorList.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuFile.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuFileCache.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuGlobal.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuGlobalMemory.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuImage.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuInfo.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuMessageLite.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuNavDir.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuPalette.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuPort.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuText.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/DjVuToPS.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GBitmap.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GContainer.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GException.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GIFFManager.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GMapAreas.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GPixmap.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GRect.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GScaler.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GSmartPointer.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GString.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GThreads.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/GUnicode.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/IFFByteStream.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/IW44EncodeCodec.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/IW44Image.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/JB2EncodeCodec.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/JB2Image.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/JPEGDecoder.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/MMRDecoder.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/MMX.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/UnicodeByteStream.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/XMLParser.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/XMLTags.cpp
-    ${CORE_ROOT}/DjVuFile/libdjvu/ZPCodec.cpp
-
-    ${CORE_ROOT}/DjVuFile/wasm/libdjvu/atomic.cpp
-    ${CORE_ROOT}/DjVuFile/wasm/libdjvu/DjVuMessage.cpp
-    ${CORE_ROOT}/DjVuFile/wasm/libdjvu/GOS.cpp
-    ${CORE_ROOT}/DjVuFile/wasm/libdjvu/GURL.cpp
+    ${CORE_ROOT}/DjVuFile/DjVu.cpp
+    ${CORE_ROOT}/DjVuFile/DjVuFileImplementation.cpp
+    ${DJVULIBRE_SOURCES}
 
     ${DESKTOP_ROOT}/graphics/pro/officedrawingfile.cpp
 
@@ -785,45 +514,48 @@ set(SOURCES
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_bld.cpp
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnvisci.cpp
 
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftdebug.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/autofit/autofit.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/bdf/bdf.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/cff/cff.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbase.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbitmap.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftfstype.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftgasp.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/cache/ftcache.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftglyph.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/gzip/ftgzip.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftinit.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/lzw/ftlzw.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftstroke.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftsystem.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/smooth.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbbox.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbdf.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftcid.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftmm.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftpfr.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftsynth.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/fttype1.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftwinfnt.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftgxval.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftotval.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftpatent.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/pcf/pcf.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/pfr/pfr.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/psaux/psaux.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/pshinter/pshinter.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/psnames/psmodule.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/raster/raster.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/sfnt.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/truetype/truetype.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/type1/type1.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/cid/type1cid.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/type42/type42.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/winfonts/winfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftdebug.c
+    ${FREETYPE_SOURCES_DIR}/src/autofit/autofit.c
+    ${FREETYPE_SOURCES_DIR}/src/bdf/bdf.c
+    ${FREETYPE_SOURCES_DIR}/src/cff/cff.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbase.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbitmap.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftfstype.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftgasp.c
+    ${FREETYPE_SOURCES_DIR}/src/cache/ftcache.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftglyph.c
+    ${FREETYPE_SOURCES_DIR}/src/gzip/ftgzip.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftinit.c
+    ${FREETYPE_SOURCES_DIR}/src/lzw/ftlzw.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftstroke.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftsystem.c
+    ${FREETYPE_SOURCES_DIR}/src/smooth/smooth.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbbox.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbdf.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftcid.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftmm.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftpfr.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftsynth.c
+    ${FREETYPE_SOURCES_DIR}/src/base/fttype1.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftwinfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftgxval.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftotval.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftpatent.c
+    ${FREETYPE_SOURCES_DIR}/src/pcf/pcf.c
+    ${FREETYPE_SOURCES_DIR}/src/pfr/pfr.c
+    ${FREETYPE_SOURCES_DIR}/src/psaux/psaux.c
+    ${FREETYPE_SOURCES_DIR}/src/pshinter/pshinter.c
+    ${FREETYPE_SOURCES_DIR}/src/psnames/psmodule.c
+    ${FREETYPE_SOURCES_DIR}/src/raster/raster.c
+    ${FREETYPE_SOURCES_DIR}/src/sfnt/sfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/truetype/truetype.c
+    ${FREETYPE_SOURCES_DIR}/src/type1/type1.c
+    ${FREETYPE_SOURCES_DIR}/src/cid/type1cid.c
+    ${FREETYPE_SOURCES_DIR}/src/type42/type42.c
+    ${FREETYPE_SOURCES_DIR}/src/winfonts/winfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/hvf/hvf.c
+    ${FREETYPE_SOURCES_DIR}/src/sdf/sdf.c
+    ${FREETYPE_SOURCES_DIR}/src/svg/svg.c
 
     ${DESKTOP_ROOT}/xml/src/xmllight.cpp
     ${DESKTOP_ROOT}/xml/src/xmldom.cpp
@@ -837,10 +569,8 @@ set(SOURCES
 set_source_files_properties(${SOURCES} PROPERTIES GENERATED TRUE)
 
 set_source_files_properties(
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/smooth.c
-    #${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/ftgrays.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/sfnt.c
-    #${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/ttcmap.c
+    # sfnt.c includes ttcmap.c, which uses try/catch (freetype.patch)
+    ${FREETYPE_SOURCES_DIR}/src/sfnt/sfnt.c
     PROPERTIES LANGUAGE CXX
 )
 
@@ -857,11 +587,8 @@ add_executable(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/wasm/src/lib
     ${DESKTOP_ROOT}/agg-2.4/include
-    ${DESKTOP_ROOT}/cximage/jasper/include
-    ${DESKTOP_ROOT}/cximage/jpeg
-    ${DESKTOP_ROOT}/cximage/png
-    ${DESKTOP_ROOT}/freetype-2.10.4/include
-    ${DESKTOP_ROOT}/freetype-2.10.4/include/freetype
+    ${FREETYPE_SOURCES_DIR}/include
+    ${FREETYPE_SOURCES_DIR}/include/freetype
     ${ZLIBNG_WASM_INCDIR}
     ${ZLIBNG_WASM_INCDIR}/minizip
     ${CORE_ROOT}/OfficeUtils/src
@@ -871,12 +598,26 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CORE_ROOT}/PdfFile/lib/splash
     ${CORE_ROOT}/PdfFile/lib
     ${DESKTOP_ROOT}/raster/Jp2/openjpeg
-    ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2
+    ${OPENJPEG_SOURCES_DIR}/src/lib/openjp2
     ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash/include
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash/include
     ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash
     ${CORE_ROOT}/DocxRenderer
+    ${CRYPTOPP_INCLUDE_DIR}
+    ${JBIG2ENC_SOURCES_DIR}
 )
+
+# jbig2enc reports its version through jbig2_version()
+set_source_files_properties(${JBIG2ENC_SOURCES} PROPERTIES COMPILE_DEFINITIONS "VERSION=\"0.32\"")
+
+# DjVuLibre's headers (e.g. GString.h) must not shadow xpdf's in other sources
+set(DJVU_SOURCES
+    ${CORE_ROOT}/DjVuFile/DjVu.cpp
+    ${CORE_ROOT}/DjVuFile/DjVuFileImplementation.cpp
+    ${DJVULIBRE_SOURCES}
+)
+set_property(SOURCE ${DJVU_SOURCES} APPEND PROPERTY INCLUDE_DIRECTORIES ${DJVULIBRE_SOURCES_DIR})
+set_property(SOURCE ${DJVU_SOURCES} APPEND PROPERTY COMPILE_DEFINITIONS ${DJVULIBRE_DEFINITIONS})
 
 # -------------------------------------------------
 # link libraries
@@ -891,6 +632,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     minizip
     z
     LibXml2
+    jpeg
+    png
+    tiff
+    webp
+    webpdemux
+    leptonica
 )
 
 # -------------------------------------------------

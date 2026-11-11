@@ -126,8 +126,8 @@ static psd_status psd_combine_grayscale16_channel(psd_context * context, psd_pat
 
 		for(i = pattern->width * pattern->height; i --; )
 		{
-			gray_color = PSD_CHAR_TO_SHORT(gray) >> 8;
-			*dst_color = PSD_ARGB_TO_COLOR(PSD_CHAR_TO_SHORT(alpha) >> 8, gray_color, gray_color, gray_color);
+			gray_color = (*(gray));
+			*dst_color = PSD_ARGB_TO_COLOR((*(alpha)), gray_color, gray_color, gray_color);
 			dst_color ++;
 			alpha += 2;
 			gray += 2;
@@ -139,7 +139,7 @@ static psd_status psd_combine_grayscale16_channel(psd_context * context, psd_pat
 		
 		for(i = pattern->width * pattern->height; i --; )
 		{
-			gray_color = PSD_CHAR_TO_SHORT(gray) >> 8;
+			gray_color = (*(gray));
 			*dst_color = PSD_RGB_TO_COLOR(gray_color, gray_color, gray_color);
 			dst_color ++;
 			gray += 2;
@@ -226,8 +226,8 @@ static psd_status psd_combine_rgb16_channel(psd_context * context, psd_pattern *
 
 		for(i = pattern->width * pattern->height; i --; )
 		{
-			*dst_color = PSD_ARGB_TO_COLOR(PSD_CHAR_TO_SHORT(alpha) >> 8, 
-				PSD_CHAR_TO_SHORT(red) >> 8, PSD_CHAR_TO_SHORT(green) >> 8, PSD_CHAR_TO_SHORT(blue) >> 8);
+			*dst_color = PSD_ARGB_TO_COLOR((*(alpha)), 
+				(*(red)), (*(green)), (*(blue)));
 			dst_color ++;
 			alpha += 2;
 			red += 2;
@@ -243,8 +243,8 @@ static psd_status psd_combine_rgb16_channel(psd_context * context, psd_pattern *
 
 		for(i = pattern->width * pattern->height; i --; )
 		{
-			*dst_color = PSD_RGB_TO_COLOR(PSD_CHAR_TO_SHORT(red) >> 8, 
-				PSD_CHAR_TO_SHORT(green) >> 8, PSD_CHAR_TO_SHORT(blue) >> 8);
+			*dst_color = PSD_RGB_TO_COLOR((*(red)), 
+				(*(green)), (*(blue)));
 			dst_color ++;
 			red += 2;
 			green += 2;
@@ -320,9 +320,9 @@ static psd_status psd_combine_cmyk16_channel(psd_context * context, psd_pattern 
 
 		for(i = pattern->width * pattern->height; i --; )
 		{
-			*dst_color = psd_intacmyk_to_color((unsigned char)(PSD_CHAR_TO_SHORT(alpha) >> 8), 
-				255 - (PSD_CHAR_TO_SHORT(cyan) >> 8), 255 - (PSD_CHAR_TO_SHORT(magenta) >> 8), 
-				255 - (PSD_CHAR_TO_SHORT(yellow) >> 8), 255 - (PSD_CHAR_TO_SHORT(black) >> 8));
+			*dst_color = psd_intacmyk_to_color((unsigned char)((*(alpha))), 
+				255 - ((*(cyan))), 255 - ((*(magenta))), 
+				255 - ((*(yellow))), 255 - ((*(black))));
 			dst_color ++;
 			alpha += 2;
 			cyan += 2;
@@ -340,9 +340,9 @@ static psd_status psd_combine_cmyk16_channel(psd_context * context, psd_pattern 
 
 		for(i = pattern->width * pattern->height; i --; )
 		{
-			*dst_color = psd_intcmyk_to_color(255 - (PSD_CHAR_TO_SHORT(cyan) >> 8), 
-				255 - (PSD_CHAR_TO_SHORT(magenta) >> 8), 255 - (PSD_CHAR_TO_SHORT(yellow) >> 8), 
-				255 - (PSD_CHAR_TO_SHORT(black) >> 8));
+			*dst_color = psd_intcmyk_to_color(255 - ((*(cyan))), 
+				255 - ((*(magenta))), 255 - ((*(yellow))), 
+				255 - ((*(black))));
 			dst_color ++;
 			cyan += 2;
 			magenta += 2;
@@ -416,8 +416,8 @@ static psd_status psd_combine_lab16_channel(psd_context * context, psd_pattern *
 
 		for(i = pattern->width * pattern->height; i --; )
 		{
-			*dst_color = psd_alab_to_color((unsigned char)(PSD_CHAR_TO_SHORT(alpha) >> 8), (PSD_CHAR_TO_SHORT(lightness) >> 8) * 100 >> 8, 
-				(PSD_CHAR_TO_SHORT(a) >> 8) - 128, (PSD_CHAR_TO_SHORT(b) >> 8) - 128);
+			*dst_color = psd_alab_to_color((unsigned char)((*(alpha))), ((*(lightness))) * 100 >> 8, 
+				((*(a))) - 128, ((*(b))) - 128);
 			dst_color ++;
 			alpha += 2;
 			lightness += 2;
@@ -433,8 +433,8 @@ static psd_status psd_combine_lab16_channel(psd_context * context, psd_pattern *
 
 		for(i = pattern->width * pattern->height; i --; )
 		{
-			*dst_color = psd_lab_to_color((PSD_CHAR_TO_SHORT(lightness) >> 8) * 100 >> 8, 
-				(PSD_CHAR_TO_SHORT(a) >> 8) - 128, (PSD_CHAR_TO_SHORT(b) >> 8) - 128);
+			*dst_color = psd_lab_to_color(((*(lightness))) * 100 >> 8, 
+				((*(a))) - 128, ((*(b))) - 128);
 			dst_color ++;
 			lightness += 2;
 			a += 2;

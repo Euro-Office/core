@@ -52,7 +52,7 @@ namespace PdfReader
         void* pResult;
 
         if (nSize == 0)
-			return NULL;
+			return nullptr;
 
         pResult = malloc(nSize);
         CheckMemory(pResult);
@@ -61,12 +61,12 @@ namespace PdfReader
     static void* MemUtilsMallocArray(unsigned int nObjectsCount, unsigned int nObjectSize)
     {
         if (0 == nObjectsCount || 0 == nObjectSize)
-            return NULL;
+            return nullptr;
 
         if (nObjectsCount >= (UINT_MAX / nObjectSize))
         {
-            CheckMemory(NULL);
-            return NULL;
+            CheckMemory(nullptr);
+            return nullptr;
         }
 
         return MemUtilsMalloc(nObjectsCount * nObjectSize);
@@ -85,7 +85,7 @@ namespace PdfReader
         void* pResult;
 
         if (!pData || nSize == 0)
-            return NULL;
+            return nullptr;
 
         pResult = realloc(pData, nSize);
         if (!pResult)
@@ -105,12 +105,12 @@ namespace PdfReader
     static void* MemUtilsReallocArray(void* pData, unsigned int nObjectsCount, unsigned int nObjectSize, unsigned int nOldCount)
     {
         if (0 == nObjectsCount || 0 == nObjectSize)
-            return NULL;
+            return nullptr;
 
         if (nObjectsCount >= (UINT_MAX / nObjectSize))
         {
-            CheckMemory(NULL);
-            return NULL;
+            CheckMemory(nullptr);
+            return nullptr;
         }
 
         return MemUtilsRealloc(pData, nObjectsCount * nObjectSize, nOldCount * nObjectSize);

@@ -93,13 +93,13 @@ namespace PdfWriter
 		NSFile::CFileBinary oFile;
 
 		if (oFile.OpenFile(wsFileName) == false)
-			return NULL;
+			return nullptr;
 
 		int nLen = oFile.GetFileSize();
 		DWORD nLenRead = 0;
 
 		char *sBuffer = (char *)malloc(nLen);
-		if (NULL != sBuffer)
+		if (nullptr != sBuffer)
 		{
 			if ((int)oFile.ReadFile((BYTE*)sBuffer, nLen, nLenRead) == false)
 			{
@@ -107,7 +107,7 @@ namespace PdfWriter
 					free(sBuffer);
 
 				oFile.CloseFile();
-				return NULL;
+				return nullptr;
 			}
 
 			oFile.CloseFile();
@@ -228,9 +228,9 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
 	CFontFileTrueType::CFontFileTrueType(char *sBuffer, int nLen, bool bFreeFileData, unsigned int unFontIndex) :CFontFileBase(sBuffer, nLen, bFreeFileData)
 	{
-		m_pTables      = NULL;
+		m_pTables      = nullptr;
 		m_nTablesCount = 0;
-		m_pCMaps       = NULL;
+		m_pCMaps       = nullptr;
 		m_nCMapsCount  = 0;
 		m_bSuccess     = false;
 		m_unFontIndex  = unFontIndex;
@@ -248,7 +248,7 @@ namespace PdfWriter
 		if (!pTTF->m_bSuccess)
 		{
 			delete pTTF;
-			return NULL;
+			return nullptr;
 		}
 		return pTTF;
 	}
@@ -258,13 +258,13 @@ namespace PdfWriter
 		int nLen = 0;
 
 		if (!(sBuffer = CFontFileBase::ReadFile(wsFileName, &nLen)))
-			return NULL;
+			return nullptr;
 
 		CFontFileTrueType *pTTF = new CFontFileTrueType(sBuffer, nLen, true, unIndex);
 		if (!pTTF->m_bSuccess)
 		{
 			delete pTTF;
-			return NULL;
+			return nullptr;
 		}
 		return pTTF;
 	}
@@ -587,7 +587,7 @@ namespace PdfWriter
 		else
 		{
 			nNewNameLen = 0;
-			arrNewNameTable = NULL;
+			arrNewNameTable = nullptr;
 		}
 
 		// Building a new table 'cmap'
@@ -628,7 +628,7 @@ namespace PdfWriter
 		else
 		{
 			nNewCmapLen = 0;
-			arrNewCmapTable = NULL;
+			arrNewCmapTable = nullptr;
 		}
 
 		// Generate a new table 'hmtx' and update the table 'hhea'
@@ -671,7 +671,7 @@ namespace PdfWriter
 		}
 		else
 		{
-			arrNewHHEATable = arrNewHMTXTable = NULL;
+			arrNewHHEATable = arrNewHMTXTable = nullptr;
 			nNewHHEALen = nNewHMTXLen = 0;
 		}
 

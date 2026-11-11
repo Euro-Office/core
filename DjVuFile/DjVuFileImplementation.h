@@ -24,16 +24,16 @@
  */
 #pragma once
 
-#include "libdjvu/DjVuDocument.h"
-#include "libdjvu/DjVuImage.h"
-#include "libdjvu/GBitmap.h"
-#include "libdjvu/GScaler.h"
-#include "libdjvu/IFFByteStream.h"
-#include "libdjvu/BSByteStream.h"
-#include "libdjvu/DataPool.h"
-#include "libdjvu/DjVuText.h"
-#include "libdjvu/DjVmNav.h"
-#include "libdjvu/IW44Image.h"
+#include "DjVuDocument.h"
+#include "DjVuImage.h"
+#include "GBitmap.h"
+#include "GScaler.h"
+#include "IFFByteStream.h"
+#include "BSByteStream.h"
+#include "DataPool.h"
+#include "DjVuText.h"
+#include "DjVmNav.h"
+#include "IW44Image.h"
 
 #define ZIP_NO_COMPRESSION         0
 #define ZIP_BEST_SPEED             1

@@ -17,3 +17,226 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = "Test/BinaryFormat/snapshots/**"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = ["DesktopEditor/raster/test/heif/quad.heic", "DesktopEditor/raster/test/heif/quad_alpha.avif", "DesktopEditor/raster/test/heif/quad_10bit.avif", "DesktopEditor/raster/test/heif/wide_rot.heic"]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = ["DesktopEditor/fontengine/test/fonts/EOTestTrueType.ttf", "DesktopEditor/fontengine/test/fonts/EOTestTrueType.woff2", "DesktopEditor/fontengine/test/fonts/EOTestCFF.otf"]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "Common/3dParty/freetype/patch/freetype.patch"
+SPDX-FileCopyrightText = ["1996-2026 David Turner, Robert Wilhelm, and Werner Lemberg", "2026 Euro-Office contributors"]
+SPDX-License-Identifier = "FTL OR GPL-2.0-or-later"
+
+[[annotations]]
+path = "Common/3dParty/djvulibre/patch/djvulibre-wasm-nothreads.patch"
+SPDX-FileCopyrightText = ["2002 Leon Bottou and Yann Le Cun", "2001 AT&T", "2026 Euro-Office contributors"]
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+[[annotations]]
+path = ["DjVuFile/test/data/bilevel.djvu", "DjVuFile/test/data/color.djvu", "DjVuFile/test/data/document.djvu"]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "Common/3dParty/libtiff/patch/libtiff.patch"
+SPDX-FileCopyrightText = ["1988-1997 Sam Leffler", "1991-1997 Silicon Graphics, Inc."]
+SPDX-License-Identifier = "libtiff"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/plain_paragraph.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/plain_paragraph.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_checkbox_12pt.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_checkbox_no_styles.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_short_value_newline.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_text_12pt.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_text_no_styles.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/content_control_value_newline.docx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_date.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_datetime.xlsx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/print_area_bad_local_sheet.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/print_area_local_sheet.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/print_area_local_sheet_past_end.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/print_area_no_local_sheet.xlsx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/field_bookmark_ref_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/field_drop_down_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/field_expression_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/field_sequence_ref_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/field_text_input_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/field_variable_input_ampersand.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/chart_local_table_category_ampersand.ods",
+    "OdfFile/Test/test_odf/ExampleFiles/chart_pivot_source_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/chart_series_name_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/chart_sheet_name_ampersand.ods",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/page_background_image_no_page_size.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/sheet_background_no_page_setup.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/sheet_background_with_margins.xlsx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/underline_double.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/underline_wave.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/underline_wave_double.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_centered.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_drop_cap.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_drop_cap_unaligned.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/hyperlink_target_frame.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/line_height_auto.odp",
+    "OdfFile/Test/test_odf/ExampleFiles/line_height_normal.odp",
+    "OdfFile/Test/test_odf/ExampleFiles/line_height_normal.ods",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/default_tab_stop_1251cm.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/default_tab_stop_2cm.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/custom_geometry_quad_bezier.pptx",
+    "OdfFile/Test/test_odf/ExampleFiles/quad_bezier_enhanced_path.odp",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/bullet_size_points.pptx",
+    "OdfFile/Test/test_odf/ExampleFiles/bullet_size_points_picture.pptx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/chart_bar_two_series.ods",
+    "OdfFile/Test/test_odf/ExampleFiles/chart_pie_one_series.ods",
+    "OdfFile/Test/test_odf/ExampleFiles/chart_ring_one_series.ods",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/numbered_paragraph_first.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/page_sequence_first.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/meta_generator_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/meta_template_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/meta_template_href_only.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/meta_template_no_generator.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/meta_template_with_generator.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/chart_empty_subtitle.ods",
+    "OdfFile/Test/test_odf/ExampleFiles/chart_subtitle_without_y.ods",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/table_builtin_style_no_part.pptx"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/sheet_fit_to_page.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/section_columns.odt"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/chapter_fields.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/styleref_fields.docx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+# Copied unchanged from sdkjs (common/stringserialize.js, commit 682c34d33e), so
+# that the WebAssembly build depends on core's sources only
+[[annotations]]
+path = "Common/js/stringserialize.js"
+SPDX-FileCopyrightText = "2010-2024 Ascensio System SIA"
+SPDX-License-Identifier = "AGPL-3.0-only"

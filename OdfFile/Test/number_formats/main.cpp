@@ -56,19 +56,132 @@ void currency_formats()
         require(xml.str().find(L"formatCode=\"" + code + L"\"") != std::wstring::npos,
                 "Currency format code must survive serialization unchanged");
 }
+
+void scientific_builtin_format()
+{
+    using cpdoccore::odf_types::office_value_type;
+    cpdoccore::oox::xlsx_num_fmts formats;
+    require(formats.add_or_find(L"0.00E+00", office_value_type::Scientific) == 11,
+            "Exact scientific format must use built-in ID 11");
+    require(formats.add_or_find(L"0.00E+00", office_value_type::Scientific) == 11,
+            "Repeated built-in scientific format must keep ID 11");
+
+    std::wostringstream xml;
+    formats.serialize(xml);
+    require(xml.str().find(L"<numFmt ") == std::wstring::npos,
+            "Built-in scientific format must not need a custom XML entry");
+}
+
+void scientific_additional_sections()
+{
+    using cpdoccore::odf_types::office_value_type;
+    cpdoccore::oox::xlsx_num_fmts formats;
+    require(formats.add_or_find(L"0.00E+00;-0.00E+00", office_value_type::Scientific) >= 164,
+            "Scientific format with an additional section must use a custom ID");
+}
+
+void scientific_different_precision()
+{
+    using cpdoccore::odf_types::office_value_type;
+    cpdoccore::oox::xlsx_num_fmts formats;
+    const auto first = formats.add_or_find(L"0.000E+00", office_value_type::Scientific);
+    const auto second = formats.add_or_find(L"0.0E+00", office_value_type::Scientific);
+    require(first >= 164 && second >= 164,
+            "Scientific formats with different precision must use custom IDs");
+    require(first != second, "Different scientific formats must have distinct IDs");
+    require(formats.add_or_find(L"0.00E+00", office_value_type::Scientific) == 11,
+            "Custom scientific formats must leave built-in ID 11 available");
+}
+
+void scientific_literal()
+{
+    using cpdoccore::odf_types::office_value_type;
+    cpdoccore::oox::xlsx_num_fmts formats;
+    require(formats.add_or_find(L"0.00E+00\" units\"", office_value_type::Scientific) >= 164,
+            "Scientific format with literal text must use a custom ID");
+}
+
+void scientific_serialization()
+{
+    using cpdoccore::odf_types::office_value_type;
+    cpdoccore::oox::xlsx_num_fmts formats;
+    // Quotes in the format code must be XML-escaped, while the format itself is preserved.
+    struct FormatCase
+    {
+        const wchar_t* code;
+        const wchar_t* serializedCode;
+    };
+    const FormatCase cases[] = {
+        {L"0.00E+00;-0.00E+00", L"0.00E+00;-0.00E+00"},
+        {L"0.000E+00", L"0.000E+00"},
+        {L"0.00E+00\" units\"", L"0.00E+00&quot; units&quot;"}
+    };
+    for (const auto& test : cases)
+        formats.add_or_find(test.code, office_value_type::Scientific);
+
+    std::wostringstream xml;
+    formats.serialize(xml);
+    for (const auto& test : cases)
+        require(xml.str().find(std::wstring(L"formatCode=\"") + test.serializedCode + L"\"") != std::wstring::npos,
+                "Custom scientific format must survive XML serialization");
+}
+
+void scientific_repeated_lookup()
+{
+    using cpdoccore::odf_types::office_value_type;
+    cpdoccore::oox::xlsx_num_fmts formats;
+    const std::vector<std::wstring> codes = {
+        L"0.000E+00", L"0.00E+00;-0.00E+00", L"0.00E+00\" units\""
+    };
+    std::vector<unsigned int> ids;
+    std::set<unsigned int> uniqueIds;
+    for (const auto& code : codes)
+    {
+        const auto id = formats.add_or_find(code, office_value_type::Scientific);
+        require(uniqueIds.insert(id).second, "Distinct scientific formats must not share an ID");
+        ids.push_back(id);
+    }
+
+    std::wostringstream before;
+    formats.serialize(before);
+    for (size_t i = 0; i < codes.size(); ++i)
+        require(formats.add_or_find(codes[i], office_value_type::Scientific) == ids[i],
+                "Repeated scientific lookup must reuse the original ID");
+    std::wostringstream after;
+    formats.serialize(after);
+    require(before.str() == after.str(), "Repeated lookup must not add duplicate XML entries");
+}
 }
 
 int main()
 {
-    try
+    struct TestCase
     {
-        currency_formats();
-        std::cout << "ODS currency format tests passed\n";
-        return 0;
-    }
-    catch (const std::exception& error)
+        const char* name;
+        void (*run)();
+    };
+    const TestCase tests[] = {
+        {"currency formats", currency_formats},
+        {"scientific built-in format", scientific_builtin_format},
+        {"scientific additional sections", scientific_additional_sections},
+        {"scientific different precision", scientific_different_precision},
+        {"scientific literal", scientific_literal},
+        {"scientific serialization", scientific_serialization},
+        {"scientific repeated lookup", scientific_repeated_lookup}
+    };
+    int failures = 0;
+    for (const auto& test : tests)
     {
-        std::cerr << error.what() << '\n';
-        return 1;
+        try
+        {
+            test.run();
+            std::cout << "[PASS] " << test.name << '\n';
+        }
+        catch (const std::exception& error)
+        {
+            ++failures;
+            std::cerr << "[FAIL] " << test.name << ": " << error.what() << '\n';
+        }
     }
+    return failures == 0 ? 0 : 1;
 }

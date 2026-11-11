@@ -60,8 +60,8 @@ public:
     GfxTextClip()
     {
         m_nTextsCount = m_nSize = 0;
-        m_pTexts = NULL;
-        m_pMatrix = NULL;
+        m_pTexts = nullptr;
+        m_pMatrix = nullptr;
     }
 
     GfxTextClip *Copy()
@@ -93,8 +93,8 @@ public:
         PdfReader::MemUtilsFree(m_pMatrix);
 
         m_nTextsCount = m_nSize = 0;
-        m_pTexts = NULL;
-        m_pMatrix = NULL;
+        m_pTexts = nullptr;
+        m_pMatrix = nullptr;
     }
 
     void
@@ -131,7 +131,7 @@ public:
                       wchar_t * *pwsFontName, wchar_t * *pwsFontPath, double *pdFontSize, int *pnFontStyle)
     {
         if (nTextIndex < 0 || nTextIndex >= m_nTextsCount)
-            return NULL;
+            return nullptr;
 
         *pdX = m_pTexts[nTextIndex].dX;
         *pdY = m_pTexts[nTextIndex].dY;
@@ -150,7 +150,7 @@ public:
     double *GetMatrix(int nTextIndex)
     {
         if (nTextIndex < 0 || nTextIndex >= m_nTextsCount)
-            return NULL;
+            return nullptr;
 
         return m_pMatrix[nTextIndex].ToDoublePointer();
     }
@@ -215,12 +215,12 @@ public:
             m_pTexts = (Text *) PdfReader::MemUtilsReallocArray(m_pTexts, m_nSize, sizeof(Text), m_nTextsCount);
             m_pMatrix = (Matrix *) PdfReader::MemUtilsReallocArray(m_pMatrix, m_nSize, sizeof(Matrix), m_nTextsCount);
 
-            if (NULL == m_pTexts)
+            if (nullptr == m_pTexts)
                 m_pTexts = (Text *) PdfReader::MemUtilsMallocArray(m_nSize, sizeof(Text));
             else
                 m_pTexts = (Text *) PdfReader::MemUtilsReallocArray(m_pTexts, m_nSize, sizeof(Text), m_nTextsCount);
 
-            if (NULL == m_pMatrix)
+            if (nullptr == m_pMatrix)
                 m_pMatrix = (Matrix *) PdfReader::MemUtilsMallocArray(m_nSize, sizeof(Matrix));
             else
                 m_pMatrix = (Matrix *) PdfReader::MemUtilsReallocArray(m_pMatrix, m_nSize, sizeof(Matrix), m_nTextsCount);

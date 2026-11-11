@@ -148,7 +148,7 @@ namespace PdfWriter
 	}
 	void         COutline::SetDestination(CDestination* pDestination)
 	{
-		if (NULL == pDestination)
+		if (nullptr == pDestination)
 			Remove("Dest");
 		else
 			Add("Dest", pDestination);

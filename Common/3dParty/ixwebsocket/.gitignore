@@ -1,5 +1,0 @@
-*
-# Except this file
-!.gitignore
-!ixwebsocket.pri
-!openssl.pri

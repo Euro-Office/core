@@ -56,7 +56,7 @@ bool PdfReader::GetCidToUnicodeMemoryMap(const char* name, const unsigned int*& 
     size = iter->second.Size;
     return true;
   }
-  data = NULL;
+  data = nullptr;
   size = 0;
   return false;
 }

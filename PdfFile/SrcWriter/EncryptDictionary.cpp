@@ -29,7 +29,7 @@
 
 #include <ctime>
 
-#include "../../Common/3dParty/cryptopp/md5.h"
+#include <cryptopp/md5.h>
 #include "../../UnicodeConverter/UnicodeConverter.h"
 
 #define SET_BINARY_PARAM(Name, set_func, max_len) \
@@ -58,7 +58,7 @@ namespace PdfWriter
 	}
     void CEncryptDict::Fix()
     {
-        CObjectBase* pObj = NULL;
+        CObjectBase* pObj = nullptr;
 		SET_BINARY_PARAM("O", SetO, 48);
 		SET_BINARY_PARAM("U", SetU, 48);
 		SET_BINARY_PARAM("OE", SetOE, 32);
@@ -90,7 +90,7 @@ namespace PdfWriter
 		// Create a file identifier using the elements of the Info dictionary.
 		if (pInfo)
 		{
-			const char *sTemp = NULL;
+			const char *sTemp = nullptr;
 			unsigned int nLen = 0;
 
 			// Author
@@ -237,7 +237,7 @@ namespace PdfWriter
 			pStream->WriteChar(' ');
 			nBegin = pStream->Tell();
 			// The digital signature isn't encrypted
-			pStream->Write(pObject, oIter->first == "Contents" ? NULL : pEncrypt);
+			pStream->Write(pObject, oIter->first == "Contents" ? nullptr : pEncrypt);
 			nEnd = pStream->Tell();
 			pStream->WriteStr("\012");
 			if (oIter->first == "Contents")
@@ -268,7 +268,7 @@ namespace PdfWriter
 				pByteRange->Add(nFileEnd - m_nOffset2);
 
                 pStream->Seek(m_nByteRangeBegin, EWhenceMode::SeekSet);
-                pStream->Write(pByteRange, NULL);
+                pStream->Write(pByteRange, nullptr);
 
                 int nEnd = pStream->Tell();
                 if (nEnd < m_nByteRangeEnd)
@@ -303,7 +303,7 @@ namespace PdfWriter
 			return false;
 
 		// The digital signature isn't encrypted
-		pStream->Write(pContents, NULL);
+		pStream->Write(pContents, nullptr);
 		delete pContents;
 
 		// Erase extra '>' if necessary

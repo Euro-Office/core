@@ -195,8 +195,8 @@ namespace PdfWriter
 	}
 	CPageTree::CPageTree()
 	{
-		m_pPages = NULL;
-		m_pCount = NULL;
+		m_pPages = nullptr;
+		m_pCount = nullptr;
 	}
 	void CPageTree::Fix()
 	{
@@ -242,7 +242,7 @@ namespace PdfWriter
 		CObjectBase* pObj = GetFromPageTree(nPageIndex, nI);
 		if (pObj && pObj->GetType() == object_type_DICT && ((CDictObject*)pObj)->GetDictType() == dict_type_PAGE)
 			return (CPage*)pObj;
-		return NULL;
+		return nullptr;
 	}
 	CObjectBase* CPageTree::RemovePage(int nPageIndex)
 	{
@@ -293,7 +293,7 @@ namespace PdfWriter
 		for (int i = 0, count = m_pPages->GetCount(); i < count; ++i)
 		{
 			CObjectBase* pObj = m_pPages->Get(i);
-			CObjectBase* pRes = NULL;
+			CObjectBase* pRes = nullptr;
 			if (pObj->GetType() == object_type_DICT && ((CDictObject*)pObj)->GetDictType() == dict_type_PAGES)
 				pRes = ((CPageTree*)pObj)->GetFromPageTree(nPageIndex, nI, bRemove, bInsert, pPage);
 			else
@@ -327,7 +327,7 @@ namespace PdfWriter
 				return pRes;
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 	bool CPageTree::Join(CPageTree* pPageTree)
 	{
@@ -474,7 +474,7 @@ namespace PdfWriter
 			}
 		}
 
-		m_pStream = NULL;
+		m_pStream = nullptr;
 	}
 	CPage::CPage(CXref* pXref, CPageTree* pParent, CDocument* pDocument)
 	{
@@ -494,7 +494,7 @@ namespace PdfWriter
 	}
 	CPage::~CPage()
 	{
-		CGrState* pGrState = m_pGrState, *pPrev = NULL;
+		CGrState* pGrState = m_pGrState, *pPrev = nullptr;
 		while (pGrState)		
 		{
 			pPrev = m_pGrState->GetPrev();
@@ -506,12 +506,12 @@ namespace PdfWriter
 	{
 		m_pDocument = pDocument;
 		m_eGrMode   = grmode_PAGE;
-		m_pGrState  = new CGrState(NULL);
+		m_pGrState  = new CGrState(nullptr);
 
-		m_pFont             = NULL;
-		m_pShadings         = NULL;
+		m_pFont             = nullptr;
+		m_pShadings         = nullptr;
 		m_unShadingsCount   = 0;
-		m_pPatterns         = NULL;
+		m_pPatterns         = nullptr;
 		m_unPatternsCount   = 0;
 		m_eType             = fontUnknownType;
 	}
@@ -585,7 +585,7 @@ namespace PdfWriter
 		// If the Resources object is null, then find Resources from the parent object recursively
 		if (!pObject)
 		{
-			CPageTree* pPageTree = NULL;
+			CPageTree* pPageTree = nullptr;
 			CObjectBase* pObj = Get("Parent");
 			if (pObj->GetType() == object_type_DICT)
 				pPageTree = (CPageTree*)pObj;
@@ -1277,7 +1277,7 @@ namespace PdfWriter
 		if (fontCIDType0 == eType || fontCIDType0C == eType || fontCIDType0COT == eType || fontCIDType2 == eType || fontCIDType2OT == eType)
 		{
 			m_pStream->WriteChar('<');
-			m_pStream->WriteBinary(sText, unLen, NULL);
+			m_pStream->WriteBinary(sText, unLen, nullptr);
 			m_pStream->WriteChar('>');
 		}
 		else
@@ -1287,7 +1287,7 @@ namespace PdfWriter
 			for (int i = 0; i < unLen; ++i)
 				sText2[i] = sText[i * 2 + 1];
 			m_pStream->WriteChar('<');
-			m_pStream->WriteBinary(sText2, unLen, NULL);
+			m_pStream->WriteBinary(sText2, unLen, nullptr);
 			m_pStream->WriteChar('>');
 			RELEASEARRAYOBJECTS(sText2);
 		}
@@ -1349,7 +1349,7 @@ namespace PdfWriter
 		}
 		else
 		{
-			CTextWord* pWord = NULL;
+			CTextWord* pWord = nullptr;
 			double dShift = 0;
 			m_pStream->WriteChar('[');
 			for (int nIndex = 0; nIndex < nCount; nIndex++)
@@ -1530,11 +1530,11 @@ namespace PdfWriter
 		{
 			CDictObject* pResources = GetResourcesItem();
 			if (!pResources)
-				return NULL;
+				return nullptr;
 
 			m_pShadings = new CDictObject();
 			if (!m_pShadings)
-				return NULL;
+				return nullptr;
 
 			pResources->Add("Shading", m_pShadings);
 		}
@@ -1569,11 +1569,11 @@ namespace PdfWriter
 		{
 			CDictObject* pResources = GetResourcesItem();
 			if (!pResources)
-				return NULL;
+				return nullptr;
 
 			m_pPatterns = new CDictObject();
 			if (!m_pPatterns)
-				return NULL;
+				return nullptr;
 
 			pResources->Add("Pattern", m_pPatterns);
 		}
@@ -1693,7 +1693,7 @@ namespace PdfWriter
 
 		m_pStream->WriteEscapeName(sName.c_str());
 		m_pStream->WriteChar(' ');
-		m_pStream->Write(pBDC, NULL);
+		m_pStream->Write(pBDC, nullptr);
 		m_pStream->WriteStr(" BDC\012");
 	}
 	void CPage::EndMarkedContent()
