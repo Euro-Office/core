@@ -351,7 +351,7 @@ namespace OOX
 			WritingStringNullableAttrBool(L"applyProtection", m_oApplyProtection);
 			WritingStringNullableAttrBool(L"quotePrefix", m_oQuotePrefix);
 			WritingStringNullableAttrBool(L"pivotButton", m_oPivotButton);
-			bool bCellControl = m_oCellControl.IsInit() ? *m_oCellControl : m_oXfComplementIndex.IsInit();
+			bool bCellControl = m_oCellControl.IsInit() && *m_oCellControl;
 			if (m_oAligment.IsInit() || m_oProtection.IsInit() || bCellControl)
 			{
 				writer.WriteString(_T(">"));

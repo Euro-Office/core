@@ -63,6 +63,7 @@ namespace OOX
 				std::vector<int> arrMappedBagIds;		// <a k="MappedFeaturePropertyBags"><bagId>N</bagId>...</a>
 			};
 			std::vector<Bag> m_arrBags;
+			int m_nComplements = -1;	// index of the XFComplements bag
 		};
 	}
 } // namespace OOX
