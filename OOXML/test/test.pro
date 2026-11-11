@@ -14,6 +14,7 @@ SOURCES += $$X2T_DIR/src/dylib/x2t.cpp
 
 SOURCES += main.cpp\
            common.cpp\
+           checkbox.cpp\
            conversion.cpp\
            workbook_facts.cpp\
 

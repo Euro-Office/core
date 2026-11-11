@@ -229,6 +229,11 @@ path = [
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
+[[annotations]]
+path = "OOXML/test/ExampleFiles/xlsx2bin/checkbox.xlsx"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
 # Copied unchanged from sdkjs (common/stringserialize.js, commit 682c34d33e), so
 # that the WebAssembly build depends on core's sources only
 [[annotations]]
