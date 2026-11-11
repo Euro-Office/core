@@ -2,12 +2,16 @@ name: Build
 
 on:
   pull_request:
+  push:
+    branches: [main, 'stable-*']
   workflow_dispatch:
 
-# A new push to a pull request cancels its previous run. Other runs (manual
-# ones included) are never cancelled, they wait instead.
+# A new push to a pull request cancels its previous run, which also keeps an
+# older run from publishing its core package after a newer one. Other runs
+# (manual ones included) get a group of their own: GitHub keeps only one
+# pending run per group, so queued commits on main would lose their package.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
@@ -16,16 +20,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Same split as the release images (.docker/core.bake.Dockerfile):
-        # server → Rocky Linux 9; desktop → Ubuntu (22.04 on amd64, 24.04 on
-        # arm64). The arm64 legs run natively on GitHub's hosted arm runners
-        # (V8 is far too slow under QEMU); swap in a self-hosted arm label if
-        # you have one.
+        # The release images (.docker/core.bake.Dockerfile): Rocky Linux 9,
+        # except desktop arm64 on Ubuntu 24.04. Desktop amd64 uses the server
+        # image, so the server amd64 leg covers it. The arm64 legs run
+        # natively on GitHub's hosted arm runners (V8 is far too slow under
+        # QEMU); swap in a self-hosted arm label if you have one.
         include:
-          - { product: server,  distro: rocky9, arch: amd64, runner: self-hosted }
-          - { product: desktop, distro: ubuntu, arch: amd64, runner: self-hosted }
-          - { product: server,  distro: rocky9, arch: arm64, runner: ubuntu-24.04-arm }
-          - { product: desktop, distro: ubuntu, arch: arm64, runner: ubuntu-24.04-arm }
+          # packages: the core packages this leg publishes. On amd64 the
+          # desktop image is the server image, so its build serves both.
+          - { product: server,  distro: rocky9, arch: amd64, platform: linux-amd64, packages: server desktop, runner: self-hosted }
+          - { product: server,  distro: rocky9, arch: arm64, platform: linux-arm64, packages: server, runner: ubuntu-24.04-arm }
+          - { product: desktop, distro: ubuntu, arch: arm64, platform: linux-arm64, packages: desktop, runner: ubuntu-24.04-arm }
     name: build (${{ matrix.product }}, ${{ matrix.distro }}, ${{ matrix.arch }})
     environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
     env:
@@ -102,7 +107,7 @@ jobs:
 
     - name: Remote cache unit tests
       run: |
-        "$RUNNER_TEMP/in-build-image" '$CORE_PYTHON -m unittest discover -s Common/3dParty'
+        "$RUNNER_TEMP/in-build-image" '$CORE_PYTHON -m unittest discover -s Common/3dParty && $CORE_PYTHON -m unittest discover -s scripts'
 
     - name: Restore vcpkg binary cache
       uses: actions/cache/restore@v4
@@ -113,27 +118,20 @@ jobs:
           vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-
 
     - name: Restore ccache
+      id: ccache
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/.cache/ccache
-        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.run_id }}
+        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
         restore-keys: |
           ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-
 
-    - name: Configure core, build third_party libs (ICU, V8, etc.)
-      run: |
-        "$RUNNER_TEMP/in-build-image" '
-          cmake -GNinja -S . -B build \
-            -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
-            -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=. \
-            -DVCPKG_MANIFEST_FEATURES=tests -DEO_BUILD_TESTS=ON \
-            -DPYTHON_BIN=$CORE_PYTHON \
-            -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-        '
-
+    # The same script builds core in .docker/core.bake.Dockerfile, so the
+    # package can replace that build. Also builds the third-party libs (ICU,
+    # V8, etc.) missing from the remote cache.
     - name: Build core (x2t, docbuilder, etc.)
       run: |
-        "$RUNNER_TEMP/in-build-image" 'cmake --build build'
+        "$RUNNER_TEMP/in-build-image" 'ccache --zero-stats && scripts/build.sh --tests --ccache -- -DEO_NO_WARNINGS=ON'
 
     - name: ccache statistics
       if: always()
@@ -144,9 +142,26 @@ jobs:
       run: |
         "$RUNNER_TEMP/in-build-image" 'ctest --test-dir build --output-on-failure'
 
+    # x2ttester writes its font cache next to itself, so it runs from the build
+    # tree: the package and the E2E overlay must not contain that cache. The
+    # core libraries it loads are in bin/.
     - name: Conversion Test
       run: |
-        "$RUNNER_TEMP/in-build-image" './Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package'
+        "$RUNNER_TEMP/in-build-image" 'LD_LIBRARY_PATH=/core/build/package/bin ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/x2ttester'
+
+    # build/package is what DocumentServer copies from core's Dockerfile.
+    # Published by the publish job for pushes to main and same-repo PRs that
+    # are up to date with their base.
+    - name: Pack core
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+      run: |
+        toolchain="$(docker image inspect --format '{{.Id}}' "$BASE_IMAGE")"
+        for product in ${{ matrix.packages }}; do
+          "$RUNNER_TEMP/in-build-image" "\$CORE_PYTHON scripts/core_package.py pack \
+            --from build/package --out build/core-package \
+            --platform ${{ matrix.platform }} --product $product \
+            --toolchain 'core-base $toolchain'"
+        done
 
     # Converts the x2tTester inputs to the internal binary format sdkjs loads
     # (Editor.bin) and compares a text dump with Test/BinaryFormat/snapshots/x2t.
@@ -156,7 +171,7 @@ jobs:
     - name: Binary format snapshots
       if: matrix.product == 'server' && matrix.arch == 'amd64'
       run: |
-        "$RUNNER_TEMP/in-build-image" 'python3 Test/BinaryFormat/run_snapshots.py x2t --package build/package --print-new --out build/binformat-dumps'
+        "$RUNNER_TEMP/in-build-image" 'python3 Test/BinaryFormat/run_snapshots.py x2t --package build/package --tester build/x2ttester/x2ttester --print-new --out build/binformat-dumps'
 
     - name: Upload binary format dumps
       if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
@@ -183,20 +198,24 @@ jobs:
         path: ${{ github.workspace }}/.cache/vcpkg
         key: vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', '.docker/core.bake.Dockerfile') }}
 
+    # Even when the build fails or is cancelled, so the next run reuses it.
+    # A PR that started from main's cache doesn't save its own: the repo's
+    # 10 GB of caches would evict main's, which every new PR starts from.
     - name: Save ccache
-      if: always()
+      if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
       uses: actions/cache/save@v4
       with:
         path: ${{ github.workspace }}/.cache/ccache
-        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.run_id }}
+        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
 
 
     # ─────────────────────────────────────────────────────────────
     # E2E: overlay the freshly built core binaries onto the published
     # nightly image and run the DocumentServer Playwright suite. Reuses
     # the binaries already produced in build/package above, so it adds
-    # no extra compile cost. Unique port + container name avoid colliding
-    # with the DocumentServer e2e job on the shared self-hosted host.
+    # no extra compile cost. The image, port and container name are per run:
+    # runs overlap on the shared self-hosted host, and so does the
+    # DocumentServer e2e job.
     # ─────────────────────────────────────────────────────────────
     - name: Check out DocumentServer e2e (current branch)
       if: matrix.product == 'server' && matrix.arch == 'amd64'
@@ -256,7 +275,7 @@ jobs:
         EOF
         docker build \
           --build-arg NIGHTLY_IMAGE=ghcr.io/euro-office/documentserver:nightly \
-          -t euro-office/documentserver:e2e-core \
+          -t euro-office/documentserver:e2e-core-${{ github.run_id }} \
           -f overlay.Dockerfile \
           build/package
 
@@ -274,25 +293,17 @@ jobs:
       if: matrix.product == 'server' && matrix.arch == 'amd64'
       working-directory: documentserver/e2e
       env:
-        E2E_IMAGE: euro-office/documentserver:e2e-core
-        E2E_HOST_PORT: 8989
-        E2E_CONTAINER_NAME: euro-office-e2e-core
-      run: npm test
-
-    - name: Upload Playwright report
-      if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
-      uses: actions/upload-artifact@v4
-      with:
-        name: playwright-report-${{ github.sha }}
-        path: documentserver/e2e/playwright-report/
-        retention-days: 14
+        E2E_IMAGE: euro-office/documentserver:e2e-core-${{ github.run_id }}
+        E2E_CONTAINER_NAME: euro-office-e2e-core-${{ github.run_id }}
+      run: E2E_HOST_PORT=$((20000 + GITHUB_RUN_ID % 10000)) npm test
 
     # Round-trips the x2tTester inputs and the Common/empty templates through
     # x2t and real sdkjs with docbuilder, inside the overlay image (fresh core,
     # nightly sdkjs): open (C++ writer, JS reader), read facts via the builder
     # API, save (JS writer, C++ reader), reopen twice. See
     # Test/BinaryFormat/README.md. Runs as root in a throwaway container and
-    # hands the results back to the runner user (HOST_UID/HOST_GID).
+    # hands the results back to the runner user (HOST_UID/HOST_GID). It runs
+    # before the overlay image is removed below.
     # A case without a committed expectation fails and prints the facts it
     # saw as a "seen:" line, so a new expectation can be taken from the log.
     - name: sdkjs round-trip (docbuilder)
@@ -303,7 +314,7 @@ jobs:
           -e PYTHONDONTWRITEBYTECODE=1 -e GITHUB_ACTIONS \
           -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" \
           -v "$GITHUB_WORKSPACE:/core:ro" -v "$RUNNER_TEMP/roundtrip:/out" \
-          euro-office/documentserver:e2e-core \
+          euro-office/documentserver:e2e-core-${{ github.run_id }} \
           /core/Test/BinaryFormat/roundtrip/roundtrip.py --out /out
 
     - name: Upload sdkjs round-trip results
@@ -315,27 +326,42 @@ jobs:
         if-no-files-found: ignore
         retention-days: 14
 
-  # macOS arm64 third-party libs for the desktop build (same selection as
-  # common.cmake with BUILD_DESKTOP on Apple), so DesktopEditors' macOS build
-  # can download them. Only on manual runs: it exists to fill the remote cache.
-  thirdparty-macos:
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: macos-15
-    environment: build-assets
-    env:
-      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
-      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        submodules: recursive
-
-    - name: Install Homebrew build prerequisites
-      run: brew install ninja autoconf automake libtool pkg-config
-
-    - name: Build third-party libs (macOS arm64)
+    # The container's name is per run, so a later run can't clean up after a
+    # cancelled one whose Playwright teardown never ran.
+    - name: Remove E2E container and overlay image
+      if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
       run: |
-        python3 Common/3dParty/build_3rdparty.py \
-          --except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,qt \
-          "$RUNNER_TEMP/3rd/work" "$RUNNER_TEMP/3rd/install"
+        docker rm -f euro-office-e2e-core-${{ github.run_id }} || true
+        docker image rm -f euro-office/documentserver:e2e-core-${{ github.run_id }} || true
+
+    - name: Upload Playwright report
+      if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report-${{ github.sha }}
+        path: documentserver/e2e/playwright-report/
+        retention-days: 14
+
+    # Last, so a leg that fails any test, E2E included, publishes nothing
+    - name: Upload core package
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+      uses: actions/upload-artifact@v4
+      with:
+        name: core-package-${{ matrix.platform }}-${{ matrix.product }}
+        path: build/core-package/
+        retention-days: 1
+        compression-level: 0
+
+  # Publishes the packages of the legs that passed
+  publish:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
+    uses: ./.github/workflows/core-package-publish.yml
+    secrets: inherit
+
+  prune-ccache:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/ccache-prune.yml

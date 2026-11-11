@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+
+# Uploads the core packages built by the calling workflow run (artifacts
+# core-package-*) to the build cache, so downstream repos can download core
+# instead of building it (scripts/core_package.py). Pushes to main and to
+# the stable branches publish to the main channel, which releases read,
+# same-repo PRs to the pr channel, where only the newest package per PR is kept.
+#
+# CI builds a PR merged with its base, while downstream repos pin the PR's
+# own sources. Those are the same tree only if the PR is up to date with its
+# base; if it isn't, nothing is published and downstream builds core itself.
+#
+# The upload credentials (S3_ACCESS_KEY, S3_SECRET_KEY) live in two
+# environments, separate from the build jobs, because a PR's run executes the
+# PR's own copy of this workflow and of scripts/core_package.py:
+#   build-cache       PR runs; its keys can only write core/pr/ and core/pr-heads/
+#   build-cache-main  only deployable from main and stable-*; its keys can
+#                     write core/main/, which releases read
+# The channel a run can write is enforced by the keys and the environment's
+# branch rule, not by this file.
+name: Publish core package
+
+on:
+  workflow_call:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'push' && 'build-cache-main' || 'build-cache' }}
+    steps:
+    - name: Checkout scripts
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: scripts
+
+    - name: Download core packages
+      uses: actions/download-artifact@v4
+      with:
+        pattern: core-package-*
+        path: core-package
+        merge-multiple: true
+
+    - name: Publish
+      env:
+        EO_CORE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+        EO_CORE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+        CHANNEL: ${{ github.event_name == 'push' && 'main' || 'pr' }}
+        PR: ${{ github.event.pull_request.number }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        shopt -s nullglob
+        manifests=(core-package/*.json)
+        if [ ${#manifests[@]} -eq 0 ]; then
+          echo "No core package was built"
+          exit 0
+        fi
+        if [ -n "$PR" ]; then
+          # A re-run of an older commit must not replace the newest package,
+          # and nothing prunes what a closed PR publishes
+          pr_state="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR" --jq '.state + " " + .head.sha')"
+          if [ "$pr_state" != "open $HEAD_SHA" ]; then
+            echo "::notice::Not publishing: $HEAD_SHA is no longer the head of open PR $PR"
+            exit 0
+          fi
+          tree="$(gh api "repos/$GITHUB_REPOSITORY/git/commits/$HEAD_SHA" --jq .tree.sha)"
+          if [ "$(jq -r .tree "${manifests[0]}")" != "$tree" ]; then
+            echo "::notice::Not publishing: PR $PR is behind its base, merge the base for a core package"
+            # This commit can't have a package, so older commits' go. One for
+            # this commit stays: a re-run after the base moved lands here too
+            python3 scripts/core_package.py prune-pr --pr "$PR" --keep-tree "$tree"
+            exit 0
+          fi
+        fi
+        python3 scripts/core_package.py publish \
+          --channel "$CHANNEL" ${PR:+--pr "$PR"} "${manifests[@]}"

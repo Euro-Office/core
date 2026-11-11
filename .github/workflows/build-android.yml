@@ -5,20 +5,23 @@ name: Build (Android)
 
 on:
   pull_request:
+  push:
+    branches: [main, 'stable-*']
   workflow_dispatch:
 
-# A new push to a pull request cancels its previous run. Other runs (manual
-# ones included) are never cancelled, they wait instead.
+# A new push to a pull request cancels its previous run, which also keeps an
+# older run from publishing its core package after a newer one. Other runs
+# (manual ones included) get a group of their own: GitHub keeps only one
+# pending run per group, so queued commits on main would lose their package.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
-    # The build tree and the third-party builds (V8 takes hours) stay in a
-    # BuildKit cache mount on the runner's Docker daemon, so later runs only
-    # build what changed; third-party builds come from the remote cache
-    # otherwise.
+    # The runners are ephemeral, so the Dockerfile's BuildKit cache mounts start
+    # empty: third-party builds come from the remote cache, and ccache
+    # (restored into, and saved from, ccache-seed) keeps the core objects.
     runs-on: self-hosted
     strategy:
       fail-fast: false
@@ -51,11 +54,11 @@ jobs:
         target "android-ndk" {
           dockerfile-inline = <<EOT
         FROM ubuntu:24.04
-        ARG ANDROID_NDK_RELEASE=r28c
-        ARG ANDROID_NDK_VERSION=28.2.13676358
+        ARG ANDROID_NDK_RELEASE=r30
+        ARG ANDROID_NDK_VERSION=30.0.16248370
         RUN apt-get update && \
             apt-get install -y --no-install-recommends \
-                ca-certificates curl unzip git python3 python-is-python3 \
+                ca-certificates ccache curl unzip git python3 python-is-python3 \
                 build-essential clang lld ninja-build cmake pkg-config \
                 autoconf automake libtool perl patch xz-utils bzip2 file && \
             rm -rf /var/lib/apt/lists/*
@@ -72,18 +75,50 @@ jobs:
         target "core-android" {
           context    = "."
           dockerfile = "core/.docker/core-android.bake.Dockerfile"
-          target     = "core-android"
-          args       = { ANDROID_ABI = ABI }
-          contexts   = { android-ndk = "target:android-ndk" }
+          target     = "core-android-ci"
+          args       = { ANDROID_ABI = ABI, CORE_CCACHE = "1", CORE_NO_WARNINGS = "ON" }
+          contexts   = { android-ndk = "target:android-ndk", ccache-seed = "ccache-seed" }
           secret     = ["id=remote_cache_s3_access_key,env=REMOTE_CACHE_S3_ACCESS_KEY", "id=remote_cache_s3_secret_key,env=REMOTE_CACHE_S3_SECRET_KEY"]
-          output     = ["type=local,dest=out/${ABI}"]
+          output     = ["type=local,dest=out"]
         }
         HCL
+
+    - name: Restore ccache
+      id: ccache
+      uses: actions/cache/restore@v4
+      with:
+        path: ccache-seed
+        key: ccache-android-${{ matrix.abi }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
+        restore-keys: ccache-android-${{ matrix.abi }}-
 
     - name: Build core for Android (x2t and its libraries)
       env:
         ABI: ${{ matrix.abi }}
-      run: docker buildx bake --progress=plain -f "$RUNNER_TEMP/core-android.hcl" core-android
+      run: |
+        mkdir -p ccache-seed
+        docker buildx bake --progress=plain -f "$RUNNER_TEMP/core-android.hcl" core-android
+        # actions/cache only finds what was saved from the path it restores to
+        rm -rf ccache-seed
+        mv out/ccache ccache-seed
+        # The build log is cut off long before the statistics
+        cat ccache-seed/last-stats.txt
+
+    # The build tree with debug info, ccache and the outputs share the
+    # runner's disk
+    - name: Disk usage
+      if: failure()
+      run: |
+        df -h
+        docker system df
+
+    # A PR that started from main's cache doesn't save its own: the repo's
+    # 10 GB of caches would evict main's, which every new PR starts from.
+    - name: Save ccache
+      if: ${{ !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-')) }}
+      uses: actions/cache/save@v4
+      with:
+        path: ccache-seed
+        key: ccache-android-${{ matrix.abi }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
 
     # What the apps load: x2t's JNI library, the editor engine's doctrenderer
     # (with V8) and the libraries they link
@@ -101,3 +136,35 @@ jobs:
         name: core-android-${{ matrix.abi }}
         path: out/${{ matrix.abi }}
         retention-days: 7
+
+    # The flat library directory MobileEditors takes from core-android
+    - name: Pack core
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+      run: |
+        python3 core/scripts/core_package.py pack \
+          --from out/${{ matrix.abi }} --out core-package \
+          --platform android-${{ matrix.abi }} --product android --core core \
+          --toolchain "$(grep -o 'ANDROID_NDK_VERSION=[0-9.]*' "$RUNNER_TEMP/core-android.hcl" | head -1)"
+
+    - name: Upload core package
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+      uses: actions/upload-artifact@v4
+      with:
+        name: core-package-android-${{ matrix.abi }}
+        path: core-package/
+        retention-days: 1
+        compression-level: 0
+
+  # Publishes the packages of the legs that passed
+  publish:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
+    uses: ./.github/workflows/core-package-publish.yml
+    secrets: inherit
+
+  prune-ccache:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/ccache-prune.yml

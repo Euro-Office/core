@@ -38,7 +38,7 @@ static const char  *c_asInfoItemNames[] =
 	"Title",
 	"Subject",
 	"Keywords",
-	NULL
+	nullptr
 };
 
 namespace PdfWriter
@@ -109,17 +109,17 @@ namespace PdfWriter
 		CObjectBase* pString = Get(std::string(sName));
 
 		if (!pString)
-			return NULL;
+			return nullptr;
 
 		if (object_type_STRING == pString->GetType())
 			return (const char*)((CStringObject*)pString)->GetString();
 
-		return NULL;
+		return nullptr;
 	}
 	void CInfoDict::SetInfo(EInfoType eType, const TDate& oDate)
 	{
 		char sTemp[DATE_TIME_STR_LEN + 1];
-		char* pTemp = NULL;
+		char* pTemp = nullptr;
 		const char* sName = InfoTypeToName(eType);
 
 		if (eType > InfoModaDate)

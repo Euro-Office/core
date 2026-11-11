@@ -58,7 +58,7 @@ public:
 		is3D_			= false;
 		type_			= 0;
 		dispBlanksAs_	= L"zero";
-		varyColors_		= true;
+		varyColors_		= false;
 	}
 	~oox_chart(){}
  
@@ -231,6 +231,7 @@ class oox_doughnut_chart: public oox_chart
 	{
 		type_		= CHART_TYPE_DOUGHNUT;
 		grouping_	= L"";
+		varyColors_	= true;
 	}
 	~oox_doughnut_chart(){}
  	
@@ -256,6 +257,7 @@ class oox_pie_chart: public oox_chart
 	{
 		type_		= CHART_TYPE_PIE;
 		grouping_	= L"";
+		varyColors_	= true;
 	}
 	~oox_pie_chart(){}
  	

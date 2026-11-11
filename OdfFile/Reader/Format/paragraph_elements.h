@@ -645,6 +645,8 @@ public:
     virtual void pptx_convert(oox::pptx_conversion_context & Context) ;
 
 	_CP_OPT(odf_types::Bool)	text_fixed_;
+	_CP_OPT(std::wstring)		text_display_;
+	_CP_OPT(int)				text_outline_level_;
 	office_element_ptr			text_;    
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );

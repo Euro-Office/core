@@ -26,9 +26,18 @@
 #include <string>
 #include <vector>
 
-void PrepareFiles(const std::wstring &fileName, const std::wstring &exampleFileName, const std::wstring &tempDirName);
 int ConvertFile(const std::wstring &fileName);
-std::wstring GetWorkDir();
-void RemoveWorkDir(const std::wstring &dir);
 std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &pathTo, const std::wstring &TempDir);
+
+// Converts `from` into `to` with x2t (formats by extension). On failure,
+// returns false and describes it in `error`.
+bool ConvertTo(const std::wstring &from, const std::wstring &to, const std::wstring &tempDir, std::string &error);
+
+// Extracts a package into `dir`.
+bool Unpack(const std::wstring &file, const std::wstring &dir, std::string &error);
+
+// A new, empty directory next to the test binary; RemoveWorkDirs() deletes
+// all of them.
+std::wstring GetWorkDir();
+void RemoveWorkDirs();
 

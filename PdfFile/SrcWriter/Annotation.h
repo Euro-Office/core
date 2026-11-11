@@ -492,7 +492,7 @@ namespace PdfWriter
 		void SetEmptyAP();
 		void SetAP(const std::wstring& wsValue, unsigned short* pCodes, unsigned int unCount, double dX, double dY, CFontCidTrueType** ppFonts, double* pShifts);
 		virtual CAnnotAppearanceObject* StartAP(int nRotate) override;
-		void AddLineToAP(const double& dX, const double& dY, unsigned short* pCodes, const unsigned int& unCodesCount, CFontCidTrueType** ppFonts = NULL, const double* pShifts = NULL);
+		void AddLineToAP(const double& dX, const double& dY, unsigned short* pCodes, const unsigned int& unCodesCount, CFontCidTrueType** ppFonts = nullptr, const double* pShifts = nullptr);
 		void EndAP();
 	};
 	class CPushButtonWidget : public CWidgetAnnotation

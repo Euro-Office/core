@@ -107,6 +107,8 @@ public:
 
 	void set_page_number_format		(_CP_OPT(int) & type, _CP_OPT(int) & start);
 
+	style_page_layout_properties	*get_properties(); // creates the element if it is missing
+
 	office_element_ptr	root_header_footer_; //for top elements in style:footer
 	
 	double				current_page_width_;
@@ -114,7 +116,6 @@ public:
 private:
 
 
-	style_page_layout_properties	*get_properties();
 	style_header_footer_properties	*get_header_properties();
 	style_header_footer_properties	*get_footer_properties();
 

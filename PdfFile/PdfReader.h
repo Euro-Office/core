@@ -22,8 +22,8 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#ifndef _PDF_READER_H
-#define _PDF_READER_H
+#ifndef PDF_READER_H
+#define PDF_READER_H
 
 #include "../DesktopEditor/graphics/pro/Fonts.h"
 #include "../DesktopEditor/graphics/pro/officedrawingfile.h"
@@ -41,7 +41,7 @@ struct CPdfReaderContext
 	unsigned int m_nStartID;
 	std::string m_sPrefixForm;
 
-	CPdfReaderContext() : m_pDocument(NULL), m_pFontList(NULL), m_nStartID(0) {}
+	CPdfReaderContext() : m_pDocument(nullptr), m_pFontList(nullptr), m_nStartID(0) {}
 	~CPdfReaderContext();
 };
 
@@ -52,7 +52,7 @@ struct CPdfRedact
 	int m_nChangeLength;
 	std::vector<double> m_arrRedactBox;
 
-	CPdfRedact() : m_nPageIndex(-1), m_pChanges(NULL), m_nChangeLength(0) {}
+	CPdfRedact() : m_nPageIndex(-1), m_pChanges(nullptr), m_nChangeLength(0) {}
 	~CPdfRedact();
 };
 
@@ -62,8 +62,8 @@ public:
 	CPdfReader(NSFonts::IApplicationFonts* pAppFonts);
 	~CPdfReader();
 
-	bool LoadFromFile  (NSFonts::IApplicationFonts* pAppFonts, const std::wstring& file, const wchar_t* owner_password = NULL, const wchar_t* user_password = NULL);
-	bool LoadFromMemory(NSFonts::IApplicationFonts* pAppFonts, BYTE* data, DWORD length, const wchar_t* owner_password = NULL, const wchar_t* user_password = NULL);
+	bool LoadFromFile  (NSFonts::IApplicationFonts* pAppFonts, const std::wstring& file, const wchar_t* owner_password = nullptr, const wchar_t* user_password = nullptr);
+	bool LoadFromMemory(NSFonts::IApplicationFonts* pAppFonts, BYTE* data, DWORD length, const wchar_t* owner_password = nullptr, const wchar_t* user_password = nullptr);
 
 	void Close();
 	void CleanUp();
@@ -83,8 +83,8 @@ public:
 	int GetNumPages();
 	bool ValidMetaData();
 	// Captures the received memory malloc data
-	bool MergePages(BYTE* pData, DWORD nLength, const wchar_t* wsPassword = NULL, int nMaxID = 0, const std::string& sPrefixForm = "");
-	bool MergePages(const std::wstring& wsFile, const wchar_t* wsPassword = NULL, int nMaxID = 0, const std::string& sPrefixForm = "");
+	bool MergePages(BYTE* pData, DWORD nLength, const wchar_t* wsPassword = nullptr, int nMaxID = 0, const std::string& sPrefixForm = "");
+	bool MergePages(const std::wstring& wsFile, const wchar_t* wsPassword = nullptr, int nMaxID = 0, const std::string& sPrefixForm = "");
 	bool UnmergePages();
 	bool RedactPage(int nPageIndex, double* arrRedactBox, int nLengthX8, BYTE* pChanges, int nLength);
 	bool UndoRedact();
@@ -104,8 +104,8 @@ public:
 	int GetStartRefID(PDFDoc* pDoc);
 	int GetNumPagesBefore(PDFDoc* pDoc);
 	std::string GetPrefixForm(PDFDoc* pDoc);
-	int FindRefNum(int nObjID, PDFDoc** pDoc = NULL, int* nStartRefID = NULL);
-	int GetPageIndex(int nPageIndex, PDFDoc** pDoc = NULL, PdfReader::CPdfFontList** pFontList = NULL, int* nStartRefID = NULL);
+	int FindRefNum(int nObjID, PDFDoc** pDoc = nullptr, int* nStartRefID = nullptr);
+	int GetPageIndex(int nPageIndex, PDFDoc** pDoc = nullptr, PdfReader::CPdfFontList** pFontList = nullptr, int* nStartRefID = nullptr);
 
 	void SetFonts(int nPageIndex);
 	BYTE* GetStructure();
@@ -114,9 +114,9 @@ public:
 	BYTE* GetFonts(bool bStandart);
 	BYTE* GetAnnots(int nPageIndex = -1);
 	BYTE* VerifySign(const std::wstring& sFile, ICertificate* pCertificate, int nWidget = -1);
-	BYTE* GetAPWidget  (int nRasterW, int nRasterH, int nBackgroundColor, int nPageIndex, int nWidget  = -1, const char* sView  = NULL, const char* sBView = NULL);
-	BYTE* GetAPAnnots  (int nRasterW, int nRasterH, int nBackgroundColor, int nPageIndex, int nAnnot   = -1, const char* sView  = NULL);
-	BYTE* GetButtonIcon(int nBackgroundColor, int nPageIndex, bool bBase64 = false, int nBWidget = -1, const char* sIView = NULL);
+	BYTE* GetAPWidget  (int nRasterW, int nRasterH, int nBackgroundColor, int nPageIndex, int nWidget  = -1, const char* sView  = nullptr, const char* sBView = nullptr);
+	BYTE* GetAPAnnots  (int nRasterW, int nRasterH, int nBackgroundColor, int nPageIndex, int nAnnot   = -1, const char* sView  = nullptr);
+	BYTE* GetButtonIcon(int nBackgroundColor, int nPageIndex, bool bBase64 = false, int nBWidget = -1, const char* sIView = nullptr);
 	BYTE* StreamToCData(BYTE* pSteam, int nLength);
 	const std::map<std::wstring, std::wstring>& GetFonts() { return m_mFonts; }
 
@@ -132,4 +132,4 @@ private:
 	std::map<std::wstring, std::wstring> m_mFonts;
 };
 
-#endif // _PDF_READER_H
+#endif // PDF_READER_H

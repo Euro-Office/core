@@ -126,10 +126,9 @@ void office_text::add_child_element( xml::sax * Reader, const std::wstring & Ns,
 	}
 	else if (is_text_content(Ns, Name))
     {
-        CP_CREATE_ELEMENT(content_);
-
-		if (!first_element_style_name && (content_.back()->get_type() == typeTextP || 
-											content_.back()->get_type() == typeTextH))
+		// elements without a reader class are skipped and add nothing to content_
+		if (CP_CREATE_ELEMENT(content_) && !first_element_style_name &&
+			(content_.back()->get_type() == typeTextP || content_.back()->get_type() == typeTextH))
 		{//bus-modern_l.ott
 			if (content_.back()->element_style_name)
 				first_element_style_name = content_.back()->element_style_name;

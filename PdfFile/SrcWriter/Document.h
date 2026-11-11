@@ -157,7 +157,7 @@ namespace PdfWriter
 		CFontTrueType*    CreateTrueTypeFont(CFontCidTrueType* pCidFont);
 		CFont14*          GetDefaultCheckboxFont();
 
-		CImageTilePattern*CreateImageTilePattern(double dW, double dH, CImageDict* pImageDict, CMatrix* pMatrix = NULL, EImageTilePatternType eType = imagetilepatterntype_Default, double dXStepSpacing = 0, double dYStepSpacing = 0);
+		CImageTilePattern*CreateImageTilePattern(double dW, double dH, CImageDict* pImageDict, CMatrix* pMatrix = nullptr, EImageTilePatternType eType = imagetilepatterntype_Default, double dXStepSpacing = 0, double dYStepSpacing = 0);
 		CImageTilePattern*CreateHatchPattern(double dW, double dH, const BYTE& nR1, const BYTE& nG1, const BYTE& nB1, const BYTE& nAlpha1, const BYTE& nR2, const BYTE& nG2, const BYTE& nB2, const BYTE& nAlpha2, const std::wstring& wsHatch);
 		CShading*         CreateAxialShading(CPage* pPage, double dX0, double dY0, double dX1, double dY1, unsigned char* pColors, unsigned char* pAlphas, double* pPoints, int nCount, CExtGrState*& pExtGrState);
 		CShading*         CreateRadialShading(CPage* pPage, double dX0, double dY0, double dR0, double dX1, double dY1, double dR1, unsigned char* pColors, unsigned char* pAlphas, double* pPoints, int nCount, CExtGrState*& pExtGrState);
@@ -185,7 +185,7 @@ namespace PdfWriter
 		bool              EditPage(CXref* pXref, CPage* pPage, int nPageIndex);
 		void              FixEditPage(CPage* pPage, int nPageIndex = 0);
 		void              AddEditPage(CPage* pPage, int nPageIndex);
-		CPage*            AddPage(int nPageIndex, CPage* _pNewPage = NULL);
+		CPage*            AddPage(int nPageIndex, CPage* _pNewPage = nullptr);
 		bool              DeletePage(int nPageIndex);
 		bool              AddToFile(const std::wstring& wsPath, CXref* pXref, CDictObject* pTrailer, CXref* pInfoXref, CInfoDict* pInfo);
 		void              AddObject(CObjectBase* pObj);
@@ -269,8 +269,8 @@ namespace PdfWriter
 				nPrevAddr = 0;
 				nFileSizeBefore = 0;
 				bNeedStreamXRef = false;
-				pField = NULL;
-				pXref = NULL;
+				pField = nullptr;
+				pXref = nullptr;
 			}
 
 			TRect oRect;

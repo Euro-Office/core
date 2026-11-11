@@ -146,7 +146,7 @@ namespace PdfWriter
 	typedef std::map<unsigned short, ByteList> UShortToByteList;
 	struct EncodingsInfo
 	{
-		EncodingsInfo() { mEncoding = NULL; mEncodingsCount = 0; }
+		EncodingsInfo() { mEncoding = nullptr; mEncodingsCount = 0; }
 
 		long long mEncodingStart;
 		long long mEncodingEnd;
@@ -168,7 +168,7 @@ namespace PdfWriter
 	typedef CharString* CharStringsIndex;
 	struct CharStrings
 	{
-		CharStrings(){mCharStringsIndex = NULL; mCharStringsType = 0; mCharStringsCount = 0;}
+		CharStrings(){mCharStringsIndex = nullptr; mCharStringsType = 0; mCharStringsCount = 0;}
 
 		BYTE mCharStringsType;
 		unsigned short mCharStringsCount;
@@ -176,7 +176,7 @@ namespace PdfWriter
 	};
 	struct PrivateDictInfo
 	{
-		PrivateDictInfo() {mPrivateDictStart=0;mPrivateDictEnd=0;mLocalSubrs=NULL;}
+		PrivateDictInfo() {mPrivateDictStart=0;mPrivateDictEnd=0;mLocalSubrs=nullptr;}
 
 		long long mPrivateDictStart;
 		long long mPrivateDictEnd;
@@ -253,7 +253,7 @@ namespace PdfWriter
 	CPrimitiveWriter::~CPrimitiveWriter()
 	{
 		mCurrentOffsize = 1;
-		mStream = NULL;
+		mStream = nullptr;
 	}
 	void CPrimitiveWriter::SetOffSize(BYTE inOffSize)
 	{
@@ -535,7 +535,7 @@ namespace PdfWriter
 		typedef std::map<unsigned short, CharString*> UShortToCharStringMap;
 		struct CharSetInfo
 		{
-			CharSetInfo() {mSIDs = NULL;}
+			CharSetInfo() {mSIDs = nullptr;}
 
 			ECharSetType mType;
 			UShortToCharStringMap mSIDToGlyphMap;
@@ -546,10 +546,10 @@ namespace PdfWriter
 		{
 			TopDictInfo()
 			{
-				mFDArray = NULL;
-				mFDSelect = NULL;
-				mCharSet = NULL;
-				mEncoding = NULL;
+				mFDArray = nullptr;
+				mFDSelect = nullptr;
+				mCharSet = nullptr;
+				mEncoding = nullptr;
 			}
 
 			UShortToDictOperandListMap mTopDict;
@@ -648,7 +648,7 @@ namespace PdfWriter
 		bool ReadFDSelect(unsigned short inFontIndex);
 		long long GetFDSelectPosition(unsigned short inFontIndex);
 		unsigned short GetGlyphSID(unsigned short inFontIndex, unsigned short inGlyphIndex);
-		bool PrepareForGlyphIntepretation(unsigned short inFontIndex, unsigned short inCharStringIndex);
+		bool PrepareForGlyphInterpretation(unsigned short inFontIndex, unsigned short inCharStringIndex);
 		CharString* GetGlyphCharString(unsigned short inFontIndex, unsigned short inCharStringIndex);
 		bool ReadCharString(long long inCharStringStart, long long inCharStringEnd, BYTE** outCharString);
 		CharString* GetLocalSubr(long inSubrIndex);
@@ -657,12 +657,12 @@ namespace PdfWriter
 	};
 	CCFFReader::CCFFReader()
 	{
-		mTopDictIndex = NULL;
-		mStrings = NULL;
-		mGlobalSubrs.mCharStringsIndex = NULL;
-		mCharStrings = NULL;
-		mPrivateDicts = NULL;
-		mPrimitivesReader = NULL;
+		mTopDictIndex = nullptr;
+		mStrings = nullptr;
+		mGlobalSubrs.mCharStringsIndex = nullptr;
+		mCharStrings = nullptr;
+		mPrivateDicts = nullptr;
+		mPrimitivesReader = nullptr;
 	}
 	CCFFReader::~CCFFReader()
 	{
@@ -672,7 +672,7 @@ namespace PdfWriter
 	{
 		mName.clear();
 		mNameToIndex.clear();
-		if (mTopDictIndex != NULL)
+		if (mTopDictIndex != nullptr)
 		{
 			for (unsigned int i = 0; i < mFontsCount; ++i)
 			{
@@ -681,7 +681,7 @@ namespace PdfWriter
 			}
 			RELEASEARRAYOBJECTS(mTopDictIndex);
 		}
-		if (mStrings != NULL)
+		if (mStrings != nullptr)
 		{
 			for (unsigned short i = 0; i < mStringsCount; ++i)
 				delete[] mStrings[i];
@@ -689,7 +689,7 @@ namespace PdfWriter
 		}
 		mStringToSID.clear();
 		RELEASEARRAYOBJECTS(mGlobalSubrs.mCharStringsIndex);
-		if (mCharStrings != NULL)
+		if (mCharStrings != nullptr)
 		{
 			for (unsigned int i = 0; i < mFontsCount; ++i)
 				delete[] mCharStrings[i].mCharStringsIndex;
@@ -955,7 +955,7 @@ namespace PdfWriter
 		outItemsCount = mPrimitivesReader->ReadUShort();
 		if (0 == outItemsCount)
 		{
-			*outOffsets = NULL;
+			*outOffsets = nullptr;
 			return true;
 		}
 
@@ -973,7 +973,7 @@ namespace PdfWriter
 	{
 		mNameIndexPosition = mPrimitivesReader->Tell();
 
-		unsigned long* offsets = NULL;
+		unsigned long* offsets = nullptr;
 		bool status = ReadIndexHeader(&offsets, mFontsCount);
 		if (!status || !offsets)
 			return false;
@@ -1060,7 +1060,7 @@ namespace PdfWriter
 
 		if (0 == mStringsCount)
 		{
-			mStrings = NULL;
+			mStrings = nullptr;
 			return true;
 		}
 
@@ -1087,7 +1087,7 @@ namespace PdfWriter
 		if (!status)
 		{
 			for (; i < mStringsCount; ++i)
-				mStrings[i] = NULL;
+				mStrings[i] = nullptr;
 		}
 
 		// now create the string to SID map
@@ -1114,7 +1114,7 @@ namespace PdfWriter
 
 		if (0 == outSubrsCount)
 		{
-			*outSubrsIndex = NULL;
+			*outSubrsIndex = nullptr;
 			return true;
 		}
 
@@ -1149,7 +1149,7 @@ namespace PdfWriter
 			if (0 == charStringsPosition)
 			{
 				mCharStrings[i].mCharStringsCount = 0;
-				mCharStrings[i].mCharStringsIndex = NULL;
+				mCharStrings[i].mCharStringsIndex = nullptr;
 			}
 			else
 			{
@@ -1194,7 +1194,7 @@ namespace PdfWriter
 		bool status = true;
 		UShortToDictOperandListMap::const_iterator it = inReferencingDict.find(scPrivate);
 
-		outPrivateDict->mLocalSubrs = NULL;
+		outPrivateDict->mLocalSubrs = nullptr;
 		if (it == inReferencingDict.end())
 		{
 			outPrivateDict->mPrivateDictStart = 0;
@@ -1227,7 +1227,7 @@ namespace PdfWriter
 
 		if (0 == subrsPosition)
 		{
-			inPrivateDict->mLocalSubrs = NULL;
+			inPrivateDict->mLocalSubrs = nullptr;
 		}
 		else
 		{
@@ -1263,7 +1263,7 @@ namespace PdfWriter
 				if (charsetPosition <= 2)
 				{
 					charSet->mType = (ECharSetType)charsetPosition;
-					charSet->mSIDs = NULL;
+					charSet->mSIDs = nullptr;
 					if (!isCID) // collect SID->Glyph map only if not CID, in which case SIDs are CIDs...and what i'm using the map for is irrelevant
 						SetupSIDToGlyphMapWithStandard(scDefaultCharsets[charsetPosition], scDefaultCharsetsSizes[charsetPosition], charSet->mSIDToGlyphMap, mCharStrings[i]);
 				}
@@ -1646,7 +1646,7 @@ namespace PdfWriter
 			return sid;
 		}
 	}
-	bool CCFFReader::PrepareForGlyphIntepretation(unsigned short inFontIndex, unsigned short inCharStringIndex)
+	bool CCFFReader::PrepareForGlyphInterpretation(unsigned short inFontIndex, unsigned short inCharStringIndex)
 	{
 		if (inFontIndex >= mFontsCount)
 			return false;
@@ -1660,13 +1660,13 @@ namespace PdfWriter
 			{
 				mCurrentLocalSubrs = mTopDictIndex[inFontIndex].mFDSelect[inCharStringIndex]->mPrivateDict.mLocalSubrs;
 				mCurrentCharsetInfo = mTopDictIndex[inFontIndex].mCharSet;
-				mCurrentDependencies = NULL;
+				mCurrentDependencies = nullptr;
 			}
 			else
 			{
 				mCurrentLocalSubrs = mPrivateDicts[inFontIndex].mLocalSubrs;
 				mCurrentCharsetInfo = mTopDictIndex[inFontIndex].mCharSet;
-				mCurrentDependencies = NULL;
+				mCurrentDependencies = nullptr;
 			}
 			return true;
 		}
@@ -1675,16 +1675,16 @@ namespace PdfWriter
 	CharString* CCFFReader::GetGlyphCharString(unsigned short inFontIndex, unsigned short inCharStringIndex)
 	{
 		if (inFontIndex >= mFontsCount)
-			return NULL;
+			return nullptr;
 		if (mCharStrings[inFontIndex].mCharStringsCount <= inCharStringIndex)
-			return NULL;
+			return nullptr;
 		return mCharStrings[inFontIndex].mCharStringsIndex + inCharStringIndex;
 	}
 	bool CCFFReader::ReadCharString(long long inCharStringStart, long long inCharStringEnd, BYTE** outCharString)
 	{
 		bool status = true;
 		mPrimitivesReader->Seek(inCharStringStart, SeekSet);
-		*outCharString = NULL;
+		*outCharString = nullptr;
 
 		unsigned int nReadLength = inCharStringEnd - inCharStringStart;
 		*outCharString = new BYTE[nReadLength];
@@ -1711,7 +1711,7 @@ namespace PdfWriter
 				mCurrentDependencies->mLocalSubrs.insert(biasedIndex);
 			return returnValue;
 		}
-		return NULL;
+		return nullptr;
 	}
 	unsigned short CCFFReader::GetBiasedIndex(unsigned short inSubroutineCollectionSize, long inSubroutineIndex)
 	{
@@ -1732,7 +1732,7 @@ namespace PdfWriter
 				mCurrentDependencies->mGlobalSubrs.insert(biasedIndex);
 			return returnValue;
 		}
-		return NULL;
+		return nullptr;
 	}
 	//----------------------------------------------------------------------------------------
 	// COpenTypeReader
@@ -1938,12 +1938,12 @@ namespace PdfWriter
 	{
 		mHeaderOffset = 0;
 		mTableOffset = 0;
-		mHMtx = NULL;
-		mName.mNameEntries = NULL;
-		mLoca = NULL;
-		mGlyf = NULL;
+		mHMtx = nullptr;
+		mName.mNameEntries = nullptr;
+		mLoca = nullptr;
+		mGlyf = nullptr;
 
-		mPrimitivesReader = NULL;
+		mPrimitivesReader = nullptr;
 		mFaceIndex = 0;
 		mFontType = EOpenTypeInputType::EOpenTypeCFF;
 		mOS2Exists = false;
@@ -1977,7 +1977,7 @@ namespace PdfWriter
 	{
 		UIntToTableEntryMap::iterator it = mTables.find(GetTag(inTagName));
 		if (it == mTables.end())
-			return NULL;
+			return nullptr;
 		else
 			return &(it->second);
 	}
@@ -2053,8 +2053,8 @@ namespace PdfWriter
 			mCVTExists = false;
 			mFPGMExists = false;
 			mPREPExists = false;
-			mGlyf = NULL;
-			mLoca = NULL;
+			mGlyf = nullptr;
+			mLoca = nullptr;
 		}
 
 		return status;
@@ -2502,7 +2502,7 @@ namespace PdfWriter
 		for (int i = 0; i < mMaxp.NumGlyphs; ++i)
 		{
 			if (mLoca[i + 1] == mLoca[i])
-				mGlyf[i] = NULL;
+				mGlyf[i] = nullptr;
 			else
 			{
 				mGlyf[i] = new GlyphEntry;
@@ -2697,14 +2697,14 @@ namespace PdfWriter
 	};
 	CharStringType2Interpreter::CharStringType2Interpreter()
 	{
-		mImplementationHelper = NULL;
+		mImplementationHelper = nullptr;
 	}
 	CharStringType2Interpreter::~CharStringType2Interpreter()
 	{
 	}
 	bool CharStringType2Interpreter::Intepret(const CharString& inCharStringToIntepret, IType2InterpreterImplementation* inImplementationHelper)
 	{
-		BYTE* charString = NULL;
+		BYTE* charString = nullptr;
 		bool status = false;
 
 		mImplementationHelper = inImplementationHelper;
@@ -2763,7 +2763,7 @@ namespace PdfWriter
 		BYTE* newPosition = inProgramCounter;
 
 		if (inReadLimit < 1)
-			return NULL; // error, cant read a single byte
+			return nullptr; // error, cant read a single byte
 
 		if (28 == *newPosition && inReadLimit >= 3)
 		{
@@ -2800,14 +2800,14 @@ namespace PdfWriter
 			newPosition += 5;
 		}
 		else
-			newPosition = NULL; // error
+			newPosition = nullptr; // error
 
 		if (newPosition)
 		{
 			mOperandStack.push_back(operand);
 			bool status = mImplementationHelper->Type2InterpretNumber(operand);
 			if (!status)
-				return NULL;
+				return nullptr;
 		}
 
 		return newPosition;
@@ -2819,12 +2819,12 @@ namespace PdfWriter
 		outGotEndExecutionCommand = false;
 
 		if (inReadLimit < 1)
-			return NULL; // error, cant read a single byte
+			return nullptr; // error, cant read a single byte
 
 		if (12 == *newPosition)
 		{
 			if (inReadLimit < 2)
-				return NULL;
+				return nullptr;
 
 			operatorValue = 0x0c00 + *(newPosition + 1);
 			newPosition += 2;
@@ -3017,11 +3017,11 @@ namespace PdfWriter
 	{
 		bool status = AddStemsCount((unsigned short)(mOperandStack.size() / 2));
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		status = mImplementationHelper->Type2Hstem(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3034,11 +3034,11 @@ namespace PdfWriter
 	{
 		bool status = AddStemsCount((unsigned short)(mOperandStack.size() / 2));
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		status = mImplementationHelper->Type2Vstem(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3047,7 +3047,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Vmoveto(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3056,7 +3056,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Rlineto(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3065,7 +3065,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Hlineto(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3074,7 +3074,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Vlineto(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3083,28 +3083,28 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2RRCurveto(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
 	}
 	BYTE* CharStringType2Interpreter::InterpretCallSubr(BYTE* inProgramCounter, long long)
 	{
-		CharString* aCharString = NULL;
+		CharString* aCharString = nullptr;
 		if (mOperandStack.size() < 1)
-			return NULL;
+			return nullptr;
 
 		aCharString = mImplementationHelper->GetLocalSubr(mOperandStack.back().IntegerValue);
 		mOperandStack.pop_back();
 
-		if (aCharString != NULL)
+		if (aCharString != nullptr)
 		{
-			BYTE* charString = NULL;
+			BYTE* charString = nullptr;
 			bool status = mImplementationHelper->ReadCharString(aCharString->mStartPosition, aCharString->mEndPosition, &charString);
 			if (!status)
 			{
 				delete charString;
-				return NULL;
+				return nullptr;
 			}
 
 			++mSubrsNesting;
@@ -3112,7 +3112,7 @@ namespace PdfWriter
 			if (mSubrsNesting > MAX_SUBR_NESTING_STACK_SIZE)
 			{
 				delete charString;
-				return NULL;
+				return nullptr;
 			}
 
 			status = ProcessCharString(charString, aCharString->mEndPosition - aCharString->mStartPosition);
@@ -3120,16 +3120,16 @@ namespace PdfWriter
 
 			delete charString;
 			if (!status)
-				return NULL;
+				return nullptr;
 			return inProgramCounter;
 		}
-		return NULL;
+		return nullptr;
 	}
 	BYTE* CharStringType2Interpreter::InterpretReturn(BYTE* inProgramCounter, long long)
 	{
 		bool status = mImplementationHelper->Type2Return(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		return inProgramCounter;
 	}
@@ -3137,7 +3137,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Endchar(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		mGotEndChar = true;
 		ClearStack();
@@ -3147,11 +3147,11 @@ namespace PdfWriter
 	{
 		bool status = AddStemsCount((unsigned short)(mOperandStack.size() / 2));
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		status = mImplementationHelper->Type2Hstemhm(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3160,39 +3160,39 @@ namespace PdfWriter
 	{
 		bool status = AddStemsCount((unsigned short)(mOperandStack.size() / 2)); // assuming this is a shortcut of dropping vstem if got arguments
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		status = mImplementationHelper->Type2Hintmask(mOperandStack, inProgramCounter, inReadLimit);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		long long programCounterStemReadSize = (mStemsCount / 8 + (mStemsCount % 8 != 0 ? 1 : 0));
 		if (programCounterStemReadSize > inReadLimit)
-			return NULL;
+			return nullptr;
 		return inProgramCounter + programCounterStemReadSize;
 	}
 	BYTE* CharStringType2Interpreter::InterpretCntrMask(BYTE* inProgramCounter, long long inReadLimit)
 	{
 		bool status = AddStemsCount((unsigned short)(mOperandStack.size() / 2)); // assuming this is a shortcut of dropping vstem if got arguments
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		status = mImplementationHelper->Type2Cntrmask(mOperandStack, inProgramCounter, inReadLimit);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		long long programCounterStemReadSize = (mStemsCount / 8 + (mStemsCount % 8 != 0 ? 1 : 0));
 		if (programCounterStemReadSize > inReadLimit)
-			return NULL;
+			return nullptr;
 		return inProgramCounter + programCounterStemReadSize;
 	}
 	BYTE* CharStringType2Interpreter::InterpretRMoveto(BYTE* inProgramCounter, long long)
 	{
 		bool status = mImplementationHelper->Type2Rmoveto(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3201,7 +3201,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Hmoveto(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3210,11 +3210,11 @@ namespace PdfWriter
 	{
 		bool status = AddStemsCount((unsigned short)(mOperandStack.size() / 2));
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		status = mImplementationHelper->Type2Vstemhm(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3223,7 +3223,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Rcurveline(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3232,7 +3232,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Rlinecurve(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3241,7 +3241,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Vvcurveto(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3250,28 +3250,28 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Hhcurveto(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
 	}
 	BYTE* CharStringType2Interpreter::InterpretCallGSubr(BYTE* inProgramCounter, long long)
 	{
-		CharString* aCharString = NULL;
+		CharString* aCharString = nullptr;
 		if (mOperandStack.size() < 1)
-			return NULL;
+			return nullptr;
 
 		aCharString = mImplementationHelper->GetGlobalSubr(mOperandStack.back().IntegerValue);
 		mOperandStack.pop_back();
 
-		if (aCharString != NULL)
+		if (aCharString != nullptr)
 		{
-			BYTE* charString = NULL;
+			BYTE* charString = nullptr;
 			bool status = mImplementationHelper->ReadCharString(aCharString->mStartPosition, aCharString->mEndPosition, &charString);
 			if (!status)
 			{
 				delete charString;
-				return NULL;
+				return nullptr;
 			}
 
 			++mSubrsNesting;
@@ -3279,7 +3279,7 @@ namespace PdfWriter
 			if (mSubrsNesting > MAX_SUBR_NESTING_STACK_SIZE)
 			{
 				delete charString;
-				return NULL;
+				return nullptr;
 			}
 
 			status = ProcessCharString(charString, aCharString->mEndPosition - aCharString->mStartPosition);
@@ -3287,16 +3287,16 @@ namespace PdfWriter
 
 			delete charString;
 			if (!status)
-				return NULL;
+				return nullptr;
 			return inProgramCounter;
 		}
-		return NULL;
+		return nullptr;
 	}
 	BYTE* CharStringType2Interpreter::InterpretVHCurveto(BYTE* inProgramCounter, long long)
 	{
 		bool status = mImplementationHelper->Type2Vhcurveto(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3305,7 +3305,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Hvcurveto(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3314,7 +3314,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2And(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand valueA;
 		CharStringOperand valueB;
@@ -3322,7 +3322,7 @@ namespace PdfWriter
 		newOperand.IsInteger = true;
 
 		if (mOperandStack.size() < 2)
-			return NULL;
+			return nullptr;
 
 		valueB = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3340,7 +3340,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Or(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand valueA;
 		CharStringOperand valueB;
@@ -3348,7 +3348,7 @@ namespace PdfWriter
 		newOperand.IsInteger = true;
 
 		if (mOperandStack.size() < 2)
-			return NULL;
+			return nullptr;
 
 		valueB = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3365,14 +3365,14 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Not(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand value;
 		CharStringOperand newOperand;
 		newOperand.IsInteger = true;
 
 		if (mOperandStack.size() < 1)
-			return NULL;
+			return nullptr;
 
 		value = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3385,13 +3385,13 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Abs(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand value;
 		CharStringOperand newOperand;
 
 		if (mOperandStack.size() < 1)
-			return NULL;
+			return nullptr;
 
 		value = mOperandStack.back();
 		newOperand.IsInteger = value.IsInteger;
@@ -3408,14 +3408,14 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Add(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand valueA;
 		CharStringOperand valueB;
 		CharStringOperand newOperand;
 
 		if (mOperandStack.size() < 2)
-			return NULL;
+			return nullptr;
 
 		valueB = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3442,14 +3442,14 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Sub(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand valueA;
 		CharStringOperand valueB;
 		CharStringOperand newOperand;
 
 		if (mOperandStack.size() < 2)
-			return NULL;
+			return nullptr;
 
 		valueB = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3476,7 +3476,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Div(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand valueA;
 		CharStringOperand valueB;
@@ -3484,7 +3484,7 @@ namespace PdfWriter
 
 
 		if (mOperandStack.size() < 2)
-			return NULL;
+			return nullptr;
 
 		valueB = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3511,13 +3511,13 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Neg(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand value;
 		CharStringOperand newOperand;
 
 		if (mOperandStack.size() < 1)
-			return NULL;
+			return nullptr;
 
 		value = mOperandStack.back();
 		newOperand.IsInteger = value.IsInteger;
@@ -3534,14 +3534,14 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Eq(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand valueA;
 		CharStringOperand valueB;
 		CharStringOperand newOperand;
 
 		if (mOperandStack.size() < 2)
-			return NULL;
+			return nullptr;
 
 		valueB = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3561,10 +3561,10 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Drop(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		if (mOperandStack.size() < 1)
-			return NULL;
+			return nullptr;
 
 		mOperandStack.pop_back();
 		return inProgramCounter;
@@ -3573,13 +3573,13 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Put(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand valueA;
 		CharStringOperand valueB;
 
 		if (mOperandStack.size() < 2)
-			return NULL;
+			return nullptr;
 
 		valueB = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3594,12 +3594,12 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Get(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand value;
 
 		if (mOperandStack.size() < 1)
-			return NULL;
+			return nullptr;
 
 		value = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3610,13 +3610,13 @@ namespace PdfWriter
 			mOperandStack.push_back(mStorage[index]);
 			return inProgramCounter;
 		}
-		return NULL;
+		return nullptr;
 	}
 	BYTE* CharStringType2Interpreter::InterpretIfelse(BYTE* inProgramCounter, long long)
 	{
 		bool status = mImplementationHelper->Type2Ifelse(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand valueA;
 		CharStringOperand valueB;
@@ -3624,7 +3624,7 @@ namespace PdfWriter
 		CharStringOperand valueD;
 
 		if (mOperandStack.size() < 4)
-			return NULL;
+			return nullptr;
 
 		valueD = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3657,7 +3657,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Random(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand newOperand;
 
@@ -3671,14 +3671,14 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Mul(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand valueA;
 		CharStringOperand valueB;
 		CharStringOperand newOperand;
 
 		if (mOperandStack.size() < 2)
-			return NULL;
+			return nullptr;
 
 		valueB = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3705,13 +3705,13 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Sqrt(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand value;
 		CharStringOperand newOperand;
 
 		if (mOperandStack.size() < 1)
-			return NULL;
+			return nullptr;
 
 		value = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3725,10 +3725,10 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Dup(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		if (mOperandStack.size() < 1)
-			return NULL;
+			return nullptr;
 
 		mOperandStack.push_back(mOperandStack.back());
 		return inProgramCounter;
@@ -3737,13 +3737,13 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Exch(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand valueA;
 		CharStringOperand valueB;
 
 		if (mOperandStack.size() < 2)
-			return NULL;
+			return nullptr;
 
 		valueB = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3759,12 +3759,12 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Index(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand value;
 
 		if (mOperandStack.size() < 1)
-			return NULL;
+			return nullptr;
 
 		value = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3781,13 +3781,13 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Roll(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		CharStringOperand valueA;
 		CharStringOperand valueB;
 
 		if (mOperandStack.size() < 1)
-			return NULL;
+			return nullptr;
 
 		valueB = mOperandStack.back();
 		mOperandStack.pop_back();
@@ -3838,7 +3838,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Hflex(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3847,7 +3847,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Flex(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3856,7 +3856,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Hflex1(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3865,7 +3865,7 @@ namespace PdfWriter
 	{
 		bool status = mImplementationHelper->Type2Flex1(mOperandStack);
 		if (!status)
-			return NULL;
+			return nullptr;
 
 		ClearStack();
 		return inProgramCounter;
@@ -3951,7 +3951,7 @@ namespace PdfWriter
 	bool CharStringType2Flattener::WriteFlattenedGlyphProgram(unsigned short inFontIndex, unsigned short inGlyphIndex, CCFFReader* inCFFFileInput, CMemoryStream* inWriter)
 	{
 		CharStringType2Interpreter interpreter;
-		bool status = inCFFFileInput->PrepareForGlyphIntepretation(inFontIndex, inGlyphIndex);
+		bool status = inCFFFileInput->PrepareForGlyphInterpretation(inFontIndex, inGlyphIndex);
 
 		mWriter = inWriter;
 		mHelper = inCFFFileInput;
@@ -4292,14 +4292,14 @@ namespace PdfWriter
 	CharString* CharStringType2Flattener::GetLocalSubr(long inSubrIndex)
 	{
 		if (!WriteSubrOperator(10))
-			return NULL;
+			return nullptr;
 
 		return mHelper->GetLocalSubr(inSubrIndex);
 	}
 	CharString* CharStringType2Flattener::GetGlobalSubr(long inSubrIndex)
 	{
 		if (!WriteSubrOperator(29))
-			return NULL;
+			return nullptr;
 
 		return mHelper->GetGlobalSubr(inSubrIndex);
 	}
@@ -4363,7 +4363,7 @@ namespace PdfWriter
 	};
 	CCFFWriter::CCFFWriter()
 	{
-		mPrimitivesWriter = NULL;
+		mPrimitivesWriter = nullptr;
 	}
 	CCFFWriter::~CCFFWriter()
 	{
@@ -4424,7 +4424,7 @@ namespace PdfWriter
 		if (!status)
 			return false;
 
-		std::vector<unsigned short>* inCIDMapping = NULL;
+		std::vector<unsigned short>* inCIDMapping = nullptr;
 		status = WriteCharsets(subsetGlyphIDs, inCIDMapping);
 		if (!status)
 			return false;
@@ -4541,7 +4541,7 @@ namespace PdfWriter
 		int topDictDataOffset = mFontFileStream->Tell();
 
 		// Write data
-		mFontFileStream->WriteStream(topDictSegment, 0, NULL);
+		mFontFileStream->WriteStream(topDictSegment, 0, nullptr);
 
 		// Adjust position locators for important placeholders
 		mCharsetPlaceHolderPosition     += topDictDataOffset;
@@ -4887,7 +4887,7 @@ namespace PdfWriter
 			mPrimitivesWriter->WriteOffset(offsets[i] + 1);
 
 		// Write data
-		mFontFileStream->WriteStream(&charStringsDataWriteStream, 0, NULL);
+		mFontFileStream->WriteStream(&charStringsDataWriteStream, 0, nullptr);
 
 		delete[] offsets;
 		return status;
@@ -4924,7 +4924,7 @@ namespace PdfWriter
 
 		FontDictInfoToLongFilePositionTypePairMap privateDictionaries;
 		bool status = true;
-		unsigned long* offsets = NULL;
+		unsigned long* offsets = nullptr;
 
 		if (inNewFontDictsIndexes.size() == 0)
 		{
@@ -4988,7 +4988,7 @@ namespace PdfWriter
 			mPrimitivesWriter->WriteOffset(offsets[i] + 1);
 
 		// Write data
-		mFontFileStream->WriteStream(&fontDictDataWriteStream, 0, NULL);
+		mFontFileStream->WriteStream(&fontDictDataWriteStream, 0, nullptr);
 
 		delete[] offsets;
 		return status;

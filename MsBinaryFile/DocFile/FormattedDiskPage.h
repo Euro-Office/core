@@ -40,6 +40,7 @@ namespace DocFileFormat
     friend class FormattedDiskPageCHPX;
 	friend class FormattedDiskPagePAPX;
 	friend class WordDocument;
+	friend struct FkpTestAccess;
   
     private:
       /// Specifies the type of the FKP
