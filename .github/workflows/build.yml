@@ -296,7 +296,9 @@ jobs:
           - { arch: amd64, runner: self-hosted }
           - { arch: arm64, runner: ubuntu-24.04-arm }
     name: third-party (rocky8, ${{ matrix.arch }})
-    environment: build-assets
+    # build-assets only accepts protected branches: elsewhere it builds
+    # without uploading, to test the third-party builds
+    environment: ${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/stable-')) && 'build-assets' || '' }}
     env:
       REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
       REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}

@@ -28,9 +28,10 @@ jobs:
       matrix:
         abi: [arm64-v8a, x86_64]
     name: build (android, ${{ matrix.abi }})
-    environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
+    environment: ${{ github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/stable-')) && 'build-assets' || '' }}
     env:
-      # Only set on a manual run, through the build-assets environment: that
+      # Only set on a manual run of main or stable-* (build-assets accepts only
+      # protected branches), through that environment: that
       # run uploads missing third-party builds, every other run only reads.
       REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
       REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
