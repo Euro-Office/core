@@ -17,7 +17,7 @@ void CBookItem::Clear()
     m_eType = Default;
 }
 */
-wchar_t _is_hex_char(wchar_t ch)
+static wchar_t is_hex_char(wchar_t ch)
 {
     if(L'0' <= ch && ch <= L'9')
         return (ch - L'0');
@@ -28,9 +28,9 @@ wchar_t _is_hex_char(wchar_t ch)
     return static_cast<wchar_t>(-1);
 }
 
-wchar_t _hex_str2int(wchar_t* str)
+static wchar_t hex_str2int(wchar_t* str)
 {
-    return _is_hex_char(str[0]) << 4 | _is_hex_char(str[1]);
+    return is_hex_char(str[0]) << 4 | is_hex_char(str[1]);
 }
 
 std::wstring URLDecode(const std::wstring& src)
@@ -44,11 +44,11 @@ std::wstring URLDecode(const std::wstring& src)
         {
             buf[0] = src.at(++i);
             buf[1] = src.at(++i);
-            dst.append(1, _hex_str2int(buf));
+            dst.append(1, hex_str2int(buf));
         } else
             dst.append(1, src.at(i));
     }
-    delete buf;
+    delete[] buf;
     return dst;
 }
 
