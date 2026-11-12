@@ -703,7 +703,12 @@ namespace ZLibZipUtils
 					if ( progress != nullptr )
 					{
 						short cancel = 0;
-						long progressValue = filesCount ? (1000000L / static_cast<long>(filesCount) * static_cast<long>(currentFileIndex)) : 0;
+						unsigned long long progressValue64 = filesCount
+								? (static_cast<unsigned long long>(currentFileIndex) * 1000000ULL) / static_cast<unsigned long long>(filesCount)
+								: 0;
+						if (progressValue64 > 1000000ULL)
+							progressValue64 = 1000000ULL;
+						long progressValue = static_cast<long>(progressValue64);
 
 						if(nullptr != progress)
 							(*progress)( UTILS_ONPROGRESSEVENT_ID, progressValue, &cancel );
