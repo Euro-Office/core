@@ -222,6 +222,18 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/whole_sheet_filter_buttons.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+# Copied unchanged from LibreOffice core (sc/qa/uitest/data/tdf99627.ods,
+# commit 641b956b7cc76e3765eacb1827e9c5297d587320)
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/tdf99627.ods"
+SPDX-FileCopyrightText = "The LibreOffice contributors"
+SPDX-License-Identifier = "MPL-2.0"
+
+[[annotations]]
 path = "OdfFile/Test/test_odf/ExampleFiles/section_columns.odt"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

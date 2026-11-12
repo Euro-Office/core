@@ -587,6 +587,7 @@ void xlsx_conversion_context::end_table()
 	get_table_context().serialize_header_footer			(current_sheet().header_footer());
 	get_table_context().serialize_condFormattingEx		(current_sheet().conditionalFormattingEx());
 	get_table_context().serialize_condFormatting		(current_sheet().conditionalFormatting());
+    get_table_context().trim_database_ranges			();
     get_table_context().serialize_tableParts			(current_sheet().tableParts(), current_sheet().sheet_rels());
     get_table_context().serialize_autofilter			(current_sheet().autofilter());
     get_table_context().serialize_sort					(current_sheet().sort());
