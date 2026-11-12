@@ -61,14 +61,14 @@ static const unsigned char encrDataIntegrityHmacValueBlockKey[8]	= { 0xa0, 0x67,
 
 using namespace CryptoPP;
 
-class buf
+class CryptBuffer
 {
 public:
 	unsigned char	*ptr;
 	int				size;
 //-----------------------------------------------------------------------------------
-	buf()													: ptr(nullptr), size(0), 	bDelete(true){}
-	buf(int sz, bool zero_set = false)						: ptr(nullptr), size(0), 	bDelete(true)
+	CryptBuffer()													: ptr(nullptr), size(0), 	bDelete(true){}
+	CryptBuffer(int sz, bool zero_set = false)						: ptr(nullptr), size(0), 	bDelete(true)
 	{
 		ptr = new unsigned char [sz]; 
 		size = sz; 
@@ -78,15 +78,15 @@ public:
 			memset(ptr, 0, size);
 		}
 	}
-	buf(unsigned char * buf, int sz, bool bDelete_ = true ): ptr(nullptr), size(0), 	bDelete(true)
+	CryptBuffer(unsigned char * buf, int sz, bool bDelete_ = true ): ptr(nullptr), size(0), 	bDelete(true)
 	{
 		CreateCopy(buf, sz, bDelete_);
 	}
-	buf(const std::string  & str)							: ptr(nullptr), size(0), 	bDelete(true)
+	CryptBuffer(const std::string  & str)							: ptr(nullptr), size(0), 	bDelete(true)
 	{
 		CreateCopy((unsigned char*)str.c_str(), str.length(), true);
 	}
-	buf(const std::wstring & str)							: ptr(nullptr), size(0), 	bDelete(true)
+	CryptBuffer(const std::wstring & str)							: ptr(nullptr), size(0), 	bDelete(true)
 	{
 		if (sizeof(wchar_t) == 4)
 		{
@@ -114,11 +114,11 @@ public:
 		}
 	}
 	
-	virtual ~buf()	
+	virtual ~CryptBuffer()	
 	{
 		Clear();
 	}
-	buf& operator=(const buf& oSrc)
+	CryptBuffer& operator=(const CryptBuffer& oSrc)
 	{
 		if (this == &oSrc) return *this;
 
@@ -166,14 +166,14 @@ private:
 	}
 };
 
-bool operator==(const buf& oBuf1, const buf& oBuf2)
+bool operator==(const CryptBuffer& oBuf1, const CryptBuffer& oBuf2)
 {
 	if (!oBuf1.ptr || !oBuf2.ptr) return false;
 
 	return 0 == memcmp(oBuf1.ptr, oBuf2.ptr, (std::min)(oBuf1.size, oBuf2.size));
 }
 
-void CorrectHashSize(buf & hashBuf, int size, unsigned char padding)
+void CorrectHashSize(CryptBuffer & hashBuf, int size, unsigned char padding)
 {
 	if (hashBuf.size < size)
 	{
@@ -191,7 +191,7 @@ void CorrectHashSize(buf & hashBuf, int size, unsigned char padding)
 		hashBuf.size = size;
 	}
 }
-buf Hmac(buf &  keyBuf, CRYPT_METHOD::_hashAlgorithm algorithm, std::string & plain)
+CryptBuffer Hmac(CryptBuffer &  keyBuf, CRYPT_METHOD::_hashAlgorithm algorithm, std::string & plain)
 {
 	std::string mac;
 	if (algorithm == CRYPT_METHOD::SHA1)
@@ -226,11 +226,11 @@ buf Hmac(buf &  keyBuf, CRYPT_METHOD::_hashAlgorithm algorithm, std::string & pl
 
 	}
 	
-	return buf(mac);
+	return CryptBuffer(mac);
 }
 
 
-buf HashAppend(buf &  hashBuf, buf & block, CRYPT_METHOD::_hashAlgorithm algorithm)
+CryptBuffer HashAppend(CryptBuffer &  hashBuf, CryptBuffer & block, CRYPT_METHOD::_hashAlgorithm algorithm)
 {//TODO redo
 	if (algorithm == CRYPT_METHOD::MD5)
 	{		
@@ -242,7 +242,7 @@ buf HashAppend(buf &  hashBuf, buf & block, CRYPT_METHOD::_hashAlgorithm algorit
 		SecByteBlock buffer(hash.DigestSize());
 		hash.Final(buffer);
 
-		return buf(buffer.BytePtr(), buffer.SizeInBytes());	
+		return CryptBuffer(buffer.BytePtr(), buffer.SizeInBytes());	
 	}
 	else if (algorithm == CRYPT_METHOD::SHA1)
 	{
@@ -254,7 +254,7 @@ buf HashAppend(buf &  hashBuf, buf & block, CRYPT_METHOD::_hashAlgorithm algorit
 		SecByteBlock buffer(hash.DigestSize());
 		hash.Final(buffer);
 
-		return buf(buffer.BytePtr(), buffer.SizeInBytes());
+		return CryptBuffer(buffer.BytePtr(), buffer.SizeInBytes());
 	}
 	else if (algorithm == CRYPT_METHOD::SHA256)
 	{
@@ -266,7 +266,7 @@ buf HashAppend(buf &  hashBuf, buf & block, CRYPT_METHOD::_hashAlgorithm algorit
 		SecByteBlock buffer(hash.DigestSize());
 		hash.Final(buffer);
 
-		return buf(buffer.BytePtr(), buffer.SizeInBytes());
+		return CryptBuffer(buffer.BytePtr(), buffer.SizeInBytes());
 	}
 	else if (algorithm == CRYPT_METHOD::SHA512)
 	{
@@ -278,22 +278,22 @@ buf HashAppend(buf &  hashBuf, buf & block, CRYPT_METHOD::_hashAlgorithm algorit
 		SecByteBlock buffer(hash.DigestSize());
 		hash.Final(buffer);
 
-		return buf(buffer.BytePtr(), buffer.SizeInBytes());
+		return CryptBuffer(buffer.BytePtr(), buffer.SizeInBytes());
 	}
 	else
-		return buf();
+		return CryptBuffer();
 }
 
-buf GenerateAgileKey(buf & salt, buf & password, buf & blockKey, int hashSize, int spin, CRYPT_METHOD::_hashAlgorithm algorithm)
+CryptBuffer GenerateAgileKey(CryptBuffer & salt, CryptBuffer & password, CryptBuffer & blockKey, int hashSize, int spin, CRYPT_METHOD::_hashAlgorithm algorithm)
 {
 	//if (hashSize < 8)
 	//	blockKey = 8;
 
-	buf pHashBuf = HashAppend(salt, password, algorithm);
+	CryptBuffer pHashBuf = HashAppend(salt, password, algorithm);
 
 	for (int i = 0; i < spin; i++)
 	{
-        buf iterator((unsigned char*)&i, 4, false);
+        CryptBuffer iterator((unsigned char*)&i, 4, false);
         pHashBuf = HashAppend(iterator, pHashBuf, algorithm);
 	}
 
@@ -301,13 +301,13 @@ buf GenerateAgileKey(buf & salt, buf & password, buf & blockKey, int hashSize, i
 
 	CorrectHashSize(pHashBuf, hashSize, 0x36);
 
-	return buf(pHashBuf.ptr, pHashBuf.size);
+	return CryptBuffer(pHashBuf.ptr, pHashBuf.size);
 }
-buf GenerateOdfKey(buf & pSalt, buf & pPassword, int keySize, int spin, CRYPT_METHOD::_hashAlgorithm algorithm)
+CryptBuffer GenerateOdfKey(CryptBuffer & pSalt, CryptBuffer & pPassword, int keySize, int spin, CRYPT_METHOD::_hashAlgorithm algorithm)
 {
-	buf pKey		(keySize);
-	buf empty		(nullptr, 0, false);
-    buf pPassword_hash;
+	CryptBuffer pKey		(keySize);
+	CryptBuffer empty		(nullptr, 0, false);
+    CryptBuffer pPassword_hash;
 
     if (algorithm == CRYPT_METHOD::None)
     {
@@ -322,19 +322,19 @@ buf GenerateOdfKey(buf & pSalt, buf & pPassword, int keySize, int spin, CRYPT_ME
 		
 	pbkdf.DeriveKey(pKey.ptr, pKey.size, 0, pPassword_hash.ptr, pPassword_hash.size, pSalt.ptr, pSalt.size, spin);
 
-	return buf(pKey.ptr, pKey.size);
+	return CryptBuffer(pKey.ptr, pKey.size);
 }
     
-buf GenerateHashKey(buf & salt, buf & password, int hashSize, int keySize, int spin, CRYPT_METHOD::_hashAlgorithm algorithm, int block_index = 0)
+CryptBuffer GenerateHashKey(CryptBuffer & salt, CryptBuffer & password, int hashSize, int keySize, int spin, CRYPT_METHOD::_hashAlgorithm algorithm, int block_index = 0)
 {
-	buf block	((unsigned char*)&block_index, 4, false);
+	CryptBuffer block	((unsigned char*)&block_index, 4, false);
 
-	buf empty	(nullptr, 0, false);
-	buf pHashBuf = HashAppend(salt, password, algorithm);
+	CryptBuffer empty	(nullptr, 0, false);
+	CryptBuffer pHashBuf = HashAppend(salt, password, algorithm);
 		
 	for (int i = 0; i < spin; i++)
 	{
-        buf iterator((unsigned char*)&i, 4, false);
+        CryptBuffer iterator((unsigned char*)&i, 4, false);
         pHashBuf = HashAppend(iterator, pHashBuf, algorithm);
 	}
 
@@ -342,27 +342,27 @@ buf GenerateHashKey(buf & salt, buf & password, int hashSize, int keySize, int s
 	
 	if (spin == 0)
 	{
-		return buf(pHashBuf.ptr, pHashBuf.size);
+		return CryptBuffer(pHashBuf.ptr, pHashBuf.size);
 	}
 
-	buf derivedKey1(64);
+	CryptBuffer derivedKey1(64);
 	memset (derivedKey1.ptr, 0x36, 64);
 	for (int i = 0; i < pHashBuf.size; i++)
 	{
 		derivedKey1.ptr[i] ^= pHashBuf.ptr[i];
 	}
 
-	buf derivedKey2(64);
+	CryptBuffer derivedKey2(64);
 	memset (derivedKey2.ptr, 0x5c, 64);
 	for (int i = 0; i < pHashBuf.size; i++)
 	{
 		derivedKey2.ptr[i] ^= pHashBuf.ptr[i];
 	}
 
-	buf pHashBuf1 = HashAppend(derivedKey1, empty, algorithm);
-	buf pHashBuf2 = HashAppend(derivedKey2, empty, algorithm);
+	CryptBuffer pHashBuf1 = HashAppend(derivedKey1, empty, algorithm);
+	CryptBuffer pHashBuf2 = HashAppend(derivedKey2, empty, algorithm);
 
-	buf pHashBuf3(2 * hashSize);
+	CryptBuffer pHashBuf3(2 * hashSize);
 	
 	memcpy(pHashBuf3.ptr + 0,			pHashBuf1.ptr, hashSize);
 	memcpy(pHashBuf3.ptr + hashSize,	pHashBuf2.ptr, hashSize);
@@ -372,12 +372,12 @@ buf GenerateHashKey(buf & salt, buf & password, int hashSize, int keySize, int s
 	if (keySize == 5)
 		CorrectHashSize(pHashBuf3, 16, 0); //40-bit crypt key !!!				
 
-	return buf(pHashBuf3.ptr, pHashBuf3.size);
+	return CryptBuffer(pHashBuf3.ptr, pHashBuf3.size);
 }
 ARC4::Decryption rc4Decryption; // TODO -> in impl
 ARC4::Encryption rc4Encryption;
 
-bool EncryptCipher(buf & key, buf & iv, buf & data_inp, buf & data_out, CRYPT_METHOD::_cipherAlgorithm algorithm,
+bool EncryptCipher(CryptBuffer & key, CryptBuffer & iv, CryptBuffer & data_inp, CryptBuffer & data_out, CRYPT_METHOD::_cipherAlgorithm algorithm,
 				    StreamTransformationFilter::BlockPaddingScheme padding = StreamTransformationFilter::PKCS_PADDING)
 {	
 	if (algorithm == CRYPT_METHOD::XOR)
@@ -388,7 +388,7 @@ bool EncryptCipher(buf & key, buf & iv, buf & data_inp, buf & data_out, CRYPT_ME
 	{
 		if (!data_out.ptr)
 		{
-			data_out = buf(data_inp.size);
+			data_out = CryptBuffer(data_inp.size);
 		}
 		
 		rc4Encryption.ProcessData(data_out.ptr, data_inp.ptr, data_inp.size);
@@ -403,13 +403,13 @@ bool EncryptCipher(buf & key, buf & iv, buf & data_inp, buf & data_out, CRYPT_ME
 	{
 		if (!iv.ptr)
 		{
-			iv = buf(16, true);
+			iv = CryptBuffer(16, true);
 		}
 		DES::Encryption desEncryption(key.ptr, key.size == 7 ? 8 : key.size);
 		StreamTransformation *modeEncryption = new CipherModeFinalTemplate_ExternalCipher<CBC_Encryption>(desEncryption, iv.ptr ); 
 		if (!data_out.ptr)
 		{
-			data_out = buf(data_inp.size);
+			data_out = CryptBuffer(data_inp.size);
 		}
 		StreamTransformationFilter stfEncryption(*modeEncryption, new ArraySink( data_out.ptr, data_out.size), padding);
 	 
@@ -422,13 +422,13 @@ bool EncryptCipher(buf & key, buf & iv, buf & data_inp, buf & data_out, CRYPT_ME
 	{
 		if (!iv.ptr)
 		{
-			iv = buf(16, true);
+			iv = CryptBuffer(16, true);
 		}
 		DES::Encryption desEncryption(key.ptr, key.size == 7 ? 8 : key.size);
 		StreamTransformation *modeEncryption = new CipherModeFinalTemplate_ExternalCipher<ECB_OneWay>(desEncryption, iv.ptr ); 
 		if (!data_out.ptr)
 		{
-			data_out = buf(data_inp.size);
+			data_out = CryptBuffer(data_inp.size);
 		}
 		StreamTransformationFilter stfEncryption(*modeEncryption, new ArraySink( data_out.ptr, data_out.size), padding);
 	 
@@ -463,7 +463,7 @@ bool EncryptCipher(buf & key, buf & iv, buf & data_inp, buf & data_out, CRYPT_ME
 		    
 		if (!data_out.ptr)
 		{
-			data_out = buf(data_inp.size);
+			data_out = CryptBuffer(data_inp.size);
 		}
 		StreamTransformationFilter stfEncryption(*modeEncryption, new ArraySink( data_out.ptr, data_out.size), padding);
 	 
@@ -476,12 +476,12 @@ bool EncryptCipher(buf & key, buf & iv, buf & data_inp, buf & data_out, CRYPT_ME
 	return true;
 }
 
-bool DecryptCipher(buf & key, buf & iv, buf & data_inp, buf & data_out,  CRYPT_METHOD::_cipherAlgorithm algorithm, 
+bool DecryptCipher(CryptBuffer & key, CryptBuffer & iv, CryptBuffer & data_inp, CryptBuffer & data_out,  CRYPT_METHOD::_cipherAlgorithm algorithm, 
 				  StreamTransformationFilter::BlockPaddingScheme padding = StreamTransformationFilter::NO_PADDING)
 {	
 	if (!data_out.ptr)
 	{
-		data_out = buf(data_inp.size);
+		data_out = CryptBuffer(data_inp.size);
 	}
 
 	if (algorithm == CRYPT_METHOD::XOR)
@@ -501,7 +501,7 @@ bool DecryptCipher(buf & key, buf & iv, buf & data_inp, buf & data_out,  CRYPT_M
 	{
 		if (!iv.ptr)
 		{
-			iv = buf(16, true);
+			iv = CryptBuffer(16, true);
 		}
 		DES::Decryption desDecryption(key.ptr, key.size == 7 ? 8 : key.size);
 		StreamTransformation *modeDecryption = new CipherModeFinalTemplate_ExternalCipher<CBC_Decryption>(desDecryption, iv.ptr );
@@ -516,7 +516,7 @@ bool DecryptCipher(buf & key, buf & iv, buf & data_inp, buf & data_out,  CRYPT_M
 	{
 		if (!iv.ptr)
 		{
-			iv = buf(16, true);
+			iv = CryptBuffer(16, true);
 		}
 		DES::Decryption desDecryption(key.ptr, key.size == 7 ? 8 : key.size);
 		StreamTransformation *modeDecryption = new CipherModeFinalTemplate_ExternalCipher<ECB_OneWay>(desDecryption, iv.ptr );
@@ -585,57 +585,57 @@ bool ECMADecryptor::SetPassword(std::wstring _password)
 	if (cryptData.blockSize > 64 || cryptData.blockSize < 1)  return false;
 	if (cryptData.saltSize > 64 || cryptData.saltSize < 1)  return false;
 
-	buf pPassword		(password);
-	buf pSalt			(cryptData.saltValue);
-	buf empty			(nullptr, 0, false);
+	CryptBuffer pPassword		(password);
+	CryptBuffer pSalt			(cryptData.saltValue);
+	CryptBuffer empty			(nullptr, 0, false);
 
-	buf pEncVerInput	(cryptData.encryptedVerifierInput);
-	buf pEncVerValue	(cryptData.encryptedVerifierValue);
+	CryptBuffer pEncVerInput	(cryptData.encryptedVerifierInput);
+	CryptBuffer pEncVerValue	(cryptData.encryptedVerifierValue);
 	
 	if (cryptData.bAgile)
 	{	
-		buf pInputBlockKey ((unsigned char*)encrVerifierHashInputBlockKey, 8);
-		buf pValueBlockKey ((unsigned char*)encrVerifierHashValueBlockKey, 8);		
+		CryptBuffer pInputBlockKey ((unsigned char*)encrVerifierHashInputBlockKey, 8);
+		CryptBuffer pValueBlockKey ((unsigned char*)encrVerifierHashValueBlockKey, 8);		
 		
-		buf verifierInputKey	= GenerateAgileKey( pSalt, pPassword, pInputBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm );
-		buf verifierHashKey	= GenerateAgileKey( pSalt, pPassword, pValueBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm );
+		CryptBuffer verifierInputKey	= GenerateAgileKey( pSalt, pPassword, pInputBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm );
+		CryptBuffer verifierHashKey	= GenerateAgileKey( pSalt, pPassword, pValueBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm );
 		
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 		{
 			rc4Decryption.SetKey(verifierInputKey.ptr, cryptData.keySize);
 		}
 //--------------------------------------------
-		buf decryptedVerifierHashInputBytes;		
+		CryptBuffer decryptedVerifierHashInputBytes;		
 		DecryptCipher(verifierInputKey, pSalt, pEncVerInput, decryptedVerifierHashInputBytes, cryptData.cipherAlgorithm);
 //--------------------------------------------
-		buf hashBuf = HashAppend(decryptedVerifierHashInputBytes, empty, cryptData.hashAlgorithm);
+		CryptBuffer hashBuf = HashAppend(decryptedVerifierHashInputBytes, empty, cryptData.hashAlgorithm);
 //--------------------------------------------
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 		{
 			rc4Decryption.SetKey(verifierHashKey.ptr, cryptData.keySize);
 		}		
-		buf decryptedVerifierHashBytes;		
+		CryptBuffer decryptedVerifierHashBytes;		
 		DecryptCipher(verifierHashKey, pSalt, pEncVerValue, decryptedVerifierHashBytes, cryptData.cipherAlgorithm);
 //--------------------------------------------
 		bVerify	= (decryptedVerifierHashBytes==hashBuf);
 	}
 	else
 	{
-		buf verifierKey = GenerateHashKey(pSalt, pPassword, cryptData.hashSize, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);		
+		CryptBuffer verifierKey = GenerateHashKey(pSalt, pPassword, cryptData.hashSize, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);		
 
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 		{
 			rc4Decryption.SetKey(verifierKey.ptr, cryptData.keySize);
 		}
 //--------------------------------------------
-		buf decryptedVerifierHashInputBytes;		
+		CryptBuffer decryptedVerifierHashInputBytes;		
 		DecryptCipher(verifierKey, pSalt, pEncVerInput, decryptedVerifierHashInputBytes, cryptData.cipherAlgorithm);
 
 	//--------------------------------------------
-		buf hashBuf = HashAppend(decryptedVerifierHashInputBytes, empty, cryptData.hashAlgorithm);
+		CryptBuffer hashBuf = HashAppend(decryptedVerifierHashInputBytes, empty, cryptData.hashAlgorithm);
 	//--------------------------------------------
 		
-		buf decryptedVerifierHashBytes;		
+		CryptBuffer decryptedVerifierHashBytes;		
 		DecryptCipher(verifierKey, pSalt, pEncVerValue, decryptedVerifierHashBytes, cryptData.cipherAlgorithm);
 
 		bVerify	= (decryptedVerifierHashBytes == hashBuf);
@@ -684,10 +684,10 @@ void ECMADecryptor::Decrypt(char* data	, const size_t size, const unsigned long 
 
 		int block_index = (nCurrPos / block_size);
 		{
-			buf pPassword	(password);
-			buf pSalt		(cryptData.saltValue);			
+			CryptBuffer pPassword	(password);
+			CryptBuffer pSalt		(cryptData.saltValue);			
 			
-			buf hashKey = GenerateHashKey(pSalt, pPassword, cryptData.hashSize, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm, block_index);
+			CryptBuffer hashKey = GenerateHashKey(pSalt, pPassword, cryptData.hashSize, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm, block_index);
 			
 			rc4Decryption.SetKey(hashKey.ptr, cryptData.keySize);
 		}
@@ -726,38 +726,38 @@ bool ECMADecryptor::CheckDataIntegrity(unsigned char* data, int  size)
 {
 	if (!cryptData.bAgile) return true;
 
-	buf pBlockKey		((unsigned char*)encrKeyValueBlockKey, 8);	
-	buf pBlockHmacKey	((unsigned char*)encrDataIntegritySaltBlockKey, 8);	
-	buf pBlockHmacValue((unsigned char*)encrDataIntegrityHmacValueBlockKey, 8);	
+	CryptBuffer pBlockKey		((unsigned char*)encrKeyValueBlockKey, 8);	
+	CryptBuffer pBlockHmacKey	((unsigned char*)encrDataIntegritySaltBlockKey, 8);	
+	CryptBuffer pBlockHmacValue((unsigned char*)encrDataIntegrityHmacValueBlockKey, 8);	
 	
-	buf pPassword		(password);
-	buf pSalt			(cryptData.saltValue);
-	buf empty			(nullptr, 0, false);
+	CryptBuffer pPassword		(password);
+	CryptBuffer pSalt			(cryptData.saltValue);
+	CryptBuffer empty			(nullptr, 0, false);
 
-	buf pDataSalt		(cryptData.dataSaltValue);
-	buf pKeyValue		(cryptData.encryptedKeyValue);
-	buf pEncHmacKey	(cryptData.encryptedHmacKey);
-	buf pEncHmacValue	(cryptData.encryptedHmacValue);
+	CryptBuffer pDataSalt		(cryptData.dataSaltValue);
+	CryptBuffer pKeyValue		(cryptData.encryptedKeyValue);
+	CryptBuffer pEncHmacKey	(cryptData.encryptedHmacKey);
+	CryptBuffer pEncHmacValue	(cryptData.encryptedHmacValue);
 
-	buf agileKey = GenerateAgileKey( pSalt, pPassword, pBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);  
+	CryptBuffer agileKey = GenerateAgileKey( pSalt, pPassword, pBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);  
 
-	buf secretKey;
+	CryptBuffer secretKey;
 	DecryptCipher( agileKey, pSalt, pKeyValue, secretKey, cryptData.cipherAlgorithm);  
 //----			
-	buf iv1 = HashAppend(pDataSalt, pBlockHmacKey, cryptData.dataHashAlgorithm);
+	CryptBuffer iv1 = HashAppend(pDataSalt, pBlockHmacKey, cryptData.dataHashAlgorithm);
 	CorrectHashSize(iv1, cryptData.dataBlockSize, 0x36);
 	
-	buf iv2 = HashAppend(pDataSalt, pBlockHmacValue, cryptData.dataHashAlgorithm);
+	CryptBuffer iv2 = HashAppend(pDataSalt, pBlockHmacValue, cryptData.dataHashAlgorithm);
 	CorrectHashSize(iv2, cryptData.dataBlockSize, 0x36);
 
-	buf pSaltHmac;
+	CryptBuffer pSaltHmac;
 	DecryptCipher(secretKey,  iv1, pEncHmacKey, pSaltHmac, cryptData.dataCipherAlgorithm);
 	
-	buf expected;
+	CryptBuffer expected;
 	DecryptCipher(secretKey,  iv2, pEncHmacValue, expected, cryptData.dataCipherAlgorithm);
 
 	std::string sData((char*)data, size);
-	buf hmac = Hmac(pSaltHmac, cryptData.dataHashAlgorithm, sData);
+	CryptBuffer hmac = Hmac(pSaltHmac, cryptData.dataHashAlgorithm, sData);
 		
 	return (hmac == expected);
 }
@@ -768,26 +768,26 @@ void ECMADecryptor::Decrypt(unsigned char* data_inp, int size, unsigned char*& d
 
 	data_out = new unsigned char[size];
 	
-	buf pPassword	(password);
-	buf pSalt		(cryptData.saltValue);
-	buf empty		(nullptr, 0, false);
+	CryptBuffer pPassword	(password);
+	CryptBuffer pSalt		(cryptData.saltValue);
+	CryptBuffer empty		(nullptr, 0, false);
 
 	if (cryptData.bAgile)
 	{	
-		buf pBlockKey	((unsigned char*)encrKeyValueBlockKey, 8);	
-		buf pDataSalt	(cryptData.dataSaltValue);
-		buf pKeyValue	(cryptData.encryptedKeyValue);
+		CryptBuffer pBlockKey	((unsigned char*)encrKeyValueBlockKey, 8);	
+		CryptBuffer pDataSalt	(cryptData.dataSaltValue);
+		CryptBuffer pKeyValue	(cryptData.encryptedKeyValue);
 
-		buf agileKey = GenerateAgileKey( pSalt, pPassword, pBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);  
+		CryptBuffer agileKey = GenerateAgileKey( pSalt, pPassword, pBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);  
 
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 		{
 			rc4Decryption.SetKey(agileKey.ptr, cryptData.keySize);
 		}
-		buf pDecryptedKey;
+		CryptBuffer pDecryptedKey;
 		DecryptCipher( agileKey, pSalt, pKeyValue, pDecryptedKey, cryptData.cipherAlgorithm);  
 
-		buf iv(cryptData.blockSize, true);
+		CryptBuffer iv(cryptData.blockSize, true);
 
 		int i = start_iv_block, sz = 4096, pos = 0;//aes block size = 4096
 
@@ -800,13 +800,13 @@ void ECMADecryptor::Decrypt(unsigned char* data_inp, int size, unsigned char*& d
 			if (pos + sz > size) 
 				sz = size - pos;
 			
-			buf pIndex((unsigned char*)&i, 4);
+			CryptBuffer pIndex((unsigned char*)&i, 4);
 			iv = HashAppend(pDataSalt, pIndex, cryptData.dataHashAlgorithm);
 
 			CorrectHashSize(iv, cryptData.dataBlockSize, 0x36);
 			
-			buf pInp(data_inp + pos, sz, false);
-			buf pOut(data_out + pos, sz, false);
+			CryptBuffer pInp(data_inp + pos, sz, false);
+			CryptBuffer pOut(data_out + pos, sz, false);
 
 			DecryptCipher(pDecryptedKey,  iv, pInp, pOut, cryptData.cipherAlgorithm);
 			
@@ -815,15 +815,15 @@ void ECMADecryptor::Decrypt(unsigned char* data_inp, int size, unsigned char*& d
 	}
 	else
 	{				
-		buf hashKey = GenerateHashKey(pSalt, pPassword, cryptData.hashSize, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm, start_iv_block);
+		CryptBuffer hashKey = GenerateHashKey(pSalt, pPassword, cryptData.hashSize, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm, start_iv_block);
 		
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 		{			
 			rc4Decryption.SetKey(hashKey.ptr, cryptData.keySize);
 		}
 	
-		buf pInp(data_inp, size, false);
-		buf pOut(data_out, size, false);
+		CryptBuffer pInp(data_inp, size, false);
+		CryptBuffer pOut(data_out, size, false);
 
 		DecryptCipher(hashKey, empty, pInp, pOut, cryptData.cipherAlgorithm);
 	}
@@ -855,10 +855,10 @@ void ODFWriteProtect::Generate()
     }
 
     std::string passw_ansi = std::string(password.begin(), password.end());
-    buf pPassword	(passw_ansi);
-    buf pSalt		(seed_salt.data(), seed_salt.size());
+    CryptBuffer pPassword	(passw_ansi);
+    CryptBuffer pSalt		(seed_salt.data(), seed_salt.size());
 
-    buf pHash = GenerateOdfKey(pSalt, pPassword, 16, data.spinCount, CRYPT_METHOD::None);
+    CryptBuffer pHash = GenerateOdfKey(pSalt, pPassword, 16, data.spinCount, CRYPT_METHOD::None);
 
     data.saltValue = std::string((char*)pSalt.ptr, pSalt.size);
     data.hashValue = std::string((char*)pHash.ptr, pHash.size);
@@ -867,22 +867,22 @@ bool ODFWriteProtect::Verify()
 {
     std::string passw_ansi = std::string(password.begin(), password.end());
 
-    buf pPassword	(passw_ansi);
-    buf pHash (data.hashValue);
+    CryptBuffer pPassword	(passw_ansi);
+    CryptBuffer pHash (data.hashValue);
 
     if (data.hashAlgorithm == CRYPT_METHOD::PBKDF2)
     {
-        buf pSalt (data.saltValue);
+        CryptBuffer pSalt (data.saltValue);
 
-        buf pHashTest = GenerateOdfKey(pSalt, pPassword, 16, data.spinCount, CRYPT_METHOD::None);
+        CryptBuffer pHashTest = GenerateOdfKey(pSalt, pPassword, 16, data.spinCount, CRYPT_METHOD::None);
 
         return (pHashTest == pHash);
     }
     else
     {
-        buf empty (nullptr, 0, false);
+        CryptBuffer empty (nullptr, 0, false);
 
-        buf pHashTest = HashAppend(empty, pPassword, data.hashAlgorithm);
+        CryptBuffer pHashTest = HashAppend(empty, pPassword, data.hashAlgorithm);
 
         return (pHashTest == pHash);
     }
@@ -910,15 +910,15 @@ void ECMAWriteProtect::Generate()
 	{
 		prng.IncorporateEntropy(seed_salt, seed_salt.size());
 	}
-	buf pPassword	(password);
-	buf empty		(nullptr, 0, false);		
-	buf pSalt		(seed_salt.data(), seed_salt.size());
+	CryptBuffer pPassword	(password);
+	CryptBuffer empty		(nullptr, 0, false);		
+	CryptBuffer pSalt		(seed_salt.data(), seed_salt.size());
 
-	buf pHashBuf = HashAppend(pSalt, pPassword, data.hashAlgorithm);
+	CryptBuffer pHashBuf = HashAppend(pSalt, pPassword, data.hashAlgorithm);
 		
 	for (_UINT32 i = 0; i < data.spinCount; i++)
 	{
-        buf iterator((unsigned char*)&i, 4, false);
+        CryptBuffer iterator((unsigned char*)&i, 4, false);
         pHashBuf = HashAppend(pHashBuf, iterator, data.hashAlgorithm);
 	}
 
@@ -953,16 +953,16 @@ bool ECMAWriteProtect::VerifyWrike()
 }
 bool ECMAWriteProtect::Verify()
 {
-	buf pPassword	(password);
-	buf empty		(nullptr, 0, false);		
-	buf pSalt		(data.saltValue);
-	buf pHash		(data.hashValue);
+	CryptBuffer pPassword	(password);
+	CryptBuffer empty		(nullptr, 0, false);		
+	CryptBuffer pSalt		(data.saltValue);
+	CryptBuffer pHash		(data.hashValue);
 
-	buf pHashTest = HashAppend(pSalt, pPassword, data.hashAlgorithm);
+	CryptBuffer pHashTest = HashAppend(pSalt, pPassword, data.hashAlgorithm);
 		
 	for (_UINT32 i = 0; i < data.spinCount; i++)
 	{
-        buf iterator((unsigned char*)&i, 4, false);
+        CryptBuffer iterator((unsigned char*)&i, 4, false);
         pHashTest = HashAppend(pHashTest, iterator, data.hashAlgorithm);
 	}
 	return (pHashTest == pHash);
@@ -1007,43 +1007,43 @@ void ECMAEncryptor::SetPassword(std::wstring _password)
 		prng.IncorporateEntropy(seed_verify, seed_verify.size());
 	}
 //---------
-	buf pPassword		(password);
-	buf empty			(nullptr, 0, false);
+	CryptBuffer pPassword		(password);
+	CryptBuffer empty			(nullptr, 0, false);
 		
-	buf pSalt			(seed_salt.data(), seed_salt.size());
-	buf pDataSalt		(seed_datasalt.data(), seed_datasalt.size());
-	buf pDecryptedKey	(seed_key.data(), seed_key.size());
+	CryptBuffer pSalt			(seed_salt.data(), seed_salt.size());
+	CryptBuffer pDataSalt		(seed_datasalt.data(), seed_datasalt.size());
+	CryptBuffer pDecryptedKey	(seed_key.data(), seed_key.size());
 	
 //------------------------------------------------------------------------------------------------
 	if (cryptData.bAgile)
 	{
-		buf pBlockKey		((unsigned char*)encrKeyValueBlockKey, 8);	
-		buf pInputBlockKey ((unsigned char*)encrVerifierHashInputBlockKey, 8);
-		buf pValueBlockKey ((unsigned char*)encrVerifierHashValueBlockKey, 8);
+		CryptBuffer pBlockKey		((unsigned char*)encrKeyValueBlockKey, 8);	
+		CryptBuffer pInputBlockKey ((unsigned char*)encrVerifierHashInputBlockKey, 8);
+		CryptBuffer pValueBlockKey ((unsigned char*)encrVerifierHashValueBlockKey, 8);
 		
-		buf agileKey = GenerateAgileKey( pSalt, pPassword, pBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);  
+		CryptBuffer agileKey = GenerateAgileKey( pSalt, pPassword, pBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);  
 
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 		{
 			rc4Encryption.SetKey(agileKey.ptr, cryptData.keySize);
 		}
-		buf pKeyValue;
+		CryptBuffer pKeyValue;
 		EncryptCipher( agileKey, pSalt, pDecryptedKey, pKeyValue, cryptData.cipherAlgorithm);  
 		
 	//--------------------------------------------
-		buf decryptedVerifierHashInputBytes(seed_verify.data(), seed_verify.size());
-		buf verifierInputKey = GenerateAgileKey( pSalt, pPassword, pInputBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm );
+		CryptBuffer decryptedVerifierHashInputBytes(seed_verify.data(), seed_verify.size());
+		CryptBuffer verifierInputKey = GenerateAgileKey( pSalt, pPassword, pInputBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm );
 		
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 		{
 			rc4Encryption.SetKey(verifierInputKey.ptr, cryptData.keySize);
 		}
-		buf pEncVerInput;
+		CryptBuffer pEncVerInput;
 		EncryptCipher( verifierInputKey, pSalt, decryptedVerifierHashInputBytes, pEncVerInput, cryptData.cipherAlgorithm);  
 	//--------------------------------------------
 
-		buf decryptedVerifierHashBytes = HashAppend(decryptedVerifierHashInputBytes, empty, cryptData.hashAlgorithm);
-		buf verifierHashKey = GenerateAgileKey(pSalt, pPassword, pValueBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);
+		CryptBuffer decryptedVerifierHashBytes = HashAppend(decryptedVerifierHashInputBytes, empty, cryptData.hashAlgorithm);
+		CryptBuffer verifierHashKey = GenerateAgileKey(pSalt, pPassword, pValueBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);
 		
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 		{
@@ -1053,7 +1053,7 @@ void ECMAEncryptor::SetPassword(std::wstring _password)
 		{
 			CorrectHashSize(decryptedVerifierHashBytes, (decryptedVerifierHashBytes.size / PADDING_SIZE + 1) * PADDING_SIZE, 0);
 		}
-		buf pEncVerValue;
+		CryptBuffer pEncVerValue;
 		EncryptCipher( verifierHashKey, pSalt, decryptedVerifierHashBytes, pEncVerValue, cryptData.cipherAlgorithm);  
 
 		cryptData.saltValue					= std::string((char*)pSalt.ptr, pSalt.size);
@@ -1064,24 +1064,24 @@ void ECMAEncryptor::SetPassword(std::wstring _password)
 	}
 	else
 	{
-		buf verifierKey = GenerateHashKey(pSalt, pPassword, cryptData.hashSize, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);		
+		CryptBuffer verifierKey = GenerateHashKey(pSalt, pPassword, cryptData.hashSize, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);		
 
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 		{			
 			rc4Encryption.SetKey(verifierKey.ptr, cryptData.keySize);
 		}	
-		buf decryptedVerInput(seed_verify.data(), seed_verify.size());
+		CryptBuffer decryptedVerInput(seed_verify.data(), seed_verify.size());
 		
-		buf pEncVerInput;
+		CryptBuffer pEncVerInput;
 		EncryptCipher( verifierKey, pSalt, decryptedVerInput, pEncVerInput, cryptData.cipherAlgorithm);  
 		
-		buf hashBuf = HashAppend(decryptedVerInput, empty, cryptData.hashAlgorithm);
+		CryptBuffer hashBuf = HashAppend(decryptedVerInput, empty, cryptData.hashAlgorithm);
 		if (cryptData.cipherAlgorithm != CRYPT_METHOD::RC4 && hashBuf.size % PADDING_SIZE != 0) 
 		{
 			CorrectHashSize(hashBuf, (hashBuf.size / PADDING_SIZE + 1) * PADDING_SIZE, 0);
 		}
 		
-		buf pEncVerValue;
+		CryptBuffer pEncVerValue;
 		EncryptCipher( verifierKey, pSalt, hashBuf, pEncVerValue, cryptData.cipherAlgorithm);  
 
 		cryptData.saltValue					= std::string((char*)pSalt.ptr, pSalt.size);
@@ -1104,32 +1104,32 @@ void ECMAEncryptor::UpdateDataIntegrity(unsigned char* data, int  size)
 {
 	if (!cryptData.bAgile) return;
 
-	buf pBlockKey		((unsigned char*)encrKeyValueBlockKey, 8);	
-	buf pBlockHmacKey	((unsigned char*)encrDataIntegritySaltBlockKey, 8);	
-	buf pBlockHmacValue((unsigned char*)encrDataIntegrityHmacValueBlockKey, 8);	
+	CryptBuffer pBlockKey		((unsigned char*)encrKeyValueBlockKey, 8);	
+	CryptBuffer pBlockHmacKey	((unsigned char*)encrDataIntegritySaltBlockKey, 8);	
+	CryptBuffer pBlockHmacValue((unsigned char*)encrDataIntegrityHmacValueBlockKey, 8);	
 	
-	buf pPassword		(password);
-	buf pSalt			(cryptData.saltValue);
-	buf empty			(nullptr, 0, false);
+	CryptBuffer pPassword		(password);
+	CryptBuffer pSalt			(cryptData.saltValue);
+	CryptBuffer empty			(nullptr, 0, false);
 
-	buf pDataSalt		(cryptData.dataSaltValue);
-	buf pKeyValue		(cryptData.encryptedKeyValue);
+	CryptBuffer pDataSalt		(cryptData.dataSaltValue);
+	CryptBuffer pKeyValue		(cryptData.encryptedKeyValue);
 	
 //----
-	buf agileKey = GenerateAgileKey( pSalt, pPassword, pBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);  
+	CryptBuffer agileKey = GenerateAgileKey( pSalt, pPassword, pBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);  
 
 	if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 	{
 		rc4Encryption.SetKey(agileKey.ptr, cryptData.keySize);
 	}
 
-	buf secretKey;
+	CryptBuffer secretKey;
 	DecryptCipher( agileKey, pSalt, pKeyValue, secretKey, cryptData.cipherAlgorithm);  
 	
-	buf iv1 = HashAppend(pDataSalt, pBlockHmacKey, cryptData.hashAlgorithm);
+	CryptBuffer iv1 = HashAppend(pDataSalt, pBlockHmacKey, cryptData.hashAlgorithm);
 	CorrectHashSize(iv1, cryptData.blockSize, 0x36);
 	
-	buf iv2 = HashAppend(pDataSalt, pBlockHmacValue, cryptData.hashAlgorithm);
+	CryptBuffer iv2 = HashAppend(pDataSalt, pBlockHmacValue, cryptData.hashAlgorithm);
 	CorrectHashSize(iv2, cryptData.blockSize, 0x36);
 
 //----
@@ -1139,10 +1139,10 @@ void ECMAEncryptor::UpdateDataIntegrity(unsigned char* data, int  size)
     OS_GenerateRandomBlock(false, seed, seed.size());
 	prng.IncorporateEntropy(seed, seed.size());
 	
-	buf pSaltHmac(seed.data(), seed.size());
+	CryptBuffer pSaltHmac(seed.data(), seed.size());
 
 	std::string sData((char*)data, size);
-	buf hmac = Hmac(pSaltHmac, cryptData.hashAlgorithm, sData);
+	CryptBuffer hmac = Hmac(pSaltHmac, cryptData.hashAlgorithm, sData);
 
 	if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 	{
@@ -1152,14 +1152,14 @@ void ECMAEncryptor::UpdateDataIntegrity(unsigned char* data, int  size)
 	{
 		CorrectHashSize(pSaltHmac, (pSaltHmac.size / PADDING_SIZE + 1) * PADDING_SIZE, 0);
 	}
-	buf pEncHmacKey;
+	CryptBuffer pEncHmacKey;
 	EncryptCipher(secretKey,  iv1, pSaltHmac, pEncHmacKey, cryptData.cipherAlgorithm);
 
 	if (hmac.size % PADDING_SIZE != 0) 
 	{
 		CorrectHashSize(hmac, (hmac.size / PADDING_SIZE + 1) * PADDING_SIZE, 0);
 	}
-	buf pEncHmacValue;
+	CryptBuffer pEncHmacValue;
 	EncryptCipher(secretKey,  iv2, hmac, pEncHmacValue, cryptData.cipherAlgorithm);
 
 	cryptData.encryptedHmacKey		= std::string((char*)pEncHmacKey.ptr, pEncHmacKey.size);
@@ -1170,9 +1170,9 @@ int ECMAEncryptor::Encrypt(unsigned char* data_inp_ptr, int size, unsigned char*
 {
 	data_out_ptr = nullptr;
 	
-	buf pPassword	(password);
-	buf pSalt		(cryptData.saltValue);
-	buf empty		(nullptr, 0, false);
+	CryptBuffer pPassword	(password);
+	CryptBuffer pSalt		(cryptData.saltValue);
+	CryptBuffer empty		(nullptr, 0, false);
 
 	int size_out = size;
 
@@ -1191,18 +1191,18 @@ int ECMAEncryptor::Encrypt(unsigned char* data_inp_ptr, int size, unsigned char*
 
 	if (cryptData.bAgile)
 	{	
-		buf pBlockKey	((unsigned char*)encrKeyValueBlockKey, 8);	
-		buf pDataSalt	(cryptData.dataSaltValue);
-		buf pKeyValue	(cryptData.encryptedKeyValue);
+		CryptBuffer pBlockKey	((unsigned char*)encrKeyValueBlockKey, 8);	
+		CryptBuffer pDataSalt	(cryptData.dataSaltValue);
+		CryptBuffer pKeyValue	(cryptData.encryptedKeyValue);
 		
 	//------------------------------------------------------------------------------------------------
-		buf agileKey = GenerateAgileKey( pSalt, pPassword, pBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);  
+		CryptBuffer agileKey = GenerateAgileKey( pSalt, pPassword, pBlockKey, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);  
 
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 		{
 			rc4Decryption.SetKey(agileKey.ptr, cryptData.keySize);
 		}
-		buf pDecryptedKey;
+		CryptBuffer pDecryptedKey;
 		DecryptCipher( agileKey, pSalt, pKeyValue, pDecryptedKey, cryptData.cipherAlgorithm);  
 		
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
@@ -1210,7 +1210,7 @@ int ECMAEncryptor::Encrypt(unsigned char* data_inp_ptr, int size, unsigned char*
 			rc4Encryption.SetKey(pDecryptedKey.ptr, cryptData.keySize);
 		}
 	//-------------------------------------------------------------------------------------------------
-		buf iv(cryptData.blockSize, true);
+		CryptBuffer iv(cryptData.blockSize, true);
 
 		int i = 0, sz = 4096, enc_size = 0;
 
@@ -1221,17 +1221,17 @@ int ECMAEncryptor::Encrypt(unsigned char* data_inp_ptr, int size, unsigned char*
 				sz = size - enc_size;
 			}
 			
-			buf pIndex((unsigned char*)&i, 4);
+			CryptBuffer pIndex((unsigned char*)&i, 4);
 			iv = HashAppend(pDataSalt, pIndex, cryptData.hashAlgorithm);
 
 			CorrectHashSize(iv, cryptData.blockSize, 0x36);
 			
 			if (sz < 4096)
 			{
-				buf pInp(4096); 
+				CryptBuffer pInp(4096); 
 					memcpy(pInp.ptr, data_inp, sz );
 					pInp.size = sz;
-				buf pOut(4096);
+				CryptBuffer pOut(4096);
 
 				EncryptCipher(pDecryptedKey,  iv, pInp, pOut, cryptData.cipherAlgorithm);
 				
@@ -1243,8 +1243,8 @@ int ECMAEncryptor::Encrypt(unsigned char* data_inp_ptr, int size, unsigned char*
 			}
 			else
 			{
-				buf pInp(data_inp, sz, false);
-				buf pOut(data_out, sz, false);
+				CryptBuffer pInp(data_inp, sz, false);
+				CryptBuffer pOut(data_out, sz, false);
 				
 				EncryptCipher(pDecryptedKey,  iv, pInp, pOut, cryptData.cipherAlgorithm);
 			}
@@ -1257,7 +1257,7 @@ int ECMAEncryptor::Encrypt(unsigned char* data_inp_ptr, int size, unsigned char*
 	}
 	else
 	{
-		buf hashKey = GenerateHashKey(pSalt, pPassword, cryptData.hashSize, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);
+		CryptBuffer hashKey = GenerateHashKey(pSalt, pPassword, cryptData.hashSize, cryptData.keySize, cryptData.spinCount, cryptData.hashAlgorithm);
 		
 		if (cryptData.cipherAlgorithm == CRYPT_METHOD::RC4)
 		{
@@ -1265,8 +1265,8 @@ int ECMAEncryptor::Encrypt(unsigned char* data_inp_ptr, int size, unsigned char*
 			rc4Encryption.SetKey(hashKey.ptr, cryptData.keySize);
 		}
 	
-		buf pInp(data_inp, size, false);
-		buf pOut(data_out, size_out, false);
+		CryptBuffer pInp(data_inp, size, false);
+		CryptBuffer pOut(data_out, size_out, false);
 
 		EncryptCipher(hashKey, empty, pInp, pOut, cryptData.cipherAlgorithm/*, StreamTransformationFilter::ZEROS_PADDING*/);	
 	
@@ -1291,15 +1291,15 @@ bool ODFDecryptor::Decrypt(const std::wstring & wspassword, unsigned char* data_
 
 	std::string password = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(wspassword);
 
-	buf pPassword	(password);
-	buf pSalt		(cryptData.saltValue);
-	buf ivi		(cryptData.initializationVector);
-	buf empty		(nullptr, 0, false);
+	CryptBuffer pPassword	(password);
+	CryptBuffer pSalt		(cryptData.saltValue);
+	CryptBuffer ivi		(cryptData.initializationVector);
+	CryptBuffer empty		(nullptr, 0, false);
 	
-	buf pKey = GenerateOdfKey(pSalt, pPassword, cryptData.keySize, cryptData.spinCount, cryptData.start_hashAlgorithm);
+	CryptBuffer pKey = GenerateOdfKey(pSalt, pPassword, cryptData.keySize, cryptData.spinCount, cryptData.start_hashAlgorithm);
 
-	buf pInp(data_inp, size_inp, false);
-	buf pOut(size_inp);	
+	CryptBuffer pInp(data_inp, size_inp, false);
+	CryptBuffer pOut(size_inp);	
 
 	bool bPadding = false;
 	
@@ -1314,10 +1314,10 @@ bool ODFDecryptor::Decrypt(const std::wstring & wspassword, unsigned char* data_
 		return false;
 	}
 
-	buf pChecksum	(cryptData.checksum);
+	CryptBuffer pChecksum	(cryptData.checksum);
 	
-	buf pOutLimit(pOut.ptr, (std::min)(cryptData.checksum_size, pOut.size), false);
-	buf pOutHash = HashAppend(pOutLimit, empty, cryptData.checksum_hashAlgorithm);
+	CryptBuffer pOutLimit(pOut.ptr, (std::min)(cryptData.checksum_size, pOut.size), false);
+	CryptBuffer pOutHash = HashAppend(pOutLimit, empty, cryptData.checksum_hashAlgorithm);
 
 	bVerify	= (pChecksum == pOutHash);
 
@@ -1325,10 +1325,10 @@ bool ODFDecryptor::Decrypt(const std::wstring & wspassword, unsigned char* data_
 	{
 		for (int i = 0; !bVerify && i < pOut.size; i++)
 		{
-			buf pOutLimit2(pOut.size - i, true);
+			CryptBuffer pOutLimit2(pOut.size - i, true);
 			memcpy(pOutLimit2.ptr, pOut.ptr, pOut.size - i);
 
-			buf pOutHash2 = HashAppend(pOutLimit2, empty, cryptData.checksum_hashAlgorithm);
+			CryptBuffer pOutHash2 = HashAppend(pOutLimit2, empty, cryptData.checksum_hashAlgorithm);
 
 			bVerify	= (pChecksum == pOutHash2);
 		}
@@ -1360,22 +1360,22 @@ int ODFEncryptor::Encrypt (const std::wstring & wspassword, unsigned char* data,
 {
 	std::string password = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(wspassword);
 
-	buf pPassword	(password);
-	buf pSalt		(cryptData.saltValue);
-	buf ivi		(cryptData.initializationVector);
-	buf empty		(nullptr, 0, false);
+	CryptBuffer pPassword	(password);
+	CryptBuffer pSalt		(cryptData.saltValue);
+	CryptBuffer ivi		(cryptData.initializationVector);
+	CryptBuffer empty		(nullptr, 0, false);
 
-	buf pKey = GenerateOdfKey(pSalt, pPassword, cryptData.keySize, cryptData.spinCount, cryptData.start_hashAlgorithm);
+	CryptBuffer pKey = GenerateOdfKey(pSalt, pPassword, cryptData.keySize, cryptData.spinCount, cryptData.start_hashAlgorithm);
 //---------
-	buf data_deflate(size + 1024); 
+	CryptBuffer data_deflate(size + 1024); 
 	ArraySink *sink = new ArraySink(data_deflate.ptr, data_deflate.size + 1024);
 
 	Deflator deflator(sink, Deflator::DEFAULT_DEFLATE_LEVEL, Deflator::DEFAULT_LOG2_WINDOW_SIZE, true);
 	deflator.Put2(data, size, 1, true);
 	data_deflate.size = sink->TotalPutLength();
 //---------	
-	buf pOutLimit(data_deflate.ptr, (std::min)(cryptData.checksum_size, data_deflate.size), false);
-	buf pChecksum = HashAppend(pOutLimit, empty, cryptData.checksum_hashAlgorithm);
+	CryptBuffer pOutLimit(data_deflate.ptr, (std::min)(cryptData.checksum_size, data_deflate.size), false);
+	CryptBuffer pChecksum = HashAppend(pOutLimit, empty, cryptData.checksum_hashAlgorithm);
 
 	cryptData.checksum = std::string((char*)pChecksum.ptr, pChecksum.size);
 //---------	
@@ -1388,7 +1388,7 @@ int ODFEncryptor::Encrypt (const std::wstring & wspassword, unsigned char* data,
 
 	data_out = new unsigned char[size_out]; 	
 	
-	buf pOut (data_out, size_out, false);	
+	CryptBuffer pOut (data_out, size_out, false);	
 
 	EncryptCipher(pKey,  ivi, data_deflate, pOut, cryptData.cipherAlgorithm, bPadding ? StreamTransformationFilter::W3C_PADDING :
 																						StreamTransformationFilter::NO_PADDING);
