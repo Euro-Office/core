@@ -1796,7 +1796,7 @@ void draw_object::docx_convert(oox::docx_conversion_context & Context)
 		else if (objectBuild.object_type_ == 2) //embedded text
 		{
 			// Shown as its replacement image and embedded as a Word document, like an embedded
-			// sheet; before, the frame was dropped and nothing was drawn.
+			// sheet.
 			bool & use_image_replace = Context.get_drawing_context().get_use_image_replace();
 			use_image_replace = true;
 

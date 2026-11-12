@@ -460,6 +460,17 @@ std::wstring draw_object::office_convert(odf_document_ptr odfDocument, int type)
 {
 	if (!odfDocument) return L"";
 
+	// An object can name its own document or an outer one (href "." or ".."), so converting it
+	// converts it again. Objects inside objects stop at a few levels; deeper ones show only
+	// their replacement image.
+	static thread_local int nesting = 0;
+	if (nesting >= 3) return L"";
+	struct nesting_level
+	{
+		nesting_level()		{ ++nesting; }
+		~nesting_level()	{ --nesting; }
+	} level;
+
 	std::wstring href_result;
 	std::wstring folderPath		= odfDocument->get_folder();	
     std::wstring objectOutPath	= NSDirectory::CreateDirectoryWithUniqueName(folderPath);
