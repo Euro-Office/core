@@ -76,6 +76,7 @@ add_core_gtest(
             interactions.cpp
             ods2xlsx_trailing_cell_style.cpp
             ods2xlsx_fit_to_page.cpp
+            ods2xlsx_page_margins.cpp
             odt2docx_section_columns.cpp
             odt2docx_chapter_field.cpp
             ods2xlsx_fill_character.cpp

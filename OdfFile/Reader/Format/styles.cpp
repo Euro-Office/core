@@ -1528,65 +1528,33 @@ void style_page_layout_properties::xlsx_serialize(std::wostream & strm, oox::xls
 			}
 		}
 
-		odf_types::common_horizontal_margin_attlist		horizontal_margins	= attlist_.common_horizontal_margin_attlist_;
-		odf_types::common_vertical_margin_attlist		vertical_margins	= attlist_.common_vertical_margin_attlist_;
-		
-		if (horizontal_margins.fo_margin_left_	|| horizontal_margins.fo_margin_right_	||
-			vertical_margins.fo_margin_top_		|| vertical_margins.fo_margin_bottom_ )
+		// LibreOffice prints with a 2 cm margin on each side the page layout leaves out, and puts the
+		// header and footer between that margin and the cells. Without pageMargins the editor takes
+		// Excel's narrower defaults and prints more rows and columns on each page.
+		const double default_margin = 0.7875; // 2 cm in inches
+		auto margin = [default_margin](const _CP_OPT(odf_types::length_or_percent)& value)
 		{
-			_CP_OPT(double)  header, footer, top, bottom;
+			if (value && value->get_type() == odf_types::length_or_percent::Length)
+				return value->get_length().get_value_unit(odf_types::length::inch);
+			return default_margin;
+		};
 
-			header	= Context.get_table_context().get_header_page();
-			footer = Context.get_table_context().get_footer_page();
+		const odf_types::common_horizontal_margin_attlist& horizontal_margins = attlist_.common_horizontal_margin_attlist_;
+		const odf_types::common_vertical_margin_attlist& vertical_margins = attlist_.common_vertical_margin_attlist_;
 
-			if (vertical_margins.fo_margin_bottom_ && vertical_margins.fo_margin_bottom_->get_type() == odf_types::length_or_percent::Length)
-			{
-				bottom = vertical_margins.fo_margin_bottom_->get_length().get_value_unit(odf_types::length::inch);
-			}
-			if (vertical_margins.fo_margin_top_ && vertical_margins.fo_margin_top_->get_type() == odf_types::length_or_percent::Length)
-			{
-				top = vertical_margins.fo_margin_top_->get_length().get_value_unit(odf_types::length::inch);
-			}
-			
-			CP_XML_NODE(L"pageMargins")
-			{
-				if (horizontal_margins.fo_margin_left_ && horizontal_margins.fo_margin_left_->get_type() == odf_types::length_or_percent::Length)
-					CP_XML_ATTR(L"left"		, horizontal_margins.fo_margin_left_->get_length().get_value_unit(odf_types::length::inch));
-				else CP_XML_ATTR(L"left", 0.7875);
-				
-				if (horizontal_margins.fo_margin_right_ && horizontal_margins.fo_margin_right_->get_type() == odf_types::length_or_percent::Length)
-					CP_XML_ATTR(L"right"	, horizontal_margins.fo_margin_right_->get_length().get_value_unit(odf_types::length::inch));
-				else CP_XML_ATTR(L"right", 0.7875);
-				
-				if (top)
-				{
-					CP_XML_ATTR(L"top", *top + header.get_value_or(0));
-				}
-				else CP_XML_ATTR(L"top", 1.025);
+		const double top = margin(vertical_margins.fo_margin_top_);
+		const double bottom = margin(vertical_margins.fo_margin_bottom_);
+		const _CP_OPT(double) header = Context.get_table_context().get_header_page();
+		const _CP_OPT(double) footer = Context.get_table_context().get_footer_page();
 
-				if (bottom)
-				{
-					CP_XML_ATTR(L"bottom", *bottom + footer.get_value_or(0));
-				}
-				else CP_XML_ATTR(L"bottom", 1.025);
-				
-				if (header)
-				{
-					double v = top ? *top : *header;
-					if (v < 0) v = 0.7875;
-					CP_XML_ATTR(L"header", v); 
-				}
-				else CP_XML_ATTR(L"header", 0.7875);
-
-				if (footer)
-				{
-					double v = bottom ? *bottom : *footer;
-					if (v < 0) v = 0.7875;
-
-					CP_XML_ATTR(L"footer", v);
-				}
-				else CP_XML_ATTR(L"footer", 0.7875);
-			}
+		CP_XML_NODE(L"pageMargins")
+		{
+			CP_XML_ATTR(L"left", margin(horizontal_margins.fo_margin_left_));
+			CP_XML_ATTR(L"right", margin(horizontal_margins.fo_margin_right_));
+			CP_XML_ATTR(L"top", top + header.get_value_or(0));
+			CP_XML_ATTR(L"bottom", bottom + footer.get_value_or(0));
+			CP_XML_ATTR(L"header", header && top >= 0 ? top : default_margin);
+			CP_XML_ATTR(L"footer", footer && bottom >= 0 ? bottom : default_margin);
 		}
 		unsigned int fit_width = 0, fit_height = 0;
 		const bool fit_to_pages = attlist_.get_fit_to_pages(fit_width, fit_height);
