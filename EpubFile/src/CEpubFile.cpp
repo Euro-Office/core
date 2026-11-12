@@ -27,7 +27,7 @@ void replace_all(std::wstring& s, const std::wstring& s1, const std::wstring& s2
 
 std::wstring GenerateUUID()
 {
-    std::mt19937 oRand(time(0));
+    std::mt19937 oRand(time(nullptr));
     std::wstringstream sstream;
     sstream << std::setfill(L'0') << std::hex << std::setw(8) << (oRand() & 0xffffffff);
     sstream << L'-';
@@ -69,7 +69,7 @@ HRESULT CEpubFile::Convert(const std::wstring& sInputFile, const std::wstring& s
 {
     COfficeUtils oOfficeUtils;
 
-    wchar_t* password = NULL;
+    wchar_t* password = nullptr;
     if (oOfficeUtils.ExtractToDirectory(sInputFile, m_sTempDir.c_str(), password, 0) != S_OK)
         return S_FALSE;
 
@@ -507,8 +507,8 @@ HRESULT CEpubFile::FromHtml(const std::wstring& sHtmlFile, const std::wstring& s
         // metadata
         bool bWasIdentifier = false;
 
-        size_t nFind;
-        if ((nFind = sIndexHtml.find(L"<title>")) != std::wstring::npos)
+        size_t nFind = sIndexHtml.find(L"<title>");
+        if (nFind != std::wstring::npos)
         {
             size_t nEnd = sIndexHtml.find(L"</title>", nFind);
             if (nEnd != std::wstring::npos)
@@ -518,15 +518,16 @@ HRESULT CEpubFile::FromHtml(const std::wstring& sHtmlFile, const std::wstring& s
             sIndexHtml.insert(sIndexHtml.find(L"</head>"), L"<title>" + sTitle + L"</title>");
 #define DocInfo(name, tag)\
 {\
-    std::wstring sFind = L"<meta name=\""; sFind += name; sFind += L'\"';\
-    if ((nFind = sIndexHtml.find(sFind)) != std::wstring::npos)\
+    std::wstring sFind = L"<meta name=\""; sFind += (name); sFind += L'\"';\
+    nFind = sIndexHtml.find(sFind);\
+    if (nFind != std::wstring::npos)\
     {\
         size_t nBegin = sIndexHtml.find(L"content=\"", nFind);\
         size_t nEnd   = sIndexHtml.find(L"\" />", nFind);\
         if (nBegin != std::wstring::npos && nEnd != std::wstring::npos && nBegin + 9 < nEnd)\
         {\
             nBegin += 9;\
-            std::wstring sRes = L"<"; sRes += tag; sRes += L'>'; sRes += sIndexHtml.substr(nBegin, nEnd - nBegin); sRes += L"</"; sRes += tag; sRes += L">";\
+            std::wstring sRes = L"<"; sRes += (tag); sRes += L'>'; sRes += sIndexHtml.substr(nBegin, nEnd - nBegin); sRes += L"</"; sRes += (tag); sRes += L">";\
             oContentOpf.WriteStringUTF8(sRes);\
         }\
     }\
