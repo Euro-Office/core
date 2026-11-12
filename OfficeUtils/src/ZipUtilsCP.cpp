@@ -62,8 +62,8 @@ namespace ZLibZipUtils
 		unzFile Get();
 
 	private:
-		unzFile m_unzFile {NULL};
-		BUFFER_IO* m_buffer {NULL};
+		unzFile m_unzFile {nullptr};
+		BUFFER_IO* m_buffer {nullptr};
 	};
 
 	CunzFileWrapped::~CunzFileWrapped()
@@ -74,7 +74,7 @@ namespace ZLibZipUtils
 	void CunzFileWrapped::Open(const wchar_t* filename)
 	{
 		Close();
-		if(filename != NULL)
+		if(filename != nullptr)
 		{
 			m_unzFile = unzOpenHelp(filename);
 		}
@@ -84,14 +84,14 @@ namespace ZLibZipUtils
 	{
 		Close();
 		m_buffer = new BUFFER_IO;
-		if ((data != NULL) && (len != 0))
+		if ((data != nullptr) && (len != 0))
 		{
 			m_buffer->buffer = data;
 			m_buffer->nSize  = len;
 
 			zlib_filefunc_def ffunc;
 			fill_buffer_filefunc(&ffunc, m_buffer);
-			m_unzFile = unzOpen2(NULL, &ffunc);
+			m_unzFile = unzOpen2(nullptr, &ffunc);
 		}
 	}
 	int CunzFileWrapped::Close()
@@ -99,7 +99,7 @@ namespace ZLibZipUtils
 		int err = 0;
 		if(m_unzFile)
 			err = unzClose(m_unzFile);
-		m_unzFile = NULL;
+		m_unzFile = nullptr;
 
 		RELEASEOBJECT(m_buffer)
 		return err;
@@ -116,7 +116,7 @@ namespace ZLibZipUtils
 		std::string filePath = NSFile::NSIOS::GetFileSystemRepresentation(filename);
 		zipFile zf = filePath.empty() ? NULL : zipOpen(filePath.c_str(), APPEND_STATUS_CREATE);
 #else
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(filename, wcslen(filename), pUtf8, lLen, false);
 		zipFile zf = zipOpen( (char*)pUtf8, APPEND_STATUS_CREATE );
@@ -133,7 +133,7 @@ namespace ZLibZipUtils
 		std::string filePath = NSFile::NSIOS::GetFileSystemRepresentation(filename);
 		unzFile uf = filePath.empty() ? NULL : unzOpen(filePath.c_str());
 #else
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(filename, wcslen(filename), pUtf8, lLen, false);
 		unzFile uf = unzOpen( (char*)pUtf8 );
@@ -266,13 +266,13 @@ namespace ZLibZipUtils
 		return (std::wstring::npos == nPos) ? std::wstring() : strName.substr(nPos);
 	}
 
-	static int do_extract_currentfile( unzFile uf, const wchar_t* unzip_dir, const int* popt_extract_without_path, int* popt_overwrite, const char* password, bool is_replcace_slash )
+	static int do_extract_currentfile( unzFile uf, const wchar_t* unzip_dir, const int* popt_extract_without_path, int* /*popt_overwrite*/, const char* password, bool is_replcace_slash )
 	{
 		char filename_inzipA[4096];
 		int err = UNZ_OK;
 		unz_file_info file_info;
 
-		err = unzGetCurrentFileInfo(uf,&file_info,filename_inzipA,sizeof(filename_inzipA),NULL,0,NULL,0);
+		err = unzGetCurrentFileInfo(uf,&file_info,filename_inzipA,sizeof(filename_inzipA),nullptr,0,nullptr,0);
 		if (err!=UNZ_OK)
 			return err;
 
@@ -335,7 +335,7 @@ namespace ZLibZipUtils
 
 			//-------------------------------------------------------------------------------------------------
 			NSFile::CFileBinary oFile;
-			FILE *fout = NULL;
+			FILE *fout = nullptr;
 
 			if ((skip==0) && (err==UNZ_OK))
 			{
@@ -343,7 +343,7 @@ namespace ZLibZipUtils
 					fout = oFile.GetFileNative();
 
 				// some zipfile don't contain directory alone before file
-				if ((fout == NULL) && ((*popt_extract_without_path)==0) &&
+				if ((fout == nullptr) && ((*popt_extract_without_path)==0) &&
 						(filenameW_withoutpath!=filenameW))
 				{
 					std::wstring folder = NSDirectory::GetFolderPath(write_filename);
@@ -357,14 +357,14 @@ namespace ZLibZipUtils
 			}
 
 			uInt size_buf = WRITEBUFFERSIZE;
-			void* buf = (void*)malloc(size_buf);
+			void* buf = malloc(size_buf);
 
-			if (buf == NULL)
+			if (buf == nullptr)
 			{
 				return UNZ_INTERNALERROR;
 			}
 
-			if (fout != NULL)
+			if (fout != nullptr)
 			{
 				do
 				{
@@ -419,7 +419,7 @@ namespace ZLibZipUtils
 		uLong i, number_extract = 0;
 		unz_global_info gi;
 		int err;
-		FILE* fout=NULL;
+		FILE* fout=nullptr;
 
 		// [Content-Types.xml] check
 		// if found - it is a office file, so we can replace '\' to '/' for non-windows
@@ -439,11 +439,11 @@ namespace ZLibZipUtils
 				number_extract++;
 			}
 
-			if ( progress != NULL )
+			if ( progress != nullptr )
 			{
 				short cancel = 0;
 				long progressValue = ( 1000000 / gi.number_entry * i );
-				if(NULL != progress)
+				if(nullptr != progress)
 					(*progress)( UTILS_ONPROGRESSEVENT_ID, progressValue, &cancel );
 
 				if ( cancel != 0 )
@@ -467,11 +467,11 @@ namespace ZLibZipUtils
 			err = -1;
 		}
 
-		if ( progress != NULL )
+		if ( progress != nullptr )
 		{
 			short cancel = 0;
 			long progressValue = 1000000;
-			if(NULL != progress)
+			if(nullptr != progress)
 				(*progress)( UTILS_ONPROGRESSEVENT_ID, progressValue, &cancel );
 		}
 
@@ -486,11 +486,11 @@ namespace ZLibZipUtils
 		unz_global_info gi;
 		int err;
 
-		err = unzGetGlobalInfo (uf,&gi);
+		unzGetGlobalInfo (uf,&gi);
 
 		for (i = 0; i < gi.number_entry; i++)
 		{
-			if (current_file_is_find(uf, filename) == true)
+			if (current_file_is_find(uf, filename))
 				return true;
 
 			if ((i + 1) < gi.number_entry)
@@ -508,19 +508,15 @@ namespace ZLibZipUtils
 	static bool current_file_is_find(unzFile uf, const wchar_t *filename)
 	{
 		char filename_inzip[256];
-		int err = UNZ_OK;
 
 		unz_file_info file_info;
 
-		err = unzGetCurrentFileInfo(uf, &file_info, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0);
+		unzGetCurrentFileInfo(uf, &file_info, filename_inzip, sizeof(filename_inzip), nullptr, 0, nullptr, 0);
 
 		std::wstring filenameW = codepage_issue_fixFromOEM(filename_inzip);
 
 		//TODO is there a need to reduce everything to the bottom???
-		if (wcscmp(filename, filenameW.c_str()) == 0)
-			return true;
-
-		return false;
+		return wcscmp(filename, filenameW.c_str()) == 0;
 	}
 
 	/*========================================================================================================*/
@@ -528,9 +524,8 @@ namespace ZLibZipUtils
 	static const std::wstring get_filename_from_unzfile(unzFile unzip_file_handle)
 	{
 		char filename_inzip[256];
-		int err = UNZ_OK;
 
-		if (UNZ_OK == unzGetCurrentFileInfo(unzip_file_handle, NULL, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0))
+		if (UNZ_OK == unzGetCurrentFileInfo(unzip_file_handle, nullptr, filename_inzip, sizeof(filename_inzip), nullptr, 0, nullptr, 0))
 			return codepage_issue_fixFromOEM(filename_inzip);
 
 		return std::wstring(L"");
@@ -545,7 +540,7 @@ namespace ZLibZipUtils
 			int data_read_size = unzReadCurrentFile(unzip_file_handle, arr, array_size);
 
 			unzCloseCurrentFile(unzip_file_handle);
-			return data_read_size == array_size ? true : false;
+			return data_read_size == array_size;
 		}
 		return false;
 	}
@@ -553,15 +548,15 @@ namespace ZLibZipUtils
 
 	static bool get_file_in_archive(unzFile unzip_file_handle, const wchar_t *filePathInZip, BYTE** fileInBytes, ULONG& nFileSize)
 	{
-		if(NULL == fileInBytes)
+		if(nullptr == fileInBytes)
 			return false;
-		(*fileInBytes) = NULL;
+		(*fileInBytes) = nullptr;
 		do
 		{
-			if (current_file_is_find(unzip_file_handle, filePathInZip) == true)
+			if (current_file_is_find(unzip_file_handle, filePathInZip))
 			{
 				unz_file_info file_info;
-				unzGetCurrentFileInfo(unzip_file_handle, &file_info, NULL, 0, NULL, 0, NULL, 0);
+				unzGetCurrentFileInfo(unzip_file_handle, &file_info, nullptr, 0, nullptr, 0, nullptr, 0);
 
 				if (nFileSize > 0)
 					nFileSize = (std::min)(nFileSize, static_cast<ULONG>(file_info.uncompressed_size));
@@ -604,7 +599,7 @@ namespace ZLibZipUtils
 				zinfo.tmz_date.tm_year = edited.tm_year;
 			}
 		}
-		zip_fileinfo* zi_new = bDateTime ? &zinfo : NULL;
+		zip_fileinfo* zi_new = bDateTime ? &zinfo : nullptr;
 
 		if (oFile.OpenFile(file_name))
 		{
@@ -614,8 +609,8 @@ namespace ZLibZipUtils
 			{
 				std::string zipFileNameA = codepage_issue_fixToOEM(zip_file_name);
 
-				err = zipOpenNewFileInZip( zf, zipFileNameA.c_str(), zi_new, NULL, 0, NULL, 0, NULL, method, compressionLevel );
-				err = zipWriteInFileInZip( zf, pData, dwSizeRead );
+				(void)zipOpenNewFileInZip( zf, zipFileNameA.c_str(), zi_new, nullptr, 0, nullptr, 0, nullptr, method, compressionLevel );
+				(void)zipWriteInFileInZip( zf, pData, dwSizeRead );
 				err = zipCloseFileInZip( zf );
 			}
 			RELEASEARRAYOBJECTS(pData);
@@ -624,7 +619,7 @@ namespace ZLibZipUtils
 	}
 	int ZipDir( const WCHAR* dir, const WCHAR* outputFile, const OnProgressCallback* progress, bool sorted, int method, int compressionLevel, bool bDateTime )
 	{
-		if ( ( dir != NULL ) && ( outputFile != NULL ) )
+		if ( ( dir != nullptr ) && ( outputFile != nullptr ) )
 		{
 			deque<wstring> StringDeque;
 			deque<wstring> zipDeque;
@@ -660,30 +655,16 @@ namespace ZLibZipUtils
 
 					if (sorted)
 					{
-						if (sDirName == L"ppt")
-						{
-							StringDeque.push_front(aCurDirectories[i] );
-							zipDeque.push_front( zipDir + sDirName );
-						}
-						else if(sDirName == L"xl")
-						{
-							StringDeque.push_front( aCurDirectories[i] );
-							zipDeque.push_front( zipDir + sDirName );
-						}
-						else if (sDirName == L"word")
-						{
-							StringDeque.push_front( aCurDirectories[i] );
-							zipDeque.push_front( zipDir + sDirName );
-						}
-						else if (sDirName == L"_rels")
+						if (sDirName == L"ppt" || sDirName == L"xl" ||
+								sDirName == L"word" || sDirName == L"_rels")
 						{
 							StringDeque.push_front(aCurDirectories[i]);
 							zipDeque.push_front(zipDir + sDirName);
 						}
 						else
 						{
-							StringDeque.push_back( aCurDirectories[i] );
-							zipDeque.push_back( zipDir + sDirName );
+							StringDeque.push_back(aCurDirectories[i]);
+							zipDeque.push_back(zipDir + sDirName);
 						}
 					}
 					else
@@ -719,29 +700,29 @@ namespace ZLibZipUtils
 
 					oneZipFile(zf, file, zipFileName, method, compressionLevel, bDateTime);
 
-					if ( progress != NULL )
+					if ( progress != nullptr )
 					{
 						short cancel = 0;
-						long progressValue = ( 1000000 / filesCount * currentFileIndex );
+						long progressValue = filesCount ? (1000000L / static_cast<long>(filesCount) * static_cast<long>(currentFileIndex)) : 0;
 
-						if(NULL != progress)
+						if(nullptr != progress)
 							(*progress)( UTILS_ONPROGRESSEVENT_ID, progressValue, &cancel );
 
 						if ( cancel != 0 )
 						{
-							zipClose( zf, NULL );
+							zipClose( zf, nullptr );
 						}
 					}
 					currentFileIndex++;
 				}
 			}
-			zipClose( zf, NULL );
+			zipClose( zf, nullptr );
 
-			if ( progress != NULL )
+			if ( progress != nullptr )
 			{
 				short cancel = 0;
 				long progressValue = 1000000;
-				if(NULL != progress)
+				if(nullptr != progress)
 					(*progress)( UTILS_ONPROGRESSEVENT_ID, progressValue, &cancel );
 			}
 		}
@@ -754,7 +735,7 @@ namespace ZLibZipUtils
 	{
 		int err = -1;
 
-		if (( inputFile != NULL) && (outputFile != NULL))
+		if (( inputFile != nullptr) && (outputFile != nullptr))
 		{
 			NSFile::CFileBinary oFile;
 
@@ -777,7 +758,7 @@ namespace ZLibZipUtils
 					zinfo.tmz_date.tm_year = edited.tm_year;
 				}
 			}
-			zip_fileinfo* zi_new = bDateTime ? &zinfo : NULL;
+			zip_fileinfo* zi_new = bDateTime ? &zinfo : nullptr;
 
 			if (oFile.OpenFile(inputFile))
 			{
@@ -791,10 +772,10 @@ namespace ZLibZipUtils
 						wstring zipFileName = NSFile::GetFileName(inputFile);
 						std::string zipFileNameA = codepage_issue_fixToOEM(zipFileName);
 
-						err = zipOpenNewFileInZip( zf, zipFileNameA.c_str(), zi_new, NULL, 0, NULL, 0, NULL, method, compressionLevel );
-						err = zipWriteInFileInZip( zf, pData, dwSizeRead );
-						err = zipCloseFileInZip( zf );
-						err = zipClose( zf, NULL );
+						(void)zipOpenNewFileInZip( zf, zipFileNameA.c_str(), zi_new, nullptr, 0, nullptr, 0, nullptr, method, compressionLevel );
+						(void)zipWriteInFileInZip( zf, pData, dwSizeRead );
+						(void)zipCloseFileInZip( zf );
+						err = zipClose( zf, nullptr );
 					}
 				}
 				RELEASEARRAYOBJECTS(pData);
@@ -810,7 +791,7 @@ namespace ZLibZipUtils
 	{
 		bool result = false;
 
-		if ( dir != NULL )
+		if ( dir != nullptr )
 		{
 			unsigned int size = (unsigned int)wcslen( dir );
 			WCHAR* _dir = new WCHAR[size + 2];
@@ -825,10 +806,10 @@ namespace ZLibZipUtils
 				NSDirectory::GetDirectories(dir);
 			}
 
-			if ( _dir != NULL )
+			if ( _dir != nullptr )
 			{
 				delete []_dir;
-				_dir = NULL;
+				_dir = nullptr;
 			}
 
 			result = true;
@@ -875,7 +856,7 @@ namespace ZLibZipUtils
 	{
 		int err = -1;
 
-		if ( uf != NULL && unzipDir != NULL )
+		if ( uf != nullptr && unzipDir != nullptr )
 		{
 			if (NSDirectory::Exists(unzipDir))
 				err = 0;
@@ -887,13 +868,13 @@ namespace ZLibZipUtils
 
 			if ( err == 0 )
 			{
-				if(NULL != password)
+				if(nullptr != password)
 				{
 					std::string passwordA = codepage_issue_fixToOEM(password);
 					err = do_extract( uf, unzipDir, opt_extract_without_path, 1, passwordA.c_str(), progress );
 				}
 				else
-					err = do_extract( uf, unzipDir, opt_extract_without_path, 1, NULL, progress );
+					err = do_extract( uf, unzipDir, opt_extract_without_path, 1, nullptr, progress );
 			}
 		}
 		return err;
@@ -927,7 +908,7 @@ namespace ZLibZipUtils
 	{
 		CunzFileWrapped ufw;
 		ufw.Open(filename);
-		return ufw.Get() != NULL;
+		return ufw.Get() != nullptr;
 	}
 
 	/*========================================================================================================*/
@@ -936,7 +917,7 @@ namespace ZLibZipUtils
 	{
 		CunzFileWrapped ufw;
 		ufw.Open(data, len);
-		return ufw.Get() != NULL;
+		return ufw.Get() != nullptr;
 	}
 
 	/*========================================================================================================*/
@@ -947,7 +928,7 @@ namespace ZLibZipUtils
 		ufw.Open(zipFile);
 		unzFile uf = ufw.Get();
 
-		return filePathInZip != NULL && uf != NULL && is_file_in_archive(uf, filePathInZip);
+		return filePathInZip != nullptr && uf != nullptr && is_file_in_archive(uf, filePathInZip);
 	}
 
 	/*========================================================================================================*/
@@ -958,7 +939,7 @@ namespace ZLibZipUtils
 		ufw.Open(data, len);
 		unzFile uf = ufw.Get();
 
-		return filePathInZip != NULL && uf != NULL && is_file_in_archive(uf, filePathInZip);
+		return filePathInZip != nullptr && uf != nullptr && is_file_in_archive(uf, filePathInZip);
 	}
 
 	/*========================================================================================================*/
@@ -969,7 +950,7 @@ namespace ZLibZipUtils
 		ufw.Open(zipFile);
 		unzFile uf = ufw.Get();
 
-		return filePathInZip != NULL && uf != NULL && get_file_in_archive( uf, filePathInZip, fileInBytes, nFileSize);
+		return filePathInZip != nullptr && uf != nullptr && get_file_in_archive( uf, filePathInZip, fileInBytes, nFileSize);
 	}
 
 	/*========================================================================================================*/
@@ -980,7 +961,7 @@ namespace ZLibZipUtils
 		ufw.Open(data, len);
 		unzFile uf = ufw.Get();
 
-		return filePathInZip != NULL && uf != NULL && get_file_in_archive( uf, filePathInZip, fileInBytes, nFileSize);
+		return filePathInZip != nullptr && uf != nullptr && get_file_in_archive( uf, filePathInZip, fileInBytes, nFileSize);
 	}
 
 	/*========================================================================================================*/
@@ -988,12 +969,12 @@ namespace ZLibZipUtils
 	bool ExtractFiles(const wchar_t* zip_file_path, const ExtractedFileCallback& callback, void* pParam)
 	{
 		unzFile unzip_file_handle = unzOpenHelp(zip_file_path);
-		if ( unzip_file_handle != NULL )
+		if ( unzip_file_handle != nullptr )
 		{
 			do
 			{
 				unz_file_info file_info;
-				unzGetCurrentFileInfo(unzip_file_handle, &file_info, NULL, 0, NULL, 0, NULL, 0);
+				unzGetCurrentFileInfo(unzip_file_handle, &file_info, nullptr, 0, nullptr, 0, nullptr, 0);
 
 				BYTE* pData = new BYTE[file_info.uncompressed_size];
 				const std::wstring strEntryName = strip_leading_separators(get_filename_from_unzfile(unzip_file_handle));
@@ -1021,23 +1002,23 @@ namespace ZLibZipUtils
 	{
 		zipFile zip_file_handle = zipOpenHelp(zip_file_path);
 
-		if(NULL != zip_file_handle)
+		if(nullptr != zip_file_handle)
 		{
-			BYTE* pData = NULL;
+			BYTE* pData = nullptr;
 			long nSize;
 			std::wstring in_zip_filename;
 			while(callback(in_zip_filename, pData, nSize, pParam))
 			{
 				std::string in_zip_filenameA = codepage_issue_fixToOEM(in_zip_filename);
-				if (ZIP_OK != zipOpenNewFileInZip( zip_file_handle, in_zip_filenameA.c_str(), NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED, compression_level ) ||
+				if (ZIP_OK != zipOpenNewFileInZip( zip_file_handle, in_zip_filenameA.c_str(), nullptr, nullptr, 0, nullptr, 0, nullptr, Z_DEFLATED, compression_level ) ||
 						ZIP_OK != zipWriteInFileInZip(zip_file_handle, pData, nSize) ||
 						ZIP_OK != zipCloseFileInZip(zip_file_handle))
 				{
-					zipClose(zip_file_handle, NULL);
+					zipClose(zip_file_handle, nullptr);
 					return false;
 				}
 			}
-			zipClose(zip_file_handle, NULL);
+			zipClose(zip_file_handle, nullptr);
 
 			return true;
 		}
@@ -1049,7 +1030,7 @@ namespace ZLibZipUtils
 		nCommpressed = 0;
 		nUncommpressed = 0;
 		unzFile unzip_file_handle = unzOpenHelp(zip_file_path);
-		if (unzip_file_handle != NULL)
+		if (unzip_file_handle != nullptr)
 		{
 			//todo implement true pattern
 			bool isAny = false;
@@ -1066,7 +1047,7 @@ namespace ZLibZipUtils
 			{
 				char filename_inzip[256];
 				unz_file_info file_info;
-				unzGetCurrentFileInfo(unzip_file_handle, &file_info, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0);
+				unzGetCurrentFileInfo(unzip_file_handle, &file_info, filename_inzip, sizeof(filename_inzip), nullptr, 0, nullptr, 0);
 				std::wstring filenameW = codepage_issue_fixFromOEM(filename_inzip);
 				std::transform(filenameW.begin(), filenameW.end(), filenameW.begin(), ::tolower);
 				if (isAny || NSFile::GetFileExtention(filenameW) == searchExt)
@@ -1089,12 +1070,11 @@ namespace ZLibZipUtils
 	{
 		unsigned int filescount = 0;
 
-		if ( dirname != NULL )
+		if ( dirname != nullptr )
 		{
 			deque<wstring> StringDeque;
 			StringDeque.push_back( dirname );
 
-			wstring file;
 			wstring szText;
 
 			while ( !StringDeque.empty() )

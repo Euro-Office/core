@@ -9,7 +9,7 @@ static long   ZCALLBACK seek_buffer_func  OF((voidpf opaque, voidpf stream, uLon
 static int    ZCALLBACK close_buffer_func OF((voidpf opaque, voidpf stream));
 static int    ZCALLBACK error_buffer_func OF((voidpf opaque, voidpf stream));
 
-voidpf ZCALLBACK open_buffer_func (voidpf opaque, const char* filename, int mode)
+voidpf ZCALLBACK open_buffer_func (voidpf opaque, const char* /*filename*/, int mode)
 {
     BUFFER_IO* hFile = NULL;
     if (opaque != NULL)
@@ -31,7 +31,7 @@ voidpf ZCALLBACK open_buffer_func (voidpf opaque, const char* filename, int mode
     return hFile;
 }
 
-uLong  ZCALLBACK read_buffer_func (voidpf opaque, voidpf stream, void* buf, uLong size)
+uLong  ZCALLBACK read_buffer_func (voidpf /*opaque*/, voidpf stream, void* buf, uLong size)
 {
     uLong ret = 0;
     BUFFER_IO* hFile = NULL;
@@ -43,13 +43,13 @@ uLong  ZCALLBACK read_buffer_func (voidpf opaque, voidpf stream, void* buf, uLon
             ret = hFile->nSize - hFile->nCurrentPos;
         else
             ret = size;
-        memcpy(buf, hFile->buffer + hFile->nCurrentPos, ret);
+        memcpy(buf, hFile->buffer + hFile->nCurrentPos, ret); // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling): no memcpy_s on glibc
         hFile->nCurrentPos += ret;
     }
     return ret;
 }
 
-uLong  ZCALLBACK write_buffer_func(voidpf opaque, voidpf stream, const void* buf, uLong size)
+uLong  ZCALLBACK write_buffer_func(voidpf /*opaque*/, voidpf stream, const void* buf, uLong size)
 {
     uLong ret = 0;
     BUFFER_IO* hFile = NULL;
@@ -63,7 +63,7 @@ uLong  ZCALLBACK write_buffer_func(voidpf opaque, voidpf stream, const void* buf
             {
                 uLong nNewSize = hFile->nSize + (size < 0xffff ? 0xffff : size);
                 unsigned char* NewBuffer = malloc(nNewSize);
-                memcpy(NewBuffer, hFile->buffer, hFile->nSize);
+                memcpy(NewBuffer, hFile->buffer, hFile->nSize); // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling): no memcpy_s on glibc
                 free(hFile->buffer);
                 hFile->buffer = NewBuffer;
                 hFile->nSize  = nNewSize;
@@ -74,7 +74,7 @@ uLong  ZCALLBACK write_buffer_func(voidpf opaque, voidpf stream, const void* buf
         }
         else
             ret = size;
-        memcpy(hFile->buffer + hFile->nCurrentPos, buf, ret);
+        memcpy(hFile->buffer + hFile->nCurrentPos, buf, ret); // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling): no memcpy_s on glibc
         hFile->nCurrentPos += ret;
         if (hFile->nCurrentPos > hFile->nLimit)
             hFile->nLimit = hFile->nCurrentPos;
@@ -82,19 +82,23 @@ uLong  ZCALLBACK write_buffer_func(voidpf opaque, voidpf stream, const void* buf
     return ret;
 }
 
-long   ZCALLBACK tell_buffer_func (voidpf opaque, voidpf stream)
+long   ZCALLBACK tell_buffer_func (voidpf /*opaque*/, voidpf stream)
 {
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
         hFile = (BUFFER_IO*)stream;
+    if (hFile == NULL)
+        return -1;
     return hFile->nCurrentPos;
 }
 
-long   ZCALLBACK seek_buffer_func (voidpf opaque, voidpf stream, uLong offset, int origin)
+long   ZCALLBACK seek_buffer_func (voidpf /*opaque*/, voidpf stream, uLong offset, int origin)
 {
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
         hFile = (BUFFER_IO*)stream;
+    if (hFile == NULL)
+        return -1;
     int fseek_origin = 0;
     switch (origin)
     {
@@ -118,7 +122,7 @@ long   ZCALLBACK seek_buffer_func (voidpf opaque, voidpf stream, uLong offset, i
     return 0;
 }
 
-int    ZCALLBACK close_buffer_func(voidpf opaque, voidpf stream)
+int    ZCALLBACK close_buffer_func(voidpf /*opaque*/, voidpf /*stream*/)
 {
     /*
     BUFFER_IO* hFile = NULL;
@@ -133,7 +137,7 @@ int    ZCALLBACK close_buffer_func(voidpf opaque, voidpf stream)
     return 0;
 }
 
-int    ZCALLBACK error_buffer_func(voidpf opaque, voidpf stream)
+int    ZCALLBACK error_buffer_func(voidpf /*opaque*/, voidpf stream)
 {
     int ret = -1;
     BUFFER_IO* hFile = NULL;

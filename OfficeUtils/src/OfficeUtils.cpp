@@ -230,7 +230,7 @@ HRESULT COfficeUtils::ExtractFilesToMemory(const std::wstring& _zipFile, const E
 	std::wstring zipFile = _zipFile;
 #endif
 
-	*result = ZLibZipUtils::ExtractFiles(zipFile.c_str(), data_receiver, pParam) ? true : false;
+	*result = ZLibZipUtils::ExtractFiles(zipFile.c_str(), data_receiver, pParam);
 	return S_OK;
 }
 
@@ -242,7 +242,7 @@ HRESULT COfficeUtils::CompressFilesFromMemory(const std::wstring& _zipFile, cons
 	std::wstring zipFile = _zipFile;
 #endif
 
-	*result = ZLibZipUtils::CompressFiles(zipFile.c_str(), data_source, pParam, compression_level) ? true : false;
+	*result = ZLibZipUtils::CompressFiles(zipFile.c_str(), data_source, pParam, compression_level);
 	return S_OK;
 }
 
@@ -417,6 +417,7 @@ namespace  NSZip
 		}
 		catch(...)
 		{
+			return false;
 		}
 		return false;
 	}
