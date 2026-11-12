@@ -458,9 +458,20 @@ void CSvmFile::Read_META_SETMAPMODE()
 	TSvmMapMode mapMode;
 	m_oStream >> mapMode;
 	
-	m_pDC->SetMapMode(mapMode);
+	if (mapMode.unit == MAP_RELATIVE)
+	{
+		// Relative to the current map mode, as in LibreOffice's OutputDevice::SetMapMode: the scale
+		// multiplies the current one and the origin adds to the current offset, which is now in
+		// the new, scaled units.
+		const double dScaleX = mapMode.scaleX.numerator && mapMode.scaleX.denominator ? (double)mapMode.scaleX.numerator / mapMode.scaleX.denominator : 1.;
+		const double dScaleY = mapMode.scaleY.numerator && mapMode.scaleY.denominator ? (double)mapMode.scaleY.numerator / mapMode.scaleY.denominator : 1.;
+		m_oCurrnetOffset.x = mapMode.origin.x + (int)(m_oCurrnetOffset.x / dScaleX);
+		m_oCurrnetOffset.y = mapMode.origin.y + (int)(m_oCurrnetOffset.y / dScaleY);
+	}
+	else
+		m_oCurrnetOffset = mapMode.origin;
 
-	m_oCurrnetOffset = mapMode.origin;
+	m_pDC->SetMapMode(mapMode);
 
 	UpdateOutputDC();
 }
@@ -941,6 +952,17 @@ bool CSvmFile::ReadImage(unsigned short ushColorUsage, BYTE** ppBgraBuffer, unsi
 void CSvmFile::Read_META_POP()
 {
 	m_oPlayer.Pop();
+
+	// Back to the state of the matching PUSH. LibreOffice restores only the parts the PUSH named;
+	// this restores all of them, which is the same for the PUSH(all) its charts and shapes use.
+	// A POP without a PUSH changes nothing.
+	if (!m_vOffsetStack.empty())
+	{
+		m_pDC = m_oPlayer.RestoreDC();
+		m_oCurrnetOffset = m_vOffsetStack.back();
+		m_vOffsetStack.pop_back();
+		UpdateOutputDC();
+	}
 }
 void CSvmFile::Read_META_PUSH()
 {
@@ -948,6 +970,13 @@ void CSvmFile::Read_META_PUSH()
 	m_oStream >> nFlags; 
 	
 	m_oPlayer.Push(nFlags);
+
+	CSvmDC* pDC = m_oPlayer.SaveDC();
+	if (pDC)
+	{
+		m_pDC = pDC;
+		m_vOffsetStack.push_back(m_oCurrnetOffset);
+	}
 }
 void CSvmFile::Read_META_RASTEROP()
 {

@@ -232,7 +232,10 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
-path = "OdfFile/Test/test_odf/ExampleFiles/svm_image.odt"
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/svm_image.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/svm_relative_map_mode.odt",
+]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 

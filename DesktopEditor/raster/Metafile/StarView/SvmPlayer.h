@@ -134,6 +134,12 @@ public:
 	double          m_dPixelWidthPrefered;
 	double          m_dPixelHeightPrefered;
 
+	// The product of the relative map modes since the last absolute one: logical coordinates and
+	// font sizes are in units this much smaller than the absolute map mode's.
+	double          m_dRelativeScaleX;
+	double          m_dRelativeScaleY;
+	double          m_dBaseUnitInMillimetres;	// the header's map unit
+
 	TSvmMapMode     m_oMapMode;
 
 private:
