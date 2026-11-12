@@ -15,6 +15,7 @@ SOURCES += $$X2T_DIR/src/dylib/x2t.cpp
 SOURCES += main.cpp\
            common.cpp\
            conversion.cpp\
+           docx_vml_textbox_tracked_changes.cpp\
            editorbin_pivots.cpp\
            workbook_facts.cpp\
 
