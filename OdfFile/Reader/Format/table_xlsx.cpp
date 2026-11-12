@@ -31,6 +31,9 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <algorithm>
+#include <cmath>
+
 #include "serialize_elements.h"
 #include "odfcontext.h"
 #include "number_style.h"
@@ -490,11 +493,16 @@ void table_table_column_group::xlsx_convert(oox::xlsx_conversion_context & Conte
 namespace {
 // see ECMA-376 page 1768
 
+// The column width in characters for a width in pixels. The editor draws a width w as
+// (256 * w + 128 / mdw) / 256 * mdw pixels, mdw being the digit width of the default font
+// rounded to whole pixels; the width includes the 5-pixel cell padding.
 double pixToSize(double pixels, double maxDigitSize)
 { 
 	if (pixels < 8) pixels = 8; //УВЕДОМЛЕНИЕ О ПРИБЫТИИ ИНОСТРАННОГО ГРАЖДАНИНА.ods
 
-	return (int(( pixels /*/ 0.75*/ - 5)/ maxDigitSize * 100. + 0.5)) /100. * 0.98; // * 9525. * 72.0 / (360000.0 * 2.54);
+	const double mdw = std::max(1., std::round(maxDigitSize));
+	const double chars = int((pixels - 5) / mdw * 100. + 0.5) / 100.;
+	return int((chars * mdw + 5) / mdw * 256.) / 256.;
 }
 
 }
