@@ -65,32 +65,120 @@ std::wstring delete_apostroph_in_name(std::wstring value)
 
 namespace {
 
+const wchar_t css_spaces[] = L" \t\n\r\f";
+
+bool is_css_space(wchar_t c)
+{
+	return c == L' ' || c == L'\t' || c == L'\n' || c == L'\r' || c == L'\f';
+}
+
+int hex_digit(wchar_t c)
+{
+	if (c >= L'0' && c <= L'9')
+		return c - L'0';
+	if (c >= L'a' && c <= L'f')
+		return c - L'a' + 10;
+	if (c >= L'A' && c <= L'F')
+		return c - L'A' + 10;
+	return -1;
+}
+
+// Reads the CSS escape whose backslash is at value[pos], appends the escaped character to name and
+// returns the position behind the escape: "\'" is a quote, "\," a comma, "\E9 " is U+00E9 (up to six
+// hex digits, one space after them belongs to the escape), and a backslash before a line break or at
+// the end of the value adds nothing.
+size_t read_css_escape(const std::wstring & value, size_t pos, std::wstring & name)
+{
+	++pos;
+	if (pos >= value.size())
+		return pos;
+	if (value[pos] == L'\r' && pos + 1 < value.size() && value[pos + 1] == L'\n')
+		return pos + 2;
+	if (value[pos] == L'\n' || value[pos] == L'\r' || value[pos] == L'\f')
+		return pos + 1;
+	if (hex_digit(value[pos]) < 0)
+	{
+		name += value[pos];
+		return pos + 1;
+	}
+
+	unsigned int code = 0;
+	for (int digits = 0; digits < 6 && pos < value.size() && hex_digit(value[pos]) >= 0; ++digits, ++pos)
+		code = code * 16 + hex_digit(value[pos]);
+	if (pos < value.size() && is_css_space(value[pos]))
+		++pos;
+
+	if (code == 0 || code > 0x10FFFF || (code >= 0xD800 && code <= 0xDFFF))
+		code = 0xFFFD;
+	if (sizeof(wchar_t) == 2 && code > 0xFFFF)
+	{
+		code -= 0x10000;
+		name += static_cast<wchar_t>(0xD800 + (code >> 10));
+		name += static_cast<wchar_t>(0xDC00 + (code & 0x3FF));
+	}
+	else
+		name += static_cast<wchar_t>(code);
+	return pos;
+}
+
 // fo:font-family holds a CSS font family list, for example "'Liberation Sans Narrow', sans-serif":
-// names with spaces are quoted. OOXML takes one font name, without quotes, so keep the first family
-// and drop its quotes.
+// names with spaces or commas are quoted, and quotes, commas and other characters can be escaped with
+// a backslash. OOXML takes one font name, without quotes, so keep the first family, unquoted and
+// unescaped.
 void first_font_family(_CP_OPT(std::wstring) & family)
 {
 	if (!family)
 		return;
 
 	const std::wstring & value = *family;
-	size_t begin = value.find_first_not_of(L" \t");
-	if (begin == std::wstring::npos)
+	size_t pos = value.find_first_not_of(css_spaces);
+	if (pos == std::wstring::npos)
 		return;
 
 	std::wstring name;
-	if (value[begin] == L'\'' || value[begin] == L'"')
+	const wchar_t quote = value[pos];
+	if (quote == L'\'' || quote == L'"')
 	{
+		// LibreOffice writes a name like Joe's Font as 'Joe's Font', without escaping the apostrophe,
+		// so a quote ends the name only where the value ends or the next family follows behind it.
 		// An unterminated quote runs to the end of the value.
-		const size_t end = value.find(value[begin], begin + 1);
-		name = value.substr(begin + 1, end == std::wstring::npos ? std::wstring::npos : end - begin - 1);
+		for (++pos; pos < value.size();)
+		{
+			if (value[pos] == L'\\')
+			{
+				pos = read_css_escape(value, pos, name);
+				continue;
+			}
+			if (value[pos] == quote)
+			{
+				const size_t next = value.find_first_not_of(css_spaces, pos + 1);
+				if (next == std::wstring::npos || value[next] == L',')
+					break;
+			}
+			name += value[pos++];
+		}
 	}
 	else
 	{
-		const size_t end = value.find(L',', begin);
-		name = value.substr(begin, end == std::wstring::npos ? std::wstring::npos : end - begin);
-		const size_t last = name.find_last_not_of(L" \t");
-		name.erase(last == std::wstring::npos ? 0 : last + 1);
+		// An unquoted name runs to the next comma; the spaces between its words become one space.
+		bool space = false;
+		while (pos < value.size() && value[pos] != L',')
+		{
+			if (is_css_space(value[pos]))
+			{
+				space = true;
+				++pos;
+				continue;
+			}
+			if (space && !name.empty())
+				name += L' ';
+			space = false;
+
+			if (value[pos] == L'\\')
+				pos = read_css_escape(value, pos, name);
+			else
+				name += value[pos++];
+		}
 	}
 	if (!name.empty())
 		family = name;
