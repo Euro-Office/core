@@ -74,6 +74,7 @@ add_core_gtest(
             motion.cpp
             audio.cpp
             interactions.cpp
+            ods2xlsx_trailing_cell_style.cpp
             ods2xlsx_fit_to_page.cpp
             odt2docx_section_columns.cpp
             odt2docx_chapter_field.cpp

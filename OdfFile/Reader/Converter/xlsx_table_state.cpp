@@ -384,6 +384,30 @@ std::wstring xlsx_table_state::default_column_cell_style() const
 	}
 }
 
+std::wstring xlsx_table_state::default_column_cell_style(unsigned int column) const
+{
+	return column < column_default_cell_style_name_.size() ? column_default_cell_style_name_[column] : L"";
+}
+
+bool xlsx_table_state::same_default_column_cell_style(unsigned int first, unsigned int end) const
+{
+	const size_t count = column_default_cell_style_name_.size();
+	if (first >= count)
+		return true;
+
+	// computed once per table (the columns come before the rows), so that a check per row is cheap
+	if (column_default_cell_style_end_.size() != count)
+	{
+		column_default_cell_style_end_.assign(count, count);
+		for (size_t i = count - 1; i > 0; i--)
+		{
+			column_default_cell_style_end_[i - 1] = column_default_cell_style_name_[i - 1] == column_default_cell_style_name_[i]
+				? column_default_cell_style_end_[i] : i;
+		}
+	}
+	return (end < count ? end : count) <= column_default_cell_style_end_[first];
+}
+
 void xlsx_table_state::end_row()
 {
 	in_cell = false;
