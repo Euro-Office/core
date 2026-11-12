@@ -370,7 +370,7 @@ void RtfLex::parseText(int car, RtfToken& token)
 		m_caReadBuffer[nTempBufPos++] = (char)c;
 
 		c = m_oStream.getc();
-		//Se ignoran los retornos de carro, tabuladores y characters nulos
+		//Carriage returns, tabs and null characters are ignored
 		while (c == '\r' || c == '\n')
 			c = m_oStream.getc();
 	}
@@ -387,7 +387,7 @@ bool RtfLex::GetNextChar( int& nChar )
 {
 	int c = m_oStream.getc();
 	m_oStream.ungetc();
-	//Se ignoran los retornos de carro, tabuladores y characters nulos
+	//Carriage returns, tabs and null characters are ignored
 	while (c == '\r' || c == '\n')
 	{
 		m_oStream.getc();
