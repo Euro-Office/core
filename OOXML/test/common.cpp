@@ -101,8 +101,8 @@ bool Unpack(const std::wstring &file, const std::wstring &dir, std::string &erro
     return true;
 }
 
-std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &pathTo, const std::wstring &TempDir)
-{   
+std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &pathTo, const std::wstring &TempDir, int formatFrom, int formatTo)
+{
     NSStringUtils::CStringBuilder oBuilder;
 
 	oBuilder.WriteString(L"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
@@ -116,6 +116,24 @@ std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &
 	oBuilder.WriteString(L"<m_sFileTo>");
 	oBuilder.WriteEncodeXmlString(pathTo);
 	oBuilder.WriteString(L"</m_sFileTo>");
+
+	if (formatFrom)
+	{
+		oBuilder.WriteString(L"<m_nFormatFrom>");
+		oBuilder.WriteString(std::to_wstring(formatFrom));
+		oBuilder.WriteString(L"</m_nFormatFrom>");
+	}
+	if (formatTo)
+	{
+		oBuilder.WriteString(L"<m_nFormatTo>");
+		oBuilder.WriteString(std::to_wstring(formatTo));
+		oBuilder.WriteString(L"</m_nFormatTo>");
+	}
+	if (formatFrom || formatTo)
+	{
+		// Editor.bin as raw bytes, not base64
+		oBuilder.WriteString(L"<m_bIsNoBase64>true</m_bIsNoBase64>");
+	}
 
 	// changes
 	oBuilder.WriteString(L"<m_bFromChanges>false</m_bFromChanges>");

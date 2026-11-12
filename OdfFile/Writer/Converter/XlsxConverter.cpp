@@ -544,6 +544,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CWorksheet *oox_sheet)
 void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableFile *oox_pivot_table)
 {
 	if (!oox_pivot_table) return;
+	oox_pivot_table->EnsureDefinition();
 	if (!oox_pivot_table->m_oPivotTableDefinition.IsInit()) return;
 
 	smart_ptr<OOX::File> oFile = oox_pivot_table->Find(OOX::Spreadsheet::FileTypes::PivotCacheDefinition);
@@ -551,6 +552,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableFile *oox_pivot_table)
 	{
 		smart_ptr<OOX::Spreadsheet::CPivotCacheDefinitionFile> oPivotCache = oFile.smart_dynamic_cast<OOX::Spreadsheet::CPivotCacheDefinitionFile>();
 				
+		oPivotCache->EnsureDefinition();
 		convert(oox_pivot_table->m_oPivotTableDefinition.GetPointer(), oPivotCache->m_oPivotCashDefinition.GetPointer());
 	}
 }
