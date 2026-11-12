@@ -12,6 +12,7 @@
 #include "../../graphics/pro/Fonts.h"
 #include "../ApplicationFontsWorker.h"
 #include "../../common/Directory.h"
+#include "../ApplicationFonts.h"
 #include "../../common/File.h"
 
 #include <algorithm>
@@ -403,4 +404,24 @@ TEST_F(CColrV1Test, GlyphPathIsSilhouetteOfLayers)
 	ASSERT_GT(oBounds.nPoints, 0);
 	EXPECT_NEAR(oBounds.dMaxX - oBounds.dMinX, oBounds.dMaxY - oBounds.dMinY, 1.0);
 	EXPECT_GT(oBounds.dMaxX - oBounds.dMinX, 0.0);
+}
+
+// A missing font with a metric twin is replaced by the twin, also under the names LibreOffice and
+// fontconfig alias (PostScript, StarOffice, ChromeOS, URW): an old document in Times or Courier
+// keeps serif or monospaced text with the same widths.
+TEST(CFontListNamePicker, MetricAliasesFindTheirTwin)
+{
+	CFontListNamePicker oPicker;
+	for (const wchar_t* sRequested : {L"Times New Roman", L"Times", L"Thorndale", L"Tinos", L"Nimbus Roman"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(L"Liberation Serif", sRequested)) << sRequested;
+	for (const wchar_t* sRequested : {L"Courier New", L"Courier", L"Cumberland", L"Cousine", L"Nimbus Mono PS"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(L"Liberation Mono", sRequested)) << sRequested;
+	for (const wchar_t* sRequested : {L"Arial", L"Helvetica", L"Albany", L"Arimo"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(L"Liberation Sans", sRequested)) << sRequested;
+
+	// Twins only: no serif for a sans request, no other group, the existing groups unchanged.
+	EXPECT_FALSE(oPicker.IsLikeFonts(L"Liberation Sans", L"Times"));
+	EXPECT_FALSE(oPicker.IsLikeFonts(L"Liberation Serif", L"Courier"));
+	EXPECT_TRUE(oPicker.IsLikeFonts(L"Caladea", L"Cambria"));
+	EXPECT_FALSE(oPicker.IsLikeFonts(L"Liberation Serif", L"Verdana"));
 }
