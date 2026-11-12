@@ -41,15 +41,20 @@
 #include <filesystem>
 
 
+static std::vector<std::wstring> g_workDirs;
+
 std::wstring GetWorkDir()
 {
-    std::wstring curDir = NSFile::GetProcessDirectory();
-    return NSDirectory::CreateDirectoryWithUniqueName(curDir);
+    std::wstring dir = NSDirectory::CreateDirectoryWithUniqueName(NSFile::GetProcessDirectory());
+    g_workDirs.push_back(dir);
+    return dir;
 }
 
-void RemoveWorkDir(const std::wstring &dir)
+void RemoveWorkDirs()
 {
-    NSDirectory::DeleteDirectory(dir);
+    for (const std::wstring &dir : g_workDirs)
+        NSDirectory::DeleteDirectory(dir);
+    g_workDirs.clear();
 }
 
 int ConvertFile(const std::wstring &fileName)
@@ -68,16 +73,32 @@ int ConvertFile(const std::wstring &fileName)
     return nResultCode;
 }
 
-void PrepareFiles(const std::wstring &fileName, const std::wstring &exampleFileName, const std::wstring &tempDirName)
+bool ConvertTo(const std::wstring &from, const std::wstring &to, const std::wstring &tempDir, std::string &error)
 {
-    std::wstring sTempUnpackedXLSB = tempDirName + FILE_SEPARATOR_STR + _T("result_unpacked");
-    NSDirectory::CreateDirectory(sTempUnpackedXLSB);
-    COfficeUtils oCOfficeUtils(NULL);
-    _UINT32 nRes = oCOfficeUtils.ExtractToDirectory(fileName, sTempUnpackedXLSB, NULL, 0);
+    if (!NSFile::CFileBinary::Exists(from))
+    {
+        error = "missing input " + U_TO_UTF8(from);
+        return false;
+    }
+    int code = ConvertFile(CreateParamsFile(from, to, tempDir));
+    if (code != 0 || !NSFile::CFileBinary::Exists(to))
+    {
+        error = "x2t returned " + std::to_string(code) + " converting " + U_TO_UTF8(from) + " to " + U_TO_UTF8(to);
+        return false;
+    }
+    return true;
+}
 
-    std::wstring sTempUnpackedXLSX = tempDirName + FILE_SEPARATOR_STR + _T("example_unpacked");
-    NSDirectory::CreateDirectory(sTempUnpackedXLSX);
-    nRes = oCOfficeUtils.ExtractToDirectory(exampleFileName, sTempUnpackedXLSX, NULL, 0);
+bool Unpack(const std::wstring &file, const std::wstring &dir, std::string &error)
+{
+    NSDirectory::CreateDirectory(dir);
+    COfficeUtils oCOfficeUtils(NULL);
+    if (S_OK != oCOfficeUtils.ExtractToDirectory(file, dir, NULL, 0))
+    {
+        error = "cannot unpack " + U_TO_UTF8(file);
+        return false;
+    }
+    return true;
 }
 
 std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &pathTo, const std::wstring &TempDir, int formatFrom, int formatTo)

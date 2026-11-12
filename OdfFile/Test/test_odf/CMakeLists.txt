@@ -11,8 +11,12 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
 include(${CORE_ROOT_DIR}/common.cmake)
 
 # test_odf.pro builds only test.cpp + common.cpp (the entrance/motion/audio/
-# interactions modules are commented out) and converts an .odp fixture via
-# ConvertODF2OOXml() + COfficeFileFormatChecker.
+# interactions modules are commented out there) and converts an .odp fixture via
+# ConvertODF2OOXml() + COfficeFileFormatChecker. The CMake target also builds the
+# animation modules: they convert their fixtures in both directions and inspect
+# the converters' animation trees (pptx_animation_context, odf_writer anim_*),
+# which only the static format libraries linked below expose. columns.cpp is
+# left out: its fixture (columns.pptx) was never committed.
 #
 # ConvertODF2OOXml() lives in OdfFormatLib, whose ODF->OOXML writer references
 # the whole OOXML/MS format-library set (XmlUtils, SimpleTypes, OOX/PPTX/XLS/XLSB
@@ -43,6 +47,37 @@ add_core_gtest(
     SOURCES test.cpp
             common.cpp
             number_styles.cpp
+            conversion_helpers.cpp
+            docx2odt_content_controls.cpp
+            xlsx2ods_date_cells.cpp
+            xlsx2ods_print_area.cpp
+            odt2docx_fields.cpp
+            chart_series_name.cpp
+            xlsx2ods_sheet_background.cpp
+            docx2odt_page_background.cpp
+            math_bar.cpp
+            chart_title.cpp
+            odt2docx_underline.cpp
+            odt2docx_keep_next.cpp
+            odt2docx_links.cpp
+            odp2pptx_line_height.cpp
+            odt2docx_default_tab_stop.cpp
+            enhanced_path_quadratic_bezier.cpp
+            pptx2odp_bullet_size.cpp
+            chart_vary_colors.cpp
+            odt2docx_first_body_element.cpp
+            odt2docx_meta_template.cpp
+            chart_subtitle.cpp
+            math_property_values.cpp
+            pptx2odp_table_styles.cpp
+            entrance.cpp
+            motion.cpp
+            audio.cpp
+            interactions.cpp
+            ods2xlsx_trailing_cell_style.cpp
+            ods2xlsx_fit_to_page.cpp
+            odt2docx_section_columns.cpp
+            odt2docx_chapter_field.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
@@ -50,8 +85,16 @@ add_core_gtest(
 # The OOXML/MS format static libraries reference one another, so wrap them in a
 # linker group; the remaining converter libraries are shared and linked after.
 # This mirrors the static + dynamic lib lists of target_link_libraries(x2tlib).
+# Apple's ld has no groups; it resolves across static libraries anyway.
+if(APPLE)
+    set(_test_odf_group_begin "")
+    set(_test_odf_group_end "")
+else()
+    set(_test_odf_group_begin "-Wl,--start-group")
+    set(_test_odf_group_end "-Wl,--end-group")
+endif()
 target_link_libraries(test_odf PRIVATE
-    -Wl,--start-group
+    ${_test_odf_group_begin}
     OdfFormatLib
     DocFormatLib
     PptFormatLib
@@ -65,7 +108,7 @@ target_link_libraries(test_odf PRIVATE
     VbaFormatLib
     CompoundFileLib
     CryptoPPLib
-    -Wl,--end-group
+    ${_test_odf_group_end}
     graphics
     kernel
     UnicodeConverter
@@ -97,6 +140,9 @@ target_include_directories(test_odf PRIVATE
     "${CORE_ROOT_DIR}"
     "${CORE_ROOT_DIR}/X2tConverter/src"
     "${CORE_ROOT_DIR}/OdfFile/Common"
+    # The animation modules include the converters' headers as
+    # "Reader/..." and "Writer/...".
+    "${CORE_ROOT_DIR}/OdfFile"
 )
 
 add_custom_command(TARGET test_odf POST_BUILD

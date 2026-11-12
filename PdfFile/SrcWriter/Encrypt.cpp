@@ -25,13 +25,13 @@
 #include "Encrypt.h"
 #include "Objects.h"
 
-#include "../../Common/3dParty/cryptopp/modes.h"
-#include "../../Common/3dParty/cryptopp/aes.h"
-#include "../../Common/3dParty/cryptopp/sha.h"
-#include "../../Common/3dParty/cryptopp/md5.h"
-#include "../../Common/3dParty/cryptopp/arc4.h"
-#include "../../Common/3dParty/cryptopp/filters.h"
-#include "../../Common/3dParty/cryptopp/osrng.h"
+#include <cryptopp/modes.h>
+#include <cryptopp/aes.h>
+#include <cryptopp/sha.h>
+#include <cryptopp/md5.h>
+#include <cryptopp/arc4.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/osrng.h>
 
 namespace PdfWriter
 {
@@ -99,7 +99,7 @@ namespace PdfWriter
     class CEncrypt::Impl
     {
     public:
-        Impl() : m_nCryptAlgorithm(2), aesEncryption(NULL), rc4Encryption(NULL), streamEncryption(NULL)
+        Impl() : m_nCryptAlgorithm(2), aesEncryption(nullptr), rc4Encryption(nullptr), streamEncryption(nullptr)
 		{
 			m_unEncryptionKeyLength = 32;
 			MemSet(m_anEncryptionKey, 0, m_unEncryptionKeyLength);

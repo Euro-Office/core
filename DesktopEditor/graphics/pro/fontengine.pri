@@ -1,5 +1,3 @@
-include(freetype.pri)
-
 FONT_ENGINE_PATH = $$PWD/../../fontengine
 
 HEADERS += \

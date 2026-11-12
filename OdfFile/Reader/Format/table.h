@@ -356,6 +356,7 @@ private:
 public:
 	bool empty();
 	bool empty_content_cells(bool bWithCellStyle = true);
+	bool trailing_cells_format(oox::xlsx_conversion_context & Context, size_t & xf);
 
 	bool bHeader = false;
 
@@ -408,6 +409,9 @@ public:
     int count_paragraph = 0;
     bool is_present_hyperlink_ = false;
 	bool last_cell_ = false;
+	// Set by table_table_row::xlsx_convert when the row takes the format of its trailing cells:
+	bool row_has_format_ = false;	// write an empty cell without a style with the default format
+	bool is_row_format_ = false;	// this cell is that trailing run: write nothing
 	bool empty(bool bWithStyle = true);
 
     table_table_cell_attlist		attlist_;
@@ -443,6 +447,7 @@ private:
 
 public:
 	bool last_cell_;
+	bool row_has_format_ = false;	// see table_table_cell::row_has_format_
 	bool empty();
 
     table_table_cell_attlist	attlist_;

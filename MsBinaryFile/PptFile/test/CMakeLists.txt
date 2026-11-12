@@ -21,14 +21,25 @@ if(NOT TARGET x2tlib)
 endif()
 
 # No fixtures: every case builds its compound file in a fresh temp directory.
+# COfficeFileFormatChecker is compiled into the target like in test_odf: the
+# format libraries reference it, but only x2tlib compiles it.
 add_core_gtest(
     NAME    pptfile_test
     SOURCES ExObjStgTest.cpp
+            ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     GTEST_MAIN
 )
 
+# Apple's ld has no groups; it resolves across static libraries anyway.
+if(APPLE)
+    set(_pptfile_test_group_begin "")
+    set(_pptfile_test_group_end "")
+else()
+    set(_pptfile_test_group_begin "-Wl,--start-group")
+    set(_pptfile_test_group_end "-Wl,--end-group")
+endif()
 target_link_libraries(pptfile_test PRIVATE
-    -Wl,--start-group
+    ${_pptfile_test_group_begin}
     OdfFormatLib
     DocFormatLib
     PptFormatLib
@@ -42,7 +53,7 @@ target_link_libraries(pptfile_test PRIVATE
     VbaFormatLib
     CompoundFileLib
     CryptoPPLib
-    -Wl,--end-group
+    ${_pptfile_test_group_end}
     graphics
     kernel
     UnicodeConverter

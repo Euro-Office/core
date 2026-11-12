@@ -324,7 +324,7 @@ namespace PdfWriter
 		}
 
 		BYTE* sTxt = const_cast<BYTE*>(sText);
-		unsigned short* pUtf16Data = NULL;
+		unsigned short* pUtf16Data = nullptr;
 
 		WriteChar('(');
 
@@ -378,11 +378,11 @@ namespace PdfWriter
     {
         char sBuf[TEXT_DEFAULT_LEN];
 
-        BYTE* pBuf = NULL;
+        BYTE* pBuf = nullptr;
         bool bDelete = false;
         unsigned int nIndex = 0;
 
-        const BYTE* pBuffer = NULL;
+        const BYTE* pBuffer = nullptr;
         if (pEncrypt)
         {
             pBuf = new BYTE[unLen + 16 + 16]; // iv + padding
@@ -416,7 +416,7 @@ namespace PdfWriter
         BYTE inbuf[STREAM_BUF_SIZ];
         BYTE otbuf[DEFLATE_BUF_SIZ];
 
-        BYTE *otbuf_all = NULL;
+        BYTE *otbuf_all = nullptr;
 
         // initialize input stream
         pStream->Seek(0, SeekSet);
@@ -583,7 +583,7 @@ namespace PdfWriter
 
 			WriteChar('<');
 
-			BYTE* pNewBinary = NULL;
+			BYTE* pNewBinary = nullptr;
 			if (pString->IsUTF16())
 			{
 				std::string sUtf8((char*)pBinary, unLen);
@@ -646,7 +646,7 @@ namespace PdfWriter
 
 		// EncryptDict doesn't need to be encrypted
 		if (dict_type_ENCRYPT == pDict->GetDictType())
-			pEncrypt = NULL;
+			pEncrypt = nullptr;
 
 		// Adding a Filter entry
 		if (pDict->GetStream())
@@ -727,7 +727,7 @@ namespace PdfWriter
 				WriteStr("\012stream\015\012");
 				
 				unsigned int unStartSize = Tell();
-				WriteStream(pStream, pDict->GetFilter(), pDict->GetDictType() == dict_type_STREAM ? NULL : pEncrypt);
+				WriteStream(pStream, pDict->GetFilter(), pDict->GetDictType() == dict_type_STREAM ? nullptr : pEncrypt);
 				pLength->Set(Tell() - unStartSize);
 
 				WriteStr("\012endstream");
@@ -751,16 +751,16 @@ namespace PdfWriter
 		m_bFree       = true;
 		m_unSize      = 0;
 		m_nBufferSize = 0;
-		m_pBuffer     = NULL;
-		m_pCur        = NULL;
+		m_pBuffer     = nullptr;
+		m_pCur        = nullptr;
 	}
 	CMemoryStream::CMemoryStream(unsigned int unBufferSize)
 	{
 		m_bFree       = true;
 		m_unSize      = 0;
 		m_nBufferSize = 0;
-		m_pBuffer     = NULL;
-		m_pCur        = NULL;
+		m_pBuffer     = nullptr;
+		m_pCur        = nullptr;
 
 		Shrink(unBufferSize);
 	}
@@ -781,8 +781,8 @@ namespace PdfWriter
 		}
 
 		m_nBufferSize = 0;
-		m_pBuffer     = NULL;
-		m_pCur        = NULL;
+		m_pBuffer     = nullptr;
+		m_pCur        = nullptr;
 		m_unSize      = 0;
 	}
 	bool         CMemoryStream::IsEof()
@@ -836,8 +836,8 @@ namespace PdfWriter
 		}
 
 		m_nBufferSize = 0;
-		m_pBuffer     = NULL;
-		m_pCur        = NULL;
+		m_pBuffer     = nullptr;
+		m_pCur        = nullptr;
 		m_unSize      = 0;
 	}
 	unsigned int CMemoryStream::Size()
@@ -860,8 +860,8 @@ namespace PdfWriter
 	void CMemoryStream::ClearWithoutAttack()
 	{
 		m_nBufferSize = 0;
-		m_pBuffer     = NULL;
-		m_pCur        = NULL;
+		m_pBuffer     = nullptr;
+		m_pCur        = nullptr;
 		m_unSize      = 0;
 	}
 	void         CMemoryStream::Shrink(unsigned int unSize)

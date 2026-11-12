@@ -40,6 +40,9 @@
 #if CXIMAGE_SUPPORT_HEIF
 #include "heif/heif.h"
 #endif
+#include "Pnm/PnmFile.h"
+#include "Ras/RasFile.h"
+#include "WebP/WebPFile.h"
 
 #include <cmath>
 #define BGRA_FRAME_CXIMAGE_MAX_MEMORY 67108864 // 256Mb (*4 channel)
@@ -455,6 +458,15 @@ bool CBgraFrame::OpenFile(const std::wstring& strFileName, unsigned int nFileTyp
 	}
 #endif
 
+	if (_CXIMAGE_FORMAT_PNM == m_nFileType)
+		return NSPnm::Open(this, strFileName, m_bIsRGBA, m_bIsGrayScale);
+
+	if (_CXIMAGE_FORMAT_RAS == m_nFileType)
+		return NSRas::Open(this, strFileName, m_bIsRGBA, m_bIsGrayScale);
+
+	if (_CXIMAGE_FORMAT_WEBP == m_nFileType)
+		return NSWebP::Open(this, strFileName, m_bIsRGBA);
+
 	NSFile::CFileBinary oFile;
 	if (!oFile.OpenFile(strFileName))
 		return false;
@@ -545,6 +557,15 @@ bool CBgraFrame::Decode(BYTE* pBuffer, int nSize, unsigned int nFileType)
 	}
 #endif
 
+	if (_CXIMAGE_FORMAT_PNM == m_nFileType)
+		return NSPnm::Open(this, pBuffer, nSize, m_bIsRGBA, m_bIsGrayScale);
+
+	if (_CXIMAGE_FORMAT_RAS == m_nFileType)
+		return NSRas::Open(this, pBuffer, nSize, m_bIsRGBA, m_bIsGrayScale);
+
+	if (_CXIMAGE_FORMAT_WEBP == m_nFileType)
+		return NSWebP::Open(this, pBuffer, nSize, m_bIsRGBA);
+
 	CxImage img;
 
 	if (!img.Decode(pBuffer, nSize, m_nFileType))
@@ -574,13 +595,6 @@ bool CBgraFrame::SaveFile(const std::wstring& strFileName, unsigned int nFileTyp
 		return res;
 	}
 #endif
-#if CXIMAGE_SUPPORT_HEIF
-	if (CXIMAGE_FORMAT_HEIF == nFileType)
-	{
-		return NSHeif::CHeifFile::Save(m_pData, m_lWidth, m_lHeight, m_lStride, strFileName, m_bIsRGBA);
-	}
-#endif
-
 	NSFile::CFileBinary oFile;
 	if (!oFile.CreateFileW(strFileName))
 		return false;

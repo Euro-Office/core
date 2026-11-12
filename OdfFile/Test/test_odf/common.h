@@ -27,15 +27,15 @@
 
 #include "gtest/gtest.h"
 
-//#include "Reader/Converter/pptx_conversion_context.h"
-//#include "Reader/Format/odf_document.h"
-//
-//#include "Writer/Converter/Oox2OdfConverter.h"
-//#include "Writer/Format/odp_conversion_context.h"
-//#include "Writer/Format/anim_elements.h"
-//#include "Writer/Format/draw_page.h"
-//
-//#include <boost/shared_ptr.hpp>
+#include "Reader/Converter/pptx_conversion_context.h"
+#include "Reader/Format/odf_document.h"
+
+#include "Writer/Converter/Oox2OdfConverter.h"
+#include "Writer/Format/odp_conversion_context.h"
+#include "Writer/Format/anim_elements.h"
+#include "Writer/Format/draw_page.h"
+
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 #include "DesktopEditor/common/Types.h"
@@ -46,83 +46,105 @@ HRESULT convert_single(std::wstring srcFileName);
 // SetUp() before any test executes.
 HRESULT GetTestEnvConvertResult();
 
+// Conversion helpers for tests that check one XML part of the converted
+// package. Fixture paths are working-dir-relative ("ExampleFiles/x.odt").
+// The returned directories are removed by the global environment's
+// TearDown(), so tests do not clean up after them.
+
+// ODF (.odt/.ods/.odp, packed or flat) -> unpacked OOXML directory, via
+// ConvertODF2OOXml(). Returns the directory, or an empty string on failure.
+std::wstring convert_odf_to_ooxml_dir(const std::wstring& srcFileName);
+
+// OOXML (.docx/.xlsx/.pptx) -> unpacked ODF directory, via
+// Oox2Odf::Converter::convert() + write(), the calls x2t makes. Returns the
+// directory, or an empty string on failure.
+std::wstring convert_ooxml_to_odf_dir(const std::wstring& srcFileName);
+
+// One part of an unpacked package ("word/document.xml", "content.xml", ...),
+// decoded from UTF-8. Empty if the part does not exist.
+std::wstring read_part(const std::wstring& packageDir, const std::wstring& partName);
+
+// True if the text is a well-formed XML document.
+bool is_well_formed(const std::wstring& xml);
+
 #define CH_DIR(x) FILE_SEPARATOR_STR + _T(x)
 
-//boost::shared_ptr<cpdoccore::odf_reader::odf_document> ReadOdfDocument(const std::wstring& from, const std::wstring& temp, const std::wstring& tempUnpackedOdf);
-//boost::shared_ptr<cpdoccore::oox::pptx_conversion_context> Convert(boost::shared_ptr<cpdoccore::odf_reader::odf_document> inputOdf);
-//
-//class ODP2OOX_AnimationEnvironment : public ::testing::Environment
-//{
-//public:
-//	ODP2OOX_AnimationEnvironment(const std::wstring& exampleFilename, boost::shared_ptr<cpdoccore::odf_reader::odf_document>* doc, boost::shared_ptr<cpdoccore::oox::pptx_conversion_context>* context);
-//	~ODP2OOX_AnimationEnvironment();
-//
-//	void SetUp() override;
-//	void TearDown() override;
-//
-//private:
-//	std::wstring sExampleFilename;
-//	std::wstring sFrom;
-//	std::wstring sTemp;
-//	std::wstring sTempUnpackedOdf;
-//
-//	boost::shared_ptr<cpdoccore::odf_reader::odf_document>* mDocument;
-//	boost::shared_ptr<cpdoccore::oox::pptx_conversion_context>* mContext;
-//};
-//
-//class OOX2ODP_AnimationEnvironment : public testing::Environment
-//{
-//public:
-//	OOX2ODP_AnimationEnvironment(const std::wstring& exampleFilename, 
-//		boost::shared_ptr<Oox2Odf::Converter>* converter,
-//		cpdoccore::odf_writer::odp_conversion_context** context);
-//
-//	void SetUp() override;
-//	void TearDown() override;
-//
-//private:
-//	std::wstring mExampleFilename;
-//	std::wstring mFrom;
-//	std::wstring mTemp;
-//	std::wstring mTempUnpackedOox;
-//
-//	boost::shared_ptr<Oox2Odf::Converter>* mConverter;
-//	cpdoccore::odf_writer::odp_conversion_context** mContext;
-//};
-//
-//class OOX2ODP_AnimationTest : public testing::Test 
-//{
-//public:
-//	const cpdoccore::odf_writer::anim_par* GetTimingRoot();
-//	const cpdoccore::odf_writer::anim_seq* GetMainSequence();
-//	const cpdoccore::odf_writer::anim_par* GetMainSequenceParByIndex(size_t index);
-//	const cpdoccore::odf_writer::anim_par* GetInnerPar(const cpdoccore::odf_writer::anim_par* par);
-//	const cpdoccore::odf_writer::anim_par* GetInnermostPar(const cpdoccore::odf_writer::anim_par* par);
-//
-//	const cpdoccore::odf_writer::odp_conversion_context* GetContext() const;
-//
-//	template<typename T>
-//	const T* GetAnimationBehaviourByIndex(const cpdoccore::odf_writer::anim_par* par, size_t index)
-//	{
-//		using namespace cpdoccore::odf_writer;
-//
-//		if (!par)
-//			return nullptr;
-//
-//		if (par->content_.size() <= index)
-//			return nullptr;
-//
-//		T* behaviour = dynamic_cast<T*>(par->content_[index].get());
-//		if (!behaviour)
-//			return nullptr;
-//
-//		return behaviour;
-//	}
-//
-//protected:
-//	const Oox2Odf::Converter* mConverter;
-//	cpdoccore::odf_writer::odp_conversion_context* mContext;
-//};
+boost::shared_ptr<cpdoccore::odf_reader::odf_document> ReadOdfDocument(const std::wstring& from, const std::wstring& temp, const std::wstring& tempUnpackedOdf);
+boost::shared_ptr<cpdoccore::oox::pptx_conversion_context> Convert(boost::shared_ptr<cpdoccore::odf_reader::odf_document> inputOdf, cpdoccore::oox::package::pptx_document* outputPptx);
+
+class ODP2OOX_AnimationEnvironment : public ::testing::Environment
+{
+public:
+	ODP2OOX_AnimationEnvironment(const std::wstring& exampleFilename, boost::shared_ptr<cpdoccore::odf_reader::odf_document>* doc, boost::shared_ptr<cpdoccore::oox::pptx_conversion_context>* context);
+	~ODP2OOX_AnimationEnvironment();
+
+	void SetUp() override;
+	void TearDown() override;
+
+private:
+	std::wstring sExampleFilename;
+	std::wstring sFrom;
+	std::wstring sTemp;
+	std::wstring sTempUnpackedOdf;
+
+	boost::shared_ptr<cpdoccore::odf_reader::odf_document>* mDocument;
+	boost::shared_ptr<cpdoccore::oox::pptx_conversion_context>* mContext;
+	boost::shared_ptr<cpdoccore::oox::package::pptx_document> mOutput;
+};
+
+class OOX2ODP_AnimationEnvironment : public testing::Environment
+{
+public:
+	OOX2ODP_AnimationEnvironment(const std::wstring& exampleFilename, 
+		boost::shared_ptr<Oox2Odf::Converter>* converter,
+		cpdoccore::odf_writer::odp_conversion_context** context);
+
+	void SetUp() override;
+	void TearDown() override;
+
+private:
+	std::wstring mExampleFilename;
+	std::wstring mFrom;
+	std::wstring mTemp;
+	std::wstring mTempUnpackedOox;
+
+	boost::shared_ptr<Oox2Odf::Converter>* mConverter;
+	cpdoccore::odf_writer::odp_conversion_context** mContext;
+};
+
+class OOX2ODP_AnimationTest : public testing::Test 
+{
+public:
+	const cpdoccore::odf_writer::anim_par* GetTimingRoot();
+	const cpdoccore::odf_writer::anim_seq* GetMainSequence();
+	const cpdoccore::odf_writer::anim_par* GetMainSequenceParByIndex(size_t index);
+	const cpdoccore::odf_writer::anim_par* GetInnerPar(const cpdoccore::odf_writer::anim_par* par);
+	const cpdoccore::odf_writer::anim_par* GetInnermostPar(const cpdoccore::odf_writer::anim_par* par);
+
+	const cpdoccore::odf_writer::odp_conversion_context* GetContext() const;
+
+	template<typename T>
+	const T* GetAnimationBehaviourByIndex(const cpdoccore::odf_writer::anim_par* par, size_t index)
+	{
+		using namespace cpdoccore::odf_writer;
+
+		if (!par)
+			return nullptr;
+
+		if (par->content_.size() <= index)
+			return nullptr;
+
+		T* behaviour = dynamic_cast<T*>(par->content_[index].get());
+		if (!behaviour)
+			return nullptr;
+
+		return behaviour;
+	}
+
+protected:
+	const Oox2Odf::Converter* mConverter;
+	cpdoccore::odf_writer::odp_conversion_context* mContext;
+};
 
 class ODT2DOCX_ConversionEnvironment : public testing::Environment
 {

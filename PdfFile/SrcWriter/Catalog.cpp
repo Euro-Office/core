@@ -40,7 +40,7 @@ namespace PdfWriter
 		"TwoColumnRight",
 		"TwoPageLeft",
 		"TwoPageRight",
-		NULL
+		nullptr
 	};
 	static const char* c_sPageModeNames[] =
 	{
@@ -50,7 +50,7 @@ namespace PdfWriter
 		"FullScreen",
 		"UseOC",
 		"UseAttachments",
-		NULL
+		nullptr
 	};
 	//----------------------------------------------------------------------------------------
 	// CCatalog

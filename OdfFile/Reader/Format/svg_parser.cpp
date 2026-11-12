@@ -1067,6 +1067,48 @@ namespace svg_path
                 }
             }break;
 
+            case 'q':
+            {
+                bRelative = true;
+            }
+            case 'Q':
+            {
+                nPos++;
+                skipSpaces(nPos, rSvgDStatement, nLen);
+
+                while (nPos < nLen && isOnNumberChar(rSvgDStatement, nPos))
+                {
+                    std::wstring nX, nY;
+                    std::wstring nX1, nY1;
+
+                    if (!importStringAndSpaces(nX1, nPos, rSvgDStatement, nLen))	return false;
+                    if (!importStringAndSpaces(nY1, nPos, rSvgDStatement, nLen))	return false;
+                    if (!importStringAndSpaces(nX, nPos, rSvgDStatement, nLen))	return false;
+                    if (!importStringAndSpaces(nY, nPos, rSvgDStatement, nLen))	return false;
+
+                    if (bRelative)
+                    {
+                        nX1 += L"+" + nLastX;
+                        nY1 += L"+" + nLastY;
+                        nX += L"+" + nLastX;
+                        nY += L"+" + nLastY;
+                    }
+                    aCurrPoly.command = L"a:quadBezTo";
+
+                    aCurrPoly.points.push_back(_pointS(nX1, nY1));
+                    aCurrPoly.points.push_back(_pointS(nX, nY));
+
+                    Polyline.push_back(aCurrPoly);
+                    aCurrPoly.points.clear();
+
+                    nLastX = nX;
+                    nLastY = nY;
+
+                    nLastControlX = nX1;
+                    nLastControlY = nY1;
+                }
+            }break;
+
             case 'c':
             {
                 bRelative = true;

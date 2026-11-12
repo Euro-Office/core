@@ -111,14 +111,22 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 		odf_reader::style_table_cell_properties_attlist	cellFormatProperties = calc_table_cell_properties(instStyle_CellDefault);
 		Default_Cell_style_in_row_ = Context.get_style_manager().xfId(NULL,NULL, &cellFormatProperties, NULL, L"", 0, true);	
 	}
-	else //There is no cell style for the row, let's look at what's inside the row in the last cell
-	{
-		//Take the style from the last cell if it is repeating (then there is no need to write empty cells)
-		int ind_last_cell = content_.size()-1;
-		table_table_cell *last_cell = NULL;
-		if (ind_last_cell > 0)
-			last_cell = dynamic_cast<table_table_cell *>(content_[ind_last_cell].get());
+	//There is no cell style for the row: take the style of the last cell if it repeats to the end of the row
+	//(then there is no need to write empty cells)
+	size_t trailing_xf = 0;
+	const bool bTrailingFormat = !prop_CellDefault && trailing_cells_format(Context, trailing_xf);
+	if (bTrailingFormat)
+		Default_Cell_style_in_row_ = trailing_xf;
 
+	for (size_t i = 0; i < content_.size(); i++)
+	{
+		if (table_table_cell * cell = dynamic_cast<table_table_cell*>(content_[i].get()))
+		{
+			cell->row_has_format_ = bTrailingFormat && trailing_xf > 0;
+			cell->is_row_format_ = bTrailingFormat && i == content_.size() - 1;
+		}
+		else if (table_covered_table_cell * covered = dynamic_cast<table_covered_table_cell*>(content_[i].get()))
+			covered->row_has_format_ = bTrailingFormat && trailing_xf > 0;
 	}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool skip_next_row = false;
@@ -230,12 +238,13 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 							else if (covered_cell)	covered_cell->last_cell_	= true;
 						}
 						elm->xlsx_convert(Context);
-                    }              
-
+                    }
+					if (bTrailingFormat && trailing_xf > 0) // a formatted row is not empty: write every repetition of it
+						Context.get_table_context().state()->non_empty_row();
                 }
             }
         }
-        Context.get_table_context().state()->end_row();        
+        Context.get_table_context().state()->end_row();
 
 		if (Context.get_table_context().state()->is_empty_row() && Context.get_table_context().state()->group_rows_.empty())
 		{
@@ -613,6 +622,12 @@ void table_table_column::xlsx_convert(oox::xlsx_conversion_context & Context)
                     Context.table_column_last_width(*width);
 				}
 			}
+			else
+			{//a column without a style has the default width, otherwise it prints with none
+				CP_XML_ATTR(L"width", 11.52);
+				CP_XML_ATTR(L"customWidth", false);
+				Context.table_column_last_width(11.52);
+			}
 
         } // col
     } // CP_XML_WRITER 
@@ -701,17 +716,132 @@ std::wstring CalcCellDataStyle(oox::xlsx_conversion_context & Context,
     {
         std::wstring ds1 = SearchCellDataStyle(Context, cellStyle);
         if (!ds1.empty())
-            data_style = ds1;    
+            data_style = ds1;
     }
     return data_style;
 }
 
+// The number format of a cell data style; sets num_format_type when it converts the style.
+std::wstring CellNumFormat(oox::xlsx_conversion_context & Context, const std::wstring & data_style, office_value_type::type & num_format_type)
+{
+	if (data_style.empty())
+		return L"";
+
+	std::wstring num_format = Context.get_num_format_context().find_complex_format(data_style, num_format_type);
+
+	if (num_format.empty())
+	{
+		office_element_ptr elm = Context.root()->odf_context().numberStyles().find_by_style_name(data_style);
+		number_style_base* num_style = dynamic_cast<number_style_base*>(elm.get());
+
+		if (num_style)
+		{
+			Context.get_num_format_context().start_complex_format(data_style);
+			num_style->oox_convert(Context.get_num_format_context());
+			Context.get_num_format_context().end_complex_format();
+
+			num_format = Context.get_num_format_context().get_last_format();
+			num_format_type = Context.get_num_format_context().type();
+		}
+	}
+	return num_format;
+}
+
+// The xf of an empty cell (no value, formula or paragraphs) with a cell style, as table_table_cell::xlsx_convert
+// computes it.
+size_t EmptyStyledCellXf(oox::xlsx_conversion_context & Context, const std::wstring & columnStyleName,
+						 const std::wstring & rowStyleName, const std::wstring & cellStyleName, style_instance * cellStyle)
+{
+	std::vector<const style_instance*> instances;
+	instances.push_back(Context.root()->odf_context().styleContainer().style_default_by_type(style_family::TableCell));
+	instances.push_back(cellStyle);
+
+	text_format_properties_ptr textFormatProperties = calc_text_properties_content(instances);
+	paragraph_format_properties parFormatProperties = calc_paragraph_properties_content(instances);
+	style_table_cell_properties_attlist cellFormatProperties = calc_table_cell_properties(instances);
+
+	office_value_type::type num_format_type = office_value_type::Custom;
+	const std::wstring num_format = CellNumFormat(Context, CalcCellDataStyle(Context, columnStyleName, rowStyleName, cellStyleName), num_format_type);
+
+	oox::xlsx_cell_format cellFormat;
+	cellFormat.set_cell_type(oox::XlsxCellType::s);
+	cellFormat.set_num_format(oox::odf_string_to_build_in(office_value_type::Custom));
+
+	bool is_visible = true;
+	return Context.get_style_manager().xfId(textFormatProperties, &parFormatProperties, &cellFormatProperties,
+		&cellFormat, num_format, num_format_type, false, is_visible);
+}
+
+}
+
+// LibreOffice writes a row formatted to the end of the sheet as its cells: an empty cell with a cell style,
+// repeated up to the last column (often hundreds of columns). Written one by one, those cells count as used
+// (the editor's print range takes in every cell with a fill or border). If the last cell of this row is such
+// a run, returns true and its format in xf; the row then carries that format (row/@s, customFormat) instead.
+bool table_table_row::trailing_cells_format(oox::xlsx_conversion_context & Context, size_t & xf)
+{
+	if (content_.empty() || attlist_.table_default_cell_style_name_ || !Context.current_sheet().external_ref().empty())
+		return false;
+
+	table_table_cell * cell = dynamic_cast<table_table_cell*>(content_.back().get());
+	if (!cell || !cell->empty(false) || !cell->attlist_.table_style_name_ || cell->attlist_.table_content_validation_name_)
+		return false;
+
+	const common_value_and_type_attlist & value = cell->attlist_.common_value_and_type_attlist_;
+	if (value.office_value_type_ || value.office_value_ || value.office_date_value_ || value.office_time_value_ ||
+		value.office_boolean_value_ || value.office_string_value_)
+		return false;
+
+	unsigned int start = 0, unstyled = 0;
+	for (size_t i = 0; i + 1 < content_.size(); i++)
+	{
+		if (table_table_cell * c = dynamic_cast<table_table_cell*>(content_[i].get()))
+		{
+			start += c->attlist_.table_number_columns_repeated_;
+			if (c->empty())
+				unstyled += c->attlist_.table_number_columns_repeated_;
+		}
+		else if (table_covered_table_cell * c = dynamic_cast<table_covered_table_cell*>(content_[i].get()))
+		{
+			start += c->attlist_.table_number_columns_repeated_;
+			if (c->empty())
+				unstyled += c->attlist_.table_number_columns_repeated_;
+		}
+	}
+	const unsigned int repeated = cell->attlist_.table_number_columns_repeated_;
+	const unsigned int columns = Context.get_table_context().columns_count();
+
+	// Only a table as wide as a sheet (256 columns in OpenOffice.org, 1024 or 16384 in LibreOffice) is formatted
+	// to the end of the row. The run must also be at least as long as the cells before it. Those that are empty
+	// and have no style are then written with the default format, one cell per column and per repetition of the
+	// row, so that they don't take the row's: at most 256 of them in all, about as many cells as a run of 199 to
+	// 299 styled cells gave before.
+	const unsigned long long default_cells = (unsigned long long)unstyled * attlist_.table_number_rows_repeated_;
+	if (columns < 256 || start + repeated < columns || repeated < start || default_cells > 256)
+		return false;
+
+	// every cell of the run must get the same format, so their columns must share one default cell style
+	oox::xlsx_table_state_ptr state = Context.get_table_context().state();
+	const std::wstring columnStyleName = state->default_column_cell_style(start);
+	if (!state->same_default_column_cell_style(start, start + repeated))
+		return false;
+
+	const std::wstring cellStyleName = cell->attlist_.table_style_name_.get();
+	style_instance * cellStyle = Context.root()->odf_context().styleContainer().style_by_name(cellStyleName, style_family::TableCell, false);
+	if (!cellStyle)
+		return false;
+
+	xf = EmptyStyledCellXf(Context, columnStyleName, L"", cellStyleName, cellStyle);
+	return true;
 }
 
 void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
+	if (is_row_format_)
+		return; // written as the row's format, see table_table_row::trailing_cells_format
+
 	bool bExternalTable = !Context.current_sheet().external_ref().empty();
-	
+
 	std::wostream & strm = Context.current_sheet().sheetData();
     
 	const common_value_and_type_attlist & attr	= attlist_.common_value_and_type_attlist_;
@@ -947,31 +1077,16 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 		if (false == data_style.empty())
 		{
-			num_format = Context.get_num_format_context().find_complex_format(data_style, num_format_type);
+			num_format = CellNumFormat(Context, data_style, num_format_type);
 
-			if (num_format.empty())
-			{
-				office_element_ptr elm = odfContext.numberStyles().find_by_style_name(data_style);
-				number_style_base* num_style = dynamic_cast<number_style_base*>(elm.get());
-
-				if (num_style)
-				{
-					Context.get_num_format_context().start_complex_format(data_style);
-					num_style->oox_convert(Context.get_num_format_context());
-					Context.get_num_format_context().end_complex_format();
-
-					num_format = Context.get_num_format_context().get_last_format();
-					num_format_type = Context.get_num_format_context().type();					
-				}
-			}
 			if (attr.office_value_type_)
 			{
 				if (attr.office_value_type_.get() != num_format_type && num_format_type != office_value_type::Custom)
-				{// reset from cell 
+				{// reset from cell
 					num_format_type = attr.office_value_type_->get_type();
 					num_format.clear();
 				}
-				
+
 			}
 		}
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -1125,6 +1240,17 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 		}
         else
         {
+			if (row_has_format_ && false == bExternalTable)
+			{// the row carries the format of its trailing cells: keep this cell at the default format
+				CP_XML_WRITER(strm)
+				{
+					CP_XML_NODE(L"c")
+					{
+						CP_XML_ATTR(L"r", oox::getCellAddress(Context.current_table_column(), Context.current_table_row()));
+						CP_XML_ATTR(L"s", 0);
+					}
+				}
+			}
             if (last_cell_) // Vehicle log book.ods (row = 24 and more)
 				skip_next_cell = true;
         }
@@ -1422,6 +1548,17 @@ void table_covered_table_cell::xlsx_convert(oox::xlsx_conversion_context & Conte
 		}
         else
         {
+			if (row_has_format_ && false == bExternalTable)
+			{// the row carries the format of its trailing cells: keep this cell at the default format
+				CP_XML_WRITER(strm)
+				{
+					CP_XML_NODE(L"c")
+					{
+						CP_XML_ATTR(L"r", oox::getCellAddress(Context.current_table_column(), Context.current_table_row()));
+						CP_XML_ATTR(L"s", 0);
+					}
+				}
+			}
             if (last_cell_) // Vehicle log book.ods (row = 24 and more)
 				skip_next_cell = true;
         }

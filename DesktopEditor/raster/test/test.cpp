@@ -1,0 +1,1803 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Euro-Office contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+// Tests for the image formats behind CBgraFrame: the PNM (raster/Pnm) and Sun
+// Raster (raster/Ras) decoders, which replaced CxImage's JasPer based decoding,
+// CxImage's JPEG, PNG and TIFF codecs on top of libjpeg-turbo, libpng and
+// libtiff, the WebP decoder (raster/WebP) on top of libwebp, and the HEIF
+// decoder (raster/heif) on top of libheif. The images are built in memory, so
+// every expected pixel is known; only the HEIF ones are fixtures, since core
+// cannot encode HEIF.
+
+#include "gtest/gtest.h"
+
+#include "../BgraFrame.h"
+#include "../ImageFileFormatChecker.h"
+#include "../../common/File.h"
+
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <functional>
+#include <string>
+#include <vector>
+
+#include <jpeglib.h>
+#include <png.h>
+#include <tiffio.h>
+#include <webp/encode.h>
+#include <webp/mux.h>
+
+namespace
+{
+	struct CColor
+	{
+		int r, g, b;
+		bool operator==(const CColor& o) const { return r == o.r && g == o.g && b == o.b; }
+	};
+
+	void PrintTo(const CColor& c, std::ostream* os)
+	{
+		*os << "(" << c.r << ", " << c.g << ", " << c.b << ")";
+	}
+
+	const CColor c_oBlack = {0, 0, 0};
+	const CColor c_oWhite = {255, 255, 255};
+
+	std::vector<BYTE> Bytes(const std::string& s)
+	{
+		return std::vector<BYTE>(s.begin(), s.end());
+	}
+
+	bool Decode(std::vector<BYTE> arData, CBgraFrame& oFrame, bool bIsRGBA = false)
+	{
+		oFrame.put_IsRGBA(bIsRGBA);
+		return oFrame.Decode(arData.data(), (int)arData.size());
+	}
+
+	const BYTE* PixelData(CBgraFrame& oFrame, int nX, int nY)
+	{
+		const int nStride = oFrame.get_Stride();
+		const int nRow = nStride >= 0 ? nY : oFrame.get_Height() - 1 - nY;
+		return oFrame.get_Data() + (size_t)nRow * std::abs(nStride) + 4 * nX;
+	}
+
+	// Color of an opaque pixel
+	CColor Pixel(CBgraFrame& oFrame, int nX, int nY, bool bIsRGBA = false)
+	{
+		const BYTE* p = PixelData(oFrame, nX, nY);
+		EXPECT_EQ(255, p[3]);
+		return bIsRGBA ? CColor{p[0], p[1], p[2]} : CColor{p[2], p[1], p[0]};
+	}
+
+	int Alpha(CBgraFrame& oFrame, int nX, int nY)
+	{
+		return PixelData(oFrame, nX, nY)[3];
+	}
+
+	int FileType(std::vector<BYTE> arData)
+	{
+		CImageFileFormatChecker oChecker(arData.data(), (DWORD)arData.size());
+		return oChecker.eFileType;
+	}
+
+	void PutUInt32BE(std::vector<BYTE>& arData, unsigned int nValue)
+	{
+		arData.push_back((BYTE)(nValue >> 24));
+		arData.push_back((BYTE)(nValue >> 16));
+		arData.push_back((BYTE)(nValue >> 8));
+		arData.push_back((BYTE)nValue);
+	}
+
+	std::vector<BYTE> MakeRas(unsigned int nWidth, unsigned int nHeight, unsigned int nDepth, unsigned int nType,
+							  const std::vector<BYTE>& arMap, const std::vector<BYTE>& arRaster)
+	{
+		std::vector<BYTE> arData;
+		PutUInt32BE(arData, 0x59a66a95);
+		PutUInt32BE(arData, nWidth);
+		PutUInt32BE(arData, nHeight);
+		PutUInt32BE(arData, nDepth);
+		PutUInt32BE(arData, (unsigned int)arRaster.size());
+		PutUInt32BE(arData, nType);
+		PutUInt32BE(arData, arMap.empty() ? 0 : 1);
+		PutUInt32BE(arData, (unsigned int)arMap.size());
+		arData.insert(arData.end(), arMap.begin(), arMap.end());
+		arData.insert(arData.end(), arRaster.begin(), arRaster.end());
+		return arData;
+	}
+
+	void ExpectNear(const CColor& oExpected, const CColor& oActual, int nTolerance)
+	{
+		EXPECT_NEAR(oExpected.r, oActual.r, nTolerance) << "red";
+		EXPECT_NEAR(oExpected.g, oActual.g, nTolerance) << "green";
+		EXPECT_NEAR(oExpected.b, oActual.b, nTolerance) << "blue";
+	}
+
+	// 32x32 image of four 16x16 quadrants, so each quadrant is a whole MCU even
+	// with 4:2:0 chroma subsampling and keeps its own color
+	const CColor c_arQuadrants[4] = {{220, 30, 40}, {30, 200, 60}, {20, 40, 210}, {128, 128, 128}};
+	const int c_nQuadImageSize = 32;
+
+	CColor QuadrantColor(int nX, int nY)
+	{
+		return c_arQuadrants[(nY >= 16 ? 2 : 0) + (nX >= 16 ? 1 : 0)];
+	}
+
+	struct CJpegOptions
+	{
+		J_COLOR_SPACE eColorSpace = JCS_RGB;
+		bool bProgressive = false;
+		bool bArithmetic = false;
+	};
+
+	// Encodes a c_nQuadImageSize square at quality 100 without chroma
+	// subsampling. fSample returns the components of one pixel.
+	std::vector<BYTE> MakeJpeg(const CJpegOptions& oOptions, const std::function<std::vector<BYTE>(int, int)>& fSample)
+	{
+		jpeg_compress_struct cinfo;
+		jpeg_error_mgr jerr;
+		cinfo.err = jpeg_std_error(&jerr);
+		jpeg_create_compress(&cinfo);
+
+		unsigned char* pOut = NULL;
+		unsigned long nOutSize = 0;
+		jpeg_mem_dest(&cinfo, &pOut, &nOutSize);
+
+		cinfo.image_width = c_nQuadImageSize;
+		cinfo.image_height = c_nQuadImageSize;
+		cinfo.in_color_space = oOptions.eColorSpace;
+		cinfo.input_components = JCS_GRAYSCALE == oOptions.eColorSpace ? 1 : (JCS_CMYK == oOptions.eColorSpace ? 4 : 3);
+		jpeg_set_defaults(&cinfo);
+		jpeg_set_quality(&cinfo, 100, TRUE);
+		for (int i = 0; i < cinfo.num_components; ++i)
+			cinfo.comp_info[i].h_samp_factor = cinfo.comp_info[i].v_samp_factor = 1;
+		if (oOptions.bProgressive)
+			jpeg_simple_progression(&cinfo);
+		cinfo.arith_code = oOptions.bArithmetic ? TRUE : FALSE;
+
+		jpeg_start_compress(&cinfo, TRUE);
+		std::vector<BYTE> arRow;
+		while (cinfo.next_scanline < cinfo.image_height)
+		{
+			arRow.clear();
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				std::vector<BYTE> arPixel = fSample(nX, (int)cinfo.next_scanline);
+				arRow.insert(arRow.end(), arPixel.begin(), arPixel.end());
+			}
+			JSAMPROW pRow = arRow.data();
+			jpeg_write_scanlines(&cinfo, &pRow, 1);
+		}
+		jpeg_finish_compress(&cinfo);
+		jpeg_destroy_compress(&cinfo);
+
+		std::vector<BYTE> arData(pOut, pOut + nOutSize);
+		free(pOut);
+		return arData;
+	}
+
+	std::vector<BYTE> MakeQuadrantJpeg(const CJpegOptions& oOptions = CJpegOptions())
+	{
+		return MakeJpeg(oOptions, [](int nX, int nY) {
+			CColor c = QuadrantColor(nX, nY);
+			return std::vector<BYTE>{(BYTE)c.r, (BYTE)c.g, (BYTE)c.b};
+		});
+	}
+
+	// Left half 40, right half 230
+	std::vector<BYTE> MakeGrayJpeg()
+	{
+		CJpegOptions oOptions;
+		oOptions.eColorSpace = JCS_GRAYSCALE;
+		return MakeJpeg(oOptions, [](int nX, int) { return std::vector<BYTE>{(BYTE)(nX < 16 ? 40 : 230)}; });
+	}
+
+	void PutUInt16LE(std::vector<BYTE>& arData, unsigned int nValue)
+	{
+		arData.push_back((BYTE)nValue);
+		arData.push_back((BYTE)(nValue >> 8));
+	}
+
+	void PutUInt32LE(std::vector<BYTE>& arData, unsigned int nValue)
+	{
+		PutUInt16LE(arData, nValue & 0xFFFF);
+		PutUInt16LE(arData, nValue >> 16);
+	}
+
+	// Little-endian TIFF with one strip of an 8 bit grayscale square image.
+	// bLoop makes the IFD its own successor.
+	std::vector<BYTE> MakeGrayTiff(unsigned int nSize, unsigned int nCompression, const std::vector<BYTE>& arStrip, bool bLoop = false)
+	{
+		const unsigned int arTags[][3] = {
+			// tag, type (3 short, 4 long), value
+			{256, 4, nSize},                       // ImageWidth
+			{257, 4, nSize},                       // ImageLength
+			{258, 3, 8},                           // BitsPerSample
+			{259, 3, nCompression},                // Compression
+			{262, 3, 1},                           // PhotometricInterpretation: BlackIsZero
+			{273, 4, 0},                           // StripOffsets, set below
+			{277, 3, 1},                           // SamplesPerPixel
+			{278, 4, nSize},                       // RowsPerStrip
+			{279, 4, (unsigned int)arStrip.size()} // StripByteCounts
+		};
+		const unsigned int nTags = sizeof(arTags) / sizeof(arTags[0]);
+		const unsigned int nDataOffset = 8 + 2 + 12 * nTags + 4;
+
+		std::vector<BYTE> arData = {'I', 'I', 42, 0};
+		PutUInt32LE(arData, 8);
+		PutUInt16LE(arData, nTags);
+		for (const auto& arTag : arTags)
+		{
+			PutUInt16LE(arData, arTag[0]);
+			PutUInt16LE(arData, arTag[1]);
+			PutUInt32LE(arData, 1);
+			const unsigned int nValue = 273 == arTag[0] ? nDataOffset : arTag[2];
+			if (3 == arTag[1])
+			{
+				PutUInt16LE(arData, nValue);
+				PutUInt16LE(arData, 0);
+			}
+			else
+				PutUInt32LE(arData, nValue);
+		}
+		PutUInt32LE(arData, bLoop ? 8 : 0); // next IFD
+		arData.insert(arData.end(), arStrip.begin(), arStrip.end());
+		return arData;
+	}
+
+	// A grayscale c_nQuadImageSize square JPEG in TIFF (compression 7)
+	std::vector<BYTE> MakeJpegTiff(const std::vector<BYTE>& arJpeg)
+	{
+		return MakeGrayTiff(c_nQuadImageSize, 7, arJpeg);
+	}
+
+	void ExpectQuadrants(CBgraFrame& oFrame, bool bIsRGBA = false)
+	{
+		ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+		ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+		for (int nY : {4, 27})
+			for (int nX : {4, 27})
+				ExpectNear(QuadrantColor(nX, nY), Pixel(oFrame, nX, nY, bIsRGBA), 4);
+	}
+
+	struct CPngImage
+	{
+		int nWidth = 0;
+		int nHeight = 0;
+		int nBitDepth = 8;
+		int nColorType = PNG_COLOR_TYPE_RGB;
+		bool bInterlaced = false;
+		std::vector<png_color> arPalette;
+		std::vector<BYTE> arTransAlpha;   // tRNS of palette images
+		int nTransGray = -1;              // tRNS of gray images
+		std::vector<BYTE> arRows;         // packed rows, big-endian 16 bit samples
+	};
+
+	void PngWrite(png_structp pPng, png_bytep pData, png_size_t nSize)
+	{
+		std::vector<BYTE>* pOut = (std::vector<BYTE>*)png_get_io_ptr(pPng);
+		pOut->insert(pOut->end(), pData, pData + nSize);
+	}
+
+	std::vector<BYTE> MakePng(const CPngImage& oImage)
+	{
+		std::vector<BYTE> arData;
+		png_structp pPng = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+		png_infop pInfo = png_create_info_struct(pPng);
+		if (setjmp(png_jmpbuf(pPng)))
+		{
+			png_destroy_write_struct(&pPng, &pInfo);
+			ADD_FAILURE() << "libpng failed to write the test image";
+			return std::vector<BYTE>();
+		}
+		png_set_write_fn(pPng, &arData, PngWrite, NULL);
+		png_set_IHDR(pPng, pInfo, oImage.nWidth, oImage.nHeight, oImage.nBitDepth, oImage.nColorType,
+					 oImage.bInterlaced ? PNG_INTERLACE_ADAM7 : PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+		if (!oImage.arPalette.empty())
+			png_set_PLTE(pPng, pInfo, oImage.arPalette.data(), (int)oImage.arPalette.size());
+		if (!oImage.arTransAlpha.empty())
+			png_set_tRNS(pPng, pInfo, oImage.arTransAlpha.data(), (int)oImage.arTransAlpha.size(), NULL);
+		if (oImage.nTransGray >= 0)
+		{
+			png_color_16 oTrans = {0, 0, 0, 0, (png_uint_16)oImage.nTransGray};
+			png_set_tRNS(pPng, pInfo, NULL, 0, &oTrans);
+		}
+		png_write_info(pPng, pInfo);
+
+		const size_t nRowBytes = png_get_rowbytes(pPng, pInfo);
+		std::vector<png_bytep> arRowPointers;
+		for (int nY = 0; nY < oImage.nHeight; ++nY)
+			arRowPointers.push_back((png_bytep)oImage.arRows.data() + nY * nRowBytes);
+		png_write_image(pPng, arRowPointers.data());
+		png_write_end(pPng, pInfo);
+		png_destroy_write_struct(&pPng, &pInfo);
+		return arData;
+	}
+
+	// Reads a PNG with libpng's simplified API as 8 bit RGBA
+	bool ReadPngRgba(const std::vector<BYTE>& arData, int& nWidth, int& nHeight, std::vector<BYTE>& arPixels, png_byte* pColorType = NULL)
+	{
+		png_image oImage;
+		memset(&oImage, 0, sizeof(oImage));
+		oImage.version = PNG_IMAGE_VERSION;
+		if (!png_image_begin_read_from_memory(&oImage, arData.data(), arData.size()))
+			return false;
+		if (pColorType)
+			*pColorType = (oImage.format & PNG_FORMAT_FLAG_COLORMAP) ? PNG_COLOR_TYPE_PALETTE
+						: ((oImage.format & PNG_FORMAT_FLAG_COLOR) ? PNG_COLOR_TYPE_RGB : PNG_COLOR_TYPE_GRAY);
+		oImage.format = PNG_FORMAT_RGBA;
+		nWidth = (int)oImage.width;
+		nHeight = (int)oImage.height;
+		arPixels.resize(PNG_IMAGE_SIZE(oImage));
+		return 0 != png_image_finish_read(&oImage, NULL, arPixels.data(), 0, NULL);
+	}
+
+	std::vector<BYTE> EncodeFrame(CBgraFrame& oFrame, unsigned int nFileType)
+	{
+		BYTE* pEncoded = NULL;
+		int nEncodedSize = 0;
+		if (!oFrame.Encode(pEncoded, nEncodedSize, nFileType))
+			return std::vector<BYTE>();
+		std::vector<BYTE> arEncoded(pEncoded, pEncoded + nEncodedSize);
+		CBgraFrame::FreeEncodedMemory(pEncoded);
+		return arEncoded;
+	}
+
+	std::vector<BYTE> ReadFile(const std::wstring& sPath)
+	{
+		BYTE* pData = NULL;
+		DWORD nSize = 0;
+		if (!NSFile::CFileBinary::ReadAllBytes(sPath, &pData, nSize))
+			return std::vector<BYTE>();
+		std::vector<BYTE> arData(pData, pData + nSize);
+		delete[] pData;
+		return arData;
+	}
+
+	// libtiff writes into memory through these
+	struct CMemoryTiff
+	{
+		std::vector<BYTE> arData;
+		size_t nPos = 0;
+	};
+
+	tmsize_t MemTiffRead(thandle_t h, void* pBuf, tmsize_t nSize)
+	{
+		CMemoryTiff* p = (CMemoryTiff*)h;
+		const size_t nCount = std::min((size_t)nSize, p->arData.size() - std::min(p->nPos, p->arData.size()));
+		memcpy(pBuf, p->arData.data() + p->nPos, nCount);
+		p->nPos += nCount;
+		return (tmsize_t)nCount;
+	}
+
+	tmsize_t MemTiffWrite(thandle_t h, void* pBuf, tmsize_t nSize)
+	{
+		CMemoryTiff* p = (CMemoryTiff*)h;
+		if (p->nPos + nSize > p->arData.size())
+			p->arData.resize(p->nPos + nSize);
+		memcpy(p->arData.data() + p->nPos, pBuf, (size_t)nSize);
+		p->nPos += (size_t)nSize;
+		return nSize;
+	}
+
+	toff_t MemTiffSeek(thandle_t h, toff_t nOff, int nWhence)
+	{
+		CMemoryTiff* p = (CMemoryTiff*)h;
+		p->nPos = (size_t)nOff + (SEEK_CUR == nWhence ? p->nPos : (SEEK_END == nWhence ? p->arData.size() : 0));
+		return p->nPos;
+	}
+
+	int MemTiffClose(thandle_t) { return 0; }
+	toff_t MemTiffSize(thandle_t h) { return ((CMemoryTiff*)h)->arData.size(); }
+	int MemTiffMap(thandle_t, void**, toff_t*) { return 0; }
+	void MemTiffUnmap(thandle_t, void*, toff_t) {}
+
+	TIFF* MemTiffOpen(CMemoryTiff& oMemory, const char* sMode)
+	{
+		return TIFFClientOpen("memory", sMode, (thandle_t)&oMemory, MemTiffRead, MemTiffWrite, MemTiffSeek,
+							  MemTiffClose, MemTiffSize, MemTiffMap, MemTiffUnmap);
+	}
+
+	struct CTiffPage
+	{
+		int nWidth = 0;
+		int nHeight = 0;
+		int nBitsPerSample = 8;
+		int nSamplesPerPixel = 3;
+		int nPhotometric = PHOTOMETRIC_RGB;
+		int nCompression = COMPRESSION_NONE;
+		int nTileSize = 0;              // 0: strips
+		std::vector<uint16_t> arColorMap; // red, green and blue entries, 16 bit
+		std::vector<BYTE> arRows;       // packed rows
+	};
+
+	std::vector<BYTE> MakeTiff(const std::vector<CTiffPage>& arPages)
+	{
+		CMemoryTiff oMemory;
+		TIFF* pTiff = MemTiffOpen(oMemory, "w");
+		if (!pTiff)
+			return std::vector<BYTE>();
+		for (const CTiffPage& oPage : arPages)
+		{
+			TIFFSetField(pTiff, TIFFTAG_IMAGEWIDTH, oPage.nWidth);
+			TIFFSetField(pTiff, TIFFTAG_IMAGELENGTH, oPage.nHeight);
+			TIFFSetField(pTiff, TIFFTAG_BITSPERSAMPLE, oPage.nBitsPerSample);
+			TIFFSetField(pTiff, TIFFTAG_SAMPLESPERPIXEL, oPage.nSamplesPerPixel);
+			TIFFSetField(pTiff, TIFFTAG_PHOTOMETRIC, oPage.nPhotometric);
+			TIFFSetField(pTiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
+			TIFFSetField(pTiff, TIFFTAG_COMPRESSION, oPage.nCompression);
+			if (COMPRESSION_JPEG == oPage.nCompression)
+				TIFFSetField(pTiff, TIFFTAG_JPEGQUALITY, 100);
+			if (!oPage.arColorMap.empty())
+			{
+				const size_t nColors = oPage.arColorMap.size() / 3;
+				TIFFSetField(pTiff, TIFFTAG_COLORMAP, oPage.arColorMap.data(), oPage.arColorMap.data() + nColors,
+							 oPage.arColorMap.data() + 2 * nColors);
+			}
+
+			const tmsize_t nRowBytes = (oPage.nWidth * oPage.nSamplesPerPixel * oPage.nBitsPerSample + 7) / 8;
+			if (oPage.nTileSize)
+			{
+				TIFFSetField(pTiff, TIFFTAG_TILEWIDTH, oPage.nTileSize);
+				TIFFSetField(pTiff, TIFFTAG_TILELENGTH, oPage.nTileSize);
+				const int nPixelBytes = oPage.nSamplesPerPixel * oPage.nBitsPerSample / 8;
+				std::vector<BYTE> arTile(TIFFTileSize(pTiff));
+				for (int nTileY = 0; nTileY < oPage.nHeight; nTileY += oPage.nTileSize)
+				{
+					for (int nTileX = 0; nTileX < oPage.nWidth; nTileX += oPage.nTileSize)
+					{
+						std::fill(arTile.begin(), arTile.end(), 0);
+						for (int nY = 0; nY < oPage.nTileSize && nTileY + nY < oPage.nHeight; ++nY)
+						{
+							const int nCount = std::min(oPage.nTileSize, oPage.nWidth - nTileX);
+							memcpy(arTile.data() + nY * oPage.nTileSize * nPixelBytes,
+								   oPage.arRows.data() + (nTileY + nY) * nRowBytes + nTileX * nPixelBytes, nCount * nPixelBytes);
+						}
+						TIFFWriteTile(pTiff, arTile.data(), nTileX, nTileY, 0, 0);
+					}
+				}
+			}
+			else
+			{
+				TIFFSetField(pTiff, TIFFTAG_ROWSPERSTRIP, COMPRESSION_JPEG == oPage.nCompression ? 16 : 3);
+				for (int nY = 0; nY < oPage.nHeight; ++nY)
+					TIFFWriteScanline(pTiff, (void*)(oPage.arRows.data() + nY * nRowBytes), nY, 0);
+			}
+			TIFFWriteDirectory(pTiff);
+		}
+		TIFFClose(pTiff);
+		return oMemory.arData;
+	}
+
+	// c_nQuadImageSize square of the quadrant colors, 8 bit RGB
+	CTiffPage QuadrantTiffPage(int nCompression = COMPRESSION_NONE, int nTileSize = 0)
+	{
+		CTiffPage oPage;
+		oPage.nWidth = oPage.nHeight = c_nQuadImageSize;
+		oPage.nCompression = nCompression;
+		oPage.nTileSize = nTileSize;
+		for (int nY = 0; nY < c_nQuadImageSize; ++nY)
+		{
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				CColor c = QuadrantColor(nX, nY);
+				oPage.arRows.insert(oPage.arRows.end(), {(BYTE)c.r, (BYTE)c.g, (BYTE)c.b});
+			}
+		}
+		return oPage;
+	}
+}
+
+// PNM
+
+TEST(CPnmTest, DetectsAllNetpbmVariants)
+{
+	for (const char* sHeader : {"P1 1 1\n1", "P2 1 1 255\n0", "P3 1 1 255\n0 0 0", "P4 1 1\n", "P5 1 1 255\n", "P6 1 1 255\n"})
+		EXPECT_EQ(_CXIMAGE_FORMAT_PNM, FileType(Bytes(sHeader))) << sHeader;
+
+	EXPECT_NE(_CXIMAGE_FORMAT_PNM, FileType(Bytes("P7 1 1 255\n")));
+	EXPECT_NE(_CXIMAGE_FORMAT_PNM, FileType(Bytes("PNG image")));
+}
+
+TEST(CPnmTest, DecodesAsciiBitmapWithCommentsAndPackedBits)
+{
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(Bytes("P1\n# comment\n3 2\n101\n0 1 0\n"), oFrame));
+	ASSERT_EQ(3, oFrame.get_Width());
+	ASSERT_EQ(2, oFrame.get_Height());
+	EXPECT_TRUE(oFrame.IsGrayScale());
+	// 1 is black
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 0, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 1, 0));
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 2, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 0, 1));
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 1, 1));
+}
+
+TEST(CPnmTest, DecodesBinaryBitmapWithRowPadding)
+{
+	// 10 pixels per row: 2 bytes, the last 6 bits are padding
+	std::vector<BYTE> arData = Bytes("P4\n10 2\n");
+	arData.insert(arData.end(), {0xA0, 0x80, 0x00, 0x40});
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(arData, oFrame));
+	ASSERT_EQ(10, oFrame.get_Width());
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 0, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 1, 0));
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 2, 0));
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 8, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 9, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 8, 1));
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 9, 1));
+}
+
+TEST(CPnmTest, ScalesGraySamplesToMaxValue)
+{
+	CBgraFrame oAscii;
+	ASSERT_TRUE(Decode(Bytes("P2 3 1 15\n0 5 15\n"), oAscii));
+	EXPECT_TRUE(oAscii.IsGrayScale());
+	EXPECT_EQ(c_oBlack, Pixel(oAscii, 0, 0));
+	EXPECT_EQ((CColor{85, 85, 85}), Pixel(oAscii, 1, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oAscii, 2, 0));
+
+	// 16 bit samples are big-endian
+	std::vector<BYTE> arData = Bytes("P5 2 1 65535\n");
+	arData.insert(arData.end(), {0x80, 0x00, 0xFF, 0xFF});
+	CBgraFrame oBinary;
+	ASSERT_TRUE(Decode(arData, oBinary));
+	EXPECT_EQ((CColor{128, 128, 128}), Pixel(oBinary, 0, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oBinary, 1, 0));
+}
+
+TEST(CPnmTest, DecodesColorInBothChannelOrders)
+{
+	std::vector<BYTE> arBinary = Bytes("P6 2 1 255\n");
+	arBinary.insert(arBinary.end(), {10, 20, 30, 200, 150, 100});
+
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oAscii;
+		ASSERT_TRUE(Decode(Bytes("P3 2 1 255\n10 20 30  200 150 100\n"), oAscii, bIsRGBA));
+		EXPECT_FALSE(oAscii.IsGrayScale());
+		EXPECT_EQ((CColor{10, 20, 30}), Pixel(oAscii, 0, 0, bIsRGBA));
+		EXPECT_EQ((CColor{200, 150, 100}), Pixel(oAscii, 1, 0, bIsRGBA));
+
+		CBgraFrame oBinary;
+		ASSERT_TRUE(Decode(arBinary, oBinary, bIsRGBA));
+		EXPECT_EQ((CColor{10, 20, 30}), Pixel(oBinary, 0, 0, bIsRGBA));
+		EXPECT_EQ((CColor{200, 150, 100}), Pixel(oBinary, 1, 0, bIsRGBA));
+	}
+}
+
+TEST(CPnmTest, OpensFile)
+{
+	std::vector<BYTE> arData = Bytes("P6 1 1 255\n");
+	arData.insert(arData.end(), {1, 2, 3});
+
+	const std::wstring sPath = NSFile::CFileBinary::CreateTempFileWithUniqueName(NSFile::CFileBinary::GetTempPath(), L"pnm");
+	NSFile::CFileBinary oFile;
+	ASSERT_TRUE(oFile.CreateFileW(sPath));
+	oFile.WriteFile(arData.data(), (DWORD)arData.size());
+	oFile.CloseFile();
+
+	CBgraFrame oFrame;
+	EXPECT_TRUE(oFrame.OpenFile(sPath));
+	NSFile::CFileBinary::Remove(sPath);
+	ASSERT_EQ(1, oFrame.get_Width());
+	EXPECT_EQ((CColor{1, 2, 3}), Pixel(oFrame, 0, 0));
+}
+
+TEST(CPnmTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+	EXPECT_FALSE(Decode(Bytes("P6 2 2 255\n123"), oFrame));        // truncated raster
+	EXPECT_FALSE(Decode(Bytes("P3 2 1 255\n1 2 3 4 5"), oFrame));  // truncated ASCII
+	EXPECT_FALSE(Decode(Bytes("P5 1 1 0\n\x01"), oFrame));          // maxval 0
+	EXPECT_FALSE(Decode(Bytes("P5 1 1 70000\n\x01"), oFrame));      // maxval > 65535
+	EXPECT_FALSE(Decode(Bytes("P5 0 1 255\n"), oFrame));            // empty
+	EXPECT_FALSE(Decode(Bytes("P6 100000 100000 255\n"), oFrame));  // too large
+	EXPECT_FALSE(Decode(Bytes("P6 99999999999 1 255\n"), oFrame));  // overflowing size
+}
+
+// Sun Raster
+
+TEST(CRasTest, DetectsSupportedDepths)
+{
+	for (unsigned int nDepth : {1u, 8u, 24u, 32u})
+		EXPECT_EQ(_CXIMAGE_FORMAT_RAS, FileType(MakeRas(1, 1, nDepth, 1, {}, {0, 0, 0, 0}))) << nDepth;
+
+	EXPECT_NE(_CXIMAGE_FORMAT_RAS, FileType(MakeRas(1, 1, 16, 1, {}, {0, 0})));
+}
+
+TEST(CRasTest, DecodesStandardBgrWithRowPadding)
+{
+	// 3 pixels of 3 bytes = 9 bytes, padded to 10
+	std::vector<BYTE> arRaster = {
+		30, 20, 10,  0, 0, 0,  255, 255, 255,  0,
+		1, 2, 3,  4, 5, 6,  7, 8, 9,  0
+	};
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeRas(3, 2, 24, 1, {}, arRaster), oFrame));
+	ASSERT_EQ(3, oFrame.get_Width());
+	ASSERT_EQ(2, oFrame.get_Height());
+	EXPECT_FALSE(oFrame.IsGrayScale());
+	EXPECT_EQ((CColor{10, 20, 30}), Pixel(oFrame, 0, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 2, 0));
+	EXPECT_EQ((CColor{3, 2, 1}), Pixel(oFrame, 0, 1));
+	EXPECT_EQ((CColor{9, 8, 7}), Pixel(oFrame, 2, 1));
+}
+
+TEST(CRasTest, DecodesRgbTypeAnd32Bit)
+{
+	CBgraFrame oRgb;
+	ASSERT_TRUE(Decode(MakeRas(1, 1, 24, 3, {}, {10, 20, 30, 0}), oRgb));
+	EXPECT_EQ((CColor{10, 20, 30}), Pixel(oRgb, 0, 0));
+
+	// 32 bit: unused byte, then B, G, R (standard) or R, G, B (RGB type)
+	CBgraFrame oStandard32;
+	ASSERT_TRUE(Decode(MakeRas(1, 1, 32, 1, {}, {0xFF, 30, 20, 10}), oStandard32));
+	EXPECT_EQ((CColor{10, 20, 30}), Pixel(oStandard32, 0, 0));
+
+	CBgraFrame oRgb32;
+	ASSERT_TRUE(Decode(MakeRas(1, 1, 32, 3, {}, {0xFF, 10, 20, 30}), oRgb32));
+	EXPECT_EQ((CColor{10, 20, 30}), Pixel(oRgb32, 0, 0));
+}
+
+TEST(CRasTest, DecodesGrayAndPalette)
+{
+	CBgraFrame oGray;
+	ASSERT_TRUE(Decode(MakeRas(2, 1, 8, 1, {}, {0, 200}), oGray));
+	EXPECT_TRUE(oGray.IsGrayScale());
+	EXPECT_EQ((CColor{200, 200, 200}), Pixel(oGray, 1, 0));
+
+	// Color map: 2 reds, 2 greens, 2 blues
+	CBgraFrame oPalette;
+	ASSERT_TRUE(Decode(MakeRas(2, 1, 8, 1, {255, 0, 0, 128, 0, 255}, {0, 1}), oPalette));
+	EXPECT_FALSE(oPalette.IsGrayScale());
+	EXPECT_EQ((CColor{255, 0, 0}), Pixel(oPalette, 0, 0));
+	EXPECT_EQ((CColor{0, 128, 255}), Pixel(oPalette, 1, 0));
+}
+
+TEST(CRasTest, DecodesMonochrome)
+{
+	// 1 is black; 3 pixels in 1 byte, padded to 2
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeRas(3, 1, 1, 1, {}, {0xA0, 0x00}), oFrame));
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 0, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 1, 0));
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 2, 0));
+}
+
+TEST(CRasTest, DecodesRunLengthEncoding)
+{
+	// 8 bit, 6 pixels: 5 x 7 (0x80 4 7), a literal 0x80 (0x80 0)
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeRas(6, 1, 8, 2, {}, {0x80, 4, 7, 0x80, 0}), oFrame));
+	for (int nX = 0; nX < 5; ++nX)
+		EXPECT_EQ((CColor{7, 7, 7}), Pixel(oFrame, nX, 0));
+	EXPECT_EQ((CColor{128, 128, 128}), Pixel(oFrame, 5, 0));
+}
+
+TEST(CRasTest, DecodesLongestRleRun)
+{
+	// 3 bytes for 256 pixels, the highest ratio the format allows
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeRas(256, 1, 8, 2, {}, {0x80, 255, 7}), oFrame));
+	EXPECT_EQ((CColor{7, 7, 7}), Pixel(oFrame, 255, 0));
+}
+
+TEST(CRasTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+	EXPECT_FALSE(Decode(MakeRas(4, 4, 24, 1, {}, {1, 2, 3}), oFrame));                 // truncated
+	EXPECT_FALSE(Decode(MakeRas(4, 1, 8, 2, {}, {0x80, 1}), oFrame));                  // truncated RLE
+	EXPECT_FALSE(Decode(MakeRas(16384, 16384, 32, 2, {}, {}), oFrame));                // RLE without data
+	EXPECT_FALSE(Decode(MakeRas(1, 1, 24, 7, {}, {1, 2, 3, 0}), oFrame));              // unknown type
+	EXPECT_FALSE(Decode(MakeRas(0, 1, 24, 1, {}, {}), oFrame));                        // empty
+	EXPECT_FALSE(Decode(MakeRas(100000, 100000, 24, 1, {}, {1, 2, 3, 0}), oFrame));    // too large
+
+	std::vector<BYTE> arBadMap = MakeRas(1, 1, 8, 1, {}, {0});
+	arBadMap[31] = 200; // color map longer than the file
+	EXPECT_FALSE(Decode(arBadMap, oFrame));
+}
+
+// JPEG
+
+TEST(CJpegTest, DetectsJpeg)
+{
+	EXPECT_EQ(_CXIMAGE_FORMAT_JPG, FileType(MakeQuadrantJpeg()));
+}
+
+TEST(CJpegTest, DecodesBaselineInBothChannelOrders)
+{
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(MakeQuadrantJpeg(), oFrame, bIsRGBA));
+		EXPECT_FALSE(oFrame.IsGrayScale());
+		ExpectQuadrants(oFrame, bIsRGBA);
+	}
+}
+
+TEST(CJpegTest, DecodesProgressiveAndArithmeticCoding)
+{
+	CJpegOptions oProgressive;
+	oProgressive.bProgressive = true;
+	CBgraFrame oProgressiveFrame;
+	ASSERT_TRUE(Decode(MakeQuadrantJpeg(oProgressive), oProgressiveFrame));
+	ExpectQuadrants(oProgressiveFrame);
+
+	CJpegOptions oArithmetic;
+	oArithmetic.bArithmetic = true;
+	CBgraFrame oArithmeticFrame;
+	ASSERT_TRUE(Decode(MakeQuadrantJpeg(oArithmetic), oArithmeticFrame));
+	ExpectQuadrants(oArithmeticFrame);
+}
+
+TEST(CJpegTest, DecodesGrayscale)
+{
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeGrayJpeg(), oFrame));
+	EXPECT_TRUE(oFrame.IsGrayScale());
+	ExpectNear({40, 40, 40}, Pixel(oFrame, 4, 4), 2);
+	ExpectNear({230, 230, 230}, Pixel(oFrame, 27, 27), 2);
+}
+
+TEST(CJpegTest, DecodesJpegCompressedTiff)
+{
+	// libtiff decodes the strip with libjpeg, so both must agree on its API
+	std::vector<BYTE> arJpeg = MakeGrayJpeg();
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeJpegTiff(arJpeg), oFrame));
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+	ExpectNear({40, 40, 40}, Pixel(oFrame, 4, 4), 2);
+	ExpectNear({230, 230, 230}, Pixel(oFrame, 27, 27), 2);
+}
+
+TEST(CJpegTest, DecodesAdobeCmyk)
+{
+	// libjpeg writes CMYK with an Adobe marker. Like Photoshop's files, the
+	// samples are inverted, so CxImage takes R = C * K / 255 and so on.
+	CJpegOptions oOptions;
+	oOptions.eColorSpace = JCS_CMYK;
+	std::vector<BYTE> arData = MakeJpeg(oOptions, [](int nX, int) {
+		return nX < 16 ? std::vector<BYTE>{200, 100, 50, 255} : std::vector<BYTE>{255, 255, 255, 128};
+	});
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(arData, oFrame));
+	ExpectNear({200, 100, 50}, Pixel(oFrame, 4, 4), 4);
+	ExpectNear({128, 128, 128}, Pixel(oFrame, 27, 27), 4);
+}
+
+TEST(CJpegTest, EncodesJpeg)
+{
+	BYTE* pPixels = new BYTE[4 * c_nQuadImageSize * c_nQuadImageSize];
+	for (int nY = 0; nY < c_nQuadImageSize; ++nY)
+	{
+		for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+		{
+			BYTE* p = pPixels + 4 * (nY * c_nQuadImageSize + nX);
+			CColor c = QuadrantColor(nX, nY);
+			p[0] = (BYTE)c.b;
+			p[1] = (BYTE)c.g;
+			p[2] = (BYTE)c.r;
+			p[3] = 255;
+		}
+	}
+
+	CBgraFrame oSource;
+	oSource.put_Width(c_nQuadImageSize);
+	oSource.put_Height(c_nQuadImageSize);
+	oSource.put_Stride(4 * c_nQuadImageSize);
+	oSource.put_Data(pPixels);
+	oSource.SetJpegQuality(100);
+
+	BYTE* pEncoded = NULL;
+	int nEncodedSize = 0;
+	ASSERT_TRUE(oSource.Encode(pEncoded, nEncodedSize, _CXIMAGE_FORMAT_JPG));
+	std::vector<BYTE> arEncoded(pEncoded, pEncoded + nEncodedSize);
+	CBgraFrame::FreeEncodedMemory(pEncoded);
+
+	// Read back with libjpeg itself, not through CxImage
+	jpeg_decompress_struct cinfo;
+	jpeg_error_mgr jerr;
+	cinfo.err = jpeg_std_error(&jerr);
+	jpeg_create_decompress(&cinfo);
+	jpeg_mem_src(&cinfo, arEncoded.data(), (unsigned long)arEncoded.size());
+	ASSERT_EQ(JPEG_HEADER_OK, jpeg_read_header(&cinfo, TRUE));
+	cinfo.out_color_space = JCS_RGB;
+	jpeg_start_decompress(&cinfo);
+	ASSERT_EQ((JDIMENSION)c_nQuadImageSize, cinfo.output_width);
+	ASSERT_EQ((JDIMENSION)c_nQuadImageSize, cinfo.output_height);
+	ASSERT_EQ(3, cinfo.output_components);
+
+	std::vector<BYTE> arRow(3 * c_nQuadImageSize);
+	while (cinfo.output_scanline < cinfo.output_height)
+	{
+		const int nY = (int)cinfo.output_scanline;
+		JSAMPROW pRow = arRow.data();
+		jpeg_read_scanlines(&cinfo, &pRow, 1);
+		if (4 != nY && 27 != nY)
+			continue;
+		for (int nX : {4, 27})
+			ExpectNear(QuadrantColor(nX, nY), CColor{arRow[3 * nX], arRow[3 * nX + 1], arRow[3 * nX + 2]}, 6);
+	}
+	jpeg_finish_decompress(&cinfo);
+	jpeg_destroy_decompress(&cinfo);
+}
+
+TEST(CJpegTest, DecodesTruncatedImagePartially)
+{
+	// Like other viewers, show what is there: libjpeg pads the missing data.
+	// Cut in the middle of the scan, after all the tables.
+	std::vector<BYTE> arData = MakeQuadrantJpeg();
+	size_t nScan = 0;
+	for (size_t i = 0; i + 1 < arData.size(); ++i)
+		if (0xFF == arData[i] && 0xDA == arData[i + 1])
+			nScan = i;
+	ASSERT_NE(0u, nScan);
+	arData.resize(nScan + (arData.size() - nScan) / 2);
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(arData, oFrame));
+	EXPECT_EQ(c_nQuadImageSize, oFrame.get_Width());
+	ExpectNear(QuadrantColor(4, 4), Pixel(oFrame, 4, 4), 4);
+}
+
+TEST(CJpegTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+	std::vector<BYTE> arGarbage = {0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x02, 0x12, 0x34, 0x56, 0x78};
+	EXPECT_FALSE(Decode(arGarbage, oFrame, false));
+
+	std::vector<BYTE> arData = MakeQuadrantJpeg();
+	arData.resize(64); // header only
+	EXPECT_FALSE(Decode(arData, oFrame));
+}
+
+// PNG
+
+TEST(CPngTest, DetectsPng)
+{
+	CPngImage oImage;
+	oImage.nWidth = oImage.nHeight = 1;
+	oImage.arRows = {1, 2, 3};
+	EXPECT_EQ(_CXIMAGE_FORMAT_PNG, FileType(MakePng(oImage)));
+}
+
+TEST(CPngTest, DecodesRgbaInBothChannelOrders)
+{
+	CPngImage oImage;
+	oImage.nWidth = 2;
+	oImage.nHeight = 2;
+	oImage.nColorType = PNG_COLOR_TYPE_RGB_ALPHA;
+	oImage.arRows = {255, 0, 0, 255,   0, 255, 0, 128,
+					 0, 0, 255, 0,     10, 20, 30, 255};
+	std::vector<BYTE> arData = MakePng(oImage);
+
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+		ASSERT_EQ(2, oFrame.get_Width());
+		ASSERT_EQ(2, oFrame.get_Height());
+		EXPECT_EQ((CColor{255, 0, 0}), Pixel(oFrame, 0, 0, bIsRGBA));
+		EXPECT_EQ((CColor{10, 20, 30}), Pixel(oFrame, 1, 1, bIsRGBA));
+		EXPECT_EQ(128, Alpha(oFrame, 1, 0));
+		EXPECT_EQ(0, Alpha(oFrame, 0, 1));
+		const BYTE* p = PixelData(oFrame, 1, 0);
+		EXPECT_EQ((CColor{0, 255, 0}), bIsRGBA ? (CColor{p[0], p[1], p[2]}) : (CColor{p[2], p[1], p[0]}));
+	}
+}
+
+TEST(CPngTest, Reduces16BitSamplesTo8Bit)
+{
+	CPngImage oImage;
+	oImage.nWidth = 2;
+	oImage.nHeight = 1;
+	oImage.nBitDepth = 16;
+	oImage.arRows = {0x12, 0x34, 0xAB, 0xCD, 0xFF, 0xFF,   0x00, 0x00, 0x80, 0x00, 0x00, 0xFF};
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakePng(oImage), oFrame));
+	EXPECT_EQ((CColor{0x12, 0xAB, 0xFF}), Pixel(oFrame, 0, 0));
+	EXPECT_EQ((CColor{0x00, 0x80, 0x00}), Pixel(oFrame, 1, 0));
+}
+
+TEST(CPngTest, DecodesPaletteWithTransparency)
+{
+	// 4 bit indices 0, 1, 2; tRNS gives 0 and 1 an alpha value, 2 stays opaque
+	CPngImage oImage;
+	oImage.nWidth = 3;
+	oImage.nHeight = 1;
+	oImage.nBitDepth = 4;
+	oImage.nColorType = PNG_COLOR_TYPE_PALETTE;
+	oImage.arPalette = {{255, 0, 0}, {0, 255, 0}, {0, 0, 255}};
+	oImage.arTransAlpha = {0, 128};
+	oImage.arRows = {0x01, 0x20};
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakePng(oImage), oFrame));
+	ASSERT_EQ(3, oFrame.get_Width());
+	EXPECT_EQ(0, Alpha(oFrame, 0, 0));
+	EXPECT_EQ(128, Alpha(oFrame, 1, 0));
+	EXPECT_EQ((CColor{0, 0, 255}), Pixel(oFrame, 2, 0));
+}
+
+TEST(CPngTest, DecodesGrayWithTransparentValue)
+{
+	CPngImage oImage;
+	oImage.nWidth = 2;
+	oImage.nHeight = 1;
+	oImage.nColorType = PNG_COLOR_TYPE_GRAY;
+	oImage.nTransGray = 50;
+	oImage.arRows = {50, 200};
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakePng(oImage), oFrame));
+	EXPECT_TRUE(oFrame.IsGrayScale());
+	EXPECT_EQ(0, Alpha(oFrame, 0, 0));
+	EXPECT_EQ((CColor{200, 200, 200}), Pixel(oFrame, 1, 0));
+}
+
+TEST(CPngTest, DecodesInterlaced2BitGray)
+{
+	// 2 bit gray is expanded to 4 bit by CxImage; Adam7 needs all 7 passes
+	CPngImage oImage;
+	oImage.nWidth = 9;
+	oImage.nHeight = 9;
+	oImage.nBitDepth = 2;
+	oImage.nColorType = PNG_COLOR_TYPE_GRAY;
+	oImage.bInterlaced = true;
+	const int nRowBytes = 3;
+	oImage.arRows.assign(nRowBytes * oImage.nHeight, 0);
+	for (int nY = 0; nY < oImage.nHeight; ++nY)
+		for (int nX = 0; nX < oImage.nWidth; ++nX)
+			oImage.arRows[nY * nRowBytes + nX / 4] |= (BYTE)(((nX + nY) % 4) << (6 - 2 * (nX % 4)));
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakePng(oImage), oFrame));
+	ASSERT_EQ(9, oFrame.get_Width());
+	for (int nY = 0; nY < oImage.nHeight; ++nY)
+	{
+		for (int nX = 0; nX < oImage.nWidth; ++nX)
+		{
+			const int nGray = 85 * ((nX + nY) % 4);
+			EXPECT_EQ((CColor{nGray, nGray, nGray}), Pixel(oFrame, nX, nY)) << nX << ", " << nY;
+		}
+	}
+}
+
+TEST(CPngTest, EncodesRgba)
+{
+	const int nWidth = 3, nHeight = 2;
+	BYTE* pPixels = new BYTE[4 * nWidth * nHeight];
+	for (int i = 0; i < nWidth * nHeight; ++i)
+	{
+		pPixels[4 * i + 0] = (BYTE)(10 * i);       // B
+		pPixels[4 * i + 1] = (BYTE)(100 + i);      // G
+		pPixels[4 * i + 2] = (BYTE)(250 - 20 * i); // R
+		pPixels[4 * i + 3] = (BYTE)(40 * i);       // A
+	}
+	CBgraFrame oSource;
+	oSource.put_Width(nWidth);
+	oSource.put_Height(nHeight);
+	oSource.put_Stride(4 * nWidth);
+	oSource.put_Data(pPixels);
+
+	int nReadWidth = 0, nReadHeight = 0;
+	std::vector<BYTE> arRgba;
+	ASSERT_TRUE(ReadPngRgba(EncodeFrame(oSource, _CXIMAGE_FORMAT_PNG), nReadWidth, nReadHeight, arRgba));
+	ASSERT_EQ(nWidth, nReadWidth);
+	ASSERT_EQ(nHeight, nReadHeight);
+	for (int i = 0; i < nWidth * nHeight; ++i)
+	{
+		EXPECT_EQ(250 - 20 * i, arRgba[4 * i + 0]) << i;
+		EXPECT_EQ(100 + i, arRgba[4 * i + 1]) << i;
+		EXPECT_EQ(10 * i, arRgba[4 * i + 2]) << i;
+		EXPECT_EQ(40 * i, arRgba[4 * i + 3]) << i;
+	}
+}
+
+TEST(CPngTest, SavesPaletteImage)
+{
+	// 8 bit indexed frame with a palette, as SaveFile gets them from DIBs
+	const int nWidth = 4, nHeight = 2;
+	BYTE* pIndices = new BYTE[nWidth * nHeight];
+	for (int i = 0; i < nWidth * nHeight; ++i)
+		pIndices[i] = (BYTE)(i % 3);
+	BYTE arPalette[256 * 4] = {};
+	const BYTE arColors[3][3] = {{200, 10, 20}, {30, 220, 40}, {50, 60, 230}}; // R, G, B
+	for (int i = 0; i < 3; ++i)
+	{
+		arPalette[4 * i + 0] = arColors[i][2];
+		arPalette[4 * i + 1] = arColors[i][1];
+		arPalette[4 * i + 2] = arColors[i][0];
+	}
+
+	CBgraFrame oSource;
+	oSource.put_Width(nWidth);
+	oSource.put_Height(nHeight);
+	oSource.put_Stride(nWidth);
+	oSource.put_Data(pIndices);
+	oSource.put_Palette(arPalette, 256);
+
+	const std::wstring sPath = NSFile::CFileBinary::CreateTempFileWithUniqueName(NSFile::CFileBinary::GetTempPath(), L"png");
+	ASSERT_TRUE(oSource.SaveFile(sPath, _CXIMAGE_FORMAT_PNG));
+	std::vector<BYTE> arData = ReadFile(sPath);
+	NSFile::CFileBinary::Remove(sPath);
+
+	int nReadWidth = 0, nReadHeight = 0;
+	png_byte nColorType = 0;
+	std::vector<BYTE> arRgba;
+	ASSERT_TRUE(ReadPngRgba(arData, nReadWidth, nReadHeight, arRgba, &nColorType));
+	EXPECT_EQ(PNG_COLOR_TYPE_PALETTE, nColorType);
+	ASSERT_EQ(nWidth, nReadWidth);
+	ASSERT_EQ(nHeight, nReadHeight);
+	for (int i = 0; i < nWidth * nHeight; ++i)
+	{
+		const BYTE* c = arColors[i % 3];
+		EXPECT_EQ((CColor{c[0], c[1], c[2]}), (CColor{arRgba[4 * i], arRgba[4 * i + 1], arRgba[4 * i + 2]})) << i;
+		EXPECT_EQ(255, arRgba[4 * i + 3]) << i;
+	}
+}
+
+TEST(CPngTest, RejectsInvalidImages)
+{
+	CPngImage oImage;
+	oImage.nWidth = oImage.nHeight = 16;
+	oImage.arRows.assign(3 * 16 * 16, 7);
+	const std::vector<BYTE> arValid = MakePng(oImage);
+
+	CBgraFrame oFrame;
+	std::vector<BYTE> arTruncated(arValid.begin(), arValid.begin() + 40); // inside IDAT
+	EXPECT_FALSE(Decode(arTruncated, oFrame));
+
+	std::vector<BYTE> arBadCrc = arValid;
+	arBadCrc[29] ^= 0xFF; // IHDR CRC
+	EXPECT_FALSE(Decode(arBadCrc, oFrame));
+}
+
+// TIFF
+
+TEST(CTiffTest, DetectsTiff)
+{
+	EXPECT_EQ(_CXIMAGE_FORMAT_TIF, FileType(MakeTiff({QuadrantTiffPage()})));
+}
+
+TEST(CTiffTest, DecodesLosslessCompressions)
+{
+	// The codecs the bundled libtiff 3.9.4 had, minus CCITT (1 bit only)
+	for (int nCompression : {COMPRESSION_NONE, COMPRESSION_LZW, COMPRESSION_ADOBE_DEFLATE, COMPRESSION_PACKBITS})
+	{
+		for (int nTileSize : {0, 16})
+		{
+			CBgraFrame oFrame;
+			ASSERT_TRUE(Decode(MakeTiff({QuadrantTiffPage(nCompression, nTileSize)}), oFrame)) << nCompression << ", " << nTileSize;
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+			for (int nY : {0, 4, 27, 31})
+				for (int nX : {0, 4, 27, 31})
+					EXPECT_EQ(QuadrantColor(nX, nY), Pixel(oFrame, nX, nY)) << nCompression << ", " << nTileSize << ": " << nX << ", " << nY;
+		}
+	}
+}
+
+TEST(CTiffTest, DecodesJpegCompression)
+{
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeTiff({QuadrantTiffPage(COMPRESSION_JPEG)}), oFrame));
+	ExpectQuadrants(oFrame);
+}
+
+TEST(CTiffTest, DecodesFaxCompressedBitmap)
+{
+	// 1 bit, white is zero, as fax machines and scanners write them
+	CTiffPage oPage;
+	oPage.nWidth = 16;
+	oPage.nHeight = 4;
+	oPage.nBitsPerSample = 1;
+	oPage.nSamplesPerPixel = 1;
+	oPage.nPhotometric = PHOTOMETRIC_MINISWHITE;
+	oPage.nCompression = COMPRESSION_CCITTFAX4;
+	oPage.arRows = {0xF0, 0x0F,  0xF0, 0x0F,  0x00, 0x00,  0xFF, 0xFF};
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeTiff({oPage}), oFrame));
+	ASSERT_EQ(16, oFrame.get_Width());
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 0, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 4, 0));
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 15, 1));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 7, 2));
+	EXPECT_EQ(c_oBlack, Pixel(oFrame, 7, 3));
+}
+
+TEST(CTiffTest, DecodesPaletteAnd16Bit)
+{
+	CTiffPage oPalette;
+	oPalette.nWidth = 3;
+	oPalette.nHeight = 1;
+	oPalette.nSamplesPerPixel = 1;
+	oPalette.nPhotometric = PHOTOMETRIC_PALETTE;
+	oPalette.arColorMap.assign(3 * 256, 0);
+	const uint16_t arColors[3][3] = {{0xFFFF, 0, 0}, {0, 0x8080, 0}, {0x1010, 0x2020, 0x3030}};
+	for (int i = 0; i < 3; ++i)
+		for (int c = 0; c < 3; ++c)
+			oPalette.arColorMap[c * 256 + i] = arColors[i][c];
+	oPalette.arRows = {0, 1, 2};
+
+	CBgraFrame oPaletteFrame;
+	ASSERT_TRUE(Decode(MakeTiff({oPalette}), oPaletteFrame));
+	EXPECT_EQ((CColor{255, 0, 0}), Pixel(oPaletteFrame, 0, 0));
+	EXPECT_EQ((CColor{0, 128, 0}), Pixel(oPaletteFrame, 1, 0));
+	EXPECT_EQ((CColor{16, 32, 48}), Pixel(oPaletteFrame, 2, 0));
+
+	// 16 bit samples (native byte order): multiples of 257 map exactly to 8 bit
+	CTiffPage oDeep;
+	oDeep.nWidth = 2;
+	oDeep.nHeight = 1;
+	oDeep.nBitsPerSample = 16;
+	const uint16_t arSamples[6] = {257 * 200, 257 * 100, 0, 0xFFFF, 257 * 1, 257 * 128};
+	oDeep.arRows.assign((const BYTE*)arSamples, (const BYTE*)arSamples + sizeof(arSamples));
+
+	CBgraFrame oDeepFrame;
+	ASSERT_TRUE(Decode(MakeTiff({oDeep}), oDeepFrame));
+	EXPECT_EQ((CColor{200, 100, 0}), Pixel(oDeepFrame, 0, 0));
+	EXPECT_EQ((CColor{255, 1, 128}), Pixel(oDeepFrame, 1, 0));
+}
+
+TEST(CTiffTest, DecodesFirstPage)
+{
+	CTiffPage oSecond = QuadrantTiffPage();
+	oSecond.nWidth = oSecond.nHeight = 8;
+	oSecond.arRows.resize(3 * 8 * 8);
+
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeTiff({QuadrantTiffPage(COMPRESSION_LZW), oSecond}), oFrame));
+	ExpectQuadrants(oFrame);
+}
+
+TEST(CTiffTest, StopsAtIfdLoop)
+{
+	// The next IFD is the same one again. libtiff 3.9.4 never returned.
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeGrayTiff(2, 1, {0, 85, 170, 255}, true), oFrame));
+	EXPECT_EQ((CColor{85, 85, 85}), Pixel(oFrame, 1, 0));
+	EXPECT_EQ(c_oWhite, Pixel(oFrame, 1, 1));
+}
+
+TEST(CTiffTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+	std::vector<BYTE> arHeaderOnly = {'I', 'I', 42, 0, 8, 0, 0, 0};
+	EXPECT_FALSE(Decode(arHeaderOnly, oFrame, false));
+
+	std::vector<BYTE> arBadIfd = {'I', 'I', 42, 0, 0xF0, 0xFF, 0, 0, 0, 0}; // IFD past the end
+	EXPECT_FALSE(Decode(arBadIfd, oFrame, false));
+}
+
+// WebP
+
+namespace
+{
+	// RGBA quadrants, with the alpha of each quadrant
+	std::vector<BYTE> QuadrantRgba(const int arAlpha[4])
+	{
+		std::vector<BYTE> arRgba;
+		for (int nY = 0; nY < c_nQuadImageSize; ++nY)
+		{
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				const CColor c = QuadrantColor(nX, nY);
+				arRgba.insert(arRgba.end(), {(BYTE)c.r, (BYTE)c.g, (BYTE)c.b, (BYTE)arAlpha[(nY >= 16 ? 2 : 0) + (nX >= 16 ? 1 : 0)]});
+			}
+		}
+		return arRgba;
+	}
+
+	const int c_arOpaque[4] = {255, 255, 255, 255};
+
+	std::vector<BYTE> MakeWebP(const std::vector<BYTE>& arRgba, int nWidth, int nHeight, bool bLossless)
+	{
+		uint8_t* pOut = NULL;
+		const size_t nSize = bLossless ? WebPEncodeLosslessRGBA(arRgba.data(), nWidth, nHeight, 4 * nWidth, &pOut)
+									   : WebPEncodeRGBA(arRgba.data(), nWidth, nHeight, 4 * nWidth, 100, &pOut);
+		std::vector<BYTE> arData(pOut, pOut + nSize);
+		WebPFree(pOut);
+		return arData;
+	}
+
+	// Lossless frames of c_nQuadImageSize, 100 ms each
+	std::vector<BYTE> MakeAnimatedWebP(const std::vector<std::vector<BYTE>>& arFrames)
+	{
+		WebPAnimEncoderOptions oOptions;
+		WebPAnimEncoderOptionsInit(&oOptions);
+		WebPAnimEncoder* pEncoder = WebPAnimEncoderNew(c_nQuadImageSize, c_nQuadImageSize, &oOptions);
+
+		WebPConfig oConfig;
+		WebPConfigInit(&oConfig);
+		oConfig.lossless = 1;
+
+		int nTimestamp = 0;
+		for (const std::vector<BYTE>& arRgba : arFrames)
+		{
+			WebPPicture oPicture;
+			WebPPictureInit(&oPicture);
+			oPicture.use_argb = 1;
+			oPicture.width = oPicture.height = c_nQuadImageSize;
+			WebPPictureImportRGBA(&oPicture, arRgba.data(), 4 * c_nQuadImageSize);
+			EXPECT_TRUE(WebPAnimEncoderAdd(pEncoder, &oPicture, nTimestamp, &oConfig));
+			WebPPictureFree(&oPicture);
+			nTimestamp += 100;
+		}
+		WebPAnimEncoderAdd(pEncoder, NULL, nTimestamp, NULL);
+
+		WebPData oData;
+		WebPDataInit(&oData);
+		EXPECT_TRUE(WebPAnimEncoderAssemble(pEncoder, &oData));
+		std::vector<BYTE> arData(oData.bytes, oData.bytes + oData.size);
+		WebPDataClear(&oData);
+		WebPAnimEncoderDelete(pEncoder);
+		return arData;
+	}
+
+	std::vector<BYTE> MakeQuadrantAnimation()
+	{
+		return MakeAnimatedWebP({QuadrantRgba(c_arOpaque), std::vector<BYTE>(4 * c_nQuadImageSize * c_nQuadImageSize, 255)});
+	}
+}
+
+TEST(CWebPTest, DetectsWebP)
+{
+	EXPECT_EQ(_CXIMAGE_FORMAT_WEBP, FileType(MakeWebP(QuadrantRgba(c_arOpaque), c_nQuadImageSize, c_nQuadImageSize, false)));
+	EXPECT_EQ(_CXIMAGE_FORMAT_WEBP, FileType(MakeWebP(QuadrantRgba(c_arOpaque), c_nQuadImageSize, c_nQuadImageSize, true)));
+	EXPECT_EQ(_CXIMAGE_FORMAT_WEBP, FileType(MakeQuadrantAnimation()));
+}
+
+TEST(CWebPTest, DecodesLossyInBothChannelOrders)
+{
+	const std::vector<BYTE> arData = MakeWebP(QuadrantRgba(c_arOpaque), c_nQuadImageSize, c_nQuadImageSize, false);
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+		ExpectQuadrants(oFrame, bIsRGBA);
+	}
+}
+
+TEST(CWebPTest, DecodesLosslessWithAlpha)
+{
+	const std::vector<BYTE> arRgba = {255, 0, 0, 255,   0, 255, 0, 128,
+									  0, 0, 255, 0,     10, 20, 30, 255};
+	const std::vector<BYTE> arData = MakeWebP(arRgba, 2, 2, true);
+
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+		ASSERT_EQ(2, oFrame.get_Width());
+		ASSERT_EQ(2, oFrame.get_Height());
+		EXPECT_EQ((CColor{255, 0, 0}), Pixel(oFrame, 0, 0, bIsRGBA));
+		EXPECT_EQ((CColor{10, 20, 30}), Pixel(oFrame, 1, 1, bIsRGBA));
+		EXPECT_EQ(128, Alpha(oFrame, 1, 0));
+		EXPECT_EQ(0, Alpha(oFrame, 0, 1));
+		// Not premultiplied
+		const BYTE* p = PixelData(oFrame, 1, 0);
+		EXPECT_EQ((CColor{0, 255, 0}), bIsRGBA ? (CColor{p[0], p[1], p[2]}) : (CColor{p[2], p[1], p[0]}));
+	}
+}
+
+TEST(CWebPTest, DecodesLossyWithAlpha)
+{
+	// The alpha plane is compressed losslessly next to the lossy color
+	const int arAlpha[4] = {255, 128, 255, 0};
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeWebP(QuadrantRgba(arAlpha), c_nQuadImageSize, c_nQuadImageSize, false), oFrame));
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+	EXPECT_EQ(255, Alpha(oFrame, 4, 4));
+	EXPECT_EQ(128, Alpha(oFrame, 27, 4));
+	EXPECT_EQ(255, Alpha(oFrame, 4, 27));
+	EXPECT_EQ(0, Alpha(oFrame, 27, 27));
+	ExpectNear(QuadrantColor(4, 4), Pixel(oFrame, 4, 4), 4);
+	ExpectNear(QuadrantColor(4, 27), Pixel(oFrame, 4, 27), 4);
+}
+
+TEST(CWebPTest, DecodesFirstFrameOfAnimation)
+{
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeQuadrantAnimation(), oFrame));
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+	for (int nY : {0, 4, 27, 31})
+		for (int nX : {0, 4, 27, 31})
+			EXPECT_EQ(QuadrantColor(nX, nY), Pixel(oFrame, nX, nY)) << nX << ", " << nY;
+}
+
+TEST(CWebPTest, OpensFile)
+{
+	const std::vector<BYTE> arData = MakeWebP(QuadrantRgba(c_arOpaque), c_nQuadImageSize, c_nQuadImageSize, true);
+
+	const std::wstring sPath = NSFile::CFileBinary::CreateTempFileWithUniqueName(NSFile::CFileBinary::GetTempPath(), L"webp");
+	NSFile::CFileBinary oFile;
+	ASSERT_TRUE(oFile.CreateFileW(sPath));
+	oFile.WriteFile(arData.data(), (DWORD)arData.size());
+	oFile.CloseFile();
+
+	CBgraFrame oFrame;
+	EXPECT_TRUE(oFrame.OpenFile(sPath));
+	NSFile::CFileBinary::Remove(sPath);
+	ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+	EXPECT_EQ(QuadrantColor(27, 4), Pixel(oFrame, 27, 4));
+}
+
+TEST(CWebPTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+	for (bool bLossless : {false, true})
+	{
+		std::vector<BYTE> arData = MakeWebP(QuadrantRgba(c_arOpaque), c_nQuadImageSize, c_nQuadImageSize, bLossless);
+		arData.resize(arData.size() / 2);
+		EXPECT_FALSE(Decode(arData, oFrame)) << bLossless;
+	}
+
+	std::vector<BYTE> arAnimation = MakeQuadrantAnimation();
+	arAnimation.resize(arAnimation.size() / 2);
+	EXPECT_FALSE(Decode(arAnimation, oFrame));
+
+	// A VP8 chunk without any data
+	std::vector<BYTE> arHeaderOnly = Bytes("RIFF");
+	PutUInt32LE(arHeaderOnly, 12);
+	const std::vector<BYTE> arChunk = Bytes("WEBPVP8 ");
+	arHeaderOnly.insert(arHeaderOnly.end(), arChunk.begin(), arChunk.end());
+	PutUInt32LE(arHeaderOnly, 0);
+	ASSERT_EQ(_CXIMAGE_FORMAT_WEBP, FileType(arHeaderOnly));
+	EXPECT_FALSE(Decode(arHeaderOnly, oFrame));
+}
+
+//////////////////////////////////////////////////////////////////////////
+// HEIF (HEIC and AVIF)
+
+namespace
+{
+	// Fixtures from heif/generate.py, read in place
+	std::wstring HeifFixturePath(const std::string& sName)
+	{
+		const std::string sPath = std::string(RASTER_TEST_HEIF_DIR) + "/" + sName;
+		return NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)sPath.c_str(), (LONG)sPath.length());
+	}
+
+	std::vector<BYTE> ReadHeifFixture(const std::string& sName)
+	{
+		BYTE* pData = NULL;
+		DWORD nSize = 0;
+		EXPECT_TRUE(NSFile::CFileBinary::ReadAllBytes(HeifFixturePath(sName), &pData, nSize)) << sName;
+		std::vector<BYTE> arData(pData, pData + nSize);
+		RELEASEARRAYOBJECTS(pData);
+		return arData;
+	}
+
+	const char* const c_arHeifFixtures[] = {"quad.heic", "quad_alpha.avif", "quad_10bit.avif", "wide_rot.heic"};
+}
+
+TEST(CHeifTest, DetectsHeicAndAvif)
+{
+	for (const char* sName : c_arHeifFixtures)
+	{
+		EXPECT_EQ(_CXIMAGE_FORMAT_HEIF, FileType(ReadHeifFixture(sName))) << sName;
+
+		// The check before inserting a file in the desktop editors
+		CImageFileFormatChecker oChecker;
+		EXPECT_TRUE(oChecker.isImageFile(HeifFixturePath(sName))) << sName;
+		EXPECT_EQ(_CXIMAGE_FORMAT_HEIF, oChecker.eFileType) << sName;
+	}
+
+	// The same box structure, but an MP4 video
+	std::vector<BYTE> arMp4;
+	PutUInt32BE(arMp4, 24);
+	const std::vector<BYTE> arBrands = Bytes(std::string("ftypisom\0\0\0\0isommp41", 20));
+	arMp4.insert(arMp4.end(), arBrands.begin(), arBrands.end());
+	EXPECT_NE(_CXIMAGE_FORMAT_HEIF, FileType(arMp4));
+}
+
+TEST(CHeifTest, DecodesHeicInBothChannelOrders)
+{
+	const std::vector<BYTE> arData = ReadHeifFixture("quad.heic");
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+		ExpectQuadrants(oFrame, bIsRGBA);
+	}
+}
+
+TEST(CHeifTest, DecodesAvifWithAlpha)
+{
+	for (bool bIsRGBA : {false, true})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(ReadHeifFixture("quad_alpha.avif"), oFrame, bIsRGBA));
+		ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+		ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+		EXPECT_NEAR(255, Alpha(oFrame, 4, 4), 2);
+		EXPECT_NEAR(128, Alpha(oFrame, 27, 4), 2);
+		EXPECT_NEAR(255, Alpha(oFrame, 4, 27), 2);
+		EXPECT_NEAR(0, Alpha(oFrame, 27, 27), 2);
+		ExpectNear(QuadrantColor(4, 4), Pixel(oFrame, 4, 4, bIsRGBA), 4);
+		ExpectNear(QuadrantColor(4, 27), Pixel(oFrame, 4, 27, bIsRGBA), 4);
+		// Not premultiplied
+		const BYTE* p = PixelData(oFrame, 27, 4);
+		ExpectNear(QuadrantColor(27, 4), bIsRGBA ? (CColor{p[0], p[1], p[2]}) : (CColor{p[2], p[1], p[0]}), 4);
+	}
+}
+
+TEST(CHeifTest, Decodes10BitAvifTo8Bit)
+{
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(ReadHeifFixture("quad_10bit.avif"), oFrame));
+	ExpectQuadrants(oFrame);
+}
+
+TEST(CHeifTest, AppliesRotation)
+{
+	// Stored 32x16 with QUADRANTS[0] left and [1] right, shown rotated by 90
+	// degrees clockwise: 16x32 with [0] on top
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(ReadHeifFixture("wide_rot.heic"), oFrame));
+	ASSERT_EQ(16, oFrame.get_Width());
+	ASSERT_EQ(32, oFrame.get_Height());
+	ExpectNear(c_arQuadrants[0], Pixel(oFrame, 8, 4), 4);
+	ExpectNear(c_arQuadrants[1], Pixel(oFrame, 8, 27), 4);
+}
+
+TEST(CHeifTest, OpensFile)
+{
+	for (const char* sName : {"quad.heic", "quad_10bit.avif"})
+	{
+		CBgraFrame oFrame;
+		ASSERT_TRUE(oFrame.OpenFile(HeifFixturePath(sName))) << sName;
+		ExpectQuadrants(oFrame);
+	}
+}
+
+TEST(CHeifTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+	for (const char* sName : c_arHeifFixtures)
+	{
+		std::vector<BYTE> arData = ReadHeifFixture(sName);
+		arData.resize(arData.size() / 2);
+		EXPECT_FALSE(Decode(arData, oFrame)) << sName;
+
+		// Just the file type box
+		arData.resize(12);
+		EXPECT_FALSE(Decode(arData, oFrame)) << sName;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+// ICO
+
+namespace
+{
+	// Header and one directory entry for an image of nSize bytes right after it
+	std::vector<BYTE> IcoHeader(int nWidth, int nHeight, unsigned int nSize)
+	{
+		std::vector<BYTE> arData;
+		PutUInt16LE(arData, 0);
+		PutUInt16LE(arData, 1);  // icon
+		PutUInt16LE(arData, 1);  // one image
+		arData.push_back((BYTE)(nWidth & 0xFF));
+		arData.push_back((BYTE)(nHeight & 0xFF));
+		arData.push_back(0);     // no palette
+		arData.push_back(0);
+		PutUInt16LE(arData, 1);  // planes
+		PutUInt16LE(arData, 32); // bits per pixel
+		PutUInt32LE(arData, nSize);
+		PutUInt32LE(arData, 22);
+		return arData;
+	}
+
+	// The quadrants as a 32 bit bitmap icon: bottom-up BGRA rows, then an empty
+	// AND mask
+	std::vector<BYTE> MakeBitmapIco()
+	{
+		std::vector<BYTE> arImage;
+		PutUInt32LE(arImage, 40);
+		PutUInt32LE(arImage, c_nQuadImageSize);
+		PutUInt32LE(arImage, 2 * c_nQuadImageSize); // color and mask
+		PutUInt16LE(arImage, 1);
+		PutUInt16LE(arImage, 32);
+		PutUInt32LE(arImage, 0);                                    // uncompressed
+		PutUInt32LE(arImage, 4 * c_nQuadImageSize * c_nQuadImageSize); // size of the color data
+		for (int i = 0; i < 4; ++i)
+			PutUInt32LE(arImage, 0);
+		for (int nY = c_nQuadImageSize - 1; nY >= 0; --nY)
+		{
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				const CColor c = QuadrantColor(nX, nY);
+				arImage.insert(arImage.end(), {(BYTE)c.b, (BYTE)c.g, (BYTE)c.r, 255});
+			}
+		}
+		arImage.insert(arImage.end(), c_nQuadImageSize * 4, 0);
+
+		std::vector<BYTE> arData = IcoHeader(c_nQuadImageSize, c_nQuadImageSize, (unsigned int)arImage.size());
+		arData.insert(arData.end(), arImage.begin(), arImage.end());
+		return arData;
+	}
+
+	// The quadrants as a PNG compressed icon, like the 256 pixel ones (always
+	// 32 bit RGBA)
+	std::vector<BYTE> MakePngIco()
+	{
+		CPngImage oImage;
+		oImage.nWidth = oImage.nHeight = c_nQuadImageSize;
+		oImage.nColorType = PNG_COLOR_TYPE_RGB_ALPHA;
+		for (int nY = 0; nY < c_nQuadImageSize; ++nY)
+		{
+			for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+			{
+				const CColor c = QuadrantColor(nX, nY);
+				oImage.arRows.insert(oImage.arRows.end(), {(BYTE)c.r, (BYTE)c.g, (BYTE)c.b, 255});
+			}
+		}
+		const std::vector<BYTE> arPng = MakePng(oImage);
+
+		std::vector<BYTE> arData = IcoHeader(c_nQuadImageSize, c_nQuadImageSize, (unsigned int)arPng.size());
+		arData.insert(arData.end(), arPng.begin(), arPng.end());
+		return arData;
+	}
+}
+
+TEST(CIcoTest, DetectsBitmapAndPngIcons)
+{
+	EXPECT_EQ(_CXIMAGE_FORMAT_ICO, FileType(MakeBitmapIco()));
+	EXPECT_EQ(_CXIMAGE_FORMAT_ICO, FileType(MakePngIco()));
+
+	// A cursor has the same layout
+	std::vector<BYTE> arCursor = MakeBitmapIco();
+	arCursor[2] = 2;
+	EXPECT_EQ(_CXIMAGE_FORMAT_ICO, FileType(arCursor));
+}
+
+TEST(CIcoTest, DecodesBitmapAndPngIcons)
+{
+	for (const std::vector<BYTE>& arData : {MakeBitmapIco(), MakePngIco()})
+	{
+		for (bool bIsRGBA : {false, true})
+		{
+			CBgraFrame oFrame;
+			ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+			for (int nY : {4, 27})
+				for (int nX : {4, 27})
+					EXPECT_EQ(QuadrantColor(nX, nY), Pixel(oFrame, nX, nY, bIsRGBA)) << nX << ", " << nY;
+		}
+	}
+}
+
+TEST(CIcoTest, RejectsOtherData)
+{
+	// The directory entry's width does not match the image
+	std::vector<BYTE> arData = MakeBitmapIco();
+	arData[6] = 16;
+	EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(arData));
+
+	// The image offset points past the end
+	arData = MakeBitmapIco();
+	arData[21] = 0x7F;
+	EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(arData));
+
+	// No images
+	arData = MakeBitmapIco();
+	arData[4] = 0;
+	EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(arData));
+
+	// Short buffers starting with zeros, like ISO media boxes
+	for (size_t nSize : {16, 22, 30, 39})
+		EXPECT_NE(_CXIMAGE_FORMAT_ICO, FileType(std::vector<BYTE>(nSize, 0))) << nSize;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// PSD
+
+namespace
+{
+	struct CPsdOptions
+	{
+		unsigned int nVersion = 1;
+		int nDepth = 8;                       // 8 or 16 bits per channel
+		bool bRle = false;
+		bool bAlpha = false;                  // a fourth channel: 255, 128, 255, 0 per quadrant
+		std::vector<BYTE> arLayerSection;     // contents of the layer and mask section
+	};
+
+	// PackBits, one literal run per row (at most 128 bytes, enough here)
+	std::vector<BYTE> PackBitsRow(const std::vector<BYTE>& arRow)
+	{
+		std::vector<BYTE> arPacked;
+		for (size_t i = 0; i < arRow.size(); i += 128)
+		{
+			const size_t nCount = std::min<size_t>(128, arRow.size() - i);
+			arPacked.push_back((BYTE)(nCount - 1));
+			arPacked.insert(arPacked.end(), arRow.begin() + i, arRow.begin() + i + nCount);
+		}
+		return arPacked;
+	}
+
+	// The quadrants as an RGB Photoshop file: the merged image, one plane per
+	// channel. 16 bit samples are the 8 bit ones times 257.
+	std::vector<BYTE> MakePsd(const CPsdOptions& oOptions = CPsdOptions())
+	{
+		std::vector<BYTE> arData = Bytes("8BPS");
+		arData.push_back(0);
+		arData.push_back((BYTE)oOptions.nVersion);
+		arData.insert(arData.end(), 6, 0);        // reserved
+		const int nChannels = oOptions.bAlpha ? 4 : 3;
+		arData.push_back(0);
+		arData.push_back((BYTE)nChannels);
+		PutUInt32BE(arData, c_nQuadImageSize);    // height
+		PutUInt32BE(arData, c_nQuadImageSize);    // width
+		arData.push_back(0);
+		arData.push_back((BYTE)oOptions.nDepth);
+		arData.push_back(0);
+		arData.push_back(3);                      // RGB
+		PutUInt32BE(arData, 0);                   // color mode data
+		PutUInt32BE(arData, 0);                   // image resources
+		PutUInt32BE(arData, (unsigned int)oOptions.arLayerSection.size());
+		arData.insert(arData.end(), oOptions.arLayerSection.begin(), oOptions.arLayerSection.end());
+
+		std::vector<std::vector<BYTE>> arRows;    // per channel, top row first
+		const int arAlpha[4] = {255, 128, 255, 0};
+		for (int nChannel = 0; nChannel < nChannels; ++nChannel)
+		{
+			for (int nY = 0; nY < c_nQuadImageSize; ++nY)
+			{
+				std::vector<BYTE> arRow;
+				for (int nX = 0; nX < c_nQuadImageSize; ++nX)
+				{
+					const CColor c = QuadrantColor(nX, nY);
+					const BYTE nValue = (BYTE)(0 == nChannel ? c.r : (1 == nChannel ? c.g : (2 == nChannel ? c.b
+										: arAlpha[(nY >= 16 ? 2 : 0) + (nX >= 16 ? 1 : 0)])));
+					arRow.push_back(nValue);
+					if (16 == oOptions.nDepth)
+						arRow.push_back(nValue);  // big-endian nValue * 257
+				}
+				arRows.push_back(arRow);
+			}
+		}
+
+		arData.push_back(0);
+		arData.push_back(oOptions.bRle ? 1 : 0);  // compression
+		if (oOptions.bRle)
+		{
+			std::vector<std::vector<BYTE>> arPacked;
+			for (const std::vector<BYTE>& arRow : arRows)
+				arPacked.push_back(PackBitsRow(arRow));
+			for (const std::vector<BYTE>& arRow : arPacked)
+			{
+				arData.push_back((BYTE)(arRow.size() >> 8));
+				arData.push_back((BYTE)arRow.size());
+			}
+			for (const std::vector<BYTE>& arRow : arPacked)
+				arData.insert(arData.end(), arRow.begin(), arRow.end());
+		}
+		else
+		{
+			for (const std::vector<BYTE>& arRow : arRows)
+				arData.insert(arData.end(), arRow.begin(), arRow.end());
+		}
+		return arData;
+	}
+
+	void ExpectPsdQuadrants(const std::vector<BYTE>& arData)
+	{
+		for (bool bIsRGBA : {false, true})
+		{
+			CBgraFrame oFrame;
+			ASSERT_TRUE(Decode(arData, oFrame, bIsRGBA));
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+			ASSERT_EQ(c_nQuadImageSize, oFrame.get_Height());
+			// The corners too: the top and bottom rows were once lost
+			for (int nY : {0, 4, 27, 31})
+				for (int nX : {0, 4, 27, 31})
+					EXPECT_EQ(QuadrantColor(nX, nY), Pixel(oFrame, nX, nY, bIsRGBA)) << nX << ", " << nY;
+		}
+	}
+}
+
+TEST(CPsdTest, DetectsPsd)
+{
+	EXPECT_EQ(_CXIMAGE_FORMAT_PSD, FileType(MakePsd()));
+
+	// The large document format (PSB) is not supported
+	CPsdOptions oPsb;
+	oPsb.nVersion = 2;
+	EXPECT_NE(_CXIMAGE_FORMAT_PSD, FileType(MakePsd(oPsb)));
+}
+
+TEST(CPsdTest, DecodesRawAndRle)
+{
+	ExpectPsdQuadrants(MakePsd());
+
+	CPsdOptions oRle;
+	oRle.bRle = true;
+	ExpectPsdQuadrants(MakePsd(oRle));
+}
+
+TEST(CPsdTest, Decodes16Bit)
+{
+	// Samples of 0x8000 and above used to turn into negative numbers
+	for (bool bRle : {false, true})
+	{
+		CPsdOptions oOptions;
+		oOptions.nDepth = 16;
+		oOptions.bRle = bRle;
+		ExpectPsdQuadrants(MakePsd(oOptions));
+	}
+}
+
+TEST(CPsdTest, DecodesTransparency)
+{
+	// The transparency is the fourth channel, after the colors
+	for (int nDepth : {8, 16})
+	{
+		CPsdOptions oOptions;
+		oOptions.nDepth = nDepth;
+		oOptions.bAlpha = true;
+		CBgraFrame oFrame;
+		ASSERT_TRUE(Decode(MakePsd(oOptions), oFrame)) << nDepth;
+		ASSERT_EQ(c_nQuadImageSize, oFrame.get_Width());
+		EXPECT_EQ(255, Alpha(oFrame, 4, 4)) << nDepth;
+		EXPECT_EQ(128, Alpha(oFrame, 27, 4)) << nDepth;
+		EXPECT_EQ(255, Alpha(oFrame, 4, 27)) << nDepth;
+		EXPECT_EQ(0, Alpha(oFrame, 27, 27)) << nDepth;
+		EXPECT_EQ(QuadrantColor(4, 4), Pixel(oFrame, 4, 4)) << nDepth;
+		EXPECT_EQ(QuadrantColor(4, 27), Pixel(oFrame, 4, 27)) << nDepth;
+	}
+}
+
+TEST(CPsdTest, SkipsLayers)
+{
+	// Only the merged image is decoded; the layer section is skipped whatever
+	// it holds
+	CPsdOptions oOptions;
+	oOptions.arLayerSection = Bytes("not a layer section libpsd could parse");
+	ExpectPsdQuadrants(MakePsd(oOptions));
+}
+
+TEST(CPsdTest, RejectsInvalidImages)
+{
+	CBgraFrame oFrame;
+
+	// Raw data cut short
+	std::vector<BYTE> arData = MakePsd();
+	arData.resize(arData.size() - 100);
+	EXPECT_FALSE(Decode(arData, oFrame));
+
+	// Compressed data cut short
+	CPsdOptions oRle;
+	oRle.bRle = true;
+	arData = MakePsd(oRle);
+	arData.resize(arData.size() - 100);
+	EXPECT_FALSE(Decode(arData, oFrame));
+
+	// A run that would write past the image: 0x81 repeats the next byte 128
+	// times, in every row
+	arData = MakePsd(oRle);
+	const size_t nCounts = arData.size() - 3 * c_nQuadImageSize * (c_nQuadImageSize + 1) - 3 * c_nQuadImageSize * 2;
+	const size_t nRows = nCounts + 3 * c_nQuadImageSize * 2;
+	for (size_t i = nRows; i + 1 < arData.size(); i += c_nQuadImageSize + 1)
+	{
+		arData[i] = 0x81;
+		arData[i + 1] = 0x55;
+	}
+	EXPECT_FALSE(Decode(arData, oFrame));
+}

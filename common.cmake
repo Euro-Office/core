@@ -30,6 +30,17 @@ if(NOT IS_ABSOLUTE "${EO_CORE_TOOLS_DIR}")
     cmake_path(ABSOLUTE_PATH EO_CORE_TOOLS_DIR BASE_DIRECTORY "${CMAKE_BINARY_DIR}" NORMALIZE)
 endif()
 
+# Static and Windows import libraries of a core package (see
+# cmake/core-package.cmake). Only used by core's own top-level build.
+if( NOT DEFINED EO_CORE_LIB_DIR )
+    cmake_path( APPEND DEFAULT_EO_CORE_LIB_DIR "${CMAKE_BINARY_DIR}" "package" "lib" )
+    set(EO_CORE_LIB_DIR "${DEFAULT_EO_CORE_LIB_DIR}" CACHE PATH "Where to place the static and import libraries of a core package")
+endif()
+file(TO_CMAKE_PATH "${EO_CORE_LIB_DIR}" EO_CORE_LIB_DIR)
+if(NOT IS_ABSOLUTE "${EO_CORE_LIB_DIR}")
+    cmake_path(ABSOLUTE_PATH EO_CORE_LIB_DIR BASE_DIRECTORY "${CMAKE_BINARY_DIR}" NORMALIZE)
+endif()
+
 if( NOT DEFINED EO_CORE_3RD_PARTY_DIR )
     set(EO_CORE_3RD_PARTY_DIR "${DEFAULT_EO_CORE_3RD_PARTY_DIR}" CACHE PATH "Where to place and build 3rd party projects (absolute path recommended)")
 endif()
@@ -43,6 +54,12 @@ if( NOT DEFINED EO_CORE_3RD_PARTY_INSTALL_DIR )
     cmake_path( APPEND DEFAULT_EO_CORE_3RD_PARTY_INSTALL_DIR "${EO_CORE_3RD_PARTY_DIR}" "install" )
     set(EO_CORE_3RD_PARTY_INSTALL_DIR "${DEFAULT_EO_CORE_3RD_PARTY_INSTALL_DIR}" CACHE PATH "3rd party install dir.")
 endif()
+
+# FreeType sources (Common/3dParty/freetype), compiled into each consumer
+set(FREETYPE_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/freetype")
+
+# OpenJPEG sources (Common/3dParty/openjpeg), compiled into each consumer
+set(OPENJPEG_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openjpeg")
 
 if( NOT DEFINED VCPKG_BINARY_REMOTE )
     set(VCPKG_BINARY_REMOTE "https://s3.eu-central-4.ionoscloud.com/eo-build-assets/vcpkg" CACHE STRING "Base URL for vcpkg binary package remote")
@@ -74,7 +91,8 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm,libxml2-wasm"
+            "--target=wasm"
+            "--only=openssl-hash,hunspell,brotli,cryptopp,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm,jbig2enc,djvulibre"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -106,6 +124,64 @@ if( EMSCRIPTEN )
         INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
     )
 
+    # Setup libjpeg-turbo-wasm
+    set(LIBJPEG_TURBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libjpeg-turbo-wasm")
+    get_filename_component(LIBJPEG_TURBO_INSTALL_DIR_ABS "${LIBJPEG_TURBO_INSTALL_DIR}" ABSOLUTE)
+    add_library(jpeg STATIC IMPORTED GLOBAL)
+    set_target_properties(jpeg PROPERTIES
+        IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/libjpeg.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
+    )
+
+    # Setup libpng-wasm
+    set(LIBPNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libpng-wasm")
+    get_filename_component(LIBPNG_INSTALL_DIR_ABS "${LIBPNG_INSTALL_DIR}" ABSOLUTE)
+    add_library(png STATIC IMPORTED GLOBAL)
+    set_target_properties(png PROPERTIES
+        IMPORTED_LOCATION "${LIBPNG_INSTALL_DIR_ABS}/lib/libpng16.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBPNG_INSTALL_DIR_ABS}/include"
+    )
+
+    # Setup libtiff-wasm
+    set(LIBTIFF_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libtiff-wasm")
+    get_filename_component(LIBTIFF_INSTALL_DIR_ABS "${LIBTIFF_INSTALL_DIR}" ABSOLUTE)
+    add_library(tiff STATIC IMPORTED GLOBAL)
+    set_target_properties(tiff PROPERTIES
+        IMPORTED_LOCATION "${LIBTIFF_INSTALL_DIR_ABS}/lib/libtiff.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBTIFF_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES jpeg
+    )
+
+    # Setup libwebp-wasm
+    set(LIBWEBP_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libwebp-wasm")
+    get_filename_component(LIBWEBP_INSTALL_DIR_ABS "${LIBWEBP_INSTALL_DIR}" ABSOLUTE)
+    add_library(sharpyuv STATIC IMPORTED GLOBAL)
+    set_target_properties(sharpyuv PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libsharpyuv.a"
+    )
+    add_library(webp STATIC IMPORTED GLOBAL)
+    set_target_properties(webp PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libwebp.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBWEBP_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES sharpyuv
+    )
+    foreach(LIBWEBP_COMPONENT webpdemux webpmux)
+        add_library(${LIBWEBP_COMPONENT} STATIC IMPORTED GLOBAL)
+        set_target_properties(${LIBWEBP_COMPONENT} PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/lib${LIBWEBP_COMPONENT}.a"
+            INTERFACE_LINK_LIBRARIES webp
+        )
+    endforeach()
+
+    # Setup leptonica-wasm
+    set(LEPTONICA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/leptonica-wasm")
+    get_filename_component(LEPTONICA_INSTALL_DIR_ABS "${LEPTONICA_INSTALL_DIR}" ABSOLUTE)
+    add_library(leptonica STATIC IMPORTED GLOBAL)
+    set_target_properties(leptonica PROPERTIES
+        IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/libleptonica.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+    )
+
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
@@ -121,7 +197,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,harfbuzz,html,hyphen,icu,libxml2,md,openssl,socketio,v8,zlib-ng"
+                "--only=apple,boost,brotli,cryptopp,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff,libwebp,libde265,libaom,libheif,leptonica,jbig2enc,djvulibre"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -138,8 +214,14 @@ else()
                 set(PLATFORM_EXCLUDE ",qt")
             endif()
 
+            set(PREBUILT_EXCLUDE "")
+            if(EO_CORE_PREBUILT_DIR)
+                # Only doctrenderer links V8, and the package has it built in
+                set(PREBUILT_EXCLUDE ",v8")
+            endif()
+
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}${PREBUILT_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -167,9 +249,6 @@ else()
 
     if(MSVC)
         set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" CACHE STRING "" FORCE)
-        foreach(flag_var CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS CMAKE_C_FLAGS_RELEASE)
-            string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-        endforeach()
     endif()
 
     if(BUILD_DESKTOP)
@@ -218,6 +297,14 @@ else()
         # Setup cef
         set(CEF_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cef")
         list(APPEND CMAKE_MODULE_PATH "${CEF_ROOT}/cmake")
+        # CEF only recognizes arm64 by the macOS/MSVC names and would build
+        # libcef_dll_wrapper with x86-64 flags for Linux aarch64.
+        if(NOT DEFINED PROJECT_ARCH AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|ARM64)$")
+            set(PROJECT_ARCH "arm64")
+        endif()
+        # CEF builds libcef_dll_wrapper with the static runtime (/MT) by default;
+        # everything here uses the DLL runtime (CMAKE_MSVC_RUNTIME_LIBRARY above).
+        set(CEF_RUNTIME_LIBRARY_FLAG "/MD" CACHE STRING "MSVC runtime for CEF targets")
         find_package(CEF REQUIRED)
 
     endif()
@@ -333,6 +420,250 @@ else()
         )
     endif()
 
+    # Setup libjpeg-turbo
+    set(LIBJPEG_TURBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libjpeg-turbo")
+    get_filename_component(LIBJPEG_TURBO_INSTALL_DIR_ABS "${LIBJPEG_TURBO_INSTALL_DIR}" ABSOLUTE)
+    add_library(jpeg STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        # libjpeg-turbo names its static MSVC library jpeg-static.lib
+        set_target_properties(jpeg PROPERTIES
+            IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/jpeg-static.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
+        )
+    else()
+        set_target_properties(jpeg PROPERTIES
+            IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/libjpeg.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
+        )
+    endif()
+
+    # Setup libpng
+    set(LIBPNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libpng")
+    get_filename_component(LIBPNG_INSTALL_DIR_ABS "${LIBPNG_INSTALL_DIR}" ABSOLUTE)
+    add_library(png STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set(LIBPNG_LIB_NAME "libpng16_static.lib")
+    else()
+        set(LIBPNG_LIB_NAME "libpng16.a")
+    endif()
+    set_target_properties(png PROPERTIES
+        IMPORTED_LOCATION "${LIBPNG_INSTALL_DIR_ABS}/lib/${LIBPNG_LIB_NAME}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBPNG_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES z
+    )
+
+    # Setup libtiff
+    set(LIBTIFF_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libtiff")
+    get_filename_component(LIBTIFF_INSTALL_DIR_ABS "${LIBTIFF_INSTALL_DIR}" ABSOLUTE)
+    add_library(tiff STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set(LIBTIFF_LIB_NAME "tiff.lib")
+    else()
+        set(LIBTIFF_LIB_NAME "libtiff.a")
+    endif()
+    set_target_properties(tiff PROPERTIES
+        IMPORTED_LOCATION "${LIBTIFF_INSTALL_DIR_ABS}/lib/${LIBTIFF_LIB_NAME}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBTIFF_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES "jpeg;z"
+    )
+
+    # Setup libwebp (MSVC builds are named like the others, libwebp.lib)
+    set(LIBWEBP_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libwebp")
+    get_filename_component(LIBWEBP_INSTALL_DIR_ABS "${LIBWEBP_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(LIBWEBP_LIB_SUFFIX ".lib")
+        set(LIBWEBP_DEP_LIBS "")
+    elseif( ANDROID )
+        set(LIBWEBP_LIB_SUFFIX ".a")
+        add_library(cpufeatures-webp STATIC IMPORTED GLOBAL)
+        set_target_properties(cpufeatures-webp PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libcpufeatures-webp.a"
+            INTERFACE_LINK_LIBRARIES dl
+        )
+        set(LIBWEBP_DEP_LIBS "cpufeatures-webp;m")
+    else()
+        set(LIBWEBP_LIB_SUFFIX ".a")
+        set(LIBWEBP_DEP_LIBS m)
+    endif()
+    add_library(sharpyuv STATIC IMPORTED GLOBAL)
+    set_target_properties(sharpyuv PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libsharpyuv${LIBWEBP_LIB_SUFFIX}"
+        INTERFACE_LINK_LIBRARIES "${LIBWEBP_DEP_LIBS}"
+    )
+    add_library(webp STATIC IMPORTED GLOBAL)
+    set_target_properties(webp PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libwebp${LIBWEBP_LIB_SUFFIX}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBWEBP_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES "sharpyuv;${LIBWEBP_DEP_LIBS}"
+    )
+    foreach(LIBWEBP_COMPONENT webpdemux webpmux)
+        add_library(${LIBWEBP_COMPONENT} STATIC IMPORTED GLOBAL)
+        set_target_properties(${LIBWEBP_COMPONENT} PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/lib${LIBWEBP_COMPONENT}${LIBWEBP_LIB_SUFFIX}"
+            INTERFACE_LINK_LIBRARIES webp
+        )
+    endforeach()
+
+    # Setup libheif with libde265 (HEIC) and libaom (AVIF), decoding only.
+    # Not in the wasm builds (CXIMAGE_SUPPORT_HEIF is off there).
+    set(LIBDE265_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libde265")
+    get_filename_component(LIBDE265_INSTALL_DIR_ABS "${LIBDE265_INSTALL_DIR}" ABSOLUTE)
+    set(LIBAOM_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libaom")
+    get_filename_component(LIBAOM_INSTALL_DIR_ABS "${LIBAOM_INSTALL_DIR}" ABSOLUTE)
+    set(LIBHEIF_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libheif")
+    get_filename_component(LIBHEIF_INSTALL_DIR_ABS "${LIBHEIF_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(LIBDE265_LIBRARY "${LIBDE265_INSTALL_DIR_ABS}/lib/libde265.lib")
+        set(LIBAOM_LIBRARY "${LIBAOM_INSTALL_DIR_ABS}/lib/aom.lib")
+        set(LIBHEIF_LIBRARY "${LIBHEIF_INSTALL_DIR_ABS}/lib/heif.lib")
+        set(LIBHEIF_DEP_LIBS "")
+    else()
+        set(LIBDE265_LIBRARY "${LIBDE265_INSTALL_DIR_ABS}/lib/libde265.a")
+        set(LIBAOM_LIBRARY "${LIBAOM_INSTALL_DIR_ABS}/lib/libaom.a")
+        set(LIBHEIF_LIBRARY "${LIBHEIF_INSTALL_DIR_ABS}/lib/libheif.a")
+        # libde265 decodes on its own threads
+        if( ANDROID OR APPLE )
+            set(LIBHEIF_DEP_LIBS m)
+        else()
+            set(LIBHEIF_DEP_LIBS "m;pthread")
+        endif()
+    endif()
+    add_library(de265 STATIC IMPORTED GLOBAL)
+    set_target_properties(de265 PROPERTIES
+        IMPORTED_LOCATION "${LIBDE265_LIBRARY}"
+        INTERFACE_LINK_LIBRARIES "${LIBHEIF_DEP_LIBS}"
+    )
+    add_library(aom STATIC IMPORTED GLOBAL)
+    set_target_properties(aom PROPERTIES
+        IMPORTED_LOCATION "${LIBAOM_LIBRARY}"
+        INTERFACE_LINK_LIBRARIES "${LIBHEIF_DEP_LIBS}"
+    )
+    add_library(heif STATIC IMPORTED GLOBAL)
+    set_target_properties(heif PROPERTIES
+        IMPORTED_LOCATION "${LIBHEIF_LIBRARY}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBHEIF_INSTALL_DIR_ABS}/include"
+        INTERFACE_COMPILE_DEFINITIONS LIBHEIF_STATIC_BUILD
+        INTERFACE_LINK_LIBRARIES "de265;aom"
+    )
+
+    # Setup leptonica
+    set(LEPTONICA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/leptonica")
+    get_filename_component(LEPTONICA_INSTALL_DIR_ABS "${LEPTONICA_INSTALL_DIR}" ABSOLUTE)
+    add_library(leptonica STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set_target_properties(leptonica PROPERTIES
+            IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/leptonica-1.87.0.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+            INTERFACE_LINK_LIBRARIES "user32;gdi32"
+        )
+    else()
+        set_target_properties(leptonica PROPERTIES
+            IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/libleptonica.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+            INTERFACE_LINK_LIBRARIES m
+        )
+    endif()
+
+endif()
+
+# Crypto++ is fetched as sources and compiled by core (Common/3dParty/cryptopp).
+# Include it as <cryptopp/...>.
+set(CRYPTOPP_INCLUDE_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cryptopp")
+set(CRYPTOPP_SOURCES_DIR "${CRYPTOPP_INCLUDE_DIR}/cryptopp")
+
+# jbig2enc is compiled into the targets that use it (source-only dependency)
+set(JBIG2ENC_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/jbig2enc/src")
+set(JBIG2ENC_SOURCES
+    "${JBIG2ENC_SOURCES_DIR}/jbig2arith.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2comparator.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2enc.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2sym.cc"
+)
+
+# DjVuLibre's libdjvu is compiled into the targets that use it (source-only
+# dependency). It only builds with autotools, so DJVULIBRE_DEFINITIONS sets
+# what its configure script would. No HAVE_NAMESPACES: core uses the classes
+# without the DJVU:: namespace.
+set(DJVULIBRE_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/djvulibre/libdjvu")
+set(DJVULIBRE_SOURCES
+    "${DJVULIBRE_SOURCES_DIR}/Arrays.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/BSByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/BSEncodeByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/ByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DataPool.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/debug.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmDir.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmDir0.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmDoc.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmNav.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuAnno.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuDocEditor.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuDocument.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuDumpHelper.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuErrorList.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuFile.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuFileCache.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuGlobal.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuGlobalMemory.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuImage.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuInfo.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuMessage.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuMessageLite.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuNavDir.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuPalette.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuPort.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuText.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuToPS.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GBitmap.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GContainer.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GException.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GIFFManager.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GMapAreas.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GOS.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GPixmap.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GRect.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GScaler.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GSmartPointer.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GString.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GThreads.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GUnicode.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GURL.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/IFFByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/IW44EncodeCodec.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/IW44Image.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/JB2EncodeCodec.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/JB2Image.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/JPEGDecoder.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/MMRDecoder.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/MMX.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/UnicodeByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/XMLParser.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/XMLTags.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/ZPCodec.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/atomic.cpp"
+)
+if(WIN32)
+    # Compiled in, not imported from libdjvulibre.dll
+    set(DJVULIBRE_DEFINITIONS "DJVUAPI=")
+else()
+    set(DJVULIBRE_DEFINITIONS
+        UNIX
+        HAVE_PTHREAD=1
+        HAVE_STDINCLUDES
+        HAVE_STDINT_H
+        HAS_WCHAR
+        HAVE_WCHAR_H
+        HAVE_MBSTATE_T
+        HAVE_SNPRINTF=1
+        # Without it GString formats with vsprintf() into a fixed buffer
+        USE_VSNPRINTF=vsnprintf
+    )
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        list(APPEND DJVULIBRE_DEFINITIONS HAVE_INTEL_ATOMIC_BUILTINS=1)
+    endif()
+    if(ANDROID)
+        list(APPEND DJVULIBRE_DEFINITIONS HAS_MBSTATE=1)
+    endif()
 endif()
 
 # Do NOT auto-add absolute link directories to RPATH
@@ -498,6 +829,26 @@ else() # if( LINUX )
 
 endif()
 
+# The CI builds turn this on: the warnings filled most of their logs (some
+# 380,000 on Linux), which made them unreadable. Remove once the warnings
+# are fixed.
+option(EO_NO_WARNINGS "Compile without warnings" OFF)
+if(EO_NO_WARNINGS)
+    # -w and /w don't touch the errors, so the flags that turn errors into
+    # warnings or off (-Wno-register for ISO C++17's register) stay
+    if(MSVC)
+        # Else cl warns on every source that /w overrides /W4 and /W3
+        list(FILTER COMMON_CXX_FLAGS EXCLUDE REGEX "^/W[0-4]$")
+        list(FILTER COMMON_C_FLAGS EXCLUDE REGEX "^/W[0-4]$")
+        foreach(flags CMAKE_C_FLAGS CMAKE_CXX_FLAGS)
+            string(REGEX REPLACE "/W[0-4]" "" ${flags} "${${flags}}")
+        endforeach()
+        add_compile_options(/w)
+    else()
+        add_compile_options(-w)
+    endif()
+endif()
+
 
 function(set_default_options target)
     if(NOT TARGET "${target}")
@@ -619,8 +970,17 @@ function(add_core_gtest)
     if(DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
         set(_eo_test_libpath "${_eo_test_libpath}:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
     endif()
-    set_tests_properties(${T_NAME} PROPERTIES
-        ENVIRONMENT "LD_LIBRARY_PATH=${_eo_test_libpath}:$ENV{LD_LIBRARY_PATH}")
+    if(APPLE)
+        set(_eo_test_libpath_var DYLD_LIBRARY_PATH)
+    else()
+        set(_eo_test_libpath_var LD_LIBRARY_PATH)
+    endif()
+    set(_eo_test_env "${_eo_test_libpath_var}=${_eo_test_libpath}:$ENV{${_eo_test_libpath_var}}")
+    if(APPLE)
+        # Frameworks (ooxmlsignature) are looked up separately
+        list(APPEND _eo_test_env "DYLD_FRAMEWORK_PATH=${EO_CORE_OUTPUT_DIR}:$ENV{DYLD_FRAMEWORK_PATH}")
+    endif()
+    set_tests_properties(${T_NAME} PROPERTIES ENVIRONMENT "${_eo_test_env}")
 endfunction()
 
 function(copy_artifacts_to_folder artifacts dest_dir)
@@ -763,3 +1123,40 @@ function( add_cpp_sources_from_dir_recurive TARGET DIR )
         ${DIR}
     )
 endfunction()
+
+# Windows: the core DLLs load each other through the private "converter"
+# side-by-side assembly, converter.manifest next to them (DesktopEditors
+# installs them in converter\). Call after the core targets exist; targets
+# that aren't built here (missing or IMPORTED) are skipped.
+set(_EO_CORE_DIR "${CMAKE_CURRENT_LIST_DIR}")
+function(eo_core_converter_assembly)
+    if(NOT WIN32)
+        return()
+    endif()
+    string(TOLOWER "${CMAKE_CXX_COMPILER_ARCHITECTURE_ID}" _arch)
+    if(_arch STREQUAL "x64" OR _arch STREQUAL "")
+        set(_arch amd64)
+    endif()
+    foreach(_t doctrenderer DocxRenderer kernel kernel_network graphics
+               UnicodeConverter PdfFile DjVuFile XpsFile ooxmlsignature
+               Fb2File EpubFile HtmlFile2 OFDFile IWorkFile HWPFile
+               StarMathConverter)
+        if(TARGET ${_t})
+            get_target_property(_imported ${_t} IMPORTED)
+            if(NOT _imported)
+                target_link_options(${_t} PRIVATE
+                    "/MANIFESTDEPENDENCY:type='win32' name='converter' version='1.0.0.0' processorArchitecture='${_arch}'")
+            endif()
+        endif()
+    endforeach()
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+        "${_EO_CORE_DIR}/Common/msvc/converter.manifest")
+    file(READ "${_EO_CORE_DIR}/Common/msvc/converter.manifest" _manifest)
+    string(REPLACE "processorArchitecture=\"amd64\"" "processorArchitecture=\"${_arch}\"" _manifest "${_manifest}")
+    file(WRITE "${EO_CORE_OUTPUT_DIR}/converter.manifest" "${_manifest}")
+endfunction()
+
+# A core package instead of building core, see cmake/prebuilt-core.cmake
+if(EO_CORE_PREBUILT_DIR)
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake/prebuilt-core.cmake")
+endif()

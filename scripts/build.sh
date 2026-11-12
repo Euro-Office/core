@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+
+# Configures and builds core on Linux and macOS, natively, for Android or
+# for WebAssembly.
+# The Dockerfiles in .docker/, the CI workflows and the downstream repos all
+# build core through this script, so they get the same binaries. Windows:
+# build.ps1.
+#
+# Usage: scripts/build.sh [options] [-- extra cmake arguments]
+#   --build-dir DIR    CMake build directory (default: build)
+#   --output DIR       build output (default: <build-dir>/package): the
+#                      libraries and x2t in bin/, the tools in tools/, the
+#                      static and import libraries in lib/ (a core package,
+#                      see cmake/prebuilt-core.cmake); for Android the
+#                      stripped libraries, flat; for WebAssembly the
+#                      engine modules
+#   --tests            also build the unit tests (run them with ctest);
+#                      not with --android or --wasm
+#   --ccache           compile through ccache
+#   --android ABI      cross-compile x2t's libraries for an Android ABI
+#                      (arm64-v8a, x86_64); needs ANDROID_NDK_ROOT
+#   --android-api N    minimum Android API level (default: 26)
+#   --wasm             build the WebAssembly modules of the editors (fonts,
+#                      drawingfile, zlib, hash, spell); needs emcmake (emsdk)
+#
+# Environment: VCPKG_ROOT (not for Android or WebAssembly); CORE_PYTHON, the
+# Python for the third-party builds (default: the one CMake finds).
+
+set -euo pipefail
+
+core="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+build_dir=build
+output=
+tests=OFF
+ccache=
+abi=
+api=26
+wasm=
+
+usage() { sed -n '/^# Usage/,/^# Environment/p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit "$1"; }
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --build-dir)   build_dir="$2"; shift 2 ;;
+        --output)      output="$2"; shift 2 ;;
+        --tests)       tests=ON; shift ;;
+        --ccache)      ccache=1; shift ;;
+        --android)     abi="$2"; shift 2 ;;
+        --android-api) api="$2"; shift 2 ;;
+        --wasm)        wasm=1; shift ;;
+        -h|--help)     usage 0 ;;
+        --)            shift; break ;;
+        *)             echo "unknown option: $1" >&2; usage 1 ;;
+    esac
+done
+
+if { [ -n "$abi" ] || [ -n "$wasm" ]; } && [ "$tests" = ON ]; then
+    echo "--tests doesn't work with --android or --wasm" >&2
+    exit 1
+fi
+if [ -n "$abi" ] && [ -n "$wasm" ]; then
+    echo "--android and --wasm can't be combined" >&2
+    exit 1
+fi
+
+mkdir -p "$build_dir"
+build_dir="$(cd "$build_dir" && pwd)"
+output="${output:-$build_dir/package}"
+mkdir -p "$output"
+output="$(cd "$output" && pwd)"
+
+args=( -G Ninja -S "$core" -B "$build_dir" )
+# The WebAssembly modules set their own optimisation flags, and were never
+# built with NDEBUG
+[ -z "$wasm" ] && args+=( -DCMAKE_BUILD_TYPE=Release )
+[ -n "${CORE_PYTHON:-}" ] && args+=( -DPYTHON_BIN="$CORE_PYTHON" )
+if [ -n "$ccache" ] && [ -n "$wasm" ]; then
+    # emcc runs clang through ccache. A launcher would wrap em++, a script
+    # that stays the same across Emscripten versions, so ccache would reuse
+    # objects from another compiler.
+    export EM_COMPILER_WRAPPER=ccache
+    export CCACHE_SLOPPINESS=time_macros,include_file_mtime,include_file_ctime
+elif [ -n "$ccache" ]; then
+    args+=( -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache )
+    # Otherwise ccache skips every source of a target with precompiled headers
+    # (about half of core): a fresh .gch is always newer than the compile
+    export CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
+    # ccache hashes the precompiled header, and Clang's holds the mtimes of its
+    # headers: without this, a new checkout misses on all of its sources
+    if [ -n "$abi" ] || [ "$(uname -s)" = Darwin ]; then
+        args+=( "-DCMAKE_C_FLAGS=-Xclang -fno-pch-timestamp" "-DCMAKE_CXX_FLAGS=-Xclang -fno-pch-timestamp" )
+    else
+        # Rocky's c++ is a hard link to g++, so ccache 4.5 can't tell it is GCC
+        # from its name, and the C++ precompiled headers never hit
+        export CCACHE_COMPILERTYPE="${CCACHE_COMPILERTYPE:-gcc}"
+    fi
+fi
+
+if [ -n "$wasm" ]; then
+    args+=( -DEO_CORE_OUTPUT_DIR="$output" )
+elif [ -n "$abi" ]; then
+    : "${ANDROID_NDK_ROOT:?ANDROID_NDK_ROOT must point at the NDK}"
+    args+=(
+        -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_ROOT/build/cmake/android.toolchain.cmake"
+        -DANDROID_ABI="$abi"
+        -DANDROID_PLATFORM="android-$api"
+        -DANDROID_STL=c++_shared
+        -DEO_CORE_OUTPUT_DIR="$build_dir/unstripped"
+    )
+else
+    : "${VCPKG_ROOT:?VCPKG_ROOT must point at vcpkg}"
+    args+=(
+        -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
+        -DVCPKG_MANIFEST_MODE=ON
+        -DVCPKG_MANIFEST_DIR="$core"
+        -DEO_CORE_OUTPUT_DIR="$output/bin"
+        -DEO_CORE_TOOLS_DIR="$output/tools"
+        -DEO_CORE_LIB_DIR="$output/lib"
+        -DEO_BUILD_TESTS="$tests"
+    )
+    [ "$tests" = ON ] && args+=( -DVCPKG_MANIFEST_FEATURES=tests )
+    case "$(uname -s)-$(uname -m)" in
+        # -O3 without -DNDEBUG, as the Linux release images always did
+        Linux-*)        args+=( -DCMAKE_C_FLAGS_RELEASE=-O3 -DCMAKE_CXX_FLAGS_RELEASE=-O3 ) ;;
+        Darwin-arm64)   args+=( -DVCPKG_TARGET_TRIPLET=arm64-osx ) ;;
+        Darwin-x86_64)  args+=( -DVCPKG_TARGET_TRIPLET=x64-osx ) ;;
+    esac
+fi
+
+if [ -n "$wasm" ]; then
+    emcmake cmake "${args[@]}" "$@"
+else
+    cmake "${args[@]}" "$@"
+fi
+
+if [ -z "$abi" ]; then
+    cmake --build "$build_dir"
+    exit 0
+fi
+
+# Android: only x2t and the libraries it and the editor engine load
+cmake --build "$build_dir" --target x2tlib
+# The NDK's toolchain always adds -g: the build tree keeps the unstripped
+# libraries, the output gets stripped ones. Strip from the linker's output, not
+# from the copy in unstripped/: lld writes through mmap and the copy is taken
+# right after the link, and on the CI runners such a copy sometimes came out
+# with zeroed section headers ("invalid sh_type for string table section").
+# The ICU libraries are only in unstripped/ (copied from the third-party tree).
+strip_tool=( "$ANDROID_NDK_ROOT"/toolchains/llvm/prebuilt/*/bin/llvm-strip )
+for lib in "$build_dir"/unstripped/*.so; do
+    name="$(basename "$lib")"
+    src="$(find "$build_dir" \( -path "$build_dir/unstripped" -o -path "$output" \) -prune \
+        -o -name "$name" -type f -print -quit)"
+    src="${src:-$lib}"
+    # llvm-strip doesn't name the file when it can't read it
+    "${strip_tool[0]}" --strip-unneeded -o "$output/$name" "$src" \
+        || { echo "llvm-strip failed on $src" >&2; exit 1; }
+done
+ls -1 "$output"

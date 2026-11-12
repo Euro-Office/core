@@ -22,8 +22,8 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#ifndef _PDF_WRITER_H
-#define _PDF_WRITER_H
+#ifndef PDF_WRITER_H
+#define PDF_WRITER_H
 
 #include <string>
 #include <vector>
@@ -38,6 +38,15 @@
 #include "../../DesktopEditor/xmlsec/src/include/Certificate.h"
 #include "SrcWriter/States.h"
 #include "SrcWriter/Annotation.h"
+
+#if !defined(PDFFILE_DECL_EXPORT)
+#if defined(PDFFILE_USE_DYNAMIC_LIBRARY)
+#include "../DesktopEditor/common/base_export.h"
+#define PDFFILE_DECL_EXPORT Q_DECL_EXPORT
+#else
+#define PDFFILE_DECL_EXPORT
+#endif
+#endif
 
 namespace PdfWriter
 {
@@ -57,10 +66,10 @@ namespace Aggplus
 	class CImage;
 }
 
-class CPdfWriter
+class PDFFILE_DECL_EXPORT CPdfWriter
 {
 public:
-	CPdfWriter(NSFonts::IApplicationFonts* pAppFonts, bool isPDFA = false, IRenderer* pRenderer = NULL, bool bCreate = true, const std::wstring& wsTempDirectory = L"");
+	CPdfWriter(NSFonts::IApplicationFonts* pAppFonts, bool isPDFA = false, IRenderer* pRenderer = nullptr, bool bCreate = true, const std::wstring& wsTempDirectory = L"");
 	~CPdfWriter();
 	int          SaveToFile(const std::wstring& wsPath);
 	int          SaveToMemory(BYTE** pData, int* pLength);
@@ -238,7 +247,7 @@ private:
 	PdfWriter::CImageDict* DrawImage(Aggplus::CImage* pImage, const double& dX, const double& dY, const double& dW, const double& dH, const BYTE& nAlpha);
 	bool DrawText(unsigned char* pCodes, const unsigned int& unLen, const double& dX, const double& dY, const std::string& sPUA);
 	bool DrawTextToRenderer(const unsigned int* unGid, const unsigned int& unLen, const double& dX, const double& dY, const std::wstring& wsUnicodeText = L"");
-	bool PathCommandDrawText(unsigned int* pUnicodes, unsigned int unLen, const double& dX, const double& dY, const unsigned int* pGids = NULL);
+	bool PathCommandDrawText(unsigned int* pUnicodes, unsigned int unLen, const double& dX, const double& dY, const unsigned int* pGids = nullptr);
 	int  IsEmbeddedBase14(const std::wstring& wsFontName);
 	bool GetBaseFont14(const std::wstring& wsFontName, int nBase14);
 	bool IsEmbeddedFont(const std::wstring& wsName);
@@ -258,7 +267,7 @@ private:
 	bool IsPageValid();
 	void SetError();
 	void AddLink(PdfWriter::CPage* pPage, const double& dX, const double& dY, const double& dW, const double& dH, const double& dDestX, const double& dDestY, const unsigned int& unDestPage);
-	unsigned char* EncodeString(const unsigned int* pUnicodes, const unsigned int& unUnicodesCount, const unsigned int* pGIDs = NULL);
+	unsigned char* EncodeString(const unsigned int* pUnicodes, const unsigned int& unUnicodesCount, const unsigned int* pGIDs = nullptr);
 	unsigned char* EncodeGID(const unsigned int& unGID, const unsigned int* pUnicodes, const unsigned int& unUnicodesCount);
 	std::wstring GetDownloadFile(const std::wstring& sUrl, const std::wstring& wsTempDirectory);
 	PdfWriter::CAnnotAppearanceObject* DrawAP(PdfWriter::CAnnotation* pAnnot, BYTE* pRender, LONG nLenRender);
@@ -303,4 +312,4 @@ private:
 	friend class PdfWriter::RedactOutputDev;
 };
 
-#endif // _PDF_WRITER_H
+#endif // PDF_WRITER_H

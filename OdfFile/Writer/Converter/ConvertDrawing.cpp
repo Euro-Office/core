@@ -1975,9 +1975,9 @@ void OoxConverter::convert_list_level(PPTX::Logic::TextParagraphPr	*oox_para_pro
 		if (buSzPts.val.IsInit())
 		{
 			if (text_properties)
-				text_properties->fo_font_size_ = odf_types::length(*buSzPts.val, odf_types::length::pt);
+				text_properties->fo_font_size_ = odf_types::length(*buSzPts.val / 100., odf_types::length::pt);
 			else if (odf_list_type == 1000)
-				odf_context()->styles_context()->lists_styles().set_bullet_image_size(*buSzPts.val);
+				odf_context()->styles_context()->lists_styles().set_bullet_image_size(*buSzPts.val / 100.);
 		}
 	}
 	else
@@ -2911,7 +2911,7 @@ void OoxConverter::convert(PPTX::Logic::QuadBezTo *oox_geom_path)
 	
 	std::wstring path_elm = oox_geom_path->x[0] + L" " + oox_geom_path->y[0] + L" " + oox_geom_path->x[1] + L" " + oox_geom_path->y[1];
 	
-	odf_context()->drawing_context()->add_path_element(std::wstring(L"S"), path_elm);
+	odf_context()->drawing_context()->add_path_element(std::wstring(L"Q"), path_elm);
 
 }
 void OoxConverter::convert(PPTX::Logic::CubicBezTo *oox_geom_path)

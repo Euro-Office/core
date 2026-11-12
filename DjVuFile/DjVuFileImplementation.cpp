@@ -38,7 +38,10 @@
 #define VER_DPI		96
 #define HOR_DPI		96
 
+#include <algorithm>
 #include <vector>
+
+#include "DjVuInfo.h"
 
 #include "../DesktopEditor/graphics/pro/js/wasm/src/serialize.h"
 
@@ -114,6 +117,77 @@ namespace NSDjvu
 	}
 }
 
+namespace
+{
+	// Reads the size of a page from its INFO (or IW44) chunk without decoding
+	// the page and without waiting for DjVuFile locks (moved here from the
+	// WinDjView version of DjVuDocument)
+	void ReadPageInfo(const GP<DjVuDocument>& pDoc, int nPage, int& width, int& height, int& nDpi)
+	{
+		width  = 1;
+		height = 1;
+		nDpi   = 96;
+
+		try
+		{
+			GURL url = pDoc->page_to_url(nPage);
+			GP<DataPool> pool = pDoc->request_data(NULL, url);
+			if (!pool)
+				return;
+			GP<ByteStream> stream = pool->get_stream();
+			GP<IFFByteStream> iff(IFFByteStream::create(stream));
+
+			GUTF8String chkid;
+			if (!iff->get_chunk(chkid) ||
+				(chkid != "FORM:DJVI" && chkid != "FORM:DJVU" &&
+				 chkid != "FORM:PM44" && chkid != "FORM:BM44"))
+			{
+				return;
+			}
+
+			bool bHasIW44 = false;
+			while (iff->get_chunk(chkid) != 0)
+			{
+				GP<ByteStream> chunk_stream = iff->get_bytestream();
+
+				if (chkid == "INFO")
+				{
+					GP<DjVuInfo> pInfo = DjVuInfo::create();
+					pInfo->decode(*chunk_stream);
+
+					width  = std::max(pInfo->width, 0);
+					height = std::max(pInfo->height, 0);
+					nDpi   = std::max(pInfo->dpi, 0);
+
+					if ((pInfo->orientation & 1) != 0)
+						std::swap(width, height);
+				}
+				else if (!bHasIW44 && (chkid == "PM44" || chkid == "BM44"))
+				{
+					bHasIW44 = true;
+
+					// serial, slices, major, minor, then the size
+					for (int i = 0; i < 4; ++i)
+						chunk_stream->read8();
+					unsigned int xhi = chunk_stream->read8();
+					unsigned int xlo = chunk_stream->read8();
+					unsigned int yhi = chunk_stream->read8();
+					unsigned int ylo = chunk_stream->read8();
+
+					width  = (xhi << 8) | xlo;
+					height = (yhi << 8) | ylo;
+					nDpi   = 100;
+				}
+
+				iff->seek_close_chunk();
+			}
+		}
+		catch (...)
+		{
+		}
+	}
+}
+
 CDjVuFileImplementation::CDjVuFileImplementation(NSFonts::IApplicationFonts* pFonts)
 {
 	m_pDoc = NULL;
@@ -140,7 +214,13 @@ bool CDjVuFileImplementation::LoadFromFile(const std::wstring& wsSrcFileName, co
 		GUTF8String utf8;
 		GURL url = GURL::Filename::UTF8(NSDjvu::MakeUTF8String(wsSrcFileName));
 		m_pDoc = DjVuDocument::create(url);
-		m_pDoc->wait_get_pages_num();
+		// libdjvu initializes the document (directory, bookmarks) in a thread
+		m_pDoc->wait_for_complete_init();
+		if (!m_pDoc->is_init_ok())
+		{
+			m_pDoc = NULL;
+			return false;
+		}
 	}
 	catch (...)
 	{
@@ -156,7 +236,13 @@ bool CDjVuFileImplementation::LoadFromMemory(BYTE* data, DWORD length, const std
 	{
 		GP<ByteStream> stream = ByteStream::create(data, (size_t)length);
 		m_pDoc = DjVuDocument::create(stream);
-		m_pDoc->wait_get_pages_num();
+		// libdjvu initializes the document (directory, bookmarks) in a thread
+		m_pDoc->wait_for_complete_init();
+		if (!m_pDoc->is_init_ok())
+		{
+			m_pDoc = NULL;
+			return false;
+		}
 	}
 	catch (...)
 	{
@@ -220,7 +306,7 @@ void CDjVuFileImplementation::GetPageInfo(int nPageIndex, double* pdWidth, doubl
 	int nW = 0;
 	int nH = 0;
 	int nDpi = 0;
-	m_pDoc->ReadPageInfo(nPageIndex, nW, nH, nDpi);
+	ReadPageInfo(m_pDoc, nPageIndex, nW, nH, nDpi);
 	*pdWidth = nW;
 	*pdHeight = nH;
 	*pdDpiX = nDpi;
