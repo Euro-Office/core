@@ -9,8 +9,9 @@ static long   ZCALLBACK seek_buffer_func  OF((voidpf opaque, voidpf stream, uLon
 static int    ZCALLBACK close_buffer_func OF((voidpf opaque, voidpf stream));
 static int    ZCALLBACK error_buffer_func OF((voidpf opaque, voidpf stream));
 
-voidpf ZCALLBACK open_buffer_func (voidpf opaque, const char* /*filename*/, int mode)
+voidpf ZCALLBACK open_buffer_func (voidpf opaque, const char* filename, int mode)
 {
+    (void)filename;
     BUFFER_IO* hFile = NULL;
     if (opaque != NULL)
         hFile = (BUFFER_IO*)opaque;
@@ -31,8 +32,9 @@ voidpf ZCALLBACK open_buffer_func (voidpf opaque, const char* /*filename*/, int 
     return hFile;
 }
 
-uLong  ZCALLBACK read_buffer_func (voidpf /*opaque*/, voidpf stream, void* buf, uLong size)
+uLong  ZCALLBACK read_buffer_func (voidpf opaque, voidpf stream, void* buf, uLong size)
 {
+    (void)opaque;
     uLong ret = 0;
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
@@ -49,8 +51,9 @@ uLong  ZCALLBACK read_buffer_func (voidpf /*opaque*/, voidpf stream, void* buf, 
     return ret;
 }
 
-uLong  ZCALLBACK write_buffer_func(voidpf /*opaque*/, voidpf stream, const void* buf, uLong size)
+uLong  ZCALLBACK write_buffer_func(voidpf opaque, voidpf stream, const void* buf, uLong size)
 {
+    (void)opaque;
     uLong ret = 0;
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
@@ -82,8 +85,9 @@ uLong  ZCALLBACK write_buffer_func(voidpf /*opaque*/, voidpf stream, const void*
     return ret;
 }
 
-long   ZCALLBACK tell_buffer_func (voidpf /*opaque*/, voidpf stream)
+long   ZCALLBACK tell_buffer_func (voidpf opaque, voidpf stream)
 {
+    (void)opaque;
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
         hFile = (BUFFER_IO*)stream;
@@ -92,8 +96,9 @@ long   ZCALLBACK tell_buffer_func (voidpf /*opaque*/, voidpf stream)
     return hFile->nCurrentPos;
 }
 
-long   ZCALLBACK seek_buffer_func (voidpf /*opaque*/, voidpf stream, uLong offset, int origin)
+long   ZCALLBACK seek_buffer_func (voidpf opaque, voidpf stream, uLong offset, int origin)
 {
+    (void)opaque;
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
         hFile = (BUFFER_IO*)stream;
@@ -122,8 +127,10 @@ long   ZCALLBACK seek_buffer_func (voidpf /*opaque*/, voidpf stream, uLong offse
     return 0;
 }
 
-int    ZCALLBACK close_buffer_func(voidpf /*opaque*/, voidpf /*stream*/)
+int    ZCALLBACK close_buffer_func(voidpf opaque, voidpf stream)
 {
+    (void)opaque;
+    (void)stream;
     /*
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
@@ -137,8 +144,9 @@ int    ZCALLBACK close_buffer_func(voidpf /*opaque*/, voidpf /*stream*/)
     return 0;
 }
 
-int    ZCALLBACK error_buffer_func(voidpf /*opaque*/, voidpf stream)
+int    ZCALLBACK error_buffer_func(voidpf opaque, voidpf stream)
 {
+    (void)opaque;
     int ret = -1;
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
