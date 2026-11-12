@@ -79,7 +79,7 @@ std::wstring RtfParagraph::RenderToRtf(RenderParameter oRenderParameter)
 		sResult += L"\\pard\\plain";
 		sResult += m_oProperty.RenderToRtf( oRenderParameter ) ;
 		
-		if( NULL != m_oOldList )
+		if( nullptr != m_oOldList )
 			sResult += m_oOldList->RenderToRtf( oRenderParameter ) ;
 
 		for (size_t i = 0; i < m_aArray.size(); i++ )
@@ -140,7 +140,7 @@ std::wstring RtfParagraph::RenderToOOX(RenderParameter oRenderParameter)
 		oNewParam.nType = RENDER_TO_OOX_PARAM_RUN;
 		
 		bool bCanConvertToNumbering = false;
-		if( NULL != m_oOldList )
+		if( nullptr != m_oOldList )
 			bCanConvertToNumbering = m_oOldList->CanConvertToNumbering();
 
 		sResult += L"<w:p";
@@ -151,13 +151,13 @@ std::wstring RtfParagraph::RenderToOOX(RenderParameter oRenderParameter)
 		}
 		sResult += L"><w:pPr>";
 		
-		m_oProperty.m_bList = (NULL != m_oOldList) || m_oProperty.m_bList;
+		m_oProperty.m_bList = (nullptr != m_oOldList) || m_oProperty.m_bList;
 		
 		bool bRenderProps = false;
 		if ( PROP_DEF != m_oProperty.m_nTableStyle && m_oProperty.m_bInTable > 0)
 		{
 			RtfStylePtr oCurStyle;
-			if( true == pRtfDocument->m_oStyleTable.GetStyle( m_oProperty.m_nTableStyle, oCurStyle ) )
+			if( pRtfDocument->m_oStyleTable.GetStyle( m_oProperty.m_nTableStyle, oCurStyle ) )
 			{
 				RtfParagraphStyle* oCurParaStyle = dynamic_cast<RtfParagraphStyle*>(oCurStyle.get());
 
@@ -172,24 +172,24 @@ std::wstring RtfParagraph::RenderToOOX(RenderParameter oRenderParameter)
 				}
 			}
 		}
-		if (false == bRenderProps)
+		if (!bRenderProps)
 			sResult += m_oProperty.RenderToOOX(oRenderParameter);
 
-		if( NULL != m_oOldList )
+		if( nullptr != m_oOldList )
 		{
 			//for OldList
-			if( true == bCanConvertToNumbering )
+			if( bCanConvertToNumbering )
 				sResult += m_oOldList->RenderToOOX( oRenderParameter );
 		}
 		sResult += L"</w:pPr>";
 
-		if( NULL != m_oOldList)
+		if( nullptr != m_oOldList)
 		{
 			//for OldList
-			if( false == bCanConvertToNumbering && NULL != m_oOldList->m_oText)
+			if( !bCanConvertToNumbering && nullptr != m_oOldList->m_oText)
 			{
 				RtfCharProperty oCharProp = m_oProperty.m_oCharProperty;
-				if( NULL != m_oOldList->m_oText )
+				if( nullptr != m_oOldList->m_oText )
 					oCharProp.m_nFont = m_oOldList->m_oText->m_oProperty.m_oCharProperty.m_nFont;
 
 				oNewParam = oRenderParameter;

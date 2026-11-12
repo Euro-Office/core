@@ -32,7 +32,7 @@ OOXAbstractNumReader::OOXAbstractNumReader(OOX::Numbering::CAbstractNum  *ooxAbs
 }
 bool OOXAbstractNumReader::Parse( ReaderParameter oParam )
 {
-	if (m_ooxAbstractNum == NULL) return false;
+	if (m_ooxAbstractNum == nullptr) return false;
 
 	RtfListProperty oNewList;
 
@@ -60,7 +60,7 @@ bool OOXAbstractNumReader::Parse( ReaderParameter oParam )
 		OOXLevelReader oLevelReader(m_ooxAbstractNum->m_arrLvl[i]);
 		RtfListLevelProperty oNewLevel;
 
-		if( true == oLevelReader.Parse( oParam, oNewLevel) )
+		if( oLevelReader.Parse( oParam, oNewLevel) )
 			oNewList.AddItem( oNewLevel );
 	}
 	oParam.oRtf->m_oListTable.AddItem( oNewList );

@@ -49,11 +49,11 @@ RtfConvertationManager::RtfConvertationManager( )
 {
 	m_nUserLCID = -1;
 
-	m_poOOXWriter = NULL;
-	m_poOOXReader = NULL;
+	m_poOOXWriter = nullptr;
+	m_poOOXReader = nullptr;
 
-	m_poRtfWriter = NULL;
-	m_poRtfReader = NULL;
+	m_poRtfWriter = nullptr;
+	m_poRtfReader = nullptr;
 
 	m_nDefaultFontSize = 0;
 }
@@ -89,7 +89,7 @@ _UINT32 RtfConvertationManager::ConvertRtfToOOX( std::wstring sSrcFileName, std:
 	m_poRtfReader = &oReader;
 	m_poOOXWriter = &oWriter;
 
-	if (false == oReader.Load())
+	if (!oReader.Load())
 		return AVS_FILEUTILS_ERROR_CONVERT;
 	if (!m_sDefaultFontName.empty())
 		oDocument.m_oProperty.m_sDefFontName = m_sDefaultFontName;
@@ -149,7 +149,7 @@ _UINT32 RtfConvertationManager::ConvertOOXToRtf( std::wstring sDstFileName, std:
 }
 void RtfConvertationManager::OnCompleteItemRtf()
 {
-    if( true == m_bParseFirstItem )
+    if( m_bParseFirstItem )
     {
         m_bParseFirstItem = false;
         m_poOOXWriter->SaveByItemStart( );
@@ -158,7 +158,7 @@ void RtfConvertationManager::OnCompleteItemRtf()
 }
 void RtfConvertationManager::OnCompleteItemOOX()
 {
-    if( true == m_bParseFirstItem )
+    if( m_bParseFirstItem )
     {
         m_bParseFirstItem = false;
         m_poRtfWriter->SaveByItemStart( );

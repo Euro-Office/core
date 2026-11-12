@@ -96,7 +96,6 @@ bool OOXFontReader2::Parse( ReaderParameter oParam, int& nFont)
 	if (m_ooxFont->m_oHAnsiTheme.IsInit())		sHAnsiTheme = m_ooxFont->m_oHAnsiTheme->ToString();
 
 	std::wstring sFont;
-	std::wstring sTempFont;
 
 	bool bFont = false;
 	if( !sAscii.empty() )
@@ -132,7 +131,7 @@ bool OOXFontReader2::Parse( ReaderParameter oParam, int& nFont)
 	if( !sFont.empty() )
 	{
 		RtfFont oCurFont;
-		if( true == oParam.oRtf->m_oFontTable.GetFont( sFont, oCurFont ) )
+		if( oParam.oRtf->m_oFontTable.GetFont( sFont, oCurFont ) )
 		{
 			if (bFont)
 				nFont = oCurFont.m_nID;
@@ -181,7 +180,6 @@ bool OOXFontReader3::Parse( ReaderParameter oParam, int& nFont)
 	if (m_asianFont)	sEastAsia	= m_asianFont->typeface;
 
 	std::wstring sFont;
-	std::wstring sTempFont;
 
 	if( !sAscii.empty() )		sFont = sAscii;
 	else if( !sCs.empty() )			sFont = sCs;
@@ -191,7 +189,7 @@ bool OOXFontReader3::Parse( ReaderParameter oParam, int& nFont)
 	if( !sFont.empty() )
 	{
 		RtfFont oCurFont;
-		if( true == oParam.oRtf->m_oFontTable.GetFont( sFont, oCurFont ) )
+		if( oParam.oRtf->m_oFontTable.GetFont( sFont, oCurFont ) )
 			nFont = oCurFont.m_nID;
 		else
 		{

@@ -31,7 +31,7 @@ RtfMath::RtfMath( )
 	m_bHeader = true;
 	m_bIsVal = m_bIsChar = m_bIsBool = false;
 }
-RtfMath::RtfMath(const RtfMath& oMath )
+RtfMath::RtfMath(const RtfMath& oMath ) : IDocumentElement(oMath), ItemContainer<IDocumentElementPtr>(oMath)
 {
 	(*this) = oMath;
 }
@@ -56,7 +56,7 @@ bool RtfMath::IsEmpty()
 }
 bool RtfMath::IsValid()
 {
-	return (false == m_sRtfName.empty());
+	return (!m_sRtfName.empty());
 }
 
 bool RtfMath::IsRtfControlPropertyBool( std::string sControl )
@@ -127,7 +127,7 @@ std::wstring RtfMath::RenderToRtf(RenderParameter oRenderParameter)
 
 	if (m_bIsVal)
 	{
-		if (false == m_bIsChar)
+		if (!m_bIsChar)
 		{
 			sVal += L" " + m_sVal;
 		}
@@ -197,7 +197,7 @@ std::wstring RtfMath::RenderToOOX(RenderParameter oRenderParameter)
     std::wstring wsOOXName(m_sOOXName.begin(), m_sOOXName.end());
 
     sResult += L"<" + wsOOXName;
-    if( false == sVal.empty() )
+    if( !sVal.empty() )
 	{
 		if (m_bIsBool)
 		{

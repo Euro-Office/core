@@ -66,7 +66,7 @@ std::wstring RtfTableRow::RenderToOOX(RenderParameter oRenderParameter)
 	oNewParam.nType = RENDER_TO_OOX_PARAM_UNKNOWN;
 
 	std::wstring sRowProp = m_oProperty.RenderToOOX(oNewParam);
-	if( false == sRowProp.empty() )
+	if( !sRowProp.empty() )
 	{
 		std::wstring sXml = L"<w:trPr>" + sRowProp + L"</w:trPr>";
 		oXmlWriter.WriteString(sXml);

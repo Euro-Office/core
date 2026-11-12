@@ -31,7 +31,7 @@ OOXAppReader::OOXAppReader(OOX::CApp *ooxApp)
 }
 bool OOXAppReader::Parse( ReaderParameter oParam )
 {
-	if (m_ooxApp == NULL) return false;
+	if (m_ooxApp == nullptr) return false;
 
 	if(m_ooxApp->m_nTotalTime.IsInit())
 	{

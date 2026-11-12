@@ -29,9 +29,9 @@ OOXtblLookReader::OOXtblLookReader(ComplexTypes::Word::CTblLook *ooxTblLook)
 {
 	m_ooxTblLook = ooxTblLook;
 }
-bool OOXtblLookReader::Parse( ReaderParameter oParam, CtblLook& oOutput)
+bool OOXtblLookReader::Parse( ReaderParameter  /*oParam*/, CtblLook& oOutput)
 {
-	if (m_ooxTblLook == NULL) return false;
+	if (m_ooxTblLook == nullptr) return false;
 
 	oOutput.bFirstRow = m_ooxTblLook->IsFirstRow();
 	oOutput.bLastRow = m_ooxTblLook->IsLastRow();

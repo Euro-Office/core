@@ -31,7 +31,7 @@ OOXShadingReader::OOXShadingReader(ComplexTypes::Word::CShading * ooxShading)
 }
 bool OOXShadingReader::Parse( ReaderParameter oParam, RtfShading& oOutputShading )
 {
-	if (m_ooxShading == NULL) return false;
+	if (m_ooxShading == nullptr) return false;
 
 	if ((m_ooxShading->m_oColor.IsInit()) && (m_ooxShading->m_oColor->GetValue() == SimpleTypes::hexcolorRGB))
 	{

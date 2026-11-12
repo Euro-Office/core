@@ -116,6 +116,7 @@ int RtfUtility::convertDateTime (const std::wstring & dt_)
 	}
 	catch(...)
 	{
+		(void)0; // keep the default value
 	}
 
 	return result;
@@ -163,7 +164,7 @@ void RtfUtility::RtfInternalEncoder::DecodeFromFile( std::wstring& sFilename, NF
 {
 	NSFile::CFileBinary file;
 
-	if (false == file.OpenFile(sFilename)) return;
+	if (!file.OpenFile(sFilename)) return;
 
 	DWORD dwBytesRead = 0;
 	BYTE byteBuffer[ BUF_SIZE ];
@@ -192,62 +193,66 @@ void RtfUtility::RtfInternalEncoder::DecodeFromFile( std::wstring& sFilename, NF
 
 float RtfUtility::String2Percent( std::wstring sValue )
 {
-	int nPosition;
-	if( (nPosition = (int)sValue.find( L"f" )) != -1 )
+	int nPosition = (int)sValue.find( L"f" );
+	if( nPosition != -1 )
 	{
 		sValue = sValue.substr(0, nPosition );
 		int dResult = Strings::ToInteger( sValue );
 		return (float)(1.0 * dResult / 65536);
 	}
-	else if( (nPosition = (int)sValue.find( L"%" )) != -1 )
+	nPosition = (int)sValue.find( L"%" );
+	if( nPosition != -1 )
 	{
 		sValue = sValue.substr(0, nPosition );
 		return (float)Strings::ToDouble( sValue ) / 100;
 	}
-	else
-		return 0;
+	return 0;
 }
 int RtfUtility::String2Twips( std::wstring sValue )
 {
-	int nPosition;
-	if( (nPosition = (int)sValue.find( L"pt" )) != -1 )
+	int nPosition = (int)sValue.find( L"pt" );
+	if( nPosition != -1 )
 	{
 		sValue = sValue.substr(0,  nPosition );
 		float dResult = (float)Strings::ToDouble( sValue );
 		return pt2Twip( dResult );
 	}
-	else if( (nPosition = (int)sValue.find( L"in" )) != -1 )
+	nPosition = (int)sValue.find( L"in" );
+	if( nPosition != -1 )
 	{
 		sValue = sValue.substr(0,  nPosition );
 		float dResult = (float)Strings::ToDouble( sValue );
 		return in2Twip(dResult);
 	}
-	else if( (nPosition = (int)sValue.find( L"cm" )) != -1 )
+	nPosition = (int)sValue.find( L"cm" );
+	if( nPosition != -1 )
 	{
 		sValue = sValue.substr(0,  nPosition );
 		float dResult = (float)Strings::ToDouble( sValue );
 		return cm2Twip(dResult);
 	}
-	else if( (nPosition = (int)sValue.find( L"mm" )) != -1 )
+	nPosition = (int)sValue.find( L"mm" );
+	if( nPosition != -1 )
 	{
 		sValue = sValue.substr(0,  nPosition );
 		float dResult = (float)Strings::ToDouble( sValue );
 		return mm2Twip(dResult);
 	}
-	else if( (nPosition = (int)sValue.find( L"pc" )) != -1 )
+	nPosition = (int)sValue.find( L"pc" );
+	if( nPosition != -1 )
 	{
 		sValue = sValue.substr(0,  nPosition );
 		float dResult = (float)Strings::ToDouble( sValue );
 		return pc2Twip(dResult);
 	}
-	else if( (nPosition = (int)sValue.find( L"pi" )) != -1 )
+	nPosition = (int)sValue.find( L"pi" );
+	if( nPosition != -1 )
 	{
 		sValue = sValue.substr(0,  nPosition );
 		float dResult = (float)Strings::ToDouble( sValue );
 		return pc2Twip(dResult);
 	}
-	else
-		return Strings::ToInteger( sValue );
+	return Strings::ToInteger( sValue );
 }
 int RtfUtility::px2Twip(int px)
 {
@@ -283,11 +288,11 @@ int RtfUtility::pt2HalfPt(float pt)
 }
 int RtfUtility::Twips2Emu(int pt)
 {
-	return (int)(pt * 635);
+	return pt * 635;
 }
 int RtfUtility::Emu2Twips(int pt)
 {
-	return (int)(pt / 635);
+	return pt / 635;
 }
 float RtfUtility::Emu2Pt(int emu)
 {
@@ -299,11 +304,11 @@ int RtfUtility::Pt2Emu(int pt)
 }
 void RtfUtility::WriteDataToFileBinary(std::wstring& sFilename, BYTE* pbData, size_t nLength)
 {
-	if( NULL == pbData )
+	if( nullptr == pbData )
 		return;
 
 	NSFile::CFileBinary file;
-	if (false == file.CreateFileW(sFilename)) return;
+	if (!file.CreateFileW(sFilename)) return;
 
 	file.WriteFile(pbData, (DWORD)nLength);
 	file.CloseFile();
@@ -312,7 +317,7 @@ void RtfUtility::WriteDataToFile(std::wstring& sFilename, std::wstring& sData)
 {
 	NSFile::CFileBinary file;
 
-	if (false == file.CreateFileW(sFilename)) return;
+	if (!file.CreateFileW(sFilename)) return;
 
 	wchar_t * buf  = (wchar_t *)sData.c_str();
 	size_t nLengthText	= sData.length();

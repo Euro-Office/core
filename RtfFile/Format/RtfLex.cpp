@@ -29,7 +29,7 @@
 
 StringStream::StringStream()
 {
-	m_aBuffer = NULL;
+	m_aBuffer = nullptr;
 	Clear();
 }
 StringStream::~StringStream()
@@ -49,7 +49,7 @@ bool StringStream::SetSource( std::wstring sPath  )
 	Clear();
 
 	NSFile::CFileBinary srcFile;
-	if (false == srcFile.OpenFile(sPath.c_str())) return false;
+	if (!srcFile.OpenFile(sPath.c_str())) return false;
 
 	__int64 totalFileSize = srcFile.GetFileSize();
 	if (totalFileSize < 5)
@@ -60,11 +60,9 @@ bool StringStream::SetSource( std::wstring sPath  )
 
 	m_nSizeAbs = (long)totalFileSize;
 	m_aBuffer = new unsigned char[m_nSizeAbs];
-	DWORD dwBytesRead = 0;
 
 	srcFile.ReadFile(m_aBuffer, (DWORD)m_nSizeAbs);
 
-	dwBytesRead = (DWORD)srcFile.GetPosition();
 	srcFile.CloseFile();
 	return true;
 }
@@ -132,14 +130,14 @@ LONG64 StringStream::getSize()
 
 RtfLex::RtfLex()
 {
-	m_oFileWriter = NULL;
+	m_oFileWriter = nullptr;
 	m_nReadBufSize = 1024 * 1024 * 5; // 5mb
 	m_caReadBuffer = new char[m_nReadBufSize + 1]; // +1: parseText terminates a full buffer
 }
 RtfLex::~RtfLex()
 {
 	if (m_caReadBuffer) delete []m_caReadBuffer;
-	m_caReadBuffer = NULL;
+	m_caReadBuffer = nullptr;
 	RELEASEOBJECT( m_oFileWriter );
 }
 double RtfLex::GetProgress()
@@ -148,7 +146,7 @@ double RtfLex::GetProgress()
 }
 bool RtfLex::SetSource( std::wstring sPath )
 {
-	if (false == m_oStream.SetSource(sPath)) return false;
+	if (!m_oStream.SetSource(sPath)) return false;
 
 	if (m_oStream.getSize() > m_nReadBufSize)
 	{
@@ -196,7 +194,7 @@ RtfToken RtfLex::NextToken()
 			break;
 		default:
 			m_oCurToken.Type = RtfToken::Text;
-			if( NULL == m_oFileWriter )
+			if( nullptr == m_oFileWriter )
 				parseText(c, m_oCurToken);
 			else
 				parseTextFile(c, m_oCurToken);
@@ -314,7 +312,7 @@ void RtfLex::parseKeyword(RtfToken& token)
 		while (RtfUtility::IsDigit(c))
 		{
 			m_oStream.getc();
-			parametroStr += c;
+			parametroStr += (wchar_t)c;
 
 			c = m_oStream.getc();
 			m_oStream.ungetc();
@@ -331,6 +329,7 @@ void RtfLex::parseKeyword(RtfToken& token)
 			}
 			catch (...)
 			{
+				(void)0; // keep the default value
 			}
 		}
 
@@ -371,7 +370,7 @@ void RtfLex::parseText(int car, RtfToken& token)
 		m_caReadBuffer[nTempBufPos++] = (char)c;
 
 		c = m_oStream.getc();
-		//Se ignoran los retornos de carro, tabuladores y caracteres nulos
+		//Carriage returns, tabs and null characters are ignored
 		while (c == '\r' || c == '\n')
 			c = m_oStream.getc();
 	}
@@ -388,7 +387,7 @@ bool RtfLex::GetNextChar( int& nChar )
 {
 	int c = m_oStream.getc();
 	m_oStream.ungetc();
-	//Se ignoran los retornos de carro, tabuladores y caracteres nulos
+	//Carriage returns, tabs and null characters are ignored
 	while (c == '\r' || c == '\n')
 	{
 		m_oStream.getc();
@@ -404,36 +403,37 @@ bool RtfLex::GetNextChar( int& nChar )
 	else
 		return false;
 }
-void RtfLex::parseTextFile(int car, RtfToken& token)
+void RtfLex::parseTextFile(int car, RtfToken& /*token*/)
 {
-	if (NULL == m_oFileWriter) return;
+	if (nullptr == m_oFileWriter) return;
 
 	try
 	{
 		int nFirst = car;
 		int nSecond = 0;
-		if( true == GetNextChar( nSecond ) )
+		if( GetNextChar( nSecond ) )
 		{
 			BYTE byteByte = 10 * RtfUtility::ToByte( nFirst ) + RtfUtility::ToByte( nSecond  );
 			m_oFileWriter->Write( &byteByte, 1 );
 			while( true )
 			{
 				bool bContinue = false;
-				if (true == GetNextChar(nFirst))
+				if (GetNextChar(nFirst))
 				{
-					if (true == GetNextChar(nSecond))
+					if (GetNextChar(nSecond))
 					{
 						byteByte = 10 * Strings::ToDigit(nFirst) + Strings::ToDigit(nSecond);
 						m_oFileWriter->Write(&byteByte, 1);
 						bContinue = true;
 					}
 				}
-				if ( false == bContinue)
+				if ( !bContinue)
 					break;
 			}
 		}
 	}
 	catch(...)
 	{
+		(void)0; // keep the default value
 	}
 }
