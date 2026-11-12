@@ -24,6 +24,8 @@
  */
 #pragma once
 
+#include <vector>
+
 #include "SvmPlayer.h"
 #include "../Common/MetaFile.h"
 
@@ -70,6 +72,7 @@ class CSvmFile : virtual public IMetaFileBase
 	{
 		m_oPlayer.Clear();
 		m_pDC = m_oPlayer.GetDC();
+		m_vOffsetStack.clear();
 
 		m_currentActionVersion	= 0;
 		m_currentCharset		= 0;
@@ -197,6 +200,7 @@ class CSvmFile : virtual public IMetaFileBase
 
  private:
 	TSvmPoint			m_oCurrnetOffset;
+	std::vector<TSvmPoint>	m_vOffsetStack;	// m_oCurrnetOffset at each PUSH, for its POP
 	BYTE*				m_pBufferData;
 	CSvmDC*				m_pDC;
 	CSvmPlayer          m_oPlayer;
@@ -263,8 +267,8 @@ class CSvmFile : virtual public IMetaFileBase
 	}
 	void TranslatePoint(int nX, int nY, double& dX, double &dY) const
 	{
-		dX = (double)nX;
-		dY = (double)nY;
+		dX = nX * m_pDC->m_dRelativeScaleX;
+		dY = nY * m_pDC->m_dRelativeScaleY;
 	}
 
 	bool ReadImage(unsigned short ushColorUsage, BYTE** ppBgraBuffer, unsigned int* pulWidth, unsigned int* pulHeight);
@@ -460,6 +464,35 @@ class CSvmFile : virtual public IMetaFileBase
 		if (m_pOutput)
 			m_pOutput->UpdateDC();
 	}
+	// Text is drawn with the pixel size 1 (what a relative map mode used to give here) and with the
+	// font sized for the current relative scale: LibreOffice sizes a font in the map mode that is
+	// active when the text is drawn.
+	void DrawStringScaled(std::wstring& wsString, unsigned int unCharsCount, double dX, double dY, double* pdDx)
+	{
+		const double dPixelWidth = m_pDC->m_dPixelWidth, dPixelHeight = m_pDC->m_dPixelHeight;
+		m_pDC->m_dPixelWidth = 1;
+		m_pDC->m_dPixelHeight = 1;
+
+		CSvmFont* pFont = const_cast<CSvmFont*>(m_pDC->GetFont());
+		unsigned int unHeight = 0, unWidth = 0;
+		if (pFont)
+		{
+			unHeight = pFont->SizeHeight;
+			unWidth = pFont->SizeWidth;
+			pFont->SizeHeight = (unsigned int)(unHeight * m_pDC->m_dRelativeScaleY + 0.5);
+			pFont->SizeWidth = (unsigned int)(unWidth * m_pDC->m_dRelativeScaleX + 0.5);
+		}
+
+		m_pOutput->DrawString(wsString, unCharsCount, dX, dY, pdDx);
+
+		if (pFont)
+		{
+			pFont->SizeHeight = unHeight;
+			pFont->SizeWidth = unWidth;
+		}
+		m_pDC->m_dPixelWidth = dPixelWidth;
+		m_pDC->m_dPixelHeight = dPixelHeight;
+	}
 	void DrawText(std::wstring& wsString, unsigned int unCharsCount, TSvmRect& rect)
 	{
 		int nX = rect.l;
@@ -488,16 +521,7 @@ class CSvmFile : virtual public IMetaFileBase
 					pdDx[unCharIndex] = (dX1 - dX)/unCharsCount;
 				}
 			}
-			TSvmMapMode aMapMode_new, aMapMode_old;
-			//
-			aMapMode_old = m_pDC->m_oMapMode;	
-			aMapMode_new.unit = MAP_RELATIVE;
-
-			m_pDC->SetMapMode(aMapMode_new);
-
-			m_pOutput->DrawString(wsString, unCharsCount, dX, dY, pdDx);
-
-			m_pDC->SetMapMode(aMapMode_old);
+			DrawStringScaled(wsString, unCharsCount, dX, dY, pdDx);
 			if (pdDx)
 				delete[] pdDx;
 		}
@@ -545,16 +569,7 @@ class CSvmFile : virtual public IMetaFileBase
 				}
 			}
 
-			TSvmMapMode aMapMode_new, aMapMode_old;
-			//
-			aMapMode_old = m_pDC->m_oMapMode;	
-			aMapMode_new.unit = MAP_RELATIVE;
-
-			m_pDC->SetMapMode(aMapMode_new);
-
-			m_pOutput->DrawString(wsString, unCharsCount, dX, dY, pdDx);
-
-			m_pDC->SetMapMode(aMapMode_old);
+			DrawStringScaled(wsString, unCharsCount, dX, dY, pdDx);
 			if (pdDx)
 				delete[] pdDx;
 		}
