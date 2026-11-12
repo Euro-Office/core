@@ -5043,14 +5043,15 @@ void BinaryWorksheetTableWriter::WriteWorksheet(OOX::Spreadsheet::CSheet* pSheet
 		{
 			OOX::Spreadsheet::CPivotTableFile* pPivotTableFile = dynamic_cast<OOX::Spreadsheet::CPivotTableFile*>(container[k].GetPointer());
 
-			if ((pPivotTableFile) && (pPivotTableFile->m_oPivotTableDefinition.IsInit()))
+			nullable<SimpleTypes::CUnsignedDecimalNumber> oCacheId;
+			if ((pPivotTableFile) && (pPivotTableFile->GetCacheId(oCacheId)))
 			{
 				BinaryTableWriter oBinaryTableWriter(m_oBcw.m_oStream);
 				nCurPos = m_oBcw.WriteItemStart(c_oSerWorksheetsTypes::PivotTable);
-				if (pPivotTableFile->m_oPivotTableDefinition->m_oCacheId.IsInit())
+				if (oCacheId.IsInit())
 				{
 					auto cachePos = m_oBcw.WriteItemStart(c_oSer_PivotTypes::cacheId);
-					m_oBcw.m_oStream.WriteULONG(pPivotTableFile->m_oPivotTableDefinition->m_oCacheId->GetValue());
+					m_oBcw.m_oStream.WriteULONG(oCacheId->GetValue());
 					m_oBcw.WriteItemWithLengthEnd(cachePos);
 				}
 				if (pPivotTableFile->m_pData && pPivotTableFile->m_nDataLength > 0)

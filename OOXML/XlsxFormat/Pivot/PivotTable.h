@@ -1045,6 +1045,11 @@ namespace OOX
 			}
             void readBin(const CPath& oPath);
 			XLS::BaseObjectPtr WriteBin() const;
+			// Builds m_oPivotTableDefinition from m_pData on first use, for parts read from XML.
+			// Parts filled by setData (Editor.bin) keep only the raw bytes and are written as is
+			void EnsureDefinition() const;
+			// Reads only the root attribute cacheId, without building the object model. Returns false if the part has no definition
+			bool GetCacheId(nullable<SimpleTypes::CUnsignedDecimalNumber>& oCacheId) const;
 			virtual void read(const CPath& oRootPath, const CPath& oPath);
 			virtual void write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const;
 			virtual const OOX::FileType type() const;
@@ -1064,10 +1069,11 @@ namespace OOX
 			BYTE *m_pData = NULL;
 			DWORD m_nDataLength = 0;
 
-			nullable<CPivotTableDefinition> m_oPivotTableDefinition;
+			mutable nullable<CPivotTableDefinition> m_oPivotTableDefinition;
 		private:
 
 			CPath m_oReadPath;
+			mutable bool m_bDefinitionPending = false;
 			void ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
 			}
