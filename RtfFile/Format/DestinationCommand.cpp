@@ -2706,6 +2706,10 @@ bool RtfOleReader::ExecuteCommand(RtfDocument& oDocument, RtfReader& oReader, st
 
 			m_oOle.SetFilename( sOleStorageName.c_str() );
 		}
+		else
+		{
+			delete[] pData;
+		}
 	}
 	else if ( "result" == sCommand )
 	{
