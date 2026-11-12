@@ -84,30 +84,55 @@ public:
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Liberation Sans", 2));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Helvetica", 2));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Sans L", 2));
+		// Metric twins of Arial under other names (StarOffice, ChromeOS, URW), as LibreOffice and
+		// fontconfig alias them.
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Albany", 2));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Arimo", 2));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Sans", 2));
 
 		std::vector<std::wstring> ar2;
 		ar2.push_back(L"Arial");
 		ar2.push_back(L"Liberation Sans");
 		ar2.push_back(L"Helvetica");
 		ar2.push_back(L"Nimbus Sans L");
+		ar2.push_back(L"Arimo");
+		ar2.push_back(L"Nimbus Sans");
 		m_listLikes.push_back(ar2);
 
 		// 3 [Times New Roman]
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Times New Roman", 3));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Liberation Serif", 3));
+		// Metric twins of Times New Roman under other names (PostScript, StarOffice, ChromeOS, URW).
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Times", 3));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Thorndale", 3));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Tinos", 3));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Roman", 3));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Roman No9 L", 3));
 
 		std::vector<std::wstring> ar3;
 		ar3.push_back(L"Times New Roman");
 		ar3.push_back(L"Liberation Serif");
+		ar3.push_back(L"Tinos");
+		ar3.push_back(L"Nimbus Roman");
+		ar3.push_back(L"Nimbus Roman No9 L");
 		m_listLikes.push_back(ar3);
 
 		// 4 [Courier New]
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Courier New", 4));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Liberation Mono", 4));
+		// Metric twins of Courier New under other names (PostScript, StarOffice, ChromeOS, URW).
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Courier", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Cumberland", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Cousine", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Mono L", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Mono PS", 4));
 
 		std::vector<std::wstring> ar4;
 		ar4.push_back(L"Courier New");
 		ar4.push_back(L"Liberation Mono");
+		ar4.push_back(L"Cousine");
+		ar4.push_back(L"Nimbus Mono L");
+		ar4.push_back(L"Nimbus Mono PS");
 		m_listLikes.push_back(ar4);
 
 		// 5 [Segoe]

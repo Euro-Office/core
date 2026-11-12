@@ -33,3 +33,9 @@ target_compile_definitions(fontengine_test PRIVATE
     FONTENGINE_TEST_FONTS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fonts"
     FONTENGINE_TEST_TYPE1_FONT="${CORE_ROOT_DIR}/PdfFile/Resources/Fonts/n019003l.pfb"
 )
+
+# The name picker test includes ApplicationFonts.h, which includes FreeType's headers
+target_include_directories(fontengine_test PRIVATE
+    ${FREETYPE_SOURCES_DIR}/include
+    ${FREETYPE_SOURCES_DIR}/include/freetype
+)
