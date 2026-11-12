@@ -31,13 +31,13 @@ unzFile unzOpenHelp(BUFFER_IO* buffer)
 {
 	zlib_filefunc_def ffunc;
 	fill_buffer_filefunc(&ffunc, buffer);
-	return unzOpen2(NULL, &ffunc);
+	return unzOpen2(nullptr, &ffunc);
 }
 zipFile zipOpenHelp(BUFFER_IO* buffer)
 {
 	zlib_filefunc_def ffunc;
 	fill_buffer_filefunc(&ffunc, buffer);
-	return zipOpen2(NULL, APPEND_STATUS_CREATE, NULL, &ffunc);
+	return zipOpen2(nullptr, APPEND_STATUS_CREATE, nullptr, &ffunc);
 }
 
 // begin from (ZipUtilsCP.cpp)
@@ -48,7 +48,7 @@ bool current_file_is_find(unzFile uf, const char* filename)
 
 	unz_file_info file_info;
 
-	err = unzGetCurrentFileInfo(uf, &file_info, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0);
+	err = unzGetCurrentFileInfo(uf, &file_info, filename_inzip, sizeof(filename_inzip), nullptr, 0, nullptr, 0);
 	if (err != UNZ_OK)
 		return false;
 
@@ -71,22 +71,22 @@ static const std::string get_filename_from_unzfile(unzFile unzip_file_handle)
 {
 	char filename_inzip[256];
 
-	if (UNZ_OK == unzGetCurrentFileInfo(unzip_file_handle, NULL, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0))
+	if (UNZ_OK == unzGetCurrentFileInfo(unzip_file_handle, nullptr, filename_inzip, sizeof(filename_inzip), nullptr, 0, nullptr, 0))
 		return std::string(filename_inzip);
 
 	return "";
 }
 bool get_file_in_archive(unzFile unzip_file_handle, const char* filePathInZip, BYTE** fileInBytes, ULONG& nFileSize)
 {
-	if (NULL == fileInBytes)
+	if (nullptr == fileInBytes)
 		return false;
-	(*fileInBytes) = NULL;
+	(*fileInBytes) = nullptr;
 	do
 	{
-		if (current_file_is_find(unzip_file_handle, filePathInZip) == true)
+		if (current_file_is_find(unzip_file_handle, filePathInZip))
 		{
 			unz_file_info file_info;
-			unzGetCurrentFileInfo(unzip_file_handle, &file_info, NULL, 0, NULL, 0, NULL, 0);
+			unzGetCurrentFileInfo(unzip_file_handle, &file_info, nullptr, 0, nullptr, 0, nullptr, 0);
 
 			if (nFileSize > 0)
 				nFileSize = (std::min)(nFileSize, static_cast<ULONG>(file_info.uncompressed_size));
@@ -107,7 +107,7 @@ bool get_file_in_archive(unzFile unzip_file_handle, const char* filePathInZip, B
 // Creates an archive in memory
 void CZipBuffer::create()
 {
-	m_zipFile = NULL;
+	m_zipFile = nullptr;
 	m_sizeZip = 0;
 }
 // Opens an archive in memory, the transferred data must be freed
@@ -133,7 +133,7 @@ void CZipBuffer::open(BYTE* buffer, DWORD size)
 		// '\\') are excluded on purpose - they aren't files.
 		const std::string sName = get_filename_from_unzfile(uf);
 		if (!sName.empty() && sName.back() != '/' && sName.back() != '\\')
-			m_arrFiles.push_back(CFile(sName, NULL, 0));
+			m_arrFiles.push_back(CFile(sName, nullptr, 0));
 	} while (UNZ_OK == unzGoToNextFile(uf));
 	unzClose(uf);
 	RELEASEOBJECT(buf);
@@ -175,17 +175,17 @@ void CZipBuffer::save(BYTE*& data, DWORD& length)
 
 	for (CFile& oFile : m_arrFiles)
 	{
-		if (ZIP_OK != zipOpenNewFileInZip( zip_file_handle, oFile.m_sPath.c_str(), NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED, -1 ) ||
+		if (ZIP_OK != zipOpenNewFileInZip( zip_file_handle, oFile.m_sPath.c_str(), nullptr, nullptr, 0, nullptr, 0, nullptr, Z_DEFLATED, -1 ) ||
 				ZIP_OK != zipWriteInFileInZip(zip_file_handle, oFile.m_pData, oFile.m_nLength) ||
 				ZIP_OK != zipCloseFileInZip(zip_file_handle))
 		{
-			zipClose(zip_file_handle, NULL);
-			data   = NULL;
+			zipClose(zip_file_handle, nullptr);
+			data   = nullptr;
 			length = 0;
 			return;
 		}
 	}
-	zipClose(zip_file_handle, NULL);
+	zipClose(zip_file_handle, nullptr);
 
 	data   = m_zipFile = buf->buffer;
 	length = m_sizeZip = buf->nCurrentPos;
@@ -198,7 +198,7 @@ void CZipBuffer::getFile(const std::string& sPath, BYTE*& data, DWORD& length)
 			std::find_if(m_arrFiles.begin(), m_arrFiles.end(), [&sPath] (const CFile& oFile) { return oFile.m_sPath == sPath; });
 	if (it == m_arrFiles.end())
 	{
-		data   = NULL;
+		data   = nullptr;
 		length = 0;
 		return;
 	}
@@ -214,7 +214,7 @@ void CZipBuffer::getFile(const std::string& sPath, BYTE*& data, DWORD& length)
 	buf->nSize  = m_sizeZip;
 	unzFile uf  = unzOpenHelp(buf);
 
-	data   = NULL;
+	data   = nullptr;
 	length = 0;
 	get_file_in_archive(uf, sPath.c_str(), &data, length);
 	unzClose(uf);

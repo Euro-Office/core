@@ -11,6 +11,7 @@ static int    ZCALLBACK error_buffer_func OF((voidpf opaque, voidpf stream));
 
 voidpf ZCALLBACK open_buffer_func (voidpf opaque, const char* filename, int mode)
 {
+    (void)filename;
     BUFFER_IO* hFile = NULL;
     if (opaque != NULL)
         hFile = (BUFFER_IO*)opaque;
@@ -33,6 +34,7 @@ voidpf ZCALLBACK open_buffer_func (voidpf opaque, const char* filename, int mode
 
 uLong  ZCALLBACK read_buffer_func (voidpf opaque, voidpf stream, void* buf, uLong size)
 {
+    (void)opaque;
     uLong ret = 0;
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
@@ -43,7 +45,7 @@ uLong  ZCALLBACK read_buffer_func (voidpf opaque, voidpf stream, void* buf, uLon
             ret = hFile->nSize - hFile->nCurrentPos;
         else
             ret = size;
-        memcpy(buf, hFile->buffer + hFile->nCurrentPos, ret);
+        memcpy(buf, hFile->buffer + hFile->nCurrentPos, ret); // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling): no memcpy_s on glibc
         hFile->nCurrentPos += ret;
     }
     return ret;
@@ -51,6 +53,7 @@ uLong  ZCALLBACK read_buffer_func (voidpf opaque, voidpf stream, void* buf, uLon
 
 uLong  ZCALLBACK write_buffer_func(voidpf opaque, voidpf stream, const void* buf, uLong size)
 {
+    (void)opaque;
     uLong ret = 0;
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
@@ -63,7 +66,7 @@ uLong  ZCALLBACK write_buffer_func(voidpf opaque, voidpf stream, const void* buf
             {
                 uLong nNewSize = hFile->nSize + (size < 0xffff ? 0xffff : size);
                 unsigned char* NewBuffer = malloc(nNewSize);
-                memcpy(NewBuffer, hFile->buffer, hFile->nSize);
+                memcpy(NewBuffer, hFile->buffer, hFile->nSize); // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling): no memcpy_s on glibc
                 free(hFile->buffer);
                 hFile->buffer = NewBuffer;
                 hFile->nSize  = nNewSize;
@@ -74,7 +77,7 @@ uLong  ZCALLBACK write_buffer_func(voidpf opaque, voidpf stream, const void* buf
         }
         else
             ret = size;
-        memcpy(hFile->buffer + hFile->nCurrentPos, buf, ret);
+        memcpy(hFile->buffer + hFile->nCurrentPos, buf, ret); // NOLINT(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling): no memcpy_s on glibc
         hFile->nCurrentPos += ret;
         if (hFile->nCurrentPos > hFile->nLimit)
             hFile->nLimit = hFile->nCurrentPos;
@@ -84,17 +87,23 @@ uLong  ZCALLBACK write_buffer_func(voidpf opaque, voidpf stream, const void* buf
 
 long   ZCALLBACK tell_buffer_func (voidpf opaque, voidpf stream)
 {
+    (void)opaque;
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
         hFile = (BUFFER_IO*)stream;
+    if (hFile == NULL)
+        return -1;
     return hFile->nCurrentPos;
 }
 
 long   ZCALLBACK seek_buffer_func (voidpf opaque, voidpf stream, uLong offset, int origin)
 {
+    (void)opaque;
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
         hFile = (BUFFER_IO*)stream;
+    if (hFile == NULL)
+        return -1;
     int fseek_origin = 0;
     switch (origin)
     {
@@ -120,6 +129,8 @@ long   ZCALLBACK seek_buffer_func (voidpf opaque, voidpf stream, uLong offset, i
 
 int    ZCALLBACK close_buffer_func(voidpf opaque, voidpf stream)
 {
+    (void)opaque;
+    (void)stream;
     /*
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
@@ -135,6 +146,7 @@ int    ZCALLBACK close_buffer_func(voidpf opaque, voidpf stream)
 
 int    ZCALLBACK error_buffer_func(voidpf opaque, voidpf stream)
 {
+    (void)opaque;
     int ret = -1;
     BUFFER_IO* hFile = NULL;
     if (stream != NULL)
