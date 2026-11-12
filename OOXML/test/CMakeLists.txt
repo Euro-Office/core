@@ -33,6 +33,7 @@ set(_ooxml_test_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/richvalue.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/conversion.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/csv_import.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/docx_vml_textbox_tracked_changes.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/editorbin_pivots.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/parameter_type.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/editorbin_source_file_type.cpp
