@@ -39,6 +39,12 @@ function convertAndDiff() {
 				if [ -f $file.$outFormat ]
 				then
 					"$pythonBin" "$zipChecker" $file.$outFormat || exitCode=1
+					# ZIP_COLLECT_DIR (absolute path) keeps a copy of each archive for scripts/office_smoke.sh,
+					# readable by the CI user that runs outside the build container
+					if [ -n "$ZIP_COLLECT_DIR" ]
+					then
+						mkdir -p "$ZIP_COLLECT_DIR" && cp $file.$outFormat "$ZIP_COLLECT_DIR/${conversionType}_$file.$inFormat.$outFormat" && chmod a+r "$ZIP_COLLECT_DIR/${conversionType}_$file.$inFormat.$outFormat"
+					fi
 				fi
 				unzip $file.$outFormat -d $outFormat > /dev/null 2>&1
 				rm $file.$outFormat > /dev/null 2>&1
