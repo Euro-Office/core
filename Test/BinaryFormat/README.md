@@ -49,7 +49,9 @@ table Style(5) @801 span=42314
 The dump is lossless: every byte of the input shows up in it, with blobs over
 32 bytes printed as length plus SHA-256. So any change to the bytes changes the
 dump, and the diff names the record that changed. The self-tests check this by
-flipping random bits.
+flipping random bits. One exception: the unused part of the reserved main table
+is only reported as zero or not. Readers never look at it, and the XLSY writer
+leaves it uninitialised, so its bytes differ between runs and machines.
 
 The format is not self-describing. For DOCY and XLSY, `binformat_schema.py`
 reads the record nesting and scalar types out of the C++ readers

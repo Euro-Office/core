@@ -342,8 +342,11 @@ def dump(raw, core_root=None):
     first = bounds[0] if bounds else len(buf)
     if p < first:
         gap = buf[p:first]
+        # Readers never look at the unused part of the reserved main table. The XLSY
+        # writer leaves it uninitialised, so its content differs between runs and
+        # machines: report that it is not zero, but not the bytes themselves.
         out.append(f"main table padding: {len(gap)} zero bytes" if not gap.strip(b"\0")
-                   else f"main table padding: {leaf_text(gap)}")
+                   else f"main table padding: {len(gap)} bytes, not all zero (never read, not compared)")
 
     for t, off in sorted(tables, key=lambda x: x[1]):
         end = next((o for o in bounds if o > off), len(buf))
