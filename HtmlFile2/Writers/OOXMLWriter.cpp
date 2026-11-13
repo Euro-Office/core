@@ -868,8 +868,6 @@ bool COOXMLWriter::WriteText(std::wstring wsText, const std::vector<NSCSS::CNode
 
 	WritePPr(arSelectors);
 
-	std::wstring wsCrossId;
-
 	if (!wsHeaderId.empty())
 		WriteEmptyBookmark(wsHeaderId);
 
@@ -1277,7 +1275,7 @@ NSFonts::IApplicationFonts* COOXMLWriter::GetFonts()
 	{
 		m_pFonts = NSFonts::NSApplication::Create();
 
-		if (NULL != m_pFonts)
+		if (nullptr != m_pFonts)
 			m_pFonts->Initialize();
 	}
 
@@ -1375,14 +1373,6 @@ std::wstring StandardizeHeaderId(const std::wstring& wsHeader)
 			inWhitespaceSequence = false;
 		}
 		// All other characters (punctuation marks) are skipped
-		// But if it's a Unicode letter, we can process it
-		else if (std::iswalpha(lowerC))
-		{
-			// For Unicode characters that are letters
-			result.push_back(lowerC);
-			prevWasHyphen = false;
-			inWhitespaceSequence = false;
-		}
 		// Ignore the remaining characters
 	}
 
@@ -1470,6 +1460,7 @@ inline UINT GetFontSizeByLevel(UINT unLevel)
 		case 5: return 36;
 		case 6: return 48;
 		case 7: return 72;
+		default: break;
 	}
 	return 24;
 }

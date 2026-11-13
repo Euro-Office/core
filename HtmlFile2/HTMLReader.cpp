@@ -178,7 +178,7 @@ bool HTML2XHTML(const std::wstring& wsFileName, XmlUtils::CXmlLiteReader& oLiteR
 	bool bNeedConvert = true;
 	if (nLength > 4)
 	{
-		if (pData[0] == 0xFF && pData[1] == 0xFE && !(pData[2] == 0x00 && pData[3] == 0x00))
+		if (pData[0] == 0xFF && pData[1] == 0xFE && (pData[2] != 0x00 || pData[3] != 0x00))
 			bNeedConvert = false;
 		if (pData[0] == 0xFE && pData[1] == 0xFF)
 			bNeedConvert = false;
@@ -459,7 +459,7 @@ bool CHTMLReader::IsHTML()
 	return ((m_oLightReader.MoveToStart() && m_oLightReader.ReadNextNode()) ? m_oLightReader.GetName() == L"html" : false);
 }
 
-HRESULT CHTMLReader::InitAndConvert2OOXML(const std::vector<std::wstring>& arPaths, const std::wstring& wsDirectory, Convert_Func Convertation, THTMLParameters* pParameters)
+HRESULT CHTMLReader::InitAndConvert2OOXML(const std::vector<std::wstring>& arPaths, const std::wstring& wsDirectory, Convert_Func Conversion, THTMLParameters* pParameters)
 {
 	InitOOXMLTags(pParameters);
 	m_wsDstDirectory = wsDirectory;
@@ -470,7 +470,7 @@ HRESULT CHTMLReader::InitAndConvert2OOXML(const std::vector<std::wstring>& arPat
 
 	for (const std::wstring& wsPath : arPaths)
 	{
-		if (Convert(wsPath, Convertation))
+		if (Convert(wsPath, Conversion))
 		{
 			lResult = S_OK;
 
@@ -484,7 +484,7 @@ HRESULT CHTMLReader::InitAndConvert2OOXML(const std::vector<std::wstring>& arPat
 	return lResult;
 }
 
-HRESULT CHTMLReader::InitAndConvert2Markdown(const std::vector<std::wstring>& arPaths, const std::wstring& wsFinalFile, Convert_Func Convertation, TMarkdownParameters* pParameters)
+HRESULT CHTMLReader::InitAndConvert2Markdown(const std::vector<std::wstring>& arPaths, const std::wstring& wsFinalFile, Convert_Func Conversion, TMarkdownParameters* pParameters)
 {
 	InitMDTags(pParameters);
 
@@ -494,7 +494,7 @@ HRESULT CHTMLReader::InitAndConvert2Markdown(const std::vector<std::wstring>& ar
 
 	for (const std::wstring& wsPath : arPaths)
 	{
-		if (Convert(wsPath, Convertation))
+		if (Convert(wsPath, Conversion))
 			lResult = S_OK;
 	}
 
@@ -503,9 +503,9 @@ HRESULT CHTMLReader::InitAndConvert2Markdown(const std::vector<std::wstring>& ar
 	return lResult;
 }
 
-bool CHTMLReader::Convert(const std::wstring& wsPath, Convert_Func Convertation)
+bool CHTMLReader::Convert(const std::wstring& wsPath, Convert_Func Conversion)
 {
-	if (nullptr == m_pWriter || !Convertation(wsPath, m_oLightReader) || !m_oLightReader.IsValid() || !IsHTML())
+	if (nullptr == m_pWriter || !Conversion(wsPath, m_oLightReader) || !m_oLightReader.IsValid() || !IsHTML())
 		return false;
 
 	if (m_wsTempDirectory.empty())
@@ -1225,7 +1225,7 @@ void CHTMLReader::ReadTableCaption(CStorageTable& oTable, std::vector<NSCSS::CNo
 
 void CalculateCellStyles(TTableCellStyle* pCellStyle, std::vector<NSCSS::CNode>& arSelectors)
 {
-	if (NULL == pCellStyle)
+	if (nullptr == pCellStyle)
 		return;
 
 	pCellStyle->m_wsVAlign    = arSelectors.back().m_pCompiledStyle->m_oDisplay.GetVAlign().ToWString();
@@ -1286,7 +1286,7 @@ void CHTMLReader::ReadTableRows(CStorageTable& oTable, std::vector<NSCSS::CNode>
 		{
 			CStorageTableCell *pCell = new CStorageTableCell();
 
-			if (NULL == pCell)
+			if (nullptr == pCell)
 				continue;
 
 			GetSubClass(arSelectors);
@@ -1366,7 +1366,7 @@ void CHTMLReader::ReadTableColspan(CStorageTable& oTable)
 
 	CTableColgroup *pColgroup = new CTableColgroup(arNodes.back());
 
-	if (NULL == pColgroup)
+	if (nullptr == pColgroup)
 		return;
 
 	oTable.AddColgroup(pColgroup);
@@ -1383,7 +1383,7 @@ void CHTMLReader::ReadTableColspan(CStorageTable& oTable)
 
 			CTableCol *pCol = new CTableCol(arNodes.back());
 
-			if (NULL == pCol)
+			if (nullptr == pCol)
 			{
 				arNodes.pop_back();
 				continue;
@@ -1392,7 +1392,7 @@ void CHTMLReader::ReadTableColspan(CStorageTable& oTable)
 			CalculateCellStyles(pCol->GetStyle(), arNodes);
 			arNodes.pop_back();
 
-			if (NULL == pCol)
+			if (nullptr == pCol)
 				continue;
 
 			pColgroup->AddCol(pCol);
@@ -1405,7 +1405,7 @@ void CHTMLReader::ReadTableColspan(CStorageTable& oTable)
 
 		CTableCol *pCol = new CTableCol((arNodes.begin()->m_mAttributes.cend() != itFound) ? NSStringFinder::ToInt(itFound->second, 1) : 1);
 
-		if (NULL == pCol)
+		if (nullptr == pCol)
 			return;
 
 		CalculateCellStyles(pCol->GetStyle(), arNodes);
@@ -1501,10 +1501,7 @@ inline std::wstring GetArgumentValue(XmlUtils::CXmlLiteReader& oLiteReader, cons
 // ! Used for styles specified via arguments !
 inline bool CheckArgumentMath(const std::wstring& wsNodeName, const std::wstring& wsStyleName)
 {
-	if (L"border" == wsStyleName && L"table" != wsNodeName)
-		return false;
-
-	return true;
+	return !(L"border" == wsStyleName && L"table" != wsNodeName);
 }
 
 inline HtmlTag GetHtmlTag(const std::wstring& wsStrTag)
