@@ -139,7 +139,7 @@ void CXpsFile::Close()
         m_pInternal->m_pDocument->Close();
         delete m_pInternal->m_pDocument;
         m_pInternal->m_pDocument = nullptr;
-        RELEASEOBJECT(m_pInternal->m_wsTempFolder);
+        m_pInternal->m_wsTempFolder = nullptr;
 	}
 }
 NSFonts::IApplicationFonts* CXpsFile::GetFonts()
