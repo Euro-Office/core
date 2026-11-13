@@ -1,0 +1,23 @@
+{
+ "editor": "word",
+ "facts": {
+  "comments": [],
+  "drawings": {
+   "image": 3
+  },
+  "elements": {
+   "count": 12,
+   "types": {
+    "paragraph": 12
+   }
+  },
+  "paragraphs": 12,
+  "sections": 1,
+  "tableRows": [],
+  "text": {
+   "fnv1a": "a8754d2a",
+   "head": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at purus mi. Nam egestas odio ac iaculis porta. Nunc mattis",
+   "length": 5917
+  }
+ }
+}
