@@ -396,6 +396,7 @@
     <ClInclude Include="..\..\..\XlsxFormat\Workbook\CustomsXml.h" />
     <ClInclude Include="..\..\..\XlsxFormat\Workbook\DefinedNames.h" />
     <ClInclude Include="..\..\..\XlsxFormat\Workbook\ExternalReferences.h" />
+    <ClInclude Include="..\..\..\XlsxFormat\Workbook\FeaturePropertyBag.h" />
     <ClInclude Include="..\..\..\XlsxFormat\Workbook\Metadata.h" />
     <ClInclude Include="..\..\..\XlsxFormat\Workbook\Sheets.h" />
     <ClInclude Include="..\..\..\XlsxFormat\Workbook\Workbook.h" />
@@ -567,6 +568,7 @@
     <ClCompile Include="..\..\..\XlsxFormat\Workbook\CustomsXml.cpp" />
     <ClCompile Include="..\..\..\XlsxFormat\Workbook\DefinedNames.cpp" />
     <ClCompile Include="..\..\..\XlsxFormat\Workbook\ExternalReferences.cpp" />
+    <ClCompile Include="..\..\..\XlsxFormat\Workbook\FeaturePropertyBag.cpp" />
     <ClCompile Include="..\..\..\XlsxFormat\Workbook\Metadata.cpp" />
     <ClCompile Include="..\..\..\XlsxFormat\Workbook\Sheets.cpp" />
     <ClCompile Include="..\..\..\XlsxFormat\Workbook\Workbook.cpp" />

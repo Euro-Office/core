@@ -28,13 +28,15 @@ endif()
 set(_ooxml_test_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/common.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/checkbox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/conversion.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/editorbin_pivots.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/workbook_facts.cpp
     ${CORE_ROOT_DIR}/X2tConverter/src/dylib/x2t.cpp
 )
 
-# The fixtures are read working-dir-relative ("ExampleFiles/xlsb2xlsx/...").
+# The fixtures are read working-dir-relative ("ExampleFiles/xlsb2xlsx/...",
+# "ExampleFiles/xlsx2bin/...").
 set(_ooxml_run_dir "${CMAKE_CURRENT_BINARY_DIR}/run")
 
 add_core_gtest(
