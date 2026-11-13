@@ -4,12 +4,12 @@
 namespace OFD
 {
 #define IF_CHECK_NODE(node_name, varible_name)\
-if (node_name == sNodeName)\
-	varible_name = oLiteReader.GetText2()
+if ((node_name) == sNodeName)\
+	(varible_name) = oLiteReader.GetText2()
 
 #define ELSE_IF_CHECK_NODE(node_name, varible_name)\
-else if (node_name == sNodeName)\
-	varible_name = oLiteReader.GetText2()
+else if ((node_name) == sNodeName)\
+	(varible_name) = oLiteReader.GetText2()
 
 EDocUsege GetDocUsage(const std::wstring& wsValue)
 {
@@ -68,14 +68,13 @@ void CDocBody::ReadSignatures(const std::wstring& wsFilePath, IFolder* pFolder)
 
 	const int nDepth = oLiteReader.GetDepth();
 	std::string sNodeName;
-	unsigned int unMaxSignId = 0;
 
 	while (oLiteReader.ReadNextSiblingNode(nDepth))
 	{
 		sNodeName = oLiteReader.GetNameA();
 
 		if ("ofd:MaxSignId" == sNodeName)
-			unMaxSignId = oLiteReader.GetUInteger();
+			(void)oLiteReader.GetUInteger(); // consumes the node, value is unused
 		else if ("ofd:Signature" == sNodeName)
 		{
 			if (0 == oLiteReader.GetAttributesCount() || !oLiteReader.MoveToFirstAttribute())

@@ -17,7 +17,7 @@ COFDFile::~COFDFile()
 		delete m_pInternal;
 }
 
-bool COFDFile::LoadFromFile(const std::wstring& file, const std::wstring& options, const wchar_t* owner_password, const wchar_t* user_password)
+bool COFDFile::LoadFromFile(const std::wstring& file, const std::wstring& /*options*/, const wchar_t* /*owner_password*/, const wchar_t* /*user_password*/)
 {
 	if (nullptr == m_pInternal)
 		return false;
@@ -27,7 +27,7 @@ bool COFDFile::LoadFromFile(const std::wstring& file, const std::wstring& option
 	return m_pInternal->LoadFromFile(file);
 }
 
-bool COFDFile::LoadFromMemory(unsigned char* data, unsigned long length, const std::wstring& options, const wchar_t* owner_password, const wchar_t* user_password)
+bool COFDFile::LoadFromMemory(unsigned char* data, unsigned long length, const std::wstring& /*options*/, const wchar_t* /*owner_password*/, const wchar_t* /*user_password*/)
 {
 	if (nullptr == m_pInternal)
 		return false;
@@ -86,7 +86,7 @@ void COFDFile::GetPageInfo(int nPageIndex, double* pdWidth, double* pdHeight, do
 	*pdDpiY = 25.4;
 }
 
-void COFDFile::DrawPageOnRenderer(IRenderer* pRenderer, int nPageIndex, bool* pBreak, COfficeDrawingPageParams* pParams)
+void COFDFile::DrawPageOnRenderer(IRenderer* pRenderer, int nPageIndex, bool* /*pBreak*/, COfficeDrawingPageParams* /*pParams*/)
 {
 	if (nullptr == pRenderer || nullptr == m_pInternal)
 		return;
@@ -140,7 +140,7 @@ unsigned char* COFDFile::GetStructure()
 	return nullptr;
 }
 
-unsigned char* COFDFile::GetLinks(int nPageIndex)
+unsigned char* COFDFile::GetLinks(int /*nPageIndex*/)
 {
 	return nullptr;
 }
