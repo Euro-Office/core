@@ -27,6 +27,7 @@
 #include "xlsx_fill.h"
 #include "xlsx_font.h"
 
+#include "../Format/style_text_properties.h"
 #include "../Format/odf_document.h"
 #include "../Format/odfcontext.h"
 
@@ -60,6 +61,9 @@ size_t xlsx_dxfs::dxfId(	const odf_reader::text_format_properties_ptr &textProp,
 {
 	xlsx_fill fill( graphProp.get(), cellProp);
 	xlsx_font font( textProp, NULL, cellProp, false, fonts_container);
+	// A conditional format changes only what its style gives: without a size it keeps the cell's.
+	if (!textProp || !textProp->fo_font_size_)
+		font.sz.reset();
 
 	impl_->dxf_array.push_back(std::make_pair(fill, font));
 
