@@ -55,6 +55,7 @@ add_core_gtest(
             chart_series_name.cpp
             xlsx2ods_sheet_background.cpp
             docx2odt_page_background.cpp
+            docx2odt_section_footers.cpp
             math_bar.cpp
             chart_title.cpp
             odt2docx_underline.cpp
