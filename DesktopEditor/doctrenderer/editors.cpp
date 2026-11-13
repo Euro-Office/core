@@ -103,7 +103,6 @@ namespace NSDoctRenderer
 				AppendScript(builder, config->m_strSdkPath + L"/cell/sdk-all-min.js");
 				AppendScript(builder, sFontsPath);
 				AppendScript(builder, config->m_strSdkPath + L"/cell/sdk-all.js");
-				builder->WriteString("\n$.ready();", 11);
 				sCachePath = config->m_strSdkPath + L"/cell/sdk-all";
 				break;
 			}
