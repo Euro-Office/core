@@ -503,6 +503,12 @@ static double MapUnitInMillimetres(unsigned short unUnit)
 	}
 }
 
+// Scales come from the file and multiply: keep them in a range that drawing can use.
+static double ClampScale(double dScale)
+{
+	return dScale > 1e6 ? 1e6 : (dScale > 1e-6 ? dScale : 1e-6);
+}
+
 void CSvmDC::SetMapMode(TSvmMapMode & mapMode, bool prefered )
 {
 	if (mapMode.unit == MAP_RELATIVE)
@@ -512,6 +518,8 @@ void CSvmDC::SetMapMode(TSvmMapMode & mapMode, bool prefered )
 			m_dRelativeScaleX *= (double)mapMode.scaleX.numerator / mapMode.scaleX.denominator;
 		if (mapMode.scaleY.numerator && mapMode.scaleY.denominator)
 			m_dRelativeScaleY *= (double)mapMode.scaleY.numerator / mapMode.scaleY.denominator;
+		m_dRelativeScaleX = ClampScale(m_dRelativeScaleX);
+		m_dRelativeScaleY = ClampScale(m_dRelativeScaleY);
 		return;
 	}
 	m_oMapMode = mapMode;
@@ -528,6 +536,8 @@ void CSvmDC::SetMapMode(TSvmMapMode & mapMode, bool prefered )
 		m_dRelativeScaleX *= (double)mapMode.scaleX.numerator / mapMode.scaleX.denominator;
 	if (!prefered && mapMode.scaleY.numerator && mapMode.scaleY.denominator)
 		m_dRelativeScaleY *= (double)mapMode.scaleY.numerator / mapMode.scaleY.denominator;
+	m_dRelativeScaleX = ClampScale(m_dRelativeScaleX);
+	m_dRelativeScaleY = ClampScale(m_dRelativeScaleY);
 
 	double dPixel = 1.;//
 	switch (GetMapModeUnit())
