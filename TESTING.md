@@ -120,6 +120,18 @@ Done:
       ECMA-376 `CT_Lvl` element order of `toXML()`'s output (including a fully-populated
       level covering all twelve possible child elements), plus `fromXML()`'s tolerance of
       non-schema-ordered input.
+- [x] `OOXML/PPTXFormat/test` — new suite (`pptx_linked_ole_test`), not a `.pro` migration.
+      Added to cover linked OLE objects (`TargetMode="External"` + `<p:link>`), which were
+      exported as an embedded part that did not exist, so PowerPoint asked to repair the
+      file. Links the format-library group directly, the same way `MsBinaryFile/PptFile/test`
+      does, because `x2tlib` hides the `PPTXFormat` classes; `OfficeFileFormatChecker2.cpp` is
+      compiled into the target. `GTEST_MAIN`. No fixture files — relationships and `<p:oleObj>` snippets are inline, and
+      the rels-generator cases write a 1x1 PNG preview into a temp directory. Covers each step
+      of the round trip: `FileFactory` marking external OLE relationships as links, the
+      editor-binary round trip of the link target and update mode (including sdkjs writing the
+      type attribute as embed), `CRelsGenerator` writing `TargetMode="External"` and skipping
+      a payload-less embedded object, `Pic` writing `<p:link>` / `<p:embed/>` / a plain picture,
+      and reading `<p:link updateAutomatic>` on both the `CXmlNode` and the lite-reader paths.
 - [x] `DesktopEditor/raster/test` — new suite (`raster_formats_test`), not a `.pro`
       migration. Covers the PNM (`raster/Pnm`) and Sun Raster (`raster/Ras`) decoders that
       replaced CxImage's JasPer based decoding, through `CBgraFrame::Decode` /

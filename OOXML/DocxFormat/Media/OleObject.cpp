@@ -94,5 +94,9 @@ namespace OOX
 	{
 		return m_bMsPackage;
 	}
+	bool OleObject::isLink()
+	{
+		return Media::IsExternal();
+	}
 
 } // namespace OOX
