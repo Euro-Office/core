@@ -144,10 +144,12 @@ jobs:
 
     # x2ttester writes its font cache next to itself, so it runs from the build
     # tree: the package and the E2E overlay must not contain that cache. The
-    # core libraries it loads are in bin/.
+    # core libraries it loads are in bin/. The Editor.bin dumps are compared on
+    # the server images only: the desktop image measures spreadsheet column
+    # widths with other fonts and writes page margins the server build doesn't.
     - name: Conversion Test
       run: |
-        "$RUNNER_TEMP/in-build-image" 'LD_LIBRARY_PATH=/core/build/package/bin ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/x2ttester'
+        "$RUNNER_TEMP/in-build-image" 'BINFORMAT_DUMPS=${{ matrix.product == 'server' && '1' || '0' }} LD_LIBRARY_PATH=/core/build/package/bin ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/x2ttester'
 
     # build/package is what DocumentServer copies from core's Dockerfile.
     # Published by the publish job for pushes to main and same-repo PRs that
