@@ -243,12 +243,20 @@ TEST_F(CFontEngineTest, FailsOnMissingOrInvalidFont)
 TEST(CFontListNamePicker, MetricAliasesFindTheirTwin)
 {
 	CFontListNamePicker oPicker;
-	for (const wchar_t* sRequested : {L"Times New Roman", L"Times", L"Thorndale", L"Tinos", L"Nimbus Roman"})
+	for (const wchar_t* sRequested : {L"Times New Roman", L"Times", L"Thorndale", L"Thorndale AMT", L"Tinos", L"Nimbus Roman"})
 		EXPECT_TRUE(oPicker.IsLikeFonts(L"Liberation Serif", sRequested)) << sRequested;
-	for (const wchar_t* sRequested : {L"Courier New", L"Courier", L"Cumberland", L"Cousine", L"Nimbus Mono PS"})
+	for (const wchar_t* sRequested : {L"Courier New", L"Courier", L"Cumberland", L"Cumberland AMT", L"Cousine", L"Nimbus Mono PS", L"Nimbus Mono"})
 		EXPECT_TRUE(oPicker.IsLikeFonts(L"Liberation Mono", sRequested)) << sRequested;
-	for (const wchar_t* sRequested : {L"Arial", L"Helvetica", L"Albany", L"Arimo"})
+	for (const wchar_t* sRequested : {L"Arial", L"Helvetica", L"Albany", L"Albany AMT", L"Arimo"})
 		EXPECT_TRUE(oPicker.IsLikeFonts(L"Liberation Sans", sRequested)) << sRequested;
+
+	// The other clones are offered as twins too, where Liberation is not installed.
+	for (const wchar_t* sCandidate : {L"Tinos", L"Nimbus Roman", L"Nimbus Roman No9 L"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(sCandidate, L"Times New Roman")) << sCandidate;
+	for (const wchar_t* sCandidate : {L"Cousine", L"Nimbus Mono PS", L"Nimbus Mono", L"Nimbus Mono L"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(sCandidate, L"Courier New")) << sCandidate;
+	for (const wchar_t* sCandidate : {L"Arimo", L"Nimbus Sans"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(sCandidate, L"Arial")) << sCandidate;
 
 	// Twins only: no serif for a sans request, no other group, the existing groups unchanged.
 	EXPECT_FALSE(oPicker.IsLikeFonts(L"Liberation Sans", L"Times"));
