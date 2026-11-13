@@ -290,6 +290,16 @@ add_library(graphics SHARED
         ${METAFILE_SOURCER_DIR}/svg/SvgUtils.h
     # }
 
+    # !metafile_disable_svm {
+        ${METAFILE_SOURCER_DIR}/StarView/SvmFile.cpp
+        ${METAFILE_SOURCER_DIR}/StarView/SvmObjects.cpp
+        ${METAFILE_SOURCER_DIR}/StarView/SvmPlayer.cpp
+
+        ${METAFILE_SOURCER_DIR}/StarView/SvmFile.h
+        ${METAFILE_SOURCER_DIR}/StarView/SvmObjects.h
+        ${METAFILE_SOURCER_DIR}/StarView/SvmPlayer.h
+    # }
+
     # CssCalculator.pri
     # css_calculator_without_xhtml {
         ${CSS_ROOT_DIR}/src/CCssCalculator_Private.cpp
@@ -731,6 +741,7 @@ target_compile_definitions(graphics PRIVATE
     METAFILE_SUPPORT_WMF_EMF # !metafile_disable_wmf_emf
     METAFILE_SUPPORT_WMF_EMF_XML # !metafile_disable_wmf_emf_xml
     METAFILE_SUPPORT_SVG # !metafile_disable_svg
+    METAFILE_SUPPORT_SVM # !metafile_disable_svm
 
     # freetype.pri
     FT_CONFIG_OPTION_SYSTEM_ZLIB

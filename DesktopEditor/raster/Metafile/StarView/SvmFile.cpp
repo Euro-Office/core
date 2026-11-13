@@ -453,14 +453,35 @@ void CSvmFile::Read_META_POLYPOLYGON()
 	}
 }
 
+// An offset for a map mode, kept in the range of the coordinates (a file sets origin and scale).
+static int ClampOffset(double dValue)
+{
+	return dValue > 1e9 ? 1000000000 : (dValue > -1e9 ? (int)dValue : -1000000000);
+}
 void CSvmFile::Read_META_SETMAPMODE()
 {
 	TSvmMapMode mapMode;
 	m_oStream >> mapMode;
-	
-	m_pDC->SetMapMode(mapMode);
 
-	m_oCurrnetOffset = mapMode.origin;
+	// LibreOffice drops a map mode with a negative scale (the fractions are signed in the file).
+	if ((int)mapMode.scaleX.numerator < 0 || (int)mapMode.scaleX.denominator < 0 ||
+		(int)mapMode.scaleY.numerator < 0 || (int)mapMode.scaleY.denominator < 0)
+		return;
+	
+	if (mapMode.unit == MAP_RELATIVE)
+	{
+		// Relative to the current map mode, as in LibreOffice's OutputDevice::SetMapMode: the scale
+		// multiplies the current one and the origin adds to the current offset, which is now in
+		// the new, scaled units.
+		const double dScaleX = mapMode.scaleX.numerator && mapMode.scaleX.denominator ? (double)mapMode.scaleX.numerator / mapMode.scaleX.denominator : 1.;
+		const double dScaleY = mapMode.scaleY.numerator && mapMode.scaleY.denominator ? (double)mapMode.scaleY.numerator / mapMode.scaleY.denominator : 1.;
+		m_oCurrnetOffset.x = ClampOffset(mapMode.origin.x + m_oCurrnetOffset.x / dScaleX);
+		m_oCurrnetOffset.y = ClampOffset(mapMode.origin.y + m_oCurrnetOffset.y / dScaleY);
+	}
+	else
+		m_oCurrnetOffset = mapMode.origin;
+
+	m_pDC->SetMapMode(mapMode);
 
 	UpdateOutputDC();
 }
@@ -940,14 +961,43 @@ bool CSvmFile::ReadImage(unsigned short ushColorUsage, BYTE** ppBgraBuffer, unsi
 }
 void CSvmFile::Read_META_POP()
 {
+	if (m_unSkippedPushes)
+	{
+		--m_unSkippedPushes;
+		return;
+	}
 	m_oPlayer.Pop();
+
+	// Back to the state of the matching PUSH. LibreOffice restores only the parts the PUSH named;
+	// this restores all of them. For the PUSH records LibreOffice's charts and shapes write (the map
+	// mode, colours, font, or all) the drawing is the same. A POP without a PUSH changes nothing.
+	if (!m_vOffsetStack.empty())
+	{
+		m_pDC = m_oPlayer.RestoreDC();
+		m_oCurrnetOffset = m_vOffsetStack.back();
+		m_vOffsetStack.pop_back();
+		UpdateOutputDC();
+	}
 }
 void CSvmFile::Read_META_PUSH()
 {
 	unsigned short nFlags;
 	m_oStream >> nFlags; 
-	
+
+	// Each PUSH keeps a copy of the drawing state until its POP; real files nest a dozen deep.
+	if (m_vOffsetStack.size() >= 1024)
+	{
+		++m_unSkippedPushes;
+		return;
+	}
 	m_oPlayer.Push(nFlags);
+
+	CSvmDC* pDC = m_oPlayer.SaveDC();
+	if (pDC)
+	{
+		m_pDC = pDC;
+		m_vOffsetStack.push_back(m_oCurrnetOffset);
+	}
 }
 void CSvmFile::Read_META_RASTEROP()
 {

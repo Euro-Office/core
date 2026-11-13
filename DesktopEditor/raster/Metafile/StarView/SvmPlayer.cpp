@@ -432,6 +432,8 @@ CSvmDC::CSvmDC()
 
 	m_dPixelHeight = m_dPixelHeightPrefered = 1;
 	m_dPixelWidth  = m_dPixelWidthPrefered	= 1;
+	m_dRelativeScaleX = m_dRelativeScaleY = 1;
+	m_dBaseUnitInMillimetres = 0;
 
 	m_oCurPos.x = 0;
 	m_oCurPos.y = 0;
@@ -466,6 +468,9 @@ CSvmDC*         CSvmDC::Copy() const
 	pNewDC->m_dPixelWidth = m_dPixelWidth;
 	pNewDC->m_dPixelHeightPrefered = m_dPixelHeightPrefered;
 	pNewDC->m_dPixelWidthPrefered = m_dPixelWidthPrefered;
+	pNewDC->m_dRelativeScaleX = m_dRelativeScaleX;
+	pNewDC->m_dRelativeScaleY = m_dRelativeScaleY;
+	pNewDC->m_dBaseUnitInMillimetres = m_dBaseUnitInMillimetres;
 
 	//pNewDC->m_oWindow.Copy(&m_oWindow);
 	//pNewDC->m_oViewport.Copy(&m_oViewport);
@@ -479,9 +484,60 @@ ESvmMapUnit CSvmDC::GetMapModeUnit() const
 {
 	return (ESvmMapUnit)m_oMapMode.unit;
 }
+// The size of a map unit in millimetres, 0 for units without a fixed size.
+static double MapUnitInMillimetres(unsigned short unUnit)
+{
+	switch (unUnit)
+	{
+	case MAP_100TH_MM:		return 0.01;
+	case MAP_10TH_MM:		return 0.1;
+	case MAP_MM:			return 1.;
+	case MAP_CM:			return 10.;
+	case MAP_1000TH_INCH:	return 25.4 / 1000.;
+	case MAP_100TH_INCH:	return 25.4 / 100.;
+	case MAP_10TH_INCH:		return 25.4 / 10.;
+	case MAP_INCH:			return 25.4;
+	case MAP_POINT:			return 25.4 / 72.;
+	case MAP_TWIP:			return 25.4 / 1440.;
+	default:				return 0.;
+	}
+}
+
+// Scales come from the file and multiply: keep them in a range that drawing can use.
+static double ClampScale(double dScale)
+{
+	return dScale > 1e6 ? 1e6 : (dScale > 1e-6 ? dScale : 1e-6);
+}
+
 void CSvmDC::SetMapMode(TSvmMapMode & mapMode, bool prefered )
 {
+	if (mapMode.unit == MAP_RELATIVE)
+	{
+		// Relative to the current map mode: its scale multiplies the current one, the unit stays.
+		if (mapMode.scaleX.numerator && mapMode.scaleX.denominator)
+			m_dRelativeScaleX *= (double)mapMode.scaleX.numerator / mapMode.scaleX.denominator;
+		if (mapMode.scaleY.numerator && mapMode.scaleY.denominator)
+			m_dRelativeScaleY *= (double)mapMode.scaleY.numerator / mapMode.scaleY.denominator;
+		m_dRelativeScaleX = ClampScale(m_dRelativeScaleX);
+		m_dRelativeScaleY = ClampScale(m_dRelativeScaleY);
+		return;
+	}
 	m_oMapMode = mapMode;
+
+	// Logical coordinates are drawn in the units of the header's map mode: a later absolute map
+	// mode (LibreOffice charts switch from twips to 1/100 mm for their labels) converts its units
+	// and applies its scale.
+	const double dUnit = MapUnitInMillimetres(mapMode.unit);
+	if (prefered)
+		m_dBaseUnitInMillimetres = dUnit;
+	const double dFactor = dUnit > 0 && m_dBaseUnitInMillimetres > 0 ? dUnit / m_dBaseUnitInMillimetres : 1.;
+	m_dRelativeScaleX = m_dRelativeScaleY = prefered ? 1. : dFactor;
+	if (!prefered && mapMode.scaleX.numerator && mapMode.scaleX.denominator)
+		m_dRelativeScaleX *= (double)mapMode.scaleX.numerator / mapMode.scaleX.denominator;
+	if (!prefered && mapMode.scaleY.numerator && mapMode.scaleY.denominator)
+		m_dRelativeScaleY *= (double)mapMode.scaleY.numerator / mapMode.scaleY.denominator;
+	m_dRelativeScaleX = ClampScale(m_dRelativeScaleX);
+	m_dRelativeScaleY = ClampScale(m_dRelativeScaleY);
 
 	double dPixel = 1.;//
 	switch (GetMapModeUnit())
