@@ -8,7 +8,7 @@ main table: 8 tables
   Worksheets(4) @2978
   Other(0) @3248
   Customs(10) @3252
-main table padding: bytes len=1228 sha256=933feab222250d5a
+main table padding: 1228 bytes, not all zero (never read, not compared)
 table App(6) @1280 span=61
   (no length prefix)
   #1 len=56

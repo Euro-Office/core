@@ -150,6 +150,15 @@ class Dump(unittest.TestCase):
         self.assertIn("  Version(0) Long: 5", dumps[1])
         self.assertTrue(any("Document(6)" in line for line in dumps[1]))
 
+    def test_unused_main_table_padding_is_not_compared(self):
+        # The XLSY writer leaves the reserved main table uninitialised; its bytes vary.
+        raw = (ROOT / "Common/empty/docx.bin").read_bytes()
+        a, b = bytearray(raw), bytearray(raw)
+        a[300], b[300] = 0x41, 0x42  # inside the padding between the main table and the first table
+        self.assertEqual(dump(bytes(a), ROOT), dump(bytes(b), ROOT))
+        self.assertIn("main table padding: 594 bytes, not all zero (never read, not compared)", dump(bytes(a), ROOT))
+        self.assertIn("main table padding: 594 zero bytes", dump(raw, ROOT))
+
     def test_every_bit_flip_changes_the_dump(self):
         rnd = random.Random(7)
         for name in ("docx", "xlsx", "pptx"):
