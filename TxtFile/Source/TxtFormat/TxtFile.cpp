@@ -238,8 +238,6 @@ const std::vector<std::string> TxtFile::readAnsiOrCodePage() // == readUtf8witho
 	DWORD file_size	= file_binary.GetFileSize();
 	char *file_data	= new char[file_size];
 
-	if (file_data == nullptr) return result;
-
 	file_binary.ReadFile((BYTE*)file_data, file_size, file_size);
 
 	DWORD start_pos = 0;
@@ -266,6 +264,7 @@ const std::vector<std::string> TxtFile::readAnsiOrCodePage() // == readUtf8witho
 	std::string str(file_data + start_pos, file_data + file_size);
 	result.push_back(str);
 	m_linesCount++;
+	delete[] file_data;
 	return result;
 }
 
@@ -307,11 +306,11 @@ const std::vector<std::wstring> TxtFile::readUnicode()
 	DWORD file_size	= file_binary.GetFileSize();
 	char *file_data	= new char[file_size];
 
-	if (file_data == nullptr) return result;
-
 	file_binary.ReadFile((BYTE*)file_data, file_size, file_size);
 
-    return readUnicodeFromBytes(file_data, file_size);
+    result = readUnicodeFromBytes(file_data, file_size);
+    delete[] file_data;
+    return result;
 }
 
 const std::vector<std::wstring> TxtFile::readBigEndian()
@@ -324,8 +323,6 @@ const std::vector<std::wstring> TxtFile::readBigEndian()
 	DWORD file_size	= file_binary.GetFileSize();
 	char *file_data	= new char[file_size];
 
-	if (file_data == nullptr) return result;
-
 	file_binary.ReadFile((BYTE*)file_data, file_size, file_size);
 
     //swap bytes
@@ -336,7 +333,9 @@ const std::vector<std::wstring> TxtFile::readBigEndian()
         file_data[i]	= file_data[i+1];
         file_data[i+1]	= v;
     }
-    return readUnicodeFromBytes(file_data, file_size);
+    result = readUnicodeFromBytes(file_data, file_size);
+    delete[] file_data;
+    return result;
 }
 
 
@@ -349,8 +348,6 @@ const std::vector<std::string> TxtFile::readUtf8()
 
 	DWORD file_size	= file_binary.GetFileSize();
 	char *file_data	= new char[file_size];
-
-	if (file_data == nullptr) return result;
 
 	file_binary.ReadFile((BYTE*)file_data, file_size, file_size);
 
@@ -377,6 +374,7 @@ const std::vector<std::string> TxtFile::readUtf8()
 	std::string str(file_data + start_pos, file_data + file_size);
 	result.push_back(str);
 	m_linesCount++;
+	delete[] file_data;
 	return result;
 }
 

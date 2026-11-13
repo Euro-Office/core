@@ -88,7 +88,6 @@ static void ParseTxtOptions(const std::wstring & sXmlOptions, int &encoding, int
 _UINT32 CTxtXmlFile::txt_LoadFromFile(const std::wstring & sSrcFileName, const std::wstring & sDstPath, const std::wstring & sXMLOptions)
 {
 	Writers::FileWriter *pDocxWriter =  new Writers::FileWriter(sDstPath, L"", true, 1, nullptr, L"");
-	if (pDocxWriter == nullptr) return AVS_FILEUTILS_ERROR_CONVERT;
 
 	CreateDocxEmpty(sDstPath, pDocxWriter);
 
@@ -189,29 +188,23 @@ void CTxtXmlFile::CreateDocxEmpty(const std::wstring & _strDirectory, Writers::F
 	OOX::CPath DocProps = std::wstring(_T("docProps"));
 
 	OOX::CApp* pApp = new OOX::CApp(nullptr);
-	if (pApp)
-	{
-		std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
-		if (sApplication.empty())
-			sApplication = NSSystemUtils::gc_EnvApplicationNameDefault;
+	std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
+	if (sApplication.empty())
+		sApplication = NSSystemUtils::gc_EnvApplicationNameDefault;
 #if defined(INTVER)
-		std::string s = VALUE2STR(INTVER);
-		sApplication += L"/" + std::wstring(s.begin(), s.end());
+	std::string s = VALUE2STR(INTVER);
+	sApplication += L"/" + std::wstring(s.begin(), s.end());
 #endif
-		pApp->m_sApplication = sApplication;
-		pApp->SetDefaults();
-		
-		pApp->write(pathDocProps + FILE_SEPARATOR_STR + _T("app.xml"), DocProps, oContentTypes);
-		delete pApp;
-	}
+	pApp->m_sApplication = sApplication;
+	pApp->SetDefaults();
+	
+	pApp->write(pathDocProps + FILE_SEPARATOR_STR + _T("app.xml"), DocProps, oContentTypes);
+	delete pApp;
 	OOX::CCore* pCore = new OOX::CCore(nullptr);
-	if (pCore)
-	{
-		pCore->SetCreator(_T(""));
-		pCore->SetLastModifiedBy(_T(""));
-		pCore->write(pathDocProps + FILE_SEPARATOR_STR + _T("core.xml"), DocProps, oContentTypes);
-		delete pCore;
-	}
+	pCore->SetCreator(_T(""));
+	pCore->SetLastModifiedBy(_T(""));
+	pCore->write(pathDocProps + FILE_SEPARATOR_STR + _T("core.xml"), DocProps, oContentTypes);
+	delete pCore;
 	/////////////////////////////////////////////////////////////////////////////////////
 	pDocxWriter->m_oTheme.Write(strDirectory);
 	pDocxWriter->get_style_writers().Write();
