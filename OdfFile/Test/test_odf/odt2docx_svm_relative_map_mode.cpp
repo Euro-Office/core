@@ -60,3 +60,24 @@ TEST(OdtToDocxSvmMapMode, RelativeMapModeAndPopAreHonoured)
     EXPECT_TRUE(is(middle, 0, 0, 255)) << "middle " << middle.r << "," << middle.g << "," << middle.b;
     EXPECT_TRUE(is(bottom_right, 0, 255, 0)) << "bottom right " << bottom_right.r << "," << bottom_right.g << "," << bottom_right.b;
 }
+
+// A crafted SVM: a map mode with a negative scale (ignored, as LibreOffice drops it), 5000 nested
+// PUSH records around 40 relative map modes of scale 4294967295 (bounded states and scales), then
+// 5000 POP. The picture still converts: red only in the top-left quarter, blue elsewhere, green in
+// the bottom-right corner at the base scale.
+TEST(OdtToDocxSvmMapMode, CraftedMapModesStayBounded)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/svm_crafted_map_mode.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    CBgraFrame frame;
+    ASSERT_TRUE(frame.OpenFile(dir + FILE_SEPARATOR_STR + L"word/media/image1.png")) << "no PNG for the SVM picture";
+    ASSERT_GT(frame.get_Width(), 0);
+
+    const Rgb top_left = colour_at(frame, 0.1, 0.1);
+    const Rgb top_right = colour_at(frame, 0.7, 0.25);
+    const Rgb bottom_right = colour_at(frame, 0.95, 0.9);
+    EXPECT_TRUE(is(top_left, 255, 0, 0)) << "top left " << top_left.r << "," << top_left.g << "," << top_left.b;
+    EXPECT_TRUE(is(top_right, 0, 0, 255)) << "top right " << top_right.r << "," << top_right.g << "," << top_right.b;
+    EXPECT_TRUE(is(bottom_right, 0, 255, 0)) << "bottom right " << bottom_right.r << "," << bottom_right.g << "," << bottom_right.b;
+}

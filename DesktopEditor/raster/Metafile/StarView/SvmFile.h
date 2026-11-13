@@ -73,6 +73,7 @@ class CSvmFile : virtual public IMetaFileBase
 		m_oPlayer.Clear();
 		m_pDC = m_oPlayer.GetDC();
 		m_vOffsetStack.clear();
+		m_unSkippedPushes = 0;
 
 		m_currentActionVersion	= 0;
 		m_currentCharset		= 0;
@@ -201,6 +202,7 @@ class CSvmFile : virtual public IMetaFileBase
  private:
 	TSvmPoint			m_oCurrnetOffset;
 	std::vector<TSvmPoint>	m_vOffsetStack;	// m_oCurrnetOffset at each PUSH, for its POP
+	unsigned int			m_unSkippedPushes = 0;	// PUSH records beyond the depth limit; their POPs only count down
 	BYTE*				m_pBufferData;
 	CSvmDC*				m_pDC;
 	CSvmPlayer          m_oPlayer;
@@ -264,6 +266,12 @@ class CSvmFile : virtual public IMetaFileBase
 	void TranslatePoint(TSvmPoint& oPoint, double& dX, double& dY) const
 	{
 		TranslatePoint(oPoint.x, oPoint.y, dX, dY);
+	}
+	// A font size at the current scale, kept within what a font can be (a file sets the scale).
+	static unsigned int ScaledFontSize(unsigned int unSize, double dScale)
+	{
+		const double dSize = unSize * dScale + 0.5;
+		return dSize > 0 ? (unsigned int)(dSize < 100000. ? dSize : 100000.) : 0;
 	}
 	void TranslatePoint(int nX, int nY, double& dX, double &dY) const
 	{
@@ -479,8 +487,8 @@ class CSvmFile : virtual public IMetaFileBase
 		{
 			unHeight = pFont->SizeHeight;
 			unWidth = pFont->SizeWidth;
-			pFont->SizeHeight = (unsigned int)(unHeight * m_pDC->m_dRelativeScaleY + 0.5);
-			pFont->SizeWidth = (unsigned int)(unWidth * m_pDC->m_dRelativeScaleX + 0.5);
+			pFont->SizeHeight = ScaledFontSize(unHeight, m_pDC->m_dRelativeScaleY);
+			pFont->SizeWidth = ScaledFontSize(unWidth, m_pDC->m_dRelativeScaleX);
 		}
 
 		m_pOutput->DrawString(wsString, unCharsCount, dX, dY, pdDx);
