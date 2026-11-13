@@ -131,6 +131,11 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/character_style_without_parent.odt"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/hyperlink_target_frame.odt",
 ]
