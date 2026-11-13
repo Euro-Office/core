@@ -10,6 +10,7 @@
 #include "gtest/gtest.h"
 
 #include "../../graphics/pro/Fonts.h"
+#include "../ApplicationFonts.h"
 #include "../../common/File.h"
 
 #include <algorithm>
@@ -234,4 +235,32 @@ TEST_F(CFontEngineTest, FailsOnMissingOrInvalidFont)
 	CPtr<NSFonts::IFontManager> pManager(s_pApplication->GenerateFontManager());
 	EXPECT_FALSE(pManager->LoadFontFromFile(FontPath("does-not-exist.ttf"), 0, 100, 72, 72));
 	EXPECT_FALSE(pManager->LoadFontFromFile(FontPath("generate.py"), 0, 100, 72, 72));
+}
+
+// A missing font with a metric twin is replaced by the twin, also under the names LibreOffice and
+// fontconfig alias (PostScript, StarOffice, ChromeOS, URW): an old document in Times or Courier
+// keeps serif or monospaced text with the same widths.
+TEST(CFontListNamePicker, MetricAliasesFindTheirTwin)
+{
+	CFontListNamePicker oPicker;
+	for (const wchar_t* sRequested : {L"Times New Roman", L"Times", L"Thorndale", L"Thorndale AMT", L"Tinos", L"Nimbus Roman"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(L"Liberation Serif", sRequested)) << sRequested;
+	for (const wchar_t* sRequested : {L"Courier New", L"Courier", L"Cumberland", L"Cumberland AMT", L"Cousine", L"Nimbus Mono PS", L"Nimbus Mono"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(L"Liberation Mono", sRequested)) << sRequested;
+	for (const wchar_t* sRequested : {L"Arial", L"Helvetica", L"Albany", L"Albany AMT", L"Arimo"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(L"Liberation Sans", sRequested)) << sRequested;
+
+	// The other clones are offered as twins too, where Liberation is not installed.
+	for (const wchar_t* sCandidate : {L"Tinos", L"Nimbus Roman", L"Nimbus Roman No9 L"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(sCandidate, L"Times New Roman")) << sCandidate;
+	for (const wchar_t* sCandidate : {L"Cousine", L"Nimbus Mono PS", L"Nimbus Mono", L"Nimbus Mono L"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(sCandidate, L"Courier New")) << sCandidate;
+	for (const wchar_t* sCandidate : {L"Arimo", L"Nimbus Sans"})
+		EXPECT_TRUE(oPicker.IsLikeFonts(sCandidate, L"Arial")) << sCandidate;
+
+	// Twins only: no serif for a sans request, no other group, the existing groups unchanged.
+	EXPECT_FALSE(oPicker.IsLikeFonts(L"Liberation Sans", L"Times"));
+	EXPECT_FALSE(oPicker.IsLikeFonts(L"Liberation Serif", L"Courier"));
+	EXPECT_TRUE(oPicker.IsLikeFonts(L"Caladea", L"Cambria"));
+	EXPECT_FALSE(oPicker.IsLikeFonts(L"Liberation Serif", L"Verdana"));
 }
