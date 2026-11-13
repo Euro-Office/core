@@ -308,9 +308,9 @@ const std::vector<std::wstring> TxtFile::readUnicode()
 
 	file_binary.ReadFile((BYTE*)file_data, file_size, file_size);
 
-    result = readUnicodeFromBytes(file_data, file_size);
+    std::vector<std::wstring> decoded = readUnicodeFromBytes(file_data, file_size);
     delete[] file_data;
-    return result;
+    return decoded;
 }
 
 const std::vector<std::wstring> TxtFile::readBigEndian()
@@ -333,9 +333,9 @@ const std::vector<std::wstring> TxtFile::readBigEndian()
         file_data[i]	= file_data[i+1];
         file_data[i+1]	= v;
     }
-    result = readUnicodeFromBytes(file_data, file_size);
+    std::vector<std::wstring> decoded = readUnicodeFromBytes(file_data, file_size);
     delete[] file_data;
-    return result;
+    return decoded;
 }
 
 
