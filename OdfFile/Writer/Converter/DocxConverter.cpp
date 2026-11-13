@@ -1878,34 +1878,43 @@ void DocxConverter::convert( ComplexTypes::Word::CShading* shading, _CP_OPT(odf_
 		}
 	}
 }
+// A section keeps the inherited header/footer of every type it does not define itself. The section
+// converter converts every reference in the list and the last one of each type wins, so the reference
+// replaces the last one of the same type (a section may list a type twice) or is added if there is none.
+static void set_hdr_ftr_ref(std::vector<nullable<ComplexTypes::Word::CHdrFtrRef>> & refs,
+							const nullable<ComplexTypes::Word::CHdrFtrRef> & other)
+{
+	if (false == other.IsInit()) return;
+
+	nullable < ComplexTypes::Word::CHdrFtrRef> ref; ref.Init();
+
+	ref->m_oId= other->m_oId;
+	ref->m_oType= other->m_oType;
+
+	const int type = other->m_oType.IsInit() ? other->m_oType->GetValue() : 0;
+	for (size_t i = refs.size(); i > 0; i--)
+	{
+		if (false == refs[i - 1].IsInit()) continue;
+
+		if ((refs[i - 1]->m_oType.IsInit() ? refs[i - 1]->m_oType->GetValue() : 0) == type)
+		{
+			refs[i - 1] = ref;
+			return;
+		}
+	}
+	refs.push_back(ref);
+}
 void DocxConverter::apply_HF_from(OOX::Logic::CSectionProperty *props, OOX::Logic::CSectionProperty *other)
 {
 	if (props == NULL || other== NULL)return;
 
-	if (other->m_arrFooterReference.size() > 0)
+	for (size_t i =0 ; i < other->m_arrFooterReference.size() ; i++)
 	{
-		for (size_t i =0 ; i < other->m_arrFooterReference.size() ; i++)
-		{
-			nullable < ComplexTypes::Word::CHdrFtrRef> ref; ref.Init();
-
-			ref->m_oId= other->m_arrFooterReference[i]->m_oId;
-			ref->m_oType= other->m_arrFooterReference[i]->m_oType;
-
-			props->m_arrFooterReference.push_back(ref);
-		}
-		
+		set_hdr_ftr_ref(props->m_arrFooterReference, other->m_arrFooterReference[i]);
 	}
-	if (other->m_arrHeaderReference.size() > 0)
+	for (size_t i =0 ; i < other->m_arrHeaderReference.size() ; i++)
 	{
-		for (size_t i =0 ; i < other->m_arrHeaderReference.size() ; i++)
-		{
-			nullable < ComplexTypes::Word::CHdrFtrRef> ref; ref.Init();
-
-			ref->m_oId= other->m_arrHeaderReference[i]->m_oId;
-			ref->m_oType= other->m_arrHeaderReference[i]->m_oType;
-
-			props->m_arrHeaderReference.push_back(ref);
-		}
+		set_hdr_ftr_ref(props->m_arrHeaderReference, other->m_arrHeaderReference[i]);
 	}
 }
 void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool bSection, const std::wstring& master_name, bool bAlways)
