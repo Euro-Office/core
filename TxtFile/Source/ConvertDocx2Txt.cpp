@@ -310,13 +310,13 @@ namespace Docx2Txt
 	std::wstring Converter_Impl::convert(OOX::Logic::CRun* pRun,
 										 OOX::CDocument *pDocument, OOX::CNumbering* pNumbering, OOX::CStyles* pStyles)
 	{
-		if (pRun == NULL) return L"";
+		if (pRun == nullptr) return L"";
 		
 		std::wstring line;
 
 		for (size_t j = 0; pRun && j < pRun->m_arrItems.size(); ++j)
 		{
-			if (pRun->m_arrItems[j] == NULL) continue;
+			if (pRun->m_arrItems[j] == nullptr) continue;
 
 			if (pRun->m_arrItems[j]->getType() == OOX::et_w_fldChar)
 			{
@@ -326,10 +326,10 @@ namespace Docx2Txt
 				{
 					if (fldChar->m_oFldCharType->GetValue() == SimpleTypes::fldchartypeBegin)	m_Field.push_back(true);
 					else if (fldChar->m_oFldCharType->GetValue() == SimpleTypes::fldchartypeEnd)m_Field.pop_back();
-					else if (false == m_Field.empty()) m_Field[m_Field.size() - 1] = false;
+					else if (!m_Field.empty()) m_Field[m_Field.size() - 1] = false;
 				}
 			}
-			else if ((m_Field.empty()) || (m_Field.back() == false))
+			else if ((m_Field.empty()) || (!m_Field.back()))
 			{
 				bool caps = false;
 				//
@@ -404,7 +404,7 @@ namespace Docx2Txt
 	void Converter_Impl::convert(OOX::Logic::CParagraph* pParagraph, std::vector<std::wstring>& textOut, bool bEnter,
 								 OOX::CDocument *pDocument, OOX::CNumbering* pNumbering, OOX::CStyles* pStyles)
 	{
-		if (pParagraph == NULL) return;
+		if (pParagraph == nullptr) return;
 
 		std::wstring line;
 
@@ -418,7 +418,7 @@ namespace Docx2Txt
 			{
 				styleName = pParagraph->m_oParagraphProperty->m_oPStyle->m_sVal.IsInit() ? pParagraph->m_oParagraphProperty->m_oPStyle->m_sVal.get() : L"";
 			}
-			if (false == styleName.empty() && pStyles)
+			if (!styleName.empty() && pStyles)
 			{
 				std::map<std::wstring, size_t>::iterator pFind = pStyles->m_mapStyleNames.find(styleName);
 
@@ -428,25 +428,25 @@ namespace Docx2Txt
 
 					if ((style) && (style->m_oParPr.IsInit()) && (style->m_oParPr->m_oNumPr.IsInit()))
 					{
-						if (false == pParagraph->m_oParagraphProperty->m_oNumPr.IsInit())
+						if (!pParagraph->m_oParagraphProperty->m_oNumPr.IsInit())
 						{
 							pParagraph->m_oParagraphProperty->m_oNumPr = style->m_oParPr->m_oNumPr;
 						}
-						if (true == style->m_oParPr->m_oNumPr->m_oIlvl.IsInit())
+						if (style->m_oParPr->m_oNumPr->m_oIlvl.IsInit())
 						{
 							level = style->m_oParPr->m_oNumPr->m_oIlvl->m_oVal.IsInit() ? *style->m_oParPr->m_oNumPr->m_oIlvl->m_oVal + 1 : 0;
 						}
 					}
 				}
 			}
-			if (true == pParagraph->m_oParagraphProperty->m_oNumPr.IsInit())
+			if (pParagraph->m_oParagraphProperty->m_oNumPr.IsInit())
 			{
-				if (true == pParagraph->m_oParagraphProperty->m_oNumPr->m_oIlvl.IsInit())
+				if (pParagraph->m_oParagraphProperty->m_oNumPr->m_oIlvl.IsInit())
 				{
 					level = pParagraph->m_oParagraphProperty->m_oNumPr->m_oIlvl->m_oVal.IsInit() ?
 								*pParagraph->m_oParagraphProperty->m_oNumPr->m_oIlvl->m_oVal + 1 : 0;
 				}
-				if (true == pParagraph->m_oParagraphProperty->m_oNumPr->m_oNumID.IsInit())
+				if (pParagraph->m_oParagraphProperty->m_oNumPr->m_oNumID.IsInit())
 				{
 					listNum = pParagraph->m_oParagraphProperty->m_oNumPr->m_oNumID->m_oVal.IsInit() ?
 								*pParagraph->m_oParagraphProperty->m_oNumPr->m_oNumID->m_oVal : 1;
@@ -495,7 +495,7 @@ namespace Docx2Txt
 					}
 				}
 
-				OOX::Numbering::CAbstractNum* abstractNum = NULL;
+				OOX::Numbering::CAbstractNum* abstractNum = nullptr;
 				
 				std::map<int, size_t>::iterator pFindAbstract = pNumbering->m_mapAbstractNum.find(abstractNumId);
 
@@ -512,9 +512,9 @@ namespace Docx2Txt
 						if (lvl)
 						{
 							ind_level = pFind->second;
-							if (false == startLvl.IsInit() && lvl->m_oStart.IsInit())
+							if (!startLvl.IsInit() && lvl->m_oStart.IsInit())
 								startLvl = lvl->m_oStart->m_oVal;
-							if (false == restartLvl.IsInit() && lvl->m_oLvlRestart.IsInit())
+							if (!restartLvl.IsInit() && lvl->m_oLvlRestart.IsInit())
 								restartLvl = lvl->m_oLvlRestart->m_oVal;
 						}
 					}
@@ -605,7 +605,7 @@ namespace Docx2Txt
 
 		for (size_t	i = 0; i < pParagraph->m_arrItems.size(); ++i)
 		{
-			if (pParagraph->m_arrItems[i] == NULL) continue;
+			if (pParagraph->m_arrItems[i] == nullptr) continue;
 
 			switch (pParagraph->m_arrItems[i]->getType())
 			{
@@ -648,7 +648,7 @@ namespace Docx2Txt
 					for (size_t j = 0; j < arDisplay.size(); ++j)
 						line += arDisplay[j];
 
-					if (false == sTarget.empty())
+					if (!sTarget.empty())
 					{
 						line += L"(" + sTarget + L")";
 					}

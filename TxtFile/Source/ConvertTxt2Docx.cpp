@@ -201,7 +201,7 @@ namespace Txt2Docx
 
 
 
-	Converter_Impl::Converter_Impl(int encoding) : m_outputFile(NULL)
+	Converter_Impl::Converter_Impl(int encoding) : m_outputFile(nullptr)
 	{
 		m_inputFile.m_nEncoding = encoding;
 		

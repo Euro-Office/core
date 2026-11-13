@@ -157,7 +157,7 @@ void CTxtRenderer::CTxtRendererImpl::AddText(const unsigned int* pUnicodes, unsi
 	const double split_distance = w * c_dSPLIT_WIDTH_COEF;
 	const double space_distance = w * c_dSPACE_WIDTH_COEF;
 	double y_precision = c_dY_PRECISION_MM;
-	if (m_bIsFontSizeDecrease) y_precision *= 3; // for posible super/sub script
+	if (m_bIsFontSizeDecrease) y_precision *= 3; // for possible super/sub script
 
 	std::wstring new_text = text_utf32.ToStdWString();
 	if (m_pCurrLine != nullptr && fabs(m_pCurrLine->dBot - b) < y_precision)
@@ -612,7 +612,7 @@ HRESULT CTxtRenderer::CommandDrawTextCHAR(const LONG& lUnicode,
 }
 
 HRESULT CTxtRenderer::CommandDrawTextExCHAR(const LONG& lUnicode,
-                                                    const LONG& lGid,
+                                                    const LONG& /*lGid*/,
                                                     const double& dX,
                                                     const double& dY,
                                                     const double& dW,
@@ -640,8 +640,8 @@ HRESULT CTxtRenderer::CommandDrawText(const std::wstring& wsUnicodeText,
 }
 
 HRESULT CTxtRenderer::CommandDrawTextEx(const std::wstring& wsUnicodeText,
-                                                const unsigned int* pGids,
-                                                const unsigned int nGidsCount,
+                                                const unsigned int* /*pGids*/,
+                                                const unsigned int /*nGidsCount*/,
                                                 const double& dX,
                                                 const double& dY,
                                                 const double& dW,
@@ -739,42 +739,42 @@ HRESULT CTxtRenderer::PathCommandGetCurrentPoint(double* dX, double* dY)
 	return S_FALSE;
 }
 
-HRESULT CTxtRenderer::PathCommandTextCHAR(const LONG& lUnicode,
-                                                  const double& dX,
-                                                  const double& dY,
-                                                  const double& dW,
-                                                  const double& dH)
+HRESULT CTxtRenderer::PathCommandTextCHAR(const LONG& /*lUnicode*/,
+                                                  const double& /*dX*/,
+                                                  const double& /*dY*/,
+                                                  const double& /*dW*/,
+                                                  const double& /*dH*/)
 {
 	// TODO
 	return S_OK;
 }
 
-HRESULT CTxtRenderer::PathCommandTextExCHAR(const LONG& lUnicode,
-                                                    const LONG& lGid,
-                                                    const double& dX,
-                                                    const double& dY,
-                                                    const double& dW,
-                                                    const double& dH)
+HRESULT CTxtRenderer::PathCommandTextExCHAR(const LONG& /*lUnicode*/,
+                                                    const LONG& /*lGid*/,
+                                                    const double& /*dX*/,
+                                                    const double& /*dY*/,
+                                                    const double& /*dW*/,
+                                                    const double& /*dH*/)
 {
 	return S_OK;
 }
 
-HRESULT CTxtRenderer::PathCommandText(const std::wstring& wsUnicodeText,
-                                              const double& dX,
-                                              const double& dY,
-                                              const double& dW,
-                                              const double& dH)
+HRESULT CTxtRenderer::PathCommandText(const std::wstring& /*wsUnicodeText*/,
+                                              const double& /*dX*/,
+                                              const double& /*dY*/,
+                                              const double& /*dW*/,
+                                              const double& /*dH*/)
 {
 	return S_OK;
 }
 
-HRESULT CTxtRenderer::PathCommandTextEx(const std::wstring& wsUnicodeText,
-                                                const unsigned int* pGids,
-                                                const unsigned int nGidsCount,
-                                                const double& dX,
-                                                const double& dY,
-                                                const double& dW,
-                                                const double& dH)
+HRESULT CTxtRenderer::PathCommandTextEx(const std::wstring& /*wsUnicodeText*/,
+                                                const unsigned int* /*pGids*/,
+                                                const unsigned int /*nGidsCount*/,
+                                                const double& /*dX*/,
+                                                const double& /*dY*/,
+                                                const double& /*dW*/,
+                                                const double& /*dH*/)
 {
 	return S_OK;
 }
