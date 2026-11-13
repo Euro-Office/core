@@ -28,6 +28,10 @@ PPTY uses another framing (OOXML/Binary/Presentation/BinaryFileReaderWriter.cpp)
 PPTY attributes are typed by the reader, not in the stream, so they are
 printed raw and records are numbered only.
 
+FILE can also be a .doct/.xlst/.pptt package (what x2t writes for sdkjs: a zip
+of Editor.bin plus media). Then Editor.bin is dumped and the other files of the
+package are listed by size and SHA-256.
+
 Usage: binformat_dump.py FILE [--root <core>] [--no-labels]
 """
 
@@ -37,6 +41,7 @@ import functools
 import hashlib
 import struct
 import sys
+import zipfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -456,6 +461,23 @@ def attr_text(data):
     return " ".join(parts)
 
 
+def dump_file(path, core_root=None):
+    """Dump a binary file, or a .doct/.xlst/.pptt package (zip of Editor.bin plus media)."""
+    path = Path(path)
+    raw = path.read_bytes()
+    if not raw.startswith(b"PK\x03\x04"):  # a bare binary file starts with "DOCY;" and the like
+        return dump(raw, core_root)
+    with zipfile.ZipFile(path) as z:
+        text = dump(z.read("Editor.bin"), core_root)
+        others = [i for i in z.infolist() if i.filename != "Editor.bin" and not i.is_dir()]
+        if others:
+            text += "package files:\n"
+            for i in sorted(others, key=lambda i: i.filename):
+                digest = hashlib.sha256(z.read(i)).hexdigest()[:16]
+                text += f"  {i.filename} len={i.file_size} sha256={digest}\n"
+    return text
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("file", type=Path)
@@ -463,7 +485,7 @@ def main():
                     help="core checkout to read enum names and reader code from (default: this repository)")
     ap.add_argument("--no-labels", action="store_true", help="numeric record types and heuristics only")
     args = ap.parse_args()
-    sys.stdout.write(dump(args.file.read_bytes(), None if args.no_labels else args.root))
+    sys.stdout.write(dump_file(args.file, None if args.no_labels else args.root))
 
 
 if __name__ == "__main__":

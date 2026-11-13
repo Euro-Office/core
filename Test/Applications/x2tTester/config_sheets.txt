@@ -4,6 +4,6 @@
 	<inputDirectory>input_sheets</inputDirectory>
 	<outputDirectory>out_sheets</outputDirectory>
 	<x2tPath>../../../build/package/bin/</x2tPath>
-	<output>xlsx ods</output>
+	<output>xlsx ods xlst</output>
 	<cores>2</cores>
 </settings>
