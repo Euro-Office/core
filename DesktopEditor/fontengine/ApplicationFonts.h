@@ -87,6 +87,7 @@ public:
 		// Metric twins of Arial under other names (StarOffice, ChromeOS, URW), as LibreOffice and
 		// fontconfig alias them.
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Albany", 2));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Albany AMT", 2));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Arimo", 2));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Sans", 2));
 
@@ -105,6 +106,7 @@ public:
 		// Metric twins of Times New Roman under other names (PostScript, StarOffice, ChromeOS, URW).
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Times", 3));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Thorndale", 3));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Thorndale AMT", 3));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Tinos", 3));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Roman", 3));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Roman No9 L", 3));
@@ -123,16 +125,19 @@ public:
 		// Metric twins of Courier New under other names (PostScript, StarOffice, ChromeOS, URW).
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Courier", 4));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Cumberland", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Cumberland AMT", 4));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Cousine", 4));
-		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Mono L", 4));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Mono PS", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Mono", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Mono L", 4));
 
 		std::vector<std::wstring> ar4;
 		ar4.push_back(L"Courier New");
 		ar4.push_back(L"Liberation Mono");
 		ar4.push_back(L"Cousine");
-		ar4.push_back(L"Nimbus Mono L");
 		ar4.push_back(L"Nimbus Mono PS");
+		ar4.push_back(L"Nimbus Mono");
+		ar4.push_back(L"Nimbus Mono L");
 		m_listLikes.push_back(ar4);
 
 		// 5 [Segoe]
