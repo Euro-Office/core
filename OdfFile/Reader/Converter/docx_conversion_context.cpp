@@ -1463,7 +1463,9 @@ void docx_conversion_context::process_styles()
                     const std::wstring basedOnId = styles_map_.get(baseOn->name(), baseOn->type());
                     _Wostream << L"<w:basedOn w:val=\"" << basedOnId << "\"/>";
                 }
-				else if (!bDefault && !default_style.empty())
+				// default_style is a paragraph style: w:basedOn must name a style of the same type
+				else if (!bDefault && !default_style.empty() &&
+						 arStyles[i]->type() == odf_types::style_family::Paragraph)
 				{
 					_Wostream << L"<w:basedOn w:val=\"" << default_style << "\"/>";
 				}
