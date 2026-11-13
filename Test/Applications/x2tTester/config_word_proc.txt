@@ -4,6 +4,6 @@
 	<inputDirectory>input_word_proc</inputDirectory>
 	<outputDirectory>out_word_proc</outputDirectory>
 	<x2tPath>../../../build/package/bin/</x2tPath>
-	<output>docx odt rtf</output>
+	<output>docx odt rtf doct</output>
 	<cores>2</cores>
 </settings>

@@ -1,0 +1,401 @@
+header DOCY;v10;0;
+main table: 9 tables
+  Signature(0) @651
+  Settings(9) @657
+  App(15) @1183
+  Core(16) @1444
+  Other(7) @1595
+  Document(6) @2577
+  HdrFtr(4) @2876
+  Style(5) @2880
+  Customs(20) @4238
+main table padding: 594 zero bytes
+table Signature(0) @651 span=6
+  (no length prefix)
+  Version(0) Long: 5
+table Settings(9) @657 span=526
+  DefaultTabStopTwips(9) len=4
+    i32 709
+  Compat(8) len=493
+    Flags1(4) len=4
+      u32 0
+    Flags2(5) len=4
+      u32 0
+    Flags3(6) len=4
+      u32 0
+    CompatSetting(0) len=133
+      CompatName(1) len=34
+        utf16 'compatibilityMode'
+      CompatUri(2) len=80
+        utf16 'http://schemas.microsoft.com/office/word'
+      CompatValue(3) len=4
+        utf16 '15'
+    CompatSetting(0) len=163
+      CompatName(1) len=66
+        utf16 'useWord2013TrackBottomHyphenation'
+      CompatUri(2) len=80
+        utf16 'http://schemas.microsoft.com/office/word'
+      CompatValue(3) len=2
+        utf16 '1'
+    CompatSetting(0) len=155
+      CompatName(1) len=58
+        utf16 'allowHyphenationAtTrackBottom'
+      CompatUri(2) len=80
+        utf16 'http://schemas.microsoft.com/office/word'
+      CompatValue(3) len=2
+        utf16 '1'
+  AutoHyphenation(21) len=1
+    u8 1
+  HyphenationZone(22) len=4
+    i32 0
+table App(15) @1183 span=261
+  (no length prefix)
+  #1 len=256
+    (PPTY records)
+    attrs hex 00 00 00 00 00 [1]'LibreOffice/25.8.5.2$Linux_X86_64 LibreOffice_project/252c20f6956e3db0b52e6e2f9dda67263513c8fc' [4]'15.0000' hex 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+    #0 len=17
+      attrs hex 10 00 00 00 00 11 00 00 00 00 16 01 00 00 00
+table Core(16) @1444 span=151
+  (no length prefix)
+  #2 len=146
+    (PPTY records)
+    attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 01 00 00 00 32 00 [4]'2026-02-18T09:32:31Z' [5]'2026-03-02T13:34:43Z'
+    #0 len=27
+      attrs hex 08 00 00 00 00 [11]'en-US' hex 0d 00 00 00 00
+table Other(7) @1595 span=982
+  DocxTheme(3) len=973
+    #20 len=968
+      (PPTY records)
+      attrs [0]'Office'
+      #0 len=935
+        #0 len=245
+          attrs [0]'LibreOffice'
+          #0 len=13
+            #1 len=8
+              attrs hex 00 18 01 a3 02 03
+          #1 len=13
+            #1 len=8
+              attrs hex 00 03 01 69 02 a3
+          #2 len=13
+            #1 len=8
+              attrs hex 00 a3 01 3e 02 03
+          #3 len=13
+            #1 len=8
+              attrs hex 00 8e 01 03 02 a3
+          #4 len=13
+            #1 len=8
+              attrs hex 00 c9 01 9c 02 00
+          #5 len=13
+            #1 len=8
+              attrs hex 00 c9 01 21 02 1e
+          #8 len=13
+            #1 len=8
+              attrs hex 00 00 01 00 02 00
+          #9 len=13
+            #1 len=8
+              attrs hex 00 00 01 00 02 00
+          #10 len=13
+            #1 len=8
+              attrs hex 00 55 01 1a 02 8b
+          #11 len=13
+            #1 len=8
+              attrs hex 00 00 01 00 02 ee
+          #12 len=13
+            #1 len=8
+              attrs hex 00 ff 01 ff 02 ff
+          #13 len=13
+            #1 len=8
+              attrs hex 00 ff 01 ff 02 ff
+        #1 len=311
+          attrs [0]'Office'
+          #0 len=141
+            #0 len=31
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'Arial'
+            #1 len=43
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'DejaVu Sans'
+            #2 len=43
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'DejaVu Sans'
+            #3 len=4
+              count 0
+          #1 len=141
+            #0 len=31
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'Arial'
+            #1 len=43
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'DejaVu Sans'
+            #2 len=43
+              attrs hex 00 01 00 00 00 31 00 02 01 00 00 00 30 00 [3]'DejaVu Sans'
+            #3 len=4
+              count 0
+        #2 len=364
+          attrs hex 00 00 00 00 00
+          #0 len=76
+            count 3
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+          #1 len=136
+            count 3
+            #0 len=39
+              attrs hex 00 00 01 00 02 01 03 ce 18 00 00
+              #0 len=0
+              #1 len=4
+                attrs hex 00 06
+              #2 len=7
+                attrs hex 00 03 00 00 00
+            #0 len=39
+              attrs hex 00 00 01 00 02 01 03 ce 18 00 00
+              #0 len=0
+              #1 len=4
+                attrs hex 00 06
+              #2 len=7
+                attrs hex 00 03 00 00 00
+            #0 len=39
+              attrs hex 00 00 01 00 02 01 03 ce 18 00 00
+              #0 len=0
+              #1 len=4
+                attrs hex 00 06
+              #2 len=7
+                attrs hex 00 03 00 00 00
+          #2 len=49
+            count 3
+            #0 len=10
+              #0 len=5
+                #1 len=0
+            #0 len=10
+              #0 len=5
+                #1 len=0
+            #0 len=10
+              #0 len=5
+                #1 len=0
+          #3 len=76
+            count 3
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+      #4 len=4
+        count 0
+table Document(6) @2577 span=299
+  Par(0) len=167
+    pPr(1) len=86
+      ParaStyle(21) Variable len=12
+        utf16 'Normal'
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=56
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+      Bidi(47) Byte: 0
+    Content(2) len=71
+      Run(5) len=66
+        rPr(1) len=56
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+        Content(8) len=0
+  sectPr(4) len=118
+    #0 len=12
+      #3 Long: 11906
+      #4 Long: 16838
+    #1 len=42
+      #6 Long: 1134
+      #7 Long: 1134
+      #8 Long: 1134
+      #9 Long: 1134
+      #10 Long: 0
+      #11 Long: 0
+      #12 Long: 0
+    #2 len=9
+      #0 Byte: 0
+      #1 Byte: 0
+      #2 Byte: 3
+    #6 len=6
+      #1 len=1
+        u8 13
+    #14 len=24
+      #0 len=1
+        u8 0
+      #1 len=4
+        i32 32768
+      #2 len=4
+        #88 Short: 0
+table HdrFtr(4) @2876 span=4
+  (empty)
+table Style(5) @2880 span=1358
+  DefpPr(0) len=3
+    WidowControl(25) Byte: 1
+  DefrPr(1) len=228
+    FontAscii(4) Variable len=32
+      utf16 'Liberation Serif'
+    FontHAnsi(5) Variable len=32
+      utf16 'Liberation Serif'
+    FontAE(6) Variable len=34
+      utf16 'Noto Serif CJK SC'
+    FontCS(7) Variable len=40
+      utf16 'Noto Sans Devanagari'
+    FontSize(8) Long: 24
+    FontSizeCs(22) Long: 24
+    Lang(25) Variable len=10
+      utf16 'en-US'
+    LangBidi(26) Variable len=10
+      utf16 'hi-IN'
+    LangEA(27) Variable len=10
+      utf16 'zh-CN'
+    Kern(56) Long: 2
+  Styles(2) len=1108
+    Style(0) len=298
+      Style_Id(1) len=12
+        utf16 'Normal'
+      Style_Name(2) len=12
+        utf16 'Normal'
+      Style_Type(9) len=1
+        u8 3
+      Style_qFormat(10) len=1
+        u8 1
+      Style_TextPr(5) len=236
+        FontAscii(4) Variable len=32
+          utf16 'Liberation Serif'
+        FontHAnsi(5) Variable len=32
+          utf16 'Liberation Serif'
+        FontAE(6) Variable len=34
+          utf16 'Noto Serif CJK SC'
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontSize(8) Long: 24
+        ColorTheme(28) Variable len=2
+          hex 00 00
+        FontSizeCs(22) Long: 24
+        Lang(25) Variable len=10
+          utf16 'en-US'
+        LangBidi(26) Variable len=10
+          utf16 'hi-IN'
+        LangEA(27) Variable len=10
+          utf16 'zh-CN'
+        Kern(56) Long: 2
+      Style_ParaPr(6) len=6
+        WidowControl(25) Byte: 1
+        Bidi(47) Byte: 0
+    Style(0) len=287
+      Style_Id(1) len=14
+        utf16 'Heading'
+      Style_Name(2) len=14
+        utf16 'Heading'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=12
+        utf16 'Normal'
+      Style_Next(4) len=16
+        utf16 'BodyText'
+      Style_qFormat(10) len=1
+        u8 1
+      Style_TextPr(5) len=168
+        FontAscii(4) Variable len=30
+          utf16 'Liberation Sans'
+        FontHAnsi(5) Variable len=30
+          utf16 'Liberation Sans'
+        FontAE(6) Variable len=32
+          utf16 'Noto Sans CJK SC'
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontSize(8) Long: 28
+        FontSizeCs(22) Long: 28
+      Style_ParaPr(6) len=21
+        KeepNext(7) Byte: 1
+        Spacing(9) Variable len=12
+          Spacing_BeforeTwips(40) Long: 240
+          Spacing_AfterTwips(41) Long: 120
+    Style(0) len=104
+      Style_Id(1) len=16
+        utf16 'BodyText'
+      Style_Name(2) len=18
+        utf16 'Body Text'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=12
+        utf16 'Normal'
+      Style_TextPr(5) len=0
+      Style_ParaPr(6) len=27
+        Spacing(9) Variable len=21
+          Spacing_LineTwips(39) Long: 276
+          Spacing_LineRule(11) Byte: 1
+          Spacing_BeforeTwips(40) Long: 0
+          Spacing_AfterTwips(41) Long: 140
+    Style(0) len=109
+      Style_Id(1) len=8
+        utf16 'List'
+      Style_Name(2) len=8
+        utf16 'List'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=16
+        utf16 'BodyText'
+      Style_TextPr(5) len=46
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+      Style_ParaPr(6) len=0
+    Style(0) len=162
+      Style_Id(1) len=14
+        utf16 'Caption'
+      Style_Name(2) len=14
+        utf16 'caption'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=12
+        utf16 'Normal'
+      Style_qFormat(10) len=1
+        u8 1
+      Style_TextPr(5) len=64
+        Italic(1) Byte: 1
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontSize(8) Long: 24
+        ItalicCs(21) Byte: 1
+        FontSizeCs(22) Long: 24
+      Style_ParaPr(6) len=21
+        SuppressLineNumbers(44) Byte: 1
+        Spacing(9) Variable len=12
+          Spacing_BeforeTwips(40) Long: 120
+          Spacing_AfterTwips(41) Long: 120
+    Style(0) len=118
+      Style_Id(1) len=10
+        utf16 'Index'
+      Style_Name(2) len=10
+        utf16 'Index'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=12
+        utf16 'Normal'
+      Style_qFormat(10) len=1
+        u8 1
+      Style_TextPr(5) len=46
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+      Style_ParaPr(6) len=3
+        SuppressLineNumbers(44) Byte: 1
+table Customs(20) @4238 span=4
+  (empty)

@@ -14,6 +14,16 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "Test/BinaryFormat/snapshots/**"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "Test/Applications/x2tTester/out_*_snap/**/*.txt"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = ["DesktopEditor/raster/test/heif/quad.heic", "DesktopEditor/raster/test/heif/quad_alpha.avif", "DesktopEditor/raster/test/heif/quad_10bit.avif", "DesktopEditor/raster/test/heif/wide_rot.heic"]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
