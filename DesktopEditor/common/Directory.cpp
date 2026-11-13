@@ -91,7 +91,7 @@ namespace NSDirectory
 	}
 #endif
 
-	void GetFiles2(std::wstring strDirectory, std::vector<std::wstring>& oArray, bool bIsRecursion)
+	void GetFilesImpl(std::wstring strDirectory, std::vector<std::wstring>& oArray, bool bIsRecursion, bool bFollowSymlinkDirs)
 	{
 #if defined(_WIN32) || defined (_WIN64)
 		WIN32_FIND_DATAW oFD;
@@ -112,7 +112,7 @@ namespace NSDirectory
 				}
 				else if (bIsRecursion)
 				{
-					GetFiles2(sSpec, oArray, bIsRecursion);
+					GetFilesImpl(sSpec, oArray, bIsRecursion, bFollowSymlinkDirs);
 				}
 			}
 		} while( FindNextFileW( hRes, &oFD ) );
@@ -120,11 +120,20 @@ namespace NSDirectory
 #endif
 
 #ifdef __linux__
+		auto doRecursiveCall = [strDirectory](const char *name, std::vector<std::wstring>& oArray, bool bFollowSymlinkDirs) {
+			if(name[0] != '.') {
+				std::wstring sName = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)name, strlen(name));
+				GetFilesImpl(strDirectory + L"/" + sName, oArray, true, bFollowSymlinkDirs);
+			}
+		};
+
 		BYTE* pUtf8 = NULL;
 		LONG lLen = 0;
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(strDirectory.c_str(), strDirectory.length(), pUtf8, lLen, false);
 		DIR *dp;
 		struct dirent *dirp;
+		struct stat stSelf;
+		bool bHaveSelf = bFollowSymlinkDirs && (0 == stat((char*)pUtf8, &stSelf));
 		if((dp  = opendir((char*)pUtf8)) != NULL)
 		{
 			while ((dirp = readdir(dp)) != NULL)
@@ -145,6 +154,25 @@ namespace NSDirectory
 					else if (S_ISDIR(buff.st_mode))
 						nType = 1;
 				}
+				else if (DT_LNK == dirp->d_type)
+				{
+					// #128: symlinked entries are reported as DT_LNK and were dropped
+					// entirely, so fonts installed as symlinks were never picked up.
+					// stat() follows the link, so the target decides.
+					struct stat buff;
+					std::string sTmp = std::string((char*)pUtf8) + "/" + std::string(dirp->d_name);
+					if (0 == stat(sTmp.c_str(), &buff))
+					{
+						if (S_ISREG(buff.st_mode))
+							nType = 2;
+						else if (bFollowSymlinkDirs  && bIsRecursion && S_ISDIR(buff.st_mode))
+						{
+							bool bLinkPointsToSelf = bHaveSelf && buff.st_dev == stSelf.st_dev && buff.st_ino == stSelf.st_ino; // ===
+							if (!bLinkPointsToSelf)
+								doRecursiveCall(dirp->d_name, oArray, bFollowSymlinkDirs);
+						}
+					}				
+				}
 
 				if (2 == nType)
 				{
@@ -154,11 +182,7 @@ namespace NSDirectory
 
 				if (bIsRecursion && (1 == nType))
 				{
-					if(dirp->d_name[0] != '.')
-					{
-						std::wstring sName = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)dirp->d_name, strlen(dirp->d_name));
-						GetFiles2(strDirectory + L"/" + sName, oArray, bIsRecursion);
-					}
+					doRecursiveCall(dirp->d_name, oArray, bFollowSymlinkDirs);
 				}
 			}
 			closedir(dp);
@@ -187,7 +211,7 @@ namespace NSDirectory
 					if(dirp->d_name[0] != '.')
 					{
 						std::wstring sName = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)dirp->d_name, strlen(dirp->d_name));
-						GetFiles2(strDirectory + L"/" + sName, oArray, bIsRecursion);
+						GetFilesImpl(strDirectory + L"/" + sName, oArray, bIsRecursion, bFollowSymlinkDirs);
 					}
 				}
 			}
@@ -196,6 +220,16 @@ namespace NSDirectory
 		delete [] pUtf8;
 		return;
 #endif
+	}
+
+	void GetFiles2(std::wstring strDirectory, std::vector<std::wstring>& oArray, bool bIsRecursion)
+	{
+		GetFilesImpl(strDirectory, oArray, bIsRecursion, false);
+	}
+
+	void GetFilesFollowSymlinks(std::wstring strDirectory, std::vector<std::wstring>& oArray, bool bIsRecursion)
+	{
+		GetFilesImpl(strDirectory, oArray, bIsRecursion, true);
 	}
 
 	std::vector<std::wstring> GetFiles(std::wstring strDirectory, bool bIsRecursion)

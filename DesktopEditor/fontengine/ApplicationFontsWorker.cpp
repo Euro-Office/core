@@ -1689,7 +1689,7 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 
 	for (std::vector<std::wstring>::iterator i = m_arAdditionalFolders.begin(); i != m_arAdditionalFolders.end(); i++)
 	{
-		NSDirectory::GetFiles2(*i, strFontsW_CurSrc, true);
+		NSDirectory::GetFilesFollowSymlinks(*i, strFontsW_CurSrc, true);
 	}
 
 	// delete folders that don't need to be parsed
