@@ -147,7 +147,17 @@ jobs:
     # core libraries it loads are in bin/.
     - name: Conversion Test
       run: |
-        "$RUNNER_TEMP/in-build-image" 'LD_LIBRARY_PATH=/core/build/package/bin ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/x2ttester'
+        "$RUNNER_TEMP/in-build-image" 'ZIP_COLLECT_DIR=/core/build/converted LD_LIBRARY_PATH=/core/build/package/bin ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/x2ttester'
+
+    # The converted documents, for the office-smoke job
+    - name: Upload converted documents
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
+      uses: actions/upload-artifact@v4
+      with:
+        name: converted-documents-${{ github.sha }}
+        path: build/converted/
+        if-no-files-found: error
+        retention-days: 1
 
     # build/package is what DocumentServer copies from core's Dockerfile.
     # Published by the publish job for pushes to main and same-repo PRs that
@@ -302,6 +312,34 @@ jobs:
         path: build/core-package/
         retention-days: 1
         compression-level: 0
+
+  # Opens what the conversion test wrote with LibreOffice, a reader that is
+  # not core. Catches output that core's own reader accepts but others reject.
+  office-smoke:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: scripts
+        persist-credentials: false
+
+    - name: Download converted documents
+      uses: actions/download-artifact@v4
+      with:
+        name: converted-documents-${{ github.sha }}
+        path: converted
+
+    - name: Install LibreOffice
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends libreoffice-writer libreoffice-calc libreoffice-impress
+
+    - name: Open the documents
+      run: scripts/office_smoke.sh converted
 
   # Publishes the packages of the legs that passed
   publish:
