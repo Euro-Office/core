@@ -10,11 +10,11 @@ docFormats=(${docZipFormats[@]} ${docBinFormats[@]})
 docFiles=( empty medium fonts_and_images )
 
 slidesZipFormats=( odp pptx )
-slidesFormats=${slidesZipFormats} 
+slidesFormats=(${slidesZipFormats[@]})
 slidesFiles=( simple )
 
 sheetsZipFormats=( ods xlsx )
-sheetsFormats=${sheetsZipFormats} 
+sheetsFormats=(${sheetsZipFormats[@]})
 sheetsFiles=( spread_basic )
 
 cd $workDir
