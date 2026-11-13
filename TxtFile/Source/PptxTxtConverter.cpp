@@ -69,7 +69,7 @@ int CPptxTxtConverter::Convert(const std::wstring& wsSrcPptxDir, const std::wstr
 		std::wstring rid = presentation->sldIdLst[i].rid.get();
 		smart_ptr<PPTX::Slide> slide = ((*presentation)[rid]).smart_dynamic_cast<PPTX::Slide>();
 
-		if (slide.IsInit() == false)
+		if (!slide.IsInit())
 			continue;
 
 		m_pImpl->AddSlide(*slide);
