@@ -74,6 +74,13 @@ the other outputs. So one x2ttester run, one list of inputs and one snapshot
 folder cover both. A package's media files are listed by size and SHA-256 at
 the end of its dump.
 
+One dump is not compared strictly: `spread_basic.ods` → `xlst`. On arm64, x2t's
+ODS reader sometimes writes other column widths and adds default page margins
+for it, while the `xlsx` written from the same input in the same run does not
+change. Until that is fixed in `OdfFile`, `unstableDumps` in
+`conversionTest.sh` lists it, and a difference prints a CI warning with the diff
+instead of failing.
+
 ```bash
 python3 Test/BinaryFormat/binformat_dump.py path/to/Editor.bin    # or a .doct/.xlst/.pptt
 python3 Test/BinaryFormat/run_snapshots.py templates
