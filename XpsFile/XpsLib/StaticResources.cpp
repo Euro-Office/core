@@ -79,7 +79,7 @@ namespace XPS
 		if (oIter != m_mBrushes.end())
 			return oIter->second;
 
-		return NULL;
+		return nullptr;
 	}
 	bool CStaticResource::GetTransform(CWString& wsKey, CWString& wsTransform)
 	{
@@ -152,7 +152,7 @@ namespace XPS
 
 		if (!m_wsRoot->exists(wsPath))
 		{
-			IFolder::CBuffer* buffer = NULL;;
+			IFolder::CBuffer* buffer = nullptr;;
 			m_wsRoot->readFileWithChunks(wsPath, buffer);
 			if (buffer)
 				delete buffer;
@@ -171,7 +171,7 @@ namespace XPS
 		return true;
 #endif
 
-		IFolder::CBuffer* buffer = NULL;
+		IFolder::CBuffer* buffer = nullptr;
 		m_wsRoot->readFileWithChunks(wsPath, buffer);
 		if (!buffer)
 			return false;
@@ -247,7 +247,7 @@ namespace XPS
 	}
 	CBrush* ReadBrushNode(XmlUtils::CXmlLiteReader& oReader, const double& dCurOpacity, CWString* pwsKey)
 	{
-		CBrush* pBrush = NULL;
+		CBrush* pBrush = nullptr;
 		CWString wsNodeName = oReader.GetNameNoNS();
 		if (wsNodeName == L"SolidColorBrush")
 		{
@@ -306,7 +306,7 @@ namespace XPS
 		}
 		else if (wsNodeName == L"LinearGradientBrush" || wsNodeName == L"RadialGradientBrush")
 		{
-			bool bLinearGradient = (wsNodeName == L"LinearGradientBrush" ? true : false);
+			bool bLinearGradient = (wsNodeName == L"LinearGradientBrush");
 
 			double dOpacity = 1.0;
 			if (bLinearGradient)
@@ -393,7 +393,7 @@ namespace XPS
 			}
 
 			if (!pBrush)
-				return NULL;
+				return nullptr;
 
 			std::vector<LONG> vColors;
 			std::vector<double> vPositions;
@@ -414,14 +414,14 @@ namespace XPS
 			if (lCount <= 0)
 			{
 				delete pBrush;
-				return NULL;
+				return nullptr;
 			}
 
 			LONG* pColors = new LONG[lCount];
 			if (!pColors)
 			{
 				delete pBrush;
-				return NULL;
+				return nullptr;
 			}
 
 			double* pPositions = new double[lCount];
@@ -429,7 +429,7 @@ namespace XPS
 			{
 				RELEASEARRAYOBJECTS(pColors);
 				delete pBrush;
-				return NULL;
+				return nullptr;
 			}
 
 			for (LONG lIndex = 0; lIndex < lCount; lIndex++)
@@ -445,7 +445,7 @@ namespace XPS
 	}
 	CBrush* ReadBrush(XmlUtils::CXmlLiteReader& oReader, const double& dCurOpacity, CWString* pwsKey)
 	{
-		CBrush* pBrush = NULL;
+		CBrush* pBrush = nullptr;
 
 		// TODO: 1. Transforms aren't implemented here because they can't be taken into account with the current renderer interface
 		//       2. VisualBrush isn't implemented

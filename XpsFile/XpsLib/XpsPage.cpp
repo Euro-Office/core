@@ -39,7 +39,7 @@
 #define xpsUnitToMM(x) ((x) * 25.4 / 96)
 #endif
 
-#define IsFromResource(String) (!String.empty() && '{' == String[0])
+#define IsFromResource(String) (!(String).empty() && '{' == (String)[0])
 
 namespace XPS
 {
@@ -260,11 +260,7 @@ namespace XPS
 		{
 			wsNodeName = oReader.GetNameNoNS();
 
-			if (wsNodeName == L"FixedPage.Resources")
-			{
-				bResource = ReadResource(oReader, pRenderer, pState);
-			}
-			else if (wsNodeName == L"Canvas.Resources")
+			if (wsNodeName == L"FixedPage.Resources" || wsNodeName == L"Canvas.Resources")
 			{
 				bResource = ReadResource(oReader, pRenderer, pState);
 			}
@@ -306,20 +302,20 @@ namespace XPS
 							ReadAttribute(oReader, L"Requires", wsAttr);
 							if (wsAttr == L"xps")
 							{
-								DrawCanvas(oReader, pRenderer, pState, NULL);
+								DrawCanvas(oReader, pRenderer, pState, nullptr);
 								break;
 							}
 						}
 						else if (wsNodeName == L"Fallback")
 						{
-							DrawCanvas(oReader, pRenderer, pState, NULL);
+							DrawCanvas(oReader, pRenderer, pState, nullptr);
 							break;
 						}
 					}
 				}
 			}
 
-			if (NULL != pbBreak && *pbBreak)
+			if (nullptr != pbBreak && *pbBreak)
 				return;
 		}		
 
@@ -335,7 +331,7 @@ namespace XPS
 		if (bResource)
 			pState->PopResource();
 	}
-	bool Page::ReadResource(XmlUtils::CXmlLiteReader& oReader, IRenderer* pRenderer, CContextState* pState)
+	bool Page::ReadResource(XmlUtils::CXmlLiteReader& oReader, IRenderer* /*pRenderer*/, CContextState* pState)
 	{
 		if (oReader.IsEmptyNode())
 			return false;
@@ -411,8 +407,8 @@ namespace XPS
 		std::wstring wsIndicies;
 		int nBidiLevel = 0;
 		CWString wsClip, wsTransform;
-		unsigned short* pUtf16    = NULL;
-		unsigned short* pUtf16Ptr = NULL;
+		unsigned short* pUtf16    = nullptr;
+		unsigned short* pUtf16Ptr = nullptr;
 		unsigned int unUtf16Len = 0;
 		CWString wsIndices;
 		CWString wsFill;
@@ -454,7 +450,7 @@ namespace XPS
                         // the font isn't odttf - need to add it to the external font storage if necessary
                         if (IFolder::iftZip == m_wsRootPath->getType() && NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())
                         {
-                            IFolder::CBuffer* buffer = NULL;
+                            IFolder::CBuffer* buffer = nullptr;
                             m_wsRootPath->read(wsFontPath, buffer);
 
                             if (NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())
@@ -554,7 +550,7 @@ namespace XPS
 		}
 		oReader.MoveToElement();
 
-		CBrush* pBrush = NULL;
+		CBrush* pBrush = nullptr;
 		bool bDeleteBrush = false;
 		if (!wsFill.empty())
 		{
@@ -631,7 +627,7 @@ namespace XPS
 		TIndicesEntry oEntry;
 		int nIndicesPos = 0, nIndicesLen = wsIndices.size();
 		int nUtf16Pos = 0;
-		bool bRtoL = (nBidiLevel % 2 ? true : false);
+		bool bRtoL = (nBidiLevel % 2 != 0);
 
 		std::wstring sFullFontPath = m_wsRootPath->getFullFilePath(wsFontPath);
 		if (NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())
@@ -824,7 +820,7 @@ namespace XPS
 		BYTE nJoinStyle = Aggplus::LineJoinMiter;
 		double dMiter   = 10.0;
 
-		double* pDashPattern  = NULL;
+		double* pDashPattern  = nullptr;
 		LONG lDashPatternSize = 0;
 		double dDashOffset    = 0.0;
 		CWString wsFill;
@@ -869,6 +865,7 @@ namespace XPS
 					int nDashArrayCount = arrDashArray.size();
 					if (nDashArrayCount > 0)
 					{
+						RELEASEARRAYOBJECTS(pDashPattern);
 						pDashPattern = new double[nDashArrayCount];
 						if (pDashPattern)
 						{
@@ -1027,7 +1024,7 @@ namespace XPS
 			}
 		}
 
-		CBrush* pBrush = NULL;
+		CBrush* pBrush = nullptr;
 		bool bDeleteBrush = false;
 		if (!wsFill.empty())
 		{
