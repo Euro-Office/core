@@ -346,10 +346,12 @@ xlsx_font::xlsx_font (	const odf_reader::text_format_properties_ptr &textProp,
     {
         sz = textProp->fo_font_size_->get_length().get_value_unit(odf_types::length::pt);
     }
-    //else
-    //{
-    //    sz = 10.;//kDefaultFontSize;        //TODO ... pull out as in math
-    //}
+    else
+    {
+        // No style in the chain gives a size: LibreOffice's default is 10 pt. A font without
+        // sz would get Excel's 11 pt in the editor.
+        sz = 10.;
+    }
 
     if ((textProp->style_text_underline_type_ &&
         textProp->style_text_underline_type_->get_type() != odf_types::line_type::None) ||
