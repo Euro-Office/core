@@ -233,12 +233,12 @@ const std::vector<std::string> TxtFile::readAnsiOrCodePage() // == readUtf8witho
     std::vector<std::string> result;
 	NSFile::CFileBinary file_binary;
 
-	if (file_binary.OpenFile(m_path) == false) return result;
+	if (!file_binary.OpenFile(m_path)) return result;
 
 	DWORD file_size	= file_binary.GetFileSize();
 	char *file_data	= new char[file_size];
 
-	if (file_data == NULL) return result;
+	if (file_data == nullptr) return result;
 
 	file_binary.ReadFile((BYTE*)file_data, file_size, file_size);
 
@@ -302,12 +302,12 @@ const std::vector<std::wstring> TxtFile::readUnicode()
     std::vector<std::wstring> result;
 	NSFile::CFileBinary file_binary;
 
-	if (file_binary.OpenFile(m_path) == false ) return result;
+	if (!file_binary.OpenFile(m_path)) return result;
 
 	DWORD file_size	= file_binary.GetFileSize();
 	char *file_data	= new char[file_size];
 
-	if (file_data == NULL) return result;
+	if (file_data == nullptr) return result;
 
 	file_binary.ReadFile((BYTE*)file_data, file_size, file_size);
 
@@ -319,12 +319,12 @@ const std::vector<std::wstring> TxtFile::readBigEndian()
     std::vector<std::wstring> result;
 	NSFile::CFileBinary file_binary;
 
-	if (file_binary.OpenFile(m_path) == false) return result;
+	if (!file_binary.OpenFile(m_path)) return result;
 
 	DWORD file_size	= file_binary.GetFileSize();
 	char *file_data	= new char[file_size];
 
-	if (file_data == NULL) return result;
+	if (file_data == nullptr) return result;
 
 	file_binary.ReadFile((BYTE*)file_data, file_size, file_size);
 
@@ -345,12 +345,12 @@ const std::vector<std::string> TxtFile::readUtf8()
     std::vector<std::string> result;
 	NSFile::CFileBinary file_binary;
 
-	if (file_binary.OpenFile(m_path) == false) return result;
+	if (!file_binary.OpenFile(m_path)) return result;
 
 	DWORD file_size	= file_binary.GetFileSize();
 	char *file_data	= new char[file_size];
 
-	if (file_data == NULL) return result;
+	if (file_data == nullptr) return result;
 
 	file_binary.ReadFile((BYTE*)file_data, file_size, file_size);
 
@@ -408,11 +408,10 @@ bool TxtFile::writeUnicode(const std::vector<std::wstring>& content)
 
 	for (std::vector<std::wstring>::const_iterator iter = content.begin(); iter != content.end(); ++iter)
 	{
-		const wchar_t *	data = (*iter).c_str();
-		int				size = (*iter).length();
-
 		if (sizeof(wchar_t) == 2)
 		{
+			const wchar_t *	data = (*iter).c_str();
+			int				size = (*iter).length();
 			file.WriteFile((BYTE*)data, size << 1);
 		}
 		else
@@ -492,7 +491,7 @@ const bool TxtFile::isUnicode()
 {
 	NSFile::CFileBinary file;
 
-	if (file.OpenFile(m_path) == false) return false;
+	if (!file.OpenFile(m_path)) return false;
 
 	DWORD dwRead;
 	BYTE data [2];
@@ -500,16 +499,14 @@ const bool TxtFile::isUnicode()
 	file.ReadFile(data, 2, dwRead);
 	file.CloseFile();
 
-	if ((data [0] == 0xff) && (data [1] == 0xfe))return true;
-
-	return false;
+	return (data [0] == 0xff) && (data [1] == 0xfe);
 }
 
 const bool TxtFile::isBigEndian()
 {
 	NSFile::CFileBinary file;
 
-	if (file.OpenFile(m_path) == false) return false;
+	if (!file.OpenFile(m_path)) return false;
 
 	DWORD dwRead;
 	BYTE data [2];
@@ -517,16 +514,14 @@ const bool TxtFile::isBigEndian()
 	file.ReadFile(data, 2, dwRead);
 	file.CloseFile();
 
-	if ((data [0] == 0xfe) && (data [1] == 0xff))return true;
-
-	return false;
+	return (data [0] == 0xfe) && (data [1] == 0xff);
 }
 
 const bool TxtFile::isUtf8()
 {
 	NSFile::CFileBinary file;
 
-	if (file.OpenFile(m_path) == false) return false;
+	if (!file.OpenFile(m_path)) return false;
 
 	DWORD dwRead;
 	BYTE data [3];
@@ -534,7 +529,5 @@ const bool TxtFile::isUtf8()
 	file.ReadFile(data, 3, dwRead);
 	file.CloseFile();
 
-	if ((data [0] == 0xef) && (data [1] == 0xbb) && (data [2] == 0xbf))return true;
-
-	return false;
+	return (data [0] == 0xef) && (data [1] == 0xbb) && (data [2] == 0xbf);
 }

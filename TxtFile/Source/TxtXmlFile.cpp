@@ -87,8 +87,8 @@ static void ParseTxtOptions(const std::wstring & sXmlOptions, int &encoding, int
 
 _UINT32 CTxtXmlFile::txt_LoadFromFile(const std::wstring & sSrcFileName, const std::wstring & sDstPath, const std::wstring & sXMLOptions)
 {
-	Writers::FileWriter *pDocxWriter =  new Writers::FileWriter(sDstPath, L"", true, 1, NULL, L"");
-	if (pDocxWriter == NULL) return AVS_FILEUTILS_ERROR_CONVERT;
+	Writers::FileWriter *pDocxWriter =  new Writers::FileWriter(sDstPath, L"", true, 1, nullptr, L"");
+	if (pDocxWriter == nullptr) return AVS_FILEUTILS_ERROR_CONVERT;
 
 	CreateDocxEmpty(sDstPath, pDocxWriter);
 
@@ -111,7 +111,7 @@ _UINT32 CTxtXmlFile::txt_LoadFromFile(const std::wstring & sSrcFileName, const s
 	pDocxWriter->get_document_writer().Write(); //overwrite document.xml
 
 	delete pDocxWriter;
-	pDocxWriter = NULL;
+	pDocxWriter = nullptr;
 
 	return 0;
 }
@@ -140,11 +140,7 @@ _UINT32 CTxtXmlFile::txt_SaveToFile(const std::wstring & sDstFileName, const std
 				result = converter.writeAnsi(sDstFileName);
 			else if (encoding == EncodingType::BigEndian)
 				result = converter.writeBigEndian(sDstFileName);
-			else if (encoding > 0) //code page
-			{
-				result = converter.write(sDstFileName);
-			}
-			else //auto define
+			else //code page or auto define
 				result = converter.write(sDstFileName);
 		}
 	}
@@ -172,10 +168,6 @@ void CTxtXmlFile::CreateDocxEmpty(const std::wstring & _strDirectory, Writers::F
 	OOX::CPath pathWordRels = pathWord + FILE_SEPARATOR_STR + _T("_rels");
 	NSDirectory::CreateDirectory(pathWordRels.GetPath());
 
-	//media
-	OOX::CPath pathMedia = pathWord + FILE_SEPARATOR_STR + _T("media");
-	std::wstring sMediaPath = pathMedia.GetPath();
-
 	// theme
 	OOX::CPath pathTheme = pathWord + FILE_SEPARATOR_STR + _T("theme");
 	NSDirectory::CreateDirectory(pathTheme.GetPath());
@@ -196,7 +188,7 @@ void CTxtXmlFile::CreateDocxEmpty(const std::wstring & _strDirectory, Writers::F
 	
 	OOX::CPath DocProps = std::wstring(_T("docProps"));
 
-	OOX::CApp* pApp = new OOX::CApp(NULL);
+	OOX::CApp* pApp = new OOX::CApp(nullptr);
 	if (pApp)
 	{
 		std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
@@ -212,7 +204,7 @@ void CTxtXmlFile::CreateDocxEmpty(const std::wstring & _strDirectory, Writers::F
 		pApp->write(pathDocProps + FILE_SEPARATOR_STR + _T("app.xml"), DocProps, oContentTypes);
 		delete pApp;
 	}
-	OOX::CCore* pCore = new OOX::CCore(NULL);
+	OOX::CCore* pCore = new OOX::CCore(nullptr);
 	if (pCore)
 	{
 		pCore->SetCreator(_T(""));
