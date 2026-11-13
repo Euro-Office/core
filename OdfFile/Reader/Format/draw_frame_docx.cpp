@@ -1795,7 +1795,22 @@ void draw_object::docx_convert(oox::docx_conversion_context & Context)
 		}
 		else if (objectBuild.object_type_ == 2) //embedded text
 		{
-			//text in text not support
+			// Shown as its replacement image and embedded as a Word document, like an embedded
+			// sheet.
+			bool & use_image_replace = Context.get_drawing_context().get_use_image_replace();
+			use_image_replace = true;
+
+			std::wstring href_new = office_convert(odf_document_, 1);
+
+			if (!href_new.empty())
+			{
+				drawing->type = oox::typeMsObject;
+				bool isMediaInternal = true;
+
+				href += FILE_SEPARATOR_STR + href_new;
+				drawing->objectId		= Context.get_mediaitems()->add_or_find(href, drawing->type, isMediaInternal, href, Context.get_type_place());
+				drawing->objectProgId	= L"Word.Document.12";
+			}
 		}
 		else if (objectBuild.object_type_ == 3) //math formula
 		{
