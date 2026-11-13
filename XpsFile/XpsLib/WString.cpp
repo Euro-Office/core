@@ -46,7 +46,7 @@ namespace XPS
 			}
 			else
 			{
-				m_pBuffer = NULL;
+				m_pBuffer = nullptr;
 			}
 
 			m_nRefCount = 1;
@@ -78,27 +78,27 @@ namespace XPS
 	CWString::CWString()
 	{
 		m_bOwnBuffer = false;
-		m_pBuffer    = NULL;
+		m_pBuffer    = nullptr;
 		m_unLen      = 0;
 	}
 	CWString::CWString(const wchar_t* wsString)
 	{
 		m_bOwnBuffer = false;
-		m_pBuffer    = NULL;
+		m_pBuffer    = nullptr;
 		m_unLen      = 0;
 		create(wsString, false);
 	}
     CWString::CWString(const std::wstring& wsString)
     {
         m_bOwnBuffer = false;
-        m_pBuffer    = NULL;
+        m_pBuffer    = nullptr;
         m_unLen      = 0;
         create(wsString, true);
     }
 	CWString::CWString(wchar_t* wsString, bool bCopy, int nLen)
 	{
 		m_bOwnBuffer = false;
-		m_pBuffer    = NULL;
+		m_pBuffer    = nullptr;
 		m_unLen      = 0;
 		create(wsString, bCopy, nLen);
 	}
@@ -133,7 +133,7 @@ namespace XPS
 			m_bOwnBuffer = false;
 		}
 	}
-    void CWString::create(const std::wstring& sString, bool bCopy)
+    void CWString::create(const std::wstring& sString, bool /*bCopy*/)
     {
         // unused bCopy
         create(sString.c_str(), true, (int)sString.length());
@@ -149,7 +149,7 @@ namespace XPS
 		}
 
 		m_bOwnBuffer = false;
-		m_pBuffer    = NULL;
+		m_pBuffer    = nullptr;
 		m_unLen      = 0;
 	}
 	void CWString::operator=(const wchar_t* wsString)
@@ -159,6 +159,9 @@ namespace XPS
 	}
 	void CWString::operator=(const CWString& wsString)
 	{
+		if (this == &wsString)
+			return;
+
 		clear();
 		m_unLen      = wsString.m_unLen;
 		m_bOwnBuffer = wsString.m_bOwnBuffer;
@@ -174,7 +177,7 @@ namespace XPS
 			if (pWStringBuffer)
 				return pWStringBuffer->m_pBuffer;
 
-			return NULL;
+			return nullptr;
 		}
 
 		return (const wchar_t*)m_pBuffer;
@@ -182,7 +185,7 @@ namespace XPS
     const std::wstring CWString::c_stdstr() const
     {
         const wchar_t* pData = c_str();
-        if (NULL == pData)
+        if (nullptr == pData)
             return L"";
         return std::wstring(pData);
     }
@@ -260,7 +263,6 @@ namespace XPS
 
 		int nPos = 0;
 		int nLen = size();
-		int nCharPos = nPos;
 		while (nPos < nLen)
 		{
 			int nCharPos = nPos;
