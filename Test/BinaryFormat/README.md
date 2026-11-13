@@ -89,3 +89,10 @@ templates --update`.
 ```bash
 python3 -m unittest discover -s Test/BinaryFormat -p 'test_*.py'
 ```
+
+With `-DEO_BUILD_TESTS=ON`, CTest runs them too, together with the template
+snapshots (`binformat_selftests`, `binformat_template_snapshots`):
+
+```bash
+ctest --test-dir build -R binformat --output-on-failure
+```

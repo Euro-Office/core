@@ -84,6 +84,9 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test/jbig2" pdf_jbig2_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DjVuFile/test" djvu_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/osign/test" osign_test )
+
+        # Python: binary format tool self-tests and template snapshots
+        add_subdirectory( "${CORE_ROOT_DIR}/Test/BinaryFormat" binformat_test )
     endif()
 
 endif()
