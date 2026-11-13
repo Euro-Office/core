@@ -24,12 +24,15 @@ V8_VERSION = "14.6.202.34"
 # pinned. 2026-10-30, verified with V8_VERSION above. Bump together with it.
 DEPOT_TOOLS_REVISION = "a20039648c0de69d8156906b18052bd47e9bf230"
 
+# Bump to rebuild the same V8 version, e.g. after a build environment change
+V8_BUILD = "2"
+
 nc.init_for_dep(
     depname = "V8",
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = V8_VERSION
+    version = f"{ V8_VERSION }-{ V8_BUILD }"
 )
 
 depot_tools_path = nc.work_dir / "depot_tools"
@@ -161,6 +164,37 @@ def patch_callable_run_type():
         nc.abort_op( f"Could not find ExtractCallableRunTypeImpl in { bind_internal_path }. Did V8 change?" )
     bind_internal_path.write_text( text.replace( original, patched ) )
 
+def patch_windows_toolchain():
+    # V8's build knows Visual Studio up to 2022, but on arm64 it uses Visual
+    # Studio 2026 with the v143 toolset (14.44) of Visual Studio 2022:
+    # - gn gen copies the VS 2022 runtime DLLs into the output dir, from the
+    #   newest redist, which is VS 2026's and has only its own. v8_monolith
+    #   doesn't need them, and the host tools that run during the build find
+    #   the installed runtime.
+    # - vcvarsall.bat loads its default toolset; take the one core builds
+    #   with (VCToolsVersion, from scripts/msvc-env.ps1), or the library may
+    #   need a newer STL than its consumers link.
+    marker = "# patched by core/Common/3dParty/v8/nc-build.py"
+
+    win_gn_path = v8_src_path / "build" / "toolchain" / "win" / "BUILD.gn"
+    text = win_gn_path.read_text()
+    copy_dlls = "if (current_toolchain == default_toolchain) {"
+    if marker not in text:
+        if copy_dlls not in text:
+            nc.abort_op( f"Could not find the runtime DLL copy in { win_gn_path }. Did the V8 build config change?" )
+        win_gn_path.write_text( text.replace( copy_dlls, f"if (false) {{  { marker }", 1 ) )
+
+    setup_path = v8_src_path / "build" / "toolchain" / "win" / "setup_toolchain.py"
+    text = setup_path.read_text()
+    sdk_arg = "    args.append(SDK_VERSION)\n"
+    if marker not in text:
+        if sdk_arg not in text:
+            nc.abort_op( f"Could not find the vcvarsall.bat arguments in { setup_path }. Did the V8 build config change?" )
+        setup_path.write_text( text.replace( sdk_arg, sdk_arg +
+            f"    { marker }\n"
+            "    if os.environ.get('VCToolsVersion'):\n"
+            "      args.append('-vcvars_ver=' + os.environ['VCToolsVersion'])\n", 1 ) )
+
 def get_cpu() -> str:
     # The arch we are *building for*; detection (incl. the Windows MSVC target
     # arch and the amd64_arm64 cross prompt) lives in build_3rdparty_common.
@@ -279,8 +313,23 @@ def prepare_clang_base() -> tuple[ Path, str ]:
     if not builtins.is_file():
         nc.abort_op( f"clang builtins { builtins } not found. Is compiler-rt installed?" )
 
-    # On macOS against the SDK's libc++, like core, not Homebrew's
-    return _make_clang_base( bin_dir, { wanted: builtins }, link_tools = nc.is_apple_silicon() )
+    if nc.is_apple_silicon():
+        # On macOS against the SDK's libc++, like core, not Homebrew's
+        return _make_clang_base( bin_dir, { wanted: builtins }, link_tools = True )
+
+    # On Linux against the libstdc++ of the GCC that builds core (the g++ on
+    # PATH, gcc-toolset-13 on Rocky 8). Clang finds a GCC by itself only in
+    # the default places (/usr/lib/gcc), and the distro config files that
+    # name another one (/etc/clang/<triple>-clang++.cfg on Rocky) don't apply:
+    # V8 passes --target with Chromium's triple. Clang also reads
+    # <triple>-<driver>.cfg from its own bin/, so put one there.
+    clang_base, major = _make_clang_base( bin_dir, { wanted: builtins }, link_tools = True )
+    gcc_install_dir = Path( nc.capture_process_output( [ "g++", "-print-libgcc-file-name" ] ).strip() ).parent
+    if not ( gcc_install_dir / "crtbegin.o" ).is_file():
+        nc.abort_op( f"g++ reports { gcc_install_dir } as its installation, which has no crtbegin.o" )
+    for driver in ( "clang", "clang++" ):
+        ( clang_base / "bin" / f"{ triple_dir }-{ driver }.cfg" ).write_text( f"--gcc-install-dir={ gcc_install_dir }\n" )
+    return clang_base, major
 
 def _homebrew_prefix( formula : str ) -> Path | None:
     for prefix in ( "/opt/homebrew/opt", "/usr/local/opt" ):
@@ -393,6 +442,9 @@ use_clang_modules=false
 use_allocator_shim=false
 use_partition_alloc_as_malloc=false
 enable_backup_ref_ptr_support=false
+# Nor PartitionAlloc inside V8, as Node.js builds it: on Linux arm64 it needs
+# glibc 2.30's <sys/ifunc.h>, newer than Rocky 8's 2.28
+v8_enable_partition_alloc=false
 
 # Symbol and debug settings
 symbol_level=0
@@ -558,6 +610,7 @@ def build_and_install():
         disable_crel()
     if nc.is_windows():
         patch_callable_run_type()
+        patch_windows_toolchain()
 
     targetarch = get_cpu()
     output_path = v8_src_path / "out.gn" / f"{targetarch}.release"

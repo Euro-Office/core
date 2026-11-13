@@ -16,28 +16,24 @@ concurrency:
 
 jobs:
   build:
+    # A manual run only builds the third-party libraries (job third-party)
+    if: github.event_name != 'workflow_dispatch'
     runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
-        # The release images (.docker/core.bake.Dockerfile): Rocky Linux 9,
-        # except desktop arm64 on Ubuntu 24.04. Desktop amd64 uses the server
-        # image, so the server amd64 leg covers it. The arm64 legs run
+        # The release images (.docker/core.bake.Dockerfile): Rocky Linux 8
+        # for both products. The desktop image only adds the -devel packages
+        # for Qt and the desktop app, which core doesn't use, so the server
+        # legs build the core packages for both products. The arm64 leg runs
         # natively on GitHub's hosted arm runners (V8 is far too slow under
         # QEMU); swap in a self-hosted arm label if you have one.
         include:
-          # packages: the core packages this leg publishes. On amd64 the
-          # desktop image is the server image, so its build serves both.
-          - { product: server,  distro: rocky9, arch: amd64, platform: linux-amd64, packages: server desktop, runner: self-hosted }
-          - { product: server,  distro: rocky9, arch: arm64, platform: linux-arm64, packages: server, runner: ubuntu-24.04-arm }
-          - { product: desktop, distro: ubuntu, arch: arm64, platform: linux-arm64, packages: desktop, runner: ubuntu-24.04-arm }
+          # packages: the core packages this leg publishes
+          - { product: server,  distro: rocky8, arch: amd64, platform: linux-amd64, packages: server desktop, runner: self-hosted }
+          - { product: server,  distro: rocky8, arch: arm64, platform: linux-arm64, packages: server desktop, runner: ubuntu-24.04-arm }
     name: build (${{ matrix.product }}, ${{ matrix.distro }}, ${{ matrix.arch }})
-    environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
     env:
-      # Only set on a manual run, through the build-assets environment: that
-      # run uploads missing third-party builds, every other run only reads.
-      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
-      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
       CCACHE_MAXSIZE: 2G
       BASE_IMAGE: euro-office/core-base-${{ matrix.product }}-${{ matrix.arch }}:ci
       BUILD_IMAGE: euro-office/core-ci-${{ matrix.product }}-${{ matrix.arch }}:ci
@@ -48,26 +44,9 @@ jobs:
       with:
         submodules: recursive
 
-    # Build environment: the core-base stage of the release Dockerfile.
-    # Euro-Office/docker-ci publishes it as core-base:<product>-<arch>-<hash>,
-    # <hash> being the first 12 characters of the Dockerfile's sha256. Without
-    # that tag (the Dockerfile changed and docker-ci has not rebuilt yet) the
-    # stage is built here: it has no COPY, so the Dockerfile is fed via stdin
-    # with an empty build context. Layers are cached by the runner's Docker daemon.
+    # Build environment: the core-base stage of the release Dockerfile
     - name: Get core-base image
-      run: |
-        hash=$(sha256sum .docker/core.bake.Dockerfile | cut -c1-12)
-        published="ghcr.io/euro-office/core-base:${{ matrix.product }}-${{ matrix.arch }}-$hash"
-        if docker pull "$published"; then
-          docker tag "$published" "$BASE_IMAGE"
-        else
-          echo "::notice::$published is not published, building core-base here"
-          docker build \
-            --target core-base \
-            --build-arg PRODUCT=${{ matrix.product }} \
-            -t "$BASE_IMAGE" \
-            - < .docker/core.bake.Dockerfile
-        fi
+      run: .github/scripts/core-base-image.sh ${{ matrix.product }} ${{ matrix.arch }} "$BASE_IMAGE"
 
     # CI-only additions on top of core-base: fonts for the conversion test.
     # x2t measures text (e.g. spreadsheet column widths) with the system
@@ -99,7 +78,6 @@ jobs:
           -v "$GITHUB_WORKSPACE/.cache/vcpkg:/nuget-cache" \
           -e CCACHE_DIR=/core/.cache/ccache \
           -e CCACHE_MAXSIZE \
-          -e REMOTE_CACHE_S3_ACCESS_KEY -e REMOTE_CACHE_S3_SECRET_KEY \
           -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 \
           "$BUILD_IMAGE" bash -euo pipefail -c "$1"
         SH
@@ -128,7 +106,7 @@ jobs:
 
     # The same script builds core in .docker/core.bake.Dockerfile, so the
     # package can replace that build. Also builds the third-party libs (ICU,
-    # V8, etc.) missing from the remote cache.
+    # V8, etc.) missing from the remote cache, without uploading them.
     - name: Build core (x2t, docbuilder, etc.)
       run: |
         "$RUNNER_TEMP/in-build-image" 'ccache --zero-stats && scripts/build.sh --tests --ccache -- -DEO_NO_WARNINGS=ON'
@@ -302,6 +280,70 @@ jobs:
         path: build/core-package/
         retention-days: 1
         compression-level: 0
+
+  # A manual run: builds the third-party libraries and uploads the ones
+  # missing from the remote cache, through the build-assets environment. Qt
+  # and CEF, which only the desktop app uses, in the desktop image (Qt needs
+  # its -devel packages); the others in the server image, so they never link
+  # a library that only the desktop image has.
+  third-party:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: amd64, runner: self-hosted }
+          - { arch: arm64, runner: ubuntu-24.04-arm }
+    name: third-party (rocky8, ${{ matrix.arch }})
+    # build-assets only accepts protected branches: elsewhere it builds
+    # without uploading, to test the third-party builds
+    environment: ${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/stable-')) && 'build-assets' || '' }}
+    env:
+      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+      SERVER_IMAGE: euro-office/core-base-server-${{ matrix.arch }}:ci
+      DESKTOP_IMAGE: euro-office/core-base-desktop-${{ matrix.arch }}:ci
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Get core-base images
+      run: |
+        .github/scripts/core-base-image.sh server ${{ matrix.arch }} "$SERVER_IMAGE"
+        .github/scripts/core-base-image.sh desktop ${{ matrix.arch }} "$DESKTOP_IMAGE"
+
+    # Runs a command inside an image with the checkout mounted at /core
+    - name: Create container wrapper
+      run: |
+        cat > "$RUNNER_TEMP/in-image" <<'SH'
+        #!/bin/sh
+        image="$1"; shift
+        exec docker run --rm \
+          -v "$GITHUB_WORKSPACE:/core" -w /core \
+          -e REMOTE_CACHE_S3_ACCESS_KEY -e REMOTE_CACHE_S3_SECRET_KEY \
+          -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 \
+          "$image" bash -euo pipefail -c "$1"
+        SH
+        chmod +x "$RUNNER_TEMP/in-image"
+
+    - name: Build the third-party libraries
+      run: |
+        "$RUNNER_TEMP/in-image" "$SERVER_IMAGE" 'scripts/build.sh --third-party-only --build-dir build/third-party'
+
+    - name: Build Qt and CEF
+      run: |
+        "$RUNNER_TEMP/in-image" "$DESKTOP_IMAGE" '$CORE_PYTHON Common/3dParty/build_3rdparty.py --only=qt,cef build/third-party/qt-work build/third-party/qt-install'
+
+    # The container runs as root; clean up as root, so the next checkout on
+    # this self-hosted runner works
+    - name: Remove the build tree
+      if: always()
+      run: |
+        docker run --rm -v "$GITHUB_WORKSPACE:/core" "$SERVER_IMAGE" rm -rf /core/build
 
   # Publishes the packages of the legs that passed
   publish:

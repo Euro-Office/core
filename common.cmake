@@ -109,6 +109,11 @@ if( EMSCRIPTEN )
         endif()
     endif()
 
+    # Third-party only (build.sh --third-party-only): stop after building them
+    if(EO_THIRD_PARTY_ONLY)
+        return()
+    endif()
+
     # Setup openssl
     set(OPENSSL_WASM_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash")
     get_filename_component(OPENSSL_WASM_INSTALL_DIR_ABS "${OPENSSL_WASM_INSTALL_DIR}" ABSOLUTE)
@@ -222,6 +227,16 @@ else()
 
             # cef and qt need old build environment, cannot be built here
             set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}${PREBUILT_EXCLUDE}")
+
+            # On x86_64 Linux the Rocky 9 compiler may emit SSE4.2 or higher
+            # instructions without an explicit -march constraint. Pass CFLAGS/CXXFLAGS
+            # so that cmake-based and autoconf-based dep builds stay at x86-64 baseline.
+            if(LINUX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+                set(THIRD_PARTY_ENV
+                    "CFLAGS=-march=x86-64"
+                    "CXXFLAGS=-march=x86-64"
+                )
+            endif()
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -247,6 +262,11 @@ else()
         endif()
     endif()
 
+    # Third-party only (build.sh --third-party-only): stop after building them
+    if(EO_THIRD_PARTY_ONLY)
+        return()
+    endif()
+
     if(MSVC)
         set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" CACHE STRING "" FORCE)
     endif()
@@ -257,7 +277,7 @@ else()
             # GUI needs it, so skip fetching/requiring it on Apple entirely.
             # Setup qt
             # Priority: explicit QT6_ROOT override > path recorded by the fetch script >
-            # glob of aqt's <version>/<arch> layout.
+            # glob of the <version>/<arch> layout of qt/nc-build.py.
             if(DEFINED ENV{QT6_ROOT})
                 set(QT_ROOT "$ENV{QT6_ROOT}")
             else()
@@ -268,7 +288,7 @@ else()
                     string(STRIP "${QT_ROOT}" QT_ROOT)
                     message(STATUS "Found qt6 root: " ${QT_ROOT})
                 else()
-                    # Fallback: find the prefix aqt extracted (arch folder varies by platform)
+                    # Fallback: find the prefix (arch folder varies by platform)
                     file(GLOB _qt6_cfg "${_qt_install}/*/*/lib/cmake/Qt6/Qt6Config.cmake")
                     if(_qt6_cfg)
                         list(GET _qt6_cfg 0 _qt6_cfg)
@@ -368,7 +388,11 @@ else()
         set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a")
     else()
         set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib64/libssl.a")
-        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a")
+        # The static libcrypto calls dlopen() and pthread functions. Before
+        # glibc 2.34 (RHEL/Rocky 8) those are in libdl and libpthread, so
+        # linking an executable against it needs both.
+        find_package(Threads REQUIRED)
+        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a" ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
     endif()
 
     # Setup zlib-ng
@@ -822,6 +846,13 @@ else() # if( LINUX )
         -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
         -O2 #Remove for debugging
     )
+
+    # On x86_64 the Rocky 9 build environment may emit SSE4.2 or higher instructions
+    # without an explicit -march constraint, breaking baseline x86_64 VPS deployments.
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        list(PREPEND COMMON_CXX_FLAGS -march=x86-64)
+        list(PREPEND COMMON_C_FLAGS   -march=x86-64)
+    endif()
 
     set(COMMON_LINK_OPTIONS
         "-Wl,--disable-new-dtags"

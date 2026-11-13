@@ -18,12 +18,15 @@ jobs:
   # Runs for every commit, not only wasm changes: downstream repos look up the
   # package by core's tree, and ccache makes an unchanged build quick.
   build-wasm:
+    # A manual run only builds the third-party libraries
+    name: ${{ github.event_name == 'workflow_dispatch' && 'third-party (wasm)' || 'build-wasm' }}
     runs-on: [ubuntu-latest, self-hosted]
     container:
         image: ghcr.io/euro-office/emsdk:5.0.4
-    environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
+    environment: ${{ github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/stable-')) && 'build-assets' || '' }}
     env:
-      # Only set on a manual run, through the build-assets environment: that
+      # Only set on a manual run of main or stable-* (build-assets accepts only
+      # protected branches), through that environment: that
       # run uploads missing third-party builds, every other run only reads.
       REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
       REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
@@ -63,6 +66,7 @@ jobs:
           emcc -v
 
       - name: Restore ccache
+        if: github.event_name != 'workflow_dispatch'
         id: ccache
         uses: actions/cache/restore@v4
         with:
@@ -73,16 +77,23 @@ jobs:
       # The same script builds the wasm modules in .docker/core-wasm.bake.Dockerfile,
       # so the package can replace that build
       - name: Build with Emscripten
+        if: github.event_name != 'workflow_dispatch'
         run: ccache --zero-stats && scripts/build.sh --wasm --ccache -- -DEO_NO_WARNINGS=ON
 
+      # A manual run only builds the third-party libraries and uploads the
+      # ones missing from the remote cache
+      - name: Build the third-party libraries
+        if: github.event_name == 'workflow_dispatch'
+        run: scripts/build.sh --wasm --third-party-only
+
       - name: ccache statistics
-        if: always()
+        if: always() && github.event_name != 'workflow_dispatch'
         run: ccache --show-stats || true
 
       # A PR that started from main's cache doesn't save its own: the repo's
       # 10 GB of caches would evict main's, which every new PR starts from
       - name: Save ccache
-        if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
+        if: always() && github.event_name != 'workflow_dispatch' && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
         uses: actions/cache/save@v4
         with:
           path: .cache/ccache
