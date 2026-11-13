@@ -1,0 +1,4 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+# The root .gitignore drops *.txt; the binary format dumps in the snapshots must be committed.
+!out_*_snap/**/*.txt

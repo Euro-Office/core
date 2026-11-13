@@ -58,28 +58,31 @@ no hand-kept schema. Where it finds nothing, the dumper falls back to
 heuristics (Read1, Read2, UTF-16, raw). PPTY records are numbered but not
 named.
 
-`run_snapshots.py` compares the dumps with `snapshots/`:
+The dumps are compared in two places:
 
-| Suite | Input | Needs a build | Runs in |
-|-------|-------|---------------|---------|
-| `templates` | `Common/empty/*.bin`, the new-document templates | no | `binary-format.yml` |
-| `x2t` | the x2tTester inputs (`docx`/`odt`/`rtf`, `xlsx`/`ods`, `pptx`/`odp`) converted by x2ttester | yes | `build.yml`, server/amd64 leg |
+| What | Input | Snapshots | Runs in |
+|------|-------|-----------|---------|
+| what x2t writes | the x2tTester inputs (`docx`/`odt`/`rtf`, `xlsx`/`ods`, `pptx`/`odp`), converted by x2ttester to `doct`/`xlst`/`pptt` | `<stem>.doct.txt` (`.xlst.txt`, `.pptt.txt`) next to the other outputs in `Test/Applications/x2tTester/out_*_snap/` | the conversion test (`conversionTest.sh`, `build.yml`) |
+| the new-document templates | `Common/empty/*.bin` | `snapshots/templates/` | `run_snapshots.py templates`: `binary-format.yml` and CTest, no build needed |
+
+The conversion test asks x2ttester for the internal format as well
+(`config_*.txt`), turns each `doct`/`xlst`/`pptt` into its dump with
+`binformat_dump.py`, and compares the folder with `out_*_snap` as it does for
+the other outputs. So one x2ttester run, one list of inputs and one snapshot
+folder cover both. A package's media files are listed by size and SHA-256 at
+the end of its dump.
 
 ```bash
+python3 Test/BinaryFormat/binformat_dump.py path/to/Editor.bin    # or a .doct/.xlst/.pptt
 python3 Test/BinaryFormat/run_snapshots.py templates
-python3 Test/BinaryFormat/run_snapshots.py x2t --package build/package --tester build/x2ttester/x2ttester
-python3 Test/BinaryFormat/binformat_dump.py path/to/Editor.bin    # inspect one file
 ```
 
-A failing snapshot prints a unified diff. If the change is intended, and sdkjs
-reads the new output, rerun with `--update` and commit the snapshot together
-with the change. CI also uploads every dump as the `binformat-dumps-<sha>`
-artifact, so snapshots can be taken from there when no local build is at hand.
-
-A case without a snapshot fails. In CI the `x2t` suite runs with
-`--print-new`, which also prints missing snapshots into the job log as a
-base64 tar.gz block, for when the artifact can't be downloaded. Save the log
-and run `run_snapshots.py --import-log <log>` to write them.
+A changed dump shows up as a `diff` of the dump file, naming the record that
+changed. If the change is intended, and sdkjs reads the new output, replace the
+snapshot with the new dump and commit it with the change: for x2t, run the
+conversion test locally and copy the `.doct.txt`/`.xlst.txt`/`.pptt.txt` files
+from `out_*` into `out_*_snap`; for the templates, run `run_snapshots.py
+templates --update`.
 
 ## 3. Round trip through real sdkjs
 
@@ -143,6 +146,13 @@ so a new expectation can also be taken from there.
 
 ```bash
 python3 -m unittest discover -s Test/BinaryFormat -p 'test_*.py'
+```
+
+With `-DEO_BUILD_TESTS=ON`, CTest runs them too, together with the template
+snapshots (`binformat_selftests`, `binformat_template_snapshots`):
+
+```bash
+ctest --test-dir build -R binformat --output-on-failure
 ```
 
 `test_roundtrip.py` drives `roundtrip.py` with `roundtrip/fake_docbuilder.py`, a

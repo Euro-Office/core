@@ -36,9 +36,11 @@ CI runs `ctest --test-dir build --output-on-failure` after the build step
 The internal DOCY/XLSY/PPTY format that sdkjs reads is covered by the Python
 tools in [`Test/BinaryFormat/`](Test/BinaryFormat/README.md). One checks that
 the enum values in the `BinReaderWriterDefines.h` headers are only ever
-appended to. The second compares snapshots of what x2t writes. The third
+appended to. The second turns `Editor.bin` into a text dump; the conversion
+test compares the dumps of what x2t writes with `out_*_snap`. The third
 round-trips documents through x2t and real sdkjs with docbuilder and checks
-that their structure survives. All three run in CI.
+that their structure survives. All three run in CI, and the tools' self-tests
+and the template snapshots also run in CTest.
 
 ## How a migrated suite is wired
 
