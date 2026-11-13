@@ -59,10 +59,10 @@ private:
 
 	typedef std::function<bool(const std::wstring&, XmlUtils::CXmlLiteReader&)> Convert_Func;
 
-	HRESULT InitAndConvert2OOXML(const std::vector<std::wstring>& arPaths, const std::wstring& wsDirectory, Convert_Func Convertation, THTMLParameters* pParameters = nullptr);
-	HRESULT InitAndConvert2Markdown(const std::vector<std::wstring>& arPaths, const std::wstring& wsFinalFile, Convert_Func Convertation, TMarkdownParameters* pParameters = nullptr);
+	HRESULT InitAndConvert2OOXML(const std::vector<std::wstring>& arPaths, const std::wstring& wsDirectory, Convert_Func Conversion, THTMLParameters* pParameters = nullptr);
+	HRESULT InitAndConvert2Markdown(const std::vector<std::wstring>& arPaths, const std::wstring& wsFinalFile, Convert_Func Conversion, TMarkdownParameters* pParameters = nullptr);
 
-	bool Convert(const std::wstring& wsPath, Convert_Func Convertation);
+	bool Convert(const std::wstring& wsPath, Convert_Func Conversion);
 
 	void ReadStyle();
 	void ReadStyle2();

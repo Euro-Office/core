@@ -147,7 +147,7 @@ void CMDWriter::BeginBlock()
 		WriteBreakLine();
 }
 
-void CMDWriter::EndBlock(bool bAddBlock)
+void CMDWriter::EndBlock(bool  /*bAddBlock*/)
 {
 	if (!m_arStates.top().m_bInTable)
 		WriteBreakLine();

@@ -11,7 +11,7 @@ CAnchor<CMDWriter>::CAnchor(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CAnchor<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CAnchor<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -44,7 +44,7 @@ CBold<CMDWriter>::CBold(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CBold<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CBold<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -58,7 +58,7 @@ bool CBold<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const 
 	return true;
 }
 
-void CBold<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CBold<CMDWriter>::Close(const std::vector<NSCSS::CNode>&  /*arSelectors*/)
 {
 	if (!ValidWriter() || !m_pWriter->IsBold())
 		return;
@@ -71,7 +71,7 @@ CBreak<CMDWriter>::CBreak(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CBreak<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CBreak<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -88,7 +88,7 @@ CItalic<CMDWriter>::CItalic(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CItalic<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CItalic<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -102,7 +102,7 @@ bool CItalic<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, cons
 	return true;
 }
 
-void CItalic<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CItalic<CMDWriter>::Close(const std::vector<NSCSS::CNode>&  /*arSelectors*/)
 {
 	if (!ValidWriter() || !m_pWriter->IsItalic())
 		return;
@@ -115,7 +115,7 @@ CStrike<CMDWriter>::CStrike(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CStrike<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CStrike<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -129,7 +129,7 @@ bool CStrike<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, cons
 	return true;
 }
 
-void CStrike<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CStrike<CMDWriter>::Close(const std::vector<NSCSS::CNode>&  /*arSelectors*/)
 {
 	if (!ValidWriter() || !m_pWriter->IsStrike())
 		return;
@@ -142,12 +142,9 @@ CQuotation<CMDWriter>::CQuotation(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CQuotation<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CQuotation<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any&  /*oExtraData*/)
 {
-	if (!ValidWriter())
-		return false;
-
-	return true;
+	return ValidWriter();
 }
 
 void CQuotation<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
@@ -157,7 +154,7 @@ CPreformatted<CMDWriter>::CPreformatted(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CPreformatted<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CPreformatted<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -198,7 +195,7 @@ CHeader<CMDWriter>::CHeader(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CHeader<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CHeader<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -218,7 +215,7 @@ bool CHeader<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, cons
 	return true;
 }
 
-void CHeader<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CHeader<CMDWriter>::Close(const std::vector<NSCSS::CNode>&  /*arSelectors*/)
 {
 	if (!ValidWriter())
 		return;
@@ -228,7 +225,7 @@ CImage<CMDWriter>::CImage(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CImage<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CImage<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -251,7 +248,7 @@ bool CImage<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const
 	return true;
 }
 
-void CImage<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CImage<CMDWriter>::Close(const std::vector<NSCSS::CNode>&  /*arSelectors*/)
 {
 	if (!ValidWriter())
 		return;
@@ -263,7 +260,7 @@ CHorizontalRule<CMDWriter>::CHorizontalRule(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CHorizontalRule<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CHorizontalRule<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -282,7 +279,7 @@ CBlockquote<CMDWriter>::CBlockquote(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CBlockquote<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CBlockquote<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -293,7 +290,7 @@ bool CBlockquote<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, 
 	return true;
 }
 
-void CBlockquote<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CBlockquote<CMDWriter>::Close(const std::vector<NSCSS::CNode>&  /*arSelectors*/)
 {
 	if (!ValidWriter())
 		return;
@@ -307,7 +304,7 @@ CTable<CMDWriter>::CTable(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CTable<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CTable<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter() /*|| m_pWriter->InTable()*/) //Nested tables aren't supported in MD (handled in the parser for now)
 		return false;
@@ -334,7 +331,7 @@ bool CTable<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const
 	return true;
 }
 
-void CTable<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CTable<CMDWriter>::Close(const std::vector<NSCSS::CNode>&  /*arSelectors*/)
 {
 	if (!ValidWriter())
 		return;
@@ -347,7 +344,7 @@ CTableRow<CMDWriter>::CTableRow(CMDWriter* pWriter)
 	: CTag(pWriter), m_unLastRowType(static_cast<UINT>(ERowParseMode::Foother))
 {}
 
-bool CTableRow<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CTableRow<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any& oExtraData)
 {
 	using DataForRow = boost::tuple<const TTableRowStyle*, const CStorageTable&, ERowParseMode, ERowPosition>;
 
@@ -385,7 +382,7 @@ bool CTableRow<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, co
 	return true;
 }
 
-void CTableRow<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CTableRow<CMDWriter>::Close(const std::vector<NSCSS::CNode>&  /*arSelectors*/)
 {
 	if (!ValidWriter())
 		return;
@@ -397,7 +394,7 @@ CTableCell<CMDWriter>::CTableCell(CMDWriter* pWriter)
 	: CTag(pWriter), m_unNeedEmptyCells(0)
 {}
 
-bool CTableCell<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CTableCell<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any& oExtraData)
 {
 	using DataForCell = boost::tuple<const CStorageTableCell&, const CStorageTable&, UINT, ERowParseMode, ERowPosition>;
 
@@ -411,7 +408,7 @@ bool CTableCell<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, c
 	return true;
 }
 
-void CTableCell<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CTableCell<CMDWriter>::Close(const std::vector<NSCSS::CNode>&  /*arSelectors*/)
 {
 	if (!ValidWriter())
 		return;
@@ -427,7 +424,7 @@ CList<CMDWriter>::CList(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CList<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CList<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -446,7 +443,7 @@ bool CList<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const 
 	return true;
 }
 
-void CList<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CList<CMDWriter>::Close(const std::vector<NSCSS::CNode>&  /*arSelectors*/)
 {
 	if (!ValidWriter())
 		return;
@@ -458,7 +455,7 @@ CListElement<CMDWriter>::CListElement(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CListElement<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CListElement<CMDWriter>::Open(const std::vector<NSCSS::CNode>&  /*arSelectors*/, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -487,7 +484,7 @@ CCode<CMDWriter>::CCode(CMDWriter* pWriter)
 	: CTag(pWriter)
 {}
 
-bool CCode<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CCode<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any&  /*oExtraData*/)
 {
 	if (!ValidWriter())
 		return false;
@@ -507,7 +504,7 @@ bool CCode<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const 
 	return true;
 }
 
-void CCode<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CCode<CMDWriter>::Close(const std::vector<NSCSS::CNode>&  /*arSelectors*/)
 {
 	if (!ValidWriter())
 		return;
