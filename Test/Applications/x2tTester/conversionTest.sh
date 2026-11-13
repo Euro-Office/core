@@ -17,6 +17,10 @@ sheetsZipFormats=( ods xlsx )
 sheetsFormats=(${sheetsZipFormats[@]})
 sheetsFiles=( spread_basic )
 
+# The internal format sdkjs reads (Editor.bin in a doct/xlst/pptt package) is
+# compared as a text dump: see Test/BinaryFormat/README.md.
+dumper="$(cd "$(dirname "$0")/../../BinaryFormat" && pwd)/binformat_dump.py"
+
 cd $workDir
 
 function convertAndDiff() {
@@ -34,6 +38,11 @@ function convertAndDiff() {
 				unzip $file.$outFormat -d $outFormat > /dev/null 2>&1
 				rm $file.$outFormat > /dev/null 2>&1
 			done
+			if [ -f $file.$internalFormat ]
+			then
+				python3 "$dumper" $file.$internalFormat > $file.$internalFormat.txt || exitCode=1
+				rm $file.$internalFormat
+			fi
 		cd ..
 		diff -r $file.$inFormat ../out_${conversionType}_snap/$file.$inFormat/
 		if [ "$?" != 0 ]
@@ -51,6 +60,7 @@ function convertAndDiff() {
 zipFormats=(${docZipFormats[@]})
 formats=(${docFormats[@]})
 files=(${docFiles[@]})
+internalFormat=doct
 conversionType=word_proc
 
 convertAndDiff
@@ -58,6 +68,7 @@ convertAndDiff
 zipFormats=(${slidesZipFormats[@]})
 formats=(${slidesFormats[@]})
 files=(${slidesFiles[@]})
+internalFormat=pptt
 conversionType=slides
 
 convertAndDiff
@@ -65,6 +76,7 @@ convertAndDiff
 zipFormats=(${sheetsZipFormats[@]})
 formats=(${sheetsFormats[@]})
 files=(${sheetsFiles[@]})
+internalFormat=xlst
 conversionType=sheets
 
 convertAndDiff
