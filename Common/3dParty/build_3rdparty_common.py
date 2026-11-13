@@ -223,6 +223,31 @@ def ensure_directory_exists( dir : Path ):
     if not dir.exists():
         dir.mkdir( parents = True )
 
+def download_verified( url : str, dest : Path, sha256 : str, retries : int = 5 ):
+    """Download url to dest and abort unless the file's SHA-256 matches."""
+    import hashlib
+    import urllib.request
+
+    for attempt in range( 1, retries + 1 ):
+        try:
+            req = urllib.request.Request( url, headers = { "User-Agent": "eo-3rdparty-fetch" } )
+            with urllib.request.urlopen( req ) as resp, open( dest, "wb" ) as out:
+                shutil.copyfileobj( resp, out )
+            break
+        except Exception as e:
+            if attempt == retries:
+                abort_op( f"Download of {url} failed after {retries} attempts: {e}" )
+            print( f"Download failed (attempt {attempt}/{retries}): {e}. Retrying in 10 seconds..." )
+            time.sleep( 10 )
+
+    digest = hashlib.sha256()
+    with open( dest, "rb" ) as f:
+        for chunk in iter( lambda: f.read( 1 << 20 ), b"" ):
+            digest.update( chunk )
+    if digest.hexdigest() != sha256.lower():
+        dest.unlink()
+        abort_op( f"SHA-256 mismatch for {url}: expected {sha256}, got {digest.hexdigest()}" )
+
 def run_command(
         cmd : list[str],
         description : str, cwd : Path | None = None,

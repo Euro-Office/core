@@ -37,7 +37,9 @@ subfolders = [
     'openssl',
     'qt',
     'socketio',
+    'sparkle',
     'v8',
+    'winsparkle',
     'zlib-ng',
     'zlib-ng-wasm',
     # Link against zlib-ng (libtiff also against libjpeg-turbo), so they come after it
