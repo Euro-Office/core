@@ -12,7 +12,8 @@
 
 // smil:subtype is optional on anim:transitionFilter. A slide transition of
 // type blindsWipe, checkerBoardWipe, pushWipe or barnDoorWipe without it
-// converts with the PowerPoint default direction instead of aborting.
+// converts instead of aborting: barnDoorWipe takes its SMIL default subtype
+// (vertical), the others the PowerPoint default direction.
 TEST(OdpToPptxTransition, TransitionWithoutSubtypeConverts)
 {
     const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/transition_without_subtype.odp");
@@ -26,7 +27,7 @@ TEST(OdpToPptxTransition, TransitionWithoutSubtypeConverts)
         {L"ppt/slides/slide1.xml", L"<p:blinds/>"},
         {L"ppt/slides/slide2.xml", L"<p:checker/>"},
         {L"ppt/slides/slide3.xml", L"<p:push/>"},
-        {L"ppt/slides/slide4.xml", L"<p:split/>"},
+        {L"ppt/slides/slide4.xml", L"<p:split orient=\"vert\"/>"},
     };
     for (const auto& slide : slides)
     {

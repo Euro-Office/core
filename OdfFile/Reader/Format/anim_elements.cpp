@@ -1200,6 +1200,10 @@ void anim_transitionFilter::convert_slide_transition_filter(oox::pptx_conversion
 			if (filter_attlist_.smil_subtype_.get() == L"vertical")		param = L"vert";
 			if (filter_attlist_.smil_subtype_.get() == L"horizontal")	param = L"horz";
 		}
+		else
+		{
+			param = L"vert"; // SMIL 2.0 default subtype of barnDoorWipe
+		}
 		break;
 	case smil_transition_type::barWipe:
 		type = L"wipe";
