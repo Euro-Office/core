@@ -72,10 +72,7 @@ The conversion test asks x2ttester for the internal format as well
 `binformat_dump.py`, and compares the folder with `out_*_snap` as it does for
 the other outputs. So one x2ttester run, one list of inputs and one snapshot
 folder cover both. A package's media files are listed by size and SHA-256 at
-the end of its dump. CI compares the dumps on the server images only
-(`BINFORMAT_DUMPS=0` for the desktop build): the desktop image measures
-spreadsheet column widths with other fonts and writes page margins the server
-build doesn't, so its `spread_basic.ods` dump differs from the snapshot.
+the end of its dump.
 
 ```bash
 python3 Test/BinaryFormat/binformat_dump.py path/to/Editor.bin    # or a .doct/.xlst/.pptt

@@ -18,16 +18,8 @@ sheetsFormats=(${sheetsZipFormats[@]})
 sheetsFiles=( spread_basic )
 
 # The internal format sdkjs reads (Editor.bin in a doct/xlst/pptt package) is
-# compared as a text dump: see Test/BinaryFormat/README.md. BINFORMAT_DUMPS=0
-# skips that, for builds whose Editor.bin differs from the snapshots' (the
-# desktop image measures spreadsheet column widths with other fonts).
+# compared as a text dump: see Test/BinaryFormat/README.md.
 dumper="$(cd "$(dirname "$0")/../../BinaryFormat" && pwd)/binformat_dump.py"
-binformatDumps=${BINFORMAT_DUMPS:-1}
-diffExclude=()
-if [ "$binformatDumps" != 1 ]
-then
-	diffExclude=( -x '*.doct.txt' -x '*.xlst.txt' -x '*.pptt.txt' )
-fi
 
 cd $workDir
 
@@ -48,14 +40,11 @@ function convertAndDiff() {
 			done
 			if [ -f $file.$internalFormat ]
 			then
-				if [ "$binformatDumps" = 1 ]
-				then
-					python3 "$dumper" $file.$internalFormat > $file.$internalFormat.txt || exitCode=1
-				fi
+				python3 "$dumper" $file.$internalFormat > $file.$internalFormat.txt || exitCode=1
 				rm $file.$internalFormat
 			fi
 		cd ..
-		diff -r "${diffExclude[@]}" $file.$inFormat ../out_${conversionType}_snap/$file.$inFormat/
+		diff -r $file.$inFormat ../out_${conversionType}_snap/$file.$inFormat/
 		if [ "$?" != 0 ]
 		then 
 			exitCode=1
