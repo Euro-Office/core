@@ -67,6 +67,8 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_date.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_datetime.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_header_footer.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_no_header_footer.xlsx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
