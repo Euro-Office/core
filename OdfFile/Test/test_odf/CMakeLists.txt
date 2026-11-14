@@ -64,6 +64,7 @@ add_core_gtest(
             odt2docx_default_tab_stop.cpp
             enhanced_path_quadratic_bezier.cpp
             pptx2odp_bullet_size.cpp
+            xlsx2ods_page_margins.cpp
             chart_vary_colors.cpp
             odt2docx_first_body_element.cpp
             odt2docx_meta_template.cpp

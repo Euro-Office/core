@@ -531,7 +531,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CWorksheet *oox_sheet)
 /////////////////////////////////////////////////////////////////////////
 	convert(oox_sheet->m_oSheetViews.GetPointer());
 	convert(oox_sheet->m_oPageSetup.GetPointer());
-	convert(oox_sheet->m_oPageMargins.GetPointer());
+	convert(oox_sheet->m_oPageMargins.GetPointer(), oox_sheet->m_oHeaderFooter.GetPointer());
 	convert(oox_sheet->m_oPrintOptions.GetPointer());
 	convert(oox_sheet->m_oPicture.GetPointer());
 	convert(oox_sheet->m_oSheetProtection.GetPointer());
@@ -2081,7 +2081,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page)
 	}
 }
 
-void XlsxConverter::convert(OOX::Spreadsheet::CPageMargins *oox_page)
+void XlsxConverter::convert(OOX::Spreadsheet::CPageMargins *oox_page, OOX::Spreadsheet::CHeaderFooter *oox_hf)
 {
 	if (!oox_page) return;
 	_CP_OPT(odf_types::length) top, left, right, bottom, other;
@@ -2091,15 +2091,55 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPageMargins *oox_page)
 	if (oox_page->m_oRight.IsInit())	right	= odf_types::length(oox_page->m_oRight->GetValue(), odf_types::length::pt);
 	if (oox_page->m_oBottom.IsInit())	bottom	= odf_types::length(oox_page->m_oBottom->GetValue(), odf_types::length::pt);
 
+	// XLSX measures the top margin (where the cells start) and the header distance both from the edge of
+	// the page. In ODF the page margin ends where the header starts and the header height reaches down
+	// to the cells. So when the sheet gets a header, the header distance is the ODF margin and the header
+	// takes the rest of the XLSX margin, as LibreOffice imports it. The same holds for the footer.
+	// The conditions are the ones under which convert(CHeaderFooter) writes a header or footer.
+	bool has_header = false, has_footer = false;
+	if (oox_hf)
+	{
+		const bool bFirst = oox_hf->m_oDifferentFirst.IsInit() ? oox_hf->m_oDifferentFirst->ToBool() : false;
+		const bool bEven = oox_hf->m_oDifferentOddEven.IsInit() ? oox_hf->m_oDifferentOddEven->ToBool() : false;
+
+		has_header = bFirst || bEven || oox_hf->m_oOddHeader.IsInit() || oox_hf->m_oFirstHeader.IsInit();
+		has_footer = bFirst || bEven || oox_hf->m_oOddFooter.IsInit() || oox_hf->m_oFirstFooter.IsInit();
+	}
+	_CP_OPT(odf_types::length) header_height, footer_height;
+
+	if (has_header && oox_page->m_oTop.IsInit() && oox_page->m_oHeader.IsInit())
+	{
+		const double distance = oox_page->m_oHeader->GetValue();
+		const double height = (std::max)(0.0, oox_page->m_oTop->GetValue() - distance);
+		top = odf_types::length(distance, odf_types::length::pt);
+		header_height = odf_types::length(height, odf_types::length::pt);
+	}
+	if (has_footer && oox_page->m_oBottom.IsInit() && oox_page->m_oFooter.IsInit())
+	{
+		const double distance = oox_page->m_oFooter->GetValue();
+		const double height = (std::max)(0.0, oox_page->m_oBottom->GetValue() - distance);
+		bottom = odf_types::length(distance, odf_types::length::pt);
+		footer_height = odf_types::length(height, odf_types::length::pt);
+	}
+
 	ods_context->page_layout_context()->set_page_margin(top, left, bottom, right);
 	
-	if (oox_page->m_oFooter.IsInit())
+	if (footer_height)
+	{
+		ods_context->page_layout_context()->set_footer_size(footer_height, footer_height);
+	}
+	else if (oox_page->m_oFooter.IsInit())
 	{
 		other = odf_types::length(oox_page->m_oFooter->GetValue(), odf_types::length::pt);
 		ods_context->page_layout_context()->set_footer_size(other, other);
 	}
 	
-	if (oox_page->m_oHeader.IsInit())
+	if (header_height)
+	{
+		// a minimum height only, so that a taller header still grows (a fixed height would cut it off)
+		ods_context->page_layout_context()->set_header_size(boost::none, header_height);
+	}
+	else if (oox_page->m_oHeader.IsInit())
 	{
 		other = odf_types::length(oox_page->m_oHeader->GetValue(), odf_types::length::pt);
 		ods_context->page_layout_context()->set_header_size(other, other);
