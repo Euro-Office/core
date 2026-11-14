@@ -744,6 +744,8 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 		if (oox_header_footer->m_sText[pos] == L'&')
 		{
 			pos++;
+			if (pos >= oox_header_footer->m_sText.size())
+				break; // a '&' at the end has no code: drop it
 			wchar_t comm = oox_header_footer->m_sText[pos];
 			
 			switch(comm)
@@ -847,11 +849,14 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 					pos++;
 					std::wstring color = oox_header_footer->m_sText.substr(pos, 6); pos += 6;
 
-					current_text_props.content_.fo_color_ = odf_types::color(L"#" + color); 
+					if (color.size() == 6)
+						current_text_props.content_.fo_color_ = odf_types::color(L"#" + color); 
 				}break;
 				case '\"':
 				{
 					size_t pos1 = oox_header_footer->m_sText.find(L'\"', pos + 1); 
+					if (pos1 == std::wstring::npos)
+						pos1 = oox_header_footer->m_sText.size(); // no closing quote: the rest is the font name
 					std::wstring font = oox_header_footer->m_sText.substr(pos + 1, pos1 - pos - 1); pos = pos1;
 
 					pos1 = font.find(L",");
@@ -897,6 +902,8 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 					}
 				}break;
 			}
+			if (pos > oox_header_footer->m_sText.size())
+				pos = oox_header_footer->m_sText.size(); // a code cut short by the end of the string
 		}
 		size_t next = oox_header_footer->m_sText.find(L'&', pos);
 		if (next == std::wstring::npos) next = oox_header_footer->m_sText.length();
