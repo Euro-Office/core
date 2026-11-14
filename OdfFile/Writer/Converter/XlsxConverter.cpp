@@ -714,7 +714,22 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 
 	size_t pos = 0;
 	odf_writer::style_text_properties current_text_props;
-	
+
+	// ODF allows only paragraphs or style:region-* in a header or footer. Without &L/&C/&R the whole
+	// string goes into plain paragraphs (as LibreOffice writes a centre-only header); text before the
+	// first section code belongs to the centre section, as Excel and LibreOffice read it.
+	const std::wstring &hf_text = oox_header_footer->m_sText;
+	bool has_sections = false;
+	for (size_t i = 0; i + 1 < hf_text.size() && !has_sections; ++i)
+	{
+		if (hf_text[i] != L'&') continue;
+		wchar_t code = hf_text[++i];
+		has_sections = (code == L'L' || code == L'C' || code == L'R');
+	}
+	bool in_block = false;			// a region or a plain paragraph is open
+	bool implicit_center = false;	// the open region is the centre section opened for leading text
+	bool own_paragraph = false;		// plain paragraph opened here, closed at the end
+
 	int type_add = 0;
 	while(pos < oox_header_footer->m_sText.size())
 	{
@@ -725,20 +740,29 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 			
 			switch(comm)
 			{
-				case 'L':	
+				case 'L':
 					{
 						current_text_props.content_.clear();
 						ods_context->start_header_footer_region(1); pos++;
+						in_block = true; implicit_center = false;
 					}break;
-				case 'C':	
+				case 'C':
+					{
+						if (implicit_center)
+						{
+							// the leading text already is the centre section: continue it
+							implicit_center = false; pos++;
+							break;
+						}
+						current_text_props.content_.clear();
+						ods_context->start_header_footer_region(2); pos++;
+						in_block = true;
+					}break;
+				case 'R':
 					{
 						current_text_props.content_.clear();
-						ods_context->start_header_footer_region(2); pos++; 
-					}break;
-				case 'R':	
-					{
-						current_text_props.content_.clear();						
-						ods_context->start_header_footer_region(3); pos++; 
+						ods_context->start_header_footer_region(3); pos++;
+						in_block = true; implicit_center = false;
 					}break;
 
 				case 'A':	type_add = 1; pos++; break;
@@ -868,7 +892,21 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 
 		if (type_add > 0 || next - pos > 0)
 		{
-			ods_context->text_context()->get_styles_context()->create_style(L"", odf_types::style_family::Text, true, false, -1);					
+			if (false == in_block)
+			{
+				if (has_sections)
+				{
+					ods_context->start_header_footer_region(2);
+					implicit_center = true;
+				}
+				else
+				{
+					ods_context->text_context()->start_paragraph(false);
+					own_paragraph = true;
+				}
+				in_block = true;
+			}
+			ods_context->text_context()->get_styles_context()->create_style(L"", odf_types::style_family::Text, true, false, -1);
 			odf_writer::text_format_properties *text_properties = ods_context->text_context()->get_styles_context()->last_state()->get_text_properties();
 			text_properties->apply_from(current_text_props.content_);
 
@@ -916,7 +954,8 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 			pos = next;
 		}
 	}
-
+	if (own_paragraph)
+		ods_context->text_context()->end_paragraph();
 }
 
 void XlsxConverter::convert(OOX::Spreadsheet::CSheetProtection *oox_prot)
