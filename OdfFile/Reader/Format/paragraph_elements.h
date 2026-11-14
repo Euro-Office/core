@@ -1439,10 +1439,11 @@ public:
 
     virtual void docx_convert(oox::docx_conversion_context & Context);
 private:
-    virtual void add_attributes( const xml::attributes_wc_ptr & Attributes ){}
+    virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
 	virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name){}
     virtual void add_text(const std::wstring & Text);
 
+	_CP_OPT(std::wstring)		text_display_;
 	office_element_ptr			text_;
 };
 CP_REGISTER_OFFICE_ELEMENT2(database_display);

@@ -14,8 +14,9 @@
 
 namespace
 {
-// The fixture has three paragraphs "D<n>: <field> END<n>":
-// D0 the field inside a bold span, D1 a value with an ampersand, D2 an empty field.
+// The fixture has four paragraphs "D<n>: <field> END<n>":
+// D0 the field inside a bold span, D1 a value with an ampersand, D2 an empty field,
+// D3 a hidden field (text:display="none").
 std::wstring document()
 {
     static const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/database_display_fields.odt");
@@ -78,5 +79,13 @@ TEST(OdtToDocxDatabaseDisplay, EmptyFieldKeepsParagraph)
     const std::wstring paragraph = paragraph_with(document(), L"D2: ");
     ASSERT_FALSE(paragraph.empty()) << "paragraph D2 not found";
     EXPECT_NE(paragraph.find(L"END2"), std::wstring::npos) << paragraph;
+}
+
+TEST(OdtToDocxDatabaseDisplay, HiddenFieldIsNotShown)
+{
+    const std::wstring paragraph = paragraph_with(document(), L"D3: ");
+    ASSERT_FALSE(paragraph.empty()) << "paragraph D3 not found";
+    EXPECT_EQ(paragraph.find(L"Hidden Value"), std::wstring::npos) << paragraph;
+    EXPECT_NE(paragraph.find(L"END3"), std::wstring::npos) << paragraph;
 }
 } // namespace
