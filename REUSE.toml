@@ -111,6 +111,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/section_footers_duplicate.docx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_background_no_page_setup.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_background_with_margins.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/sheet_header_colour_not_hex.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_header_footer_cut_short.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_header_unterminated_font.xlsx",
 ]
