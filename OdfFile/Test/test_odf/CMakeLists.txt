@@ -51,6 +51,7 @@ add_core_gtest(
             docx2odt_content_controls.cpp
             xlsx2ods_date_cells.cpp
             xlsx2ods_print_area.cpp
+            xlsx2ods_header_footer.cpp
             odt2docx_fields.cpp
             chart_series_name.cpp
             xlsx2ods_sheet_background.cpp
