@@ -113,6 +113,26 @@ namespace Oox2Odf
 		}
 		return cols_1 == cols_2;
 	}
+
+	bool is_landscape(OOX::Logic::CSectionProperty* props)
+	{
+		return props->m_oPgSz.IsInit() && props->m_oPgSz->m_oOrient.IsInit()
+			&& props->m_oPgSz->m_oOrient->GetValue() == SimpleTypes::pageorientLandscape;
+	}
+
+	// A continuous section break does not start a new page, unless the orientation changes (as in Word and
+	// LibreOffice). Only sections without their own headers, footers or title page keep the page here.
+	bool keeps_page(OOX::Logic::CSectionProperty* prev, OOX::Logic::CSectionProperty* props)
+	{
+		if (!prev || !props) return false;
+		if (!props->m_oType.IsInit() || !props->m_oType->m_oVal.IsInit()
+			|| props->m_oType->m_oVal->GetValue() != SimpleTypes::sectionmarkContinious)
+			return false;
+		if (props->m_oTitlePg.IsInit() || !props->m_arrHeaderReference.empty() || !props->m_arrFooterReference.empty())
+			return false;
+		return is_landscape(prev) == is_landscape(props);
+	}
+
 DocxConverter::DocxConverter(const std::wstring & path, bool bTemplate) : docx_flat_document(NULL), docx_document(NULL)
 {
     const OOX::CPath oox_path(std::wstring(path.c_str()));
@@ -291,6 +311,11 @@ void DocxConverter::convert_document()
 		sections.push_back(section);
 	}					
 //----------------------------------------------------------------------------------------------------------
+
+	for (size_t sect = 1; sect < sections.size(); sect++)
+	{
+		sections[sect].bKeepPage = sections[sect].bContinue && keeps_page(sections[sect - 1].props, sections[sect].props);
+	}
 
 	convert(doc->m_oSectPr.GetPointer(), false, L"Standard", true);
 	
@@ -1920,9 +1945,12 @@ void DocxConverter::apply_HF_from(OOX::Logic::CSectionProperty *props, OOX::Logi
 void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool bSection, const std::wstring& master_name, bool bAlways)
 {
 	if (oox_section_pr == NULL) return;
+	const bool bKeepPage = current_section_properties && current_section_properties->bKeepPage;
 	current_section_properties = NULL;
 
 	odt_context->text_context()->set_type_break(-1, 0);
+
+	if (bKeepPage) return; // same columns, continuous: no new master page, so no page break
 
 	bool continuous = false;
 

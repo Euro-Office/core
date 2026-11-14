@@ -167,6 +167,7 @@ namespace Oox2Odf
             size_t start_para = 0;
             size_t end_para = 0;
 			bool bContinue = false;
+			bool bKeepPage = false;
 		} *current_section_properties;
 
 		OOX::CDocx *docx_document;
