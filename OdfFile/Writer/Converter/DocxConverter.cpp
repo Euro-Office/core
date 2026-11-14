@@ -130,6 +130,10 @@ namespace Oox2Odf
 			return false;
 		if (props->m_oTitlePg.IsInit() || !props->m_arrHeaderReference.empty() || !props->m_arrFooterReference.empty())
 			return false;
+		// The line numbering settings are written by the section conversion that is skipped here; the previous section
+		// has already written them if it has line numbering too.
+		if (props->m_oLnNumType.IsInit() && !prev->m_oLnNumType.IsInit())
+			return false;
 		return is_landscape(prev) == is_landscape(props);
 	}
 

@@ -55,3 +55,23 @@ TEST(DocxToOdt, ContinuousSectionKeepsPage)
 	EXPECT_NE(master_page_of(content, L"THIRD"), L"?");
 	EXPECT_EQ(master_page_of(content, L"FOURTH"), L"") << "continuous break, same orientation";
 }
+
+// Three continuous portrait sections; only the middle one has line numbering. Its settings must not get lost when the
+// section keeps the page.
+TEST(DocxToOdt, ContinuousSectionKeepsLineNumbering)
+{
+	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/continuous_sections_line_numbers.docx");
+	ASSERT_FALSE(dir.empty()) << "DOCX -> ODT conversion failed";
+
+	const std::wstring styles = read_part(dir, L"styles.xml");
+	const std::wstring content = read_part(dir, L"content.xml");
+	ASSERT_FALSE(content.empty()) << "content.xml is missing";
+
+	const std::wstring parts = styles + content;
+	const size_t config = parts.find(L"<text:linenumbering-configuration");
+	ASSERT_NE(config, std::wstring::npos) << "line numbering of the middle section is lost";
+	const std::wstring tag = parts.substr(config, parts.find(L'>', config) - config);
+	// x2t writes text:number-lines only when it is false (ODF default: true).
+	EXPECT_EQ(tag.find(L"text:number-lines=\"false\""), std::wstring::npos);
+	EXPECT_NE(tag.find(L"text:increment=\"1\""), std::wstring::npos) << "w:countBy of the middle section";
+}
