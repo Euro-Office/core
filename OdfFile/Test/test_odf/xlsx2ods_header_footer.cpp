@@ -98,3 +98,27 @@ TEST(XlsxToOdsHeaderFooter, SectionsKeepRegions)
 	EXPECT_NE(page.find(L"<style:region-center><text:p>"), std::wstring::npos);
 	EXPECT_NE(page.find(L"<style:region-right><text:p>"), std::wstring::npos);
 }
+
+// "&C" after leading text continues the centre section instead of opening a second one.
+TEST(XlsxToOdsHeaderFooter, CentreCodeContinuesLeadingText)
+{
+	const std::wstring page = master_page_with(L">Lead<");
+	ASSERT_FALSE(page.empty());
+	EXPECT_EQ(count_of(page, L"<style:region-center>"), 1u);
+	EXPECT_EQ(page.find(L"<style:region-left>"), std::wstring::npos);
+	EXPECT_EQ(page.find(L"<style:region-right>"), std::wstring::npos);
+	EXPECT_LT(page.find(L">Lead<"), page.find(L">Middle<"));
+	EXPECT_NE(page.find(L">Middle<"), std::wstring::npos);
+}
+
+// Malformed: a 5-digit &K colour swallows the next '&', so plain text is followed by "&L".
+// The section text must still land in a region of this header.
+TEST(XlsxToOdsHeaderFooter, SectionAfterPlainTextKeepsItsText)
+{
+	const std::wstring page = master_page_with(L">Start<");
+	ASSERT_FALSE(page.empty());
+	const size_t left = page.find(L"<style:region-left><text:p>");
+	ASSERT_NE(left, std::wstring::npos);
+	EXPECT_LT(left, page.find(L">Kept<"));
+	EXPECT_NE(page.find(L">Kept<"), std::wstring::npos);
+}
