@@ -101,8 +101,9 @@ void note_body::add_child_element( xml::sax * Reader, const std::wstring & Ns, c
     CP_CREATE_ELEMENT(content_);
 }
 
-// text:note-body holds paragraphs, lists and tables only. Character data between them is
-// insignificant (indentation of a pretty-printed file) and must not become a run outside a paragraph.
+// text:note-body holds block content only (paragraphs, headings, lists, tables, sections, ...).
+// Character data between them is insignificant (indentation of a pretty-printed file) and must not
+// become a run outside a paragraph.
 void note_body::add_text(const std::wstring & Text)
 {
 }
