@@ -659,7 +659,9 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooter *oox_header_footer)
 	bool bFirst = oox_header_footer->m_oDifferentFirst.IsInit() ? oox_header_footer->m_oDifferentFirst->ToBool() : false;
 	bool bEven = oox_header_footer->m_oDifferentOddEven.IsInit() ? oox_header_footer->m_oDifferentOddEven->ToBool() : false;
 
-	if (bEven || oox_header_footer->m_oOddHeader.IsInit())
+	// With a different first page the other pages still need their own (maybe empty) header and footer:
+	// ODF uses style:header-first only next to a style:header, and the page margins count on it.
+	if (bEven || bFirst || oox_header_footer->m_oOddHeader.IsInit())
 	{
 		if (true == ods_context->start_header(0))
 		{
@@ -667,7 +669,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooter *oox_header_footer)
 			ods_context->end_header_footer();
 		}
 	}
-	if (bEven ||oox_header_footer->m_oOddFooter.IsInit())
+	if (bEven || bFirst || oox_header_footer->m_oOddFooter.IsInit())
 	{
 		if (true == ods_context->start_footer(0))
 		{
@@ -2095,21 +2097,22 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPageMargins *oox_page, OOX::Sprea
 	// the page. In ODF the page margin ends where the header starts and the header height reaches down
 	// to the cells. So when the sheet gets a header, the header distance is the ODF margin and the header
 	// takes the rest of the XLSX margin, as LibreOffice imports it. The same holds for the footer.
-	// The conditions are the ones under which convert(CHeaderFooter) writes a header or footer.
+	// The conditions are the ones under which convert(CHeaderFooter) writes a style:header or style:footer.
 	bool has_header = false, has_footer = false;
 	if (oox_hf)
 	{
 		const bool bFirst = oox_hf->m_oDifferentFirst.IsInit() ? oox_hf->m_oDifferentFirst->ToBool() : false;
 		const bool bEven = oox_hf->m_oDifferentOddEven.IsInit() ? oox_hf->m_oDifferentOddEven->ToBool() : false;
 
-		has_header = bFirst || bEven || oox_hf->m_oOddHeader.IsInit() || oox_hf->m_oFirstHeader.IsInit();
-		has_footer = bFirst || bEven || oox_hf->m_oOddFooter.IsInit() || oox_hf->m_oFirstFooter.IsInit();
+		has_header = bFirst || bEven || oox_hf->m_oOddHeader.IsInit();
+		has_footer = bFirst || bEven || oox_hf->m_oOddFooter.IsInit();
 	}
 	_CP_OPT(odf_types::length) header_height, footer_height;
 
 	if (has_header && oox_page->m_oTop.IsInit() && oox_page->m_oHeader.IsInit())
 	{
 		const double distance = oox_page->m_oHeader->GetValue();
+		// a top margin above the header distance leaves no room: the cells start below the header, as in LibreOffice
 		const double height = (std::max)(0.0, oox_page->m_oTop->GetValue() - distance);
 		top = odf_types::length(distance, odf_types::length::pt);
 		header_height = odf_types::length(height, odf_types::length::pt);
