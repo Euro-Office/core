@@ -729,6 +729,14 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 	bool in_block = false;			// a region or a plain paragraph is open
 	bool implicit_center = false;	// the open region is the centre section opened for leading text
 	bool own_paragraph = false;		// plain paragraph opened here, closed at the end
+	// A section code after plain text (only in malformed strings, e.g. a short &K colour that swallows
+	// the next '&') closes the paragraph first, so the region still opens inside the header.
+	auto end_own_paragraph = [&]()
+	{
+		if (!own_paragraph) return;
+		ods_context->text_context()->end_paragraph();
+		own_paragraph = false;
+	};
 
 	int type_add = 0;
 	while(pos < oox_header_footer->m_sText.size())
@@ -743,6 +751,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 				case 'L':
 					{
 						current_text_props.content_.clear();
+						end_own_paragraph();
 						ods_context->start_header_footer_region(1); pos++;
 						in_block = true; implicit_center = false;
 					}break;
@@ -755,12 +764,14 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 							break;
 						}
 						current_text_props.content_.clear();
+						end_own_paragraph();
 						ods_context->start_header_footer_region(2); pos++;
 						in_block = true;
 					}break;
 				case 'R':
 					{
 						current_text_props.content_.clear();
+						end_own_paragraph();
 						ods_context->start_header_footer_region(3); pos++;
 						in_block = true; implicit_center = false;
 					}break;
@@ -954,8 +965,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 			pos = next;
 		}
 	}
-	if (own_paragraph)
-		ods_context->text_context()->end_paragraph();
+	end_own_paragraph();
 }
 
 void XlsxConverter::convert(OOX::Spreadsheet::CSheetProtection *oox_prot)
