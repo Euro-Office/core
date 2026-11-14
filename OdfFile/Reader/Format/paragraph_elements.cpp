@@ -1897,6 +1897,24 @@ void sender_company::docx_convert(oox::docx_conversion_context & Context)
 	docx_serialize_sdt_placeholder(L"Sender company", text_, Context);
 }
 //------------------------------------------------------------------------------------------------------------
+const wchar_t * database_display::ns = L"text";
+const wchar_t * database_display::name = L"database-display";
+
+std::wostream & database_display::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
+{
+    CP_SERIALIZE_TEXT(text_, bXmlEncode);
+    return _Wostream;
+}
+void database_display::add_text(const std::wstring & Text)
+{
+    text_ = text::create(Text) ;
+}
+void database_display::docx_convert(oox::docx_conversion_context & Context)
+{
+	// The current value of the database column, e.g. "<Last Name>" in a mail merge template.
+	docx_serialize_run(text_, Context);
+}
+//------------------------------------------------------------------------------------------------------------
 const wchar_t * sender_postal_code::ns = L"text";
 const wchar_t * sender_postal_code::name = L"sender-postal-code";
 
