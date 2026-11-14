@@ -283,8 +283,9 @@ void ods_conversion_context::end_row()
 {
 	if (repeat_at_lasts_)
 	{
-		//add default last cells
-		int repeated = 1024;// max dimension columns???
+		//add default last cells up to the columns of the table (see end_columns), so that a row formatted
+		//to the end of the sheet stays formatted to its end
+		int repeated = current_table()->columns_count - current_table()->current_column();
 
 		current_table()->add_default_cell(repeated);
 	}
@@ -506,11 +507,14 @@ void ods_conversion_context::end_columns()
 	}
 	if (repeat_at_lasts_)
 	{
-		int repeat = (std::max)(current_table()->dimension_columns, 1024) - current_table()->current_column();
-		if (repeat < 0) repeat = 1;
+		//not past the last column of a sheet (XFD)
+		int columns = (std::min)((std::max)(current_table()->dimension_columns, 1024), 16384);
+		int repeat = columns - current_table()->current_column();
 
-		add_column(current_table()->current_column() + 1, repeat, 0, true);
+		if (repeat > 0)
+			add_column(current_table()->current_column() + 1, repeat, 0, true);
 	}
+	current_table()->columns_count = current_table()->current_column();
 }
 void ods_conversion_context::start_rows()
 {
