@@ -814,8 +814,8 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 					pos++;
 					std::wstring color = oox_header_footer->m_sText.substr(pos, 6); pos += 6;
 
-					if (color.size() == 6)
-						current_text_props.content_.fo_color_ = odf_types::color(L"#" + color); 
+					if (color.size() == 6 && color.find_first_not_of(L"0123456789ABCDEFabcdef") == std::wstring::npos)
+						current_text_props.content_.fo_color_ = odf_types::color(L"#" + color);
 				}break;
 				case '\"':
 				{

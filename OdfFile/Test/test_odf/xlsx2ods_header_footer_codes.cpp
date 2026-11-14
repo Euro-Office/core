@@ -37,7 +37,19 @@ TEST(XlsxToOdsHeaderFooterCodes, CodeCutShortAtEnd)
 	EXPECT_EQ(xml.find(L"\"#12\""), std::wstring::npos);
 }
 
-// A font name without its closing quote takes the rest of the string, as in Excel and LibreOffice.
+// "&K" takes the next six characters; they set the colour only when all six are hex digits.
+TEST(XlsxToOdsHeaderFooterCodes, ColourCodeNotHex)
+{
+	const std::wstring xml = convert_xlsx_styles(L"ExampleFiles/sheet_header_colour_not_hex.xlsx");
+	ASSERT_FALSE(xml.empty()) << "XLSX -> ODS conversion failed";
+	EXPECT_TRUE(is_well_formed(xml));
+	EXPECT_NE(xml.find(L">Hue<"), std::wstring::npos);
+	EXPECT_EQ(xml.find(L"#12&"), std::wstring::npos);
+	EXPECT_NE(xml.find(L"\"#FF0000\""), std::wstring::npos);
+}
+
+// A font name without its closing quote takes the rest of the string, so no text after it is shown
+// (LibreOffice does the same).
 TEST(XlsxToOdsHeaderFooterCodes, UnterminatedFontName)
 {
 #if GTEST_HAS_DEATH_TEST && !defined(_WIN32)
