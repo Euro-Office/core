@@ -69,6 +69,8 @@ TEST(OdsToXlsxHeaderFooterAmpersand, SpanTextAndCodes)
 
 	const std::wstring header = header_footer(sheet, L"oddHeader");
 	EXPECT_NE(header.find(L"Q&&\"A"), std::wstring::npos) << header;
+	EXPECT_NE(header.find(L"&C&\"-,"), std::wstring::npos) << header;
+	EXPECT_EQ(header.find(L"&&\"-,"), std::wstring::npos) << header;
 	EXPECT_NE(header.find(L"&P"), std::wstring::npos) << header;
 	EXPECT_EQ(header.find(L"&&P"), std::wstring::npos) << header;
 }
@@ -88,5 +90,5 @@ TEST(OdsToXlsxHeaderFooterAmpersand, FooterWithoutRegions)
 	ASSERT_FALSE(sheet.empty()) << "ODS -> XLSX conversion failed";
 
 	const std::wstring footer = header_footer(sheet, L"oddFooter");
-	EXPECT_NE(footer.find(L"A && B &&"), std::wstring::npos) << footer;
+	EXPECT_EQ(footer, L"A && B &&");
 }
