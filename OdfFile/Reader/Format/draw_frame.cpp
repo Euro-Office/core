@@ -26,6 +26,7 @@
 #include <ostream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include <boost/regex.hpp>
 
@@ -456,15 +457,46 @@ void draw_object_ole::detectObject(const std::wstring &fileName, std::wstring &p
 }
 
 
+// The folder of the document an object's href names inside the package folder root, or "" when
+// the href names the package itself or a folder above it ("." or "..", also from inside an
+// object): such an object would convert its own or an outer document again, so only its
+// replacement image is shown.
+std::wstring draw_object::object_document_path(const std::wstring & href, const std::wstring & root)
+{
+	std::vector<std::wstring> parts;
+	for (size_t start = 0; start <= href.size();)
+	{
+		size_t end = href.find_first_of(L"/\\", start);
+		if (end == std::wstring::npos) end = href.size();
+
+		const std::wstring part = href.substr(start, end - start);
+		if (part == L"..")
+		{
+			if (parts.empty()) return L"";
+			parts.pop_back();
+		}
+		else if (!part.empty() && part != L".")
+			parts.push_back(part);
+
+		start = end + 1;
+	}
+	if (parts.empty()) return L"";
+
+	std::wstring path = root;
+	for (size_t i = 0; i < parts.size(); ++i)
+		path += FILE_SEPARATOR_STR + parts[i];
+	return path;
+}
+
 std::wstring draw_object::office_convert(odf_document_ptr odfDocument, int type)
 {
 	if (!odfDocument) return L"";
 
-	// An object can name its own document or an outer one (href "." or ".."), so converting it
-	// converts it again. Objects inside objects stop at a few levels; deeper ones show only
-	// their replacement image.
+	// Objects that name their own or an outer document are not opened (object_document_path).
+	// As a backstop, objects inside objects stop after two levels; deeper ones show only their
+	// replacement image.
 	static thread_local int nesting = 0;
-	if (nesting >= 3) return L"";
+	if (nesting >= 2) return L"";
 	struct nesting_level
 	{
 		nesting_level()		{ ++nesting; }

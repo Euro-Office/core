@@ -9,6 +9,7 @@
 
 #include "common.h"
 
+#include <chrono>
 #include <string>
 #include <vector>
 
@@ -75,4 +76,28 @@ TEST(OdtToDocxEmbeddedTextObject, ObjectNamingItsOwnDocumentStops)
     const std::wstring document = read_part(dir, L"word/document.xml");
     EXPECT_TRUE(is_well_formed(document));
     EXPECT_NE(document.find(L"Before the object."), std::wstring::npos);
+}
+
+// Objects that name their own document (".", "./", "Object 1/..") are not opened, also from inside
+// an object ("../Object 1" in Object 1): only the real object is embedded, and the conversion stays
+// quick. Before, each such object converted the whole document again, objects included.
+TEST(OdtToDocxEmbeddedTextObject, ObjectsNamingTheirOwnDocumentAreNotConverted)
+{
+    const auto start = std::chrono::steady_clock::now();
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/embedded_text_object_self_many.odt");
+    const double seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_LT(seconds, 10.);
+
+    const std::wstring document = read_part(dir, L"word/document.xml");
+    EXPECT_TRUE(is_well_formed(document));
+    EXPECT_NE(document.find(L"Before the object."), std::wstring::npos);
+
+    size_t embedded = 0;
+    for (size_t pos = document.find(L"Word.Document.12"); pos != std::wstring::npos;
+         pos = document.find(L"Word.Document.12", pos + 1))
+        ++embedded;
+    EXPECT_EQ(embedded, 1u) << "only the real object is embedded";
+    EXPECT_FALSE(read_part(dir, L"word/embeddings/msObject1.docx").empty()) << "the real object is missing";
+    EXPECT_TRUE(read_part(dir, L"word/embeddings/msObject2.docx").empty());
 }

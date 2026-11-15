@@ -316,6 +316,7 @@ private:
     virtual void add_child_element	( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
 
 	std::wstring office_convert(odf_document_ptr odfDocument, int type);
+	static std::wstring object_document_path(const std::wstring & href, const std::wstring & root);
 	
 	office_element_ptr draw_frame_ptr; //openoffice xml 1.0
 };
