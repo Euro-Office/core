@@ -114,7 +114,9 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/continuous_section_page_margins.docx",
     "OdfFile/Test/test_odf/ExampleFiles/header_footer_page_margins.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/header_footer_small_and_negative_margins.docx",
     "OdfFile/Test/test_odf/ExampleFiles/header_page_margins_no_footer.docx",
     "OdfFile/Test/test_odf/ExampleFiles/page_margins_no_header_footer.docx",
 ]
