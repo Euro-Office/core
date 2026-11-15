@@ -473,8 +473,8 @@ void CSvmFile::Read_META_SETMAPMODE()
 		// Relative to the current map mode, as in LibreOffice's OutputDevice::SetMapMode: the scale
 		// multiplies the current one and the origin adds to the current offset, which is now in
 		// the new, scaled units.
-		const double dScaleX = mapMode.scaleX.numerator && mapMode.scaleX.denominator ? (double)mapMode.scaleX.numerator / mapMode.scaleX.denominator : 1.;
-		const double dScaleY = mapMode.scaleY.numerator && mapMode.scaleY.denominator ? (double)mapMode.scaleY.numerator / mapMode.scaleY.denominator : 1.;
+		const double dScaleX = FractionToScale(mapMode.scaleX);
+		const double dScaleY = FractionToScale(mapMode.scaleY);
 		m_oCurrnetOffset.x = ClampOffset(mapMode.origin.x + m_oCurrnetOffset.x / dScaleX);
 		m_oCurrnetOffset.y = ClampOffset(mapMode.origin.y + m_oCurrnetOffset.y / dScaleY);
 	}

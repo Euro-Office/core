@@ -514,10 +514,8 @@ void CSvmDC::SetMapMode(TSvmMapMode & mapMode, bool prefered )
 	if (mapMode.unit == MAP_RELATIVE)
 	{
 		// Relative to the current map mode: its scale multiplies the current one, the unit stays.
-		if (mapMode.scaleX.numerator && mapMode.scaleX.denominator)
-			m_dRelativeScaleX *= (double)mapMode.scaleX.numerator / mapMode.scaleX.denominator;
-		if (mapMode.scaleY.numerator && mapMode.scaleY.denominator)
-			m_dRelativeScaleY *= (double)mapMode.scaleY.numerator / mapMode.scaleY.denominator;
+		m_dRelativeScaleX *= FractionToScale(mapMode.scaleX);
+		m_dRelativeScaleY *= FractionToScale(mapMode.scaleY);
 		m_dRelativeScaleX = ClampScale(m_dRelativeScaleX);
 		m_dRelativeScaleY = ClampScale(m_dRelativeScaleY);
 		return;
@@ -532,10 +530,11 @@ void CSvmDC::SetMapMode(TSvmMapMode & mapMode, bool prefered )
 		m_dBaseUnitInMillimetres = dUnit;
 	const double dFactor = dUnit > 0 && m_dBaseUnitInMillimetres > 0 ? dUnit / m_dBaseUnitInMillimetres : 1.;
 	m_dRelativeScaleX = m_dRelativeScaleY = prefered ? 1. : dFactor;
-	if (!prefered && mapMode.scaleX.numerator && mapMode.scaleX.denominator)
-		m_dRelativeScaleX *= (double)mapMode.scaleX.numerator / mapMode.scaleX.denominator;
-	if (!prefered && mapMode.scaleY.numerator && mapMode.scaleY.denominator)
-		m_dRelativeScaleY *= (double)mapMode.scaleY.numerator / mapMode.scaleY.denominator;
+	if (!prefered)
+	{
+		m_dRelativeScaleX *= FractionToScale(mapMode.scaleX);
+		m_dRelativeScaleY *= FractionToScale(mapMode.scaleY);
+	}
 	m_dRelativeScaleX = ClampScale(m_dRelativeScaleX);
 	m_dRelativeScaleY = ClampScale(m_dRelativeScaleY);
 

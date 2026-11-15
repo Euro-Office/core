@@ -457,6 +457,8 @@ public:
 };
 
 int parseString(CDataStream &stream, std::wstring &string, unsigned short version = 0, unsigned short charset = 0);
+// The scale a map mode fraction stands for; 1 when the numerator or the denominator is 0.
+double FractionToScale(const Fraction &fract);
 
 CDataStream& operator>>(CDataStream &stream, VersionCompat &compat);
 CDataStream& operator>>(CDataStream &stream, Fraction &fract);

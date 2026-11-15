@@ -219,6 +219,10 @@ CDataStream& operator>>(CDataStream &stream, VersionCompat &compat)
 
 	return stream;
 }
+double FractionToScale(const Fraction &fract)
+{
+	return fract.numerator && fract.denominator ? (double)fract.numerator / fract.denominator : 1.;
+}
 CDataStream& operator>>(CDataStream &stream, Fraction &fract)
 {
 	stream >> fract.numerator;
