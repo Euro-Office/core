@@ -392,6 +392,10 @@ CDataStream& operator>>(CDataStream &stream, TSvmPolygon &p)
 	unsigned short count;
 	stream >> count;
 
+	// The count comes from the file: no more points than 8-byte values are left.
+	if (count > stream.CanRead() / 8)
+		count = (unsigned short)(stream.CanRead() / 8);
+
 	for (int i = 0; i < count; i++)
 	{
 		TSvmPoint point;

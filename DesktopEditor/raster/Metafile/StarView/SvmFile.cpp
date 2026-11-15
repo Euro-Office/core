@@ -150,6 +150,9 @@ void CSvmFile::PlayMetaFile()
 
         m_unRecordPos = m_oStream.Tell();
 
+		// The record's reader sees only the record: a size read from it cannot reach the next records.
+		m_oStream.SetCurrentBlockSize(m_unRecordSize);
+
         switch (actionType) 
 		{
 			case META_RECT_ACTION:				Read_META_RECTANGLE();			break;
@@ -224,8 +227,9 @@ void CSvmFile::PlayMetaFile()
 
 		m_currentActionType = actionType;
 
-		// Go on at the end of the record, also when its reader went past it (a size in the record
-		// pointed beyond it): the following records are still read, as LibreOffice does.
+		m_oStream.ClearCurrentBlockSize();
+
+		// Go on at the end of the record (LibreOffice also skips to the end of each record).
 		const unsigned long long ullRecordEnd = (unsigned long long)m_unRecordPos + m_unRecordSize;
 		const unsigned int unPos = m_oStream.Tell();
 		int need_skip = 0;
@@ -402,6 +406,10 @@ void CSvmFile::Read_META_POLYPOLYGON(std::vector<TSvmPolygon> & polygons, std::v
 	if (ushNumberOfPolygons <= 0)
 		return;
 
+	// The count comes from the file: every polygon needs at least its 2-byte point count.
+	if (ushNumberOfPolygons > m_oStream.CanRead() / 2)
+		ushNumberOfPolygons = (unsigned short)(m_oStream.CanRead() / 2);
+
 	for (unsigned short ushIndex = 0; ushIndex < ushNumberOfPolygons; ushIndex++)
 	{
 		TSvmPolygon poligon;
@@ -414,6 +422,10 @@ void CSvmFile::Read_META_POLYPOLYGON(std::vector<TSvmPolygon> & polygons, std::v
 	{
 		unsigned short complexPolygonCount;
 		m_oStream >> complexPolygonCount;
+
+		// Every entry needs at least its 2-byte index and 2-byte point count.
+		if (complexPolygonCount > m_oStream.CanRead() / 4)
+			complexPolygonCount = (unsigned short)(m_oStream.CanRead() / 4);
 
 		complexPolygons.resize(complexPolygonCount);
 
@@ -1107,14 +1119,15 @@ void CSvmFile::Read_META_BMP(TSvmBitmap & bitmap_info, BYTE** ppDstBuffer, unsig
     BYTE*		pData = NULL;
 
     bitmap_info = TSvmBitmap();
+    const unsigned long long ullHeaderPos = m_oStream.Tell();
     m_oStream >> bitmap_info; //size = 40
 
     // The header size comes from the file. TSvmBitmap keeps the first 40 bytes of the header;
     // operator>> skipped the rest of a larger one (BITMAPV4HEADER, BITMAPV5HEADER).
     const unsigned int nKnownSize = (std::min)(bitmap_info.nSize, (unsigned int)sizeof(TSvmBitmap));
 
-    // A header that runs past the end of the record: drop the bitmap (LibreOffice rejects it too).
-    if ((unsigned long long)m_oStream.Tell() > (unsigned long long)m_unRecordPos + m_unRecordSize)
+    // A header that runs past the end of the record: drop the bitmap.
+    if (ullHeaderPos + bitmap_info.nSize > (unsigned long long)m_unRecordPos + m_unRecordSize)
         return;
 
     int nBitCount = discretizeBitcount(bitmap_info.nBitCount);

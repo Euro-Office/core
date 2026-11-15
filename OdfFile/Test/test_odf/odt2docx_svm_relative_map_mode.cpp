@@ -86,11 +86,11 @@ TEST(OdtToDocxSvmMapMode, CraftedMapModesStayBounded)
 // A crafted SVM whose sizes come from the file and point far beyond it: a text array with 0x04000000
 // DX entries (two in the file), a compressed bitmap of 0xFFFFFF00 coded and 0xFFFFFFF0 uncoded bytes
 // (8 in the file), uncompressed bitmaps with an image or a header of 0xFFFFFF00 bytes, a valid
-// bitmap with a 124-byte header and a bitmap header of 0x1000 bytes; the header announces
-// 4294967295 records (the file has 12). The picture is blue, and a green rectangle in the
-// bottom-right quarter comes after all of them: every size stays inside its record and the reader
-// goes on at the end of each record, so the green one is still drawn, and the reader stops at the
-// end of the data, so the conversion is quick.
+// bitmap with a 124-byte header, a bitmap header of 0x1000 bytes and 1000 one-point polygons
+// claiming 65535 points each; the header announces 4294967295 records (the file has 1012). The
+// picture is blue, and a green rectangle in the bottom-right quarter comes after all of them: every
+// size stays inside its record and the reader goes on at the end of each record, so the green one
+// is still drawn, and no record reads the following ones, so the conversion is quick.
 TEST(OdtToDocxSvmMapMode, CraftedSizesStayInsideTheFile)
 {
     const auto start = std::chrono::steady_clock::now();
