@@ -1793,14 +1793,15 @@ void draw_object::docx_convert(oox::docx_conversion_context & Context)
 			bool isMediaInternal = true;
 			drawing->objectId = Context.get_mediaitems()->add_or_find(href, drawing->type, isMediaInternal, href, Context.get_type_place());
 		}
-		else if (objectBuild.object_type_ == 2) //embedded text
+		else if (objectBuild.object_type_ == 2 || objectBuild.object_type_ == 4) //embedded text or sheet
 		{
-			// Shown as its replacement image and embedded as a Word document, like an embedded
-			// sheet.
+			// Shown as its replacement image and embedded as a Word document or an Excel sheet.
+			const bool isText = objectBuild.object_type_ == 2;
+
 			bool & use_image_replace = Context.get_drawing_context().get_use_image_replace();
 			use_image_replace = true;
 
-			std::wstring href_new = office_convert(odf_document_, 1);
+			std::wstring href_new = office_convert(odf_document_, isText ? 1 : 2);
 
 			if (!href_new.empty())
 			{
@@ -1809,7 +1810,7 @@ void draw_object::docx_convert(oox::docx_conversion_context & Context)
 
 				href += FILE_SEPARATOR_STR + href_new;
 				drawing->objectId		= Context.get_mediaitems()->add_or_find(href, drawing->type, isMediaInternal, href, Context.get_type_place());
-				drawing->objectProgId	= L"Word.Document.12";
+				drawing->objectProgId	= isText ? L"Word.Document.12" : L"Excel.Sheet.12";
 			}
 		}
 		else if (objectBuild.object_type_ == 3) //math formula
@@ -1845,23 +1846,6 @@ void draw_object::docx_convert(oox::docx_conversion_context & Context)
 				if (runState) Context.add_new_run(_T(""));
 			}
 			Context.get_drawing_context().clear_stream_frame();						
-		}
-		else if (objectBuild.object_type_ == 4) //embedded sheet
-		{	
-			bool & use_image_replace = Context.get_drawing_context().get_use_image_replace();
-			use_image_replace = true;
-
-			std::wstring href_new = office_convert(odf_document_, 2);
-
-			if (!href_new.empty())
-			{
-				drawing->type = oox::typeMsObject;
-				bool isMediaInternal = true;        
-				
-				href += FILE_SEPARATOR_STR + href_new;
-				drawing->objectId		= Context.get_mediaitems()->add_or_find(href, drawing->type, isMediaInternal, href, Context.get_type_place());
-				drawing->objectProgId	= L"Excel.Sheet.12";
-			}
 		}
 		else
 		{
