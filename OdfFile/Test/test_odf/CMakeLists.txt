@@ -70,6 +70,7 @@ add_core_gtest(
             chart_subtitle.cpp
             math_property_values.cpp
             pptx2odp_table_styles.cpp
+            docx2odt_header_footer_margins.cpp
             entrance.cpp
             motion.cpp
             audio.cpp
