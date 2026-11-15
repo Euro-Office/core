@@ -1099,9 +1099,9 @@ void CSvmFile::Read_META_BMP(TSvmBitmap & bitmap_info, BYTE** ppDstBuffer, unsig
     bitmap_info = TSvmBitmap();
     m_oStream >> bitmap_info; //size = 40
 
-    // The header size comes from the file; TSvmBitmap holds at most 40 bytes of it.
-    if (bitmap_info.nSize > sizeof(TSvmBitmap))
-        return;
+    // The header size comes from the file. TSvmBitmap keeps the first 40 bytes of the header;
+    // operator>> skipped the rest of a larger one (BITMAPV4HEADER, BITMAPV5HEADER).
+    const unsigned int nKnownSize = (std::min)(bitmap_info.nSize, (unsigned int)sizeof(TSvmBitmap));
 
     int nBitCount = discretizeBitcount(bitmap_info.nBitCount);
 
@@ -1144,20 +1144,23 @@ void CSvmFile::Read_META_BMP(TSvmBitmap & bitmap_info, BYTE** ppDstBuffer, unsig
         }
         m_oStream.Skip(srcSize);
 
-        MetaFile::ReadImage((BYTE*)&bitmap_info, bitmap_info.nSize, destBuf, destSize, ppDstBuffer, pulWidth, pulHeight, unColorUsed);
+        MetaFile::ReadImage((BYTE*)&bitmap_info, nKnownSize, destBuf, destSize, ppDstBuffer, pulWidth, pulHeight, unColorUsed);
         delete []destBuf;
     }
     else if (nHeaderSize >= bitmap_info.nSize && nHeaderSize - bitmap_info.nSize <= BytesLeftInRecord())
     {
-        BYTE *Header = new BYTE [ nHeaderSize];
-        memcpy(Header, &bitmap_info, bitmap_info.nSize);
+        // The known part of the header, then what follows the whole header (the palette), as
+        // ReadImage reads the palette right after the first 40 bytes.
+        const unsigned int nRestSize = nHeaderSize - bitmap_info.nSize;
+        BYTE *Header = new BYTE [ nKnownSize + nRestSize ];
+        memcpy(Header, &bitmap_info, nKnownSize);
 
-        m_oStream.ReadBytes(Header + bitmap_info.nSize, nHeaderSize - bitmap_info.nSize);
+        m_oStream.ReadBytes(Header + nKnownSize, nRestSize);
 
         if (bitmap_info.nSizeImage > BytesLeftInRecord())
             bitmap_info.nSizeImage = BytesLeftInRecord();
 
-        MetaFile::ReadImage(Header , nHeaderSize,  m_oStream.GetCurPtr(), bitmap_info.nSizeImage, ppDstBuffer, pulWidth, pulHeight, unColorUsed);
+        MetaFile::ReadImage(Header , nKnownSize + nRestSize,  m_oStream.GetCurPtr(), bitmap_info.nSizeImage, ppDstBuffer, pulWidth, pulHeight, unColorUsed);
         m_oStream.Skip(bitmap_info.nSizeImage);
         delete[] Header;
     }

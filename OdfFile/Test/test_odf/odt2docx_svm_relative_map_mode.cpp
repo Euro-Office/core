@@ -84,10 +84,11 @@ TEST(OdtToDocxSvmMapMode, CraftedMapModesStayBounded)
 }
 
 // A crafted SVM whose sizes come from the file and point far beyond it: a text array with 0x04000000
-// DX entries (two in the file), a bitmap header of 0x1000 bytes (the reader's struct holds 40), a
-// compressed bitmap of 0xFFFFFF00 coded and 0xFFFFFFF0 uncoded bytes (8 in the file), and a header
-// that announces 4294967295 records (the file has 9). The picture is blue, and a green rectangle in
-// the bottom-right quarter follows the crafted records: every size stays inside its record, so the
+// DX entries (two in the file), a compressed bitmap of 0xFFFFFF00 coded and 0xFFFFFFF0 uncoded bytes
+// (8 in the file), uncompressed bitmaps with an image or a header of 0xFFFFFF00 bytes, a valid
+// bitmap with a 124-byte header, and last a bitmap header of 0x1000 bytes; the header announces
+// 4294967295 records (the file has 12). The picture is blue, and a green rectangle in the
+// bottom-right quarter comes before the last record: every size stays inside its record, so the
 // green one is still drawn, and the reader stops at the end of the data, so the conversion is quick.
 TEST(OdtToDocxSvmMapMode, CraftedSizesStayInsideTheFile)
 {
