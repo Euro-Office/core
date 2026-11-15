@@ -1974,69 +1974,45 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 		convert(oox_section_pr->m_oPgMar->m_oFooter.GetPointer(), footer);
 		convert(oox_section_pr->m_oPgMar->m_oGutter.GetPointer(), gutter);
 
-		footer_min = footer;
-		header_min = header;
-
-		if (bottom)
-		{
-			double bottom_cm = bottom->get_value_unit(length::cm);
-			double footer_cm = footer ? footer->get_value_unit(length::cm) : 0;
-			double length_cm = bottom_cm - footer_cm;
-
-			if (length_cm < 0)
-			{
-				footer_min = length(-length_cm, length::cm);
-				footer.reset();
-			}
-			else //if(length_cm > 2.4)
-			{
-				bottom = footer;
-				footer = length(fabs(length_cm), length::cm);
-			}
-		}
-		else
-		{
-			bottom = footer;
-		}
+		// Word measures w:top (w:bottom) from the page edge to the body and w:header (w:footer) from the page edge
+		// to the header (footer), which grows into the body when its content is taller than the rest. In ODF the
+		// page margin is the distance to the header (footer) and the header (footer) area takes the rest of the
+		// Word margin as its minimum height. The layout context switches the page margin to the header (footer)
+		// distance only when the master page gets a header (footer); without one the margin stays w:top (w:bottom).
 		if (top)
 		{
-			double length_cm = top->get_value_unit(length::cm);
-			
+			double top_cm = fabs(top->get_value_unit(length::cm));
+			top = length(top_cm, length::cm);
 			if (header)
 			{
-				double header_length_cm = header->get_value_unit(length::cm);
-				//if (abs(length_cm - header_length_cm) > 0.001)
-				//	length_cm -= header_length_cm;
-			}
-
-			if (length_cm > 2.4)
-			{
-				top = header;
-				header = length(fabs(length_cm), length::cm);
-			}
-			else if (length_cm < 0)
-			{
-				header_min = length(-length_cm, length::cm);
-				header.reset();
-			}
-			else if (length_cm < 0.)
-			{
-				header_min = length(-length_cm, length::cm);
-				header.reset();
-			}
-			else
-			{
-				top = length(length_cm, length::cm);
+				double rest_cm = top_cm - header->get_value_unit(length::cm);
+				header_min = length(rest_cm > 0.1 ? rest_cm : 0.1, length::cm);
 			}
 		}
 		else
 		{
 			top = header;
+			header.reset();
+		}
+		if (bottom)
+		{
+			double bottom_cm = fabs(bottom->get_value_unit(length::cm));
+			bottom = length(bottom_cm, length::cm);
+			if (footer)
+			{
+				double rest_cm = bottom_cm - footer->get_value_unit(length::cm);
+				footer_min = length(rest_cm > 0.1 ? rest_cm : 0.1, length::cm);
+			}
+		}
+		else
+		{
+			bottom = footer;
+			footer.reset();
 		}
 		odt_context->page_layout_context()->set_page_margin(top, left, bottom, right);
 		odt_context->page_layout_context()->set_page_gutter(gutter);
-		odt_context->page_layout_context()->set_header_size(header, header_min);
-		odt_context->page_layout_context()->set_footer_size(footer, footer_min);
+		odt_context->page_layout_context()->set_header_size(boost::none, header_min, header);
+		odt_context->page_layout_context()->set_footer_size(boost::none, footer_min, footer);
 	}
 	if (oox_section_pr->m_oPgBorders.IsInit())
 	{

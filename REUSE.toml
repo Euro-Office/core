@@ -131,6 +131,15 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/header_footer_page_margins.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/header_page_margins_no_footer.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/page_margins_no_header_footer.docx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OdfFile/Test/test_odf/ExampleFiles/underline_double.odt",
     "OdfFile/Test/test_odf/ExampleFiles/underline_wave.odt",
     "OdfFile/Test/test_odf/ExampleFiles/underline_wave_double.odt",
