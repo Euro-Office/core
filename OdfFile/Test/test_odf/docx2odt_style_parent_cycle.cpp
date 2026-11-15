@@ -21,9 +21,11 @@ namespace
 #if GTEST_HAS_DEATH_TEST && !defined(_WIN32)
 	// Runs in the death-test child: limits time and address space, so a conversion that never ends
 	// or keeps allocating fails the test instead of hanging the suite or exhausting the machine.
+	// The address-space limit needs /proc (Linux); elsewhere only the timer applies, so keep it short.
+	// A child stopped this way leaves its temporary folders behind; that only happens when the test fails.
 	void limit_child()
 	{
-		alarm(30);
+		alarm(10);
 		std::ifstream statm("/proc/self/statm");
 		unsigned long long pages = 0;
 		if (statm >> pages)
