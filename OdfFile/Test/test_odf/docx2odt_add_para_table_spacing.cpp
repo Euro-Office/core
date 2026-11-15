@@ -59,6 +59,7 @@ TEST_P(DocxToOdtAddParaTableSpacing, WritesSetting)
 const SpacingCase kSpacingCases[] = {
     { L"paragraph_spacing_compat_flag.docx", L"true", "CompatFlag" },
     { L"paragraph_spacing_no_compat_flag.docx", L"false", "NoCompatFlag" },
+    { L"paragraph_spacing_no_settings_part.docx", L"false", "NoSettingsPart" },
 };
 
 std::string SpacingCaseName(const ::testing::TestParamInfo<SpacingCase>& info)
