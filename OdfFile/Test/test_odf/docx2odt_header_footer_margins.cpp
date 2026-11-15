@@ -10,6 +10,7 @@
 
 #include "common.h"
 
+#include <stdexcept>
 #include <string>
 
 namespace
@@ -65,7 +66,15 @@ namespace
 		if (value.empty())
 			return -1;
 		size_t pos = 0;
-		const double number = std::stod(value, &pos);
+		double number = 0;
+		try
+		{
+			number = std::stod(value, &pos);
+		}
+		catch (const std::exception&)
+		{
+			return -1;
+		}
 		const std::wstring unit = value.substr(pos);
 		if (unit == L"cm")
 			return number;
@@ -78,10 +87,10 @@ namespace
 		return -1;
 	}
 
-	// The style:page-layout used by the Standard master page, or an empty string.
-	std::wstring standard_page_layout(const std::wstring& styles)
+	// The style:page-layout used by the master page "name", or an empty string.
+	std::wstring page_layout(const std::wstring& styles, const std::wstring& name)
 	{
-		const std::wstring master = start_tag(element(styles, L"style:master-page", L"style:name=\"Standard\""),
+		const std::wstring master = start_tag(element(styles, L"style:master-page", L"style:name=\"" + name + L"\""),
 			L"style:master-page");
 		const std::wstring layout = attribute(master, L"style:page-layout-name");
 		if (layout.empty())
@@ -102,7 +111,7 @@ namespace
 		std::wstring footer; // style:header-footer-properties of the footer style
 	};
 
-	Converted convert(const std::wstring& docx)
+	Converted convert(const std::wstring& docx, const std::wstring& master_page = L"Standard")
 	{
 		Converted result;
 		const std::wstring dir = convert_ooxml_to_odf_dir(docx);
@@ -110,8 +119,8 @@ namespace
 		const std::wstring styles = read_part(dir, L"styles.xml");
 		EXPECT_FALSE(styles.empty()) << "styles.xml is missing";
 		EXPECT_TRUE(is_well_formed(styles));
-		const std::wstring layout = standard_page_layout(styles);
-		EXPECT_FALSE(layout.empty()) << "no page layout for the Standard master page";
+		const std::wstring layout = page_layout(styles, master_page);
+		EXPECT_FALSE(layout.empty()) << "no page layout for the master page " << master_page;
 		result.page = start_tag(layout, L"style:page-layout-properties");
 		result.header = header_footer_properties(layout, L"style:header-style");
 		result.footer = header_footer_properties(layout, L"style:footer-style");
@@ -160,4 +169,39 @@ TEST(DocxToOdt, PageWithoutHeaderOrFooterKeepsItsMargins)
 
 	EXPECT_NEAR(length_cm(odt.page, L"fo:margin-top"), 1134 * 2.54 / 1440, 0.002);
 	EXPECT_NEAR(length_cm(odt.page, L"fo:margin-bottom"), 2.54, 0.002);
+}
+
+// w:top 1.06 cm is less than w:header 1.25 cm: the header keeps the minimum height of 0.1 cm. w:bottom is negative
+// (-2.0 cm, Word keeps the body clear of the footer): the converter uses its absolute value.
+TEST(DocxToOdt, SmallAndNegativeMarginsWithHeaderAndFooter)
+{
+	const Converted odt = convert(L"ExampleFiles/header_footer_small_and_negative_margins.docx");
+	ASSERT_FALSE(odt.page.empty());
+	ASSERT_FALSE(odt.header.empty()) << "no header style";
+	ASSERT_FALSE(odt.footer.empty()) << "no footer style";
+
+	EXPECT_NEAR(length_cm(odt.page, L"fo:margin-top"), 709 * 2.54 / 1440, 0.002);
+	EXPECT_NEAR(length_cm(odt.header, L"fo:min-height"), 0.1, 0.002);
+	EXPECT_NEAR(length_cm(odt.page, L"fo:margin-bottom"), 284 * 2.54 / 1440, 0.002);
+	EXPECT_NEAR(length_cm(odt.footer, L"fo:min-height"), (1134 - 284) * 2.54 / 1440, 0.002);
+}
+
+// Section 1 has a title page, a header and a footer (w:top 3.0 cm, w:header 1.0 cm, w:bottom 2.0 cm, w:footer
+// 0.5 cm). The body section is continuous with two columns and no title page, so it is converted into the page
+// layout of section 1, which already has the header and the footer and does not get them again. The page margins
+// and the header and footer heights must all come from the body section's w:pgMar (w:top 2.0 cm, w:header 1.25 cm,
+// w:bottom 2.54 cm, w:footer 1.27 cm), not the margins from one section and the heights from the other.
+TEST(DocxToOdt, ContinuousSectionSetsMarginsAndHeightsTogether)
+{
+	const Converted odt = convert(L"ExampleFiles/continuous_section_page_margins.docx", L"MasterPage2");
+	ASSERT_FALSE(odt.page.empty());
+	ASSERT_FALSE(odt.header.empty()) << "no header style";
+	ASSERT_FALSE(odt.footer.empty()) << "no footer style";
+
+	EXPECT_NEAR(length_cm(odt.page, L"fo:margin-top"), 709 * 2.54 / 1440, 0.002);
+	EXPECT_NEAR(length_cm(odt.header, L"fo:min-height"), (1134 - 709) * 2.54 / 1440, 0.002);
+	EXPECT_EQ(attribute(odt.header, L"svg:height"), L"");
+	EXPECT_NEAR(length_cm(odt.page, L"fo:margin-bottom"), 720 * 2.54 / 1440, 0.002);
+	EXPECT_NEAR(length_cm(odt.footer, L"fo:min-height"), (1440 - 720) * 2.54 / 1440, 0.002);
+	EXPECT_EQ(attribute(odt.footer, L"svg:height"), L"");
 }
