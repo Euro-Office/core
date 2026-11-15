@@ -60,8 +60,9 @@ namespace
 			{
 				const std::wstring tag = xml.substr(pos, end - pos);
 				const std::wstring repeated = attribute(tag, L"table:number-columns-repeated");
-				result.push_back({attribute(tag, L"table:style-name"),
-								  repeated.empty() ? 1 : std::atoi(std::string(repeated.begin(), repeated.end()).c_str())});
+				const std::string digits(repeated.begin(), repeated.end());
+				const int count = digits.empty() ? 1 : std::atoi(digits.c_str());
+				result.push_back({attribute(tag, L"table:style-name"), count});
 			}
 			pos = end;
 		}
