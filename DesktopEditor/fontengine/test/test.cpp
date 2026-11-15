@@ -139,6 +139,34 @@ TEST_F(CFontEngineTest, FontListSkipsType1Font)
 	EXPECT_EQ(nullptr, FindInList(Type1Path()));
 }
 
+// Old OpenOffice/LibreOffice documents ask for StarSymbol; OpenSymbol is the
+// same font renamed, so it must win over an unrelated font (CFontListNamePicker)
+TEST_F(CFontEngineTest, PicksOpenSymbolForStarSymbol)
+{
+	std::vector<std::wstring> arFiles = {FontPath("EOTestTrueType.ttf"), FontPath("EOTestCFF.otf")};
+	CPtr<NSFonts::IApplicationFonts> pApplication(NSFonts::NSApplication::Create());
+	pApplication->InitializeFromArrayFiles(arFiles, 1);
+
+	std::vector<NSFonts::CFontInfo*>* pFonts = pApplication->GetList()->GetFonts();
+	ASSERT_EQ(2u, pFonts->size());
+	// The fixtures differ only in name, so on a name tie the first font wins
+	NSFonts::CFontInfo* pOther = pFonts->front();
+	NSFonts::CFontInfo* pOpenSymbol = pFonts->back();
+	pOther->names.clear();
+	pOpenSymbol->m_wsFontName = L"OpenSymbol";
+	pOpenSymbol->names.clear();
+
+	auto Pick = [&](const wchar_t* sName) {
+		NSFonts::CFontSelectFormat oSelect;
+		oSelect.wsName = new std::wstring(sName);
+		return pApplication->GetList()->GetByParams(oSelect, false);
+	};
+
+	EXPECT_EQ(pOther, Pick(L"NoSuchFont"));
+	EXPECT_EQ(pOpenSymbol, Pick(L"Wingdings"));
+	EXPECT_EQ(pOpenSymbol, Pick(L"StarSymbol"));
+}
+
 struct CSfntFontParam
 {
 	const char* sFile;
