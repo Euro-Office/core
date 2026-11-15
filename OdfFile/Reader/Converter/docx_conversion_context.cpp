@@ -1146,9 +1146,10 @@ std::wstring  docx_conversion_context::dump_settings_document()
 			}
 			
 			// ODF AddParaTableSpacing (true or missing: space below + space above of adjacent
-			// paragraphs add up) is Word's doNotUseHTMLParagraphAutoSpacing.
+			// paragraphs add up) is Word's doNotUseHTMLParagraphAutoSpacing. Like LibreOffice, take
+			// only the exact value "true" as true.
 			_CP_OPT(std::wstring) addParaTableSpacing = root()->odf_context().Settings().find_by_name(L"AddParaTableSpacing");
-			const bool bAddParaTableSpacing = !addParaTableSpacing || *addParaTableSpacing != L"false";
+			const bool bAddParaTableSpacing = !addParaTableSpacing || *addParaTableSpacing == L"true";
 
 			CP_XML_NODE(L"w:compat")
 			{

@@ -202,7 +202,9 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 [[annotations]]
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/add_para_table_spacing_false.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/add_para_table_spacing_invalid_value.odt",
     "OdfFile/Test/test_odf/ExampleFiles/add_para_table_spacing_missing.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/add_para_table_spacing_other_setting.odt",
     "OdfFile/Test/test_odf/ExampleFiles/add_para_table_spacing_true.odt",
     "OdfFile/Test/test_odf/ExampleFiles/paragraph_spacing_compat_flag.docx",
     "OdfFile/Test/test_odf/ExampleFiles/paragraph_spacing_no_compat_flag.docx",

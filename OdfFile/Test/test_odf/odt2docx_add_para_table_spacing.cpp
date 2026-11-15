@@ -58,6 +58,8 @@ const SpacingCase kSpacingCases[] = {
     { L"add_para_table_spacing_true.odt", true, "SettingTrue" },
     { L"add_para_table_spacing_false.odt", false, "SettingFalse" },
     { L"add_para_table_spacing_missing.odt", true, "NoSetting" },
+    { L"add_para_table_spacing_other_setting.odt", true, "OtherSettingOnly" },
+    { L"add_para_table_spacing_invalid_value.odt", false, "InvalidValue" },
 };
 
 std::string SpacingCaseName(const ::testing::TestParamInfo<SpacingCase>& info)
