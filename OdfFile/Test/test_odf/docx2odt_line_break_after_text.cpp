@@ -37,9 +37,25 @@ TEST(DocxToOdt, LineBreakAfterTextInSameRun)
 }
 
 // <w:r><w:t>BEFORE</w:t><w:br w:type="page"/></w:r>: a page break after text does not become a line break.
+// It still takes the deferred path, which today writes no break at all; this only checks it is no line break.
 TEST(DocxToOdt, PageBreakAfterTextIsNoLineBreak)
 {
 	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/page_break_after_text.docx");
+	ASSERT_FALSE(dir.empty()) << "DOCX -> ODT conversion failed";
+
+	const std::wstring content = read_part(dir, L"content.xml");
+	ASSERT_FALSE(content.empty()) << "content.xml is missing";
+	EXPECT_TRUE(is_well_formed(content));
+	EXPECT_NE(content.find(L"BEFORE"), std::wstring::npos);
+	EXPECT_NE(content.find(L"AFTER"), std::wstring::npos);
+	EXPECT_EQ(content.find(L"<text:line-break"), std::wstring::npos);
+}
+
+// <w:r><w:t>BEFORE</w:t><w:br w:type="column"/></w:r>: the column break type has the value 0, which convert(CRun) maps
+// to a line break for a break before any text. After text it must keep the deferred path and not become a line break.
+TEST(DocxToOdt, ColumnBreakAfterTextIsNoLineBreak)
+{
+	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/column_break_after_text.docx");
 	ASSERT_FALSE(dir.empty()) << "DOCX -> ODT conversion failed";
 
 	const std::wstring content = read_part(dir, L"content.xml");

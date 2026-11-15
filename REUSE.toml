@@ -105,6 +105,7 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/column_break_after_text.docx",
     "OdfFile/Test/test_odf/ExampleFiles/line_break_after_text.docx",
     "OdfFile/Test/test_odf/ExampleFiles/page_background_image_no_page_size.docx",
     "OdfFile/Test/test_odf/ExampleFiles/page_break_after_text.docx",
