@@ -242,6 +242,7 @@ class CSvmFile : virtual public IMetaFileBase
 	void Read_META_BMPEXSCALE();
         void Read_META_BMP();
         void Read_META_BMP(TSvmBitmap &bitmap_info, BYTE** ppDstBuffer, unsigned int* pulWidth, unsigned int* pulHeight);
+	unsigned int BytesLeftInRecord() const;
         void Read_META_BMPEX();
         void Read_META_RASTEROP();
 	void Read_META_PUSH();

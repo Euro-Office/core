@@ -134,6 +134,9 @@ namespace MetaFile
 		{
 			unsigned int length;
 			stream >> length;
+			// The length comes from the file: no more characters than are left in the stream.
+			if (length > stream.CanRead() / 2)
+				length = stream.CanRead() / 2;
 			
 			string = NSStringExt::CConverter::GetUnicodeFromUTF16((unsigned short*)stream.GetCurPtr(), length);
 	
@@ -144,6 +147,8 @@ namespace MetaFile
 		{
 			unsigned short  length;
 			stream >> length;
+			if (length > stream.CanRead())
+				length = (unsigned short)stream.CanRead();
 		
 			if (charset < 1)
 			{

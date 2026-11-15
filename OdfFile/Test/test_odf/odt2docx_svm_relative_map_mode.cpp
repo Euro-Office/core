@@ -13,6 +13,7 @@
 
 #include "../../../DesktopEditor/raster/BgraFrame.h"
 
+#include <chrono>
 #include <cstdlib>
 #include <string>
 
@@ -79,5 +80,29 @@ TEST(OdtToDocxSvmMapMode, CraftedMapModesStayBounded)
     const Rgb bottom_right = colour_at(frame, 0.95, 0.9);
     EXPECT_TRUE(is(top_left, 255, 0, 0)) << "top left " << top_left.r << "," << top_left.g << "," << top_left.b;
     EXPECT_TRUE(is(top_right, 0, 0, 255)) << "top right " << top_right.r << "," << top_right.g << "," << top_right.b;
+    EXPECT_TRUE(is(bottom_right, 0, 255, 0)) << "bottom right " << bottom_right.r << "," << bottom_right.g << "," << bottom_right.b;
+}
+
+// A crafted SVM whose sizes come from the file and point far beyond it: a text array with 0x04000000
+// DX entries (two in the file), a bitmap header of 0x1000 bytes (the reader's struct holds 40), a
+// compressed bitmap of 0xFFFFFF00 coded and 0xFFFFFFF0 uncoded bytes (8 in the file), and a header
+// that announces 4294967295 records (the file has 9). The picture is blue, and a green rectangle in
+// the bottom-right quarter follows the crafted records: every size stays inside its record, so the
+// green one is still drawn, and the reader stops at the end of the data, so the conversion is quick.
+TEST(OdtToDocxSvmMapMode, CraftedSizesStayInsideTheFile)
+{
+    const auto start = std::chrono::steady_clock::now();
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/svm_crafted_bitmap.odt");
+    const double seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_LT(seconds, 5.) << "the record loop ran past the end of the data";
+
+    CBgraFrame frame;
+    ASSERT_TRUE(frame.OpenFile(dir + FILE_SEPARATOR_STR + L"word/media/image1.png")) << "no PNG for the SVM picture";
+    ASSERT_GT(frame.get_Width(), 0);
+
+    const Rgb bottom_left = colour_at(frame, 0.25, 0.75);
+    const Rgb bottom_right = colour_at(frame, 0.75, 0.75);
+    EXPECT_TRUE(is(bottom_left, 0, 0, 255)) << "bottom left " << bottom_left.r << "," << bottom_left.g << "," << bottom_left.b;
     EXPECT_TRUE(is(bottom_right, 0, 255, 0)) << "bottom right " << bottom_right.r << "," << bottom_right.g << "," << bottom_right.b;
 }

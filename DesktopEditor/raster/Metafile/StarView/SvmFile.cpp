@@ -105,6 +105,15 @@ static const struct ActionNamesSmv
     { META_COMMENT_ACTION,               L"META_COMMENT_ACTION" }
 };
 
+// The bytes left in the current record (a size read from a record cannot reach beyond it).
+unsigned int CSvmFile::BytesLeftInRecord() const
+{
+	const unsigned long long ullEnd = (unsigned long long)m_unRecordPos + m_unRecordSize;
+	const unsigned int unPos = m_oStream.Tell();
+	const unsigned long long ullLeft = ullEnd > unPos ? ullEnd - unPos : 0;
+	return ullLeft < m_oStream.CanRead() ? (unsigned int)ullLeft : m_oStream.CanRead();
+}
+
 void CSvmFile::PlayMetaFile()
 {
 	m_oStream.SeekToStart();
@@ -128,6 +137,10 @@ void CSvmFile::PlayMetaFile()
 
 	for (unsigned int action = 0; action < m_oHeader.actionCount; ++action)
 	{
+		// The count comes from the file: stop where the records end, as LibreOffice does.
+		if (m_oStream.CanRead() < 8) // less than a record header (type, version, size)
+			break;
+
         unsigned short  actionType;
 
 		m_oStream >> actionType;
@@ -572,6 +585,10 @@ void CSvmFile::Read_META_ARRAYTEXT()
 	m_oStream >> nLen;
 
 	m_oStream >> nArrayLen;
+
+	// The length comes from the file: no more entries than 4-byte values are left in the record.
+	if (nArrayLen > BytesLeftInRecord() / 4)
+		nArrayLen = BytesLeftInRecord() / 4;
 
 	int *mpDXAry = NULL;
 	if( nArrayLen > 0 )
@@ -1079,7 +1096,12 @@ void CSvmFile::Read_META_BMP(TSvmBitmap & bitmap_info, BYTE** ppDstBuffer, unsig
     unsigned short	nColors;
     BYTE*		pData = NULL;
 
+    bitmap_info = TSvmBitmap();
     m_oStream >> bitmap_info; //size = 40
+
+    // The header size comes from the file; TSvmBitmap holds at most 40 bytes of it.
+    if (bitmap_info.nSize > sizeof(TSvmBitmap))
+        return;
 
     int nBitCount = discretizeBitcount(bitmap_info.nBitCount);
 
@@ -1102,6 +1124,13 @@ void CSvmFile::Read_META_BMP(TSvmBitmap & bitmap_info, BYTE** ppDstBuffer, unsig
         ULONG destSize, srcSize;
         m_oStream >> srcSize >> destSize >> bitmap_info.nCompression;
 
+        // Both sizes come from the file: read no more than is left in the record, and allocate
+        // no more than deflate can produce from that (at most 1032:1).
+        if (srcSize > BytesLeftInRecord())
+            srcSize = BytesLeftInRecord();
+        if (destSize > (unsigned long long)srcSize * 1032)
+            destSize = (ULONG)((unsigned long long)srcSize * 1032);
+
         BYTE*	srcBuf	= m_oStream.GetCurPtr();
         BYTE*	destBuf = new BYTE[destSize];
 
@@ -1118,12 +1147,15 @@ void CSvmFile::Read_META_BMP(TSvmBitmap & bitmap_info, BYTE** ppDstBuffer, unsig
         MetaFile::ReadImage((BYTE*)&bitmap_info, bitmap_info.nSize, destBuf, destSize, ppDstBuffer, pulWidth, pulHeight, unColorUsed);
         delete []destBuf;
     }
-    else if (nHeaderSize >= bitmap_info.nSize)
+    else if (nHeaderSize >= bitmap_info.nSize && nHeaderSize - bitmap_info.nSize <= BytesLeftInRecord())
     {
         BYTE *Header = new BYTE [ nHeaderSize];
         memcpy(Header, &bitmap_info, bitmap_info.nSize);
 
         m_oStream.ReadBytes(Header + bitmap_info.nSize, nHeaderSize - bitmap_info.nSize);
+
+        if (bitmap_info.nSizeImage > BytesLeftInRecord())
+            bitmap_info.nSizeImage = BytesLeftInRecord();
 
         MetaFile::ReadImage(Header , nHeaderSize,  m_oStream.GetCurPtr(), bitmap_info.nSizeImage, ppDstBuffer, pulWidth, pulHeight, unColorUsed);
         m_oStream.Skip(bitmap_info.nSizeImage);
