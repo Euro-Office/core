@@ -59,3 +59,20 @@ TEST(DocxToOdt, BodySectionKeepsOwnHeaderAndInheritsFooter)
 	EXPECT_EQ(standard.find(L"Earlier header"), std::wstring::npos);
 	EXPECT_NE(standard.find(L"Inherited footer"), std::wstring::npos);
 }
+
+// Two earlier sections have a header of the same type: the body section takes
+// the one of the closest section, as Word does.
+TEST(DocxToOdt, BodySectionTakesClosestEarlierHeader)
+{
+	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/body_section_closest_header.docx");
+	ASSERT_FALSE(dir.empty()) << "DOCX -> ODT conversion failed";
+
+	const std::wstring styles = read_part(dir, L"styles.xml");
+	ASSERT_FALSE(styles.empty()) << "styles.xml is missing";
+	EXPECT_TRUE(is_well_formed(styles));
+
+	const std::wstring standard = standard_master_page(styles);
+	ASSERT_FALSE(standard.empty()) << "no Standard master page";
+	EXPECT_NE(standard.find(L"Closest header"), std::wstring::npos);
+	EXPECT_EQ(standard.find(L"Older header"), std::wstring::npos);
+}
