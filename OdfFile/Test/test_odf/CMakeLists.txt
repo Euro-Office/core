@@ -83,6 +83,7 @@ add_core_gtest(
             odt2docx_chapter_field.cpp
             ods2xlsx_fill_character.cpp
             odf_font_family.cpp
+            docx2odt_style_parent_cycle.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
