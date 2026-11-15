@@ -507,14 +507,15 @@ void ods_conversion_context::end_columns()
 	}
 	if (repeat_at_lasts_)
 	{
-		//not past the last column of a sheet (XFD)
+		//default columns not past the last column of a sheet (XFD)
 		int columns = (std::min)((std::max)(current_table()->dimension_columns, 1024), 16384);
 		int repeat = columns - current_table()->current_column();
 
 		if (repeat > 0)
 			add_column(current_table()->current_column() + 1, repeat, 0, true);
 	}
-	current_table()->columns_count = current_table()->current_column();
+	//rows are padded up to here (end_row); a <col> past XFD in the source must not take them past it
+	current_table()->columns_count = (std::min)(current_table()->current_column(), 16384);
 }
 void ods_conversion_context::start_rows()
 {

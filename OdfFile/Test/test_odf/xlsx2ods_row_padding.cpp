@@ -81,7 +81,7 @@ namespace
 		return tag.substr(start, tag.find(L'"', start) - start);
 	}
 
-	void expect_rows_end_at_last_column(const wchar_t* fixture, long columns)
+	void expect_rows_end_at_last_column(const wchar_t* fixture, long columns, long declared_columns)
 	{
 		const std::wstring dir = convert_ooxml_to_odf_dir(fixture);
 		ASSERT_FALSE(dir.empty()) << "XLSX -> ODS conversion failed";
@@ -90,7 +90,7 @@ namespace
 		EXPECT_TRUE(is_well_formed(content));
 
 		const sheet_shape shape = read_sheet(content);
-		EXPECT_EQ(shape.columns, columns);
+		EXPECT_EQ(shape.columns, declared_columns);
 		ASSERT_GE(shape.row_cells.size(), 2u);
 		for (size_t i = 0; i < shape.row_cells.size(); i++)
 			EXPECT_EQ(shape.row_cells[i], columns) << "row element " << i + 1;
@@ -106,11 +106,17 @@ namespace
 // and each row (also the filled one) has 16384 cells, not its cells plus 1024.
 TEST(XlsxToOds, RowsEndAtLastColumnOfFullWidthSheet)
 {
-	expect_rows_end_at_last_column(L"ExampleFiles/row_format_all_columns.xlsx", 16384);
+	expect_rows_end_at_last_column(L"ExampleFiles/row_format_all_columns.xlsx", 16384, 16384);
 }
 
 // No column declarations: the sheet gets 1024 default columns and each row 1024 cells.
 TEST(XlsxToOds, RowsEndAtLastColumnOfDefaultSheet)
 {
-	expect_rows_end_at_last_column(L"ExampleFiles/row_format_default_columns.xlsx", 1024);
+	expect_rows_end_at_last_column(L"ExampleFiles/row_format_default_columns.xlsx", 1024, 1024);
+}
+
+// A malformed <col> past XFD (max 20000) keeps its column declaration, but no row gets cells past XFD.
+TEST(XlsxToOds, RowsEndAtXfdWhenColumnsGoPastIt)
+{
+	expect_rows_end_at_last_column(L"ExampleFiles/row_format_columns_past_last.xlsx", 16384, 20000);
 }
