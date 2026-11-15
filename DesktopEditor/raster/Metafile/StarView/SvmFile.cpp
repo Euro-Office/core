@@ -224,8 +224,18 @@ void CSvmFile::PlayMetaFile()
 
 		m_currentActionType = actionType;
 
-		int need_skip = m_unRecordSize - (m_oStream.Tell() - m_unRecordPos);
-		m_oStream.Skip(need_skip);
+		// Go on at the end of the record, also when its reader went past it (a size in the record
+		// pointed beyond it): the following records are still read, as LibreOffice does.
+		const unsigned long long ullRecordEnd = (unsigned long long)m_unRecordPos + m_unRecordSize;
+		const unsigned int unPos = m_oStream.Tell();
+		int need_skip = 0;
+		if (ullRecordEnd < unPos)
+			m_oStream.SeekBack(unPos - (unsigned int)ullRecordEnd);
+		else
+		{
+			need_skip = (int)(std::min)(ullRecordEnd - unPos, (unsigned long long)m_oStream.CanRead());
+			m_oStream.Skip((unsigned int)need_skip);
+		}
 
 #ifdef _DEBUG
 		if (100 <= actionType && actionType <= META_LAST_ACTION && need_skip > 0 && !m_pOutput)
@@ -1103,6 +1113,10 @@ void CSvmFile::Read_META_BMP(TSvmBitmap & bitmap_info, BYTE** ppDstBuffer, unsig
     // operator>> skipped the rest of a larger one (BITMAPV4HEADER, BITMAPV5HEADER).
     const unsigned int nKnownSize = (std::min)(bitmap_info.nSize, (unsigned int)sizeof(TSvmBitmap));
 
+    // A header that runs past the end of the record: drop the bitmap (LibreOffice rejects it too).
+    if ((unsigned long long)m_oStream.Tell() > (unsigned long long)m_unRecordPos + m_unRecordSize)
+        return;
+
     int nBitCount = discretizeBitcount(bitmap_info.nBitCount);
 
     if( nBitCount <= 8 )
@@ -1125,11 +1139,22 @@ void CSvmFile::Read_META_BMP(TSvmBitmap & bitmap_info, BYTE** ppDstBuffer, unsig
         m_oStream >> srcSize >> destSize >> bitmap_info.nCompression;
 
         // Both sizes come from the file: read no more than is left in the record, and allocate
-        // no more than deflate can produce from that (at most 1032:1).
+        // no more than deflate can produce from that (at most 1032:1) and than ReadImage can use:
+        // it takes the size as an int and reads no more than the palette and the rows the header
+        // describes (uncompressed rows; run-length rows have no fixed size).
+        unsigned long long ullUsable = 0x7FFFFFFF;
+        if (BI_RGB == bitmap_info.nCompression)
+        {
+            const unsigned long long ullRow = (((unsigned long long)bitmap_info.nWidth * bitmap_info.nBitCount + 31) & ~31ULL) / 8;
+            const unsigned long long ullRows = (bitmap_info.nHeight & 0x80000000) ? 0x100000000ULL - bitmap_info.nHeight : bitmap_info.nHeight;
+            ullUsable = (std::min)(ullUsable, 4ULL * nColors + ullRow * ullRows);
+        }
         if (srcSize > BytesLeftInRecord())
             srcSize = BytesLeftInRecord();
         if (destSize > (unsigned long long)srcSize * 1032)
             destSize = (ULONG)((unsigned long long)srcSize * 1032);
+        if (destSize > ullUsable)
+            destSize = (ULONG)ullUsable;
 
         BYTE*	srcBuf	= m_oStream.GetCurPtr();
         BYTE*	destBuf = new BYTE[destSize];
