@@ -95,6 +95,14 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/table_part_column_widths.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/table_part_shared_first_columns.xlsx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OdfFile/Test/test_odf/ExampleFiles/chart_local_table_category_ampersand.ods",
     "OdfFile/Test/test_odf/ExampleFiles/chart_pivot_source_ampersand.odt",
     "OdfFile/Test/test_odf/ExampleFiles/chart_series_name_ampersand.odt",
