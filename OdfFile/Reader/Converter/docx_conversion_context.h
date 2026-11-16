@@ -997,6 +997,7 @@ public:
 	styles_map	styles_map_;
 	std::unordered_map<std::wstring,bool> status_para{};
 	bool		process_headers_footers_;
+	bool		body_started_ = false; // a body paragraph has been written
 	bool		delayed_converting_;
 	bool		convert_delayed_enabled_;
 

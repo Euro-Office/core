@@ -567,6 +567,9 @@ private:
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
 };
 CP_REGISTER_OFFICE_ELEMENT2(index_body);
+
+// Sets a page break before a body element whose style names a master page (not before the first one).
+void break_before_master_page(oox::docx_conversion_context & Context, const office_element_ptr & elm);
 //---------------------------------------------------------------------------------------------------
 class index_title : public office_element_impl<index_title>
 {

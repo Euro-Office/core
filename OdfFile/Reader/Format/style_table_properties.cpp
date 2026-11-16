@@ -104,7 +104,8 @@ void table_format_properties::docx_convert(oox::docx_conversion_context & Contex
         _tblPr << L"<w:tblW w:type=\"pct\" w:w=\"5000\"/>";
     }
 
-    if (common_break_attlist_.fo_break_before_)
+    // A master page switch has already asked for a new page (2); fo:break-before="auto" must not cancel it
+    if (common_break_attlist_.fo_break_before_ && Context.get_page_break_before() != 2)
     {
 		Context.set_page_break_before(common_break_attlist_.fo_break_before_->get_type());
 	}
