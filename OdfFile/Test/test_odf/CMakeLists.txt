@@ -49,6 +49,7 @@ add_core_gtest(
             number_styles.cpp
             conversion_helpers.cpp
             docx2odt_content_controls.cpp
+            docx2odt_contextual_spacing.cpp
             xlsx2ods_date_cells.cpp
             xlsx2ods_print_area.cpp
             odt2docx_fields.cpp
@@ -59,6 +60,7 @@ add_core_gtest(
             chart_title.cpp
             odt2docx_underline.cpp
             odt2docx_keep_next.cpp
+            odt2docx_contextual_spacing.cpp
             odt2docx_links.cpp
             odp2pptx_line_height.cpp
             odt2docx_default_tab_stop.cpp
