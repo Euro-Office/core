@@ -132,7 +132,7 @@ def baseline_arch_flags() -> list[ str ]:
     their own CFLAGS/CXXFLAGS (b2, ICU's configure) add these explicitly,
     because they don't pick up the environment from common.cmake.
     """
-    if is_linux() and not is_android() and target_arch() == "x64":
+    if is_linux() and not is_android() and not is_wasm() and target_arch() == "x64":
         return [ "-march=x86-64" ]
     return []
 

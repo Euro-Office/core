@@ -100,12 +100,14 @@ def build_and_install():
                 "no-shared",
                 "no-asm",
                 # On the command line, so it adds to Configure's default
-                # CFLAGS (-O3). A CFLAGS from the environment (common.cmake)
-                # would replace them, and with no-asm leave this unoptimized.
+                # CFLAGS (-Wall -O3)
                 *nc.baseline_arch_flags(),
             ],
             "Configure",
-            nc.work_dir
+            nc.work_dir,
+            # Configure replaces its default CFLAGS with these from the
+            # environment (common.cmake sets them), which drops -O3
+            env = { "CFLAGS": "", "CXXFLAGS": "" }
         )
 
         nc.run_command(
