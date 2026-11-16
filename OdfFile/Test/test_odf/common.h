@@ -37,6 +37,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <string>
+#include <vector>
 
 #include "DesktopEditor/common/Types.h"
 
@@ -66,6 +67,11 @@ std::wstring read_part(const std::wstring& packageDir, const std::wstring& partN
 
 // True if the text is a well-formed XML document.
 bool is_well_formed(const std::wstring& xml);
+
+// Paths of the .xml and .rels parts under packageDir (recursively) that are
+// not well-formed. convert_odf_to_ooxml_dir() and convert_ooxml_to_odf_dir()
+// fail the running test for each of them.
+std::vector<std::wstring> malformed_xml_parts(const std::wstring& packageDir);
 
 #define CH_DIR(x) FILE_SEPARATOR_STR + _T(x)
 
