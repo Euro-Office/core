@@ -45,6 +45,7 @@ set(_test_odf_run_dir "${CMAKE_CURRENT_BINARY_DIR}/run")
 add_core_gtest(
     NAME    test_odf
     SOURCES test.cpp
+            odt2docx_outline_num_format.cpp
             common.cpp
             number_styles.cpp
             conversion_helpers.cpp
