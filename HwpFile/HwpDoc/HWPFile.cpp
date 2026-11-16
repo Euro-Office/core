@@ -364,6 +364,7 @@ bool CHWPFile::Decrypt(CHWPStream& oInput, CHWPStream& oBuffer)
 	oDecryptor.SetKey((byte*)(oDocData.GetCurPtr() + nHashOffset), 16);
 
 	ArraySource oSource((byte*)oInput.GetCurPtr(), oInput.SizeToEnd(), true, new StreamTransformationFilter(oDecryptor, new ArraySink( (byte*)oBuffer.GetCurPtr(), oBuffer.GetSize()), StreamTransformationFilter::NO_PADDING));
+	(void)oSource;
 
 	return true;
 }
