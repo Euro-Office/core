@@ -714,6 +714,29 @@ void DocxConverter::convert(OOX::Logic::CSdtContent *oox_sdt)
 		convert(oox_sdt->m_arrItems[i]);
 	}
 }
+// ODF outline level of a paragraph: its own w:outlineLvl, else the level of its style chain;
+// 0 is body text. w:outlineLvl is zero-based, 9 is body text and Word ignores other values.
+static int paragraph_outline_level(odf_writer::odt_conversion_context* odt_context,
+	OOX::Logic::CParagraphProperty* oox_paragraph_pr)
+{
+	if (!oox_paragraph_pr) return 0;
+
+	if (oox_paragraph_pr->m_oOutlineLvl.IsInit() && oox_paragraph_pr->m_oOutlineLvl->m_oVal.IsInit())
+	{
+		const int oox_level = *oox_paragraph_pr->m_oOutlineLvl->m_oVal;
+		if (oox_level >= 0 && oox_level <= 9)
+			return (oox_level == 9) ? 0 : oox_level + 1;
+	}
+	if (oox_paragraph_pr->m_oPStyle.IsInit() && oox_paragraph_pr->m_oPStyle->m_sVal.IsInit())
+	{
+		odf_writer::style_paragraph_properties style_properties;
+		odt_context->styles_context()->calc_paragraph_properties(*oox_paragraph_pr->m_oPStyle->m_sVal,
+			odf_types::style_family::Paragraph, &style_properties.content_);
+		if (style_properties.content_.outline_level_)
+			return (int)*style_properties.content_.outline_level_;
+	}
+	return 0;
+}
 void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 {
 	if (oox_paragraph == NULL) return; 
@@ -930,6 +953,15 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 
 	if (bStartNewParagraph)
 	{
+		// ODF has no headings in comments or in the text of a shape that is not a text box
+		// (WordArt counts as a text box preset but is written as draw:custom-shape)
+		odf_writer::odf_drawing_context* drawing_context = odt_context->drawing_context();
+		const bool in_shape_text = drawing_context && !drawing_context->is_current_empty() &&
+			(!drawing_context->is_text_box() || drawing_context->is_wordart());
+		const int outline_level = (odt_context->comment_context()->is_started() || in_shape_text) ? 0 :
+			paragraph_outline_level(odt_context, oox_paragraph->m_oParagraphProperty);
+		odt_context->text_context()->set_outline_level(outline_level - 1);
+
 		odt_context->start_paragraph(bStyled);
 
 		if (odt_context->is_paragraph_in_current_section_)
@@ -1500,8 +1532,6 @@ void DocxConverter::convert(OOX::Logic::CParagraphProperty	*oox_paragraph_pr,
 		return;
 	}
 
-	int outline_level = 0;
-
 	bool reDefine = false;
 	if (oox_paragraph_pr->m_oPStyle.IsInit() && oox_paragraph_pr->m_oPStyle->m_sVal.IsInit())
 	{
@@ -1535,10 +1565,6 @@ void DocxConverter::convert(OOX::Logic::CParagraphProperty	*oox_paragraph_pr,
 		{
 			odf_writer::odf_style_state_ptr style_state = odt_context->styles_context()->last_state();
 			style_state->set_parent_style_name(style_name);
-		}
-		if (parent_paragraph_properties.content_.outline_level_)
-		{
-			outline_level = *parent_paragraph_properties.content_.outline_level_;
 		}
 	}
 	//if (!reDefine && oox_paragraph_pr->m_oRPr.IsInit() && !odt_context->in_drop_cap())
@@ -1708,13 +1734,12 @@ void DocxConverter::convert(OOX::Logic::CParagraphProperty	*oox_paragraph_pr,
 			paragraph_properties->style_writing_mode_= odf_types::writing_mode(odf_types::writing_mode::TbLr);	break;
 		}
 	}
-	if (oox_paragraph_pr->m_oOutlineLvl.IsInit())
+	if (oox_paragraph_pr->m_oOutlineLvl.IsInit() && oox_paragraph_pr->m_oOutlineLvl->m_oVal.IsInit())
 	{
-		outline_level = 0;
-		if (oox_paragraph_pr->m_oOutlineLvl->m_oVal.IsInit())
-			outline_level = *oox_paragraph_pr->m_oOutlineLvl->m_oVal;
-		if (outline_level > 0) paragraph_properties->outline_level_ =  outline_level /*+1*/;
-		odt_context->text_context()->set_outline_level (outline_level);
+		// w:outlineLvl is zero-based and 9 means body text; Word ignores other values
+		const int oox_level = *oox_paragraph_pr->m_oOutlineLvl->m_oVal;
+		if (oox_level >= 0 && oox_level <= 9)
+			paragraph_properties->outline_level_ = (oox_level == 9) ? 0 : oox_level + 1;
 	}
 	if (oox_paragraph_pr->m_oPageBreakBefore.IsInit() && oox_paragraph_pr->m_oPageBreakBefore->m_oVal.ToBool())
 	{
@@ -4395,6 +4420,15 @@ void DocxConverter::convert(OOX::CStyle	*oox_style)
 		}
 
 		convert(oox_style->m_oParPr.GetPointer(), paragraph_properties, NULL, false);
+
+		odf_writer::style* odf_style =
+			dynamic_cast<odf_writer::style*>(odt_context->styles_context()->last_state()->get_office_element().get());
+		if (odf_style && paragraph_properties->outline_level_ && family == odf_types::style_family::Paragraph)
+		{
+			// an empty value (ODF 1.2) makes a style based on a heading style body text again
+			const unsigned int level = *paragraph_properties->outline_level_;
+			odf_style->style_default_outline_level_ = level > 0 ? std::to_wstring(level) : std::wstring();
+		}
 
 		if (oox_style->m_oParPr->m_oNumPr.IsInit())
 		{
