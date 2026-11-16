@@ -513,18 +513,17 @@ namespace NSDocxRenderer
 
 	void CFontSelector::CheckRanges(UINT& lRange1, UINT& lRange2, UINT& lRange3, UINT& lRange4, BYTE& lRangeNum, BYTE& lRange)
 	{
-		// lRange is 0xFF for symbols outside all known ranges; mask the shift
-		// count so that the shift is well defined.
-		const BYTE nBit = lRange & 31;
+		if (lRangeNum > 3 || lRange > 31)
+			return;
 
 		if (0 == lRangeNum)
-			lRange1 |= 1u << nBit;
+			lRange1 |= 1u << lRange;
 		else if (1 == lRangeNum)
-			lRange2 |= 1u << nBit;
+			lRange2 |= 1u << lRange;
 		else if (2 == lRangeNum)
-			lRange3 |= 1u << nBit;
+			lRange3 |= 1u << lRange;
 		else
-			lRange4 |= 1u << nBit;
+			lRange4 |= 1u << lRange;
 	}
 
 	CFontManager::CFontManager(NSFonts::IApplicationFonts* pApplication)
