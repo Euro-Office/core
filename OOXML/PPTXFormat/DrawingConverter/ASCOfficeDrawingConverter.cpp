@@ -2166,7 +2166,20 @@ void CDrawingConverter::ConvertShape(PPTX::Logic::SpTreeElem *elem, XmlUtils::CX
 				XmlUtils::CXmlNode oNodeContent;
 				if (oNodeTextBox.GetNode(L"w:txbxContent", oNodeContent))
 				{
-					pShape->oTextBoxShape = oNodeContent;
+					// Read the content with the full reader (CXmlLiteReader): the node based reader
+					// drops w:ins, w:del, w:moveFrom and w:moveTo together with their text.
+					XmlUtils::CXmlLiteReader oReaderContent;
+					if (oReaderContent.FromString(_start_xml_object + oNodeContent.GetXml() + _end_xml_object) &&
+						oReaderContent.ReadNextNode() && // main
+						oReaderContent.ReadNextNode() && // w:txbxContent
+						L"txbxContent" == XmlUtils::GetNameNoNS(oReaderContent.GetName()))
+					{
+						pShape->oTextBoxShape = oReaderContent;
+					}
+					else
+					{
+						pShape->oTextBoxShape = oNodeContent;
+					}
 				}
 				else if (oNodeTextBox.GetNode(L"div", oNodeContent))
 				{//The <div> tag was used to create an area in which the rotation would take place. 

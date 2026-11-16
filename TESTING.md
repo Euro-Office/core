@@ -81,6 +81,8 @@ Done:
       XLSX → XLSB both XLSB files are converted back to XLSX first. A category the
       workbook doesn't have is skipped. `Pivots` and `Slicers` of `xlsx2xlsb_simple2` are
       filtered out until #266 (flags never set in the XLSB writer) is fixed.
+      `docx_vml_textbox_tracked_changes.cpp` round-trips `ExampleFiles/docx/` through
+      Editor.bin and checks that tracked changes inside legacy VML text boxes are kept.
 - [x] `X2tConverter/test/TestOOOXml2Odf` (`ooxml2odf_math_test`) — 45 cases for
       `StarMath::COOXml2Odf`, which converts OOXML math (`m:oMath`) to StarMath/MathML when
       OdfFormatLib writes ODF. It has a `.pro` but was missed by the first migration. Links
