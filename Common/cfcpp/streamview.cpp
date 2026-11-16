@@ -130,7 +130,7 @@ _INT64 StreamView::read(char *buffer, _INT64 len)
     _INT32 nRead = 0;
     _INT32 nToRead = 0;
     _INT32 offset = 0;
-    if (!sectorChain.empty() && sectorChain.size() > 0)
+    if (!sectorChain.empty())
     {
         _INT32 sectorIndex = (int)(position / (_INT64)sectorSize);
 
