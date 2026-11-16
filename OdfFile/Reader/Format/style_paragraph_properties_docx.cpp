@@ -199,7 +199,7 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 				_pPr << L"<w:numPr>";
 				    auto temp_name = Context.get_temp_style_name();
 					Context.status_para[temp_name] = true;
-					if (bListEnabled && level < 9 && bOutlineList)
+					if (bListEnabled && level <= 9 && bOutlineList)
 					{
 						_pPr << L"<w:ilvl w:val=\"" << level - 1 << L"\"/>";
 						_pPr << L"<w:numId w:val=\"" << list_styles.id_outline() << L"\"/>";
