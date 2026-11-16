@@ -19,7 +19,7 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
-path = ["DesktopEditor/fontengine/test/fonts/EOTestTrueType.ttf", "DesktopEditor/fontengine/test/fonts/EOTestTrueType.woff2", "DesktopEditor/fontengine/test/fonts/EOTestCFF.otf"]
+path = ["DesktopEditor/fontengine/test/fonts/EOTestTrueType.ttf", "DesktopEditor/fontengine/test/fonts/EOTestTrueType.woff2", "DesktopEditor/fontengine/test/fonts/EOTestCFF.otf", "DesktopEditor/fontengine/test/fonts/EOTestColrV1.ttf"]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
