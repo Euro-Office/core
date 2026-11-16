@@ -9,6 +9,9 @@
 
 #include "common.h"
 
+#include "DesktopEditor/common/Directory.h"
+#include "Reader/Converter/mediaitems.h"
+
 #include <chrono>
 #include <string>
 #include <vector>
@@ -100,4 +103,27 @@ TEST(OdtToDocxEmbeddedTextObject, ObjectsNamingTheirOwnDocumentAreNotConverted)
     EXPECT_EQ(embedded, 1u) << "only the real object is embedded";
     EXPECT_FALSE(read_part(dir, L"word/embeddings/msObject1.docx").empty()) << "the real object is missing";
     EXPECT_TRUE(read_part(dir, L"word/embeddings/msObject2.docx").empty());
+}
+
+// An href counts as inside the package folder only when it resolves to a path below that folder.
+// From inside "Object 1", the sibling "../Object 10" also starts with ".../Object 1", and ".." is
+// the folder above: neither is inside "Object 1".
+TEST(OdtToDocxEmbeddedTextObject, SiblingFolderIsNotInsideTheObject)
+{
+    const std::wstring root = NSDirectory::CreateDirectoryWithUniqueName(NSDirectory::GetTempPath());
+    ASSERT_FALSE(root.empty());
+    const std::wstring object1 = root + FILE_SEPARATOR_STR + L"Object 1";
+    ASSERT_TRUE(NSDirectory::CreateDirectory(object1));
+    ASSERT_TRUE(NSDirectory::CreateDirectory(object1 + FILE_SEPARATOR_STR + L"Pictures"));
+    ASSERT_TRUE(NSDirectory::CreateDirectory(root + FILE_SEPARATOR_STR + L"Object 10"));
+
+    cpdoccore::oox::mediaitems items(object1);
+    EXPECT_TRUE(items.is_internal_path(L"Pictures", object1));
+    EXPECT_TRUE(items.is_internal_path(L"./Pictures/", object1));
+    EXPECT_FALSE(items.is_internal_path(L"../Object 10", object1));
+    EXPECT_FALSE(items.is_internal_path(L"..", object1));
+    EXPECT_FALSE(items.is_internal_path(L"Pictures/../..", object1));
+    EXPECT_FALSE(items.is_internal_path(L"Missing", object1));
+
+    NSDirectory::DeleteDirectory(root);
 }
