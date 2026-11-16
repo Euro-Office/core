@@ -78,6 +78,10 @@ protected:
 
 // --- #128: entries that readdir reports as DT_LNK were dropped ---
 
+// Listing symlinked files is only implemented for Linux now
+// TODO: update the guard when implemented for other OS
+#ifdef __linux__
+
 TEST_F(CDirectoryTest, symlinked_file_is_listed)
 {
 	if (!Symlink("real.bin", m_root + L"/link.bin"))
@@ -88,6 +92,7 @@ TEST_F(CDirectoryTest, symlinked_file_is_listed)
 	EXPECT_TRUE(Contains(oFiles, L"real.bin"));
 	EXPECT_TRUE(Contains(oFiles, L"link.bin"));
 }
+#endif
 
 // Symlinked directories stay out on purpose. GetDirectories() feeds
 // DeleteDirectory(), which recurses over its result: reporting a symlinked
@@ -148,7 +153,7 @@ TEST_F(CDirectoryTest, self_referencing_symlink_does_not_recurse_forever)
 }
 
 // Following link subdirectories is only implemented for Linux now
-// TODO: update the guard when implemented for MacOS
+// TODO: update the guard when implemented for other OS
 #ifdef __linux__
 
 TEST_F(CDirectoryTest, follow_symlinks_lists_files_in_symlinked_subdirectory)
@@ -302,4 +307,51 @@ TEST_F(CDirectoryTest, get_files_still_does_not_follow_symlinked_subdirectory)
 	EXPECT_TRUE(Contains(oFiles, L"/sub/nested.bin"));
 	EXPECT_FALSE(Contains(oFiles, L"/sublink/nested.bin"));
 	EXPECT_EQ(oFiles.size(), (size_t)2);
+}
+
+// --- empty directory path ---
+
+TEST(CDirectoryEmptyPathTest, get_files_returns_nothing)
+{
+	EXPECT_TRUE(NSDirectory::GetFiles(L"", false).empty());
+	EXPECT_TRUE(NSDirectory::GetFiles(L"", true).empty());
+}
+
+TEST(CDirectoryEmptyPathTest, get_files2_appends_nothing)
+{
+	for (bool bIsRecursion : { false, true })
+	{
+		std::vector<std::wstring> oFiles = { L"already-there" };
+		NSDirectory::GetFiles2(L"", oFiles, bIsRecursion);
+
+		ASSERT_EQ(oFiles.size(), (size_t)1) << "bIsRecursion = " << bIsRecursion;
+		EXPECT_EQ(oFiles[0], L"already-there");
+	}
+}
+
+TEST(CDirectoryEmptyPathTest, get_files_follow_symlinks_appends_nothing)
+{
+	for (bool bIsRecursion : { false, true })
+	{
+		std::vector<std::wstring> oFiles = { L"already-there" };
+		NSDirectory::GetFilesFollowSymlinks(L"", oFiles, bIsRecursion);
+
+		ASSERT_EQ(oFiles.size(), (size_t)1) << "bIsRecursion = " << bIsRecursion;
+		EXPECT_EQ(oFiles[0], L"already-there");
+	}
+}
+
+// The guard must only reject the empty path: a real directory is still listed
+// by all three.
+TEST_F(CDirectoryTest, non_empty_path_is_still_listed_by_all_three)
+{
+	EXPECT_EQ(NSDirectory::GetFiles(m_root, true).size(), (size_t)2);
+
+	std::vector<std::wstring> oFiles2;
+	NSDirectory::GetFiles2(m_root, oFiles2, true);
+	EXPECT_EQ(oFiles2.size(), (size_t)2);
+
+	std::vector<std::wstring> oFollow;
+	NSDirectory::GetFilesFollowSymlinks(m_root, oFollow, true);
+	EXPECT_EQ(oFollow.size(), (size_t)2);
 }

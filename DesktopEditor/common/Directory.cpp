@@ -93,6 +93,11 @@ namespace NSDirectory
 
 	void GetFilesImpl(std::wstring strDirectory, std::vector<std::wstring>& oArray, bool bIsRecursion, bool bFollowSymlinkDirs)
 	{
+		if (strDirectory.empty())
+		{
+			return;
+		}
+
 #if defined(_WIN32) || defined (_WIN64)
 		WIN32_FIND_DATAW oFD;
 
@@ -167,7 +172,7 @@ namespace NSDirectory
 							nType = 2;
 						else if (bFollowSymlinkDirs  && bIsRecursion && S_ISDIR(buff.st_mode))
 						{
-							bool bLinkPointsToSelf = bHaveSelf && buff.st_dev == stSelf.st_dev && buff.st_ino == stSelf.st_ino; // ===
+							bool bLinkPointsToSelf = bHaveSelf && buff.st_dev == stSelf.st_dev && buff.st_ino == stSelf.st_ino;
 							if (!bLinkPointsToSelf)
 								doRecursiveCall(dirp->d_name, oArray, bFollowSymlinkDirs);
 						}
@@ -236,10 +241,7 @@ namespace NSDirectory
 	{
 		std::vector<std::wstring> oArray;
 		
-		if (!strDirectory.empty())
-		{
-			GetFiles2(strDirectory, oArray, bIsRecursion);
-		}
+		GetFiles2(strDirectory, oArray, bIsRecursion);
 		return oArray;
 	}
 	std::vector<std::wstring> GetDirectories(std::wstring strDirectory)
