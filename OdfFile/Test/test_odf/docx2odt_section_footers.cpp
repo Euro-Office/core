@@ -39,21 +39,48 @@ namespace
 		return footers;
 	}
 
-	// Names of the automatic text styles in styles.xml that nothing in styles.xml uses.
-	std::vector<std::wstring> unused_automatic_text_styles(const std::wstring& styles)
+	// Value of the attribute name in the start tag tag, or "" if the tag has none.
+	std::wstring attribute_value(const std::wstring& tag, const std::wstring& name)
 	{
-		std::vector<std::wstring> unused;
+		const std::wstring key = L" " + name + L"=\"";
+		const size_t pos = tag.find(key);
+		if (pos == std::wstring::npos)
+			return L"";
+		const size_t begin = pos + key.size();
+		const size_t end = tag.find(L'"', begin);
+		return end == std::wstring::npos ? L"" : tag.substr(begin, end - begin);
+	}
+
+	// Names of the automatic text styles in styles.xml, whatever the order of
+	// the attributes (style:parent-style-name is written before style:family).
+	std::vector<std::wstring> automatic_text_styles(const std::wstring& styles)
+	{
+		std::vector<std::wstring> names;
 		const size_t begin = styles.find(L"<office:automatic-styles>");
 		const size_t end = styles.find(L"</office:automatic-styles>");
 		if (begin == std::wstring::npos || end == std::wstring::npos)
-			return unused;
+			return names;
 
-		const std::wstring tag = L"<style:style style:family=\"text\" style:name=\"";
 		size_t pos = begin;
-		while ((pos = styles.find(tag, pos)) != std::wstring::npos && pos < end)
+		while ((pos = styles.find(L"<style:style ", pos)) != std::wstring::npos && pos < end)
 		{
-			pos += tag.size();
-			const std::wstring name = styles.substr(pos, styles.find(L'"', pos) - pos);
+			const size_t tag_end = styles.find(L'>', pos);
+			if (tag_end == std::wstring::npos)
+				break;
+			const std::wstring tag = styles.substr(pos, tag_end - pos);
+			if (attribute_value(tag, L"style:family") == L"text")
+				names.push_back(attribute_value(tag, L"style:name"));
+			pos = tag_end;
+		}
+		return names;
+	}
+
+	// The styles in names that nothing in styles.xml uses.
+	std::vector<std::wstring> unused_styles(const std::wstring& styles, const std::vector<std::wstring>& names)
+	{
+		std::vector<std::wstring> unused;
+		for (const std::wstring& name : names)
+		{
 			if (styles.find(L"text:style-name=\"" + name + L"\"") == std::wstring::npos)
 				unused.push_back(name);
 		}
@@ -76,7 +103,9 @@ TEST(DocxToOdt, SectionFootersAreConvertedOnce)
 	const std::vector<std::wstring> expected = {L"", L"FOOTER-A", L"FOOTER-B", L"FOOTER-C", L"FOOTER-C"};
 	EXPECT_EQ(footers, expected);
 
-	const std::vector<std::wstring> unused = unused_automatic_text_styles(styles);
+	const std::vector<std::wstring> text_styles = automatic_text_styles(styles);
+	EXPECT_GT(text_styles.size(), 0u) << "no automatic text styles found in styles.xml";
+	const std::vector<std::wstring> unused = unused_styles(styles, text_styles);
 	EXPECT_TRUE(unused.empty()) << unused.size() << " automatic text styles belong to discarded footers";
 }
 
