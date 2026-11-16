@@ -208,7 +208,7 @@ void CompoundFile_impl::Commit(bool releaseMemory)
         if (sector.get() != nullptr && sector->dirtyFlag)
         {
             if (gap)
-                sourceStream->seek(((long)(sectorSize) + (long)i * (long)sectorSize), std::ios::beg);
+                sourceStream->seek((_INT64)sectorSize + (_INT64)i * (_INT64)sectorSize, std::ios::beg);
 
             sourceStream->write(reinterpret_cast<char*>(sector->GetData().data()), sectorSize);
             sourceStream->flush();
