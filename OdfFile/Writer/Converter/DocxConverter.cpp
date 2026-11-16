@@ -4421,7 +4421,24 @@ void DocxConverter::convert(OOX::CStyle	*oox_style)
 		}
 	}
 	if (oox_style->m_oBasedOn.IsInit() && oox_style->m_oBasedOn->m_sVal.IsInit())
-		odt_context->styles_context()->last_state()->set_parent_style_name(*oox_style->m_oBasedOn->m_sVal);
+	{
+		// A w:basedOn naming a style of another type is ignored (ISO/IEC 29500-1 17.7.4.3).
+		// As an ODF parent it would name a style of another family, which the style
+		// lookups never find.
+		const std::wstring & parent_id = *oox_style->m_oBasedOn->m_sVal;
+
+		OOX::CStyles* styles = docx_document ? docx_document->m_oMain.styles : (docx_flat_document ? docx_flat_document->m_pStyles.GetPointer() : NULL);
+		if (styles)
+		{
+			std::map<std::wstring, size_t>::iterator pFind = styles->m_mapStyleNames.find(parent_id);
+			if (pFind != styles->m_mapStyleNames.end() && pFind->second < styles->m_arrStyle.size())
+			{
+				OOX::CStyle* parent_style = styles->m_arrStyle[pFind->second];
+				if (parent_style && parent_style->m_oType.IsInit() && parent_style->m_oType->GetValue() == oox_style->m_oType->GetValue())
+					odt_context->styles_context()->last_state()->set_parent_style_name(parent_id);
+			}
+		}
+	}
 
     //nullable<ComplexTypes::Word::COnOff2> m_oQFormat;
 	//nullable<ComplexTypes::Word::std::wstring_> m_oAliases;
