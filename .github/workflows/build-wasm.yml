@@ -75,6 +75,10 @@ jobs:
       - name: Build with Emscripten
         run: ccache --zero-stats && scripts/build.sh --wasm --ccache -- -DEO_NO_WARNINGS=ON
 
+      # The editors read and write every zip in the browser with this engine
+      - name: Test zip engine
+        run: node OfficeUtils/js/test/zip_engine_test.js build/package/libfont/engine
+
       - name: ccache statistics
         if: always()
         run: ccache --show-stats || true
