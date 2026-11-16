@@ -7,7 +7,7 @@
 //
 // A checkbox is an <xf> whose extLst references, through
 // xl/featurePropertyBag/featurePropertyBag.xml, a bag of type "Checkbox".
-// The bin carries only a boolean per xf (c_oSerXfsTypes::CellControl), not the
+// The bin carries only a boolean per xf (c_oSerXfsTypes::CellControl, id 100), not the
 // xfComplement index or the part, so the checkbox can only reach the saved
 // XLSX through that flag.
 
@@ -17,6 +17,8 @@
 
 #include <gtest/gtest.h>
 
+#include <cstdint>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -78,6 +80,103 @@ namespace
 		std::string c = Element(sheet, "<c r=\"" + ref + "\"", ">");
 		std::string s = Attribute(c, "s");
 		return s.empty() ? 0 : std::stoul(s);
+	}
+
+	std::vector<uint8_t> Base64Decode(const std::string& in)
+	{
+		static const std::string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+		std::vector<uint8_t> out;
+		uint32_t buf = 0;
+		int bits = 0;
+		for (char c : in)
+		{
+			size_t v = chars.find(c);
+			if (v == std::string::npos)
+				continue;
+			buf = (buf << 6) | static_cast<uint32_t>(v);
+			bits += 6;
+			if (bits >= 8)
+			{
+				bits -= 8;
+				out.push_back(static_cast<uint8_t>(buf >> bits));
+			}
+		}
+		return out;
+	}
+
+	struct BinCursor
+	{
+		const std::vector<uint8_t>& data;
+		size_t pos;
+		uint8_t Byte() { return data.at(pos++); }
+		uint32_t Long()
+		{
+			uint32_t v = data.at(pos) | data.at(pos + 1) << 8 | data.at(pos + 2) << 16 | static_cast<uint32_t>(data.at(pos + 3)) << 24;
+			pos += 4;
+			return v;
+		}
+	};
+
+	// Field ids of every cell xf in an Editor.bin (XLSY;v<N>;<size>;<base64 or raw>).
+	// Layout: main table (count, then type + offset per table); the styles table
+	// and its CellXfs/Xfs items are type + 4-byte length records, xf fields are
+	// type + length-type + value.
+	std::vector<std::set<int>> CellXfFields(const std::string& file)
+	{
+		size_t header = 0;
+		for (int i = 0; i < 3 && header != std::string::npos; ++i)
+			header = file.find(';', header + (i ? 1 : 0));
+		if (header == std::string::npos)
+			return {};
+		size_t sizeStart = file.rfind(';', header - 1) + 1;
+		bool base64 = std::stoul(file.substr(sizeStart, header - sizeStart)) != 0;
+		std::vector<uint8_t> data = base64 ? Base64Decode(file.substr(header + 1))
+		                                   : std::vector<uint8_t>(file.begin(), file.end());
+		BinCursor bin{data, base64 ? 0 : header + 1};
+
+		const uint8_t kStylesTable = 2, kCellXfs = 2, kXfs = 3;
+		uint32_t stylesOffset = 0;
+		for (uint8_t i = 0, count = bin.Byte(); i < count; ++i)
+		{
+			uint8_t type = bin.Byte();
+			uint32_t offset = bin.Long();
+			if (type == kStylesTable)
+				stylesOffset = offset;
+		}
+		std::vector<std::set<int>> xfs;
+		if (!stylesOffset)
+			return xfs;
+		bin.pos = stylesOffset;
+		size_t stylesEnd = bin.Long();
+		stylesEnd += bin.pos;
+		while (bin.pos < stylesEnd)
+		{
+			uint8_t type = bin.Byte();
+			size_t end = bin.Long();
+			end += bin.pos;
+			while (type == kCellXfs && bin.pos < end)
+			{
+				uint8_t itemType = bin.Byte();
+				size_t itemEnd = bin.Long();
+				itemEnd += bin.pos;
+				if (itemType == kXfs)
+				{
+					std::set<int> fields;
+					while (bin.pos < itemEnd)
+					{
+						fields.insert(bin.Byte());
+						// c_oSerPropLenType: Null, Byte, Short, Three, Long, Double, Variable, Double64, Long64
+						static const size_t kLen[] = {0, 1, 2, 3, 4, 8, 0, 8, 8};
+						uint8_t lenType = bin.Byte();
+						bin.pos += lenType == 6 ? bin.Long() : kLen[lenType];
+					}
+					xfs.push_back(fields);
+				}
+				bin.pos = itemEnd;
+			}
+			bin.pos = end;
+		}
+		return xfs;
 	}
 
 	class CheckboxRoundTrip : public ::testing::Test
@@ -164,4 +263,20 @@ TEST_F(CheckboxRoundTrip, CheckboxOnlyOnCheckboxCells)
 	EXPECT_EQ(xfs[plain].find(kXfComplement), std::string::npos) << xfs[plain];
 	EXPECT_NE(xfs[checked].find(kXfComplement), std::string::npos) << xfs[checked];
 	EXPECT_NE(xfs[checked].find("<ext uri=\"{C7286773-470A-42A8-94C5-96B5CB345126}\""), std::string::npos) << xfs[checked];
+}
+
+
+TEST_F(CheckboxRoundTrip, BinUsesCheckboxFieldId100)
+{
+	ASSERT_TRUE(error.empty()) << error;
+	std::vector<std::set<int>> xfs = CellXfFields(ReadText(bin));
+	ASSERT_FALSE(xfs.empty());
+	size_t withCheckbox = 0;
+	for (const std::set<int>& fields : xfs)
+	{
+		// 15 is upstream's Complement field, it must stay unused
+		EXPECT_EQ(fields.count(15), 0u);
+		withCheckbox += fields.count(100);
+	}
+	EXPECT_GT(withCheckbox, 0u);
 }

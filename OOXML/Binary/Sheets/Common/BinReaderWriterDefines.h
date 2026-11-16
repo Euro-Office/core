@@ -138,7 +138,8 @@ namespace BinXlsxRW
 		XfId = 12,
 		Aligment = 13,
 		Protection = 14,
-		CellControl = 15
+		// Euro-Office only: a reserved id far from upstream growth (upstream uses 15 for Complement)
+		CellControl = 100
 	};}
 	namespace c_oSerProtectionTypes {enum c_oSerProtectionTypes
 	{
