@@ -47,3 +47,20 @@ TEST(OdpToPptxShape, RotationIsInOneTurn)
     }
     EXPECT_EQ(rot[2], 0) << "a whole turn is no rotation";
 }
+
+// rotate(0.3) is 342.81126614607... degrees, 20568675.97 in 60000ths: the
+// nearest unit is 20568676. A cast to int truncated it to 20568675, and the
+// angle crept on each open of a saved file. rotate(-6.2831853) is
+// 359.9999996 degrees, 21599999.975 units: it rounds up to 21600000, a whole
+// turn, which is written as 0.
+TEST(OdpToPptxShape, RotationIsRounded)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/rotate_range.odp");
+    ASSERT_FALSE(dir.empty()) << "ODP -> PPTX conversion failed";
+
+    const std::vector<long long> rot = rot_values(read_part(dir, L"ppt/slides/slide1.xml"));
+    ASSERT_EQ(rot.size(), 4u) << "one rot per rotated shape";
+    EXPECT_EQ(rot[0], 20568676);
+    EXPECT_EQ(rot[1], 20626481);
+    EXPECT_EQ(rot[3], 0) << "a value that rounds up to 360 degrees";
+}

@@ -892,7 +892,7 @@ void _oox_drawing::serialize_xfrm(std::wostream & strm, const std::wstring & nam
 				// ODF rotate() has no range. Without this, each open of a saved file adds a whole turn.
 				d = fmod(d, 360.);
 				if (d < 0) d += 360.;
-				CP_XML_ATTR(L"rot", (int)( d * 60000) ); //60 000 per 1 gr - 19.5.5 oox 
+				CP_XML_ATTR(L"rot", (int)( d * 60000 + 0.5) % 21600000 ); //60 000 per 1 gr - 19.5.5 oox 
 			}
 			_CP_OPT(bool)bVal;
 			if (odf_reader::GetProperty(additional, L"flipH", bVal))
