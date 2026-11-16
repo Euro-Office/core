@@ -133,7 +133,7 @@ const LPOLESTR c_pszErrorFrameConverting = L"Frame Not Converting";
 const LPOLESTR c_pszErrorRemakerOpenSrcFile = L"Cannot open source file";
 const LPOLESTR c_pszErrorRemakerCreateDstFile = L"Cannot create destination file";
 const LPOLESTR c_pszErrorRemakerNoEqualVideo = L"Video Format is not equal. Used key frames only";
-const LPOLESTR c_pszErrorRemakerConteiner = L"Error file conteiner";
+const LPOLESTR c_pszErrorRemakerContainer = L"Error file container";
 
 #define NOERROR				0
 #define BUSY				1

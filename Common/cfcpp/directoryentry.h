@@ -115,7 +115,7 @@ public:
     static std::shared_ptr<IDirectoryEntry> Mock(std::wstring name, StgType stgType);
 
 private:
-    static _UINT64 fnv_hash(const char *buffer, _INT64 lenght);
+    static _UINT64 fnv_hash(const char *buffer, _INT64 length);
 
 private:
     _INT32 sid = -1;
