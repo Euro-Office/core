@@ -15,7 +15,7 @@ EAltType GetAltType(int nValue)
 	}
 }
 
-CHWPRecordFaceName::CHWPRecordFaceName(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CHWPRecordFaceName::CHWPRecordFaceName(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 	: CHWPRecord(nTagNum, nLevel, nSize), m_pParent(&oDocInfo)
 {
 	HWP_BYTE chDataBits;
@@ -40,14 +40,14 @@ CHWPRecordFaceName::CHWPRecordFaceName(CHWPDocInfo& oDocInfo, int nTagNum, int n
 	{
 		oBuffer.ReadByte(m_chFamilyType);
 		oBuffer.ReadByte(m_chSerifStyle);
-		m_shWeight = oBuffer.ReadByte();
-		m_shPropotion = oBuffer.ReadByte();
-		m_shContrast = oBuffer.ReadByte();
-		m_shStrokeVariation = oBuffer.ReadByte();
-		m_shArmStyle = oBuffer.ReadByte();
-		m_shLetterform = oBuffer.ReadByte();
-		m_shMidLine = oBuffer.ReadByte();
-		m_shXHeight = oBuffer.ReadByte();
+		m_shWeight = (unsigned char)oBuffer.ReadByte();
+		m_shPropotion = (unsigned char)oBuffer.ReadByte();
+		m_shContrast = (unsigned char)oBuffer.ReadByte();
+		m_shStrokeVariation = (unsigned char)oBuffer.ReadByte();
+		m_shArmStyle = (unsigned char)oBuffer.ReadByte();
+		m_shLetterform = (unsigned char)oBuffer.ReadByte();
+		m_shMidLine = (unsigned char)oBuffer.ReadByte();
+		m_shXHeight = (unsigned char)oBuffer.ReadByte();
 	}
 
 	if (m_bBasicFaceExists)

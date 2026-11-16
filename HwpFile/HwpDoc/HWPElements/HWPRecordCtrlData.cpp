@@ -6,7 +6,12 @@ namespace HWP
 
 EParamItemType GetParamItemType(int nValue)
 {
-	switch(static_cast<EParamItemType>(nValue))
+	if (0 > nValue || 0x8002 < nValue)
+		return EParamItemType::PIT_NULL;
+
+	const EParamItemType eType = static_cast<EParamItemType>(nValue);
+
+	switch(eType)
 	{
 		case EParamItemType::PIT_NULL:
 		case EParamItemType::PIT_BSTR:
@@ -21,7 +26,7 @@ EParamItemType GetParamItemType(int nValue)
 		case EParamItemType::PIT_SET:
 		case EParamItemType::PIT_ARRAY:
 		case EParamItemType::PIT_BINDATA:
-			return static_cast<EParamItemType>(nValue);
+			return eType;
 		default:
 			return EParamItemType::PIT_NULL;
 	}
@@ -31,7 +36,7 @@ CHWPRecordCtrlData::CHWPRecordCtrlData(int nTagNum, int nLevel, int nSize)
 	: CHWPRecord(nTagNum, nLevel, nSize)
 {}
 
-int CHWPRecordCtrlData::ParseCtrl(CCtrl& oCtrl, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CHWPRecordCtrlData::ParseCtrl(CCtrl& oCtrl, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	// TODO:: Return to this point
 	// The contents of the Hancom document alone make it difficult to understand how to interpret it.
@@ -68,11 +73,11 @@ int CHWPRecordCtrlData::ParseCtrl(CCtrl& oCtrl, int nSize, CHWPStream& oBuffer, 
 				}
 				case EParamItemType::PIT_I1: oBuffer.Skip(1); break;
 				case EParamItemType::PIT_I2: oBuffer.Skip(2); break;
-				case EParamItemType::PIT_I4: oBuffer.Skip(4); break;
+				case EParamItemType::PIT_I4:
 				case EParamItemType::PIT_I:  oBuffer.Skip(4); break;
 				case EParamItemType::PIT_UI1: oBuffer.Skip(1); break;
 				case EParamItemType::PIT_UI2: oBuffer.Skip(2); break;
-				case EParamItemType::PIT_UI4: oBuffer.Skip(4); break;
+				case EParamItemType::PIT_UI4:
 				case EParamItemType::PIT_UI: oBuffer.Skip(4); break;
 				case EParamItemType::PIT_SET:
 				case EParamItemType::PIT_ARRAY:

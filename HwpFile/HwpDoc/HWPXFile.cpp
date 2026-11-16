@@ -21,7 +21,7 @@ VECTOR<const CHWPSection*> CHWPXFile::GetSections() const
 
 bool CHWPXFile::Detect()
 {
-	BYTE *pBuffer = NULL;
+	BYTE *pBuffer = nullptr;
 	DWORD dwBufferSize = 0;
 
 	if (!NSFile::CFileBinary::ReadAllBytes(m_sFileName, &pBuffer, dwBufferSize))

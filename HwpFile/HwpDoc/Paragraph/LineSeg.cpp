@@ -2,7 +2,7 @@
 
 namespace HWP
 {
-CLineSeg::CLineSeg(int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CLineSeg::CLineSeg(int /*nTagNum*/, int /*nLevel*/, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

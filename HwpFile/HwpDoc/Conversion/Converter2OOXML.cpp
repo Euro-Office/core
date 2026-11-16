@@ -1,6 +1,7 @@
 #include "Converter2OOXML.h"
 
 #include <cfloat>
+#include <cstdint>
 
 #include "../../../DesktopEditor/common/File.h"
 #include "../../../DesktopEditor/common/Directory.h"
@@ -31,7 +32,7 @@
 namespace HWP
 {
 
-enum class EShapeObjectType
+enum class EShapeObjectType : std::uint8_t
 {
 	Arc,
 	Curve,
@@ -386,7 +387,7 @@ void CConverter2OOXML::WriteShape(const CCtrlGeneralShape* pShape, short shParaS
 	}
 }
 
-void CConverter2OOXML::WriteNote(const CCtrlNote* pNote, short shParaShapeID, NSStringUtils::CStringBuilder& oBuilder, TConversionState& oState)
+void CConverter2OOXML::WriteNote(const CCtrlNote* pNote, short /*shParaShapeID*/, NSStringUtils::CStringBuilder& oBuilder, TConversionState& oState)
 {
 	if (nullptr == pNote)
 		return;
@@ -398,7 +399,7 @@ void CConverter2OOXML::WriteNote(const CCtrlNote* pNote, short shParaShapeID, NS
 
 	WriteRunnerStyle(oState.m_ushLastCharShapeId, oBuilder, oState, oRunnerStyle);
 
-	oBuilder.WriteString(m_oFootnoteConverter.CreateNote((const CCtrlNote*)pNote, *this));
+	oBuilder.WriteString(m_oFootnoteConverter.CreateNote(pNote, *this));
 
 	oBuilder.WriteString(L"</w:r>");
 }
@@ -653,7 +654,7 @@ void CConverter2OOXML::WriteParaShapeProperties(short shParaShapeID, short shPar
 	if (m_oStyleConverter.GetLastParaShapeId() != shParaShapeID)
 		m_oStyleConverter.WriteDifferenceParagraphStyles(m_oStyleConverter.GetLastParaShapeId(), shParaShapeID, *m_pContext, oBuilder);
 
-	const CHWPRecordParaShape* pParaShape= dynamic_cast<const CHWPRecordParaShape*>(m_pContext->GetParaShape(shParaShapeID));
+	const CHWPRecordParaShape* pParaShape= m_pContext->GetParaShape(shParaShapeID);
 
 	if (nullptr == pParaShape)
 		return;
@@ -663,7 +664,7 @@ void CConverter2OOXML::WriteParaShapeProperties(short shParaShapeID, short shPar
 		case EHeadingType::NUMBER:
 		case EHeadingType::BULLET:
 		{
-			const int nNumId = m_oNumberingConverter.CreateNumbering(dynamic_cast<const CHWPRecordNumbering*>(m_pContext->GetNumbering(pParaShape->GetHeadingIdRef())), pParaShape->GetHeadingType(), *this);
+			const int nNumId = m_oNumberingConverter.CreateNumbering(m_pContext->GetNumbering(pParaShape->GetHeadingIdRef()), pParaShape->GetHeadingType(), *this);
 
 			if (0 == nNumId)
 				break;
@@ -943,7 +944,7 @@ void CConverter2OOXML::WriteCellProperties(short shBorderFillID, NSStringUtils::
 	const CHWPRecordBorderFill* pBorderFill = nullptr;
 
 	if (nullptr != m_pContext)
-		pBorderFill = dynamic_cast<const CHWPRecordBorderFill*>(m_pContext->GetBorderFill(shBorderFillID));
+		pBorderFill = m_pContext->GetBorderFill(shBorderFillID);
 
 	if (nullptr == pBorderFill)
 		return;
@@ -985,7 +986,7 @@ void CConverter2OOXML::WriteBorder(const TBorder& oBorder, const HWP_STRING& sBo
 		case ELineStyle2::DOT: sType = L"dotted"; break;
 		case ELineStyle2::DASH_DOT: sType = L"dotDash"; break;
 		case ELineStyle2::DASH_DOT_DOT: sType = L"dotDotDash"; break;
-		case ELineStyle2::LONG_DASH: sType = L"dashed"; break;
+		case ELineStyle2::LONG_DASH:
 		case ELineStyle2::CIRCLE: sType = L"dashed"; break;
 		case ELineStyle2::DOUBLE_SLIM: sType = L"double"; break;
 		case ELineStyle2::SLIM_THICK: sType = L"thinThickSmallGap"; break;
@@ -1159,7 +1160,7 @@ void CConverter2OOXML::WriteGeometryShape(const CCtrlGeneralShape* pGeneralShape
 			oBuilder.WriteString(L"<a:custGeom><a:pathLst><a:path>");
 			oBuilder.WriteString(L"<a:moveTo><a:pt x=\"" + std::to_wstring(arPoints[0].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[0].m_nY) + L"\"/></a:moveTo>");
 
-			for (unsigned short ushIndex = 1; ushIndex < arPoints.size(); ++ushIndex)
+			for (size_t ushIndex = 1; ushIndex < arPoints.size(); ++ushIndex)
 				oBuilder.WriteString(L"<a:lnTo><a:pt x=\"" + std::to_wstring(arPoints[ushIndex].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[ushIndex].m_nY) + L"\"/></a:lnTo>");
 
 			oBuilder.WriteString(L"</a:path></a:pathLst></a:custGeom>");
@@ -1187,7 +1188,7 @@ void CConverter2OOXML::WriteGeometryShape(const CCtrlGeneralShape* pGeneralShape
 
 			oBuilder.WriteString(L"<a:moveTo><a:pt x=\"" + std::to_wstring(arPoints[0].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[0].m_nY) + L"\"/></a:moveTo>");
 
-			for (unsigned short ushIndex = 0; ushIndex < arSegmentType.size(); ++ushIndex)
+			for (size_t ushIndex = 0; ushIndex < arSegmentType.size(); ++ushIndex)
 			{
 				if (0x01 == arSegmentType[ushIndex])
 				{
@@ -1294,8 +1295,6 @@ void CConverter2OOXML::WriteOleShape(const CCtrlShapeOle* pOleShape, short shPar
 
 	WriteCaption((const CCtrlCommon*)pOleShape, oBuilder, oState);
 
-	const std::wstring wsWidth  = std::to_wstring(Transform::HWPUINT2OOXML(pOleShape->GetWidth()));
-	const std::wstring wsHeight = std::to_wstring(Transform::HWPUINT2OOXML(pOleShape->GetHeight()));
 	const std::wstring wsRelID  = AddRelationship(L"chart", L"charts/chart" + std::to_wstring(unChartIndex) + L".xml", &oState);
 
 	OpenParagraph(shParaShapeID, shParaStyleID, oBuilder, oState);
@@ -1349,9 +1348,9 @@ void CConverter2OOXML::WriteSectionSettings(TConversionState& oState)
 		}
 
 		#define WRITE_ID(id)\
-		if (!id.empty() && id.length() > 6)\
+		if (!(id).empty() && (id).length() > 6)\
 		{\
-			const std::wstring wsType = id.substr(0, 6);\
+			const std::wstring wsType = (id).substr(0, 6);\
 			AddContentType(id, L"application/vnd.openxmlformats-officedocument.wordprocessingml." + wsType + L"+xml");\
 			m_oDocXml.WriteString(L"<w:" + wsType + L"Reference w:type=\"default\" r:id=\"" + AddRelationship(wsType, id, &oState) + L"\"/>");\
 		}
@@ -1367,7 +1366,7 @@ void CConverter2OOXML::WriteSectionSettings(TConversionState& oState)
 
 		for (const CCtrlHeadFoot* pCtrlHeadFoot : arCtrlsHeadFoot)
 		{
-			const std::wstring wsID = m_oFootnoteConverter.CreateHeadOrFoot((const CCtrlHeadFoot*)pCtrlHeadFoot, *this);
+			const std::wstring wsID = m_oFootnoteConverter.CreateHeadOrFoot(pCtrlHeadFoot, *this);
 
 			WRITE_ID(wsID);
 		}
@@ -1579,7 +1578,7 @@ void CConverter2OOXML::WriteRunnerStyle(short shCharShapeID, NSStringUtils::CStr
 	if (m_oStyleConverter.GetLastCharShapeId() != shCharShapeID)
 		m_oStyleConverter.WriteDifferenceRunnerStyles(m_oStyleConverter.GetLastCharShapeId(), shCharShapeID, *m_pContext, oBuilder);
 
-	const CHWPRecordCharShape* pCharShape = dynamic_cast<const CHWPRecordCharShape*>(m_pContext->GetCharShape(shCharShapeID));
+	const CHWPRecordCharShape* pCharShape = m_pContext->GetCharShape(shCharShapeID);
 
 	if (nullptr != pCharShape)
 	{
@@ -1606,9 +1605,9 @@ void CConverter2OOXML::WriteRunnerStyle(short shCharShapeID, NSStringUtils::CStr
 	oState.m_eBreakType = TConversionState::EBreakType::None;
 }
 
-void CConverter2OOXML::WriteTextBorderStyle(short shBorderFillId, NSStringUtils::CStringBuilder& oBuilder, TConversionState& oState)
+void CConverter2OOXML::WriteTextBorderStyle(short shBorderFillId, NSStringUtils::CStringBuilder& oBuilder, TConversionState& /*oState*/)
 {
-	const CHWPRecordBorderFill* pBorderFill = dynamic_cast<const CHWPRecordBorderFill*>(m_pContext->GetBorderFill(shBorderFillId));
+	const CHWPRecordBorderFill* pBorderFill = m_pContext->GetBorderFill(shBorderFillId);
 
 	if (nullptr == pBorderFill)
 		return;
@@ -2110,6 +2109,7 @@ void CConverter2OOXML::WriteLineSettings(const TLineData& oLineData, NSStringUti
 			oBuilder.WriteString(L"<a:miter lim=\"800000\"/>");
 			break;
 		}
+		default: break;
 	}
 
 	oBuilder.WriteString(L"</a:ln>");

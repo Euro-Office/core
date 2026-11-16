@@ -40,7 +40,7 @@
 #define PRINT_HWPTAG(prefix, tag, postfix) \
 	do \
 	{ \
-	std::cout << prefix; \
+	std::cout << (prefix); \
 	switch (eTag) \
 	{ \
 		case HWPTAG_DOCUMENT_PROPERTIES: std::cout << "HWPTAG_DOCUMENT_PROPERTIES"; break; \
@@ -94,7 +94,7 @@
 		case HWPTAG_SHAPE_COMPONENT_UNKNOWN:  std::cout << "HWPTAG_SHAPE_COMPONENT_UNKNOWN"; break; \
 		default: std::cout << "UNKNOWN"; break; \
 	} \
-	std::cout << postfix << std::endl; \
+	std::cout << (postfix) << std::endl; \
 	} \
 	while (false)
 #else
@@ -154,7 +154,7 @@ bool CHWPSection::Parse(CHWPStream& oBuffer, int nVersion)
 
 		EHWPTag eTag = GetTagFromNum(nTagNum);
 
-		PRINT_HWPTAG("Main parse: ", eTag, " : size=" << std::to_string(nSize) << " level=" << std::to_string(nLevel));
+		PRINT_HWPTAG("Main parse: ", eTag, " : size=" + std::to_string(nSize) + " level=" + std::to_string(nLevel));
 
  		if (0 == nLevel && HWPTAG_PARA_HEADER == eTag)
 		{
@@ -182,7 +182,7 @@ T* FindLastElement(ECtrlObjectType eCtrlType, const VECTOR<CCtrl*>& arCtrls)
 	return nullptr;
 }
 
-int CHWPSection::ParseRecurse(CHWPPargraph* pCurrPara, int nRunLevel, CHWPStream& oBuffer, int nOff, int nVersion)
+int CHWPSection::ParseRecurse(CHWPPargraph* pCurrPara, int nRunLevel, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 {
 	oBuffer.SavePosition();
 
@@ -214,7 +214,7 @@ int CHWPSection::ParseRecurse(CHWPPargraph* pCurrPara, int nRunLevel, CHWPStream
 
 		EHWPTag eTag = GetTagFromNum(nTagNum);
 
-		PRINT_HWPTAG("Recurse parse: ", eTag, " : size=" << std::to_string(nSize) << " level=" << std::to_string(nLevel));
+		PRINT_HWPTAG("Recurse parse: ", eTag, " : size=" + std::to_string(nSize) + " level=" + std::to_string(nLevel));
 
 		if (nLevel > nRunLevel)
 		{
@@ -432,7 +432,7 @@ int CHWPSection::ParseRecurse(CHWPPargraph* pCurrPara, int nRunLevel, CHWPStream
 	return oBuffer.GetDistanceToLastPos(true);
 }
 
-int CHWPSection::ParseCtrlRecurse(CCtrl* pCurrCtrl, int nRunLevel, CHWPStream& oBuffer, int nOff, int nVersion)
+int CHWPSection::ParseCtrlRecurse(CCtrl* pCurrCtrl, int nRunLevel, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 {
 	CCtrl* pCtrl = pCurrCtrl;
 
@@ -466,7 +466,7 @@ int CHWPSection::ParseCtrlRecurse(CCtrl* pCurrCtrl, int nRunLevel, CHWPStream& o
 
 		EHWPTag eTag = GetTagFromNum(nTagNum);
 
-		PRINT_HWPTAG("Recurse ctrl parse: ", eTag, " : size=" << std::to_string(nSize) << " level=" << std::to_string(nLevel));
+		PRINT_HWPTAG("Recurse ctrl parse: ", eTag, " : size=" + std::to_string(nSize) + " level=" + std::to_string(nLevel));
 
 		if (nLevel > nRunLevel)
 		{
@@ -509,7 +509,7 @@ int CHWPSection::ParseCtrlRecurse(CCtrl* pCurrCtrl, int nRunLevel, CHWPStream& o
 				{
 					oBuffer.Skip(nHeaderSize);
 
-					int nSubParaCount = CHWPRecordListHeader::GetCount(nTagNum, nLevel, nSize, oBuffer, 0, nVersion);
+					CHWPRecordListHeader::GetCount(nTagNum, nLevel, nSize, oBuffer, 0, nVersion);
 
 					if (ECtrlObjectType::Table == pCtrl->GetCtrlType())
 					{
@@ -698,7 +698,7 @@ int CHWPSection::ParseCtrlRecurse(CCtrl* pCurrCtrl, int nRunLevel, CHWPStream& o
 				}
 				case HWPTAG_TABLE:
 				{
-					int nLen = CCtrlTable::ParseCtrl(*(CCtrlTable*)pCtrl, nSize, oBuffer, 0, nVersion);
+					CCtrlTable::ParseCtrl(*(CCtrlTable*)pCtrl, nSize, oBuffer, 0, nVersion);
 					break;
 				}
 				case HWPTAG_LIST_HEADER:
@@ -744,7 +744,7 @@ int CHWPSection::ParseCtrlRecurse(CCtrl* pCurrCtrl, int nRunLevel, CHWPStream& o
 				}
 
 				#define PROCESS_SHAPE_COMPONENT(type_component, class_component) \
-				if (ECtrlObjectType::Shape != pCtrl->GetCtrlType() && type_component != ((CCtrlGeneralShape*)pCtrl)->GetShapeType()) \
+				if (ECtrlObjectType::Shape != pCtrl->GetCtrlType() && (type_component) != ((CCtrlGeneralShape*)pCtrl)->GetShapeType()) \
 				{ \
 					oBuffer.Skip(nSize); \
 					break; \
@@ -861,10 +861,10 @@ void CheckAndParseShape(EShapeType eShapeType, CCtrlContainer* pContainer, CHWPS
 			pContainer->AddShape(pCtrl);
 	}
 
-	T::ParseElement((T&)(*pCtrl), nSize, oBuffer, 0, nVersion);
+	T::ParseElement(*pCtrl, nSize, oBuffer, 0, nVersion);
 }
 
-int CHWPSection::ParseContainerRecurse(CCtrlContainer* pContainer, int nRunLevel, CHWPStream& oBuffer, int nOff, int nVersion)
+int CHWPSection::ParseContainerRecurse(CCtrlContainer* pContainer, int nRunLevel, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 {
 	oBuffer.SavePosition();
 
@@ -896,7 +896,7 @@ int CHWPSection::ParseContainerRecurse(CCtrlContainer* pContainer, int nRunLevel
 
 		EHWPTag eTag = GetTagFromNum(nTagNum);
 
-		PRINT_HWPTAG("Container parse: ", eTag, " : size=" << std::to_string(nSize) << " level=" << std::to_string(nLevel));
+		PRINT_HWPTAG("Container parse: ", eTag, " : size=" + std::to_string(nSize) + " level=" + std::to_string(nLevel));
 
 		if (nLevel > nRunLevel)
 		{
@@ -957,7 +957,7 @@ int CHWPSection::ParseContainerRecurse(CCtrlContainer* pContainer, int nRunLevel
 				case HWPTAG_LIST_HEADER:
 				{
 					CCtrlGeneralShape* pCtrl = pContainer->GetLastShape();
-					int nSubParaCount = CHWPRecordListHeader::GetCount(nTagNum, nLevel, nSize, oBuffer, 0, nVersion);
+					CHWPRecordListHeader::GetCount(nTagNum, nLevel, nSize, oBuffer, 0, nVersion);
 
 					if (EShapeType::Rect == pCtrl->GetShapeType() || EShapeType::Polygon == pCtrl->GetShapeType())
 					{
@@ -1082,7 +1082,7 @@ VECTOR<const CHWPPargraph*> CHWPSection::GetParagraphs() const
 	return arParagraphs;
 }
 
-int CHWPSection::ParseListAppend(CCtrlCommon& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CHWPSection::ParseListAppend(CCtrlCommon& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 {
 	oBuffer.SavePosition();
 
@@ -1104,7 +1104,7 @@ int CHWPSection::ParseListAppend(CCtrlCommon& oObj, int nSize, CHWPStream& oBuff
 	return oBuffer.GetDistanceToLastPos(true);
 }
 
-int CHWPSection::ParseListAppend(CCtrl& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CHWPSection::ParseListAppend(CCtrl& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 {
 	if (L"dces" == oObj.GetID())
 		oBuffer.Skip(nSize - 6);
