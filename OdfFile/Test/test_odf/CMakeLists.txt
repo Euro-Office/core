@@ -58,6 +58,7 @@ add_core_gtest(
             math_bar.cpp
             chart_title.cpp
             odt2docx_underline.cpp
+            odt2docx_outline_level.cpp
             odt2docx_keep_next.cpp
             odt2docx_links.cpp
             odp2pptx_line_height.cpp

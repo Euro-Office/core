@@ -27,6 +27,7 @@
 #include "odfcontext.h"
 
 #include "style_paragraph_properties.h"
+#include "calcs_styles.h"
 
 #include <xml/simple_xml_writer.h>
 
@@ -174,7 +175,7 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 			}
 		}
 	
-		if (level >= 0 && level < 10)
+		if (level >= 0 && level <= 10)
 		{
 			text_outline_style* outline_style = list_styles.outline_style();
 			if (outline_style)
@@ -195,10 +196,19 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 				else
 					bListEnabled = false;
 
-				_pPr << L"<w:numPr>";
-				    auto temp_name = Context.get_temp_style_name();
-					Context.status_para[temp_name] = true;
-					if (bListEnabled && level < 9 && bOutlineList)
+				auto temp_name = Context.get_temp_style_name();
+				Context.status_para[temp_name] = true;
+
+				// A list item gets its w:numPr from its list, and a second one is invalid.
+				// w:numId 0 cancels the outline numbering that a style with a level brings;
+				// without such a style there is nothing to cancel, and the editor would drop
+				// the paragraph style's indentation with it.
+				const bool bOutlineNumbering = bListEnabled && level >= 1 && level < 9 && bOutlineList;
+				if (!Context.list_properties_pending() &&
+					(bOutlineNumbering || odf_reader::calc_outline_level(boost::none, style_inst)))
+				{
+					_pPr << L"<w:numPr>";
+					if (bOutlineNumbering)
 					{
 						_pPr << L"<w:ilvl w:val=\"" << level - 1 << L"\"/>";
 						_pPr << L"<w:numId w:val=\"" << list_styles.id_outline() << L"\"/>";
@@ -208,9 +218,10 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 						_pPr << L"<w:ilvl w:val=\"" << 0 << L"\"/>";
 						_pPr << L"<w:numId w:val=\"" << 0 << L"\"/>";
 					}
-				_pPr << L"</w:numPr>";
+					_pPr << L"</w:numPr>";
+				}
 			}
-			_pPr << L"<w:outlineLvl w:val=\"" << level << L"\"/>";
+			_pPr << L"<w:outlineLvl w:val=\"" << oox::docx_outline_level(level) << L"\"/>";
 		}
 	    
 		if (fo_text_align_)

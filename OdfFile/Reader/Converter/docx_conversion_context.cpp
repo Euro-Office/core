@@ -2256,10 +2256,10 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 							//process_paragraph_style(Context.get_current_paragraph_style()); ??
 
 							//if ((Attr->outline_level_) && (*Attr->outline_level_ > 0))
-							if ((outline_level) && (*outline_level < 10))
+							if ((outline_level) && (*outline_level <= 10))
 							{
 								output_stream() << L"<w:pPr>";
-									output_stream() << L"<w:outlineLvl w:val=\"" << *outline_level << L"\"/>";
+									output_stream() << L"<w:outlineLvl w:val=\"" << docx_outline_level(*outline_level) << L"\"/>";
 								output_stream() << L"</w:pPr>";
 							}					
 						}
@@ -2268,9 +2268,9 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 							output_stream() << get_section_context().dump_;
 							get_section_context().dump_.clear();
 							//if ((Attr->outline_level_) && (*Attr->outline_level_ > 0))
-							if ((outline_level) && (*outline_level < 10))
+							if ((outline_level) && (*outline_level <= 10))
 							{
-								output_stream() << L"<w:outlineLvl w:val=\"" << *outline_level << L"\"/>";
+								output_stream() << L"<w:outlineLvl w:val=\"" << docx_outline_level(*outline_level) << L"\"/>";
 							}
 							output_stream() << L"</w:pPr>";
 						}
@@ -2314,19 +2314,22 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 
 				serialize_list_properties(output_stream());
 				
-				//if ((Attr->outline_level_) && (*Attr->outline_level_ > 0))
-				if ( outline_level && status_para[id] == false )
+				// The style already carries its outline level (status_para), but a heading
+				// whose own text:outline-level differs from it must still say so.
+				if ( outline_level &&
+					(status_para[id] == false || calc_outline_level(boost::none, styleInst) != outline_level) )
 				{
 					odf_reader::list_style_container & list_styles = root()->odf_context().listStyleContainer();
 					
-					if (/*outline_level < 9 && */list_style_stack_.empty() && list_styles.outline_style() && !get_table_context().in_table())
+					if (*outline_level >= 1 && *outline_level <= 9 && list_style_stack_.empty() &&
+						list_styles.outline_style() && !get_table_context().in_table())
 					{
 						output_stream() << L"<w:numPr>";
 						output_stream() << L"<w:ilvl w:val=\"" << *outline_level - 1  << L"\"/>";
 						output_stream() << L"<w:numId w:val=\"" << list_styles.id_outline() << L"\"/>"; // check bug 51965
 						output_stream() << L"</w:numPr>";
 					}
-					output_stream() << L"<w:outlineLvl w:val=\"" << *outline_level << L"\"/>";
+					output_stream() << L"<w:outlineLvl w:val=\"" << docx_outline_level(*outline_level) << L"\"/>";
 				}
 
 				if (!get_text_tracked_context().dumpRPrInsDel_.empty())
