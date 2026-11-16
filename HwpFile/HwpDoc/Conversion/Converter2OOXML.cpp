@@ -1160,8 +1160,8 @@ void CConverter2OOXML::WriteGeometryShape(const CCtrlGeneralShape* pGeneralShape
 			oBuilder.WriteString(L"<a:custGeom><a:pathLst><a:path>");
 			oBuilder.WriteString(L"<a:moveTo><a:pt x=\"" + std::to_wstring(arPoints[0].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[0].m_nY) + L"\"/></a:moveTo>");
 
-			for (size_t ushIndex = 1; ushIndex < arPoints.size(); ++ushIndex)
-				oBuilder.WriteString(L"<a:lnTo><a:pt x=\"" + std::to_wstring(arPoints[ushIndex].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[ushIndex].m_nY) + L"\"/></a:lnTo>");
+			for (size_t numIndex = 1; numIndex < arPoints.size(); ++numIndex)
+				oBuilder.WriteString(L"<a:lnTo><a:pt x=\"" + std::to_wstring(arPoints[numIndex].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[numIndex].m_nY) + L"\"/></a:lnTo>");
 
 			oBuilder.WriteString(L"</a:path></a:pathLst></a:custGeom>");
 			break;
@@ -1188,19 +1188,19 @@ void CConverter2OOXML::WriteGeometryShape(const CCtrlGeneralShape* pGeneralShape
 
 			oBuilder.WriteString(L"<a:moveTo><a:pt x=\"" + std::to_wstring(arPoints[0].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[0].m_nY) + L"\"/></a:moveTo>");
 
-			for (size_t ushIndex = 0; ushIndex < arSegmentType.size(); ++ushIndex)
+			for (size_t numIndex = 0; numIndex < arSegmentType.size(); ++numIndex)
 			{
-				if (0x01 == arSegmentType[ushIndex])
+				if (0x01 == arSegmentType[numIndex])
 				{
 					oBuilder.WriteString(L"<a:cubicBezTo>");
-					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[ushIndex + 1].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[ushIndex + 1].m_nY) + L"\"/>");
-					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[ushIndex + 2].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[ushIndex + 2].m_nY) + L"\"/>");
-					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[ushIndex + 3].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[ushIndex + 3].m_nY) + L"\"/>");
+					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[numIndex + 1].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[numIndex + 1].m_nY) + L"\"/>");
+					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[numIndex + 2].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[numIndex + 2].m_nY) + L"\"/>");
+					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[numIndex + 3].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[numIndex + 3].m_nY) + L"\"/>");
 					oBuilder.WriteString(L"</a:cubicBezTo>");
-					ushIndex += 2;
+					numIndex += 2;
 				}
 				else
-					oBuilder.WriteString(L"<a:lnTo><a:pt x=\"" + std::to_wstring(arPoints[ushIndex + 1].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[ushIndex + 1].m_nY) + L"\"/></a:lnTo>");
+					oBuilder.WriteString(L"<a:lnTo><a:pt x=\"" + std::to_wstring(arPoints[numIndex + 1].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[numIndex + 1].m_nY) + L"\"/></a:lnTo>");
 			}
 
 			oBuilder.WriteString(L"</a:path></a:pathLst></a:custGeom>");

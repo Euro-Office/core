@@ -299,10 +299,11 @@ CHWPRecordCharShape::CHWPRecordCharShape(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 			{
 				if (GetAttributeName(EAttribute::Type, eType) == sAttributeName)
 				{
+					const std::string sType{oReader.GetTextA()};
 
-					if (GetValueName(EValue::Drop, eType))
+					if (GetValueName(EValue::Drop, eType) == sType)
 						m_eShadow = EShadow::DISCRETE;
-					else if (GetValueName(EValue::Continuous, eType))
+					else if (GetValueName(EValue::Continuous, eType) == sType)
 						m_eShadow = EShadow::CONTINUOUS;
 					else
 						m_eShadow = EShadow::NONE;

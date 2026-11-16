@@ -250,12 +250,13 @@ void CFill::ReadImgBrush(CXMLReader& oReader, EHanType eType)
 				m_chContrast = (HWP_BYTE)oReader.GetInt();
 			else if (GetAttributeName(EAttribute::Effect, eType) == sAttributeName)
 			{
+				const std::string sEffect{oReader.GetTextA()};
 
-				if (GetValueName(EValue::RealPic, eType))
+				if (GetValueName(EValue::RealPic, eType) == sEffect)
 					m_chEffect = 0;
-				else if (GetValueName(EValue::GrayScale, eType))
+				else if (GetValueName(EValue::GrayScale, eType) == sEffect)
 					m_chEffect = 1;
-				else if (GetValueName(EValue::BlackWhite, eType))
+				else if (GetValueName(EValue::BlackWhite, eType) == sEffect)
 					m_chEffect = 2;
 			}
 			else if (GetAttributeName(EAttribute::BinItem, eType))
