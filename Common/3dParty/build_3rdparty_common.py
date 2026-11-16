@@ -62,7 +62,9 @@ def init_for_dep(
     work_dir = workdir
     install_dir = installdir
     force_redo = forceredo
-    dep_version = version
+    # Every dep, so one that is added later gets it too and an old install
+    # (local marker or remote archive) built without the baseline flag misses.
+    dep_version = version + baseline_version_tag()
     debug_mode = debugmode
     log_cleared = False
     
@@ -135,10 +137,10 @@ def baseline_arch_flags() -> list[ str ]:
     return []
 
 def baseline_version_tag() -> str:
-    """Suffix for the cache version of a dep that is built with
-    baseline_arch_flags(). Archives built before the flag existed (and so
-    may need x86-64-v2) live under the plain version, so adding this makes
-    them miss the cache on x86_64 Linux only; other platforms keep theirs.
+    """Suffix init_for_dep() adds to every dep's version where
+    baseline_arch_flags() applies. Installs and archives built before the
+    flag existed (and so may need x86-64-v2) have the plain version, so they
+    miss on x86_64 Linux only; other platforms keep theirs.
     """
     return "-x86v1" if baseline_arch_flags() else ""
 

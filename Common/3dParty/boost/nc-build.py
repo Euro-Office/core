@@ -18,7 +18,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "2" + nc.baseline_version_tag()
+    version = "2"
 )
 
 modules_needed = [ "headers", "system", "filesystem", "regex", "date_time" ]
