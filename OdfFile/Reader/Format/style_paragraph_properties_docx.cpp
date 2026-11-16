@@ -180,9 +180,10 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 			if (outline_style)
 			{
 				bool bListEnabled = true;
-				if (level < outline_style->content_.size())
+				// ODF counts outline levels from 1, content_ holds level 1 at index 0
+				if (level >= 1 && level <= (int)outline_style->content_.size())
 				{
-					office_element_ptr elm = outline_style->content_[level];
+					office_element_ptr elm = outline_style->content_[level - 1];
 					text_outline_level_style* outline_level = dynamic_cast<text_outline_level_style*>(elm.get());
 					if (outline_level)
 					{
