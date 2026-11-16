@@ -134,6 +134,7 @@ const LPOLESTR c_pszErrorRemakerOpenSrcFile = L"Cannot open source file";
 const LPOLESTR c_pszErrorRemakerCreateDstFile = L"Cannot create destination file";
 const LPOLESTR c_pszErrorRemakerNoEqualVideo = L"Video Format is not equal. Used key frames only";
 const LPOLESTR c_pszErrorRemakerContainer = L"Error file container";
+const LPOLESTR c_pszErrorRemakerConteiner = c_pszErrorRemakerContainer; // old misspelling, kept for source compatibility
 
 #define NOERROR				0
 #define BUSY				1
