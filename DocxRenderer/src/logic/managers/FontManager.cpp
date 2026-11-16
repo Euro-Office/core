@@ -240,6 +240,9 @@ namespace NSDocxRenderer
 	}
 	CFontSelectParams& CFontSelectParams::operator=(const CFontSelectParams& oOther)
 	{
+		if (this == &oOther)
+			return *this;
+
 		wsDefaultName = oOther.wsDefaultName;
 		bDefaultBold = oOther.bDefaultBold;
 		bDefaultItalic = oOther.bDefaultItalic;
@@ -319,7 +322,7 @@ namespace NSDocxRenderer
 	}
 
 	void CFontSelector::SelectFont(const CFontSelectParams& oFontSelectParams,
-	                               const CFontMetrics& oFontMetrics,
+	                               const CFontMetrics& /*oFontMetrics*/,
 	                               const NSStringUtils::CStringUTF32& oText)
 	{
 		BYTE lRangeNum	= 0xFF;
@@ -510,14 +513,18 @@ namespace NSDocxRenderer
 
 	void CFontSelector::CheckRanges(UINT& lRange1, UINT& lRange2, UINT& lRange3, UINT& lRange4, BYTE& lRangeNum, BYTE& lRange)
 	{
+		// lRange is 0xFF for symbols outside all known ranges; mask the shift
+		// count so that the shift is well defined.
+		const BYTE nBit = lRange & 31;
+
 		if (0 == lRangeNum)
-			lRange1 |= 1 << lRange;
+			lRange1 |= 1u << nBit;
 		else if (1 == lRangeNum)
-			lRange2 |= 1 << lRange;
+			lRange2 |= 1u << nBit;
 		else if (2 == lRangeNum)
-			lRange3 |= 1 << lRange;
+			lRange3 |= 1u << nBit;
 		else
-			lRange4 |= 1 << lRange;
+			lRange4 |= 1u << nBit;
 	}
 
 	CFontManager::CFontManager(NSFonts::IApplicationFonts* pApplication)
@@ -634,7 +641,7 @@ namespace NSDocxRenderer
 
 		m_pManager->LoadString1(wsText, (float)x, (float)y);
 
-		TBBox bbox;
+		TBBox bbox{};
 		if (mtGlyph == measureType) bbox = m_pManager->MeasureString();
 		else if (mtPosition == measureType) bbox = m_pManager->MeasureString2();
 
@@ -670,7 +677,7 @@ namespace NSDocxRenderer
 
 		m_pManager->LoadString1(pGids, count, (float)x, (float)y);
 
-		TBBox bbox;
+		TBBox bbox{};
 		if (mtGlyph == measureType) bbox = m_pManager->MeasureString();
 		else if (mtPosition == measureType) bbox = m_pManager->MeasureString2();
 
@@ -717,7 +724,7 @@ namespace NSDocxRenderer
 		m_oFontSelectParams.arSignature.clear();
 
 		// check os2 present:
-		bool bIsOS2Present = (-1 != m_pManager->GetFile()->IsUnicodeRangeAvailable(0, 0)) ? true : false;
+		bool bIsOS2Present = -1 != m_pManager->GetFile()->IsUnicodeRangeAvailable(0, 0);
 
 		if (bIsOS2Present)
 		{
@@ -769,7 +776,7 @@ namespace NSDocxRenderer
 								std::wstring sValue = oCurNode.GetAttribute(L"value");
 								try {
 									m_oFontSelectParams.lAvgWidth = (SHORT)std::stol(sValue);
-								} catch (std::invalid_argument &) {}
+								} catch (std::invalid_argument &) { (void)0; }
 							}
 						}
 					}
@@ -786,7 +793,7 @@ namespace NSDocxRenderer
 						std::wstring sValue = oCurNode.GetAttribute(L"value");
 						try {
 							m_oFontSelectParams.lAvgWidth = (SHORT)std::stol(sValue);
-						} catch (std::invalid_argument &) {}
+						} catch (std::invalid_argument &) { (void)0; }
 					}
 				}
 			}

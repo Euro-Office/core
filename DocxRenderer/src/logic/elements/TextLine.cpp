@@ -9,7 +9,7 @@ namespace NSDocxRenderer
 
 	CTextLine::~CTextLine()
 	{
-		Clear();
+		CTextLine::Clear();
 	}
 
 	void CTextLine::Clear()

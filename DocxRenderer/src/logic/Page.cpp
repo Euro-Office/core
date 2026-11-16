@@ -1,5 +1,6 @@
 #include "Page.h"
 
+#include <cstdint>
 #include <memory>
 #include <map>
 #include <set>
@@ -1115,8 +1116,8 @@ namespace NSDocxRenderer
 		//Colors must be different
 		bool bIf4 = pCont->m_pFontStyle->oBrush.Color1 != pShape->m_oBrush.Color1;
 		bool bIf5 = pShape->m_oBrush.Color1 == c_iBlackColor && pShape->m_oPen.Color == c_iWhiteColor;
-		bool bIf6 = pShape->m_bIsNoFill == false;
-		bool bIf7 = pShape->m_bIsNoStroke == true;
+		bool bIf6 = !pShape->m_bIsNoFill;
+		bool bIf7 = pShape->m_bIsNoStroke;
 
 		return bIf1 && bIf2 && bIf3 && bIf4 && !bIf5 && bIf6 && bIf7;
 	}
@@ -1411,8 +1412,8 @@ namespace NSDocxRenderer
 	{
 		for (const auto& text_line : m_arShapes)
 			if (text_line && text_line->m_eType == CShape::eShapeType::stTextBox && text_line->m_dBot > pFirst->m_dTop &&
-			        text_line->m_dBot < pFirst->m_dBot && !(
-			        text_line->m_dRight < pFirst->m_dLeft || text_line->m_dLeft > pFirst->m_dRight))
+			        text_line->m_dBot < pFirst->m_dBot &&
+			        text_line->m_dRight >= pFirst->m_dLeft && text_line->m_dLeft <= pFirst->m_dRight)
 				return true;
 
 		return false;
@@ -1646,7 +1647,7 @@ namespace NSDocxRenderer
 			bool right{false};
 		};
 
-		// lamda to setup and add paragpraph
+		// lambda to setup and add paragraph
 		auto add_paragraph = [this, &max_right, &min_left, &ar_paragraphs] (paragraph_ptr_t& paragraph) {
 
 			std::shared_ptr<CTextLine>& firstLine = paragraph->m_arTextLines.front();
@@ -1747,7 +1748,7 @@ namespace NSDocxRenderer
 			max_right = 0.0;
 		};
 
-		// lamda to add line and setup min_left/max_right
+		// lambda to add line and setup min_left/max_right
 		auto add_line = [&min_left, &max_right] (paragraph_ptr_t& paragraph, const text_line_ptr_t& curr_line) {
 			min_left = std::min(min_left, curr_line->m_dLeft);
 			max_right = std::max(max_right, curr_line->m_dRight);
@@ -1887,9 +1888,7 @@ namespace NSDocxRenderer
 					// if there are more than three lines, check the third
 					if (index < ar_positions.size() - 2)
 					{
-						if (!ar_delims[index] && !ar_delims[index + 1] && ar_positions[index + 1].left)
-							ar_indents[index] = true;
-						else if (!ar_delims[index] && ar_delims[index + 1])
+						if (!ar_delims[index] && (ar_delims[index + 1] || ar_positions[index + 1].left))
 							ar_indents[index] = true;
 					}
 					else
@@ -1919,8 +1918,8 @@ namespace NSDocxRenderer
 				auto& line_top = text_lines[index];
 				auto& line_bot = text_lines[index + 1];
 
-				bool is_start = index == 0 || ar_delims[index - 1] == true;
-				bool is_end = index == ar_positions.size() - 1 || ar_delims[index + 1] == true;
+				bool is_start = index == 0 || ar_delims[index - 1];
+				bool is_end = index == ar_positions.size() - 1 || ar_delims[index + 1];
 				bool is_diff = fabs(line_top->m_dHeight - line_bot->m_dHeight) > (line_top->m_dHeight + line_bot->m_dHeight) / 4;
 				if (is_start && is_end && is_diff)
 					ar_delims[index] = true;
@@ -2301,7 +2300,7 @@ namespace NSDocxRenderer
 		struct Crossing;
 		struct Line;
 
-		enum class eLineDirection
+		enum class eLineDirection : std::uint8_t
 		{
 			ldTop,
 			ldBot,
