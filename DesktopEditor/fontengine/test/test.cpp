@@ -432,4 +432,10 @@ TEST(CFontListNamePicker, MetricAliasesFindTheirTwin)
 	EXPECT_FALSE(oPicker.IsLikeFonts(L"Liberation Serif", L"Courier"));
 	EXPECT_TRUE(oPicker.IsLikeFonts(L"Caladea", L"Cambria"));
 	EXPECT_FALSE(oPicker.IsLikeFonts(L"Liberation Serif", L"Verdana"));
+
+	// A font whose name only contains a twin's name is not in the groups: it keeps the
+	// substitute it got before.
+	EXPECT_FALSE(oPicker.IsLikeFonts(L"Liberation Mono", L"Courier 10 Pitch"));
+	EXPECT_FALSE(oPicker.IsLikeFonts(L"Courier New", L"Courier 10 Pitch"));
+	EXPECT_EQ(10000, oPicker.CheckEqualsFonts(L"Liberation Mono", L"Courier 10 Pitch"));
 }
