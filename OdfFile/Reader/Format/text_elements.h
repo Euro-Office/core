@@ -171,6 +171,12 @@ public:
     void docx_convert(oox::docx_conversion_context & Context);
 	void pptx_convert(oox::pptx_conversion_context & Context) ;
 
+    // the list header if there is one, else the first list item
+    const office_element * get_first_item() const
+    {
+        return list_header_ ? list_header_.get() : (list_items_.empty() ? NULL : list_items_.front().get());
+    }
+
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
@@ -221,6 +227,8 @@ public:
     
 	virtual void afterCreate();
     virtual void afterReadContent();
+
+    const office_element_ptr_array & get_content() const { return content_; }
 
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
