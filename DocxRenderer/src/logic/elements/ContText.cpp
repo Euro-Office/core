@@ -74,7 +74,7 @@ namespace NSDocxRenderer
 		m_bWriteStyleRaw = rCont.m_bWriteStyleRaw;
 
 		m_nOriginFontFaceIndex = rCont.m_nOriginFontFaceIndex;
-		m_wsOriginFontName = static_cast<wchar_t>(rCont.m_nOriginFontFaceIndex);
+		m_wsOriginFontName = rCont.m_wsOriginFontName;
 
 		m_arSymWidths.clear();
 		m_arSymWidths.resize(rCont.m_arSymWidths.size());
