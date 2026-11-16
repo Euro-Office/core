@@ -40,8 +40,8 @@ int style_list_level(const std::wstring& styles, const std::wstring& name)
     return style_value(styles, name, L"<w:ilvl w:val=\"");
 }
 
-// Outline numbering on levels 1 and 3 only, level 2 has no number format. The heading
-// styles have paragraph properties and the outline levels 1, 2 and 3.
+// Outline numbering on levels 1, 3 and 9 only, the other levels have no number format. The
+// heading styles have paragraph properties and the outline levels 1, 2, 3 and 9.
 const std::wstring& converted_styles()
 {
     static const std::wstring styles = []
@@ -77,6 +77,15 @@ TEST_F(OdtToDocxOutlineNumFormat, LevelWithoutNumberFormatGetsNoNumbering)
 
 TEST_F(OdtToDocxOutlineNumFormat, LastLevelKeepsOutlineNumbering)
 {
+    EXPECT_GT(style_num_id(styles_, L"Heading 3"), 0);
     EXPECT_EQ(style_num_id(styles_, L"Heading 3"), style_num_id(styles_, L"Heading 1"));
     EXPECT_EQ(style_list_level(styles_, L"Heading 3"), 2);
+}
+
+// Word has nine list levels, so ODF's outline level 9 is the last one with a number.
+TEST_F(OdtToDocxOutlineNumFormat, NinthLevelKeepsOutlineNumbering)
+{
+    EXPECT_GT(style_num_id(styles_, L"Heading 9"), 0);
+    EXPECT_EQ(style_num_id(styles_, L"Heading 9"), style_num_id(styles_, L"Heading 1"));
+    EXPECT_EQ(style_list_level(styles_, L"Heading 9"), 8);
 }
