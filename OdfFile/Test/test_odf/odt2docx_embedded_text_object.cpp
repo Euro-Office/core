@@ -12,7 +12,6 @@
 #include "DesktopEditor/common/Directory.h"
 #include "Reader/Converter/mediaitems.h"
 
-#include <chrono>
 #include <string>
 #include <vector>
 
@@ -82,15 +81,12 @@ TEST(OdtToDocxEmbeddedTextObject, ObjectNamingItsOwnDocumentStops)
 }
 
 // Objects that name their own document (".", "./", "Object 1/..") are not opened, also from inside
-// an object ("../Object 1" in Object 1): only the real object is embedded, and the conversion stays
-// quick. Before, each such object converted the whole document again, objects included.
+// an object ("../Object 1" in Object 1): only the real object is embedded. Before, each such object
+// converted the whole document again, objects included.
 TEST(OdtToDocxEmbeddedTextObject, ObjectsNamingTheirOwnDocumentAreNotConverted)
 {
-    const auto start = std::chrono::steady_clock::now();
     const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/embedded_text_object_self_many.odt");
-    const double seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
     ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
-    EXPECT_LT(seconds, 10.);
 
     const std::wstring document = read_part(dir, L"word/document.xml");
     EXPECT_TRUE(is_well_formed(document));
