@@ -75,7 +75,8 @@ namespace
 		if (start == std::wstring::npos || end == std::wstring::npos)
 			return -1;
 		std::wstring body = content.substr(start, end - start);
-		for (size_t note = body.find(L"<text:note-body"); note != std::wstring::npos; note = body.find(L"<text:note-body"))
+		for (size_t note = body.find(L"<text:note-body"); note != std::wstring::npos;
+			 note = body.find(L"<text:note-body"))
 		{
 			const size_t close = body.find(L"</text:note-body>", note);
 			if (close == std::wstring::npos)
@@ -109,7 +110,8 @@ namespace
 		return result;
 	}
 
-	void expect_endnote_page(const converted& odt, const std::wstring& num_format, const std::wstring& start_value)
+	void expect_endnote_page(const converted& odt, const std::wstring& num_format, const std::wstring& start_value,
+							 const std::wstring& header = L"ENDNOTE-HEADER")
 	{
 		ASSERT_FALSE(odt.styles.empty()) << "DOCX -> ODT conversion failed";
 		EXPECT_TRUE(is_well_formed(odt.styles));
@@ -120,7 +122,7 @@ namespace
 		const std::wstring master = attribute(odt.styles, config, L"text:master-page-name");
 		EXPECT_FALSE(master.empty());
 		EXPECT_TRUE(is_landscape(odt.styles, master)) << "the endnote page has not the last section's page setup";
-		EXPECT_NE(master_page(odt.styles, master).find(L"ENDNOTE-HEADER"), std::wstring::npos);
+		EXPECT_NE(master_page(odt.styles, master).find(header), std::wstring::npos) << "the header is not " << header;
 		EXPECT_EQ(attribute(odt.styles, config, L"style:num-format"), num_format);
 		EXPECT_EQ(attribute(odt.styles, config, L"text:start-value"), start_value);
 
@@ -171,4 +173,21 @@ TEST(DocxToOdtEndnotePage, SectionKeptWhenContinuous)
 TEST(DocxToOdtEndnotePage, SectionKeptWhenEndnotesEndEachSection)
 {
 	expect_section_kept(convert(L"endnote_page_section_section_end"));
+}
+
+// The last section has no header of its own: as in Word, it shows the header
+// of the section before it.
+TEST(DocxToOdtEndnotePage, EndnotePageInheritsTheHeaderOfEarlierSections)
+{
+	expect_endnote_page(convert(L"endnote_page_section_inherited_header"), L"i", L"0", L"HEADER-BODY");
+}
+
+TEST(DocxToOdtEndnotePage, SectionKeptWhenItsEndnotesEndTheSection)
+{
+	expect_section_kept(convert(L"endnote_page_section_section_end_in_section"));
+}
+
+TEST(DocxToOdtEndnotePage, SectionKeptWhenTheEndnoteIsMissing)
+{
+	expect_section_kept(convert(L"endnote_page_section_missing_endnote"));
 }

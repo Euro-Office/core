@@ -125,10 +125,13 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section.docx",
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_continuous.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_inherited_header.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_missing_endnote.docx",
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_no_endnotes.docx",
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_no_type.docx",
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_numbering.docx",
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_section_end.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_section_end_in_section.docx",
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_with_text.docx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"

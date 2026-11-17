@@ -294,21 +294,20 @@ void DocxConverter::convert_document()
 
 	convert(doc->m_oSectPr.GetPointer(), false, L"Standard", true);
 
-	std::wstring standard_master_name;
-	if (odt_context->page_layout_context()->last_master())
-		standard_master_name = odt_context->page_layout_context()->last_master()->get_name();
-
 	odt_context->text_context()->clear_params();
 
 	for (size_t sect = 0; sect < sections.size(); sect++)
 	{
 		// Every earlier section is converted at this point, so converted_endnotes is final.
-		if (sect > 0 && sect + 1 == sections.size() && false == standard_master_name.empty()
-			&& is_endnote_page_section(doc, sections[sect]))
+		if (sect > 0 && sect + 1 == sections.size() && is_endnote_page_section(doc, sections[sect]))
 		{
 			// The empty paragraph only opens the page that Word prints the endnotes on: ODF
-			// names that page style in the endnote configuration instead.
-			add_endnote_page_configuration(standard_master_name);
+			// names that page style in the endnote configuration instead. The page style is
+			// made as for the paragraph, with the headers and footers the section inherits
+			// from earlier sections, but without a section in the text.
+			convert(sections[sect].props, false);
+			if (odt_context->page_layout_context()->last_master())
+				add_endnote_page_configuration(odt_context->page_layout_context()->last_master()->get_name());
 			break;
 		}
 		current_section_properties = &sections[sect];
