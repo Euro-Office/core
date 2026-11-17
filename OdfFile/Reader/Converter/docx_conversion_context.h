@@ -32,6 +32,7 @@
 #include <unordered_map>
 #include <boost/shared_ptr.hpp>
 #include <list>
+#include <algorithm>
 
 #include "docx_table_context.h"
 #include "oox_conversion_context.h"
@@ -741,8 +742,8 @@ private:
 // levels and uses 9 for body text. Levels 9 and 10 both become Word's last level, as in LibreOffice.
 inline int docx_outline_level(int odf_level)
 {
-	if (odf_level <= 0) return 9;
-	return (odf_level > 9 ? 9 : odf_level) - 1;
+	if (odf_level <= 0) { return 9; }
+	return (std::min)(odf_level, 9) - 1;
 }
 //---------------------------------------------------------------------------------------------------------
 class docx_conversion_context : boost::noncopyable
