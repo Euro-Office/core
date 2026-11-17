@@ -15,6 +15,8 @@
 
 namespace
 {
+	// The fixture's styles.xml holds the common styles Default and Padded; it needs master styles, without them the
+	// reader skips all styles of that file.
 	// Sheet 1 "Rows", one case per row, every row 1 cm high:
 	// 1 optimal, plain cell
 	// 2 optimal, cell padding 0.071 cm a side
@@ -29,7 +31,7 @@ namespace
 	// three empty cells without a style.
 	// Sheet 3 "Alternating": the default cell styles of columns A..E alternate between two styles without padding,
 	// column F's is padded. Row 1 (optimal): text in A, empty cells without a style in B..F; row 2 (optimal): the
-	// same up to D.
+	// same up to E, right before the padded column.
 	std::wstring sheet_xml(int sheet)
 	{
 		static const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/sheet_optimal_row_height.ods");
