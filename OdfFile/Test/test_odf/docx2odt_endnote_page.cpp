@@ -106,9 +106,19 @@ namespace
 		std::wstring settings;
 	};
 
+	// True if the configuration settings say ContinuousEndnotes=true, once.
 	bool continuous_endnotes(const converted& odt)
 	{
-		return odt.settings.find(L"config:name=\"ContinuousEndnotes\" config:type=\"boolean\">true<") != std::wstring::npos;
+		const size_t set = odt.settings.find(L"<config:config-item-set config:name=\"ooo:configuration-settings\">");
+		if (set == std::wstring::npos)
+			return false;
+		const size_t end = odt.settings.find(L"</config:config-item-set>", set);
+		const std::wstring items = odt.settings.substr(set, end == std::wstring::npos ? std::wstring::npos : end - set);
+		const std::wstring item = L"config:name=\"ContinuousEndnotes\"";
+		const size_t pos = items.find(item);
+		if (pos == std::wstring::npos || items.find(item, pos + 1) != std::wstring::npos)
+			return false;
+		return items.find(L"config:type=\"boolean\">true<", pos) == pos + item.size() + 1;
 	}
 
 	converted convert(const std::wstring& name)
@@ -233,6 +243,14 @@ TEST(DocxToOdtEndnotePage, EndnotesFollowTheTextWithoutAnEndnotePage)
 {
 	EXPECT_TRUE(continuous_endnotes(convert(L"endnote_page_section_with_text")));
 	EXPECT_TRUE(continuous_endnotes(convert(L"endnote_page_section_continuous")));
+}
+
+// Endnotes at the end of each section: the document has no endnote page, so the
+// endnotes follow the text too.
+TEST(DocxToOdtEndnotePage, EndnotesAtSectionEndFollowTheText)
+{
+	EXPECT_TRUE(continuous_endnotes(convert(L"endnote_page_section_section_end")));
+	EXPECT_TRUE(continuous_endnotes(convert(L"endnote_page_section_section_end_in_section")));
 }
 
 TEST(DocxToOdtEndnotePage, EndnotesKeepTheirPageWithAnEndnotePage)
