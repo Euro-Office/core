@@ -163,10 +163,12 @@ namespace
 	// (IFileContainer::m_mapEnumeratedGlobal) and in ODF automatic style names (style_family_counts_ in
 	// odf_style_context.cpp). The document server starts one x2t per conversion, but this test converts
 	// several times in one process, so the second save writes drawing2.xml and ce4 where the first wrote
-	// drawing1.xml and ce1. Number such names in the order they first appear before comparing.
+	// drawing1.xml and ce1. Number such names in the order they first appear before comparing. Only a
+	// whole quoted name ("ce3") or a part path (/drawing1.xml") counts, so cell references (N5, P1:P3,
+	// [.T4]) and cell text are left alone; parts with cell references (r="N5") are compared as they are.
 	std::string Renumber(const std::vector<char>& bytes)
 	{
-		static const std::regex name(R"(\b(ce|co|ro|ta|gr|P|T|N|Mpm|drawing)([0-9]+)\b)");
+		static const std::regex name(R"((["/])(ce|co|ro|ta|gr|P|T|N|Mpm|drawing)([0-9]+)(\.xml)?")");
 		const std::string xml(bytes.begin(), bytes.end());
 		std::map<std::string, std::string> renamed;
 		std::map<std::string, int> used;
@@ -176,28 +178,35 @@ namespace
 		{
 			const std::smatch& match = *it;
 			result.append(xml, done, match.position() - done);
-			auto found = renamed.find(match.str());
+			const std::string key = match.str(2) + match.str(3);
+			auto found = renamed.find(key);
 			if (found == renamed.end())
-				found = renamed.emplace(match.str(), match.str(1) + "#" + std::to_string(++used[match.str(1)])).first;
-			result += found->second;
+				found = renamed.emplace(key, match.str(2) + "#" + std::to_string(++used[match.str(2)])).first;
+			result += match.str(1) + found->second + match.str(4) + "\"";
 			done = match.position() + match.length();
 		}
 		result.append(xml, done, std::string::npos);
 		return result;
 	}
 
-	void ExpectSameFile(const std::wstring& withPath, const std::wstring& withoutPath, const std::string& part)
+	void ExpectSameFile(const std::wstring& withPath, const std::wstring& withoutPath, const std::string& part,
+						bool renumber)
 	{
 		std::vector<char> with, without;
 		ASSERT_TRUE(ReadBytes(withPath, with)) << "missing: " << U_TO_UTF8(withPath);
 		ASSERT_TRUE(ReadBytes(withoutPath, without)) << "missing: " << U_TO_UTF8(withoutPath);
 		EXPECT_FALSE(with.empty()) << part;
-		EXPECT_EQ(Renumber(with), Renumber(without)) << part << " differs when the Editor.bin carries the record";
+		if (renumber)
+			EXPECT_EQ(Renumber(with), Renumber(without)) << part << " differs when the Editor.bin carries the record";
+		else
+			EXPECT_EQ(with, without) << part << " differs when the Editor.bin carries the record";
 	}
 
-	void ExpectSamePart(const std::wstring& withDir, const std::wstring& withoutDir, const std::wstring& part)
+	void ExpectSamePart(const std::wstring& withDir, const std::wstring& withoutDir, const std::wstring& part,
+						bool renumber = false)
 	{
-		ExpectSameFile(withDir + FILE_SEPARATOR_STR + part, withoutDir + FILE_SEPARATOR_STR + part, U_TO_UTF8(part));
+		ExpectSameFile(withDir + FILE_SEPARATOR_STR + part, withoutDir + FILE_SEPARATOR_STR + part, U_TO_UTF8(part),
+					   renumber);
 	}
 
 	// The one drawing part of each save, whatever its number
@@ -208,7 +217,7 @@ namespace
 		std::vector<std::wstring> without = NSDirectory::GetFiles(withoutDir + drawings);
 		ASSERT_EQ(with.size(), 1u);
 		ASSERT_EQ(without.size(), 1u);
-		ExpectSameFile(with[0], without[0], "the drawing part");
+		ExpectSameFile(with[0], without[0], "the drawing part", false);
 	}
 }
 
@@ -276,8 +285,9 @@ TEST(EditorBinSourceFileType, SaveToXlsxSkipsTheRecord)
 	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"worksheets" FILE_SEPARATOR_STR L"sheet1.xml");
 	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"styles.xml");
 	ExpectSamePart(withDir, withoutDir,
-				   L"xl" FILE_SEPARATOR_STR L"worksheets" FILE_SEPARATOR_STR L"_rels" FILE_SEPARATOR_STR L"sheet1.xml.rels");
-	ExpectSamePart(withDir, withoutDir, L"[Content_Types].xml");
+				   L"xl" FILE_SEPARATOR_STR L"worksheets" FILE_SEPARATOR_STR L"_rels" FILE_SEPARATOR_STR L"sheet1.xml.rels",
+				   true);
+	ExpectSamePart(withDir, withoutDir, L"[Content_Types].xml", true);
 	ExpectSameDrawing(withDir, withoutDir);
 }
 
@@ -287,6 +297,6 @@ TEST(EditorBinSourceFileType, SaveToOdsSkipsTheRecord)
 	std::string error;
 	ASSERT_TRUE(SaveWithAndWithoutRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS, L".ods", withDir, withoutDir, error))
 		<< error;
-	ExpectSamePart(withDir, withoutDir, L"content.xml");
-	ExpectSamePart(withDir, withoutDir, L"styles.xml");
+	ExpectSamePart(withDir, withoutDir, L"content.xml", true);
+	ExpectSamePart(withDir, withoutDir, L"styles.xml", true);
 }
