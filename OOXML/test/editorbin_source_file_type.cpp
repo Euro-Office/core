@@ -71,6 +71,83 @@ namespace
 		content.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
 		return content;
 	}
+
+	bool ReadBytes(const std::wstring& path, std::vector<char>& content)
+	{
+		std::ifstream file(std::filesystem::path(path), std::ios::binary);
+		if (!file)
+			return false;
+		content.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+		return true;
+	}
+
+	// One x2t run with a temp dir of its own: x2t does not clean a temp dir it is given, so a shared
+	// one would let a later step zip the parts an earlier step unpacked there.
+	bool Convert(const std::wstring& from, const std::wstring& to, int formatFrom, int formatTo, std::string& error)
+	{
+		int code = ConvertFile(CreateParamsFile(from, to, GetWorkDir(), formatFrom, formatTo));
+		if (code != 0 || !NSFile::CFileBinary::Exists(to))
+		{
+			error = "x2t returned " + std::to_string(code) + " converting " + U_TO_UTF8(from) + " to " + U_TO_UTF8(to);
+			return false;
+		}
+		return true;
+	}
+
+	// Saves the workbook of plain.ods to `ext` twice, each time from an Editor.bin as the editor sends
+	// it back: once from a binary file with the SourceFileType record (ODS -> Editor.bin), once from
+	// one without it (ODS -> XLSX -> Editor.bin). Both results are unpacked into withDir / withoutDir.
+	bool SaveWithAndWithoutRecord(int formatTo, const std::wstring& ext, std::wstring& withDir,
+								  std::wstring& withoutDir, std::string& error)
+	{
+		std::wstring source = L"ExampleFiles" FILE_SEPARATOR_STR L"ods2bin" FILE_SEPARATOR_STR L"plain.ods";
+		if (!NSFile::CFileBinary::Exists(source))
+		{
+			error = "missing input " + U_TO_UTF8(source);
+			return false;
+		}
+		std::wstring workDir = GetWorkDir();
+		std::wstring binWith = workDir + FILE_SEPARATOR_STR L"with.bin";
+		std::wstring xlsx = workDir + FILE_SEPARATOR_STR L"plain.xlsx";
+		std::wstring binWithout = workDir + FILE_SEPARATOR_STR L"without.bin";
+		std::wstring savedWith = workDir + FILE_SEPARATOR_STR L"with" + ext;
+		std::wstring savedWithout = workDir + FILE_SEPARATOR_STR L"without" + ext;
+
+		if (!Convert(source, binWith, 0, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET, error) ||
+			!Convert(source, xlsx, 0, AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX, error) ||
+			!Convert(xlsx, binWithout, 0, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET, error))
+			return false;
+
+		std::vector<char> bytesWith, bytesWithout;
+		if (!ReadBytes(binWith, bytesWith) || !ReadBytes(binWithout, bytesWithout))
+		{
+			error = "cannot read the Editor.bin files";
+			return false;
+		}
+		std::vector<char> record = SourceFileTypeRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS);
+		if (!Contains(bytesWith, record) || Contains(bytesWithout, record))
+		{
+			error = "only the Editor.bin from ODS should carry the record";
+			return false;
+		}
+
+		if (!Convert(binWith, savedWith, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET, formatTo, error) ||
+			!Convert(binWithout, savedWithout, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET, formatTo, error))
+			return false;
+
+		withDir = workDir + FILE_SEPARATOR_STR L"with";
+		withoutDir = workDir + FILE_SEPARATOR_STR L"without";
+		return Unpack(savedWith, withDir, error) && Unpack(savedWithout, withoutDir, error);
+	}
+
+	void ExpectSamePart(const std::wstring& withDir, const std::wstring& withoutDir, const std::wstring& part)
+	{
+		std::vector<char> with, without;
+		ASSERT_TRUE(ReadBytes(withDir + FILE_SEPARATOR_STR + part, with)) << "missing: " << U_TO_UTF8(part);
+		ASSERT_TRUE(ReadBytes(withoutDir + FILE_SEPARATOR_STR + part, without)) << "missing: " << U_TO_UTF8(part);
+		EXPECT_FALSE(with.empty()) << U_TO_UTF8(part);
+		EXPECT_EQ(with, without) << U_TO_UTF8(part) << " differs when the Editor.bin carries the record";
+	}
 }
 
 TEST(EditorBinSourceFileType, OdsWorkbookRecordsItsSource)
@@ -104,4 +181,28 @@ TEST(EditorBinSourceFileType, XlsxWorkbookHasNoSourceRecord)
 	ASSERT_TRUE(error.empty()) << error;
 	EXPECT_FALSE(Contains(bin, SourceFileTypeRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX)));
 	EXPECT_FALSE(Contains(bin, SourceFileTypeRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS)));
+}
+
+// The save direction: x2t's own reader skips the record, so saving a workbook whose Editor.bin
+// carries it gives the same file as saving one without it.
+TEST(EditorBinSourceFileType, SaveToXlsxSkipsTheRecord)
+{
+	std::wstring withDir, withoutDir;
+	std::string error;
+	ASSERT_TRUE(SaveWithAndWithoutRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX, L".xlsx", withDir, withoutDir, error))
+		<< error;
+	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"workbook.xml");
+	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"worksheets" FILE_SEPARATOR_STR L"sheet1.xml");
+	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"sharedStrings.xml");
+	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"styles.xml");
+}
+
+TEST(EditorBinSourceFileType, SaveToOdsSkipsTheRecord)
+{
+	std::wstring withDir, withoutDir;
+	std::string error;
+	ASSERT_TRUE(SaveWithAndWithoutRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS, L".ods", withDir, withoutDir, error))
+		<< error;
+	ExpectSamePart(withDir, withoutDir, L"content.xml");
+	ExpectSamePart(withDir, withoutDir, L"styles.xml");
 }
