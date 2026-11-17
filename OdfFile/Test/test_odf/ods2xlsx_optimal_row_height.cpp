@@ -19,11 +19,12 @@ namespace
 	// 1 optimal, plain cell
 	// 2 optimal, cell padding 0.071 cm a side
 	// 3 fixed height (use-optimal-row-height="false")
-	// 4 optimal, padding 0.018 cm a side (LibreOffice's default)
+	// 4 optimal, padding 0.035 cm a side (LibreOffice's default, 1 pt)
 	// 5 optimal, cell style inherits fo:padding="0.1cm" from its parent style
 	// 6 optimal, cell style sets padding-top and padding-bottom to 0 over that parent
 	// 7 optimal, padded row default cell style, cell without a style
 	// 8 optimal, text cell followed by an empty cell with the padded style
+	// 9 optimal, padding 0.05 cm a side (2.8 pt in all, above the default)
 	// Sheet 2 "Columns": columns B..D have the padded default cell style; row 1 is optimal with cell A filled and
 	// three empty cells without a style.
 	std::wstring sheet_xml(int sheet)
@@ -108,6 +109,11 @@ TEST(OdsToXlsxOptimalRowHeight, PaddedRowDefaultCellStyle)
 TEST(OdsToXlsxOptimalRowHeight, PaddedEmptyCellCounts)
 {
 	expect_row(1, 8, L"1");
+}
+
+TEST(OdsToXlsxOptimalRowHeight, PaddingAboveTheDefaultKeepsTheHeight)
+{
+	expect_row(1, 9, L"1");
 }
 
 TEST(OdsToXlsxOptimalRowHeight, PaddedColumnDefaultCellStyle)

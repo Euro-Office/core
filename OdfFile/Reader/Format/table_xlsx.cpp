@@ -790,9 +790,10 @@ size_t EmptyStyledCellXf(oox::xlsx_conversion_context & Context, const std::wstr
 // (the editor's print range takes in every cell with a fill or border). If the last cell of this row is such
 // a run, returns true and its format in xf; the row then carries that format (row/@s, customFormat) instead.
 namespace {
-	// LibreOffice adds a cell's top and bottom padding to the optimal height of its row (0.018 cm a side by default).
-	// XLSX has no cell padding, so a row the spreadsheet application fits itself would be lower than in LibreOffice.
-	const double max_default_vertical_padding_pt = 1.2;
+	// LibreOffice adds a cell's top and bottom padding to the optimal height of its row (20 twips = 1 pt a side by
+	// default). XLSX has no cell padding, so a row the spreadsheet application fits itself would be lower than in
+	// LibreOffice; up to about the default, the difference does not matter.
+	const double max_default_vertical_padding_pt = 2.1;
 
 	void cell_properties_chain(const style_instance * style, std::vector<const style_table_cell_properties*> & chain)
 	{
