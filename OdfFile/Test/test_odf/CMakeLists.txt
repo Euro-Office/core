@@ -61,6 +61,7 @@ add_core_gtest(
             odt2docx_keep_next.cpp
             odt2docx_links.cpp
             odp2pptx_line_height.cpp
+            odt2docx_header_footer_not_inherited.cpp
             odt2docx_default_tab_stop.cpp
             enhanced_path_quadratic_bezier.cpp
             pptx2odp_bullet_size.cpp
