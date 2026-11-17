@@ -45,6 +45,10 @@ namespace
 		const size_t start = styles.find(L"<style:master-page style:name=\"" + name + L"\"");
 		if (start == std::wstring::npos)
 			return L"";
+		// An empty master page closes itself: the next end tag belongs to another master page.
+		const size_t tag_end = styles.find(L'>', start);
+		if (tag_end == std::wstring::npos || styles[tag_end - 1] == L'/')
+			return styles.substr(start, tag_end == std::wstring::npos ? std::wstring::npos : tag_end + 1 - start);
 		const size_t end = styles.find(L"</style:master-page>", start);
 		return styles.substr(start, end == std::wstring::npos ? std::wstring::npos : end - start);
 	}
