@@ -11,7 +11,6 @@
 #include "common.h"
 
 #include "../../Common/OfficeFileFormats.h"
-#include "../../DesktopEditor/common/Base64.h"
 #include "../../DesktopEditor/common/Directory.h"
 #include "../../DesktopEditor/common/File.h"
 
@@ -75,39 +74,18 @@ namespace
 	}
 
 	// Converts the example file to Editor.bin given the file names only (no m_nFormatFrom, no
-	// m_nFormatTo: the direction comes from the extensions) and returns the decoded bytes. Without
-	// m_bIsNoBase64 the file is base64: "XLSY;v<version>;<size>;<data>".
+	// m_nFormatTo: the direction comes from the extensions) and returns its bytes. m_bIsNoBase64
+	// defaults to true, so the file is not base64.
 	std::vector<char> ConvertToEditorBinByFileNames(const std::wstring& name, std::string& error)
 	{
-		std::vector<char> bytes;
+		std::vector<char> content;
 		std::wstring source = L"ExampleFiles" FILE_SEPARATOR_STR + name;
 		std::wstring bin = GetWorkDir() + FILE_SEPARATOR_STR L"Editor.bin";
 		if (!ConvertTo(source, bin, GetWorkDir(), error))
-			return bytes;
+			return content;
 		std::ifstream file(std::filesystem::path(bin), std::ios::binary);
-		std::vector<char> text((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-		size_t start = 0;
-		for (int i = 0; i < 3; ++i)
-		{
-			auto separator = std::find(text.begin() + start, text.end(), ';');
-			if (separator == text.end())
-			{
-				error = "no Editor.bin header for " + U_TO_UTF8(name);
-				return bytes;
-			}
-			start = static_cast<size_t>(separator - text.begin()) + 1;
-		}
-		int sourceLength = static_cast<int>(text.size() - start);
-		int length = NSBase64::Base64DecodeGetRequiredLength(sourceLength);
-		bytes.resize(static_cast<size_t>(length));
-		if (!NSBase64::Base64Decode(text.data() + start, sourceLength, reinterpret_cast<BYTE*>(bytes.data()), &length))
-		{
-			error = "cannot decode the Editor.bin of " + U_TO_UTF8(name);
-			bytes.clear();
-			return bytes;
-		}
-		bytes.resize(static_cast<size_t>(length));
-		return bytes;
+		content.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+		return content;
 	}
 
 	bool ReadBytes(const std::wstring& path, std::vector<char>& content)
@@ -221,7 +199,7 @@ TEST(EditorBinSourceFileType, XlsxWorkbookHasNoSourceRecord)
 	EXPECT_FALSE(Contains(bin, SourceFileTypeRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS)));
 }
 
-// x2t given only the file names (x2t in.ods out.bin) detects the type in the ODF reader
+// x2t given only the file names (x2t in.ods out.bin) detects the type in odf2oot_bin
 TEST(EditorBinSourceFileType, OdsByFileNamesRecordsItsSource)
 {
 	std::string error;
@@ -239,7 +217,9 @@ TEST(EditorBinSourceFileType, OdsTemplateByFileNamesRecordsItsSource)
 }
 
 // The save direction: x2t's own reader skips the record, so saving a workbook whose Editor.bin
-// carries it gives the same file as saving one without it.
+// carries it gives the same file as saving one without it. The Editor.bin here is x2t's own, where
+// the record is the last workbook item; x2t has no code for the record and skips it by its length
+// like any unknown item.
 TEST(EditorBinSourceFileType, SaveToXlsxSkipsTheRecord)
 {
 	std::wstring withDir, withoutDir;
@@ -248,8 +228,8 @@ TEST(EditorBinSourceFileType, SaveToXlsxSkipsTheRecord)
 		<< error;
 	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"workbook.xml");
 	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"worksheets" FILE_SEPARATOR_STR L"sheet1.xml");
-	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"sharedStrings.xml");
 	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"styles.xml");
+	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"drawings" FILE_SEPARATOR_STR L"drawing1.xml");
 }
 
 TEST(EditorBinSourceFileType, SaveToOdsSkipsTheRecord)
