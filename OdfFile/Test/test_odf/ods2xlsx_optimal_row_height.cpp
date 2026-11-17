@@ -27,6 +27,9 @@ namespace
 	// 9 optimal, padding 0.05 cm a side (2.8 pt in all, above the default)
 	// Sheet 2 "Columns": columns B..D have the padded default cell style; row 1 is optimal with cell A filled and
 	// three empty cells without a style.
+	// Sheet 3 "Alternating": the default cell styles of columns A..E alternate between two styles without padding,
+	// column F's is padded. Row 1 (optimal): text in A, empty cells without a style in B..F; row 2 (optimal): the
+	// same up to D.
 	std::wstring sheet_xml(int sheet)
 	{
 		static const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/sheet_optimal_row_height.ods");
@@ -119,4 +122,14 @@ TEST(OdsToXlsxOptimalRowHeight, PaddingAboveTheDefaultKeepsTheHeight)
 TEST(OdsToXlsxOptimalRowHeight, PaddedColumnDefaultCellStyle)
 {
 	expect_row(2, 1, L"1");
+}
+
+TEST(OdsToXlsxOptimalRowHeight, PaddedColumnAfterAlternatingColumnStyles)
+{
+	expect_row(3, 1, L"1");
+}
+
+TEST(OdsToXlsxOptimalRowHeight, CellsBeforeThePaddedColumn)
+{
+	expect_row(3, 2, L"(none)");
 }

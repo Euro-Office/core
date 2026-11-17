@@ -785,10 +785,6 @@ size_t EmptyStyledCellXf(oox::xlsx_conversion_context & Context, const std::wstr
 
 }
 
-// LibreOffice writes a row formatted to the end of the sheet as its cells: an empty cell with a cell style,
-// repeated up to the last column (often hundreds of columns). Written one by one, those cells count as used
-// (the editor's print range takes in every cell with a fill or border). If the last cell of this row is such
-// a run, returns true and its format in xf; the row then carries that format (row/@s, customFormat) instead.
 namespace {
 	// LibreOffice adds a cell's top and bottom padding to the optimal height of its row (20 twips = 1 pt a side by
 	// default). XLSX has no cell padding, so a row the spreadsheet application fits itself would be lower than in
@@ -827,7 +823,7 @@ namespace {
 // cell's own, else the row's default cell style, else its column's default cell style.
 bool table_table_row::cells_padded(oox::xlsx_conversion_context & Context)
 {
-	odf_read_context & odfContext = Context.root()->odf_context();
+	styles_container & styles = Context.root()->odf_context().styleContainer();
 	oox::xlsx_table_state_ptr state = Context.get_table_context().state();
 
 	std::map<std::wstring, bool> padded;
@@ -839,16 +835,19 @@ bool table_table_row::cells_padded(oox::xlsx_conversion_context & Context)
 
 		std::vector<const style_table_cell_properties*> chain;
 		if (!name.empty())
-			cell_properties_chain(odfContext.styleContainer().style_by_name(name, style_family::TableCell, false), chain);
-		cell_properties_chain(odfContext.styleContainer().style_by_name(L"Default", style_family::TableCell, false), chain);
-		cell_properties_chain(odfContext.styleContainer().style_default_by_type(style_family::TableCell), chain);
+		{
+			cell_properties_chain(styles.style_by_name(name, style_family::TableCell, false), chain);
+		}
+		cell_properties_chain(styles.style_by_name(L"Default", style_family::TableCell, false), chain);
+		cell_properties_chain(styles.style_default_by_type(style_family::TableCell), chain);
 
-		const bool result = padding_side_pt(chain, true) + padding_side_pt(chain, false) > max_default_vertical_padding_pt;
+		const double vertical = padding_side_pt(chain, true) + padding_side_pt(chain, false);
+		const bool result = vertical > max_default_vertical_padding_pt;
 		padded[name] = result;
 		return result;
 	};
 
-	const std::wstring rowStyleName = attlist_.table_default_cell_style_name_.get_value_or(L"");
+	const std::wstring defaultCellStyleName = attlist_.table_default_cell_style_name_.get_value_or(L"");
 	unsigned int column = 0;
 	for (size_t i = 0; i < content_.size(); i++)
 	{
@@ -866,27 +865,24 @@ bool table_table_row::cells_padded(oox::xlsx_conversion_context & Context)
 			if (style_padded(*cell->table_style_name_))
 				return true;
 		}
-		else if (!rowStyleName.empty())
+		else if (!defaultCellStyleName.empty())
 		{
-			if (style_padded(rowStyleName))
+			if (style_padded(defaultCellStyleName))
 				return true;
 		}
-		else
+		else if (state->padded_default_column_cell_style(column, end, style_padded))
 		{
-			// a run of columns with one default cell style is checked once
-			for (unsigned int c = column; c < end; c++)
-			{
-				if (style_padded(state->default_column_cell_style(c)))
-					return true;
-				if (state->same_default_column_cell_style(c, end))
-					break;
-			}
+			return true;
 		}
 		column = end;
 	}
 	return false;
 }
 
+// LibreOffice writes a row formatted to the end of the sheet as its cells: an empty cell with a cell style,
+// repeated up to the last column (often hundreds of columns). Written one by one, those cells count as used
+// (the editor's print range takes in every cell with a fill or border). If the last cell of this row is such
+// a run, returns true and its format in xf; the row then carries that format (row/@s, customFormat) instead.
 bool table_table_row::trailing_cells_format(oox::xlsx_conversion_context & Context, size_t & xf)
 {
 	if (content_.empty() || attlist_.table_default_cell_style_name_ || !Context.current_sheet().external_ref().empty())
