@@ -20,6 +20,9 @@
 #include <filesystem>
 #include <fstream>
 #include <iterator>
+#include <map>
+#include <regex>
+#include <string>
 #include <vector>
 
 namespace
@@ -156,13 +159,56 @@ namespace
 		return Unpack(savedWith, withDir, error) && Unpack(savedWithout, withoutDir, error);
 	}
 
-	void ExpectSamePart(const std::wstring& withDir, const std::wstring& withoutDir, const std::wstring& part)
+	// x2t counts two kinds of names per process, not per conversion: the numbers in OOXML part names
+	// (IFileContainer::m_mapEnumeratedGlobal) and in ODF automatic style names (style_family_counts_ in
+	// odf_style_context.cpp). The document server starts one x2t per conversion, but this test converts
+	// several times in one process, so the second save writes drawing2.xml and ce4 where the first wrote
+	// drawing1.xml and ce1. Number such names in the order they first appear before comparing.
+	std::string Renumber(const std::vector<char>& bytes)
+	{
+		static const std::regex name(R"(\b(ce|co|ro|ta|gr|P|T|N|Mpm|drawing)([0-9]+)\b)");
+		const std::string xml(bytes.begin(), bytes.end());
+		std::map<std::string, std::string> renamed;
+		std::map<std::string, int> used;
+		std::string result;
+		size_t done = 0;
+		for (std::sregex_iterator it(xml.begin(), xml.end(), name), end; it != end; ++it)
+		{
+			const std::smatch& match = *it;
+			result.append(xml, done, match.position() - done);
+			auto found = renamed.find(match.str());
+			if (found == renamed.end())
+				found = renamed.emplace(match.str(), match.str(1) + "#" + std::to_string(++used[match.str(1)])).first;
+			result += found->second;
+			done = match.position() + match.length();
+		}
+		result.append(xml, done, std::string::npos);
+		return result;
+	}
+
+	void ExpectSameFile(const std::wstring& withPath, const std::wstring& withoutPath, const std::string& part)
 	{
 		std::vector<char> with, without;
-		ASSERT_TRUE(ReadBytes(withDir + FILE_SEPARATOR_STR + part, with)) << "missing: " << U_TO_UTF8(part);
-		ASSERT_TRUE(ReadBytes(withoutDir + FILE_SEPARATOR_STR + part, without)) << "missing: " << U_TO_UTF8(part);
-		EXPECT_FALSE(with.empty()) << U_TO_UTF8(part);
-		EXPECT_EQ(with, without) << U_TO_UTF8(part) << " differs when the Editor.bin carries the record";
+		ASSERT_TRUE(ReadBytes(withPath, with)) << "missing: " << U_TO_UTF8(withPath);
+		ASSERT_TRUE(ReadBytes(withoutPath, without)) << "missing: " << U_TO_UTF8(withoutPath);
+		EXPECT_FALSE(with.empty()) << part;
+		EXPECT_EQ(Renumber(with), Renumber(without)) << part << " differs when the Editor.bin carries the record";
+	}
+
+	void ExpectSamePart(const std::wstring& withDir, const std::wstring& withoutDir, const std::wstring& part)
+	{
+		ExpectSameFile(withDir + FILE_SEPARATOR_STR + part, withoutDir + FILE_SEPARATOR_STR + part, U_TO_UTF8(part));
+	}
+
+	// The one drawing part of each save, whatever its number
+	void ExpectSameDrawing(const std::wstring& withDir, const std::wstring& withoutDir)
+	{
+		const std::wstring drawings = FILE_SEPARATOR_STR L"xl" FILE_SEPARATOR_STR L"drawings";
+		std::vector<std::wstring> with = NSDirectory::GetFiles(withDir + drawings);
+		std::vector<std::wstring> without = NSDirectory::GetFiles(withoutDir + drawings);
+		ASSERT_EQ(with.size(), 1u);
+		ASSERT_EQ(without.size(), 1u);
+		ExpectSameFile(with[0], without[0], "the drawing part");
 	}
 }
 
@@ -229,7 +275,10 @@ TEST(EditorBinSourceFileType, SaveToXlsxSkipsTheRecord)
 	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"workbook.xml");
 	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"worksheets" FILE_SEPARATOR_STR L"sheet1.xml");
 	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"styles.xml");
-	ExpectSamePart(withDir, withoutDir, L"xl" FILE_SEPARATOR_STR L"drawings" FILE_SEPARATOR_STR L"drawing1.xml");
+	ExpectSamePart(withDir, withoutDir,
+				   L"xl" FILE_SEPARATOR_STR L"worksheets" FILE_SEPARATOR_STR L"_rels" FILE_SEPARATOR_STR L"sheet1.xml.rels");
+	ExpectSamePart(withDir, withoutDir, L"[Content_Types].xml");
+	ExpectSameDrawing(withDir, withoutDir);
 }
 
 TEST(EditorBinSourceFileType, SaveToOdsSkipsTheRecord)
