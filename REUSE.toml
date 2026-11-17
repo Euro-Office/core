@@ -50,6 +50,7 @@ SPDX-License-Identifier = "libtiff"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/header_drawing_section_starts_with_table.docx",
     "OdfFile/Test/test_odf/ExampleFiles/plain_paragraph.docx",
     "OdfFile/Test/test_odf/ExampleFiles/plain_paragraph.odt",
 ]

@@ -50,6 +50,7 @@ add_core_gtest(
             number_styles.cpp
             conversion_helpers.cpp
             docx2odt_content_controls.cpp
+            docx2odt_header_drawing_anchor.cpp
             xlsx2ods_date_cells.cpp
             xlsx2ods_print_area.cpp
             xlsx2ods_header_footer.cpp
