@@ -63,6 +63,7 @@ add_core_gtest(
             chart_title.cpp
             odt2docx_underline.cpp
             odt2docx_keep_next.cpp
+            odt2docx_header_footer_spacing.cpp
             odt2docx_links.cpp
             odp2pptx_line_height.cpp
             odp2pptx_transition_without_subtype.cpp
