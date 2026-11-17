@@ -214,7 +214,7 @@ namespace OOX
 			m_oRefreshAllConnections        = ptr->fRefreshAll;
 			m_oShowBorderUnselectedTables   = ptr->fHideBorderUnselLists;
 			m_oShowInkAnnotation            = ptr->fShowInkAnnotation;
-			m_oShowObjects                  = ptr->mdDspObj == 2?false:true;
+			m_oShowObjects                  = ptr->mdDspObj != 2;
 			m_oShowPivotChartFilter         = ptr->fShowPivotChartFilter;
 			m_oUpdateLinks                  = (SimpleTypes::Spreadsheet::EUpdateLinksType)ptr->grbitUpdateLinks;
 

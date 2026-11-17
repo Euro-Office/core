@@ -33,12 +33,12 @@ namespace PPTX
 	}
 	HandoutMaster::HandoutMaster(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain), PPTX::FileContainer(pMain)
 	{
-		read(filename, map);
+		HandoutMaster::read(filename, map);
 	}
 	HandoutMaster::~HandoutMaster()
 	{
 	}
-	void HandoutMaster::read(const OOX::CPath& filename, FileMap& map)
+	void HandoutMaster::read(const OOX::CPath& filename, FileMap&  /*map*/)
 	{
 		//FileContainer::read(filename, map);
 		XmlUtils::CXmlNode oNode;

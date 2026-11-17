@@ -268,7 +268,7 @@ namespace PPTX
 			pWriter->m_strStyleMain.clear();
 			pWriter->m_strStyleWrap.clear();
 	
-			if (false == pWriter->m_strAttributesMain.empty())
+			if (!pWriter->m_strAttributesMain.empty())
 			{
 				pWriter->WriteString(pWriter->m_strAttributesMain);
 				pWriter->m_strAttributesMain.clear();
@@ -539,7 +539,7 @@ namespace PPTX
 		void LockedCanvas::toPPTY(NSBinPptxRW::CBinaryFileWriter* pWriter) const
 		{
 			BinDocxRW::CDocxSerializer* docx = pWriter->m_pDocxSerializer;
-			pWriter->m_pDocxSerializer = NULL;
+			pWriter->m_pDocxSerializer = nullptr;
 
 			pWriter->StartRecord(SPTREE_TYPE_LOCKED_CANVAS);
 
@@ -557,7 +557,7 @@ namespace PPTX
 			pReader->Skip(5); // type + len
 
 			BinDocxRW::CDocxSerializer* docx = pReader->m_pDocxSerializer;
-			pReader->m_pDocxSerializer = NULL;
+			pReader->m_pDocxSerializer = nullptr;
 
 			while (pReader->GetPos() < _end_rec)
 			{

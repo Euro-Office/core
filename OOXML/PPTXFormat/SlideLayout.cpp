@@ -43,12 +43,12 @@ namespace PPTX
 	}
 	SlideLayout::SlideLayout(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain), FileContainer(pMain)
 	{
-		read(filename, map);
+		SlideLayout::read(filename, map);
 	}
 	SlideLayout::~SlideLayout()
 	{
 	}
-	void SlideLayout::read(const OOX::CPath& filename, FileMap& map)
+	void SlideLayout::read(const OOX::CPath& filename, FileMap&  /*map*/)
 	{
 		m_sOutputFilename = filename.GetFilename();
 
@@ -105,13 +105,13 @@ namespace PPTX
 
 		if (!pShape && !pPic) return;
 
-		Logic::NvPr *pNvPr = NULL;
+		Logic::NvPr *pNvPr = nullptr;
 
 		if (pShape)	pNvPr = &pShape->nvSpPr.nvPr;
 		if (pPic)	pNvPr = &pPic->nvPicPr.nvPr;
 
 		if (!pNvPr) return;
-		if (pNvPr->ph.is_init() == false) return;
+		if (!pNvPr->ph.is_init()) return;
 
 		std::wstring idx = pNvPr->ph->idx.get_value_or(L"");
 		std::wstring type = pNvPr->ph->type.get_value_or(L"body");
@@ -131,14 +131,7 @@ namespace PPTX
 
 					if (lType == L"ctrTitle") lType = L"title";
 
-					if ((type == lType) && (idx == lIdx) && !idx.empty())
-					{
-						if (pShape)	pShape->SetLevelUpElement(pLayoutShape.GetPointer());
-						if (pPic)	pPic->SetLevelUpElement(pLayoutShape.GetPointer());
-
-						return;
-					}
-					else if ((type == lType) && idx.empty() && lIdx.empty())
+					if ((type == lType) && (((idx == lIdx) && !idx.empty()) || (idx.empty() && lIdx.empty())))
 					{
 						if (pShape)	pShape->SetLevelUpElement(pLayoutShape.GetPointer());
 						if (pPic)	pPic->SetLevelUpElement(pLayoutShape.GetPointer());

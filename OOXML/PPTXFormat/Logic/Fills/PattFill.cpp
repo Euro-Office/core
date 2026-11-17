@@ -155,7 +155,7 @@ namespace PPTX
 		void PattFill::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar(); // FILL_TYPE_PATT
+			pReader->GetUChar(); // FILL_TYPE_PATT
 			LONG _e = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);

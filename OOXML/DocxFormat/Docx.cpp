@@ -46,14 +46,14 @@ namespace OOX
 {
 	void CDocx::_part_summary::init()
 	{
-		document = NULL;
-		fontTable = NULL;
-		numbering = NULL;
-		styles = NULL;
-		footnotes = NULL;
-		endnotes = NULL;
-		settings = NULL;
-		comments = NULL;
+		document = nullptr;
+		fontTable = nullptr;
+		numbering = nullptr;
+		styles = nullptr;
+		footnotes = nullptr;
+		endnotes = nullptr;
+		settings = nullptr;
+		comments = nullptr;
 	}
 
 	CDocx::CDocx() : OOX::IFileContainer(dynamic_cast<OOX::Document*>(this))
@@ -70,23 +70,23 @@ namespace OOX
 		m_oMain.init();
 		m_oGlossary.init();
 
-		m_pApp = NULL;
-		m_pCore = NULL;
-		m_pTheme = NULL;
+		m_pApp = nullptr;
+		m_pCore = nullptr;
+		m_pTheme = nullptr;
 
-		m_pCommentsExt = NULL;
-		m_pCommentsExtensible = NULL;
-		m_pCommentsIds = NULL;
-		m_pPeople = NULL;
-		m_pDocumentComments = NULL;
-		m_pDocumentCommentsExt = NULL;
-		m_pDocumentCommentsExtensible = NULL;
-		m_pDocumentPeople = NULL;
-		m_pDocumentCommentsIds = NULL;
-		m_pCommentsUserData = NULL;
+		m_pCommentsExt = nullptr;
+		m_pCommentsExtensible = nullptr;
+		m_pCommentsIds = nullptr;
+		m_pPeople = nullptr;
+		m_pDocumentComments = nullptr;
+		m_pDocumentCommentsExt = nullptr;
+		m_pDocumentCommentsExtensible = nullptr;
+		m_pDocumentPeople = nullptr;
+		m_pDocumentCommentsIds = nullptr;
+		m_pCommentsUserData = nullptr;
 
-		m_pVbaProject = NULL;
-		m_pJsaProject = NULL;
+		m_pVbaProject = nullptr;
+		m_pJsaProject = nullptr;
 	}
 	bool CDocx::Write(const CPath& oFilePath)
 	{
@@ -117,7 +117,7 @@ namespace OOX
 	void CDocx::FixAfterRead()
 	{
 		//solve id conflict between comments and documentComments
-		if ((NULL != m_oMain.comments && NULL != m_pDocumentComments) && (false == m_oMain.comments->m_arrComments.empty() && false != m_pDocumentComments->m_arrComments.empty()))
+		if ((nullptr != m_oMain.comments && nullptr != m_pDocumentComments) && (!m_oMain.comments->m_arrComments.empty() && m_pDocumentComments->m_arrComments.empty()))
 		{
 			int maxId = INT_MIN;
 			for (size_t i = 0; i < m_oMain.comments->m_arrComments.size(); ++i)
@@ -146,9 +146,9 @@ namespace OOX
 
 			smart_ptr<OOX::File> pFile = pDocumentContainer->Find(rId);
 			if (pFile.IsInit() && (OOX::FileTypes::Header == pFile->type() || OOX::FileTypes::Footer == pFile->type()))
-				return (OOX::CHdrFtr*)pFile.GetPointer();
+				return (OOX::CHdrFtr*)pFile.GetPointer(); // NOLINT(clang-analyzer-cplusplus.NewDelete): the container map keeps the refcount alive
 			else
-				return NULL;
+				return nullptr;
 		}
 		else if (!glossary && m_oMain.document)
 		{
@@ -156,12 +156,12 @@ namespace OOX
 
             smart_ptr<OOX::File> pFile = pDocumentContainer->Find( rId );
 			if ( pFile.IsInit() && ( OOX::FileTypes::Header == pFile->type() || OOX::FileTypes::Footer == pFile->type() ) )
-				return (OOX::CHdrFtr*)pFile.GetPointer();
+				return (OOX::CHdrFtr*)pFile.GetPointer(); // NOLINT(clang-analyzer-cplusplus.NewDelete): the container map keeps the refcount alive
 			else 
-				return NULL;
+				return nullptr;
 		}
 		
-		return NULL;
+		return nullptr;
 	}
 	const std::wstring CDocx::GetCustomSettings() const
 	{
@@ -188,23 +188,23 @@ namespace OOX
 		m_oMain.init();
 		m_oGlossary.init();
 
-		m_pApp       = NULL;
-		m_pCore      = NULL;
-		m_pTheme     = NULL;
+		m_pApp       = nullptr;
+		m_pCore      = nullptr;
+		m_pTheme     = nullptr;
 
-		m_pCommentsExt	= NULL;
-		m_pCommentsExtensible	= NULL;
-		m_pCommentsIds	= NULL;
-		m_pPeople		= NULL;
-		m_pDocumentComments  = NULL;
-		m_pDocumentCommentsExt	= NULL;
-		m_pDocumentCommentsExtensible	= NULL;
-		m_pDocumentPeople		= NULL;
-		m_pDocumentCommentsIds	= NULL;
-		m_pCommentsUserData = NULL;
+		m_pCommentsExt	= nullptr;
+		m_pCommentsExtensible	= nullptr;
+		m_pCommentsIds	= nullptr;
+		m_pPeople		= nullptr;
+		m_pDocumentComments  = nullptr;
+		m_pDocumentCommentsExt	= nullptr;
+		m_pDocumentCommentsExtensible	= nullptr;
+		m_pDocumentPeople		= nullptr;
+		m_pDocumentCommentsIds	= nullptr;
+		m_pCommentsUserData = nullptr;
 
-		m_pVbaProject	= NULL;
-		m_pJsaProject	= NULL;
+		m_pVbaProject	= nullptr;
+		m_pJsaProject	= nullptr;
 
 		m_bGlossaryRead = false;
 	}

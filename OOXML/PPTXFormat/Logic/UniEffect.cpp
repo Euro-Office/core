@@ -111,6 +111,7 @@ namespace PPTX
 			case EFFECT_TYPE_ALPHAINV:		Effect = new PPTX::Logic::AlphaInv(); break;
 			case EFFECT_TYPE_ALPHAMOD:		Effect = new PPTX::Logic::AlphaMod(); break;
 			case EFFECT_TYPE_BLEND:			Effect = new PPTX::Logic::Blend(); break;
+			default: break;
 			}
 			
 			pReader->Seek(pos);
@@ -125,7 +126,7 @@ namespace PPTX
 		}
 		UniEffect::UniEffect(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			UniEffect::fromXML(node);
 		}
 
 		OOX::EElementType UniEffect::getType () const
@@ -264,6 +265,7 @@ namespace PPTX
 					if (name == _T("xfrm"))			{ Effect.reset(CreatePtrXmlContent<Logic::XfrmEffect>(oReader)); break; }	//30
 					break;
 				}
+			default: break;
 			}
 		}
 		void UniEffect::fromXML(XmlUtils::CXmlNode& node)

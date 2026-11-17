@@ -87,6 +87,7 @@ namespace PPTX
 			{
 			case EFFECTPROPERTIES_TYPE_LIST:	List = new PPTX::Logic::EffectLst(); break;
 			case EFFECT_TYPE_DAG:				List = new PPTX::Logic::EffectDag(); break;
+			default: break;
 			}
 
 			pReader->Seek(pos);

@@ -34,7 +34,8 @@ namespace PPTX
 			m_name = name;
 		}
 		Bevel::~Bevel() {}
-		Bevel::Bevel(const Bevel& oSrc) { *this = oSrc; }
+		// *this = oSrc copies only this class' members; chaining the base copy ctor would also copy base state.
+		Bevel::Bevel(const Bevel& oSrc) { *this = oSrc; } // NOLINT(bugprone-copy-constructor-init)
 		OOX::EElementType Bevel::getType() const
 		{
 			return OOX::et_a_bevel;

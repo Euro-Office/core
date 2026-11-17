@@ -102,6 +102,7 @@ namespace PPTX
 				switch (_at)
 				{
 				case 0: m_strVersion = pReader->GetString2(); break;
+				default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -137,7 +138,7 @@ namespace PPTX
 			m_eType = CVariant::getTypeByString(XmlUtils::GetNameNoNS(node.GetName()));
 			switch(getVariantType())
 			{
-				case vtEmpty: break;
+				case vtEmpty:
 				case vtNull: break;
 				case vtVariant:
 					{
@@ -157,33 +158,33 @@ namespace PPTX
 				case vtVector: m_oVector.Init();m_oVector->fromXML(node);break;
 				case vtArray: m_oArray.Init();m_oArray->fromXML(node);break;
 				case vtVStream: m_oVStream.Init();m_oVStream->fromXML(node);break;
-				case vtBlob: m_strContent = node.GetTextExt();break;
+				case vtBlob:
 				case vtOBlob: m_strContent = node.GetTextExt();break;
-				case vtI1: m_iContent = node.GetTextExt();break;
-				case vtI2: m_iContent = node.GetTextExt();break;
-				case vtI4: m_iContent = node.GetTextExt();break;
-				case vtI8: m_iContent = node.GetTextExt();break;
+				case vtI1:
+				case vtI2:
+				case vtI4:
+				case vtI8:
 				case vtInt: m_iContent = node.GetTextExt();break;
-				case vtUi1: m_uContent = node.GetTextExt();break;
-				case vtUi2: m_uContent = node.GetTextExt();break;
-				case vtUi4: m_uContent = node.GetTextExt();break;
-				case vtUi8: m_uContent = node.GetTextExt();break;
+				case vtUi1:
+				case vtUi2:
+				case vtUi4:
+				case vtUi8:
 				case vtUint: m_uContent = node.GetTextExt();break;
-				case vtR4: m_dContent = node.GetTextExt();break;
-				case vtR8: m_dContent = node.GetTextExt();break;
+				case vtR4:
+				case vtR8:
 				case vtDecimal: m_dContent = node.GetTextExt();break;
-				case vtLpstr: m_strContent = node.GetTextExt();break;
-				case vtLpwstr: m_strContent = node.GetTextExt();break;
-				case vtBstr: m_strContent = node.GetTextExt();break;
-				case vtDate: m_strContent = node.GetTextExt();break;
+				case vtLpstr:
+				case vtLpwstr:
+				case vtBstr:
+				case vtDate:
 				case vtFiletime: m_strContent = node.GetTextExt();break;
 				case vtBool: m_bContent = node.GetTextExt();break;
-				case vtCy: m_strContent = node.GetTextExt();break;
-				case vtError: m_strContent = node.GetTextExt();break;
-				case vtStream: m_strContent = node.GetTextExt();break;
-				case vtOStream: m_strContent = node.GetTextExt();break;
-				case vtStorage: m_strContent = node.GetTextExt();break;
-				case vtOStorage: m_strContent = node.GetTextExt();break;
+				case vtCy:
+				case vtError:
+				case vtStream:
+				case vtOStream:
+				case vtStorage:
+				case vtOStorage:
 				case vtClsid: m_strContent = node.GetTextExt();break;
 			}
 		}
@@ -254,6 +255,7 @@ namespace PPTX
 				switch (_at)
 				{
 				case 0: m_eType = (eVariantType)pReader->GetUChar(); break;
+				default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -497,6 +499,7 @@ namespace PPTX
 				{
 				case 0: m_eBaseType = (eVariantType)pReader->GetUChar(); break;
 				case 1: m_nSize = pReader->GetLong(); break;
+				default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -594,6 +597,7 @@ namespace PPTX
 				case 0: m_eBaseType = (eVariantType)pReader->GetUChar(); break;
 				case 1: m_strLBounds = pReader->GetString2(); break;
 				case 2: m_strUBounds = pReader->GetString2(); break;
+				default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -691,6 +695,7 @@ namespace PPTX
 				case 1: m_nPid = pReader->GetLong(); break;
 				case 2: m_strName = pReader->GetString2(); break;
 				case 3: m_strLinkTarget = pReader->GetString2(); break;
+				default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -734,12 +739,12 @@ namespace PPTX
 	}
 	CustomProperties::CustomProperties(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain)
 	{
-		read(filename, map);
+		CustomProperties::read(filename, map);
 	}
 	CustomProperties::~CustomProperties()
 	{
 	}
-	void CustomProperties::read(const OOX::CPath& filename, FileMap& map)
+	void CustomProperties::read(const OOX::CPath& filename, FileMap& /*map*/)
 	{
 		XmlUtils::CXmlNode oNode;
 		oNode.FromXmlFile(filename.m_strFilename);

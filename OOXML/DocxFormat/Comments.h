@@ -47,7 +47,7 @@ namespace OOX
 	public:
 		WritingElement_AdditionMethods(CComment)
 			
-		CComment(OOX::Document *pMain = NULL);
+		CComment(OOX::Document *pMain = nullptr);
 		virtual ~CComment();
 
 		virtual void fromXML(XmlUtils::CXmlNode& oNode);

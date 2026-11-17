@@ -35,12 +35,12 @@ namespace OOX
 	OleObject::OleObject(OOX::Document *pMain, const OOX::CPath& filename, bool bMsPackage) : OOX::IFileContainer(pMain), Media (pMain)
 	{
 		m_bMsPackage = bMsPackage;
-		read(filename);
+		OleObject::read(filename);
 	}
 	void OleObject::read(const CPath& oFilePath)
 	{
 		CPath oRootPath;
-		read(oRootPath, oFilePath);
+		OleObject::read(oRootPath, oFilePath);
 	}
 	void OleObject::read(const CPath& oRootPath, const CPath& oFilePath)
 	{

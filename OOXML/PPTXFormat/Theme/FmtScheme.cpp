@@ -249,8 +249,8 @@ namespace PPTX
 			}
 			void FmtScheme::FillWithDefaults()
 			{
-				Logic::SolidFill* pSolidFill = NULL;
-				Logic::SchemeClr* pSchemeClr = NULL;
+				Logic::SolidFill* pSolidFill = nullptr;
+				Logic::SchemeClr* pSchemeClr = nullptr;
 
 				// -------------- fill styles -------------------------
 				if (fillStyleLst.size() < 3)

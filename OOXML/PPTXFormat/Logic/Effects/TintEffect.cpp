@@ -93,7 +93,7 @@ namespace PPTX
 		void TintEffect::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar();
+			pReader->GetUChar();
 			LONG _e = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);
@@ -108,6 +108,7 @@ namespace PPTX
 				{
 					case 0:	amt = pReader->GetLong(); break;
 					case 1:	hue = pReader->GetLong(); break;
+					default: break;
 				}
 			}
 			pReader->Seek(_e);

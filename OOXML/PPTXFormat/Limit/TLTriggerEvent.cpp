@@ -81,6 +81,7 @@ namespace PPTX
 			case 8: m_strValue = L"onNext"; break;
 			case 9: m_strValue = L"onPrev"; break;
 			case 10: m_strValue = L"onStopAudio"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

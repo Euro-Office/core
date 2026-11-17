@@ -91,17 +91,17 @@ void OOX::Spreadsheet::CXlsx::init()
 {
     m_bSpreadsheets		= true;
 
-    m_pApp				= NULL;
-    m_pCore				= NULL;
+    m_pApp				= nullptr;
+    m_pCore				= nullptr;
 
-    m_pWorkbook			= NULL;
-    m_pSharedStrings	= NULL;
-    m_pStyles			= NULL;
-    m_pCalcChain		= NULL;
-    m_pVbaProject		= NULL;
-    m_pJsaProject		= NULL;
-    m_pWorkbookComments = NULL;
-    m_pXlsbWriter       = NULL;
+    m_pWorkbook			= nullptr;
+    m_pSharedStrings	= nullptr;
+    m_pStyles			= nullptr;
+    m_pCalcChain		= nullptr;
+    m_pVbaProject		= nullptr;
+    m_pJsaProject		= nullptr;
+    m_pWorkbookComments = nullptr;
+    m_pXlsbWriter       = nullptr;
     m_nLastReadRow      = 0;
     m_nLastReadCol      = -1;
     m_bNeedCalcChain    = true;
@@ -150,7 +150,7 @@ bool OOX::Spreadsheet::CXlsx::Read(const CPath& oFilePath)
 }
 bool OOX::Spreadsheet::CXlsx::WriteNative(const CPath& oDirPath, OOX::CContentTypes &oContentTypes)
 {
-    if (NULL == m_pWorkbook)
+    if (nullptr == m_pWorkbook)
 		return false;
 
 	IFileContainer::Write(oDirPath / L"", OOX::CPath(_T("")), oContentTypes);
@@ -162,11 +162,11 @@ bool OOX::Spreadsheet::CXlsx::Write(const CPath& oDirPath, OOX::CContentTypes &o
 {
     PrepareToWrite();
   
-	if(NULL == m_pWorkbook ||  m_arWorksheets.empty ())
+	if(nullptr == m_pWorkbook ||  m_arWorksheets.empty ())
         return false;
 
 //CApp
-	if(NULL == m_pApp)
+	if(nullptr == m_pApp)
 	{
 		OOX::CApp* pApp = new OOX::CApp(this);
 		pApp->SetDefaults();
@@ -175,7 +175,7 @@ bool OOX::Spreadsheet::CXlsx::Write(const CPath& oDirPath, OOX::CContentTypes &o
 	}
 
 //CCore
-	if(NULL == m_pCore)
+	if(nullptr == m_pCore)
 	{
 		OOX::CCore* pCore = new OOX::CCore(this);
 		pCore->SetDefaults();
@@ -195,7 +195,7 @@ bool OOX::Spreadsheet::CXlsx::Write(const CPath& oDirPath, OOX::CContentTypes &o
 bool OOX::Spreadsheet::CXlsx::WriteXLS(const CPath& oFilePath)
 {
 	PrepareToWrite();
-	if(NULL == m_pWorkbook ||  m_arWorksheets.empty ())
+	if(nullptr == m_pWorkbook ||  m_arWorksheets.empty ())
 		return false;
 	auto workbookStream = new XLS::WorkbookStreamObject;
 	auto workbookPtr = XLS::BaseObjectPtr(workbookStream);
@@ -307,7 +307,7 @@ bool OOX::Spreadsheet::CXlsx::WriteXLS(const CPath& oFilePath)
 	}
 	return true;
 }
-bool OOX::Spreadsheet::CXlsx::WriteWorkbook(const CPath& oDirPath)
+bool OOX::Spreadsheet::CXlsx::WriteWorkbook(const CPath&  /*oDirPath*/)
 {
 //Theme
 	if (m_pTheme.IsInit())
@@ -352,7 +352,7 @@ void OOX::Spreadsheet::CXlsx::CreateWorkbook ()
 {
 	if(bDeleteWorkbook)
 		RELEASEOBJECT(m_pWorkbook);
-	m_pWorkbook = new CWorkbook(NULL);
+	m_pWorkbook = new CWorkbook(nullptr);
 	bDeleteWorkbook = true;
 }
 
@@ -360,7 +360,7 @@ void OOX::Spreadsheet::CXlsx::CreateSharedStrings ()
 {
 	if(bDeleteSharedStrings)
 		RELEASEOBJECT(m_pSharedStrings);
-	m_pSharedStrings = new CSharedStrings(NULL);
+	m_pSharedStrings = new CSharedStrings(nullptr);
 	bDeleteSharedStrings = true;
 }
 
@@ -368,7 +368,7 @@ void OOX::Spreadsheet::CXlsx::CreateStyles ()
 {
 	if(bDeleteStyles)
 		RELEASEOBJECT(m_pStyles);
-	m_pStyles = new CStyles(NULL);
+	m_pStyles = new CStyles(nullptr);
 	bDeleteStyles = true;
 }
 bool OOX::Spreadsheet::CXlsx::hasPivot()
@@ -460,7 +460,7 @@ void OOX::Spreadsheet::CXlsx::PrepareWorkbook()
 	if( m_pStyles )
 	{
 		//Fonts
-		if(false == m_pStyles->m_oFonts.IsInit())
+		if(!m_pStyles->m_oFonts.IsInit())
 			m_pStyles->m_oFonts.Init();
 		
 		if(m_pStyles->m_oFonts->m_arrItems.empty())
@@ -468,12 +468,12 @@ void OOX::Spreadsheet::CXlsx::PrepareWorkbook()
 		
 		OOX::Spreadsheet::CFont* pFont = m_pStyles->m_oFonts->m_arrItems.front();
 		
-		if(false == pFont->m_oRFont.IsInit())
+		if(!pFont->m_oRFont.IsInit())
 		{
 			pFont->m_oRFont.Init();
 			pFont->m_oRFont->m_sVal = _T("Calibri");
 
-			if(false == pFont->m_oScheme.IsInit())
+			if(!pFont->m_oScheme.IsInit())
 			{
 				pFont->m_oScheme.Init();
 				pFont->m_oScheme->m_oFontScheme.Init();
@@ -481,57 +481,57 @@ void OOX::Spreadsheet::CXlsx::PrepareWorkbook()
 			}
 		}
 
-		if(false == pFont->m_oSz.IsInit() || false == pFont->m_oSz->m_oVal.IsInit())
+		if(!pFont->m_oSz.IsInit() || !pFont->m_oSz->m_oVal.IsInit())
 		{
 			pFont->m_oSz.Init();
 			pFont->m_oSz->m_oVal.Init();
 			pFont->m_oSz->m_oVal->SetValue(11.0);
 		}
 		//Fills
-		if(false == m_pStyles->m_oFills.IsInit())
+		if(!m_pStyles->m_oFills.IsInit())
 			m_pStyles->m_oFills.Init();
 		
 		if(m_pStyles->m_oFills->m_arrItems.empty())
 			m_pStyles->m_oFills->m_arrItems.push_back(new OOX::Spreadsheet::CFill());
 
 		OOX::Spreadsheet::CFill* pFill = m_pStyles->m_oFills->m_arrItems.front();
-		if(false == pFill->m_oGradientFill.IsInit())
+		if(!pFill->m_oGradientFill.IsInit())
 		{
-			if(false == pFill->m_oPatternFill.IsInit())
+			if(!pFill->m_oPatternFill.IsInit())
 				pFill->m_oPatternFill.Init();
-			if(false == pFill->m_oPatternFill->m_oPatternType.IsInit())
+			if(!pFill->m_oPatternFill->m_oPatternType.IsInit())
 				pFill->m_oPatternFill->m_oPatternType.Init();
 			pFill->m_oPatternFill->m_oPatternType->SetValue(SimpleTypes::Spreadsheet::patterntypeNone);
 		}
-		if(false == m_pStyles->m_oBorders.IsInit())
+		if(!m_pStyles->m_oBorders.IsInit())
 			m_pStyles->m_oBorders.Init();
 		if(m_pStyles->m_oBorders->m_arrItems.size() == 0)
 			m_pStyles->m_oBorders->m_arrItems.push_back(new OOX::Spreadsheet::CBorder());
 
 		//Xfs
-		if(false == m_pStyles->m_oCellXfs.IsInit())
+		if(!m_pStyles->m_oCellXfs.IsInit())
 			m_pStyles->m_oCellXfs.Init();
 		
 		if(m_pStyles->m_oCellXfs->m_arrItems.empty())
 			m_pStyles->m_oCellXfs->m_arrItems.push_back(new OOX::Spreadsheet::CXfs());
 
 		OOX::Spreadsheet::CXfs* pXfs = m_pStyles->m_oCellXfs->m_arrItems.front();
-		if(false == pXfs->m_oBorderId.IsInit())
+		if(!pXfs->m_oBorderId.IsInit())
 		{
 			pXfs->m_oBorderId.Init();
 			pXfs->m_oBorderId->SetValue(0);
 		}
-		if(false == pXfs->m_oFillId.IsInit())
+		if(!pXfs->m_oFillId.IsInit())
 		{
 			pXfs->m_oFillId.Init();
 			pXfs->m_oFillId->SetValue(0);
 		}
-		if(false == pXfs->m_oFontId.IsInit())
+		if(!pXfs->m_oFontId.IsInit())
 		{
 			pXfs->m_oFontId.Init();
 			pXfs->m_oFontId->SetValue(0);
 		}
-		if(false == pXfs->m_oNumFmtId.IsInit())
+		if(!pXfs->m_oNumFmtId.IsInit())
 		{
 			pXfs->m_oNumFmtId.Init();
 			pXfs->m_oNumFmtId->SetValue(0);
@@ -573,7 +573,7 @@ void OOX::Spreadsheet::CXlsx::PrepareWorksheet(CWorksheet* pWorksheet)
 						if(!m_pSharedStrings) CreateSharedStrings();
 						
 						OOX::Spreadsheet::CSi* pSi = pCell->m_oRichText.GetPointerEmptyNullable();
-						if(NULL != pSi)
+						if(nullptr != pSi)
 						{
 							int nIndex = m_pSharedStrings->AddSi(pSi);
 							//change the cell value

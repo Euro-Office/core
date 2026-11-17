@@ -95,7 +95,7 @@ namespace PPTX
 
 					smart_ptr<OOX::Media> pMedia;
 
-					if (pRels != NULL)
+					if (pRels != nullptr)
 						pMedia = pRels->Get<OOX::Media>(embed.get());
 
 					if (pMedia.IsInit())
@@ -148,7 +148,7 @@ namespace PPTX
 			}
 			pReader->Seek(end);
 
-			if (false == file_name_embed.empty())
+			if (!file_name_embed.empty())
 			{
 				std::wstring strPath = pReader->m_strFolder + FILE_SEPARATOR_STR + _T("media")  + FILE_SEPARATOR_STR + file_name_embed;
 

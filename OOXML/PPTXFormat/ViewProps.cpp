@@ -40,12 +40,12 @@ namespace PPTX
 	}
 	ViewProps::ViewProps(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain), PPTX::FileContainer(pMain)
 	{
-		read(filename, map);
+		ViewProps::read(filename, map);
 	}
 	ViewProps::~ViewProps()
 	{
 	}
-	void ViewProps::read(const OOX::CPath& filename, FileMap& map)
+	void ViewProps::read(const OOX::CPath& filename, FileMap&  /*map*/)
 	{
 		XmlUtils::CXmlNode oNode;
 		oNode.FromXmlFile(filename.m_strFilename);

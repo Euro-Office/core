@@ -62,6 +62,7 @@ namespace PPTX
 				case 2: m_strValue = L"mult";		break;
 				case 3: m_strValue = L"over";		break;
 				case 4: m_strValue = L"screen";		break;
+				default: break;
 			}
 		}
 	} // namespace Limit

@@ -62,6 +62,7 @@ namespace PPTX
 			case 2: m_strValue = L"ptInCategory"; break;
 			case 3: m_strValue = L"ptInSeries"; break;
 			case 4: m_strValue = L"series"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

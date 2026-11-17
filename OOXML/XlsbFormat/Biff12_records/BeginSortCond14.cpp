@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginSortCond14::readFields(XLS::CFRecord& record)
     {
-		_UINT16 flags;
+		_UINT16 flags = 0;
         record >> flags;
 
         fSortDes	= GETBIT(flags, 0);
@@ -62,6 +62,9 @@ namespace XLSB
                 break;
             case 0x03:
                 record >> cfflag14;
+                break;
+
+            default:
                 break;
         }
 
@@ -88,6 +91,9 @@ namespace XLSB
 			break;
 		case 0x03:
 			record << cfflag14;
+			break;
+
+		default:
 			break;
 		}
 

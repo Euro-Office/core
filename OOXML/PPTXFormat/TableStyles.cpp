@@ -32,12 +32,12 @@ namespace PPTX
 	}
 	TableStyles::TableStyles(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain)
 	{
-		read(filename, map);
+		TableStyles::read(filename, map);
 	}
 	TableStyles::~TableStyles()
 	{
 	}
-	void TableStyles::read(const OOX::CPath& filename, FileMap& map)
+	void TableStyles::read(const OOX::CPath& filename, FileMap&  /*map*/)
 	{
 		XmlUtils::CXmlNode oNode;
 		oNode.FromXmlFile(filename.m_strFilename);
@@ -124,7 +124,7 @@ namespace PPTX
 			}
 		}
 
-		BYTE _type = pReader->GetUChar(); // 0!!!
+		pReader->GetUChar(); // 0!!!
 		pReader->Skip(4); // len
 
 		LONG lPos = pReader->GetPos();
@@ -152,7 +152,7 @@ namespace PPTX
 					}
 					case 1:
 					{
-						std::wstring styleName = pReader->GetString2();
+						pReader->GetString2();
 						break;
 					}
 					default:

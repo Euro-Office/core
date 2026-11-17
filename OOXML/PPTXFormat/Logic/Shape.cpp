@@ -41,7 +41,7 @@ namespace PPTX
 		Shape::Shape(std::wstring name_)
 		{
 			m_name = name_;
-			m_pLevelUp = NULL;
+			m_pLevelUp = nullptr;
 		}
 
 		Shape::~Shape()
@@ -50,26 +50,26 @@ namespace PPTX
 
 		Shape::Shape(XmlUtils::CXmlNode& node)
 		{
-			m_pLevelUp = NULL;
+			m_pLevelUp = nullptr;
 
-			fromXML(node);
+			Shape::fromXML(node);
 		}
 		Shape::Shape(XmlUtils::CXmlLiteReader& oReader)
 		{
-			m_pLevelUp = NULL;
+			m_pLevelUp = nullptr;
 
-			fromXML(oReader);
+			Shape::fromXML(oReader);
 		}
 		const Shape& Shape::operator =(XmlUtils::CXmlNode& node)
 		{
-			m_pLevelUp = NULL;
+			m_pLevelUp = nullptr;
 
 			fromXML(node);
 			return *this;
 		}
 		const Shape& Shape::operator =(XmlUtils::CXmlLiteReader& oReader)
 		{
-			m_pLevelUp = NULL;
+			m_pLevelUp = nullptr;
 
 			fromXML(oReader);
 			return *this;
@@ -105,7 +105,7 @@ namespace PPTX
 						if (oReader.MoveToFirstAttribute())
 						{
 							std::string sNameA = XmlUtils::GetNameNoNS(oReader.GetNameChar());
-							while (false == sNameA.empty())
+							while (!sNameA.empty())
 							{
 								if ("id" == sNameA) oTextBoxId = oReader.GetText();
 								if (!oReader.MoveToNextAttribute())
@@ -402,7 +402,7 @@ namespace PPTX
 				}break;
 				case 4:
 				{
-					if (NULL != pReader->m_pDocxSerializer)
+					if (nullptr != pReader->m_pDocxSerializer)
 					{
 						LONG lLenRec = pReader->GetLong();
 
@@ -498,7 +498,7 @@ namespace PPTX
 			pWriter->WriteRecord1(1, spPr);
 			pWriter->WriteRecord2(2, style);
 
-			if (pWriter->m_pDocxSerializer != NULL)
+			if (pWriter->m_pDocxSerializer != nullptr)
 			{
 				if (oTextBoxShape.is_init())
 				{
@@ -587,7 +587,7 @@ namespace PPTX
 
 		void Shape::FillLevelUp()
 		{
-			if ((m_pLevelUp == NULL) && (nvSpPr.nvPr.ph.IsInit()))
+			if ((m_pLevelUp == nullptr) && (nvSpPr.nvPr.ph.IsInit()))
 			{
 				if ((nvSpPr.nvPr.ph->type.IsInit()) || (nvSpPr.nvPr.ph->idx.IsInit()))
 				{
@@ -612,14 +612,14 @@ namespace PPTX
 
 		bool Shape::IsListStyleEmpty()
 		{
-			if ((m_pLevelUp) && (m_pLevelUp->IsListStyleEmpty() == false)) return false;
+			if ((m_pLevelUp) && (!m_pLevelUp->IsListStyleEmpty())) return false;
 
-			if (txBody.IsInit() == false) return true;
-			if (txBody->lstStyle.IsInit() == false) return true;
+			if (!txBody.IsInit()) return true;
+			if (!txBody->lstStyle.IsInit()) return true;
 
 			return txBody->lstStyle->IsListStyleEmpty();
 		}
-		void Shape::Merge(Pic& pic, bool bIsSlidePlaceholder)
+		void Shape::Merge(Pic& pic, bool /*bIsSlidePlaceholder*/)
 		{
 			if (m_pLevelUp)
 				m_pLevelUp->Merge(pic, true);
@@ -716,8 +716,6 @@ namespace PPTX
 				if (spPr.xfrm->extX.is_init())	dW = *spPr.xfrm->extX;
 				if (spPr.xfrm->extY.is_init())	dH = *spPr.xfrm->extY;
 
-				lW = spPr.xfrm->extX.get_value_or(43200);
-				lH = spPr.xfrm->extY.get_value_or(43200);
 			}
 
 			std::wstring strId = L"shape " + std::to_wstring(pWriter->m_lObjectIdVML);
@@ -840,7 +838,7 @@ namespace PPTX
 
 			pWriter->WriteAttribute(L"style", pWriter->m_strStyleMain + pWriter->m_strStyleWrap + oStylesWriter.GetXmlString() );
 
-			if (false == strPath.empty())
+			if (!strPath.empty())
 			{
 				pWriter->WriteAttribute(L"path", strPath);
 				pWriter->WriteAttribute(L"coordsize", (std::wstring)L"100000,100000");
@@ -851,7 +849,7 @@ namespace PPTX
 				pWriter->WriteAttribute(L"to", XmlUtils::ToString(pWriter->m_dX + pWriter->m_dWidth, L"%.1lf") + L"pt," + XmlUtils::ToString(pWriter->m_dY + pWriter->m_dHeight, L"%.1lf") + L"pt");
 			}
 
-			if (false == pWriter->m_strAttributesMain.empty())
+			if (!pWriter->m_strAttributesMain.empty())
 			{
 				pWriter->WriteString(pWriter->m_strAttributesMain);
 				pWriter->m_strAttributesMain.clear();
@@ -862,7 +860,7 @@ namespace PPTX
 
 			pWriter->EndAttributes();
 
-			if (false == strTextRect.empty())
+			if (!strTextRect.empty())
 			{
 				pWriter->StartNode(L"v:path");
 				pWriter->StartAttributes();

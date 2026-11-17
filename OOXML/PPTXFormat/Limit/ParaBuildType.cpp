@@ -59,6 +59,7 @@ namespace PPTX
 			case 1: m_strValue = L"cust"; break;
 			case 2: m_strValue = L"p"; break;
 			case 3: m_strValue = L"whole"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

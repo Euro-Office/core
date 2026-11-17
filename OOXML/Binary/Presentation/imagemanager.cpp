@@ -49,11 +49,11 @@ namespace NSShapeImageGen
 		m_lMaxSizeImage = c_nMaxImageSize;
 		m_lNextIDImage	= 0;
 		m_lDstFormat	= 0;
-		m_pFontManager = NULL;
+		m_pFontManager = nullptr;
 	}
 	CMediaManager::~CMediaManager()
 	{
-		m_pFontManager = NULL;
+		m_pFontManager = nullptr;
 	}
 
 	CMediaInfo CMediaManager::WriteImage(CBgraFrame& oImage, double& width, double& height)
@@ -104,7 +104,7 @@ namespace NSShapeImageGen
 				strDownload = oDownloader.GetFilePath();
 				
 				CImageFileFormatChecker checker;
-				if (false == checker.isImageFile(strDownload))
+				if (!checker.isImageFile(strDownload))
 				{
 					strDownload.clear();
 				}
@@ -117,7 +117,7 @@ namespace NSShapeImageGen
 		{
 			CMediaInfo info;
 			NSFile::CFileBinary oFile;
-			if (false == oFile.OpenFile(strFile) && std::wstring::npos == strFile.find(L"data:base64,"))
+			if (!oFile.OpenFile(strFile) && std::wstring::npos == strFile.find(L"data:base64,"))
 			{
 				return info;
 			}
@@ -168,7 +168,7 @@ namespace NSShapeImageGen
 				strDownload = oDownloader.GetFilePath();
 				
 				CImageFileFormatChecker checker;
-				if (false == checker.isImageFile(strDownload))
+				if (!checker.isImageFile(strDownload))
 				{
 					strDownload.clear();
 				}
@@ -184,7 +184,7 @@ namespace NSShapeImageGen
 		m_pFontManager = pFontManager;
 	}
 
-	void CMediaManager::SaveImage(const std::wstring& strFileName, CMediaInfo& oInfo, LONG __width, LONG __height)
+	void CMediaManager::SaveImage(const std::wstring& strFileName, CMediaInfo& oInfo, LONG nWidth, LONG nHeight)
 	{
 		bool result = false;
 		CImageFileFormatChecker checker;
@@ -192,16 +192,16 @@ namespace NSShapeImageGen
 		std::wstring sTempUnpacked;
 		std::wstring strFileSrc = strFileName;
 
-		COfficeUtils officeUtils(NULL);
+		COfficeUtils officeUtils(nullptr);
 		
 		bool bIsImage = checker.isImageFile(strFileSrc);
 		
-		if (false == bIsImage && true == officeUtils.IsArchive(strFileSrc))
+		if (!bIsImage && static_cast<bool>(officeUtils.IsArchive(strFileSrc)))
 		{
 			sTempUnpacked = m_strTempMedia + FILE_SEPARATOR_STR + L"zip_unpacked";
 			NSDirectory::CreateDirectory(sTempUnpacked);
 
-			if (S_OK == officeUtils.ExtractToDirectory(strFileSrc, sTempUnpacked, NULL, 0))
+			if (S_OK == officeUtils.ExtractToDirectory(strFileSrc, sTempUnpacked, nullptr, 0))
 			{
 				std::vector<std::wstring> arrFiles = NSDirectory::GetFiles(sTempUnpacked, false);
 				if (1 == arrFiles.size())
@@ -211,7 +211,7 @@ namespace NSShapeImageGen
 			}
 			else
 			{//gzip
-				BYTE *pData = NULL;
+				BYTE *pData = nullptr;
 				DWORD nBytesCount = 0;
 
 				NSFile::CFileBinary file;
@@ -228,8 +228,8 @@ namespace NSShapeImageGen
 
 						strFileSrc = tempFile;
 					}
-					if (pDataUncompress) delete []pDataUncompress; pDataUncompress = NULL;
-					if (pData) delete []pData; pData = NULL;
+					if (pDataUncompress) delete []pDataUncompress; pDataUncompress = nullptr;
+					if (pData) delete []pData; pData = nullptr;
 				}
 			}
 
@@ -294,16 +294,16 @@ namespace NSShapeImageGen
 			else
 			{
 				CBgraFrame oBgraFrame;
-				if (oBgraFrame.OpenFile(strFileSrc) == true)
+				if (oBgraFrame.OpenFile(strFileSrc))
 				{
-					SaveImage(oBgraFrame, oInfo, __width, __height);
+					SaveImage(oBgraFrame, oInfo, nWidth, nHeight);
 
 					result = true;
 				}
 			}
 		}
 
-		if (false == result)
+		if (!result)
 		{
 			//conversion is unsuccessful - take the original file
 			OOX::CPath pathOriginal = strFileSrc;
@@ -319,12 +319,12 @@ namespace NSShapeImageGen
 			CDirectory::CopyFile(strFileSrc, strSaveItem);
 		}
 
-		if (false == sTempUnpacked.empty())
+		if (!sTempUnpacked.empty())
 		{
 			NSDirectory::DeleteDirectory(sTempUnpacked);
 		}
 	}
-	void CMediaManager::SaveImage(CBgraFrame& oBgraFrame, CMediaInfo& oInfo, LONG __width, LONG __height)
+	void CMediaManager::SaveImage(CBgraFrame& oBgraFrame, CMediaInfo& oInfo, LONG  /*nWidth*/, LONG  /*nHeight*/)
 	{
 		LONG lWidth		= oBgraFrame.get_Width();
 		LONG lHeight	= oBgraFrame.get_Height();
@@ -348,7 +348,7 @@ namespace NSShapeImageGen
 
 		LONG lMaxSize = (std::min)((std::max)(lWidth, lHeight), m_lMaxSizeImage);
 
-		if (!((lWidth <= lMaxSize) && (lHeight <= lMaxSize)))
+		if ((lWidth > lMaxSize) || (lHeight > lMaxSize))
 		{
 			LONG lW = 0;
 			LONG lH = 0;
@@ -378,7 +378,7 @@ namespace NSShapeImageGen
 		LONG lHeight	= (LONG)(dHeight * 96 / 25.4);
 
 		BYTE* pBuffer = punkData.get_Data();
-		LONG lLen = 4 * punkData.get_Width() * punkData.get_Height();
+		LONG lLen = 4L * punkData.get_Width() * punkData.get_Height();
 
 		DWORD dwSum = m_oCRC.Calc(pBuffer, lLen);
 

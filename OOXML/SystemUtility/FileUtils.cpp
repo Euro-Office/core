@@ -51,7 +51,7 @@ namespace StreamUtils
 
 	BYTE ReadBYTE(POLE::Stream* pStream)
 	{
-		if (pStream == NULL) return 0;
+		if (pStream == nullptr) return 0;
 
 		BYTE lMem = 0;
 		ULONG lReadByte = 0;
@@ -65,7 +65,7 @@ namespace StreamUtils
 	}
 	WORD ReadWORD(POLE::Stream* pStream)
 	{
-		if (pStream == NULL) return 0;
+		if (pStream == nullptr) return 0;
 
 		WORD lWord = 0;
 		BYTE pMem[2];
@@ -80,7 +80,7 @@ namespace StreamUtils
 	}
 	DWORD ReadDWORD(POLE::Stream* pStream)
 	{
-		if (pStream == NULL) return 0;
+		if (pStream == nullptr) return 0;
 
 		DWORD lDWord = 0;
 		BYTE pMem[4];
@@ -107,7 +107,7 @@ namespace StreamUtils
 	}
 	FLOAT ReadFLOAT( POLE::Stream* pStream)
 	{
-		if (pStream == NULL) return 0;
+		if (pStream == nullptr) return 0;
 
 		FLOAT Value = 0.0f;
 		pStream->read ((unsigned char*) &Value, sizeof (FLOAT));
@@ -117,10 +117,10 @@ namespace StreamUtils
 	std::string ReadStringA(POLE::Stream* pStream, LONG lLen)
 	{
 		if (lLen < 0) return ("");
-		if (pStream == NULL) return ("");
+		if (pStream == nullptr) return ("");
 
 		char* pData = new char[lLen + 1];
-		ULONG lReadByte = (ULONG)pStream->read((unsigned char*)pData, lLen);
+		pStream->read((unsigned char*)pData, lLen);
 
 		pData[lLen] = 0;
 
@@ -131,12 +131,12 @@ namespace StreamUtils
 	}
 	std::wstring ReadStringW(POLE::Stream* pStream, LONG lLen)
 	{
-		if (pStream == NULL) return (L"");
+		if (pStream == nullptr) return (L"");
 
 		unsigned char* pData = new unsigned char[2 * (lLen + 1)];
 		memset (pData, 0, 2 * (lLen + 1));
 
-		ULONG lReadByte = (ULONG)pStream->read(pData, 2 * lLen);
+		pStream->read(pData, 2 * lLen);
 
 		if (sizeof(wchar_t) == 4)
 		{
@@ -173,25 +173,25 @@ namespace StreamUtils
 
 	void StreamSeek(long lOffset, POLE::Stream* pStream)
 	{
-		if (pStream == NULL) return;
+		if (pStream == nullptr) return;
 
 		pStream->seek(lOffset);
 	}
 	void StreamPosition(long& lPosition, POLE::Stream* pStream)
 	{
-		if (pStream == NULL) return ;
+		if (pStream == nullptr) return ;
 
 		lPosition = (LONG)pStream->tell();
 	}
 	void StreamSkip(long lCount, POLE::Stream* pStream)
 	{
-		if (pStream == NULL) return;
+		if (pStream == nullptr) return;
 
 		pStream->seek(pStream->tell() + lCount);
 	}
 	void StreamSkipBack(long lCount, POLE::Stream* pStream)
 	{
-		if (pStream == NULL) return;
+		if (pStream == nullptr) return;
 
 		pStream->seek(pStream->tell()-lCount);
 	}
@@ -251,7 +251,7 @@ namespace CDirectory
 	void WriteValueToNode(std::wstring strName, bool value, XmlUtils::CXmlWriter* pWriter)
 	{
 		pWriter->WriteNodeBegin(strName);
-		std::wstring str = (true == value) ? (L"1") : (L"0");
+		std::wstring str = (value) ? (L"1") : (L"0");
 		pWriter->WriteString(str);
 		pWriter->WriteNodeEnd(strName);
 	}
@@ -259,7 +259,8 @@ namespace CDirectory
 	double FixedPointToDouble(DWORD point)
 	{
 		double dVal = (double)(point % 65536) / 65536;
-		dVal += (point / 65536);
+		const DWORD nIntegerPart = point / 65536; // truncated integer part of the fixed-point value
+		dVal += nIntegerPart;
 		return dVal;
 	}
 	LONG NormFixedPoint(DWORD point, LONG base)

@@ -82,10 +82,10 @@ namespace PPTX
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"accent6", lColorIndex_accent6 )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"bg1", lColorIndex_bg1 )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"bg2", lColorIndex_bg2 )
-				WritingElement_ReadAttributes_Read_else_if( oReader, L"tx1", lColorIndex_tx1 )
-				WritingElement_ReadAttributes_Read_else_if( oReader, L"tx2", lColorIndex_tx2 )
-				WritingElement_ReadAttributes_Read_else_if( oReader, L"folHlink", lColorIndex_folHlink )
-				WritingElement_ReadAttributes_Read_else_if( oReader, L"hlink", lColorIndex_hlink )
+				WritingElement_ReadAttributes_Read_else_if( oReader, L"tx1", lColorIndex_tx1 ) // NOLINT(bugprone-branch-clone): "tx1" and "t1" are distinct attribute names read into the same field
+				WritingElement_ReadAttributes_Read_else_if( oReader, L"tx2", lColorIndex_tx2 ) // NOLINT(bugprone-branch-clone): "tx2" and "t2" are distinct attribute names read into the same field
+				WritingElement_ReadAttributes_Read_else_if( oReader, L"folHlink", lColorIndex_folHlink ) // NOLINT(bugprone-branch-clone): "folHlink" and "followedHyperlink" are distinct attribute names read into the same field
+				WritingElement_ReadAttributes_Read_else_if( oReader, L"hlink", lColorIndex_hlink ) // NOLINT(bugprone-branch-clone): "hlink" and "hyperlink" are distinct attribute names read into the same field
 
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"t1", lColorIndex_tx1 )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"t2", lColorIndex_tx2 )
@@ -264,7 +264,7 @@ namespace PPTX
 		void ClrMap::FillParentPointersForChilds(){};
 		void ClrMap::SetMap()
 		{
-			if (false == m_mapColorMap.empty()) return;
+			if (!m_mapColorMap.empty()) return;
 
 			m_mapColorMap.insert(std::make_pair(L"bg1", 0));
 			m_mapColorMap.insert(std::make_pair(L"tx1", 1));

@@ -29,30 +29,30 @@ namespace PPTX
 {
 	LegacyDiagramText::LegacyDiagramText(OOX::Document *pMain) : OOX::File(pMain)
 	{
-		m_Data		= 0;
+		m_Data		= nullptr;
 		m_DataSize	= 0;
 	}
 	LegacyDiagramText::LegacyDiagramText(OOX::Document *pMain, const OOX::CPath& filename) : OOX::File(pMain)
 	{
-		m_Data		= 0;
+		m_Data		= nullptr;
 		m_DataSize	= 0;
 
-		read(filename);
+		LegacyDiagramText::read(filename);
 	}
 	LegacyDiagramText::~LegacyDiagramText()
 	{
 		if (m_Data)delete []m_Data;
-		m_Data = NULL;
+		m_Data = nullptr;
 		m_DataSize =0;
 	}
 	void LegacyDiagramText::read(const OOX::CPath& filename)
 	{
 		if (m_Data)delete []m_Data;
-		m_Data = NULL;
+		m_Data = nullptr;
 		m_DataSize =0;
 
 		NSFile::CFileBinary file;
-		if (true == file.OpenFile(filename.GetPath()))
+		if (file.OpenFile(filename.GetPath()))
 		{
 			m_DataSize = (int)file.GetFileSize();
 			m_Data = new BYTE[m_DataSize];
@@ -77,6 +77,9 @@ namespace PPTX
 	}
 	LegacyDiagramText& LegacyDiagramText::operator=(const LegacyDiagramText& oSrc)
 	{
+		if (this == &oSrc)
+			return *this;
+
 		m_Text = oSrc.m_Text;
 		return *this;
 	}
@@ -95,7 +98,6 @@ namespace PPTX
 
 	void LegacyDiagramText::Parse()
 	{
-		_UINT32 typeText =0;
 		int pos = 8; //skip first main header
 		while (pos < m_DataSize - 8)
 		{
@@ -105,8 +107,6 @@ namespace PPTX
 			{
 				case 0x0F9F:	//TextHeaderAtom
 				{
-					typeText = *(_UINT32*)(m_Data + pos);
-
 //Tx_TYPE_TITLE			0x00000000 Title placeholder shape text.
 //Tx_TYPE_BODY			0x00000001 Body placeholder shape text.
 //Tx_TYPE_NOTES			0x00000002 Notes placeholder shape text.
@@ -173,6 +173,7 @@ namespace PPTX
 						//lang, bidi, spelling
 					}
 				}break;
+				default: break;
 			}
 			pos += rec.RecLen;
 
@@ -207,22 +208,18 @@ namespace PPTX
 		}
 	}
 
-	int LegacyDiagramText::ParseParaProps(PPTX::Logic::TextParagraphPr& props, BYTE* Data, int size, int  & count)
+	int LegacyDiagramText::ParseParaProps(PPTX::Logic::TextParagraphPr& props, BYTE* Data, int  /*size*/, int  & count)
 	{
 		int pos=0;
 		count = *(_UINT32*)(Data + pos); pos += 4;
 
-		int m_lLevel	= *(_UINT16*)(Data + pos); pos += 2;
-
-		if (m_lLevel > 0x0004)
-			m_lLevel = 0x0004;
+		pos += 2; // text level (unused)
 
 
 		DWORD dwFlags = *(_UINT32*)(Data + pos); pos += 4;
 		BYTE flag1 = (BYTE)(dwFlags);
 		BYTE flag2 = (BYTE)(dwFlags >> 8);
 		BYTE flag3 = (BYTE)(dwFlags >> 16);
-		BYTE flag4 = (BYTE)(dwFlags >> 24);
 
 		bool hasBullet_				= (0x01 == (0x01 & flag1));
 		bool bulletHasFont_			= (0x02 == (0x02 & flag1));
@@ -250,19 +247,10 @@ namespace PPTX
 		bool tabStops_				= (0x10 == (0x10 & flag3));
 		bool textDirection_			= (0x20 == (0x20 & flag3));
 		//reserved
-		bool bulletBlip_			= (0x80 == (0x80 & flag3));
 
-		bool bulletScheme_			= (0x01 == (0x01 & flag4));
-		bool bulletHasScheme_		= (0x02 == (0x02 & flag4));
-
-		bool Bulleted = false;
 		if (hasBullet_ || bulletHasFont_ || bulletHasColor_ || bulletHasSize_)
 		{
-			WORD bulletFlag		= *(_UINT16*)(Data + pos); pos += 2;
-			if (bulletFlag & 0x0F)
-				Bulleted	=  (0x01 == (bulletFlag & 0x01));
-			else
-				Bulleted	= false;
+			pos += 2; // bullet flags (unused)
 		}
 //TODO tested only align
 		if (bulletChar_)
@@ -273,7 +261,7 @@ namespace PPTX
 		}
 		if (bulletFontRef_)
 		{
-			_UINT16 buTypeface	= *(_UINT16*)(Data + pos); pos += 2;
+			pos += 2; // buTypeface (unused)
 		}
 		if (bulletSize_)
 		{
@@ -318,6 +306,7 @@ namespace PPTX
 				case 4: pptx_align = 1; break;//dist
 				case 5: pptx_align = 6; break;//thaiDist
 				case 6: pptx_align = 3; break;//justLow
+				default: break;
 			}
 			props.algn = pptx_align;
 		}
@@ -383,17 +372,17 @@ namespace PPTX
 
 		if (charWrap_ || wordWrap_ || overflow_)
 		{
-			int wrapFlags	= *(_UINT16*)(Data + pos); pos += 2;
+			pos += 2; // wrapFlags (unused)
 		}
 
 		if (textDirection_)
 		{
-			int textDirection = *(_UINT16*)(Data + pos); pos += 2;
+			pos += 2; // textDirection (unused)
 		}
 		return pos;
 	}
 
-	int LegacyDiagramText::ParseRunProps(PPTX::Logic::RunProperties& props, BYTE* Data, int size, int  & count)
+	int LegacyDiagramText::ParseRunProps(PPTX::Logic::RunProperties& props, BYTE* Data, int  /*size*/, int  & count)
 	{
 		int pos = 0;
 		count	= *(_UINT32*)(Data + pos); pos += 4;
@@ -402,7 +391,6 @@ namespace PPTX
 		BYTE flag1 = (BYTE)(dwFlags);
 		BYTE flag2 = (BYTE)(dwFlags >> 8);
 		BYTE flag3 = (BYTE)(dwFlags >> 16);
-		BYTE flag4 = (BYTE)(dwFlags >> 24);
 
 		bool hasBold				= (0x01 == (0x01 & flag1));
 		bool hasItalic				= (0x02 == (0x02 & flag1));
@@ -427,10 +415,6 @@ namespace PPTX
 		bool AnsiFontRef_			= (0x40 == (0x40 & flag3));
 		bool SymbolFontRef_			= (0x80 == (0x80 & flag3));
 
-		bool hasNewEATypeface		= (0x01 == (0x01 & flag4));
-		bool hasCsTypeface			= (0x02 == (0x02 & flag4));
-		bool hasPp11ext				= (0x04 == (0x04 & flag4));
-
 		bool bIsFontStylePresent = (hasBold || hasItalic || hasUnderline || hasShadow ||
 			hasFehint || hasKimi || hasEmboss || hasStyle != 0);
 
@@ -449,27 +433,24 @@ namespace PPTX
 				props.u = Limit::TextUnderline();
 		}
 
-		_UINT32 Typeface;
-		_UINT16 EAFontRef, AnsiFontRef, SymbolFontRef;
-
 		if (typeface_)
 		{
-			Typeface = *(_UINT16*)(Data + pos); pos += 2;
+			pos += 2; // Typeface (unused)
 		}
 
 		if (EAFontRef_)
 		{
-			EAFontRef = *(_UINT16*)(Data + pos); pos += 2;
+			pos += 2; // EAFontRef (unused)
 		}
 
 		if (AnsiFontRef_)
 		{
-			AnsiFontRef = *(_UINT16*)(Data + pos); pos += 2;
+			pos += 2; // AnsiFontRef (unused)
 		}
 
 		if (SymbolFontRef_)
 		{
-			SymbolFontRef = *(_UINT16*)(Data + pos); pos += 2;
+			pos += 2; // SymbolFontRef (unused)
 		}
 		if (size_)
 		{
@@ -503,7 +484,7 @@ namespace PPTX
 
 		if (BaseLineOffset_)
 		{
-			int BaseLineOffset = static_cast<int>((double)(*(_UINT16*)(Data + pos))); pos += 2;
+			pos += 2; // BaseLineOffset (unused)
 		}
 
 		// or the last two are the other way around????

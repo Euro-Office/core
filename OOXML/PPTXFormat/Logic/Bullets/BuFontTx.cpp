@@ -45,8 +45,6 @@ namespace PPTX
 			int nCurDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-				std::wstring sName = oReader.GetName();
-
 			}
 		}
 		OOX::EElementType BuFontTx::getType () const

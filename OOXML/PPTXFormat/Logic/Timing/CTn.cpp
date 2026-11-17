@@ -176,7 +176,7 @@ namespace PPTX
 				else if (8 == _at)	syncBehavior = pReader->GetUChar();
 				else if (9 == _at)	display = pReader->GetBool();
 				else if (10 == _at)	nodePh = pReader->GetBool();
-				else if (11 == _at)	bldLvl = pReader->GetLong();
+				else if (11 == _at)	bldLvl = pReader->GetLong(); // NOLINT(bugprone-branch-clone): distinct record ids 11 and 13 both decode into bldLvl
 				else if (12 == _at)	decel = pReader->GetLong();
 				else if (13 == _at)	bldLvl = pReader->GetLong();
 				else if (14 == _at)	grpId = pReader->GetLong();

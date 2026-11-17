@@ -204,7 +204,7 @@ namespace PPTX
 		void BlipFill::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar(); // FILL_TYPE_BLIP
+			pReader->GetUChar(); // FILL_TYPE_BLIP
 			LONG _e = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);
@@ -283,7 +283,7 @@ namespace PPTX
 										blip->Effects.push_back(UniEffect());
 										blip->Effects.back().fromPPTY(pReader);
 
-										if (false == blip->Effects.back().is_init())
+										if (!blip->Effects.back().is_init())
 										{
 											blip->Effects.pop_back();
 										}
@@ -315,10 +315,7 @@ namespace PPTX
 										if (std::wstring::npos != nFind)
 										{
 											std::wstring sFormatDataString = XmlUtils::GetLower(strImagePath.substr(5, nFind - 5));
-											size_t nFind1 = sFormatDataString.find(L"base64");
-											if (std::wstring::npos != nFind1) bBase64 = true;
-
-											nFind1 = sFormatDataString.find(L"image/");
+											size_t nFind1 = sFormatDataString.find(L"image/");
 											if (std::wstring::npos != nFind1)
 											{
 												int nFind2 = (int)sFormatDataString.find(L";");
@@ -329,30 +326,30 @@ namespace PPTX
 										}
 										strImagePath.erase(0, nFind + 1);
 
-										std::string __s = std::string(strImagePath.begin(), strImagePath.end());
-										size_t len = __s.length();
+										std::string sImageData = std::string(strImagePath.begin(), strImagePath.end());
+										size_t len = sImageData.length();
 										
-										BYTE* pDstBuffer = NULL;
+										BYTE* pDstBuffer = nullptr;
 										int dstLen = 0;
 
-										if (true)//(bBase64)
+										if (true) // NOLINT(readability-simplify-boolean-expr): base64 decoding is always on; the else is the disabled bBase64 switch
 										{
 											bBase64 = true;
 											int dstLenTemp = Base64::Base64DecodeGetRequiredLength(len);
 
 											pDstBuffer = new BYTE[dstLenTemp];
 											dstLen = dstLenTemp;
-											Base64::Base64Decode(__s.c_str(), len, pDstBuffer, &dstLen);
+											Base64::Base64Decode(sImageData.c_str(), len, pDstBuffer, &dstLen);
 										}
 										else
 										{
-											pDstBuffer = (BYTE*) __s.c_str();
+											pDstBuffer = (BYTE*) sImageData.c_str();
 											dstLen = len;
 										}
 										CImageFileFormatChecker checker;
 										std::wstring detectImageExtension = checker.DetectFormatByData(pDstBuffer, dstLen);
 
-										if (false == detectImageExtension.empty())
+										if (!detectImageExtension.empty())
 										{
 											sImageExtension = detectImageExtension;
 

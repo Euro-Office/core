@@ -99,7 +99,7 @@ namespace PPTX
 		void HslEffect::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar();
+			pReader->GetUChar();
 			LONG _e = pReader->GetPos() + pReader->GetLong() + 4;
 
 			pReader->Skip(1);
@@ -118,6 +118,7 @@ namespace PPTX
 						lum = pReader->GetLong(); break;
 					case 2:
 						sat = pReader->GetLong(); break;
+					default: break;
 				}
 			}
 			pReader->Seek(_e);

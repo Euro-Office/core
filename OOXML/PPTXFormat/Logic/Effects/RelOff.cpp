@@ -89,7 +89,7 @@ namespace PPTX
 		void RelOff::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar();
+			pReader->GetUChar();
 			LONG _end_rec = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);
@@ -104,6 +104,7 @@ namespace PPTX
 				{
 					case 0:	tx	= pReader->GetLong(); break;
 					case 1:	ty	= pReader->GetLong(); break;
+					default: break;
 				}
 
 			}

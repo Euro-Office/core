@@ -335,14 +335,14 @@ namespace OOX
 		}		
 		CFFDDList::~CFFDDList()
 		{
-			ClearItems();
+			CFFDDList::ClearItems();
 		}
 		void CFFDDList::ClearItems()
 		{
 			for ( unsigned int nIndex = 0; nIndex < m_arrListEntry.size(); nIndex++ )
 			{
 				if ( m_arrListEntry[nIndex] ) delete m_arrListEntry[nIndex];
-				m_arrListEntry[nIndex] = NULL;
+				m_arrListEntry[nIndex] = nullptr;
 			}
 			m_arrListEntry.clear();
 		}
@@ -614,7 +614,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth )  )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( L"w:ffData" == sName )
 					m_oFFData = oReader;

@@ -79,7 +79,7 @@ namespace OOX
 	}
 	CWebSettings::CWebSettings(OOX::Document *pMain, const CPath& oPath) : OOX::File(pMain)
 	{
-		read( oPath );
+		CWebSettings::read( oPath );
 	}
 	CWebSettings::~CWebSettings()
 	{

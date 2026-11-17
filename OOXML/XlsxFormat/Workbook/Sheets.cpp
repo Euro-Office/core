@@ -86,9 +86,7 @@ namespace OOX
 			else
 				ptr->iTabID = 0;
 
-			if(m_oState == SimpleTypes::Spreadsheet::EVisibleType::visibleVisible)
-				ptr->hsState = XLSB::BundleSh::ST_SheetState::VISIBLE;
-			else if(m_oState == SimpleTypes::Spreadsheet::EVisibleType::visibleHidden)
+			if(m_oState == SimpleTypes::Spreadsheet::EVisibleType::visibleHidden)
 				ptr->hsState = XLSB::BundleSh::ST_SheetState::HIDDEN;
 			else if(m_oState == SimpleTypes::Spreadsheet::EVisibleType::visibleVeryHidden)
 				ptr->hsState = XLSB::BundleSh::ST_SheetState::VERYHIDDEN;
@@ -132,6 +130,7 @@ namespace OOX
 				case XLSB::BundleSh::ST_SheetState::VERYHIDDEN:
 					m_oState = SimpleTypes::Spreadsheet::EVisibleType::visibleVeryHidden;
 					break;
+				default: break;
 			}
 
 		}

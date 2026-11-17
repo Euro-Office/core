@@ -120,7 +120,7 @@ namespace PPTX
 			virtual void GetRect(Aggplus::RECT& pRect)const;
 			
 			virtual std::wstring GetFullPicName()const;
-			smart_ptr<OOX::File> GetMediaLink(NSBinPptxRW::CBinaryFileWriter* pWriter = NULL)const;
+			smart_ptr<OOX::File> GetMediaLink(NSBinPptxRW::CBinaryFileWriter* pWriter = nullptr)const;
 			
 			DWORD GetFill(UniFill& fill)const;
 			DWORD GetLine(Ln& line)const;

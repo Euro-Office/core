@@ -355,7 +355,7 @@ namespace Spreadsheet
 //------------------------------------
 	void CPivotTableDefinition::toXML(NSStringUtils::CStringBuilder& writer) const
 	{
-		if(false == m_oName.IsInit()) return;
+		if(!m_oName.IsInit()) return;
 
 		writer.WriteString(L"<pivotTableDefinition \
 xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" \
@@ -1652,6 +1652,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case XLSB::PivotItemType::PITBLANK:
                     m_oT = SimpleTypes::Spreadsheet::EPivotItemType::typeBlank;
                     break;
+                default: break;
             }
         }
     }
@@ -1971,6 +1972,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case XLSB::ShowDataAs::PERCENTOFRUNTOTAL:
                     m_oShowDataAs = SimpleTypes::Spreadsheet::EShowDataAs::dataAsRunTotal;
                     break;
+                default: break;
             }
 
             switch(ptr->iiftab.value().get())
@@ -2008,6 +2010,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case XLSB::DataConsolidationFunction::STDVARP:
                     m_oSubtotal = SimpleTypes::Spreadsheet::EDataConsolidateFunction::functionVarP;
                     break;
+                default: break;
             }
         }
     }
@@ -2502,6 +2505,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case XLSB::PivotItemType::PITBLANK:
                     m_oItemType = SimpleTypes::Spreadsheet::EPivotItemType::typeBlank;
                     break;
+                default: break;
             }
         }
     }
@@ -2902,10 +2906,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
             ptr->fAutoSort = false;
 		if(m_oSortType.IsInit())
 		{
-            if(m_oSortType->GetValue() == SimpleTypes::Spreadsheet::EFieldSortType::sortAscending)
-                ptr->fAscendSort = true;
-            else
-                ptr->fAscendSort = false;
+            ptr->fAscendSort = m_oSortType->GetValue() == SimpleTypes::Spreadsheet::EFieldSortType::sortAscending;
 		}
         else
              ptr->fAscendSort = false;
@@ -3934,6 +3935,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case 0x06:
                     m_oType = SimpleTypes::Spreadsheet::EPivotAreaType::areaTopEnd;
                     break;
+                default: break;
             }
         }
     }
@@ -4092,7 +4094,6 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			WritingElement_ReadAttributes_Read_if		( oReader, L"name", m_oName )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"showColHeaders", m_oShowColHeaders )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"showLastColumn", m_oShowLastColumn )
-			WritingElement_ReadAttributes_Read_else_if	( oReader, L"showLastColumn", m_oShowLastColumn )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"showRowHeaders", m_oShowRowHeaders )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"showRowStripes", m_oShowRowStripes )
 		WritingElement_ReadAttributes_End( oReader )
@@ -4102,7 +4103,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 	{
 		m_bSpreadsheets = true;
 
-		m_pData = NULL;
+		m_pData = nullptr;
 		m_nDataLength = 0;
 
 		bIsWritten = false;
@@ -4111,7 +4112,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 	{
 		m_bSpreadsheets = true;
 
-		m_pData = NULL;
+		m_pData = nullptr;
 		m_nDataLength = 0;
 
 		bIsWritten = false;
@@ -4265,7 +4266,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 		}
 		return OOX::Spreadsheet::FileTypes::PivotCacheDefinition;
 	}
-	void CPivotCacheDefinitionFile::setData(BYTE* pData, long length, const std::wstring& srIdRecords)
+	void CPivotCacheDefinitionFile::setData(BYTE* pData, long length, const std::wstring&  /*srIdRecords*/)
 	{
 		//if (srIdRecords.length() > 0)
 		//{
@@ -4613,9 +4614,9 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 	{
 		WritingElement_ReadAttributes_Start_No_NS( oReader )
 			WritingElement_ReadAttributes_Read_if		( oReader, L"backgroundQuery",	m_oBackgroundQuery )
-			WritingElement_ReadAttributes_Read_else_if	( oReader, L"enableRefresh",	m_oEnableRefresh )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"id",				m_oRid )
-			WritingElement_ReadAttributes_Read_else_if	( oReader, L"invalid",			m_oEnableRefresh )
+			else if ( L"enableRefresh" == wsName || L"invalid" == wsName ) // pre-existing: invalid is stored in m_oEnableRefresh
+				m_oEnableRefresh = oReader.GetText();
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"createdVersion",	m_oCreatedVersion )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"refreshableVersion",m_oMinRefreshableVersion )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"missingItemsLimit",m_oMissingItemsLimit )
@@ -5342,6 +5343,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                                                         case 0x24: err->m_oValue = L"#NUM!"; break;
                                                         case 0x2A: err->m_oValue = L"#N/A"; break;
                                                         case 0x2B: err->m_oValue = L"#GETTING_DATA"; break;
+                                                        default: break;
                                                     }
 
                                                     m_arrItems.push_back(err);
@@ -5356,6 +5358,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                                                 }
                                                 break;
 
+                                                default: break;
                                             }
                                         }
                                     }
@@ -5708,6 +5711,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                                                     case 0x24: err->m_oValue = L"#NUM!"; break;
                                                     case 0x2A: err->m_oValue = L"#N/A"; break;
                                                     case 0x2B: err->m_oValue = L"#GETTING_DATA"; break;
+                                                    default: break;
                                                 }
 
                                                 m_arrItems.push_back(err);
@@ -5722,6 +5726,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                                             }
                                             break;
 
+                                            default: break;
                                         }
                                     }
                                 }
@@ -5859,6 +5864,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case 0x07:
                     m_oGroupBy = SimpleTypes::Spreadsheet::EValuesGroupBy::groupByYears;
                     break;
+                default: break;
             }
         }
     }
@@ -6217,6 +6223,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                     case 0x24: m_oValue = L"#NUM!"; break;
                     case 0x2A: m_oValue = L"#N/A"; break;
                     case 0x2B: m_oValue = L"#GETTING_DATA"; break;
+                    default: break;
                 }
 				if (ptr->sxvcellextra)
 				{
@@ -6253,6 +6260,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                     case 0x24: m_oValue = L"#NUM!"; break;
                     case 0x2A: m_oValue = L"#N/A"; break;
                     case 0x2B: m_oValue = L"#GETTING_DATA"; break;
+                    default: break;
                 }
 
                 if(!ptr->info.stCaption.value().empty())
@@ -6969,6 +6977,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case 0x00000003:
                     m_oType = SimpleTypes::Spreadsheet::ESourceCacheType::typeSourceScenario;
                     break;
+                default: break;
             }
 
             m_oConnectionId = ptr->dwConnID;
@@ -7591,7 +7600,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
         CXlsb* xlsb = dynamic_cast<CXlsb*>(File::m_pMainDocument);
         if (xlsb)
         {
-            BYTE* fileStream = 0;
+            BYTE* fileStream = nullptr;
             auto fileReader = xlsb->GetFileReader(oPath, fileStream);
             ///todo read records from the stream
             m_oPivotCacheRecords.Init();
@@ -7712,7 +7721,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			{
 				std::wstring sPath = oPath.GetPath();
 
-				if (false == m_oPivotCacheRecords->m_strOutputXml.empty())
+				if (!m_oPivotCacheRecords->m_strOutputXml.empty())
 				{
 					NSFile::CFileBinary::SaveToFile(sPath, m_oPivotCacheRecords->m_strOutputXml);
 				}
@@ -7809,7 +7818,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			//m_oCount = (_UINT32)ptr->m_arPIVOTCACHERECORD.size();
 
             //for(auto &item : ptr->m_arPIVOTCACHERECORD)
-			while(false == ptr->m_arPIVOTCACHERECORD.empty())
+			while(!ptr->m_arPIVOTCACHERECORD.empty())
             {
                 //m_arrItems.push_back(new CPivotCacheRecord(item));
 
@@ -8356,6 +8365,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                              case 0x24: ErrValue->m_oValue = L"#NUM!"; break;
                              case 0x2A: ErrValue->m_oValue = L"#N/A"; break;
                              case 0x2B: ErrValue->m_oValue = L"#GETTING_DATA"; break;
+                             default: break;
                          }
                          m_arrItems.push_back(ErrValue);
                          break;

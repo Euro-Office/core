@@ -27,7 +27,7 @@
 
 namespace PPTX
 {
-	WrapperWritingElement::WrapperWritingElement(OOX::Document *pMain) :  OOX::WritingElement(pMain), parentElement(NULL), parentFile(NULL)
+	WrapperWritingElement::WrapperWritingElement(OOX::Document *pMain) :  OOX::WritingElement(pMain), parentElement(nullptr), parentFile(nullptr)
 	{
 	}
 	WrapperWritingElement::~WrapperWritingElement()

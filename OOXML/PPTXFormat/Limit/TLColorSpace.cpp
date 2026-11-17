@@ -53,6 +53,7 @@ namespace PPTX
 			{
 			case 0: m_strValue = L"rgb"; break;
 			case 1: m_strValue = L"hsl"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

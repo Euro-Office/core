@@ -35,7 +35,7 @@ namespace PPTX
 		{
 			if (!pOOXToVMLRenderer) return;
 
-			PPT::CShapeElement* lpShapeElement = NULL;
+			PPT::CShapeElement* lpShapeElement = nullptr;
 			if (this->is<PPTX::Logic::PrstGeom>())
 			{
 				const PPTX::Logic::PrstGeom & lpGeom = this->as<PPTX::Logic::PrstGeom>();
@@ -56,7 +56,7 @@ namespace PPTX
 				lpShapeElement = new PPT::CShapeElement(strShape);
 			}
 
-			if (lpShapeElement == NULL)
+			if (lpShapeElement == nullptr)
 				return;
 
             double dCoordSizeX = (double)(std::max)((int)lWidth, 1);
@@ -82,7 +82,7 @@ namespace PPTX
 			
 			COOXToVMLGeometry* pOOXToVMLGeometry = dynamic_cast<COOXToVMLGeometry*>(pOOXToVMLRenderer);
 
-            if(NULL != pOOXToVMLGeometry)
+            if(nullptr != pOOXToVMLGeometry)
 				pOOXToVMLGeometry->NewShape();
 
 			ODRAW::CGraphicPath oGrPath;			
@@ -97,7 +97,7 @@ namespace PPTX
 
 				oGrPath.Draw(pOOXToVMLRenderer);
 			}
-			if(NULL != pOOXToVMLGeometry)
+			if(nullptr != pOOXToVMLGeometry)
 				pOOXToVMLGeometry->ResultPath(&strPath);
 
 			if (lpShapeElement->m_pShape->getBaseShape()->m_arTextRects.size() <= 0)
@@ -283,7 +283,7 @@ namespace PPTX
 
 								for (ULONG i = 0; i < _c; ++i)
 								{
-									BYTE _type1 = pReader->GetUChar();
+									pReader->GetUChar();
 									pReader->Skip(4); // len
 									BYTE _type = pReader->GetUChar();
 									pReader->Skip(5); // len + start attributes
@@ -353,7 +353,7 @@ namespace PPTX
 
 								for (ULONG i = 0; i < _c; ++i)
 								{
-									BYTE _type = pReader->GetUChar();
+									pReader->GetUChar();
 									pReader->Skip(5); // len + start attributes
 
 									pGeom->cxnLst.push_back(Cxn());
@@ -390,7 +390,7 @@ namespace PPTX
 
 								for (ULONG i = 0; i < _c; ++i)
 								{
-									BYTE _type = pReader->GetUChar();
+									pReader->GetUChar();
 									pGeom->pathLst.push_back(Path2D());
 									pGeom->pathLst[i].fromPPTY(pReader);
 								}

@@ -39,7 +39,7 @@ namespace PPTX
 		}
 		TableCell::TableCell(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			TableCell::fromXML(node);
 		}
 		const TableCell& TableCell::operator =(XmlUtils::CXmlNode& node)
 		{
@@ -48,7 +48,7 @@ namespace PPTX
 		}
 		TableCell::TableCell(XmlUtils::CXmlLiteReader& oReader)
 		{
-			fromXML(oReader);
+			TableCell::fromXML(oReader);
 		}
 		const TableCell& TableCell::operator =(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -96,7 +96,7 @@ namespace PPTX
             XmlMacroReadAttributeBase(node, L"vMerge", VMerge);
             XmlMacroReadAttributeBase(node, L"id", Id);
 
-			FillParentPointersForChilds();
+			TableCell::FillParentPointersForChilds();
 		}
 		void TableCell::FillParentPointersForChilds()
 		{

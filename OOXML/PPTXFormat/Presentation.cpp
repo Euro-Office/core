@@ -49,12 +49,12 @@ namespace PPTX
 	Presentation::Presentation(OOX::Document *pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain), PPTX::FileContainer(pMain)
 	{
 		m_bMacroEnabled = false;
-		read(filename, map);
+		Presentation::read(filename, map);
 	}
 	Presentation::~Presentation()
 	{
 	}
-	void Presentation::read(const OOX::CPath& filename, FileMap& map)
+	void Presentation::read(const OOX::CPath& filename, FileMap& /*map*/)
 	{
 		embeddedFontLst.clear();
 		handoutMasterIdLst.clear();
@@ -241,13 +241,14 @@ namespace PPTX
 	}
 	void Presentation::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 	{
-		BYTE _type = pReader->GetUChar();
+		BYTE _type;
+		pReader->GetUChar();
 		LONG _len = pReader->GetULong();
 		LONG _start_pos = pReader->GetPos();
 		LONG _end_pos = _len + _start_pos;
 
 		// attributes
-		BYTE _sa = pReader->GetUChar();
+		pReader->GetUChar();
 
 		while (true)
 		{
@@ -288,7 +289,7 @@ namespace PPTX
 				defaultTextStyle->fromPPTY(pReader);
 				break;
 			}
-			case 1: { pReader->SkipRecord(); break; }
+			case 1:
 			case 2: { pReader->SkipRecord(); break; }
 			case 3:
 			{
@@ -337,7 +338,7 @@ namespace PPTX
 			}break;
 			case 6:
 			{
-				if (false == commentAuthors.IsInit())
+				if (!commentAuthors.IsInit())
 				{
 					commentAuthors = new PPTX::Authors(File::m_pMainDocument);
 				}
@@ -424,7 +425,7 @@ namespace PPTX
 		pWriter->Write(photoAlbum);
 		pWriter->Write(kinsoku);
 
-		if (false == custDataLst.empty())
+		if (!custDataLst.empty())
 		{
 			pWriter->StartNode(L"p:custDataLst");
 			pWriter->EndAttributes();

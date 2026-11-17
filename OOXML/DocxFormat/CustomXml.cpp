@@ -37,7 +37,7 @@ namespace OOX
 	}
 	CCustomXMLProps::CShemaRef::CShemaRef(const XmlUtils::CXmlNode& oNode)
 	{
-		fromXML( (XmlUtils::CXmlNode&)oNode );
+		CShemaRef::fromXML( (XmlUtils::CXmlNode&)oNode );
 	}
 	CCustomXMLProps::CShemaRef::~CShemaRef()
 	{
@@ -70,7 +70,7 @@ namespace OOX
 	}
 	void CCustomXMLProps::CShemaRef::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			{
-				BYTE type = pReader->GetUChar();
+				pReader->GetUChar();
 
 				LONG _rec_start = pReader->GetPos();
 				LONG _end_rec = _rec_start + pReader->GetRecordSize() + 4;
@@ -99,7 +99,7 @@ namespace OOX
 	}
 	CCustomXMLProps::CShemaRefs::CShemaRefs(const XmlUtils::CXmlNode& oNode)
 	{
-		fromXML( (XmlUtils::CXmlNode&)oNode );
+		CShemaRefs::fromXML( (XmlUtils::CXmlNode&)oNode );
 	}
 	CCustomXMLProps::CShemaRefs::~CShemaRefs()
 	{
@@ -150,7 +150,7 @@ namespace OOX
 	}
 	CCustomXMLProps::CCustomXMLProps(OOX::Document *pMain, const OOX::CPath& oFilePath) : OOX::FileGlobalEnumerated(pMain)
 	{
-		read( oFilePath );
+		CCustomXMLProps::read( oFilePath );
 	}
 	CCustomXMLProps::~CCustomXMLProps()
 	{
@@ -162,16 +162,15 @@ namespace OOX
 	}
 	void CCustomXMLProps::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		if (L"datastoreItem" == XmlUtils::GetNameNoNS(oNode.GetName()));
 		{
 			std::wstring id = oNode.ReadAttribute(L"ds:itemID");
-			if (false == id.empty())
+			if (!id.empty())
 			{
 				if (id[0] != L'{' && id.size() == 36)
 				{
 					id = L"{" + id + L"}";
 				}
-				if (false == m_oItemID.FromString(id))
+				if (!m_oItemID.FromString(id))
 				{
 					_CP_LOG << L"[error] guid (" << id << L")" << std::endl;
 				}
@@ -184,7 +183,6 @@ namespace OOX
 	}
 	std::wstring CCustomXMLProps::toXML() const
 	{
-		std::wstring guid = m_oItemID.ToString();
 		std::wstring sXml = L"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><ds:datastoreItem ds:itemID=\"";
 		sXml += m_oItemID.ToString(false);
 		sXml += L"\" xmlns:ds=\"http://schemas.openxmlformats.org/officeDocument/2006/customXml\">";
@@ -203,9 +201,9 @@ namespace OOX
 		XmlUtils::CXmlNode oCustomXml;
 		oCustomXml.FromXmlFile( oFilePath.GetPath(), true );
 
-		fromXML(oCustomXml);
+		CCustomXMLProps::fromXML(oCustomXml);
 	}
-	void CCustomXMLProps::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
+	void CCustomXMLProps::write(const CPath& oFilePath, const CPath& /*oDirectory*/, CContentTypes& oContent) const
 	{
 		NSFile::CFileBinary::SaveToFile(oFilePath.GetPath(), toXML());
 
@@ -234,8 +232,8 @@ namespace OOX
 	}
 	CCustomXML::CCustomXML(OOX::Document *pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 	{
-		m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-		read( oRootPath, oPath );
+		m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+		CCustomXML::read( oRootPath, oPath );
 	}
 	CCustomXML::~CCustomXML()
 	{
@@ -254,9 +252,9 @@ namespace OOX
 	void CCustomXML::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
 		NSFile::CFileBinary oFile;
-		if (true == oFile.CreateFileW(oFilePath.GetPath()))
+		if (oFile.CreateFileW(oFilePath.GetPath()))
 		{
-			if (false == m_sXmlA.empty())
+			if (!m_sXmlA.empty())
 				oFile.WriteFile((BYTE*)m_sXmlA.c_str(), m_sXmlA.length());
 			oFile.CloseFile();
 		}
@@ -327,12 +325,12 @@ namespace OOX
 	}
 	void CCustomXML::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
-			BYTE type = pReader->GetUChar();
+			pReader->GetUChar();
 
 			LONG _rec_start = pReader->GetPos();
 			LONG _end_rec = _rec_start + pReader->GetRecordSize() + 4;
 
-			smart_ptr<OOX::CCustomXMLProps> pCustomXmlProps = new OOX::CCustomXMLProps(NULL);
+			smart_ptr<OOX::CCustomXMLProps> pCustomXmlProps = new OOX::CCustomXMLProps(nullptr);
 			smart_ptr<OOX::File> pCustomXmlPropsFile = pCustomXmlProps.smart_dynamic_cast<OOX::File>();
 			Add(pCustomXmlPropsFile);
 
@@ -367,6 +365,7 @@ namespace OOX
 						pReader->Skip(4); // len
 						m_sXmlA = pReader->GetString2A();
 					}break;
+					default: break;
 				}
 			}
 

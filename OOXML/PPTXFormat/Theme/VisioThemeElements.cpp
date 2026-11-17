@@ -1180,6 +1180,9 @@ namespace PPTX
 //-----------------------------------------------------------------------------------------
 		VariationClrScheme& VariationClrScheme::operator=(const VariationClrScheme& oSrc)
 		{
+			if (this == &oSrc)
+				return *this;
+
 			parentFile = oSrc.parentFile;
 			parentElement = oSrc.parentElement;
 

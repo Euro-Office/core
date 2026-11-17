@@ -33,6 +33,8 @@
 #include "Effects/AlphaModFix.h"
 #include "Effects/Duotone.h"
 
+#include <cmath>
+
 #include "../SlideMaster.h"
 
 #include "../../DocxFormat/Media/Audio.h"
@@ -98,7 +100,7 @@ namespace PPTX
 							{
 								double dA = (double)(oAlpha.amt.get());
 								dA = (dA * 65536 / 100000);
-								int nA = (int)(dA + 0.5);
+								int nA = std::lround(dA);
 
 								if (nA < 0)
 									nA = 0;
@@ -124,7 +126,7 @@ namespace PPTX
 					}
 					std::wstring strId = oBlip.blip->embed->ToString();
 					
-					NSCommon::smart_ptr<OOX::Image> pImageFileVml(new OOX::Image(NULL, false));
+					NSCommon::smart_ptr<OOX::Image> pImageFileVml(new OOX::Image(nullptr, false));
 					pImageFileVml->set_filename(oBlip.blip->imageFilepath, false);
 
 					smart_ptr<OOX::File> pFileVml = pImageFileVml.smart_dynamic_cast<OOX::File>();
@@ -239,46 +241,46 @@ namespace PPTX
 					sColors += pos + L" " + col + L";";
 				}
 
-				if (false == sColor.empty())
+				if (!sColor.empty())
 				{
 					strAttr = L" fillcolor=\"" + sColor + L"\"";
 				}
 
 				strNode += L"<v:fill";
-				if (false == sColor2.empty())
+				if (!sColor2.empty())
 				{
 					strNode += L" color2=\"" + sColor2 + L"\"";
 				}
-				if (false == sOpacity.empty())
+				if (!sOpacity.empty())
 				{
 					strNode += L" opacity=\"" + sOpacity + L"\"";
 				}
-				if (false == sOpacity2.empty())
+				if (!sOpacity2.empty())
 				{
 					strNode += L" opacity2=\"" + sOpacity2 + L"\"";
 				}
-				if (false == sColors.empty())
+				if (!sColors.empty())
 				{
 					strNode += L" colors=\"" + sColors + L"\"";
 				}
-				if (false == sAngle.empty())
+				if (!sAngle.empty())
 				{
 					strNode += L" angle=\"" + sAngle + L"\"";
 				}
-				if (false == sFocusPosition.empty())
+				if (!sFocusPosition.empty())
 				{
 					strNode += L" focusposition=\"" + sFocusPosition + L"\"";
 				}
-				if (false == sFocus.empty())
+				if (!sFocus.empty())
 				{
 					strNode += L" focus=\"" + sFocus + L"\"";
 				}
-				if (false == sType.empty())
+				if (!sType.empty())
 				{
 					strNode += L" type=\"" + sType + L"\"";
 				}
 
-				if (false == sFillNode.empty())
+				if (!sFillNode.empty())
 				{
 					strNode += L">" + sFillNode + L"</v:fill>";
 				}
@@ -301,7 +303,7 @@ namespace PPTX
 				}
 			}
 		}
-		void CalculateLine(BYTE lDocType, PPTX::Logic::SpPr& oSpPr, nullable<ShapeStyle>& pShapeStyle, NSCommon::smart_ptr<PPTX::Theme>& oTheme,
+		void CalculateLine(BYTE /*lDocType*/, PPTX::Logic::SpPr& oSpPr, nullable<ShapeStyle>& pShapeStyle, NSCommon::smart_ptr<PPTX::Theme>& oTheme,
 			NSCommon::smart_ptr<PPTX::Logic::ClrMap>& oClrMap, std::wstring& strAttr, std::wstring& strNode, bool bOle)
 		{
 			PPTX::Logic::Ln line;
@@ -348,7 +350,7 @@ namespace PPTX
 					case 10: value = L"shortdot"; break;
 					default: value = L"solid"; break;
 				}
-				if (false == value.empty())
+				if (!value.empty())
 					strNode = L"<v:stroke dashstyle=\"" + value  + L"\"/>";
 			}
 		}
@@ -367,7 +369,7 @@ namespace PPTX
 		}
 		SpTreeElem::SpTreeElem(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			SpTreeElem::fromXML(node);
 		}
 		const SpTreeElem& SpTreeElem::operator =(XmlUtils::CXmlNode& node)
 		{
@@ -381,7 +383,7 @@ namespace PPTX
 		}
 		SpTreeElem::SpTreeElem(XmlUtils::CXmlLiteReader& oReader)
 		{
-			fromXML(oReader);
+			SpTreeElem::fromXML(oReader);
 		}
 		const SpTreeElem& SpTreeElem::operator =(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -423,7 +425,7 @@ namespace PPTX
 				pGraphic->m_sRequires = m_sRequires;
 				pGraphic->fromXML(oReader);
 
-				if (pGraphic && pGraphic->IsEmpty() == false)
+				if (pGraphic && !pGraphic->IsEmpty())
 				{
 					if (m_bAlternative)
 						m_elem_alternative.reset(pGraphic);
@@ -535,7 +537,7 @@ namespace PPTX
 
 							fromXML(oNodeC);
 				
-							isEmpty = (false == m_elem.IsInit());
+							isEmpty = (!m_elem.IsInit());
 						}
 					}
 					m_bAlternative = (L"cx1" == m_sRequires || L"cx2" == m_sRequires);
@@ -574,7 +576,7 @@ namespace PPTX
 		}
 		std::wstring SpTreeElem::GetUriElem()
 		{
-			if (m_elem.IsInit() == false)
+			if (!m_elem.IsInit())
 			{
 				return L"";
 				//return L"http://schemas.microsoft.com/office/word/2010/wordprocessingShape";
@@ -617,13 +619,13 @@ namespace PPTX
 
 					if (_type == SPTREE_TYPE_AUDIO)	
 					{
-						OOX::Audio *pAudio = new OOX::Audio(NULL, pReader->m_nDocumentType == XMLWRITER_DOC_TYPE_DOCX);
+						OOX::Audio *pAudio = new OOX::Audio(nullptr, pReader->m_nDocumentType == XMLWRITER_DOC_TYPE_DOCX);
 						p->blipFill.additionalFiles.emplace_back();
 						p->blipFill.additionalFiles.back() = smart_ptr<OOX::File>(dynamic_cast<OOX::File*>(pAudio));
 					}
 					else if (_type == SPTREE_TYPE_VIDEO)
 					{
-						OOX::Video* pVideo = new OOX::Video(NULL, pReader->m_nDocumentType == XMLWRITER_DOC_TYPE_DOCX);
+						OOX::Video* pVideo = new OOX::Video(nullptr, pReader->m_nDocumentType == XMLWRITER_DOC_TYPE_DOCX);
 						p->blipFill.additionalFiles.emplace_back();
 						p->blipFill.additionalFiles.back() = smart_ptr<OOX::File>(dynamic_cast<OOX::File*>(pVideo));
 					}
@@ -700,7 +702,7 @@ namespace PPTX
 		}
 		void SpTreeElem::toXmlWriterVML	(NSBinPptxRW::CXmlWriter* pWriter, smart_ptr<PPTX::Theme>& oTheme, smart_ptr<PPTX::Logic::ClrMap>& oClrMap, OOX::IFileContainer* pContainer) const
 		{
-			if (m_elem.IsInit() == false) return;
+			if (!m_elem.IsInit()) return;
 
 			switch(m_elem->getType())
 			{

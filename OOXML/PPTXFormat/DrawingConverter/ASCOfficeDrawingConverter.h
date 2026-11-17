@@ -213,7 +213,7 @@ namespace NSBinPptxRW
 		void AddShapeType(XmlUtils::CXmlNode& oNode);
 		void AddBinData(XmlUtils::CXmlNode& oNode);
 
-        bool AddObject(const std::wstring& sXml, std::wstring* pMainProps = NULL);
+        bool AddObject(const std::wstring& sXml, std::wstring* pMainProps = nullptr);
 
 		void ConvertVml(const std::wstring& sXml, std::vector<nullable<PPTX::Logic::SpTreeElem>> &elements, NSCommon::nullable<OOX::WritingElement> &anchor);
 
@@ -267,12 +267,12 @@ namespace NSBinPptxRW
 	protected:
 		nullable<PPTX::Logic::Xfrm> m_oxfrm_override;
 
-		bool ParceObject(const std::wstring& strXml, std::wstring* pMainProps = NULL);
-		void SendMainProps(const std::wstring& strMainProps, std::wstring* pMainProps = NULL);
+		bool ParceObject(const std::wstring& strXml, std::wstring* pMainProps = nullptr);
+		void SendMainProps(const std::wstring& strMainProps, std::wstring* pMainProps = nullptr);
 
-		void ConvertShape(PPTX::Logic::SpTreeElem* result, XmlUtils::CXmlNode& oNode, std::wstring* pMainProps = NULL, bool bIsTop = true);
-		void ConvertGroup(PPTX::Logic::SpTreeElem* result, XmlUtils::CXmlNode& oNode, std::wstring* pMainProps = NULL, bool bIsTop = true);
-		void ConvertDrawing(PPTX::Logic::SpTreeElem* result, XmlUtils::CXmlNode& oNode, std::wstring* pMainProps = NULL, bool bIsTop = true);
+		void ConvertShape(PPTX::Logic::SpTreeElem* result, XmlUtils::CXmlNode& oNode, std::wstring* pMainProps = nullptr, bool bIsTop = true);
+		void ConvertGroup(PPTX::Logic::SpTreeElem* result, XmlUtils::CXmlNode& oNode, std::wstring* pMainProps = nullptr, bool bIsTop = true);
+		void ConvertDrawing(PPTX::Logic::SpTreeElem* result, XmlUtils::CXmlNode& oNode, std::wstring* pMainProps = nullptr, bool bIsTop = true);
 		void ConvertWordArtShape(PPTX::Logic::SpTreeElem* result, XmlUtils::CXmlNode& oNode, CPPTShape* pPPTShape);
 
 		void CheckBrushShape(PPTX::Logic::SpTreeElem* oElem, XmlUtils::CXmlNode& oNode, CPPTShape* pPPTShape);

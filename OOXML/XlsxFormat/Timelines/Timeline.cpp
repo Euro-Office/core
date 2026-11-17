@@ -477,8 +477,6 @@ xmlns:xr10=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision10\"
 					m_oState = oReader;
 				else if (L"pivotFilter" == sName)
 					m_oPivotFilter = oReader;
-				else if (L"pivotFilter" == sName)
-					m_oPivotFilter = oReader;
 				else if (L"extLst" == sName)
 					m_oExtLst = oReader;
 			}
@@ -499,7 +497,7 @@ xmlns:xr10=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision10\"
 		CTimelineFile::CTimelineFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 		{
 			m_bSpreadsheets = true;
-			read( oRootPath, oPath );
+			CTimelineFile::read( oRootPath, oPath );
 		}
 		CTimelineFile::~CTimelineFile()
 		{
@@ -543,7 +541,7 @@ xmlns:xr10=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision10\"
 		}
 		void CTimelineFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 		{
-			if(false == m_oTimelines.IsInit()) return;
+			if(!m_oTimelines.IsInit()) return;
 
 			NSStringUtils::CStringBuilder sXml;
 
@@ -564,7 +562,7 @@ xmlns:xr10=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision10\"
 		CTimelineCacheFile::CTimelineCacheFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 		{
 			m_bSpreadsheets = true;
-			read(oRootPath, oPath);
+			CTimelineCacheFile::read(oRootPath, oPath);
 		}
 		CTimelineCacheFile::~CTimelineCacheFile()
 		{
@@ -608,7 +606,7 @@ xmlns:xr10=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision10\"
 		}
 		void CTimelineCacheFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 		{
-			if (false == m_oTimelineCacheDefinition.IsInit()) return;
+			if (!m_oTimelineCacheDefinition.IsInit()) return;
 
 			NSStringUtils::CStringBuilder sXml;
 
@@ -1000,6 +998,7 @@ xmlns:xr10=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision10\"
 					{
 						m_oName = pReader->GetString2();					
 					}break;
+					default: break;
 				}
 			}
 			pReader->Seek(_end_rec);

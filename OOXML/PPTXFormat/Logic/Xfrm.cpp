@@ -36,11 +36,11 @@ namespace PPTX
 		Xfrm::~Xfrm() {}
 		Xfrm::Xfrm(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			Xfrm::fromXML(node);
 		}
 		Xfrm::Xfrm(XmlUtils::CXmlLiteReader& oReader)
 		{
-			fromXML(oReader);
+			Xfrm::fromXML(oReader);
 		}
 		const Xfrm& Xfrm::operator =(XmlUtils::CXmlNode& node)
 		{
@@ -52,7 +52,8 @@ namespace PPTX
 			fromXML(oReader);
 			return *this;
 		}
-		Xfrm::Xfrm(const Xfrm& oSrc)
+		// *this = oSrc copies only this class' members; chaining the base copy ctor would also copy base state.
+		Xfrm::Xfrm(const Xfrm& oSrc) // NOLINT(bugprone-copy-constructor-init)
 		{
 			*this = oSrc;
 		}

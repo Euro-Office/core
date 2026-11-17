@@ -31,6 +31,9 @@ namespace PPTX
 	{
 		CubicBezTo& CubicBezTo::operator=(const CubicBezTo& oSrc)
 		{
+			if (this == &oSrc)
+				return *this;
+
 			parentFile		= oSrc.parentFile;
 			parentElement	= oSrc.parentElement;
 

@@ -135,7 +135,7 @@ xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\">\
 			if (!pWriter) return;
 			
 			int nRecordType;
-			void* pElem = NULL;
+			void* pElem = nullptr;
 			OOX::EElementType eElemType;
 			if(m_oMathPara.IsInit())
 			{
@@ -149,11 +149,11 @@ xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\">\
 				pElem = m_oMath.GetPointer();
 				eElemType = m_oMath->getType();
 			}
-			if(NULL != pElem)
+			if(nullptr != pElem)
 			{
 				pWriter->StartRecord(nRecordType);
 				long lDataSize = 0;
-				if(NULL != pWriter->m_pDocxSerializer)
+				if(nullptr != pWriter->m_pDocxSerializer)
 				{
 					pWriter->m_pDocxSerializer->getBinaryContentElem(eElemType, pElem, *pWriter, lDataSize);
 				}
@@ -166,7 +166,7 @@ xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\">\
 					oDrawingConverter.m_pBinaryWriter = pWriter;
 
 					DocWrapper::FontProcessor fp;
-					oDocxSerializer.m_pParamsWriter = new BinDocxRW::ParamsWriter(pWriter, &fp, &oDrawingConverter, NULL);
+					oDocxSerializer.m_pParamsWriter = new BinDocxRW::ParamsWriter(pWriter, &fp, &oDrawingConverter, nullptr);
 					oDocxSerializer.getBinaryContentElem(eElemType, pElem, *pWriter, lDataSize);
 					//*oDrawingConverter.m_pBinaryWriter->m_pCommonRels = pOldRels;
 					oDrawingConverter.m_pBinaryWriter = pOldWriter;

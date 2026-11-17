@@ -31,6 +31,9 @@ namespace PPTX
 	{
 		QuadBezTo& QuadBezTo::operator=(const QuadBezTo& oSrc)
 		{
+			if (this == &oSrc)
+				return *this;
+
 			parentFile		= oSrc.parentFile;
 			parentElement	= oSrc.parentElement;
 
