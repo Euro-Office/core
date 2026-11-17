@@ -40,7 +40,7 @@ EState GetState(int nValue)
 	}
 }
 
-CHWPRecordBinData::CHWPRecordBinData(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CHWPRecordBinData::CHWPRecordBinData(CHWPDocInfo& /*oDocInfo*/, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 	: CHWPRecord(nTagNum, nLevel, nSize)
 {
 	oBuffer.SavePosition();

@@ -105,7 +105,7 @@ int CPage::GetMarginGutter() const
 	return m_nMarginGutter;
 }
 
-CPage* CPage::Parse(int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CPage* CPage::Parse(int /*nLevel*/, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 
