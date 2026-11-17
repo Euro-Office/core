@@ -3185,7 +3185,7 @@ void DocxConverter::convert(OOX::Logic::CPicture* oox_pic)
 	{
 		odt_context->start_drawing_context();
 
-		if (odt_context->table_context()->empty())
+		if (!in_table())
 			odf_context()->drawing_context()->set_anchor(anchor_type::Char);//default
 		else
 		{
@@ -3218,7 +3218,7 @@ void DocxConverter::convert(OOX::Logic::CObject* oox_obj)
 
 	odt_context->start_drawing_context();
 			
-	if (odt_context->table_context()->empty())
+	if (!in_table())
 		odf_context()->drawing_context()->set_anchor(odf_types::anchor_type::AsChar);//default
 	else
 	{
@@ -3505,7 +3505,7 @@ void DocxConverter::convert(OOX::Drawing::CAnchor* oox_anchor)
 
 	if ((oox_anchor->m_oLayoutInCell.IsInit()) && (oox_anchor->m_oLayoutInCell->ToBool()))
 	{
-		if (odt_context->table_context()->empty() == false)
+		if (in_table())
 		{//VillageofSchaumburg.docx
 			odt_context->drawing_context()->set_anchor(3); 
 			odt_context->drawing_context()->set_vertical_rel(1); //paragraph content
@@ -4668,11 +4668,19 @@ void DocxConverter::convert_hdr_ftr(std::wstring sId)
 	OOX::IFileContainer* back_document = oox_current_child_document;
 	oox_current_child_document = dynamic_cast<OOX::IFileContainer*>(oox_hdr_ftr);
 
+	const size_t back_tables = tables_around_hdr_ftr;
+	tables_around_hdr_ftr = odt_context->table_context()->depth();
+
     for (size_t i = 0; i < oox_hdr_ftr->m_arrItems.size(); ++i)
 	{
 		convert(oox_hdr_ftr->m_arrItems[i]);
 	}
+	tables_around_hdr_ftr = back_tables;
 	oox_current_child_document  = back_document;
+}
+bool DocxConverter::in_table()
+{
+	return odt_context->table_context()->depth() > tables_around_hdr_ftr;
 }
 
 void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
