@@ -293,11 +293,24 @@ void DocxConverter::convert_document()
 //----------------------------------------------------------------------------------------------------------
 
 	convert(doc->m_oSectPr.GetPointer(), false, L"Standard", true);
-	
+
+	std::wstring standard_master_name;
+	if (odt_context->page_layout_context()->last_master())
+		standard_master_name = odt_context->page_layout_context()->last_master()->get_name();
+
 	odt_context->text_context()->clear_params();
 
 	for (size_t sect = 0; sect < sections.size(); sect++)
 	{
+		// Every earlier section is converted at this point, so converted_endnotes is final.
+		if (sect > 0 && sect + 1 == sections.size() && false == standard_master_name.empty()
+			&& is_endnote_page_section(doc, sections[sect]))
+		{
+			// The empty paragraph only opens the page that Word prints the endnotes on: ODF
+			// names that page style in the endnote configuration instead.
+			add_endnote_page_configuration(standard_master_name);
+			break;
+		}
 		current_section_properties = &sections[sect];
 
 		for (size_t i = sections[sect].start_para; i < sections[sect].end_para; ++i)
@@ -310,6 +323,86 @@ void DocxConverter::convert_document()
 	{
 		OoxConverter::convert (docx_document->m_pJsaProject);
 	}
+}
+// Word prints endnotes at the end of the document, after the content of the last section. A
+// last section that starts on a new page and holds nothing but one empty paragraph is therefore
+// the page setup of the endnotes (this is how ODF endnote pages are written to DOCX).
+bool DocxConverter::is_endnote_page_section(OOX::CDocument *doc, const _section & section)
+{
+	if (converted_endnotes == 0) return false;
+	if (section.props == NULL || section.props != doc->m_oSectPr.GetPointer()) return false;
+	if (section.end_para != section.start_para + 1 || section.end_para > doc->m_arrItems.size()) return false;
+
+	if (section.props->m_oType.IsInit() && section.props->m_oType->m_oVal.IsInit() &&
+		section.props->m_oType->m_oVal->GetValue() != SimpleTypes::sectionmarkNextPage)
+		return false;
+
+	if (section.props->m_oEndnotePr.IsInit() && section.props->m_oEndnotePr->m_oPos.IsInit() &&
+		section.props->m_oEndnotePr->m_oPos->m_oVal.IsInit() &&
+		section.props->m_oEndnotePr->m_oPos->m_oVal->GetValue() == SimpleTypes::ednposSectEnd)
+		return false;
+
+	OOX::CSettings *settings = docx_document ? docx_document->m_oMain.settings :
+		(docx_flat_document ? docx_flat_document->m_pSettings.GetPointer() : NULL);
+	if (settings && settings->m_oEndnotePr.IsInit() && settings->m_oEndnotePr->m_oPos.IsInit() &&
+		settings->m_oEndnotePr->m_oPos->m_oVal.IsInit() &&
+		settings->m_oEndnotePr->m_oPos->m_oVal->GetValue() == SimpleTypes::ednposSectEnd)
+		return false;
+
+	OOX::WritingElement *item = doc->m_arrItems[section.start_para];
+	if (item == NULL || item->getType() != OOX::et_w_p) return false;
+
+	OOX::Logic::CParagraph *para = dynamic_cast<OOX::Logic::CParagraph*>(item);
+	if (para == NULL) return false;
+	if (para->m_oParagraphProperty && para->m_oParagraphProperty->m_oSectPr.IsInit()) return false;
+
+	for (size_t i = 0; i < para->m_arrItems.size(); ++i)
+	{
+		if (para->m_arrItems[i] && para->m_arrItems[i]->getType() != OOX::et_w_pPr) return false;
+	}
+	return true;
+}
+void DocxConverter::add_endnote_page_configuration(const std::wstring & master_page_name)
+{
+	odf_writer::office_element_ptr notes_elm;
+	odf_writer::create_element(L"text", L"notes-configuration", notes_elm, odf_context());
+
+	odf_writer::text_notes_configuration *notes = dynamic_cast<odf_writer::text_notes_configuration*>(notes_elm.get());
+	if (!notes) return;
+
+	notes->noteclass_ = odf_types::noteclass(odf_types::noteclass::Endnote);
+	notes->text_master_page_name_ = master_page_name;
+
+	// A notes configuration without style:num-format numbers the endnotes 1, 2, 3 in LibreOffice;
+	// Word's default for endnotes is i, ii, iii.
+	odf_types::style_numformat num_format(odf_types::style_numformat::romanLc);
+	unsigned int start_value = 0;
+
+	OOX::CSettings *settings = docx_document ? docx_document->m_oMain.settings :
+		(docx_flat_document ? docx_flat_document->m_pSettings.GetPointer() : NULL);
+	if (settings && settings->m_oEndnotePr.IsInit())
+	{
+		if (settings->m_oEndnotePr->m_oNumFmt.IsInit() && settings->m_oEndnotePr->m_oNumFmt->m_oVal.IsInit())
+		{
+			switch (settings->m_oEndnotePr->m_oNumFmt->m_oVal->GetValue())
+			{
+			case SimpleTypes::numberformatDecimal:		num_format = odf_types::style_numformat::arabic; break;
+			case SimpleTypes::numberformatUpperRoman:	num_format = odf_types::style_numformat::romanUc; break;
+			case SimpleTypes::numberformatLowerLetter:	num_format = odf_types::style_numformat::alphaLc; break;
+			case SimpleTypes::numberformatUpperLetter:	num_format = odf_types::style_numformat::alphaUc; break;
+			default: break;
+			}
+		}
+		if (settings->m_oEndnotePr->m_oNumStart.IsInit() && settings->m_oEndnotePr->m_oNumStart->m_oVal.IsInit())
+		{
+			const int start = *settings->m_oEndnotePr->m_oNumStart->m_oVal;
+			if (start > 1) start_value = start - 1; // ODF counts from 0
+		}
+	}
+	notes->common_num_format_attlist_.style_num_format_ = num_format;
+	notes->text_start_value_ = start_value;
+
+	odt_context->styles_context()->add_style(notes_elm, false, true, style_family::None);
 }
 std::wstring DocxConverter::dump_text(OOX::WritingElement *oox_unknown)
 {
@@ -4639,6 +4732,8 @@ void DocxConverter::convert_endnote(int oox_ref_id)
 	if (pFind != oox_endnotes->m_mapEndnote.end())
 	{
 		OOX::CFtnEdn* oox_note = pFind->second;
+
+		converted_endnotes++;
 
 		odt_context->start_note_content();
 		{
