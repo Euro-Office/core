@@ -126,6 +126,8 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_centered.odt",
     "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_drop_cap.odt",
     "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_drop_cap_unaligned.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/header_footer_spacing.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/header_footer_spacing_below_last_para.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

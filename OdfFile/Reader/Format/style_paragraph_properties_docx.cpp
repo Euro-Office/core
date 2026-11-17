@@ -356,14 +356,25 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 					CP_XML_STREAM() << L"<w:bottom " << w_bottom << L" />";
 			}
 		}
+		// distance between a header/footer and the page body, for the header/footer paragraph next to the body
+		const bool edge_spacing = !Context.get_header_footer_context().edge_attr().empty();
+
 		if ((style_line_height_at_least_ || fo_line_height_ || style_line_spacing_ ||
-			fo_margin_top_ || fo_margin_bottom_ || fo_margin_) && Context.get_drop_cap_context().state() != 2)
+			fo_margin_top_ || fo_margin_bottom_ || fo_margin_ || edge_spacing) &&
+			Context.get_drop_cap_context().state() != 2)
 		{
 			std::wstring w_after, w_before;
 			std::wstring w_line, w_lineRule;
 
             w_after = docx_process_margin(fo_margin_bottom_, 20.0);
             w_before = docx_process_margin(fo_margin_top_, 20.0);
+
+			if (edge_spacing)
+			{
+				oox::header_footer_context & edge = Context.get_header_footer_context();
+				(edge.edge_attr_name() == L"w:after" ? w_after : w_before) = std::to_wstring(edge.edge_attr_twips());
+				edge.reset_edge_attr();
+			}
 
 			// TODO: is 240 taken from the root style here? shouldn't use a constant but take it from there
 			//          in xsl transformations it is also written
