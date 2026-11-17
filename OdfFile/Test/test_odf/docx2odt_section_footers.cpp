@@ -89,7 +89,8 @@ namespace
 }
 
 // Sections 1-3 reference their own default footer (one bold run each), the last
-// section references none and inherits the footer of section 3.
+// section references none and inherits the footer of section 3, also on the
+// Standard page that the converter writes for it first.
 TEST(DocxToOdt, SectionFootersAreConvertedOnce)
 {
 	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/section_footers.docx");
@@ -100,7 +101,7 @@ TEST(DocxToOdt, SectionFootersAreConvertedOnce)
 	EXPECT_TRUE(is_well_formed(styles));
 
 	const std::vector<std::wstring> footers = master_page_footers(styles);
-	const std::vector<std::wstring> expected = {L"", L"FOOTER-A", L"FOOTER-B", L"FOOTER-C", L"FOOTER-C"};
+	const std::vector<std::wstring> expected = {L"FOOTER-C", L"FOOTER-A", L"FOOTER-B", L"FOOTER-C", L"FOOTER-C"};
 	EXPECT_EQ(footers, expected);
 
 	const std::vector<std::wstring> text_styles = automatic_text_styles(styles);
@@ -111,7 +112,7 @@ TEST(DocxToOdt, SectionFootersAreConvertedOnce)
 
 // Section 1 lists two default footers (A, then X; the last one wins), section 2
 // its own footer B, and the last section none, so it inherits B. Section 2's
-// footer must replace X, not A.
+// footer must replace X, not A. The Standard page of the last section shows B.
 TEST(DocxToOdt, SectionFooterReplacesTheLastOfItsType)
 {
 	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/section_footers_duplicate.docx");
@@ -121,6 +122,6 @@ TEST(DocxToOdt, SectionFooterReplacesTheLastOfItsType)
 	ASSERT_FALSE(styles.empty()) << "styles.xml is missing";
 
 	const std::vector<std::wstring> footers = master_page_footers(styles);
-	const std::vector<std::wstring> expected = {L"", L"FOOTER-X", L"FOOTER-B", L"FOOTER-B"};
+	const std::vector<std::wstring> expected = {L"FOOTER-B", L"FOOTER-X", L"FOOTER-B", L"FOOTER-B"};
 	EXPECT_EQ(footers, expected);
 }
