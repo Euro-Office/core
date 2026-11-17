@@ -289,6 +289,9 @@ public:
 	static NSFonts::EFontFormat GetFontFormatType(FT_Face pFace);
 	virtual int GetEmbeddingLicenceType();
 	virtual void FillFontSelectFormat(NSFonts::CFontSelectFormat& oFormat);
+
+	virtual bool HasColorGlyphs();
+	virtual BYTE* GetColorGlyphRGBA(unsigned int unGID, double dPixelsPerEm, unsigned int unForegroundRGBA, int& nLeft, int& nTop, int& nWidth, int& nHeight);
 };
 
 
