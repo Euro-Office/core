@@ -929,10 +929,24 @@ void style_section_properties::add_child_element( xml::sax * Reader, const std::
         CP_CREATE_ELEMENT(style_background_image_);    
     else if (L"style" == Ns && L"columns" == Name)
         CP_CREATE_ELEMENT(style_columns_);        
+    else if (L"text" == Ns && L"notes-configuration" == Name)
+        CP_CREATE_ELEMENT(text_notes_configuration_);
     else
     {
         CP_NOT_APPLICABLE_ELM();
     }
+}
+
+bool style_section_properties::collects_endnotes() const
+{
+    for (size_t i = 0; i < text_notes_configuration_.size(); i++)
+    {
+        const text_notes_configuration * conf =
+            dynamic_cast<const text_notes_configuration *>(text_notes_configuration_[i].get());
+        if (conf && conf->noteclass_.get_type() == noteclass::Endnote)
+            return true;
+    }
+    return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1651,8 +1665,10 @@ void style_page_layout_properties::docx_serialize(std::wostream & strm, oox::doc
 			
 			CP_XML_NODE(L"w:type")
 			{				
-				if (change_page_layout && Context.get_page_break()) // check bug 76397
+				if ((change_page_layout && Context.get_page_break()) // check bug 76397
+					|| Context.endnote_page_section_)
 				{
+					Context.endnote_page_section_ = false;
 					CP_XML_ATTR(L"w:val", L"nextPage");
 				}
 				else			

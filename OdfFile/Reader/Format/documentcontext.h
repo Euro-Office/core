@@ -46,6 +46,9 @@ public:
 
 	std::vector<office_element*> levels;
 	office_element* last_paragraph;
+
+	// for each endnote of the document: the style names of the text:section elements around it
+	std::vector<std::vector<std::wstring>> endnote_sections;
 };
 
 }

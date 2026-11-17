@@ -363,6 +363,12 @@ void paragraph::docx_convert(oox::docx_conversion_context & Context, _CP_OPT(std
             is_empty = false;
         }
 	}
+	if (Context.endnote_page_paragraph_ == this)
+	{
+		// the last paragraph of the body ends its section: the endnote page follows
+		Context.endnote_page_paragraph_ = NULL;
+		Context.next_dump_page_properties(true);
+	}
     std::wstringstream strm;
     if (Context.process_page_properties(strm))
     {

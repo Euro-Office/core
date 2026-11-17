@@ -309,6 +309,19 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_footnote.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_section.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_list.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_no_configuration.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_no_page_style.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_table.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OOXML/test/ExampleFiles/xlsx2bin/checkbox.xlsx",
     "OOXML/test/ExampleFiles/xlsx2bin/richvalue-fallback.xlsx",
 ]
