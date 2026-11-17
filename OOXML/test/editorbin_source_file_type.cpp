@@ -11,6 +11,7 @@
 #include "common.h"
 
 #include "../../Common/OfficeFileFormats.h"
+#include "../../DesktopEditor/common/Base64.h"
 #include "../../DesktopEditor/common/Directory.h"
 #include "../../DesktopEditor/common/File.h"
 
@@ -55,7 +56,8 @@ namespace
 		NSDirectory::CreateDirectory(workDir);
 		NSDirectory::CreateDirectory(tempDir);
 
-		// No format from: x2t detects it, as for a file given by its name only
+		// The params the document server sends when it opens a file: m_nFormatTo only, no m_nFormatFrom,
+		// so x2t detects the source type and stores it back into the params
 		int code = ConvertFile(CreateParamsFile(source, bin, tempDir, 0, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET));
 		if (code != 0)
 		{
@@ -70,6 +72,42 @@ namespace
 		}
 		content.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
 		return content;
+	}
+
+	// Converts the example file to Editor.bin given the file names only (no m_nFormatFrom, no
+	// m_nFormatTo: the direction comes from the extensions) and returns the decoded bytes. Without
+	// m_bIsNoBase64 the file is base64: "XLSY;v<version>;<size>;<data>".
+	std::vector<char> ConvertToEditorBinByFileNames(const std::wstring& name, std::string& error)
+	{
+		std::vector<char> bytes;
+		std::wstring source = L"ExampleFiles" FILE_SEPARATOR_STR + name;
+		std::wstring bin = GetWorkDir() + FILE_SEPARATOR_STR L"Editor.bin";
+		if (!ConvertTo(source, bin, GetWorkDir(), error))
+			return bytes;
+		std::ifstream file(std::filesystem::path(bin), std::ios::binary);
+		std::vector<char> text((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+		size_t start = 0;
+		for (int i = 0; i < 3; ++i)
+		{
+			auto separator = std::find(text.begin() + start, text.end(), ';');
+			if (separator == text.end())
+			{
+				error = "no Editor.bin header for " + U_TO_UTF8(name);
+				return bytes;
+			}
+			start = static_cast<size_t>(separator - text.begin()) + 1;
+		}
+		int sourceLength = static_cast<int>(text.size() - start);
+		int length = NSBase64::Base64DecodeGetRequiredLength(sourceLength);
+		bytes.resize(static_cast<size_t>(length));
+		if (!NSBase64::Base64Decode(text.data() + start, sourceLength, reinterpret_cast<BYTE*>(bytes.data()), &length))
+		{
+			error = "cannot decode the Editor.bin of " + U_TO_UTF8(name);
+			bytes.clear();
+			return bytes;
+		}
+		bytes.resize(static_cast<size_t>(length));
+		return bytes;
 	}
 
 	bool ReadBytes(const std::wstring& path, std::vector<char>& content)
@@ -181,6 +219,23 @@ TEST(EditorBinSourceFileType, XlsxWorkbookHasNoSourceRecord)
 	ASSERT_TRUE(error.empty()) << error;
 	EXPECT_FALSE(Contains(bin, SourceFileTypeRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX)));
 	EXPECT_FALSE(Contains(bin, SourceFileTypeRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS)));
+}
+
+// x2t given only the file names (x2t in.ods out.bin) detects the type in the ODF reader
+TEST(EditorBinSourceFileType, OdsByFileNamesRecordsItsSource)
+{
+	std::string error;
+	std::vector<char> bin = ConvertToEditorBinByFileNames(L"ods2bin" FILE_SEPARATOR_STR L"plain.ods", error);
+	ASSERT_TRUE(error.empty()) << error;
+	EXPECT_TRUE(Contains(bin, SourceFileTypeRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS)));
+}
+
+TEST(EditorBinSourceFileType, OdsTemplateByFileNamesRecordsItsSource)
+{
+	std::string error;
+	std::vector<char> bin = ConvertToEditorBinByFileNames(L"ods2bin" FILE_SEPARATOR_STR L"plain.ots", error);
+	ASSERT_TRUE(error.empty()) << error;
+	EXPECT_TRUE(Contains(bin, SourceFileTypeRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS)));
 }
 
 // The save direction: x2t's own reader skips the record, so saving a workbook whose Editor.bin
