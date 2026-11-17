@@ -296,6 +296,7 @@ void DocxConverter::convert_document()
 
 	odt_context->text_context()->clear_params();
 
+	bool endnote_page = false;
 	for (size_t sect = 0; sect < sections.size(); sect++)
 	{
 		// Every earlier section is converted at this point, so converted_endnotes is final.
@@ -314,7 +315,10 @@ void DocxConverter::convert_document()
 			current_section_properties = NULL;
 			convert(props, false);
 			if (odt_context->page_layout_context()->last_master())
+			{
 				add_endnote_page_configuration(odt_context->page_layout_context()->last_master()->get_name());
+				endnote_page = true;
+			}
 			break;
 		}
 		current_section_properties = &sections[sect];
@@ -324,6 +328,10 @@ void DocxConverter::convert_document()
 			convert(doc->m_arrItems[i]);
 		}
 	}
+	// Word prints the endnotes right after the text, on no page of their own. Without this
+	// setting LibreOffice starts a new page for them.
+	if (converted_endnotes > 0 && !endnote_page)
+		odt_context->settings_context()->add_config_content_item(L"ContinuousEndnotes", L"boolean", L"true");
 //-----------------------------------------------------------------------------------------------------------------
 	if (docx_document)
 	{

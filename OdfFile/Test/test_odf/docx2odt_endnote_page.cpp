@@ -103,7 +103,13 @@ namespace
 	{
 		std::wstring styles;
 		std::wstring content;
+		std::wstring settings;
 	};
+
+	bool continuous_endnotes(const converted& odt)
+	{
+		return odt.settings.find(L"config:name=\"ContinuousEndnotes\" config:type=\"boolean\">true<") != std::wstring::npos;
+	}
 
 	converted convert(const std::wstring& name)
 	{
@@ -113,6 +119,7 @@ namespace
 			return result;
 		result.styles = read_part(dir, L"styles.xml");
 		result.content = read_part(dir, L"content.xml");
+		result.settings = read_part(dir, L"settings.xml");
 		return result;
 	}
 
@@ -218,4 +225,23 @@ TEST(DocxToOdtEndnotePage, LineNumberingWrittenOnce)
 		 pos = odt.styles.find(L"<text:linenumbering-configuration", pos + 1))
 		count++;
 	EXPECT_EQ(count, 1u);
+}
+
+// Without an endnote page Word prints the endnotes right after the text, and so
+// must LibreOffice: the saved document says so in its settings.
+TEST(DocxToOdtEndnotePage, EndnotesFollowTheTextWithoutAnEndnotePage)
+{
+	EXPECT_TRUE(continuous_endnotes(convert(L"endnote_page_section_with_text")));
+	EXPECT_TRUE(continuous_endnotes(convert(L"endnote_page_section_continuous")));
+}
+
+TEST(DocxToOdtEndnotePage, EndnotesKeepTheirPageWithAnEndnotePage)
+{
+	EXPECT_FALSE(continuous_endnotes(convert(L"endnote_page_section")));
+}
+
+TEST(DocxToOdtEndnotePage, NoEndnoteSettingWithoutEndnotes)
+{
+	EXPECT_FALSE(continuous_endnotes(convert(L"endnote_page_section_no_endnotes")));
+	EXPECT_FALSE(continuous_endnotes(convert(L"endnote_page_section_missing_endnote")));
 }
