@@ -93,6 +93,7 @@ add_core_gtest(
             odt2docx_section_columns.cpp
             odt2docx_chapter_field.cpp
             odt2docx_database_display.cpp
+            odt2docx_page_style_after_table.cpp
             ods2xlsx_fill_character.cpp
             odf_font_family.cpp
             odt2docx_character_style_based_on.cpp
