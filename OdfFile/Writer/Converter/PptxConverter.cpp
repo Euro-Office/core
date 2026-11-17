@@ -1390,7 +1390,13 @@ void PptxConverter::convert_slides()
 				if (slide->Master->cSld.attrName.IsInit())					master_style_name = slide->Master->cSld.attrName.get();
 				else if ((current_theme) && (current_theme->name.IsInit()))	master_style_name = current_theme->name.get();
 
-				master_style_name += L"_" ;
+				// The ODF reader gives the layout the name of the master page.
+				// Use only that name, or each save makes it longer.
+				if (slide->Layout->cSld.attrName.IsInit() && !slide->Layout->cSld.attrName.get().empty() &&
+					(master_style_name.empty() || master_style_name == slide->Layout->cSld.attrName.get()))
+					master_style_name.clear();
+				else
+					master_style_name += L"_" ;
 				
 				if (slide->Layout->cSld.attrName.IsInit())	master_style_name += slide->Layout->cSld.attrName.get();
 				else if (slide->Layout->attrType.IsInit())	master_style_name += slide->Layout->attrType->get();
