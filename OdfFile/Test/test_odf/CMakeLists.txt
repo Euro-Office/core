@@ -60,6 +60,7 @@ add_core_gtest(
             xlsx2ods_header_footer_codes.cpp
             docx2odt_page_background.cpp
             docx2odt_section_footers.cpp
+            docx2odt_section_header_and_footer.cpp
             math_bar.cpp
             chart_title.cpp
             odt2docx_underline.cpp
