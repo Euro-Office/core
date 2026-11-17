@@ -17,6 +17,7 @@ SOURCES += main.cpp\
            checkbox.cpp\
            conversion.cpp\
            editorbin_pivots.cpp\
+           editorbin_source_file_type.cpp\
            workbook_facts.cpp\
 
 HEADERS += common.h workbook_facts.h

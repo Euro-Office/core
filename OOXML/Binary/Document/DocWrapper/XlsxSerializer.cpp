@@ -42,7 +42,7 @@
 namespace BinXlsxRW{
 	int g_nCurFormatVersion = 0;
 
-	CXlsxSerializer::CXlsxSerializer() : m_bIsMacro(false), m_bIsNoBase64(false)
+	CXlsxSerializer::CXlsxSerializer() : m_bIsMacro(false), m_bIsNoBase64(false), m_nSourceFileType(0)
 	{
 		m_pExternalDrawingConverter = NULL;
 	}
@@ -131,6 +131,7 @@ namespace BinXlsxRW{
 		oOfficeDrawingConverter.SetFontPicker(pFontPicker);
 
 		BinXlsxRW::BinaryFileWriter oBinaryFileWriter(fp);
+		oBinaryFileWriter.m_nSourceFileType = m_nSourceFileType;
 		_UINT32 result = oBinaryFileWriter.Open(sSrcPath, sDstFileName, pEmbeddedFontsManager, &oOfficeDrawingConverter, sXMLOptions, m_bIsNoBase64);
 
 		RELEASEOBJECT(pFontPicker);
@@ -274,6 +275,10 @@ namespace BinXlsxRW{
 	void CXlsxSerializer::setIsNoBase64(bool val)
 	{
 		m_bIsNoBase64 = val;
+	}
+	void CXlsxSerializer::setSourceFileType(int nFileType)
+	{
+		m_nSourceFileType = nFileType;
 	}
 	void CXlsxSerializer::setMacroEnabled(bool val)
 	{

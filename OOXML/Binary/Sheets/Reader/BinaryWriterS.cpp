@@ -2140,7 +2140,7 @@ void BinarySharedStringTableWriter::WriteRPr(const OOX::Spreadsheet::CRPr& rPr, 
 
 
 BinaryWorkbookTableWriter::BinaryWorkbookTableWriter(NSBinPptxRW::CBinaryFileWriter &oCBufferedStream, OOX::Document *pDocument) 
-: m_oBcw(oCBufferedStream), m_pXlsx(NULL), m_pXlsxFlat(NULL)
+: m_oBcw(oCBufferedStream), m_pXlsx(NULL), m_pXlsxFlat(NULL), m_nSourceFileType(0)
 {
 	m_pXlsx		= dynamic_cast<OOX::Spreadsheet::CXlsx*>(pDocument);
 	m_pXlsxFlat	= dynamic_cast<OOX::Spreadsheet::CXlsxFlat*>(pDocument);
@@ -2312,6 +2312,12 @@ void BinaryWorkbookTableWriter::WriteWorkbook(OOX::Spreadsheet::CWorkbook& workb
 	{
 		nCurPos = m_oBcw.WriteItemStart(c_oSerWorkbookTypes::AppName);
 		m_oBcw.m_oStream.WriteStringW3(*workbook.m_oAppName);
+		m_oBcw.WriteItemWithLengthEnd(nCurPos);
+	}
+	if (m_nSourceFileType > 0)
+	{
+		nCurPos = m_oBcw.WriteItemStart(c_oSerWorkbookTypes::SourceFileType);
+		m_oBcw.m_oStream.WriteLONG(m_nSourceFileType);
 		m_oBcw.WriteItemWithLengthEnd(nCurPos);
 	}	
 	if (workbook.m_oOleSize.IsInit())
@@ -9070,6 +9076,7 @@ BinaryFileWriter::BinaryFileWriter(DocWrapper::FontProcessor& oFontProcessor) : 
 {
 	m_nLastFilePos = 0;
 	m_nLastFilePosOffset = 0;
+	m_nSourceFileType = 0;
 	m_nRealTableCount = 0;
 }
 BinaryFileWriter::~BinaryFileWriter()
@@ -9392,6 +9399,7 @@ void BinaryFileWriter::WriteContent(OOX::Document *pDocument, NSFontCutter::CEmb
 	{
 		nCurPos = WriteTableStart(c_oSerTableTypes::Workbook);
 		BinaryWorkbookTableWriter oBinaryWorkbookTableWriter(m_oBcw->m_oStream, pXlsx ? dynamic_cast<OOX::Document*>(pXlsx) : dynamic_cast<OOX::Document*>(pXlsxFlat));
+		oBinaryWorkbookTableWriter.m_nSourceFileType = m_nSourceFileType;
 		oBinaryWorkbookTableWriter.Write(*pWorkbook);
 		WriteTableEnd(nCurPos);
 	}
