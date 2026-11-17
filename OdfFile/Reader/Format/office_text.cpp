@@ -171,15 +171,15 @@ bool has_endnote_at_document_end(oox::docx_conversion_context & Context, const d
 	return false;
 }
 
-// The paragraph that ends the body, when the body ends with a paragraph, a heading or a list.
+// The paragraph that ends the body, when the body ends with a paragraph or a list. Not a heading:
+// a heading writes the section properties into an empty paragraph of its own before it, so the
+// heading would move to the endnote page.
 const text::paragraph * last_body_paragraph(const office_element_ptr_array & content)
 {
 	const office_element * element = content.empty() ? NULL : content.back().get();
 	while (element)
 	{
 		if (const text::p * last = dynamic_cast<const text::p *>(element))
-			return &last->paragraph_;
-		if (const text::h * last = dynamic_cast<const text::h *>(element))
 			return &last->paragraph_;
 
 		const text::list * last_list = dynamic_cast<const text::list *>(element);
@@ -218,8 +218,13 @@ void office_text::docx_convert(oox::docx_conversion_context & Context)
 	// LibreOffice prints the endnotes that no section collects on a page of their own after the
 	// body, with the page style of the endnote configuration. Word and the editors print them
 	// after the last paragraph, so the body ends with a section for that page.
+	// With ContinuousEndnotes (set by LibreOffice's import of Word 97 files) LibreOffice prints them
+	// right after the text instead.
+	const _CP_OPT(std::wstring) continuous_endnotes =
+		Context.root()->odf_context().Settings().find_by_name(L"ContinuousEndnotes");
+	const bool continuous = continuous_endnotes && *continuous_endnotes == L"true";
 	const text::paragraph * last_paragraph =
-		has_endnote_at_document_end(Context, getContext()) ? last_body_paragraph(content_) : NULL;
+		(!continuous && has_endnote_at_document_end(Context, getContext())) ? last_body_paragraph(content_) : NULL;
 
 	Context.endnote_page_paragraph_ = last_paragraph;
 
@@ -355,7 +360,8 @@ void office_text::docx_convert(oox::docx_conversion_context & Context)
 			Context.remove_page_properties();
 			Context.add_page_properties(layout);
 		}
-		Context.output_stream() << L"<w:p><w:pPr><w:spacing w:before=\"0\" w:after=\"0\" w:line=\"20\" w:lineRule=\"exact\"/>"
+		Context.output_stream()
+			<< L"<w:p><w:pPr><w:spacing w:before=\"0\" w:after=\"0\" w:line=\"20\" w:lineRule=\"exact\"/>"
 			L"<w:rPr><w:sz w:val=\"2\"/><w:szCs w:val=\"2\"/></w:rPr></w:pPr></w:p>";
 
 		Context.next_dump_page_properties(true);

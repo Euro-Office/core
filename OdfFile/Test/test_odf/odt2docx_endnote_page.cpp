@@ -106,6 +106,8 @@ void expect_endnote_page(const std::wstring& xml, const std::wstring& before_las
     ASSERT_NE(std::wstring::npos, last_text);
     EXPECT_GT(first_section, xml.find(L">" + before_last + L"<"));
     EXPECT_LT(first_section, last_text);
+    EXPECT_EQ(std::wstring::npos, xml.substr(first_section, last_text - first_section).find(L"</w:p>"))
+        << "the section properties are not in the paragraph with " << std::string(last.begin(), last.end());
 
     EXPECT_EQ(1u, count(xml, kCarrier));
     EXPECT_GT(xml.find(kCarrier), last_text);
@@ -176,4 +178,24 @@ TEST(OdtToDocxEndnotePage, NoEndnotePageWithoutEndnotesAfterTheLastParagraph)
         EXPECT_EQ(0u, count(xml, kCarrier));
         EXPECT_EQ(std::wstring::npos, xml.find(L"<w:type w:val=\"nextPage\"/>"));
     }
+}
+
+// A heading writes the section properties into an empty paragraph before
+// itself, so it would move to the endnote page: no endnote page.
+TEST(OdtToDocxEndnotePage, NoEndnotePageWhenTheBodyEndsWithAHeading)
+{
+    const std::wstring xml = convert(L"endnote_page_heading.odt");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_EQ(0u, count(xml, kCarrier));
+    EXPECT_EQ(std::wstring::npos, xml.find(L"<w:type w:val=\"nextPage\"/>"));
+}
+
+// With ContinuousEndnotes LibreOffice prints the endnotes right after the
+// text: no endnote page.
+TEST(OdtToDocxEndnotePage, NoEndnotePageWithContinuousEndnotes)
+{
+    const std::wstring xml = convert(L"endnote_page_continuous.odt");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_EQ(0u, count(xml, kCarrier));
+    EXPECT_EQ(std::wstring::npos, xml.find(L"<w:type w:val=\"nextPage\"/>"));
 }

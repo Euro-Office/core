@@ -310,7 +310,9 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 [[annotations]]
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_continuous.odt",
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page_footnote.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_heading.odt",
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_section.odt",
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page_list.odt",
     "OdfFile/Test/test_odf/ExampleFiles/endnote_page_no_configuration.odt",
