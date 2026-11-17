@@ -294,6 +294,11 @@ SPDX-FileCopyrightText = "The LibreOffice contributors"
 SPDX-License-Identifier = "MPL-2.0"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/sheet_optimal_row_height.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = "OdfFile/Test/test_odf/ExampleFiles/section_columns.odt"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

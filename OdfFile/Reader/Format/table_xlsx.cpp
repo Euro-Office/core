@@ -32,6 +32,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <algorithm>
+#include <map>
 #include <cmath>
 
 #include "serialize_elements.h"
@@ -136,6 +137,7 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 
     std::wstring ht		= L"";
     double row_height	= 0.0;
+	bool fit_height		= false;
 
 	bool bBreakAfter = false, bBreakBefore = false;
 
@@ -152,9 +154,9 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 			if ((prop->attlist_.style_use_optimal_row_height_) && 
 						(*prop->attlist_.style_use_optimal_row_height_==true))
 			{
-				//automatic height adjustment.
-				//no in ooh
-				//TODO change the size y (double) according to the current font and compare it with the given one - interrupt !!!
+				// LibreOffice fits such a row to its content when it loads the file, and so does the spreadsheet
+				// application for a row without a custom height; the stored height may come from other fonts.
+				fit_height = !cells_padded(Context);
 			}
 
 			std::wstringstream ht_s;
@@ -217,7 +219,8 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
                     if (!ht.empty())
                     {
                         CP_XML_ATTR(L"ht", ht);                                            
-                        CP_XML_ATTR(L"customHeight", 1);
+                        if (!fit_height)
+                            CP_XML_ATTR(L"customHeight", 1);
                     }
 					if (Default_Cell_style_in_row_ > 0)
 					{
@@ -786,6 +789,103 @@ size_t EmptyStyledCellXf(oox::xlsx_conversion_context & Context, const std::wstr
 // repeated up to the last column (often hundreds of columns). Written one by one, those cells count as used
 // (the editor's print range takes in every cell with a fill or border). If the last cell of this row is such
 // a run, returns true and its format in xf; the row then carries that format (row/@s, customFormat) instead.
+namespace {
+	// LibreOffice adds a cell's top and bottom padding to the optimal height of its row (0.018 cm a side by default).
+	// XLSX has no cell padding, so a row the spreadsheet application fits itself would be lower than in LibreOffice.
+	const double max_default_vertical_padding_pt = 1.2;
+
+	void cell_properties_chain(const style_instance * style, std::vector<const style_table_cell_properties*> & chain)
+	{
+		for (int depth = 0; style && depth < 32; style = style->parent(), depth++)
+		{
+			if (style_content * content = style->content())
+			{
+				if (const style_table_cell_properties * prop = content->get_style_table_cell_properties())
+					chain.push_back(prop);
+			}
+		}
+	}
+
+	// the first style of the chain that sets this side, or fo:padding for all sides, decides
+	double padding_side_pt(const std::vector<const style_table_cell_properties*> & chain, bool top)
+	{
+		for (size_t i = 0; i < chain.size(); i++)
+		{
+			const odf_types::common_padding_attlist & padding = chain[i]->attlist_.common_padding_attlist_;
+			const _CP_OPT(odf_types::length) & side = top ? padding.fo_padding_top_ : padding.fo_padding_bottom_;
+			if (side)
+				return side->get_value_unit(odf_types::length::pt);
+			if (padding.fo_padding_)
+				return padding.fo_padding_->get_value_unit(odf_types::length::pt);
+		}
+		return 0.0;
+	}
+}
+
+// Whether a cell of the row, empty or not, has more vertical padding than LibreOffice's default. Its style is the
+// cell's own, else the row's default cell style, else its column's default cell style.
+bool table_table_row::cells_padded(oox::xlsx_conversion_context & Context)
+{
+	odf_read_context & odfContext = Context.root()->odf_context();
+	oox::xlsx_table_state_ptr state = Context.get_table_context().state();
+
+	std::map<std::wstring, bool> padded;
+	auto style_padded = [&](const std::wstring & name) -> bool
+	{
+		std::map<std::wstring, bool>::const_iterator found = padded.find(name);
+		if (found != padded.end())
+			return found->second;
+
+		std::vector<const style_table_cell_properties*> chain;
+		if (!name.empty())
+			cell_properties_chain(odfContext.styleContainer().style_by_name(name, style_family::TableCell, false), chain);
+		cell_properties_chain(odfContext.styleContainer().style_by_name(L"Default", style_family::TableCell, false), chain);
+		cell_properties_chain(odfContext.styleContainer().style_default_by_type(style_family::TableCell), chain);
+
+		const bool result = padding_side_pt(chain, true) + padding_side_pt(chain, false) > max_default_vertical_padding_pt;
+		padded[name] = result;
+		return result;
+	};
+
+	const std::wstring rowStyleName = attlist_.table_default_cell_style_name_.get_value_or(L"");
+	unsigned int column = 0;
+	for (size_t i = 0; i < content_.size(); i++)
+	{
+		const table_table_cell_attlist * cell = NULL;
+		if (table_table_cell * c = dynamic_cast<table_table_cell*>(content_[i].get()))
+			cell = &c->attlist_;
+		else if (table_covered_table_cell * c = dynamic_cast<table_covered_table_cell*>(content_[i].get()))
+			cell = &c->attlist_;
+		if (!cell)
+			continue;
+
+		const unsigned int end = column + cell->table_number_columns_repeated_;
+		if (cell->table_style_name_)
+		{
+			if (style_padded(*cell->table_style_name_))
+				return true;
+		}
+		else if (!rowStyleName.empty())
+		{
+			if (style_padded(rowStyleName))
+				return true;
+		}
+		else
+		{
+			// a run of columns with one default cell style is checked once
+			for (unsigned int c = column; c < end; c++)
+			{
+				if (style_padded(state->default_column_cell_style(c)))
+					return true;
+				if (state->same_default_column_cell_style(c, end))
+					break;
+			}
+		}
+		column = end;
+	}
+	return false;
+}
+
 bool table_table_row::trailing_cells_format(oox::xlsx_conversion_context & Context, size_t & xf)
 {
 	if (content_.empty() || attlist_.table_default_cell_style_name_ || !Context.current_sheet().external_ref().empty())
