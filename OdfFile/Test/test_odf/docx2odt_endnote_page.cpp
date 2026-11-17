@@ -63,8 +63,10 @@ namespace
 		const size_t start = styles.find(L"<style:page-layout style:name=\"" + layout + L"\"");
 		if (layout.empty() || start == std::wstring::npos)
 			return false;
+		// Only the properties of this page layout, not those of the next one.
+		const size_t end = styles.find(L"</style:page-layout>", start);
 		const size_t props = styles.find(L"<style:page-layout-properties", start);
-		if (props == std::wstring::npos)
+		if (props == std::wstring::npos || end == std::wstring::npos || props > end)
 			return false;
 		const double width = std::wcstod(attribute(styles, props, L"fo:page-width").c_str(), nullptr);
 		const double height = std::wcstod(attribute(styles, props, L"fo:page-height").c_str(), nullptr);
@@ -194,4 +196,26 @@ TEST(DocxToOdtEndnotePage, SectionKeptWhenItsEndnotesEndTheSection)
 TEST(DocxToOdtEndnotePage, SectionKeptWhenTheEndnoteIsMissing)
 {
 	expect_section_kept(convert(L"endnote_page_section_missing_endnote"));
+}
+
+// The columns of the last section belong to the endnote page only: the body
+// section before it keeps its own two columns.
+TEST(DocxToOdtEndnotePage, BodySectionKeepsItsColumns)
+{
+	const converted odt = convert(L"endnote_page_section_columns");
+	expect_endnote_page(odt, L"i", L"0");
+	EXPECT_NE(odt.content.find(L"fo:column-count=\"2\""), std::wstring::npos) << "the body section lost its columns";
+}
+
+// The line numbering of the document is written once, not again for the
+// endnote page.
+TEST(DocxToOdtEndnotePage, LineNumberingWrittenOnce)
+{
+	const converted odt = convert(L"endnote_page_section_line_numbers");
+	expect_endnote_page(odt, L"i", L"0");
+	size_t count = 0;
+	for (size_t pos = odt.styles.find(L"<text:linenumbering-configuration"); pos != std::wstring::npos;
+		 pos = odt.styles.find(L"<text:linenumbering-configuration", pos + 1))
+		count++;
+	EXPECT_EQ(count, 1u);
 }

@@ -304,8 +304,15 @@ void DocxConverter::convert_document()
 			// The empty paragraph only opens the page that Word prints the endnotes on: ODF
 			// names that page style in the endnote configuration instead. The page style is
 			// made as for the paragraph, with the headers and footers the section inherits
-			// from earlier sections, but without a section in the text.
-			convert(sections[sect].props, false);
+			// from earlier sections, but without a section in the text. Its columns and line
+			// numbering are not converted: the columns would go to the section of the body,
+			// which is still the open one, and the line numbering of the document is written
+			// already, with the default page style.
+			OOX::Logic::CSectionProperty *props = sections[sect].props;
+			props->m_oCols.reset();
+			props->m_oLnNumType.reset();
+			current_section_properties = NULL;
+			convert(props, false);
 			if (odt_context->page_layout_context()->last_master())
 				add_endnote_page_configuration(odt_context->page_layout_context()->last_master()->get_name());
 			break;
