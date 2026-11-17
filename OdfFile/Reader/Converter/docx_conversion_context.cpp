@@ -1114,6 +1114,11 @@ std::wstring  docx_conversion_context::dump_settings_document()
 					}
 				}
 			}
+			strVal = root()->odf_context().Settings().find_by_name(L"RecordChanges");
+			if (strVal && *strVal == L"true")
+			{
+				CP_XML_NODE(L"w:trackRevisions");
+			}
 			if (odf_reader::GetProperty(settings_properties_,L"evenAndOddHeaders", boolVal))
 			{
 				CP_XML_NODE(L"w:evenAndOddHeaders");

@@ -3692,6 +3692,10 @@ void DocxConverter::convert_settings()
 		odt_context->settings_context()->set_modify_info(crypt, algorithm, settings->m_oDocumentProtection->m_sSaltValue.get_value_or(L""),
 			settings->m_oDocumentProtection->m_sHashValue.get_value_or(L""), settings->m_oDocumentProtection->m_oSpinCount.get_value_or(1));
 	}
+	if (settings->m_oTrackRevisions.IsInit() && settings->m_oTrackRevisions->m_oVal.ToBool())
+	{
+		odt_context->settings_context()->add_config_content_item(L"RecordChanges", L"boolean", L"true");
+	}
 	if (settings->m_oZoom.IsInit())
 	{
 	}
