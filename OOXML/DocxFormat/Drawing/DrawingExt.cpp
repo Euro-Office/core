@@ -954,7 +954,9 @@ namespace OOX
 					objectPtr = XLS::BaseObjectPtr(ptr);
 					auto ptr1(new XLSB::RICHDATAMETADATA);
 					ptr1->m_BeginRichValueBlock = i->m_oRichValueBlock->toBin();
-					delete ptr1; // never attached to the returned tree; release the unused node
+					// TODO: FMD expects this node in m_RICHDATAMETADATA, but nothing attaches it
+					// today; the output stays as it is until that is fixed.
+					delete ptr1;
 				}
 			}
 			return objectPtr;

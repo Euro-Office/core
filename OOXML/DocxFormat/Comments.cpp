@@ -313,7 +313,7 @@ namespace OOX
 	{
 		//don't use this. use read(const CPath& oRootPath, const CPath& oFilePath)
 		CPath oRootPath;
-		CComments::read(oRootPath, oPath);
+		read(oRootPath, oPath);
 	}
 	void CComments::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
@@ -447,7 +447,7 @@ namespace OOX
 	{
 		//don't use this. use read(const CPath& oRootPath, const CPath& oFilePath)
 		CPath oRootPath;
-		CCommentsExt::read(oRootPath, oPath);
+		read(oRootPath, oPath);
 	}
 	void CCommentsExt::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
@@ -613,7 +613,7 @@ namespace OOX
 	{
 		//don't use this. use read(const CPath& oRootPath, const CPath& oFilePath)
 		CPath oRootPath;
-		CCommentsExtensible::read(oRootPath, oPath);
+		read(oRootPath, oPath);
 	}
 	void CCommentsExtensible::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
 	{

@@ -245,9 +245,9 @@ namespace OOX
 			fMouseIcon = GETBIT(mask, 27);
 			fPicture = GETBIT(mask, 28);
 			fAccelerator = GETBIT(mask, 29);
-			// Bit 32 is outside the 32-bit mask; keep the masked-shift result the old
-			// `1 << 32` produced on x86 (bit 0) without invoking undefined behaviour.
-			fGroupName = GETBIT(mask, (32 & 31));
+			// TODO: the group name is bit 32 of the mask, but GETBIT shifts an int, so this
+			// was always false in GCC builds and the reader skipped the group name. Fix in its own PR.
+			fGroupName = false;
 		}
 		MorphDataPropMask & operator = (_UINT32 flag)
 		{
@@ -634,9 +634,7 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		if (PropMask.fFontCharSet) stream->ReadByte();
 		if (PropMask.fFontPitchAndFamily)
 		{
-			_UINT32 nFontPitchAndFamily = stream->ReadByte();
-			GETBITS(nFontPitchAndFamily, 0, 3);
-			GETBITS(nFontPitchAndFamily, 4, 7);
+			stream->ReadByte();
 		}
 		if (PropMask.fParagraphAlign) stream->ReadByte();
 
@@ -955,7 +953,6 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		bool fMousePointer			= GETBIT(PropMask, 6);
 		bool fPicture				= GETBIT(PropMask, 7);
 		bool fAccelerator			= GETBIT(PropMask, 8);
-		GETBIT(PropMask, 9);
 		bool fMouseIcon				= GETBIT(PropMask, 10);
 
 		m_oLockText = true;

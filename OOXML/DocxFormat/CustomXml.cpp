@@ -201,7 +201,7 @@ namespace OOX
 		XmlUtils::CXmlNode oCustomXml;
 		oCustomXml.FromXmlFile( oFilePath.GetPath(), true );
 
-		CCustomXMLProps::fromXML(oCustomXml);
+		fromXML(oCustomXml);
 	}
 	void CCustomXMLProps::write(const CPath& oFilePath, const CPath& /*oDirectory*/, CContentTypes& oContent) const
 	{

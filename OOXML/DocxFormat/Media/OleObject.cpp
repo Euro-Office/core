@@ -40,7 +40,7 @@ namespace OOX
 	void OleObject::read(const CPath& oFilePath)
 	{
 		CPath oRootPath;
-		OleObject::read(oRootPath, oFilePath);
+		read(oRootPath, oFilePath);
 	}
 	void OleObject::read(const CPath& oRootPath, const CPath& oFilePath)
 	{

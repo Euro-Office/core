@@ -77,7 +77,7 @@ namespace OOX
 		if ( !oReader.ReadNextNode() )
 			return;
 
-		CHdrFtr::fromXML(oReader);
+		fromXML(oReader);
 	}
 	void CHdrFtr::fromXML(XmlUtils::CXmlNode& oNode)
 	{

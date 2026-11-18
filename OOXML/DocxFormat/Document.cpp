@@ -468,7 +468,7 @@ namespace OOX
 		std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
 		if ( L"document" == sName || L"wordDocument" == sName || L"glossaryDocument" == sName)
 		{
-			CDocument::fromXML(oReader);
+			fromXML(oReader);
 		}			
 	}
 	void CDocument::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const

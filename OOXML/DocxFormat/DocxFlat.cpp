@@ -65,7 +65,7 @@ namespace OOX
 		if (!oReader.ReadNextNode())
 			return;
 
-		CDocxFlat::fromXML(oReader);
+		fromXML(oReader);
 	}
 	void CDocxFlat::write(const CPath& oFilePath, const CPath& /*oDirectory*/, CContentTypes& /*oContent*/) const
 	{

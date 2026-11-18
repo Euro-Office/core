@@ -663,7 +663,7 @@ namespace OOX
 			std::wstring sName = oReader.GetName();
 			if ( L"w:styles" == sName)
 			{
-				CStyles::fromXML(oReader);
+				fromXML(oReader);
 			}
 		}
 		void CStyles::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const

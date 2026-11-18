@@ -108,7 +108,7 @@ namespace OOX
 		std::wstring sName = oReader.GetName();
 		if ( _T("w:fonts") == sName)
 		{
-			CFontTable::fromXML(oReader);
+			fromXML(oReader);
 		}
 	}
 	void CFontTable::write(const CPath &oFilePath, const CPath &oDirectory, CContentTypes& oContent) const

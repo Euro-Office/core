@@ -2489,7 +2489,7 @@ namespace Settings
 		if ( !oReader.ReadNextNode() )
 			return;
 
-		CSettings::fromXML(oReader);
+		fromXML(oReader);
 	}
 	void CSettings::fromXML(XmlUtils::CXmlNode& oNode)
 	{

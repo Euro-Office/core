@@ -829,7 +829,7 @@ namespace OOX
 		std::wstring sName = oReader.GetName();
 		if ( _T("w:numbering") == sName && !oReader.IsEmptyNode() )
 		{
-			CNumbering::fromXML(oReader);
+			fromXML(oReader);
 		}
 	}
 	void CNumbering::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
