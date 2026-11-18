@@ -259,6 +259,8 @@ private:
    
 	int									current_table_column_;
     int									current_table_row_;
+	int									last_used_row_ = -1;
+	int									last_used_column_ = -1;
 	bool								empty_row_;
 	bool								in_cell;
 

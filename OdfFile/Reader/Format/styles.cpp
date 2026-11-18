@@ -2086,15 +2086,100 @@ std::wostream & header_footer_impl::text_to_stream(std::wostream & _Wostream, bo
     return _Wostream;
 }
 
+namespace
+{
+	// The paragraph of a header/footer that is next to the page body: the last block of a header, the first block
+	// of a footer. NULL when that block is not a paragraph (a table, a list, a section).
+	const text::paragraph_attrs* edge_paragraph(const office_element_ptr_array & content, bool last)
+	{
+		for (size_t n = 0; n < content.size(); n++)
+		{
+			office_element* elm = content[last ? content.size() - 1 - n : n].get();
+			if (!elm) continue;
+
+			// office_element is a virtual base: no static_cast
+			switch (elm->get_type())
+			{
+			case typeTextP:
+			{
+				const text::p* para = dynamic_cast<const text::p*>(elm);
+				return para ? &para->paragraph_.attrs_ : NULL;
+			}
+			case typeTextH:
+			{
+				const text::h* heading = dynamic_cast<const text::h*>(elm);
+				return heading ? &heading->paragraph_.attrs_ : NULL;
+			}
+			// declarations take no room
+			case typeTextVariableDecls:
+			case typeTextSequenceDecls:
+			case typeTextUserFieldDecls:
+				continue;
+			default:
+				return NULL;
+			}
+		}
+		return NULL;
+	}
+}
 void header_footer_impl::docx_convert(oox::docx_conversion_context & Context)
 {
 	if (tracked_changes_)
 		tracked_changes_->docx_convert(Context);
 
+	// A header keeps fo:margin-bottom of its style free below its content, a footer fo:margin-top above it.
+	// Not when the distance is dynamic (it is given up as the content grows) or the height is fixed (svg:height
+	// includes the distance): there w:pgMar already describes the layout.
+	oox::header_footer_context::edge_spacing edge;
+	// not get_type(): it is typeStyleHeaderFooter for all six kinds
+	edge.header = dynamic_cast<const style_header*>(this) || dynamic_cast<const style_header_first*>(this) ||
+		dynamic_cast<const style_header_left*>(this);
+
+	const page_layout_instance* layout =
+		Context.root()->odf_context().pageLayoutContainer().page_layout_by_name(Context.get_page_properties());
+	const style_page_layout* page_layout = layout ? layout->style_page_layout_ : NULL;
+	const style_header_footer_properties* props = NULL;
+	if (page_layout && edge.header)
+	{
+		const style_header_style* style = dynamic_cast<style_header_style*>(page_layout->style_header_style_.get());
+		if (style) props = dynamic_cast<style_header_footer_properties*>(style->style_header_footer_properties_.get());
+	}
+	else if (page_layout)
+	{
+		const style_footer_style* style = dynamic_cast<style_footer_style*>(page_layout->style_footer_style_.get());
+		if (style) props = dynamic_cast<style_header_footer_properties*>(style->style_header_footer_properties_.get());
+	}
+	if (props)
+	{
+		const style_header_footer_properties_attlist & attr = props->style_header_footer_properties_attlist_;
+
+		_CP_OPT(length_or_percent) distance = edge.header ? attr.common_vertical_margin_attlist_.fo_margin_bottom_
+														 : attr.common_vertical_margin_attlist_.fo_margin_top_;
+		if (!distance) distance = attr.common_margin_attlist_.fo_margin_;
+
+		const bool fixed_height = attr.svg_height_ && !attr.fo_min_height_;
+		const bool dynamic = attr.style_dynamic_spacing_.get_value_or(false);
+
+		if (distance && distance->get_type() == length_or_percent::Length && !fixed_height && !dynamic)
+		{
+			edge.pt = distance->get_length().get_value_unit(length::pt);
+			if (edge.pt > 0)
+				edge.paragraph = edge_paragraph(content_, edge.header);
+
+			// A footer keeps the top margin of its first paragraph. A header drops the bottom margin of its last
+			// one, unless the document has the compatibility setting that LibreOffice sets for Word documents.
+			const _CP_OPT(std::wstring) below_last =
+				Context.root()->odf_context().Settings().find_by_name(L"HeaderSpacingBelowLastPara");
+			edge.add_own = !edge.header || (below_last && *below_last == L"true");
+		}
+	}
+	Context.get_header_footer_context().set_edge_spacing(edge);
+
     for (size_t i = 0; i < content_.size(); i++)
     {
 		content_[i]->docx_convert(Context);
     }
+	Context.get_header_footer_context().reset_edge_spacing();
 }
 void header_footer_impl::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context)
 {

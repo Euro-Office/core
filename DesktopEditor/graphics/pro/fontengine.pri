@@ -11,6 +11,7 @@ HEADERS += \
 
 SOURCES += \
 	$$FONT_ENGINE_PATH/ApplicationFonts.cpp \
+	$$FONT_ENGINE_PATH/ColrV1Renderer.cpp \
 	$$FONT_ENGINE_PATH/FontFile.cpp \
 	$$FONT_ENGINE_PATH/FontManager.cpp \
 	$$FONT_ENGINE_PATH/FontPath.cpp \

@@ -246,7 +246,7 @@ namespace HWP
 		m_eTextVerAlign = oCtrlCommon.m_eTextVerAlign;
 	}
 
-	CCtrlCommon::CCtrlCommon(const HWP_STRING& sCtrlID, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+	CCtrlCommon::CCtrlCommon(const HWP_STRING& sCtrlID, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 		: CCtrl(sCtrlID), m_nWidth(0), m_nHeight(0), m_arOutMargin{0, 0, 0, 0}, m_arInMargin{0, 0, 0, 0}
 	{
 		oBuffer.SavePosition();
@@ -399,7 +399,7 @@ namespace HWP
 			}
 			END_READ_ATTRIBUTES(oReader)
 		}
-		else if (GetNodeName(ENode::Posistion, eType) == sNodeName)
+		else if (GetNodeName(ENode::Position, eType) == sNodeName)
 		{
 			START_READ_ATTRIBUTES(oReader)
 			{
@@ -662,7 +662,7 @@ namespace HWP
 		RETURN_VECTOR_CONST_PTR(CCapParagraph, m_arCaption);
 	}
 
-	int CCtrlCommon::ParseCtrl(CCtrlCommon& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+	int CCtrlCommon::ParseCtrl(CCtrlCommon& /*oObj*/, int /*nSize*/, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 	{
 		HWP_STRING sCtrlId;
 		oBuffer.ReadString(sCtrlId, 4, EStringCharacter::ASCII);
@@ -680,7 +680,7 @@ namespace HWP
 		// there are further steps in the source code
 	}
 
-	int CCtrlCommon::ParseCaption(CCtrlCommon& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+	int CCtrlCommon::ParseCaption(CCtrlCommon& oObj, int /*nSize*/, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 	{
 		oBuffer.ReadInt(oObj.m_nCaptionAttr);
 		oBuffer.ReadInt(oObj.m_nCaptionWidth);

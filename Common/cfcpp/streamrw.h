@@ -57,10 +57,10 @@ public:
         stream->write(asByteArr, sizeof (T));
     }
 
-    void ReadArray(char* data, _INT32 lenght);
-    void ReadArray(BYTE* data, _INT32 lenght);
-    void WriteArray(const BYTE *arr, _INT32 lenght);
-    void WriteArray(const char *arr, _INT32 lenght);
+    void ReadArray(char* data, _INT32 length);
+    void ReadArray(BYTE* data, _INT32 length);
+    void WriteArray(const BYTE *arr, _INT32 length);
+    void WriteArray(const char *arr, _INT32 length);
 
     inline void Close(){return;}
 

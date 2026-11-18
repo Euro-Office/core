@@ -377,13 +377,15 @@ namespace cpdoccore {
 			return dynamic_cast<style_page_layout_properties*>(style_page_layout_->style_page_layout_properties_.get());
 		}
 
-		void page_layout_instance::xlsx_serialize(std::wostream& strm, oox::xlsx_conversion_context& Context)
+		void page_layout_instance::xlsx_serialize(std::wostream& strm, oox::xlsx_conversion_context& Context,
+												  bool header_on, bool footer_on)
 		{
 			const style_header_style* headerStyle = dynamic_cast<style_header_style*>(style_page_layout_->style_header_style_.get());
 			const style_footer_style* footerStyle = dynamic_cast<style_footer_style*>(style_page_layout_->style_footer_style_.get());
 
-			style_header_footer_properties* headerProp = headerStyle ? dynamic_cast<style_header_footer_properties*>(headerStyle->style_header_footer_properties_.get()) : NULL;
-			style_header_footer_properties* footerProp = footerStyle ? dynamic_cast<style_header_footer_properties*>(footerStyle->style_header_footer_properties_.get()) : NULL;
+			// A header or footer that the master page switches off takes no space on the page.
+			style_header_footer_properties* headerProp = headerStyle && header_on ? dynamic_cast<style_header_footer_properties*>(headerStyle->style_header_footer_properties_.get()) : NULL;
+			style_header_footer_properties* footerProp = footerStyle && footer_on ? dynamic_cast<style_header_footer_properties*>(footerStyle->style_header_footer_properties_.get()) : NULL;
 
 			if (headerProp)
 			{

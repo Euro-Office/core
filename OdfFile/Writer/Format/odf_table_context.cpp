@@ -104,6 +104,7 @@ public:
 
 	odf_table_state & current_table()	{return tables_.back();}
 	bool empty () {return (false == tables_.empty()) ? false : true; }
+	size_t depth() {return tables_.size();}
 
 	void start_table(odf_table_state & state) {tables_.push_back(state);}
 
@@ -293,6 +294,10 @@ void odf_table_context::end_row()
 bool odf_table_context::empty()
 {
 	return impl_->empty();
+}
+size_t odf_table_context::depth()
+{
+	return impl_->depth();
 }
 void odf_table_context::add_column(office_element_ptr &elm, bool styled)
 {

@@ -531,7 +531,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CWorksheet *oox_sheet)
 /////////////////////////////////////////////////////////////////////////
 	convert(oox_sheet->m_oSheetViews.GetPointer());
 	convert(oox_sheet->m_oPageSetup.GetPointer());
-	convert(oox_sheet->m_oPageMargins.GetPointer());
+	convert(oox_sheet->m_oPageMargins.GetPointer(), oox_sheet->m_oHeaderFooter.GetPointer());
 	convert(oox_sheet->m_oPrintOptions.GetPointer());
 	convert(oox_sheet->m_oPicture.GetPointer());
 	convert(oox_sheet->m_oSheetProtection.GetPointer());
@@ -659,7 +659,9 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooter *oox_header_footer)
 	bool bFirst = oox_header_footer->m_oDifferentFirst.IsInit() ? oox_header_footer->m_oDifferentFirst->ToBool() : false;
 	bool bEven = oox_header_footer->m_oDifferentOddEven.IsInit() ? oox_header_footer->m_oDifferentOddEven->ToBool() : false;
 
-	if (bEven || oox_header_footer->m_oOddHeader.IsInit())
+	// With a different first page the other pages still need their own (maybe empty) header and footer:
+	// ODF uses style:header-first only next to a style:header, and the page margins count on it.
+	if (bEven || bFirst || oox_header_footer->m_oOddHeader.IsInit())
 	{
 		if (true == ods_context->start_header(0))
 		{
@@ -667,7 +669,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooter *oox_header_footer)
 			ods_context->end_header_footer();
 		}
 	}
-	if (bEven ||oox_header_footer->m_oOddFooter.IsInit())
+	if (bEven || bFirst || oox_header_footer->m_oOddFooter.IsInit())
 	{
 		if (true == ods_context->start_footer(0))
 		{
@@ -714,31 +716,68 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 
 	size_t pos = 0;
 	odf_writer::style_text_properties current_text_props;
-	
+
+	// ODF allows only paragraphs or style:region-* in a header or footer. Without &L/&C/&R the whole
+	// string goes into plain paragraphs (as LibreOffice writes a centre-only header); text before the
+	// first section code belongs to the centre section, as Excel and LibreOffice read it.
+	const std::wstring &hf_text = oox_header_footer->m_sText;
+	bool has_sections = false;
+	for (size_t i = 0; i + 1 < hf_text.size() && !has_sections; ++i)
+	{
+		if (hf_text[i] != L'&') continue;
+		wchar_t code = hf_text[++i];
+		has_sections = (code == L'L' || code == L'C' || code == L'R');
+	}
+	bool in_block = false;			// a region or a plain paragraph is open
+	bool implicit_center = false;	// the open region is the centre section opened for leading text
+	bool own_paragraph = false;		// plain paragraph opened here, closed at the end
+	// A section code after plain text (only in malformed strings, e.g. a short &K colour that swallows
+	// the next '&') closes the paragraph first, so the region still opens inside the header.
+	auto end_own_paragraph = [&]()
+	{
+		if (!own_paragraph) return;
+		ods_context->text_context()->end_paragraph();
+		own_paragraph = false;
+	};
+
 	int type_add = 0;
 	while(pos < oox_header_footer->m_sText.size())
 	{
 		if (oox_header_footer->m_sText[pos] == L'&')
 		{
 			pos++;
+			if (pos >= oox_header_footer->m_sText.size())
+				break; // a '&' at the end has no code: drop it
 			wchar_t comm = oox_header_footer->m_sText[pos];
 			
 			switch(comm)
 			{
-				case 'L':	
+				case 'L':
 					{
 						current_text_props.content_.clear();
+						end_own_paragraph();
 						ods_context->start_header_footer_region(1); pos++;
+						in_block = true; implicit_center = false;
 					}break;
-				case 'C':	
+				case 'C':
+					{
+						if (implicit_center)
+						{
+							// the leading text already is the centre section: continue it
+							implicit_center = false; pos++;
+							break;
+						}
+						current_text_props.content_.clear();
+						end_own_paragraph();
+						ods_context->start_header_footer_region(2); pos++;
+						in_block = true;
+					}break;
+				case 'R':
 					{
 						current_text_props.content_.clear();
-						ods_context->start_header_footer_region(2); pos++; 
-					}break;
-				case 'R':	
-					{
-						current_text_props.content_.clear();						
-						ods_context->start_header_footer_region(3); pos++; 
+						end_own_paragraph();
+						ods_context->start_header_footer_region(3); pos++;
+						in_block = true; implicit_center = false;
 					}break;
 
 				case 'A':	type_add = 1; pos++; break;
@@ -812,11 +851,14 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 					pos++;
 					std::wstring color = oox_header_footer->m_sText.substr(pos, 6); pos += 6;
 
-					current_text_props.content_.fo_color_ = odf_types::color(L"#" + color); 
+					if (color.size() == 6 && color.find_first_not_of(L"0123456789ABCDEFabcdef") == std::wstring::npos)
+						current_text_props.content_.fo_color_ = odf_types::color(L"#" + color);
 				}break;
 				case '\"':
 				{
 					size_t pos1 = oox_header_footer->m_sText.find(L'\"', pos + 1); 
+					if (pos1 == std::wstring::npos)
+						pos1 = oox_header_footer->m_sText.size(); // no closing quote: the rest is the font name
 					std::wstring font = oox_header_footer->m_sText.substr(pos + 1, pos1 - pos - 1); pos = pos1;
 
 					pos1 = font.find(L",");
@@ -862,13 +904,29 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 					}
 				}break;
 			}
+			if (pos > oox_header_footer->m_sText.size())
+				pos = oox_header_footer->m_sText.size(); // a code cut short by the end of the string
 		}
 		size_t next = oox_header_footer->m_sText.find(L'&', pos);
 		if (next == std::wstring::npos) next = oox_header_footer->m_sText.length();
 
 		if (type_add > 0 || next - pos > 0)
 		{
-			ods_context->text_context()->get_styles_context()->create_style(L"", odf_types::style_family::Text, true, false, -1);					
+			if (false == in_block)
+			{
+				if (has_sections)
+				{
+					ods_context->start_header_footer_region(2);
+					implicit_center = true;
+				}
+				else
+				{
+					ods_context->text_context()->start_paragraph(false);
+					own_paragraph = true;
+				}
+				in_block = true;
+			}
+			ods_context->text_context()->get_styles_context()->create_style(L"", odf_types::style_family::Text, true, false, -1);
 			odf_writer::text_format_properties *text_properties = ods_context->text_context()->get_styles_context()->last_state()->get_text_properties();
 			text_properties->apply_from(current_text_props.content_);
 
@@ -916,7 +974,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHeaderFooterElement	*oox_header_f
 			pos = next;
 		}
 	}
-
+	end_own_paragraph();
 }
 
 void XlsxConverter::convert(OOX::Spreadsheet::CSheetProtection *oox_prot)
@@ -2081,7 +2139,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page)
 	}
 }
 
-void XlsxConverter::convert(OOX::Spreadsheet::CPageMargins *oox_page)
+void XlsxConverter::convert(OOX::Spreadsheet::CPageMargins *oox_page, OOX::Spreadsheet::CHeaderFooter *oox_hf)
 {
 	if (!oox_page) return;
 	_CP_OPT(odf_types::length) top, left, right, bottom, other;
@@ -2091,15 +2149,56 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPageMargins *oox_page)
 	if (oox_page->m_oRight.IsInit())	right	= odf_types::length(oox_page->m_oRight->GetValue(), odf_types::length::pt);
 	if (oox_page->m_oBottom.IsInit())	bottom	= odf_types::length(oox_page->m_oBottom->GetValue(), odf_types::length::pt);
 
+	// XLSX measures the top margin (where the cells start) and the header distance both from the edge of
+	// the page. In ODF the page margin ends where the header starts and the header height reaches down
+	// to the cells. So when the sheet gets a header, the header distance is the ODF margin and the header
+	// takes the rest of the XLSX margin, as LibreOffice imports it. The same holds for the footer.
+	// The conditions are the ones under which convert(CHeaderFooter) writes a style:header or style:footer.
+	bool has_header = false, has_footer = false;
+	if (oox_hf)
+	{
+		const bool bFirst = oox_hf->m_oDifferentFirst.IsInit() ? oox_hf->m_oDifferentFirst->ToBool() : false;
+		const bool bEven = oox_hf->m_oDifferentOddEven.IsInit() ? oox_hf->m_oDifferentOddEven->ToBool() : false;
+
+		has_header = bFirst || bEven || oox_hf->m_oOddHeader.IsInit();
+		has_footer = bFirst || bEven || oox_hf->m_oOddFooter.IsInit();
+	}
+	_CP_OPT(odf_types::length) header_height, footer_height;
+
+	if (has_header && oox_page->m_oTop.IsInit() && oox_page->m_oHeader.IsInit())
+	{
+		const double distance = oox_page->m_oHeader->GetValue();
+		// a top margin above the header distance leaves no room: the cells start below the header, as in LibreOffice
+		const double height = (std::max)(0.0, oox_page->m_oTop->GetValue() - distance);
+		top = odf_types::length(distance, odf_types::length::pt);
+		header_height = odf_types::length(height, odf_types::length::pt);
+	}
+	if (has_footer && oox_page->m_oBottom.IsInit() && oox_page->m_oFooter.IsInit())
+	{
+		const double distance = oox_page->m_oFooter->GetValue();
+		const double height = (std::max)(0.0, oox_page->m_oBottom->GetValue() - distance);
+		bottom = odf_types::length(distance, odf_types::length::pt);
+		footer_height = odf_types::length(height, odf_types::length::pt);
+	}
+
 	ods_context->page_layout_context()->set_page_margin(top, left, bottom, right);
 	
-	if (oox_page->m_oFooter.IsInit())
+	if (footer_height)
+	{
+		ods_context->page_layout_context()->set_footer_size(footer_height, footer_height);
+	}
+	else if (oox_page->m_oFooter.IsInit())
 	{
 		other = odf_types::length(oox_page->m_oFooter->GetValue(), odf_types::length::pt);
 		ods_context->page_layout_context()->set_footer_size(other, other);
 	}
 	
-	if (oox_page->m_oHeader.IsInit())
+	if (header_height)
+	{
+		// a minimum height only, so that a taller header still grows (a fixed height would cut it off)
+		ods_context->page_layout_context()->set_header_size(boost::none, header_height);
+	}
+	else if (oox_page->m_oHeader.IsInit())
 	{
 		other = odf_types::length(oox_page->m_oHeader->GetValue(), odf_types::length::pt);
 		ods_context->page_layout_context()->set_header_size(other, other);
