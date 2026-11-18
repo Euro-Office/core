@@ -519,7 +519,8 @@ void xlsx_text_context::Impl::start_drawing_content()
 	{
 		dump_run();
 
-		store_cell_string_ = run_.str();	
+		// append: every picture or shape in the cell starts a drawing (an SVG picture is two draw:image)
+		store_cell_string_ += run_.str();
 	}
 
     paragraphs_cout_ = 0;
