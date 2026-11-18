@@ -65,13 +65,14 @@ namespace formulasconvert {
 					L"TEXTJOIN", L"TEXTSPLIT", L"TOCOL", L"TOROW", L"UNIQUE", L"VAR.P", L"VAR.S", L"VSTACK", L"WEBSERVICE",
 					L"WEIBULL.DIST", L"WRAPCOLS", L"WRAPROWS", L"XLOOKUP", L"XMATCH", L"Z.TEST"});
 				add_names(n, L"COM.MICROSOFT.", L"_xlfn._xlws.", {L"FILTER", L"SORT"});
-				add_names(n, L"COM.MICROSOFT.", L"", {L"CEILING", L"FLOOR", L"ISO.CEILING", L"NETWORKDAYS.INTL", L"WORKDAY.INTL"});
+				add_names(n, L"COM.MICROSOFT.", L"", {L"BAHTTEXT", L"CEILING", L"FLOOR", L"ISO.CEILING", L"NETWORKDAYS.INTL", L"WORKDAY.INTL"});
 				add_names(n, L"LEGACY.", L"", {
 					L"CHIDIST", L"CHIINV", L"CHITEST", L"FDIST", L"FINV", L"NORMSDIST", L"NORMSINV", L"TDIST"});
 				// OpenFormula functions that Excel added later and stores with the _xlfn. prefix
 				add_names(n, L"", L"_xlfn.", {
-					L"ACOT", L"ACOTH", L"ARABIC", L"BASE", L"BITAND", L"BITLSHIFT", L"BITOR", L"BITRSHIFT", L"BITXOR",
-					L"COMBINA", L"COT", L"COTH", L"CSC", L"CSCH", L"DAYS", L"DECIMAL", L"GAMMA", L"GAUSS", L"IFNA", L"ISFORMULA",
+					L"ACOT", L"ACOTH", L"ARABIC", L"BASE", L"BINOM.DIST.RANGE", L"BITAND", L"BITLSHIFT", L"BITOR", L"BITRSHIFT",
+					L"BITXOR", L"COMBINA", L"COT", L"COTH", L"CSC", L"CSCH", L"DAYS", L"DECIMAL", L"GAMMA", L"GAUSS", L"IFNA",
+					L"IMCOSH", L"IMCOT", L"IMCSC", L"IMCSCH", L"IMSEC", L"IMSECH", L"IMSINH", L"IMTAN", L"ISFORMULA",
 					L"ISOWEEKNUM", L"MUNIT", L"NUMBERVALUE", L"PDURATION", L"PERMUTATIONA", L"PHI", L"RRI", L"SEC", L"SECH",
 					L"SHEET", L"SHEETS", L"UNICHAR", L"UNICODE", L"XOR"});
 				n[L"FDIST"]		= L"_xlfn.F.DIST";
@@ -106,7 +107,7 @@ namespace formulasconvert {
 		}
 
 		// A name directly before "(", not part of a longer name, a sheet reference or an ODF condition like is-true-formula(
-		const boost::wregex function_name_re(L"(?<![\\w.$-])[A-Za-z_][\\w.]*(?=\\()");
+		const boost::wregex function_name_re(L"(?<![\\w.$])(?!(?<=[a-z]-)[a-z]+\\()[A-Za-z_][\\w.]*(?=\\()");
 
 		std::wstring odf2oox_function_name(const boost::wsmatch& what)
 		{
@@ -116,6 +117,11 @@ namespace formulasconvert {
 			auto it = names.find(name);
 			if (it != names.end())
 				return it->second;
+
+			// Take one to three arguments, the editor's CEILING and FLOOR exactly two. Import only:
+			// the editor's CEILING and FLOOR export as COM.MICROSOFT.CEILING and COM.MICROSOFT.FLOOR
+			if (name == L"CEILING" || name == L"FLOOR")
+				return L"_xlfn." + name + L".MATH";
 
 			// Functions LibreOffice learns later get the same prefixes
 			if (boost::algorithm::starts_with(name, L"COM.MICROSOFT."))
