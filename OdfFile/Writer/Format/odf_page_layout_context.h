@@ -96,10 +96,12 @@ public:
 	void set_pages_mirrored				(bool val);
 	
 	bool add_footer(int type);
-		void set_footer_size(_CP_OPT(odf_types::length) length_, _CP_OPT(odf_types::length) length_min);
+		void set_footer_size(_CP_OPT(odf_types::length) length_, _CP_OPT(odf_types::length) length_min,
+			_CP_OPT(odf_types::length) page_margin = boost::none);
 	
 	bool add_header(int type);
-		void set_header_size(_CP_OPT(odf_types::length) length_, _CP_OPT(odf_types::length) length_min);
+		void set_header_size(_CP_OPT(odf_types::length) length_, _CP_OPT(odf_types::length) length_min,
+			_CP_OPT(odf_types::length) page_margin = boost::none);
 
 	void set_header_footer_image	(office_element_ptr image);
 	void set_background				(_CP_OPT(odf_types::color) & color, int type);
@@ -114,7 +116,8 @@ public:
 	double				current_page_width_;
 	bool				even_and_left_headers_;
 private:
-
+	void apply_header_size();
+	void apply_footer_size();
 
 	style_header_footer_properties	*get_header_properties();
 	style_header_footer_properties	*get_footer_properties();

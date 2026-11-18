@@ -7,7 +7,7 @@ CHWPRecordParaRangeTag::CHWPRecordParaRangeTag(int nTagNum, int nLevel, int nSiz
 	: CHWPRecord(nTagNum, nLevel, nSize)
 {}
 
-int CHWPRecordParaRangeTag::Parse(CHWPPargraph& oPara, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CHWPRecordParaRangeTag::Parse(CHWPPargraph& oPara, int /*nTagNum*/, int /*nLevel*/, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

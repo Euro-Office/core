@@ -6,7 +6,7 @@ namespace NSDocxRenderer
 {
 	CParagraph::~CParagraph()
 	{
-		Clear();
+		CParagraph::Clear();
 	}
 
 	void CParagraph::Clear()
@@ -28,7 +28,7 @@ namespace NSDocxRenderer
 		if (m_dSpaceBefore > 0)
 			oWriter.AddInt(static_cast<int>(m_dSpaceBefore * c_dMMToDx));
 		else
-			oWriter.AddInt(static_cast<int>(0));
+			oWriter.AddInt(0);
 		oWriter.WriteString(L"\"");
 
 
@@ -127,8 +127,6 @@ namespace NSDocxRenderer
 			oWriter.WriteString(L"just");
 			break;
 		case tatByLeft:
-			oWriter.WriteString(L"l");
-			break;
 		case tatUnknown:
 		default:
 			oWriter.WriteString(L"l");
@@ -238,7 +236,7 @@ namespace NSDocxRenderer
 			int height_value = static_cast<int>(m_dLineHeight * c_dMMToPt * 100);
 			if (fabs(height_value) > max_value)
 				height_value > 0 ? height_value = max_value : height_value = -max_value;
-			oWriter.WriteBYTE(1); oWriter.AddSInt(static_cast<int>(height_value));
+			oWriter.WriteBYTE(1); oWriter.AddSInt(height_value);
 			oWriter.WriteBYTE(kBin_g_nodeAttributeEnd);
 			oWriter.EndRecord();
 
@@ -248,7 +246,7 @@ namespace NSDocxRenderer
 			int after_value = static_cast<int>(m_dSpaceAfter * c_dMMToPt * 100);
 			if (fabs(after_value) > max_value)
 				after_value > 0 ? after_value = max_value : after_value = -max_value;
-			oWriter.WriteBYTE(1); oWriter.AddSInt(static_cast<int>(after_value));
+			oWriter.WriteBYTE(1); oWriter.AddSInt(after_value);
 			oWriter.WriteBYTE(kBin_g_nodeAttributeEnd);
 			oWriter.EndRecord();
 
@@ -258,7 +256,7 @@ namespace NSDocxRenderer
 			int before_value = static_cast<int>(m_dSpaceBefore * c_dMMToPt * 100);
 			if (fabs(before_value) > max_value)
 				before_value > 0 ? before_value = max_value : before_value = -max_value;
-			oWriter.WriteBYTE(1); oWriter.AddSInt(static_cast<int>(before_value));
+			oWriter.WriteBYTE(1); oWriter.AddSInt(before_value);
 			oWriter.WriteBYTE(kBin_g_nodeAttributeEnd);
 			oWriter.EndRecord();
 

@@ -45,44 +45,59 @@ set(_test_odf_run_dir "${CMAKE_CURRENT_BINARY_DIR}/run")
 add_core_gtest(
     NAME    test_odf
     SOURCES test.cpp
+            odt2docx_outline_num_format.cpp
             common.cpp
             number_styles.cpp
             conversion_helpers.cpp
             docx2odt_content_controls.cpp
+            docx2odt_header_drawing_anchor.cpp
             xlsx2ods_date_cells.cpp
             xlsx2ods_print_area.cpp
+            xlsx2ods_header_footer.cpp
             odt2docx_fields.cpp
             chart_series_name.cpp
             xlsx2ods_sheet_background.cpp
+            xlsx2ods_header_footer_codes.cpp
             docx2odt_page_background.cpp
+            docx2odt_section_footers.cpp
             math_bar.cpp
             chart_title.cpp
             odt2docx_underline.cpp
             odt2docx_keep_next.cpp
+            odt2docx_header_footer_spacing.cpp
             odt2docx_links.cpp
             odp2pptx_line_height.cpp
+            odp2pptx_transition_without_subtype.cpp
             odt2docx_default_tab_stop.cpp
             enhanced_path_quadratic_bezier.cpp
             pptx2odp_bullet_size.cpp
+            xlsx2ods_page_margins.cpp
             chart_vary_colors.cpp
             odt2docx_first_body_element.cpp
             odt2docx_meta_template.cpp
             chart_subtitle.cpp
             math_property_values.cpp
             pptx2odp_table_styles.cpp
+            docx2odt_header_footer_margins.cpp
             entrance.cpp
             motion.cpp
             audio.cpp
             interactions.cpp
+            xlsx2ods_table_print_titles.cpp
             ods2xlsx_trailing_cell_style.cpp
             ods2xlsx_fit_to_page.cpp
             ods2xlsx_page_margins.cpp
+            ods2xlsx_hidden_header_footer.cpp
             ods2xlsx_font_size_column_width.cpp
+            ods2xlsx_database_range.cpp
             odt2docx_section_columns.cpp
             odt2docx_chapter_field.cpp
+            odt2docx_database_display.cpp
             ods2xlsx_fill_character.cpp
             odf_font_family.cpp
             docx2odt_line_break_after_text.cpp
+            odt2docx_character_style_based_on.cpp
+            docx2odt_style_based_on.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )

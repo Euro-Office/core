@@ -209,6 +209,8 @@ public:
 		int m_nMaxSymbols;
 		int* m_pSymbols;
 		int m_nPriority;
+		// > 0: only codes from here on, overriding any priority
+		int m_nMinForced = 0;
 
 	public:
 		CSymbolSimpleChecker()
@@ -219,6 +221,13 @@ public:
 		{
 			if (nCode > m_nMaxSymbols)
 				return;
+
+			if (m_nMinForced > 0)
+			{
+				if (nCode >= m_nMinForced)
+					m_pSymbols[nCode] = m_nPriority;
+				return;
+			}
 
 			if (m_pSymbols[nCode] == 0)
 				m_pSymbols[nCode] = m_nPriority;
@@ -363,6 +372,25 @@ public:
 			RELEASEARRAYOBJECTS(m_pTmpSymbols);
 		}
 	};
+
+	// sfnt table directory only: TTC and WOFF are not detected
+	static bool HasColrTable(const std::wstring& sPath)
+	{
+		NSFile::CFileBinary oFile;
+		BYTE header[12];
+		if (!oFile.OpenFile(sPath) || !oFile.ReadFile(header, 12))
+			return false;
+		DWORD nDirSize = 16 * ((header[4] << 8) | header[5]);
+		std::vector<BYTE> dir(nDirSize);
+		if (0 == nDirSize || !oFile.ReadFile(dir.data(), nDirSize))
+			return false;
+		for (DWORD i = 0; i < nDirSize; i += 16)
+		{
+			if (0 == memcmp(&dir[i], "COLR", 4))
+				return true;
+		}
+		return false;
+	}
 
 	class CFontPriority
 	{
@@ -1067,6 +1095,23 @@ public:
 							oAllChecker.Apply1(nMask);
 						}
 					}
+				}
+
+				// Code points from U+1F000 default to emoji presentation: a color (COLR) font
+				// takes them over from higher ranked text fonts such as DejaVu Sans
+				// ponytail: fixed boundary, BMP emoji (U+2764 etc.) stay text; use Emoji_Presentation from emoji-data.txt if they need color too
+				for (int index = 0; index < nCountFonts; ++index)
+				{
+					CFontInfoJS& info = mapFonts.find(arrFonts[index])->second;
+					if (-1 == info.m_lIndexR || !HasColrTable(mapFontFiles2[info.m_lIndexR]))
+						continue;
+
+					CSymbolSimpleChecker checker;
+					checker.m_nMaxSymbols = nMaxSymbol;
+					checker.m_pSymbols = arSymbolsAll;
+					checker.m_nPriority = mapFontsPriority.find(arrFonts[index])->second;
+					checker.m_nMinForced = 0x1F000;
+					oApplicationChecker.CheckSymbols(mapFontFiles2[info.m_lIndexR], info.m_lFaceIndexR, &checker);
 				}
 
 				//dwTime = NSTimers::GetTickCount() - dwTime;

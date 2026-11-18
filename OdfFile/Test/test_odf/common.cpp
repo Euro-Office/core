@@ -342,6 +342,31 @@ HRESULT convert_single(std::wstring srcFileName)
 	return nResult;
 }
 
+std::vector<std::wstring> malformed_xml_parts(const std::wstring& packageDir)
+{
+	std::vector<std::wstring> arMalformed;
+	for (const std::wstring& path : NSDirectory::GetFiles(packageDir, true))
+	{
+		const std::wstring sExtension = NSFile::GetFileExtention(path);
+		if (sExtension != L"xml" && sExtension != L"rels")
+			continue;
+
+		std::wstring sXml;
+		if (!NSFile::CFileBinary::ReadAllTextUtf8(path, sXml) || !is_well_formed(sXml))
+			arMalformed.push_back(path);
+	}
+	return arMalformed;
+}
+
+// Word and LibreOffice refuse a whole file over one malformed part, so every
+// XML part a conversion writes is checked, not only the ones a test reads.
+// Called from the *_dir helpers, which run inside a test body.
+static void expect_xml_parts_well_formed(const std::wstring& packageDir)
+{
+	for (const std::wstring& path : malformed_xml_parts(packageDir))
+		ADD_FAILURE() << L"not well-formed: " << path;
+}
+
 std::wstring convert_odf_to_ooxml_dir(const std::wstring& srcFileName)
 {
 	COfficeFileFormatChecker fileChecker(srcFileName);
@@ -353,7 +378,11 @@ std::wstring convert_odf_to_ooxml_dir(const std::wstring& srcFileName)
 		return L"";
 	g_arTestEnvOutputs.push_back(dstDir);
 
-	return convert_odf_into_dir(srcFileName, fileChecker.nFileType, dstDir) == 0 ? dstDir : L"";
+	if (convert_odf_into_dir(srcFileName, fileChecker.nFileType, dstDir) != 0)
+		return L"";
+
+	expect_xml_parts_well_formed(dstDir);
+	return dstDir;
 }
 
 std::wstring convert_ooxml_to_odf_dir(const std::wstring& srcFileName)
@@ -398,7 +427,11 @@ std::wstring convert_ooxml_to_odf_dir(const std::wstring& srcFileName)
 	NSDirectory::DeleteDirectory(srcTempPath);
 	NSDirectory::DeleteDirectory(tempPath);
 
-	return bResult ? dstDir : L"";
+	if (!bResult)
+		return L"";
+
+	expect_xml_parts_well_formed(dstDir);
+	return dstDir;
 }
 
 std::wstring read_part(const std::wstring& packageDir, const std::wstring& partName)

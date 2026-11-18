@@ -163,6 +163,19 @@ AscFonts.FT_Get_Glyph_Render_Buffer = function(face, size)
 	var pointer = Module["_ASC_FT_Get_Glyph_Render_Buffer"](face);
 	return new Uint8Array(Module["HEAP8"].buffer, pointer, size);
 };
+AscFonts.FT_Get_Glyph_Color_Render = function(face, gid, foreground)
+{
+	let pointer = Module["_ASC_FT_Get_Glyph_Color_Render"](face, gid, foreground >>> 0);
+	if (!pointer)
+		return null;
+
+	let header = new Int32Array(Module["HEAP8"].buffer, pointer, 4);
+	let info = { left : header[0], top : header[1], width : header[2], rows : header[3], data : null };
+	let start = pointer + 16;
+	info.data = new Uint8ClampedArray(Module["HEAPU8"].slice(start, start + 4 * info.width * info.rows));
+	Module["_ASC_FT_Free"](pointer);
+	return info;
+};
 
 let hb_cache_languages = {};
 // (AscFonts.HB_FontFree also set in onRuntimeInitialized)
