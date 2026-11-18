@@ -129,10 +129,12 @@ TEST(OdtToDocxMasterPageBreak, MasterPageBreakOnceAndOnlyOnPages)
     ASSERT_FALSE(missing.empty());
     EXPECT_FALSE(has_page_break(missing));
 
-    // a table that names a master page starts a new page also with fo:break-before="auto"
+    // a table that names a master page starts a new page also with fo:break-before="auto"; the break is
+    // w:pageBreakBefore on the first paragraph of the first cell, here one without a style
     const std::wstring table = paragraph_with_text(xml, L"Table with master");
     ASSERT_FALSE(table.empty());
-    EXPECT_TRUE(has_page_break(table));
+    EXPECT_NE(table.find(L"<w:pageBreakBefore w:val=\"true\"/>"), std::wstring::npos);
+    EXPECT_EQ(table.find(L"<w:br w:type=\"page\"/>"), std::wstring::npos);
 
     // a master page name inside a table cell does not break the page
     const std::wstring cell = paragraph_with_text(xml, L"Cell section paragraph");
@@ -194,5 +196,39 @@ TEST(OdtToDocxMasterPageBreak, PageLayoutChangeGivesNoEmptyPage)
     for (size_t pos = xml.find(section); pos != std::wstring::npos; pos = xml.find(section, pos + 1))
         sections++;
     EXPECT_EQ(sections, 4u);
+    EXPECT_EQ(xml.find(page_break_run), std::wstring::npos);
+}
+
+// A table that names a master page starts a new page through w:pageBreakBefore on the first paragraph of its first
+// cell, whatever the style of that paragraph. Word and LibreOffice ignore a page break run there, so the table would
+// stay on the previous page.
+TEST(OdtToDocxMasterPageBreak, TableBreakIsPageBreakBeforeInFirstCell)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/master_page_break.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    const std::wstring xml = read_part(dir, L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "word/document.xml is missing";
+    EXPECT_TRUE(is_well_formed(xml));
+
+    const std::wstring page_break_run = L"<w:br w:type=\"page\"/>";
+    const std::wstring page_break_before = L"<w:pageBreakBefore w:val=\"true\"/>";
+
+    // named paragraph style, automatic style without paragraph properties, automatic style with them
+    for (const wchar_t* text :
+         {L"Table named style cell", L"Table plain automatic cell", L"Table formatted automatic cell"})
+    {
+        const std::wstring cell = paragraph_with_text(xml, text);
+        ASSERT_FALSE(cell.empty()) << text;
+        EXPECT_NE(cell.find(page_break_before), std::wstring::npos) << text;
+        EXPECT_EQ(cell.find(page_break_run), std::wstring::npos) << text;
+    }
+
+    // only the first paragraph of the cell breaks the page
+    const std::wstring second = paragraph_with_text(xml, L"Table second paragraph");
+    ASSERT_FALSE(second.empty());
+    EXPECT_FALSE(has_page_break(second));
+
+    // no page break run anywhere in the document
     EXPECT_EQ(xml.find(page_break_run), std::wstring::npos);
 }
