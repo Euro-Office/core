@@ -22,11 +22,8 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
-
 #include "./FileTransporter_private.h"
 #include "../include/FileTransporter.h"
-#include "./Session.h"
 
 namespace NSNetwork
 {
@@ -64,11 +61,6 @@ namespace NSNetwork
 		{
 			CFileDownloader::Stop();
 			delete m_pInternal;
-		}
-
-		void CFileDownloader::SetSession(CSession* session)
-		{
-			m_pInternal->SetSession(session);
 		}
 
 		void CFileDownloader::SetFilePath(const std::wstring &sFilePath)
@@ -135,11 +127,6 @@ namespace NSNetwork
 		{
 			CFileUploader::Stop();
 			delete m_pInternal;
-		}
-
-		void CFileUploader::SetSession(CSession* session)
-		{
-			m_pInternal->SetSession(session);
 		}
 
 		void CFileUploader::SetUrl(const std::wstring& sUrl)

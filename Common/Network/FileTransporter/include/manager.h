@@ -58,7 +58,6 @@ namespace ASC
 		~CDownloadManager();
 
 	public:
-		NSNetwork::NSFileTransport::CSession* GetSession();
 		void SetMaxConcurrentDownloadCount(const int& count);
 
 		void AddTask(const std::wstring& url,
