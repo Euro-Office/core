@@ -62,7 +62,7 @@ namespace NSNetwork
 		}
 		CFileDownloader::~CFileDownloader()
 		{
-			Stop();
+			CFileDownloader::Stop();
 			delete m_pInternal;
 		}
 
@@ -133,7 +133,7 @@ namespace NSNetwork
 		}
 		CFileUploader::~CFileUploader()
 		{
-			Stop();
+			CFileUploader::Stop();
 			delete m_pInternal;
 		}
 

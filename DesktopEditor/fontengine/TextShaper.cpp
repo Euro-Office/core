@@ -25,6 +25,7 @@
 
 #include "./TextShaper.h"
 #include "./TextShaper_p.h"
+#include "./ColrV1Renderer.h"
 
 namespace NSShaper
 {
@@ -579,7 +580,12 @@ namespace NSShaper
 				0, 0
 			};
 
-			FT_Outline_Decompose(&((FT_OutlineGlyph)glyph)->outline, &pOutlineFuncs, &buffer);
+			FT_Outline* outline = &((FT_OutlineGlyph)glyph)->outline;
+			FT_Outline silhouette = {};
+			bool isSilhouette = 0 == outline->n_points && ColrV1_GetSilhouette((FT_Face)face, slot->glyph_index, &silhouette);
+			FT_Outline_Decompose(isSilhouette ? &silhouette : outline, &pOutlineFuncs, &buffer);
+			if (isSilhouette)
+				FT_Outline_Done(slot->library, &silhouette);
 
 			int nCount = buffer.pos;
 

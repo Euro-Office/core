@@ -123,6 +123,10 @@ else
     [ "$tests" = ON ] && args+=( -DVCPKG_MANIFEST_FEATURES=tests )
     case "$(uname -s)-$(uname -m)" in
         # -O3 without -DNDEBUG, as the Linux release images always did
+        # x86_64: the Rocky 9 compiler defaults to -march=x86-64-v2, which
+        # crashes on baseline hosts. Targets that skip set_default_options()
+        # (e.g. ooxmlsignature) only get the flag from here.
+        Linux-x86_64)   args+=( "-DCMAKE_C_FLAGS_RELEASE=-O3 -march=x86-64" "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -march=x86-64" ) ;;
         Linux-*)        args+=( -DCMAKE_C_FLAGS_RELEASE=-O3 -DCMAKE_CXX_FLAGS_RELEASE=-O3 ) ;;
         Darwin-arm64)   args+=( -DVCPKG_TARGET_TRIPLET=arm64-osx ) ;;
         Darwin-x86_64)  args+=( -DVCPKG_TARGET_TRIPLET=x64-osx ) ;;

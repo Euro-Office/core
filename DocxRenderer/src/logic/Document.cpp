@@ -492,7 +492,7 @@ namespace NSDocxRenderer
 	//-------- Functions for text output --------------------------------------------------------
 	HRESULT CDocument::CommandDrawTextPrivate(const int* pUnicodes, const int* pGids, int nCount,
 	                                          const double& dX, const double& dY, const double& dW,
-	                                          const double& dH, const double& dBaseLineOffset)
+	                                          const double& dH, const double& /*dBaseLineOffset*/)
 	{
 		double dAngleMatrix = m_oCurrentPage.m_oTransform.z_Rotation();
 		if (fabs(dAngleMatrix) > 1 || m_oCurrentPage.m_oTransform.sx() < 0 || m_oCurrentPage.m_oTransform.sy() < 0)
@@ -699,7 +699,7 @@ namespace NSDocxRenderer
 		return S_OK;
 	}
 
-	HRESULT CDocument::GetCommandParams(double* dAngle, double* dLeft, double* dTop, double* dWidth, double* dHeight, DWORD* lFlags)
+	HRESULT CDocument::GetCommandParams(double* /*dAngle*/, double* /*dLeft*/, double* /*dTop*/, double* /*dWidth*/, double* /*dHeight*/, DWORD* /*lFlags*/)
 	{
 		return S_OK;
 	}
@@ -725,7 +725,7 @@ namespace NSDocxRenderer
 		ApplyTransform(dA, dB, dC, dD, dE, dF);
 		return S_OK;
 	}
-	HRESULT CDocument::GetTransform(double *pdA, double *pdB, double *pdC, double *pdD, double *pdE, double *pdF)
+	HRESULT CDocument::GetTransform(double* /*pdA*/, double* /*pdB*/, double* /*pdC*/, double* /*pdD*/, double* /*pdE*/, double* /*pdF*/)
 	{
 		return S_OK;
 	}

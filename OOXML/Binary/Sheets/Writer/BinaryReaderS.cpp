@@ -65,6 +65,7 @@
 #include "../../../XlsxFormat/Controls/Controls.h"
 #include "../../../XlsxFormat/Timelines/Timeline.h"
 #include "../../../XlsxFormat/Workbook/Metadata.h"
+#include "../../../XlsxFormat/Workbook/FeaturePropertyBag.h"
 #include "../../../XlsxFormat/Workbook/CustomsXml.h"
 #include "../../../XlsxFormat/RichData/RdRichData.h"
 
@@ -1971,6 +1972,10 @@ int BinaryStyleTableReader::ReadXfs(BYTE type, long length, void* poResult)
 	{
 		pXfs->m_oXfId.Init();
 		pXfs->m_oXfId->SetValue(m_oBufferedStream.GetLong());
+	}
+	else if (c_oSerXfsTypes::CellControl == type)
+	{
+		pXfs->m_oCellControl = m_oBufferedStream.GetBool();
 	}
 	else
 		res = c_oSerConstants::ReadUnknown;
@@ -9931,6 +9936,38 @@ int BinaryFileReader::ReadMainTable(OOX::Spreadsheet::CXlsx& oXlsx, NSBinPptxRW:
 		}	
 		if (c_oSerConstants::ReadOk != res)
 			return res;
+	}
+	OOX::Spreadsheet::CXlsb* pXlsb = dynamic_cast<OOX::Spreadsheet::CXlsb*>(&oXlsx);
+	if (oXlsx.m_pStyles && oXlsx.m_pWorkbook && (!pXlsb || !pXlsb->m_bWriteToXlsb))
+	{
+		//checkbox xfs reference the canonical featurePropertyBag part - create it on demand
+		bool bHasCellControl = false;
+		if (oXlsx.m_pStyles->m_oCellXfs.IsInit())
+		{
+			for (size_t i = 0; !bHasCellControl && i < oXlsx.m_pStyles->m_oCellXfs->m_arrItems.size(); ++i)
+			{
+				OOX::Spreadsheet::CXfs* pXfs = oXlsx.m_pStyles->m_oCellXfs->m_arrItems[i];
+				if ((pXfs) && (pXfs->m_oCellControl.IsInit()) && (*pXfs->m_oCellControl))
+					bHasCellControl = true;
+			}
+		}
+		if (oXlsx.m_pStyles->m_oCellStyleXfs.IsInit())
+		{
+			for (size_t i = 0; !bHasCellControl && i < oXlsx.m_pStyles->m_oCellStyleXfs->m_arrItems.size(); ++i)
+			{
+				OOX::Spreadsheet::CXfs* pXfs = oXlsx.m_pStyles->m_oCellStyleXfs->m_arrItems[i];
+				if ((pXfs) && (pXfs->m_oCellControl.IsInit()) && (*pXfs->m_oCellControl))
+					bHasCellControl = true;
+			}
+		}
+		if (bHasCellControl)
+		{
+			smart_ptr<OOX::Spreadsheet::CFeaturePropertyBagFile> oBagFile(new OOX::Spreadsheet::CFeaturePropertyBagFile(NULL));
+			oBagFile->OOX::File::m_pMainDocument = oXlsx.m_pWorkbook->OOX::File::m_pMainDocument;
+
+			smart_ptr<OOX::File> oFile = oBagFile.smart_dynamic_cast<OOX::File>();
+			oXlsx.m_pWorkbook->Add(oFile);
+		}
 	}
 	for (boost::unordered_map<long, ImageObject*>::const_iterator pPair = mapMedia.begin(); pPair != mapMedia.end(); ++pPair)
 	{

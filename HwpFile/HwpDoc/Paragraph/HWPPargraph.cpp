@@ -283,7 +283,7 @@ VECTOR<TRangeTag> CHWPPargraph::GetRangeTags() const
 	return m_arRangeTags;
 }
 
-CHWPPargraph* CHWPPargraph::Parse(int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CHWPPargraph* CHWPPargraph::Parse(int /*nTagNum*/, int /*nLevel*/, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
 {
 	CHWPPargraph *pPara = new CHWPPargraph();
 
@@ -297,7 +297,7 @@ CHWPPargraph* CHWPPargraph::Parse(int nTagNum, int nLevel, int nSize, CHWPStream
 	return pPara;
 }
 
-int CHWPPargraph::Parse(CHWPPargraph& oPara, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CHWPPargraph::Parse(CHWPPargraph& oPara, int nSize, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 {
 	oBuffer.SavePosition();
 

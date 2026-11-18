@@ -136,8 +136,9 @@ option.set keep-going : false ;
     build_cmd.append( "--disable-icu" )
     build_cmd.append( "link=static" )
     if not nc.is_windows():
-        build_cmd.append( "cflags=-fPIC" )
-        build_cmd.append( "cxxflags=-fPIC" )
+        flags = " ".join( [ "-fPIC" ] + nc.baseline_arch_flags() )
+        build_cmd.append( f"cflags={ flags }" )
+        build_cmd.append( f"cxxflags={ flags }" )
     build_cmd.append( f"--prefix={ nc.install_dir }" )
     if nc.is_windows():
         build_cmd.append( "address-model=64" )

@@ -77,7 +77,7 @@ namespace NFileWriter
 
 		virtual ~CBufferedFileWriter ()
 		{
-			Flush();
+			CBufferedFileWriter::Flush();
 			m_oFile.CloseFile();
 
 			RELEASEARRAYOBJECTS(m_lpBuffer);

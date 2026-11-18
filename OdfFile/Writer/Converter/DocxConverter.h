@@ -188,6 +188,11 @@ namespace Oox2Odf
 		void convert_comment		(int oox_comm_id);
         void convert_hdr_ftr		(std::wstring sId);
 
+		// A header or footer is converted where its section starts, which can be inside a table of the body.
+		// That table is not around the header or footer: only tables opened since count for its content.
+		size_t tables_around_hdr_ftr = 0;
+		bool in_table();
+
 		void convert(OOX::Logic::CSdtContent			*oox_sdt);
 		void convert(OOX::Logic::CBackground			*oox_background, int type);
 		void convert(OOX::Logic::CBgPict				*oox_background, int type);
