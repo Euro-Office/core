@@ -119,7 +119,7 @@ TPoint CCtrlShapeArc::GetSecondPoint() const
 	return {m_nAxixX2, m_nAxixY2};
 }
 
-int CCtrlShapeArc::ParseElement(CCtrlShapeArc& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlShapeArc::ParseElement(CCtrlShapeArc& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

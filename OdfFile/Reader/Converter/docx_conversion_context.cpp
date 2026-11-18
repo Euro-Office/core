@@ -1464,7 +1464,9 @@ void docx_conversion_context::process_styles()
                     const std::wstring basedOnId = styles_map_.get(baseOn->name(), baseOn->type());
                     _Wostream << L"<w:basedOn w:val=\"" << basedOnId << "\"/>";
                 }
-				else if (!bDefault && !default_style.empty())
+				// default_style is a paragraph style: w:basedOn must name a style of the same type
+				else if (!bDefault && !default_style.empty() &&
+						 arStyles[i]->type() == odf_types::style_family::Paragraph)
 				{
 					_Wostream << L"<w:basedOn w:val=\"" << default_style << "\"/>";
 				}
@@ -1755,6 +1757,12 @@ void docx_conversion_context::serialize_paragraph_style(std::wostream & strm, co
 	std::wstringstream & paragraph_style	= get_styles_context().paragraph_nodes();
  	std::wstringstream & run_style			= get_styles_context().text_style();
    
+	if (!in_styles && !header_footer_context_.edge_attr().empty())
+	{
+		// the style has no paragraph properties that wrote the header/footer distance with their own spacing
+		paragraph_style << L"<w:spacing " << header_footer_context_.edge_attr() << L"/>";
+		header_footer_context_.reset_edge_attr();
+	}
 	CP_XML_WRITER(strm)
 	{
 		////Tutor_Charlotte_Tutor_the_Entire_World_.odt
@@ -2162,6 +2170,45 @@ int docx_conversion_context::process_paragraph_style(_CP_OPT(std::wstring) style
 	}
 	return 0;
 }
+namespace
+{
+	// While the last paragraph of a header or the first paragraph of a footer is written, the distance between the
+	// header/footer and the page body waits in the header/footer context for the code that writes w:spacing.
+	// LibreOffice puts the distance below the last line of a header whatever bottom margin that paragraph has
+	// (unless the document asks for HeaderSpacingBelowLastPara), and above a footer in addition to the top margin of
+	// its first paragraph.
+	class header_footer_edge_spacing
+	{
+	public:
+		header_footer_edge_spacing(docx_conversion_context & Context, const odf_reader::text::paragraph_attrs *Attr,
+			const odf_reader::style_instance *styleInst) : context_(Context.get_header_footer_context())
+		{
+			const header_footer_context::edge_spacing & edge = context_.get_edge_spacing();
+			if (!Attr || edge.paragraph != Attr) return;
+
+			// the frame paragraph of a drop cap has its own fixed spacing, the paragraph after it gets the distance
+			if (Context.get_drop_cap_context().state() == 2) return;
+
+			double pt = edge.pt;
+			if (edge.add_own)
+			{
+				const odf_reader::paragraph_format_properties properties =
+					odf_reader::calc_paragraph_properties_content(styleInst);
+				const _CP_OPT(odf_types::length_or_percent) & own =
+					edge.header ? properties.fo_margin_bottom_ : properties.fo_margin_top_;
+				if (own && own->get_type() == odf_types::length_or_percent::Length)
+					pt += own->get_length().get_value_unit(odf_types::length::pt);
+			}
+			// w:before and w:after hold at most 1584pt
+			if (pt < 0)		pt = 0;
+			if (pt > 1584)	pt = 1584;
+			context_.set_edge_attr(edge.header ? L"w:after" : L"w:before", (int)(0.5 + 20.0 * pt));
+		}
+		~header_footer_edge_spacing() { context_.reset_edge_attr(); }
+	private:
+		header_footer_context & context_;
+	};
+}
 int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_attrs *Attr)
 {
 	if (!Attr) return 0;
@@ -2187,6 +2234,8 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 			if (font_size > 0) current_fontSize.push_back(font_size);
 			
 			_CP_OPT(int) outline_level = calc_outline_level(Attr->outline_level_, styleInst);
+
+			header_footer_edge_spacing edge_spacing(*this, Attr, styleInst);
 			
 			process_page_break_after(styleInst);
 
@@ -2314,9 +2363,10 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 				}
 
 				serialize_list_properties(output_stream());
-				
+
 				//if ((Attr->outline_level_) && (*Attr->outline_level_ > 0))
-				if ( outline_level && status_para[id] == false )
+				const bool write_outline = outline_level && status_para[id] == false;
+				if (write_outline)
 				{
 					odf_reader::list_style_container & list_styles = root()->odf_context().listStyleContainer();
 					
@@ -2327,6 +2377,15 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 						output_stream() << L"<w:numId w:val=\"" << list_styles.id_outline() << L"\"/>"; // check bug 51965
 						output_stream() << L"</w:numPr>";
 					}
+				}
+				// after w:numPr, before w:outlineLvl
+				if (!header_footer_context_.edge_attr().empty())
+				{
+					output_stream() << L"<w:spacing " << header_footer_context_.edge_attr() << L"/>";
+					header_footer_context_.reset_edge_attr();
+				}
+				if (write_outline)
+				{
 					output_stream() << L"<w:outlineLvl w:val=\"" << *outline_level << L"\"/>";
 				}
 
@@ -2342,16 +2401,28 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 			}
 		}
 	}
+	// A paragraph without a style, or with one that is not known or has no content, wrote no properties so far: the
+	// distance between a header/footer and the page body is all it gets.
+	header_footer_edge_spacing edge_spacing(*this, Attr, NULL);
+	const std::wstring edge_attr = header_footer_context_.edge_attr();
+
 	if (!get_section_context().dump_.empty() 
 		&& !get_table_context().in_table()
 		&& (get_process_note() == oox::docx_conversion_context::noNote)
 		&& !in_drawing)
 	{
         output_stream() << L"<w:pPr>";
+			if (!edge_attr.empty())
+				output_stream() << L"<w:spacing " << edge_attr << L"/>";
 			output_stream() << get_section_context().dump_;
 			get_section_context().dump_.clear();
 			//TODO find out if headers are real without styles and properties
 		output_stream() << L"</w:pPr>";
+		return 3;
+	}
+	if (!edge_attr.empty())
+	{
+		output_stream() << L"<w:pPr><w:spacing " << edge_attr << L"/></w:pPr>";
 		return 3;
 	}
 

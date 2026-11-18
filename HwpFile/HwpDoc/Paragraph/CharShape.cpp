@@ -25,7 +25,7 @@ int CCharShape::GetCharShapeID() const
 	return m_nCharShapeID;
 }
 
-VECTOR<CCharShape*> CCharShape::Parse(int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+VECTOR<CCharShape*> CCharShape::Parse(int /*nTagNum*/, int /*nLevel*/, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

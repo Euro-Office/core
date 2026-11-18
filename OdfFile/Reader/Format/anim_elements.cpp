@@ -1145,13 +1145,19 @@ void anim_transitionFilter::convert_slide_transition_filter(oox::pptx_conversion
 		break;
 	case smil_transition_type::checkerBoardWipe:
 		type = L"checker";
-		if (filter_attlist_.smil_subtype_.get() == L"across")	dir = L"horz";
-		if (filter_attlist_.smil_subtype_.get() == L"down")	dir = L"vert";
+		if (filter_attlist_.smil_subtype_)
+		{
+			if (filter_attlist_.smil_subtype_.get() == L"across")	dir = L"horz";
+			if (filter_attlist_.smil_subtype_.get() == L"down")	dir = L"vert";
+		}
 		break;
 	case smil_transition_type::blindsWipe:
 		type = L"blinds";
-		if (filter_attlist_.smil_subtype_.get() == L"vertical")		dir = L"vert";
-		else if (filter_attlist_.smil_subtype_.get() == L"horizontal")	dir = L"horz";
+		if (filter_attlist_.smil_subtype_)
+		{
+			if (filter_attlist_.smil_subtype_.get() == L"vertical")		dir = L"vert";
+			else if (filter_attlist_.smil_subtype_.get() == L"horizontal")	dir = L"horz";
+		}
 		break;
 	case smil_transition_type::diagonalWipe:
 	case smil_transition_type::waterfallWipe:
@@ -1177,8 +1183,11 @@ void anim_transitionFilter::convert_slide_transition_filter(oox::pptx_conversion
 		break;
 	case smil_transition_type::pushWipe:
 		type = L"push";
-		if (filter_attlist_.smil_subtype_.get() == L"combVertical") { type = L"comb"; dir = L"vert"; }
-		else if (filter_attlist_.smil_subtype_.get() == L"combHorizontal") { type = L"comb"; dir = L"horz"; }
+		if (filter_attlist_.smil_subtype_)
+		{
+			if (filter_attlist_.smil_subtype_.get() == L"combVertical") { type = L"comb"; dir = L"vert"; }
+			else if (filter_attlist_.smil_subtype_.get() == L"combHorizontal") { type = L"comb"; dir = L"horz"; }
+		}
 		break;
 	case smil_transition_type::slideWipe:
 	case smil_transition_type::boxWipe:
@@ -1186,8 +1195,15 @@ void anim_transitionFilter::convert_slide_transition_filter(oox::pptx_conversion
 		break;
 	case smil_transition_type::barnDoorWipe:
 		type = L"split";
-		if (filter_attlist_.smil_subtype_.get() == L"vertical")		param = L"vert";
-		if (filter_attlist_.smil_subtype_.get() == L"horizontal")	param = L"horz";
+		if (filter_attlist_.smil_subtype_)
+		{
+			if (filter_attlist_.smil_subtype_.get() == L"vertical")		param = L"vert";
+			if (filter_attlist_.smil_subtype_.get() == L"horizontal")	param = L"horz";
+		}
+		else
+		{
+			param = L"vert"; // SMIL 2.0 default subtype of barnDoorWipe
+		}
 		break;
 	case smil_transition_type::barWipe:
 		type = L"wipe";

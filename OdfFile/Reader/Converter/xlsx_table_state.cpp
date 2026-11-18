@@ -569,14 +569,35 @@ namespace
 
 		return odfContext.pageLayoutContainer().page_layout_by_name(*master_style_->attlist_.style_page_layout_name_);
 	}
+
+	// style:display="false" on a master page's header (footer) switches it off: LibreOffice then prints
+	// neither it nor its left/first variants and reserves no space for it on the page.
+	bool header_footer_hidden(const odf_reader::office_element_ptr & elm)
+	{
+		const odf_reader::header_footer_impl* header_footer = dynamic_cast<odf_reader::header_footer_impl*>(elm.get());
+		return header_footer && !header_footer->attlist_.style_display_;
+	}
 }
 
 void xlsx_table_state::serialize_page_properties (std::wostream & strm)
 {
-	odf_reader::page_layout_instance * page_layout = sheet_page_layout(context_->root()->odf_context(), table_style_);
+	odf_reader::odf_read_context & odfContext = context_->root()->odf_context();
+
+	odf_reader::page_layout_instance * page_layout = sheet_page_layout(odfContext, table_style_);
 	if (!page_layout) return;
 
-	page_layout->xlsx_serialize(strm, *context_);
+	bool header_hidden = false, footer_hidden = false;
+
+	_CP_OPT(std::wstring) masterPageName = odfContext.styleContainer().master_page_name_by_name(table_style_);
+	odf_reader::style_master_page* master_style_ = masterPageName ?
+		odfContext.pageLayoutContainer().master_page_by_name(*masterPageName) : NULL;
+	if (master_style_)
+	{
+		header_hidden = header_footer_hidden(master_style_->style_header_);
+		footer_hidden = header_footer_hidden(master_style_->style_footer_);
+	}
+
+	page_layout->xlsx_serialize(strm, *context_, !header_hidden, !footer_hidden);
 }
 void xlsx_table_state::serialize_header_footer (std::wostream & strm)
 {
@@ -593,6 +614,15 @@ void xlsx_table_state::serialize_header_footer (std::wostream & strm)
 	odf_reader::style_footer		*footer_odd		= dynamic_cast<odf_reader::style_footer*>		(master_style_->style_footer_.get());
 	odf_reader::style_footer_first	*footer_first	= dynamic_cast<odf_reader::style_footer_first*>	(master_style_->style_footer_first_.get());
 	odf_reader::style_footer_left	*footer_even	= dynamic_cast<odf_reader::style_footer_left*>	(master_style_->style_footer_left_.get());
+
+	if (header_footer_hidden(master_style_->style_header_))
+	{
+		header_odd = NULL; header_first = NULL; header_even = NULL;
+	}
+	if (header_footer_hidden(master_style_->style_footer_))
+	{
+		footer_odd = NULL; footer_first = NULL; footer_even = NULL;
+	}
 
 	if (!header_odd && !header_first && !header_even && 
 		!footer_odd && !footer_first && !footer_even) return;

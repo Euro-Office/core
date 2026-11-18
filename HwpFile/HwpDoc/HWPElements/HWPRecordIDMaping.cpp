@@ -34,7 +34,7 @@ EIndex GetIndex(int nValue)
 	}
 }
 
-CHWPRecordIDMaping::CHWPRecordIDMaping(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CHWPRecordIDMaping::CHWPRecordIDMaping(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 	: CHWPRecord(nTagNum, nLevel, nSize), m_pParent(&oDocInfo)
 {
 	for (int nIndex = 0; nIndex < (nSize / 4); ++nIndex)
