@@ -80,6 +80,7 @@ public:
 
     bool bColor;
     bool bThemeColor;
+    bool bFirstPageOnly;
 
 	Background();
 
