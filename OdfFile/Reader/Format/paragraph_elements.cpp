@@ -1383,7 +1383,7 @@ void text_date::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_c
 }
 void text_date::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
-	// Cell text has no fields in SpreadsheetML: keep the date as stored in the document.
+	// SpreadsheetML cell and comment text has no fields: keep the date as stored in the document.
 	if (text_)
 	{
 		text_->xlsx_convert(Context);
@@ -1800,7 +1800,7 @@ void sheet_name::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_
 }
 void sheet_name::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
-	// Cell text has no fields in SpreadsheetML: keep the sheet name as stored in the document.
+	// SpreadsheetML cell and comment text has no fields: keep the sheet name as stored in the document.
 	if (text_)
 	{
 		text_->xlsx_convert(Context);

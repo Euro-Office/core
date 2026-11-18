@@ -76,9 +76,12 @@ TEST(OdsToXlsxCellTextFields, DateInFormattedSpanKept)
     const std::wstring xml = read_part(out_dir(), L"xl/sharedStrings.xml");
     const size_t date = xml.find(L"23.07.2013");
     ASSERT_NE(date, std::wstring::npos) << xml;
+    const size_t item = xml.rfind(L"<si>", date);
+    ASSERT_NE(item, std::wstring::npos) << xml;
     const size_t run = xml.rfind(L"<r>", date);
     ASSERT_NE(run, std::wstring::npos) << xml;
-    EXPECT_NE(xml.substr(run, date - run).find(L"<b"), std::wstring::npos) << xml;
+    ASSERT_GT(run, item) << "the date is not in a run of its own string item: " << xml;
+    EXPECT_NE(xml.substr(run, date - run).find(L"<b val=\"true\"/>"), std::wstring::npos) << xml;
 }
 
 TEST(OdsToXlsxCellTextFields, TitleKept)
@@ -87,9 +90,11 @@ TEST(OdsToXlsxCellTextFields, TitleKept)
     EXPECT_TRUE(has_string(L"Title: Fixture")) << read_part(out_dir(), L"xl/sharedStrings.xml");
 }
 
-TEST(OdsToXlsxCellTextFields, HeaderKeepsDateCode)
+// Headers and footers keep their own field codes (&D, &A) instead of the stored text.
+TEST(OdsToXlsxCellTextFields, HeaderFooterKeepFieldCodes)
 {
     ASSERT_FALSE(out_dir().empty()) << "ODS -> XLSX conversion failed";
     const std::wstring sheet = read_part(out_dir(), L"xl/worksheets/sheet1.xml");
     EXPECT_NE(sheet.find(L"<oddHeader>&amp;D</oddHeader>"), std::wstring::npos) << sheet;
+    EXPECT_NE(sheet.find(L"<oddFooter>&amp;A</oddFooter>"), std::wstring::npos) << sheet;
 }
