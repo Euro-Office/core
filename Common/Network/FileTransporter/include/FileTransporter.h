@@ -32,20 +32,6 @@ namespace NSNetwork
 {
 	namespace NSFileTransport
 	{
-		class CSession_private;
-		class KERNEL_DECL CSession
-		{
-		public:
-			CSession();
-			~CSession();
-
-			void SetProperty(const std::string& name, const std::string& value);
-			void Initialize();
-
-		public:
-			CSession_private* m_pInternal;
-		};
-
 		class KERNEL_DECL IFileTransporter
 		{
 		public:
@@ -53,9 +39,6 @@ namespace NSNetwork
 			virtual ~IFileTransporter() {}
 
 		public:
-			// manager must release. FileTransporter save link only
-			virtual void SetSession(CSession* session) = 0;
-
 		public:
 			// thread
 			virtual void Start(int lPriority) = 0;
@@ -84,8 +67,6 @@ namespace NSNetwork
 		public:
 			CFileDownloader(std::wstring sFileUrl, bool bDelete = true);
 			virtual ~CFileDownloader();
-
-			virtual void SetSession(CSession* session);
 
 			void SetFilePath(const std::wstring& sFilePath);
 			std::wstring GetFilePath();
@@ -119,8 +100,6 @@ namespace NSNetwork
 			CFileUploader(std::wstring sUrl, const unsigned char* cData, const int nSize);
 			CFileUploader(std::wstring sUrl, std::wstring sFilePath);
 			virtual ~CFileUploader();
-
-			virtual void SetSession(CSession* session);
 
 			void SetUrl(const std::wstring& sUrl);
 			void SetBinaryData(const unsigned char* data, const int size);
