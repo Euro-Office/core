@@ -1639,8 +1639,14 @@ void XlsxConverter::convert(OOX::Spreadsheet::CCol *oox_column)
 
 	int start_column = oox_column->m_oMin.IsInit() ? oox_column->m_oMin->GetValue() : 0 ;
 	
-	int repeated =	(oox_column->m_oMax.IsInit() ? oox_column->m_oMax->GetValue() : 0) - 
-					(oox_column->m_oMin.IsInit() ? oox_column->m_oMin->GetValue() : 0) + 1;
+	//a sheet ends at column XFD (16384): a malformed <col> past it is cut there, or dropped if it starts past it
+	if (start_column > 16384)
+		return;
+	int end_column = oox_column->m_oMax.IsInit() ? oox_column->m_oMax->GetValue() : 0;
+	if (end_column > 16384)
+		end_column = 16384;
+
+	int repeated =	end_column - (oox_column->m_oMin.IsInit() ? oox_column->m_oMin->GetValue() : 0) + 1;
 
 	int level = 0;
 	if (oox_column->m_oOutlineLevel.IsInit())

@@ -115,8 +115,14 @@ TEST(XlsxToOds, RowsEndAtLastColumnOfDefaultSheet)
 	expect_rows_end_at_last_column(L"ExampleFiles/row_format_default_columns.xlsx", 1024, 1024);
 }
 
-// A malformed <col> past XFD (max 20000) keeps its column declaration, but no row gets cells past XFD.
+// A malformed <col> past XFD (max 20000) is cut at XFD: neither the columns nor any row go past it.
 TEST(XlsxToOds, RowsEndAtXfdWhenColumnsGoPastIt)
 {
-	expect_rows_end_at_last_column(L"ExampleFiles/row_format_columns_past_last.xlsx", 16384, 20000);
+	expect_rows_end_at_last_column(L"ExampleFiles/row_format_columns_past_last.xlsx", 16384, 16384);
+}
+
+// A <col> that starts past XFD (16385 to 20000) is dropped; the sheet keeps its 1024 default columns.
+TEST(XlsxToOds, ColumnsStartingPastXfdAreDropped)
+{
+	expect_rows_end_at_last_column(L"ExampleFiles/row_format_columns_start_past_last.xlsx", 1024, 1024);
 }
