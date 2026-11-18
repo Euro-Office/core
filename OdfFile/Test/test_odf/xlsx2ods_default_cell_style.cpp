@@ -19,8 +19,12 @@ namespace
 		while ((pos = styles.find(L"<style:style ", pos)) != std::wstring::npos)
 		{
 			const size_t tag_end = styles.find(L'>', pos);
-			const size_t end = styles.find(L"</style:style>", pos);
-			if (tag_end == std::wstring::npos || end == std::wstring::npos)
+			if (tag_end == std::wstring::npos)
+				return L"";
+			// A self-closing style ends at its own tag, not at the next </style:style>.
+			const bool empty_element = styles[tag_end - 1] == L'/';
+			const size_t end = empty_element ? tag_end + 1 : styles.find(L"</style:style>", pos);
+			if (end == std::wstring::npos)
 				return L"";
 			const std::wstring tag = styles.substr(pos, tag_end - pos);
 			if (tag.find(L"style:name=\"Default\"") != std::wstring::npos &&

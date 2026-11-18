@@ -2895,9 +2895,10 @@ void XlsxConverter::convert(OOX::Spreadsheet::CXfs * xfc_style, int oox_id, bool
 	int font_id		= xfc_style->m_oFontId.IsInit()		? xfc_style->m_oFontId->GetValue()	: -1;
 	int border_id	= xfc_style->m_oBorderId.IsInit()	? xfc_style->m_oBorderId->GetValue(): -1;
 
-	// The first cell style format becomes the ODF "Default" cell style. Without a
-	// fontId it falls back to the workbook's first font, as LibreOffice does;
-	// otherwise the Default cell style has no font at all.
+	// The cell style that uses the first cell style format (named "Default" in
+	// x2t's own XLSX, usually "Normal" in Excel files) is also the columns' default
+	// cell style. Without a fontId it falls back to the workbook's first font, as
+	// LibreOffice does; otherwise that style has no font at all.
 	if (root && oox_id == 0 && font_id < 0)
 		font_id = 0;
 		
