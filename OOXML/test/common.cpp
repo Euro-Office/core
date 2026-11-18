@@ -73,14 +73,14 @@ int ConvertFile(const std::wstring &fileName)
     return nResultCode;
 }
 
-bool ConvertTo(const std::wstring &from, const std::wstring &to, const std::wstring &tempDir, std::string &error)
+bool ConvertTo(const std::wstring &from, const std::wstring &to, const std::wstring &tempDir, std::string &error, int csvEncoding)
 {
     if (!NSFile::CFileBinary::Exists(from))
     {
         error = "missing input " + U_TO_UTF8(from);
         return false;
     }
-    int code = ConvertFile(CreateParamsFile(from, to, tempDir));
+    int code = ConvertFile(CreateParamsFile(from, to, tempDir, 0, 0, csvEncoding));
     if (code != 0 || !NSFile::CFileBinary::Exists(to))
     {
         error = "x2t returned " + std::to_string(code) + " converting " + U_TO_UTF8(from) + " to " + U_TO_UTF8(to);
@@ -101,7 +101,7 @@ bool Unpack(const std::wstring &file, const std::wstring &dir, std::string &erro
     return true;
 }
 
-std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &pathTo, const std::wstring &TempDir, int formatFrom, int formatTo)
+std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &pathTo, const std::wstring &TempDir, int formatFrom, int formatTo, int csvEncoding)
 {
     NSStringUtils::CStringBuilder oBuilder;
 
@@ -147,7 +147,7 @@ std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &
 
 	// txt/csv
 	oBuilder.WriteString(L"<m_nCsvTxtEncoding>");
-	oBuilder.WriteEncodeXmlString(L"46");
+	oBuilder.WriteEncodeXmlString(std::to_wstring(csvEncoding));
 	oBuilder.WriteString(L"</m_nCsvTxtEncoding>");
 
 	oBuilder.WriteString(L"<m_nCsvDelimiter>");
