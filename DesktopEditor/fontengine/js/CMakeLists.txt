@@ -159,6 +159,7 @@ set(SOURCES
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/graph/gsubgpos-context.cc
 
     ${CMAKE_CURRENT_SOURCE_DIR}/cpp/text.cpp
+    ${DESKTOP_ROOT}/fontengine/ColrV1Renderer.cpp
 
     ${DESKTOP_ROOT}/graphics/pro/js/wasm/src/lib/wasm_jmp.cpp
 
@@ -351,6 +352,7 @@ set(EXPORTED_FUNCS
     _ASC_FT_Get_Glyph_Measure_Params
     _ASC_FT_Get_Glyph_Render_Params
     _ASC_FT_Get_Glyph_Render_Buffer
+    _ASC_FT_Get_Glyph_Color_Render
     _ASC_HB_LanguageFromString
     _ASC_HB_ShapeText
     _ASC_HB_FontFree

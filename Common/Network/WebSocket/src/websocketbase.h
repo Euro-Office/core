@@ -44,7 +44,7 @@ namespace NSNetwork
                 this->url = url;
                 this->listener = listener;
             }
-            virtual ~CWebWorkerBase() { close(); }
+            virtual ~CWebWorkerBase() { CWebWorkerBase::close(); }
             virtual void open(const std::map<std::string, std::string>& query) override {}
             virtual void send(const std::string& message) override {}
             virtual void close() override {}

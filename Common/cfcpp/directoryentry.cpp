@@ -38,7 +38,7 @@ DirectoryEntry::DirectoryEntry(std::wstring name, StgType stgType, SVector<IDire
 
     if (stgType == StgType::StgStorage)
     {
-        creationDate = 10000000ULL * std::time(NULL) + 116444736000000000ULL;
+        creationDate = 10000000ULL * std::time(nullptr) + 116444736000000000ULL;
         startSetc = ZERO;
     }
 
@@ -61,7 +61,7 @@ DirectoryEntry::DirectoryEntry(std::wstring name, StgType stgType) :
     if (stgType == StgType::StgStorage)
     {
         // file timestamp
-        creationDate = 10000000ULL * std::time(NULL) + 116444736000000000ULL;
+        creationDate = 10000000ULL * std::time(nullptr) + 116444736000000000ULL;
         startSetc = ZERO;
     }
 
@@ -91,7 +91,7 @@ std::wstring DirectoryEntry::GetEntryName() const
     if (entryName[0] != '\0' && nameLength > 0)
     {
         wchar_t name[32];
-        for (_INT32 i = 0; i < 32; i++)
+        for (size_t i = 0; i < 32; i++)
         {
             name[i] = entryName[2*i] + (entryName[2*i+1] << 8);
         }
@@ -303,12 +303,12 @@ _INT32 DirectoryEntry::CompareTo(const RedBlackTree::PIRBNode &other) const
     }
 }
 
-_UINT64 DirectoryEntry::fnv_hash(const char *buffer, _INT64 lenght)
+_UINT64 DirectoryEntry::fnv_hash(const char *buffer, _INT64 length)
 {
     _UINT64 h = 2166136261;
     _INT64 i;
 
-    for (i = 0; i < lenght; i++)
+    for (i = 0; i < length; i++)
         h = (h * 16777619) ^ buffer[i];
 
     return h;

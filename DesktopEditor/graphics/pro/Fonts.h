@@ -636,6 +636,12 @@ namespace NSFonts
 
 		virtual int GetEmbeddingLicenceType() = 0;
 		virtual void FillFontSelectFormat(CFontSelectFormat& oFormat) = 0;
+
+		// COLRv1 color glyphs (e.g. Noto Color Emoji)
+		virtual bool HasColorGlyphs() = 0;
+		// Straight RGBA, top row first, freed by the caller with delete[]; nullptr if the glyph has no color.
+		// nLeft/nTop are pixels from the pen position to the left and top edges, y up.
+		virtual BYTE* GetColorGlyphRGBA(unsigned int unGID, double dPixelsPerEm, unsigned int unForegroundRGBA, int& nLeft, int& nTop, int& nWidth, int& nHeight) = 0;
 	};
 
 	namespace NSFontFile

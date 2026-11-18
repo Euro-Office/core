@@ -98,7 +98,7 @@ const CHWPDocInfo* CHWPFile::GetDocInfo() const
 	return &m_oDocInfo;
 }
 
-bool CHWPFile::GetDocInfo(int nVersion)
+bool CHWPFile::GetDocInfo(int /*nVersion*/)
 {
 	CHWPStream oBuffer;
 	if (m_oFileHeader.Compressed())
@@ -155,7 +155,7 @@ CDirectoryEntry* CHWPFile::FindChildEntry(const HWP_STRING& sBasePath, const CDi
 	return nullptr;
 }
 
-HWP_STRING CHWPFile::SaveChildEntry(const HWP_STRING& sRootPath, const HWP_STRING& sEntryName, ECompressed eCompressed)
+HWP_STRING CHWPFile::SaveChildEntry(const HWP_STRING& /*sRootPath*/, const HWP_STRING& /*sEntryName*/, ECompressed /*eCompressed*/)
 {
 	//TODO::transfer
 	return HWP_STRING();
@@ -363,12 +363,13 @@ bool CHWPFile::Decrypt(CHWPStream& oInput, CHWPStream& oBuffer)
 	ECB_Mode<AES>::Decryption oDecryptor;
 	oDecryptor.SetKey((byte*)(oDocData.GetCurPtr() + nHashOffset), 16);
 
-	ArraySource((byte*)oInput.GetCurPtr(), oInput.SizeToEnd(), true, new StreamTransformationFilter(oDecryptor, new ArraySink( (byte*)oBuffer.GetCurPtr(), oBuffer.GetSize()), StreamTransformationFilter::NO_PADDING));
+	ArraySource oSource((byte*)oInput.GetCurPtr(), oInput.SizeToEnd(), true, new StreamTransformationFilter(oDecryptor, new ArraySink( (byte*)oBuffer.GetCurPtr(), oBuffer.GetSize()), StreamTransformationFilter::NO_PADDING));
+	(void)oSource;
 
 	return true;
 }
 
-bool CHWPFile::GetBodyText(int nVersion)
+bool CHWPFile::GetBodyText(int /*nVersion*/)
 {
 	VECTOR<CDirectoryEntry*> arSections{m_oOleFile.GetChildEntries(L"BodyText")};
 
@@ -393,7 +394,7 @@ bool CHWPFile::GetBodyText(int nVersion)
 	return true;
 }
 
-bool CHWPFile::GetViewText(int nVersion)
+bool CHWPFile::GetViewText(int /*nVersion*/)
 {
 	VECTOR<CDirectoryEntry*> arSections{m_oOleFile.GetChildEntries(L"ViewText")};
 
