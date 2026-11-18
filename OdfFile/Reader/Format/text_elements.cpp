@@ -567,6 +567,10 @@ void h::add_text(const std::wstring & Text)
 {
     paragraph_.add_text(Text);
 }
+void h::add_space(const std::wstring & Text)
+{
+    paragraph_.add_space(Text);
+}
 
 void h::docx_convert(oox::docx_conversion_context & Context) 
 {

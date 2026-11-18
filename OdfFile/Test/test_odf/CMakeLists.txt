@@ -63,6 +63,7 @@ add_core_gtest(
             math_bar.cpp
             chart_title.cpp
             odt2docx_underline.cpp
+            odt2docx_heading_spaces.cpp
             odt2docx_keep_next.cpp
             odt2docx_header_footer_spacing.cpp
             odt2docx_links.cpp
