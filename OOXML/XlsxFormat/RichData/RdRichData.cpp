@@ -44,7 +44,7 @@ namespace Spreadsheet
 	}
 	CRdRichValueFile::CRdRichValueFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 	{
-		read(oRootPath, oPath);
+		CRdRichValueFile::read(oRootPath, oPath);
 	}
 	CRdRichValueFile::~CRdRichValueFile()
 	{
@@ -71,7 +71,7 @@ namespace Spreadsheet
 	{
 		return m_oReadPath;
 	}
-	void CRdRichValueFile::read(const CPath& oRootPath, const CPath& oPath)
+	void CRdRichValueFile::read(const CPath&  /*oRootPath*/, const CPath& oPath)
 	{
 		m_oReadPath = oPath;
 
@@ -87,7 +87,7 @@ namespace Spreadsheet
 	}
 	void CRdRichValueFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
-		if (false == m_oRvData.IsInit()) return;
+		if (!m_oRvData.IsInit()) return;
 
 		NSStringUtils::CStringBuilder sXml;
 
@@ -106,7 +106,7 @@ namespace Spreadsheet
 	}
 	CRdRichValueStructureFile::CRdRichValueStructureFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 	{
-		read(oRootPath, oPath);
+		CRdRichValueStructureFile::read(oRootPath, oPath);
 	}
 	CRdRichValueStructureFile::~CRdRichValueStructureFile()
 	{
@@ -133,7 +133,7 @@ namespace Spreadsheet
 	{
 		return m_oReadPath;
 	}
-	void CRdRichValueStructureFile::read(const CPath& oRootPath, const CPath& oPath)
+	void CRdRichValueStructureFile::read(const CPath&  /*oRootPath*/, const CPath& oPath)
 	{
 		m_oReadPath = oPath;
 
@@ -149,7 +149,7 @@ namespace Spreadsheet
 	}
 	void CRdRichValueStructureFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
-		if (false == m_oRvStructures.IsInit()) return;
+		if (!m_oRvStructures.IsInit()) return;
 
 		NSStringUtils::CStringBuilder sXml;
 
@@ -167,7 +167,7 @@ namespace Spreadsheet
 	}
 	CRdRichValueTypesFile::CRdRichValueTypesFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 	{
-		read(oRootPath, oPath);
+		CRdRichValueTypesFile::read(oRootPath, oPath);
 	}
 	CRdRichValueTypesFile::~CRdRichValueTypesFile()
 	{
@@ -194,7 +194,7 @@ namespace Spreadsheet
 	{
 		return m_oReadPath;
 	}
-	void CRdRichValueTypesFile::read(const CPath& oRootPath, const CPath& oPath)
+	void CRdRichValueTypesFile::read(const CPath&  /*oRootPath*/, const CPath& oPath)
 	{
 		m_oReadPath = oPath;
 
@@ -210,7 +210,7 @@ namespace Spreadsheet
 	}
 	void CRdRichValueTypesFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
-		if (false == m_oRvTypesInfo.IsInit()) return;
+		if (!m_oRvTypesInfo.IsInit()) return;
 
 		NSStringUtils::CStringBuilder sXml;
 
@@ -339,7 +339,7 @@ std::to_wstring(m_arrItems.size()) + L"\">");
 		writer.WriteString(L"<rv");
 		WritingStringNullableAttrInt2(L"s", m_oS);
 
-		if (m_arrV.empty() && false == m_oFb.IsInit())
+		if (m_arrV.empty() && !m_oFb.IsInit())
 			writer.WriteString(L"/>");
 		else
 		{

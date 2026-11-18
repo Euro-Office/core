@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginSXVD::readFields(XLS::CFRecord& record)
     {
-        _UINT32 flags1, flags2;
+        _UINT32 flags1 = 0, flags2 = 0;
 
         record >> flags1 >> ifmt >> flags2;
 

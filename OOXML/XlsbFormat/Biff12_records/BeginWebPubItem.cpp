@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginWebPubItem::readFields(XLS::CFRecord& record)
     {
-        _UINT32 flags1;
+        _UINT32 flags1 = 0;
         BYTE    flags2;
         record >> tws >> flags1;
 

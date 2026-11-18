@@ -49,7 +49,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CSheet)
             WritingElement_XlsbConstructors(CSheet)
-			CSheet(OOX::Document *pMain = NULL);
+			CSheet(OOX::Document *pMain = nullptr);
 			virtual ~CSheet();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -79,7 +79,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CSheets)
             WritingElement_XlsbVectorConstructors(CSheets)
-			CSheets(OOX::Document *pMain = NULL);
+			CSheets(OOX::Document *pMain = nullptr);
 			virtual ~CSheets();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

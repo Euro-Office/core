@@ -45,7 +45,7 @@ namespace XLSB
 
     void PrintOptions::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> flags;
 
         fHCenter        = GETBIT(flags, 0);

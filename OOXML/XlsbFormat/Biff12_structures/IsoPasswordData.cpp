@@ -35,7 +35,7 @@ namespace XLSB
 
     IsoPasswordData::IsoPasswordData(XLS::CFRecord& record)
     {
-        load(record);
+        IsoPasswordData::load(record);
     }
 
     BiffStructurePtr IsoPasswordData::clone()

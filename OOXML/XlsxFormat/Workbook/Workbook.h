@@ -94,7 +94,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CWorkbookPivotCaches)
             WritingElement_XlsbConstructors(CWorkbookPivotCaches)
-			CWorkbookPivotCaches(OOX::Document *pMain = NULL);
+			CWorkbookPivotCaches(OOX::Document *pMain = nullptr);
 			virtual ~CWorkbookPivotCaches();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

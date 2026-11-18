@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginECOlapProps::readFields(XLS::CFRecord& record)
     {
-        BYTE flags1, flags2;
+        BYTE flags1 = 0, flags2 = 0;
 
         record >> flags1 >> nDrillthroughRows >> flags2;
 

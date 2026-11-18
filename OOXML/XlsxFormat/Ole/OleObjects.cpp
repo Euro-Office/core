@@ -170,8 +170,8 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"dde"),			m_oDde )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"defaultSize"),	m_oDefaultSize )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"disabled"),		m_oDisabled )
-				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"r:id"),			m_oRid )
-				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"relationships:id"), m_oRid )
+				else if ( (L"r:id") == wsName || (L"relationships:id") == wsName )
+					m_oRid = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"locked"),			m_oLocked )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"macro"),			m_oMacro )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"print"),			m_oPrint )
@@ -229,9 +229,8 @@ namespace OOX
 				writer.WriteString(L"/>");
 			}
 		}
-		void COleObject::toXMLPptx(NSStringUtils::CStringBuilder& writer, std::wstring qqq)
+		void COleObject::toXMLPptx(NSStringUtils::CStringBuilder& writer, std::wstring  /*qqq*/)
 		{
-			std::wstring sRoot;
 			writer.WriteString(L"<o:OLEObject");
 			if(m_oDvAspect.IsInit())
 			{
@@ -258,7 +257,7 @@ namespace OOX
 			if (m_OleObjectFile.IsInit())
 			{
 				if (m_OleObjectFile->isMsPackage())
-					WritingStringAttrString(L"mspackage", L"true");
+					WritingStringAttrString(L"mspackage", L"true"); // NOLINT(bugprone-multiple-statement-macro): braces would drop the unconditional trailing writes only for non-MSPackage objects, changing serialized output
 
 				WritingStringAttrEncodeXmlString(L"pathbin", m_OleObjectFile->filename().GetPath());
 				WritingStringAttrEncodeXmlString(L"pathimg", m_OleObjectFile->filename_cache().GetPath());
@@ -433,8 +432,8 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"oleUpdate"),	m_oOleUpdate )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"autoLoad"),	m_oAutoLoad )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"shapeId"),	m_oShapeId )
-				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"r:id"),		m_oRid )
-				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"relationships:id"), m_oRid )
+				else if ( (L"r:id") == wsName || (L"relationships:id") == wsName )
+					m_oRid = oReader.GetText();
 			WritingElement_ReadAttributes_End( oReader )
 		}
 

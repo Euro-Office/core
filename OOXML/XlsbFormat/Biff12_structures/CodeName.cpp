@@ -36,7 +36,7 @@ namespace XLSB
 
     CodeName::CodeName(XLS::CFRecord& record)
     {
-        load(record);
+        CodeName::load(record);
     }
 
 	CodeName::CodeName(const std::wstring & str)

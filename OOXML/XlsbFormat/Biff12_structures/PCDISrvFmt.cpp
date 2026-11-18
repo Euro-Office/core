@@ -36,7 +36,7 @@ namespace XLSB
 
     PCDISrvFmt::PCDISrvFmt(XLS::CFRecord& record)
     {
-        load(record);
+        PCDISrvFmt::load(record);
     }
 
     PCDISrvFmt::~PCDISrvFmt()
@@ -50,7 +50,7 @@ namespace XLSB
 
 	void PCDISrvFmt::load(XLS::CFRecord& record)
 	{
-		BYTE flags;
+		BYTE flags = 0;
 		record >> flags;
 
 		fSrvFmtNum = GETBIT(flags, 0);

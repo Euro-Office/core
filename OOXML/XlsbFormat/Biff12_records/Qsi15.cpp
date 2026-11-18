@@ -45,7 +45,7 @@ namespace XLSB
 
     void Qsi15::readFields(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
         record >> FRTheader >> flags >> irstPPMConnectionName;
 
         fClipped         = GETBIT(flags, 0);

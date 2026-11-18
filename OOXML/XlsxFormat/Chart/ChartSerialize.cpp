@@ -977,32 +977,32 @@ namespace Spreadsheet
 
 		CT_ChartSpace::CT_ChartSpace()
 		{
-			m_AlternateContent = NULL;
-			m_style = NULL;
-			m_pivotSource = NULL;
-			m_protection = NULL;
-			m_chart = NULL;
-			m_externalData = NULL;
-			m_printSettings = NULL;
-			m_userShapes = NULL;
+			m_AlternateContent = nullptr;
+			m_style = nullptr;
+			m_pivotSource = nullptr;
+			m_protection = nullptr;
+			m_chart = nullptr;
+			m_externalData = nullptr;
+			m_printSettings = nullptr;
+			m_userShapes = nullptr;
 		}
 		CT_ChartSpace::~CT_ChartSpace()
 		{
-			if (NULL != m_AlternateContent)
+			if (nullptr != m_AlternateContent)
 				delete m_AlternateContent;
-			if (NULL != m_style)
+			if (nullptr != m_style)
 				delete m_style;
-			if (NULL != m_pivotSource)
+			if (nullptr != m_pivotSource)
 				delete m_pivotSource;
-			if (NULL != m_protection)
+			if (nullptr != m_protection)
 				delete m_protection;
-			if (NULL != m_chart)
+			if (nullptr != m_chart)
 				delete m_chart;
-			if (NULL != m_externalData)
+			if (nullptr != m_externalData)
 				delete m_externalData;
-			if (NULL != m_printSettings)
+			if (nullptr != m_printSettings)
 				delete m_printSettings;
-			if (NULL != m_userShapes)
+			if (nullptr != m_userShapes)
 				delete m_userShapes;
 		}
 		void CT_ChartSpace::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -1103,11 +1103,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 			m_roundedCorners.toXML(L"c:roundedCorners", writer);
 
-			if (NULL != m_AlternateContent)
+			if (nullptr != m_AlternateContent)
 			{
 				m_AlternateContent->toXML(L"mc:AlternateContent", writer);
 			}
-			if (NULL != m_style)
+			if (nullptr != m_style)
 			{
 				m_style->toXML(writer);
 			}
@@ -1115,15 +1115,15 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			{
 				writer.WriteString(m_oClrMapOvr->toXML());
 			}
-			if (NULL != m_pivotSource)
+			if (nullptr != m_pivotSource)
 			{
 				m_pivotSource->toXML(L"c:pivotSource", writer);
 			}
-			if (NULL != m_protection)
+			if (nullptr != m_protection)
 			{
 				m_protection->toXML(L"c:protection", writer);
 			}
-			if (NULL != m_chart)
+			if (nullptr != m_chart)
 			{
 				m_chart->toXML(writer);
 			}
@@ -1136,15 +1136,15 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				m_txPr->m_name = L"c:txPr";
 				writer.WriteString(m_txPr->toXML());
 			}
-			if (NULL != m_externalData)
+			if (nullptr != m_externalData)
 			{
 				m_externalData->toXML(L"c:externalData", writer);
 			}
-			if (NULL != m_printSettings)
+			if (nullptr != m_printSettings)
 			{
 				m_printSettings->toXML(L"c:printSettings", writer);
 			}
-			if (NULL != m_userShapes)
+			if (nullptr != m_userShapes)
 			{
 				m_userShapes->toXML(L"c:userShapes", writer);
 			}
@@ -1283,10 +1283,10 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"firstPageNumber", m_firstPageNumber)
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"orientation", m_orientation)
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"blackAndWhite", m_blackAndWhite)
-				WritingElement_ReadAttributes_Read_else_if(oReader, L"draft", m_draft)
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"useFirstPageNumber", m_useFirstPageNumber)
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"horizontalDpi", m_horizontalDpi)
-				WritingElement_ReadAttributes_Read_else_if(oReader, L"verticalDpi", m_draft)
+				else if ( L"draft" == wsName || L"verticalDpi" == wsName ) // pre-existing: verticalDpi is stored in m_draft
+					m_draft = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"copies", m_copies)
 			WritingElement_ReadAttributes_End_No_NS(oReader)
 		}
@@ -1500,17 +1500,17 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		}
 		CT_PrintSettings::CT_PrintSettings()
 		{
-			m_headerFooter = NULL;
-			m_pageMargins = NULL;
-			m_pageSetup = NULL;
+			m_headerFooter = nullptr;
+			m_pageMargins = nullptr;
+			m_pageSetup = nullptr;
 		}
 		CT_PrintSettings::~CT_PrintSettings()
 		{
-			if (NULL != m_headerFooter)
+			if (nullptr != m_headerFooter)
 				delete m_headerFooter;
-			if (NULL != m_pageMargins)
+			if (nullptr != m_pageMargins)
 				delete m_pageMargins;
-			if (NULL != m_pageSetup)
+			if (nullptr != m_pageSetup)
 				delete m_pageSetup;
 		}
 		void CT_PrintSettings::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -1546,17 +1546,17 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(L"<");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
-			if (NULL != m_headerFooter)
+			if (nullptr != m_headerFooter)
 			{
 				std::wstring sNodeName = L"c:headerFooter";
 				m_headerFooter->toXML(sNodeName, writer);
 			}
-			if (NULL != m_pageMargins)
+			if (nullptr != m_pageMargins)
 			{
 				std::wstring sNodeName = L"c:pageMargins";
 				m_pageMargins->toXML(sNodeName, writer);
 			}
-			if (NULL != m_pageSetup)
+			if (nullptr != m_pageSetup)
 			{
 				std::wstring sNodeName = L"c:pageSetup";
 				m_pageSetup->toXML(sNodeName, writer);
@@ -1718,7 +1718,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		}
 		CT_Legend::CT_Legend()
 		{
-			m_layout = NULL;
+			m_layout = nullptr;
 		}
 		CT_Legend::~CT_Legend()
 		{
@@ -1726,7 +1726,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_legendEntry[i];
 			m_legendEntry.clear();
 			
-			if (NULL != m_layout)
+			if (nullptr != m_layout)
 				delete m_layout;
 		}
 		void CT_Legend::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -1782,13 +1782,13 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_legendEntry.size(); ++i)
 			{
 				CT_LegendEntry* pElem = m_legendEntry[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:legendEntry";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_layout)
+			if (nullptr != m_layout)
 			{
 				std::wstring sNodeName = L"c:layout";
 				m_layout->toXML(sNodeName, writer);
@@ -1827,11 +1827,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_Legend::getType() { return et_ct_Legend; }
 		CT_Layout::CT_Layout()
 		{
-			m_manualLayout = NULL;
+			m_manualLayout = nullptr;
 		}
 		CT_Layout::~CT_Layout()
 		{
-			if (NULL != m_manualLayout)
+			if (nullptr != m_manualLayout)
 				delete m_manualLayout;
 		}
 		void CT_Layout::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -1859,7 +1859,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(L"<");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
-			if (NULL != m_manualLayout)
+			if (nullptr != m_manualLayout)
 			{
 				std::wstring sNodeName = L"c:manualLayout";
 				m_manualLayout->toXML(sNodeName, writer);
@@ -1957,8 +1957,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		ST_LayoutTarget CLayoutTarget::FromString(const std::wstring &sValue)
 		{
-			if ((L"inner") == sValue) this->m_eValue = st_layouttargetINNER;
-			else if ((L"outer") == sValue) this->m_eValue = st_layouttargetOUTER;
+			if ((L"outer") == sValue) this->m_eValue = st_layouttargetOUTER;
 			else this->m_eValue = st_layouttargetINNER;
 
 			return this->m_eValue;
@@ -2052,7 +2051,6 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			}
 			if (m_extLst.IsInit())
 			{
-				std::wstring sNodeName = L"c:extLst";
 				writer.WriteString(m_extLst->toXMLWithNS(L"c:"));
 			}
 			writer.WriteString(L"</");
@@ -2063,23 +2061,23 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		CBaseAx::CBaseAx()
 		{
-			m_scaling = NULL;
-			m_majorGridlines = NULL;
-			m_minorGridlines = NULL;
-			m_title = NULL;
-			m_numFmt = NULL;
+			m_scaling = nullptr;
+			m_majorGridlines = nullptr;
+			m_minorGridlines = nullptr;
+			m_title = nullptr;
+			m_numFmt = nullptr;
 		}
 		CBaseAx::~CBaseAx()
 		{
-			if (NULL != m_scaling)
+			if (nullptr != m_scaling)
 				delete m_scaling;
-			if (NULL != m_majorGridlines)
+			if (nullptr != m_majorGridlines)
 				delete m_majorGridlines;
-			if (NULL != m_minorGridlines)
+			if (nullptr != m_minorGridlines)
 				delete m_minorGridlines;
-			if (NULL != m_title)
+			if (nullptr != m_title)
 				delete m_title;
-			if (NULL != m_numFmt)
+			if (nullptr != m_numFmt)
 				delete m_numFmt;
 		}
 		bool CBaseAx::fromXML(const std::wstring & sName, XmlUtils::CXmlLiteReader& oReader)
@@ -2174,20 +2172,20 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			m_delete.toXML(L"c:delete", writer);
 			m_axPos.toXML(L"c:axPos", writer);
 
-			if (NULL != m_majorGridlines)
+			if (nullptr != m_majorGridlines)
 			{
 				m_majorGridlines->toXML(L"c:majorGridlines", writer);
 			}
-			if (NULL != m_minorGridlines)
+			if (nullptr != m_minorGridlines)
 			{
 				m_minorGridlines->toXML(L"c:minorGridlines", writer);
 			}
-			if (NULL != m_title)
+			if (nullptr != m_title)
 			{
 				std::wstring sNodeName = L"c:title";
 				m_title->toXML(sNodeName, writer);
 			}
-			if (NULL != m_numFmt)
+			if (nullptr != m_numFmt)
 			{
 				std::wstring sNodeName = L"c:numFmt";
 				m_numFmt->toXML(sNodeName, writer);
@@ -2383,14 +2381,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_ChartLines::getType() { return et_ct_chartlines; }
 		CT_Title::CT_Title()
 		{
-			m_tx = NULL;
-			m_layout = NULL;
+			m_tx = nullptr;
+			m_layout = nullptr;
 		}
 		CT_Title::~CT_Title()
 		{
-			if (NULL != m_tx)
+			if (nullptr != m_tx)
 				delete m_tx;
-			if (NULL != m_layout)
+			if (nullptr != m_layout)
 				delete m_layout;
 		}
 		void CT_Title::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -2436,12 +2434,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(L"<");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
-			if (NULL != m_tx)
+			if (nullptr != m_tx)
 			{
 				std::wstring sNodeName = L"c:tx";
 				m_tx->toXML(sNodeName, writer);
 			}
-			if (NULL != m_layout)
+			if (nullptr != m_layout)
 			{
 				std::wstring sNodeName = L"c:layout";
 				m_layout->toXML(sNodeName, writer);
@@ -2468,11 +2466,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_Title::getType() { return et_ct_title; }
 		CT_Tx::CT_Tx()
 		{
-			m_strRef = NULL;
+			m_strRef = nullptr;
 		}
 		CT_Tx::~CT_Tx()
 		{
-			if (NULL != m_strRef)
+			if (nullptr != m_strRef)
 				delete m_strRef;
 		}
 		std::wstring CT_Tx::toXML() const
@@ -2513,7 +2511,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				m_oRich->m_name = L"c:rich";
 				writer.WriteString(m_oRich->toXML());
 			}
-			if (NULL != m_strRef)
+			if (nullptr != m_strRef)
 			{
 				std::wstring sNodeName = L"c:strRef";
 				m_strRef->toXML(sNodeName, writer);
@@ -2525,11 +2523,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_Tx::getType() { return et_ct_tx; }
 		CT_StrRef::CT_StrRef()
 		{
-			m_strCache = NULL;
+			m_strCache = nullptr;
 		}
 		CT_StrRef::~CT_StrRef()
 		{
-			if (NULL != m_strCache)
+			if (nullptr != m_strCache)
 				delete m_strCache;
 		}
 		void CT_StrRef::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -2571,7 +2569,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				writer.WriteEncodeXmlString(*m_f);
 				writer.WriteString(L"</c:f>");
 			}
-			if (NULL != m_strCache)
+			if (nullptr != m_strCache)
 			{
 				std::wstring sNodeName = L"c:strCache";
 				m_strCache->toXML(sNodeName, writer);
@@ -2637,7 +2635,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_pt.size(); ++i)
 			{
 				CT_StrVal* pElem = m_pt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:pt";
 					pElem->toXML(sNodeName, writer);
@@ -3059,14 +3057,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_CatAx::getType() { return et_ct_catax; }
 		CT_DispUnitsLbl::CT_DispUnitsLbl()
 		{
-			m_layout = NULL;
-			m_tx = NULL;
+			m_layout = nullptr;
+			m_tx = nullptr;
 		}
 		CT_DispUnitsLbl::~CT_DispUnitsLbl()
 		{
-			if (NULL != m_layout)
+			if (nullptr != m_layout)
 				delete m_layout;
-			if (NULL != m_tx)
+			if (nullptr != m_tx)
 				delete m_tx;
 		}
 		void CT_DispUnitsLbl::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -3104,12 +3102,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(L"<");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
-			if (NULL != m_layout)
+			if (nullptr != m_layout)
 			{
 				std::wstring sNodeName = L"c:layout";
 				m_layout->toXML(sNodeName, writer);
 			}
-			if (NULL != m_tx)
+			if (nullptr != m_tx)
 			{
 				std::wstring sNodeName = L"c:tx";
 				m_tx->toXML(sNodeName, writer);
@@ -3143,11 +3141,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_DispUnits::CT_DispUnits()
 		{
-			m_dispUnitsLbl = NULL;
+			m_dispUnitsLbl = nullptr;
 		}
 		CT_DispUnits::~CT_DispUnits()
 		{
-			if (NULL != m_dispUnitsLbl)
+			if (nullptr != m_dispUnitsLbl)
 				delete m_dispUnitsLbl;
 		}
 		void CT_DispUnits::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -3187,7 +3185,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			m_builtInUnit.toXML(L"c:builtInUnit", writer);
 			m_custUnit.toXML(L"c:custUnit", writer);
 
-			if (NULL != m_dispUnitsLbl)
+			if (nullptr != m_dispUnitsLbl)
 			{
 				m_dispUnitsLbl->toXML(L"c:dispUnitsLbl", writer);
 			}
@@ -3214,7 +3212,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		}
 		CT_ValAx::CT_ValAx()
 		{
-			m_dispUnits = NULL;
+			m_dispUnits = nullptr;
 		}
 		CT_ValAx::~CT_ValAx()
 		{
@@ -3265,7 +3263,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			m_crossBetween.toXML(L"c:crossBetween", writer);
 			m_majorUnit.toXML(L"c:majorUnit", writer);
 			m_minorUnit.toXML(L"c:minorUnit", writer);
-			if (NULL != m_dispUnits)
+			if (nullptr != m_dispUnits)
 			{
 				m_dispUnits->toXML(L"c:dispUnits", writer);
 			}
@@ -3369,11 +3367,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		CBaseSer::CBaseSer()
 		{
-			m_tx = NULL;
+			m_tx = nullptr;
 		}
 		CBaseSer::~CBaseSer()
 		{
-			if (NULL != m_tx)
+			if (nullptr != m_tx)
 				delete m_tx;
 		}
 		bool CBaseSer::fromXML(const std::wstring sName, XmlUtils::CXmlLiteReader& oReader)
@@ -3409,7 +3407,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			m_idx.toXML(L"c:idx", writer);
 			m_order.toXML(L"c:order", writer);
 
-			if (NULL != m_tx)
+			if (nullptr != m_tx)
 			{
 				std::wstring sNodeName = L"c:tx";
 				m_tx->toXML(sNodeName, writer);
@@ -3422,10 +3420,10 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		CT_BubbleSer::CT_BubbleSer()
 		{
-			m_dLbls = NULL;
-			m_xVal = NULL;
-			m_yVal = NULL;
-			m_bubbleSize = NULL;
+			m_dLbls = nullptr;
+			m_xVal = nullptr;
+			m_yVal = nullptr;
+			m_bubbleSize = nullptr;
 		}
 		CT_BubbleSer::~CT_BubbleSer()
 		{
@@ -3433,7 +3431,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_dPt[i];
 			m_dPt.clear();
 
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 			for (size_t i = 0; i < m_trendline.size(); ++i)
 				delete m_trendline[i];
@@ -3441,11 +3439,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_errBars.size(); ++i)
 				delete m_errBars[i];
 			m_errBars.clear();
-			if (NULL != m_xVal)
+			if (nullptr != m_xVal)
 				delete m_xVal;
-			if (NULL != m_yVal)
+			if (nullptr != m_yVal)
 				delete m_yVal;
-			if (NULL != m_bubbleSize)
+			if (nullptr != m_bubbleSize)
 				delete m_bubbleSize;
 		}
 		void CT_BubbleSer::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -3526,13 +3524,13 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 			{
 				CT_DPt* pElem = m_dPt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:dPt";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				std::wstring sNodeName = L"c:dLbls";
 				m_dLbls->toXML(sNodeName, writer);
@@ -3540,7 +3538,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_trendline.size(); ++i)
 			{
 				CT_Trendline* pElem = m_trendline[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:trendline";
 					pElem->toXML(sNodeName, writer);
@@ -3549,23 +3547,23 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_errBars.size(); ++i)
 			{
 				CT_ErrBars* pElem = m_errBars[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:errBars";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_xVal)
+			if (nullptr != m_xVal)
 			{
 				std::wstring sNodeName = L"c:xVal";
 				m_xVal->toXML(sNodeName, writer);
 			}
-			if (NULL != m_yVal)
+			if (nullptr != m_yVal)
 			{
 				std::wstring sNodeName = L"c:yVal";
 				m_yVal->toXML(sNodeName, writer);
 			}
-			if (NULL != m_bubbleSize)
+			if (nullptr != m_bubbleSize)
 			{
 				std::wstring sNodeName = L"c:bubbleSize";
 				m_bubbleSize->toXML(sNodeName, writer);
@@ -3583,11 +3581,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_BubbleSer::getType() { return et_ct_bubbleser; }
 		CT_SerTx::CT_SerTx()
 		{
-			m_strRef = NULL;
+			m_strRef = nullptr;
 		}
 		CT_SerTx::~CT_SerTx()
 		{
-			if (NULL != m_strRef)
+			if (nullptr != m_strRef)
 				delete m_strRef;
 		}
 		void CT_SerTx::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -3615,7 +3613,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(L"<");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
-			if (NULL != m_strRef)
+			if (nullptr != m_strRef)
 			{
 				std::wstring sNodeName = L"c:strRef";
 				m_strRef->toXML(sNodeName, writer);
@@ -3638,14 +3636,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_DPt::CT_DPt()
 		{
-			m_marker = NULL;
-			m_pictureOptions = NULL;
+			m_marker = nullptr;
+			m_pictureOptions = nullptr;
 		}
 		CT_DPt::~CT_DPt()
 		{
-			if (NULL != m_marker)
+			if (nullptr != m_marker)
 				delete m_marker;
-			if (NULL != m_pictureOptions)
+			if (nullptr != m_pictureOptions)
 				delete m_pictureOptions;
 		}
 		void CT_DPt::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -3703,7 +3701,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			m_idx.toXML(L"c:idx", writer);
 			m_invertIfNegative.toXML(L"c:invertIfNegative", writer);
 
-			if (NULL != m_marker)
+			if (nullptr != m_marker)
 			{
 				m_marker->toXML(L"c:marker", writer);
 			}
@@ -3714,7 +3712,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			{
 				writer.WriteString(m_spPr->toXML());
 			}
-			if (NULL != m_pictureOptions)
+			if (nullptr != m_pictureOptions)
 			{
 				m_pictureOptions->toXML(L"c:pictureOptions", writer);
 			}
@@ -4042,7 +4040,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_dLbl.size(); ++i)
 			{
 				CT_DLbl* pElem = m_dLbl[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:dLbl";
 					pElem->toXML(sNodeName, writer);
@@ -4070,9 +4068,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3DLBLPOS:
 				{
 					CDLblPos* pTypeVal = static_cast<CDLblPos*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (false == bIsAttribute)
+						if (!bIsAttribute)
 						{
 							std::wstring sNodeName = L"c:dLblPos";
 							writer.WriteString(L"<" + sNodeName + L" val=\"" + pTypeVal->ToString() + L"\"/>");
@@ -4082,9 +4080,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3DELETE:
 				{
 					bool* pTypeVal = static_cast<bool*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (false == bIsAttribute)
+						if (!bIsAttribute)
 						{
 							std::wstring sNodeName = L"c:delete";
 							writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4094,9 +4092,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3LEADERLINES:
 				{
 					CT_ChartLines* pTypeVal = static_cast<CT_ChartLines*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (false == bIsAttribute)
+						if (!bIsAttribute)
 						{
 							std::wstring sNodeName = L"c:leaderLines";
 							pTypeVal->toXML(sNodeName, writer);
@@ -4106,9 +4104,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3NUMFMT:
 				{
 					CT_NumFmt* pTypeVal = static_cast<CT_NumFmt*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (false == bIsAttribute)
+						if (!bIsAttribute)
 						{
 							std::wstring sNodeName = L"c:numFmt";
 							pTypeVal->toXML(sNodeName, writer);
@@ -4118,9 +4116,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3SEPARATOR:
 				{
 					std::wstring* pTypeVal = static_cast<std::wstring*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (true == bIsAttribute)
+						if (bIsAttribute)
 						{
 							WritingStringAttrEncodeXmlString(L"c:separator", *pTypeVal);
 						}
@@ -4139,9 +4137,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3SHOWBUBBLESIZE:
 				{
 					bool* pTypeVal = static_cast<bool*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (false == bIsAttribute)
+						if (!bIsAttribute)
 						{
 							std::wstring sNodeName = L"c:showBubbleSize";
 							writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4151,9 +4149,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3SHOWCATNAME:
 				{
 					bool* pTypeVal = static_cast<bool*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (false == bIsAttribute)
+						if (!bIsAttribute)
 						{
 							std::wstring sNodeName = L"c:showCatName";
 							writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4163,9 +4161,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3SHOWLEADERLINES:
 				{
 					bool* pTypeVal = static_cast<bool*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (false == bIsAttribute)
+						if (!bIsAttribute)
 						{
 							std::wstring sNodeName = L"c:showLeaderLines";
 							writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4175,9 +4173,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3SHOWLEGENDKEY:
 				{
 					bool* pTypeVal = static_cast<bool*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (false == bIsAttribute)
+						if (!bIsAttribute)
 						{
 							std::wstring sNodeName = L"c:showLegendKey";
 							writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4187,9 +4185,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3SHOWPERCENT:
 				{
 					bool* pTypeVal = static_cast<bool*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (false == bIsAttribute)
+						if (!bIsAttribute)
 						{
 							std::wstring sNodeName = L"c:showPercent";
 							writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4199,9 +4197,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3SHOWSERNAME:
 				{
 					bool* pTypeVal = static_cast<bool*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (false == bIsAttribute)
+						if (!bIsAttribute)
 						{
 							std::wstring sNodeName = L"c:showSerName";
 							writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4211,9 +4209,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3SHOWVAL:
 				{
 					bool* pTypeVal = static_cast<bool*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
-						if (false == bIsAttribute)
+						if (!bIsAttribute)
 						{
 							std::wstring sNodeName = L"c:showVal";
 							writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4223,7 +4221,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3SPPR:
 				{
 					PPTX::Logic::SpPr* pTypeVal = static_cast<PPTX::Logic::SpPr*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
 						writer.WriteString(pTypeVal->toXML());
 					}
@@ -4231,7 +4229,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				case itemschoicetype3TXPR:
 				{
 					PPTX::Logic::TxBody* pTypeVal = static_cast<PPTX::Logic::TxBody*>(pVal);
-					if (NULL != pTypeVal)
+					if (nullptr != pTypeVal)
 					{
 						pTypeVal->m_name = L"c:txPr";
 						writer.WriteString(pTypeVal->toXML());
@@ -4332,12 +4330,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		CT_DLbl::CT_DLbl()
 		{
 	//ext
-			m_leaderLines = NULL;
+			m_leaderLines = nullptr;
 		}
 		CT_DLbl::~CT_DLbl()
 		{
 		
-			if (NULL != m_leaderLines)
+			if (nullptr != m_leaderLines)
 				delete m_leaderLines;
 
 			for (size_t i = 0; i < m_Items.size(), i < m_ItemsElementName0.size(); ++i)
@@ -4572,9 +4570,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4DLBLPOS:
 			{
 				CDLblPos* pTypeVal = static_cast<CDLblPos*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = nodeNS + L":dLblPos";
 						writer.WriteString(L"<" + sNodeName + L" val=\"" + pTypeVal->ToString() + L"\"/>");
@@ -4585,9 +4583,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4DELETE:
 			{
 				bool* pTypeVal = static_cast<bool*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = nodeNS + L":delete";
 						writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4598,9 +4596,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4LAYOUT:
 			{
 				CT_Layout* pTypeVal = static_cast<CT_Layout*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = nodeNS + L":layout";
 						pTypeVal->toXML(sNodeName, writer);
@@ -4611,9 +4609,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4NUMFMT:
 			{
 				CT_NumFmt* pTypeVal = static_cast<CT_NumFmt*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = nodeNS + L":numFmt";
 						pTypeVal->toXML(sNodeName, writer);
@@ -4624,9 +4622,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4SEPARATOR:
 			{
 				std::wstring* pTypeVal = static_cast<std::wstring*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (true == bIsAttribute)
+					if (bIsAttribute)
 					{
 						WritingStringAttrEncodeXmlString(L"c:separator", *pTypeVal);
 					}
@@ -4646,9 +4644,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4SHOWBUBBLESIZE:
 			{
 				bool* pTypeVal = static_cast<bool*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = nodeNS + L":showBubbleSize";
 						writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4659,9 +4657,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4SHOWCATNAME:
 			{
 				bool* pTypeVal = static_cast<bool*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = nodeNS + L":showCatName";
 						writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4672,9 +4670,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4SHOWLEGENDKEY:
 			{
 				bool* pTypeVal = static_cast<bool*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = nodeNS + L":showLegendKey";
 						writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4685,9 +4683,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4SHOWPERCENT:
 			{
 				bool* pTypeVal = static_cast<bool*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = nodeNS + L":showPercent";
 						writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4698,9 +4696,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4SHOWSERNAME:
 			{
 				bool* pTypeVal = static_cast<bool*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = nodeNS + L":showSerName";
 						writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4711,9 +4709,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4SHOWVAL:
 			{
 				bool* pTypeVal = static_cast<bool*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = nodeNS + L":showVal";
 						writer.WriteString(L"<" + sNodeName + L" val=\"" + (*pTypeVal ? L"1" : L"0") + L"\"/>");
@@ -4724,7 +4722,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4SPPR:
 			{
 				PPTX::Logic::SpPr* pTypeVal = static_cast<PPTX::Logic::SpPr*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
 					pTypeVal->m_namespace = nodeNS;
 					writer.WriteString(pTypeVal->toXML());
@@ -4734,9 +4732,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4TX:
 			{
 				CT_Tx* pTypeVal = static_cast<CT_Tx*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = nodeNS + L":tx";
 						pTypeVal->toXML(sNodeName, writer);
@@ -4747,7 +4745,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype4TXPR:
 			{
 				PPTX::Logic::TxBody* pTypeVal = static_cast<PPTX::Logic::TxBody*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
 					pTypeVal->m_name = nodeNS + L":txPr";
 					writer.WriteString(pTypeVal->toXML());
@@ -4846,11 +4844,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		}
 		CT_Trendline::CT_Trendline()
 		{
-			m_trendlineLbl = NULL;
+			m_trendlineLbl = nullptr;
 		}
 		CT_Trendline::~CT_Trendline()
 		{
-			if (NULL != m_trendlineLbl)
+			if (nullptr != m_trendlineLbl)
 				delete m_trendlineLbl;
 		}
 		void CT_Trendline::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -4945,7 +4943,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			m_dispRSqr.toXML(L"c:dispRSqr", writer);
 			m_dispEq.toXML(L"c:dispEq", writer);
 
-			if (NULL != m_trendlineLbl)
+			if (nullptr != m_trendlineLbl)
 			{
 				m_trendlineLbl->toXML(L"c:trendlineLbl", writer);
 			}
@@ -4973,17 +4971,17 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		CT_TrendlineLbl::CT_TrendlineLbl()
 		{
-			m_layout = NULL;
-			m_tx = NULL;
-			m_numFmt = NULL;
+			m_layout = nullptr;
+			m_tx = nullptr;
+			m_numFmt = nullptr;
 		}
 		CT_TrendlineLbl::~CT_TrendlineLbl()
 		{
-			if (NULL != m_layout)
+			if (nullptr != m_layout)
 				delete m_layout;
-			if (NULL != m_tx)
+			if (nullptr != m_tx)
 				delete m_tx;
-			if (NULL != m_numFmt)
+			if (nullptr != m_numFmt)
 				delete m_numFmt;
 		}
 		void CT_TrendlineLbl::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -5031,17 +5029,17 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(L"<");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
-			if (NULL != m_layout)
+			if (nullptr != m_layout)
 			{
 				std::wstring sNodeName = L"c:layout";
 				m_layout->toXML(sNodeName, writer);
 			}
-			if (NULL != m_tx)
+			if (nullptr != m_tx)
 			{
 				std::wstring sNodeName = L"c:tx";
 				m_tx->toXML(sNodeName, writer);
 			}
-			if (NULL != m_numFmt)
+			if (nullptr != m_numFmt)
 			{
 				std::wstring sNodeName = L"c:numFmt";
 				m_numFmt->toXML(sNodeName, writer);
@@ -5067,14 +5065,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_ErrBars::CT_ErrBars()
 		{
-			m_plus = NULL;
-			m_minus = NULL;
+			m_plus = nullptr;
+			m_minus = nullptr;
 		}
 		CT_ErrBars::~CT_ErrBars()
 		{
-			if (NULL != m_plus)
+			if (nullptr != m_plus)
 				delete m_plus;
-			if (NULL != m_minus)
+			if (nullptr != m_minus)
 				delete m_minus;
 		}
 		void CT_ErrBars::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -5138,11 +5136,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			m_errValType.toXML(L"c:errValType", writer);
 			m_noEndCap.toXML(L"c:noEndCap", writer);
 
-			if (NULL != m_plus)
+			if (nullptr != m_plus)
 			{
 				m_plus->toXML(L"c:plus", writer);
 			}
-			if (NULL != m_minus)
+			if (nullptr != m_minus)
 			{
 				m_minus->toXML(L"c:minus", writer);
 			}
@@ -5198,14 +5196,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		CT_NumDataSource::CT_NumDataSource()
 		{
-			m_numLit = NULL;
-			m_numRef = NULL;
+			m_numLit = nullptr;
+			m_numRef = nullptr;
 		}
 		CT_NumDataSource::~CT_NumDataSource()
 		{
-			if (NULL != m_numLit)
+			if (nullptr != m_numLit)
 				delete m_numLit;
-			if (NULL != m_numRef)
+			if (nullptr != m_numRef)
 				delete m_numRef;
 		}
 		void CT_NumDataSource::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -5235,12 +5233,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(L"<");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
-			if (NULL != m_numLit)
+			if (nullptr != m_numLit)
 			{
 				std::wstring sNodeName = L"c:numLit";
 				m_numLit->toXML(sNodeName, writer);
 			}
-			if (NULL != m_numRef)
+			if (nullptr != m_numRef)
 			{
 				std::wstring sNodeName = L"c:numRef";
 				m_numRef->toXML(sNodeName, writer);
@@ -5308,7 +5306,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_pt.size(); ++i)
 			{
 				CT_NumVal* pElem = m_pt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:pt";
 					pElem->toXML(sNodeName, writer);
@@ -5384,11 +5382,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		}
 		CT_NumRef::CT_NumRef()
 		{
-			m_numCache = NULL;
+			m_numCache = nullptr;
 		}
 		CT_NumRef::~CT_NumRef()
 		{
-			if (NULL != m_numCache)
+			if (nullptr != m_numCache)
 				delete m_numCache;
 		}
 		void CT_NumRef::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -5431,7 +5429,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				writer.WriteEncodeXmlString(*m_f);
 				writer.WriteString(L"</c:f>");
 			}
-			if (NULL != m_numCache)
+			if (nullptr != m_numCache)
 			{
 				std::wstring sNodeName = L"c:numCache";
 				m_numCache->toXML(sNodeName, writer);
@@ -5448,23 +5446,23 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_AxDataSource::CT_AxDataSource()
 		{
-			m_multiLvlStrRef = NULL;
-			m_numLit = NULL;
-			m_numRef = NULL;
-			m_strLit = NULL;
-			m_strRef = NULL;
+			m_multiLvlStrRef = nullptr;
+			m_numLit = nullptr;
+			m_numRef = nullptr;
+			m_strLit = nullptr;
+			m_strRef = nullptr;
 		}
 		CT_AxDataSource::~CT_AxDataSource()
 		{
-			if (NULL != m_multiLvlStrRef)
+			if (nullptr != m_multiLvlStrRef)
 				delete m_multiLvlStrRef;
-			if (NULL != m_numLit)
+			if (nullptr != m_numLit)
 				delete m_numLit;
-			if (NULL != m_numRef)
+			if (nullptr != m_numRef)
 				delete m_numRef;
-			if (NULL != m_strLit)
+			if (nullptr != m_strLit)
 				delete m_strLit;
-			if (NULL != m_strRef)
+			if (nullptr != m_strRef)
 				delete m_strRef;
 		}
 		void CT_AxDataSource::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -5520,27 +5518,27 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(L"<");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
-			if (NULL != m_multiLvlStrRef)
+			if (nullptr != m_multiLvlStrRef)
 			{
 				std::wstring sNodeName = L"c:multiLvlStrRef";
 				m_multiLvlStrRef->toXML(sNodeName, writer);
 			}
-			if (NULL != m_numLit)
+			if (nullptr != m_numLit)
 			{
 				std::wstring sNodeName = L"c:numLit";
 				m_numLit->toXML(sNodeName, writer);
 			}
-			if (NULL != m_numRef)
+			if (nullptr != m_numRef)
 			{
 				std::wstring sNodeName = L"c:numRef";
 				m_numRef->toXML(sNodeName, writer);
 			}
-			if (NULL != m_strLit)
+			if (nullptr != m_strLit)
 			{
 				std::wstring sNodeName = L"c:strLit";
 				m_strLit->toXML(sNodeName, writer);
 			}
-			if (NULL != m_strRef)
+			if (nullptr != m_strRef)
 			{
 				std::wstring sNodeName = L"c:strRef";
 				m_strRef->toXML(sNodeName, writer);
@@ -5553,11 +5551,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		CT_MultiLvlStrRef::CT_MultiLvlStrRef()
 		{
-			m_multiLvlStrCache = NULL;
+			m_multiLvlStrCache = nullptr;
 		}
 		CT_MultiLvlStrRef::~CT_MultiLvlStrRef()
 		{
-			if (NULL != m_multiLvlStrCache)
+			if (nullptr != m_multiLvlStrCache)
 				delete m_multiLvlStrCache;
 		}
 		void CT_MultiLvlStrRef::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -5600,7 +5598,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				writer.WriteEncodeXmlString(*m_f);
 				writer.WriteString(L"</c:f>");
 			}
-			if (NULL != m_multiLvlStrCache)
+			if (nullptr != m_multiLvlStrCache)
 			{
 				std::wstring sNodeName = L"c:multiLvlStrCache";
 				m_multiLvlStrCache->toXML(sNodeName, writer);
@@ -5648,7 +5646,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_pt.size(); ++i)
 			{
 				CT_StrVal* pElem = m_pt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:pt";
 					pElem->toXML(sNodeName, writer);
@@ -5704,7 +5702,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_lvl.size(); ++i)
 			{
 				CT_lvl* pElem = m_lvl[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:lvl";
 					pElem->toXML(sNodeName, writer);
@@ -5722,11 +5720,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_BubbleChart::CT_BubbleChart()
 		{
-			m_dLbls = NULL;
+			m_dLbls = nullptr;
 		}
 		CT_BubbleChart::~CT_BubbleChart()
 		{
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 
 			for (size_t i = 0; i < m_ser.size(); ++i)
@@ -5794,12 +5792,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_BubbleSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
@@ -5855,7 +5853,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_bandFmt.size(); ++i)
 			{
 				CT_BandFmt* pElem = m_bandFmt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:bandFmt";
 					pElem->toXML(sNodeName, writer);
@@ -5869,14 +5867,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_Surface3DChart::CT_Surface3DChart()
 		{
-			m_bandFmts = NULL;
+			m_bandFmts = nullptr;
 		}
 		CT_Surface3DChart::~CT_Surface3DChart()
 		{
 			for (size_t i = 0; i < m_ser.size(); ++i)
 				delete m_ser[i];
 			m_ser.clear();
-			if (NULL != m_bandFmts)
+			if (nullptr != m_bandFmts)
 				delete m_bandFmts;
 		}
 		void CT_Surface3DChart::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -5926,7 +5924,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_SurfaceSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
@@ -5949,14 +5947,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_SurfaceSer::CT_SurfaceSer()
 		{
-			m_cat = NULL;
-			m_val = NULL;
+			m_cat = nullptr;
+			m_val = nullptr;
 		}
 		CT_SurfaceSer::~CT_SurfaceSer()
 		{
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 				delete m_cat;
-			if (NULL != m_val)
+			if (nullptr != m_val)
 				delete m_val;
 		}
 		void CT_SurfaceSer::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -5994,12 +5992,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			
 			CBaseSer::toXML(writer);
 
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 			{
 				std::wstring sNodeName = L"c:cat";
 				m_cat->toXML(sNodeName, writer);
 			}
-			if (NULL != m_val)
+			if (nullptr != m_val)
 			{
 				std::wstring sNodeName = L"c:val";
 				m_val->toXML(sNodeName, writer);
@@ -6115,7 +6113,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_SurfaceChart::CT_SurfaceChart()
 		{
-			m_bandFmts = NULL;
+			m_bandFmts = nullptr;
 		}
 		CT_SurfaceChart::~CT_SurfaceChart()
 		{
@@ -6123,7 +6121,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_ser[i];
 			m_ser.clear();
 			
-			if (NULL != m_bandFmts)
+			if (nullptr != m_bandFmts)
 				delete m_bandFmts;
 		}
 		void CT_SurfaceChart::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -6172,12 +6170,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_SurfaceSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_bandFmts)
+			if (nullptr != m_bandFmts)
 			{
 				m_bandFmts->toXML(L"c:bandFmts", writer);
 			}
@@ -6276,8 +6274,8 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_OfPieChart::CT_OfPieChart()
 		{
-			m_dLbls = NULL;
-			m_custSplit = NULL;
+			m_dLbls = nullptr;
+			m_custSplit = nullptr;
 		}
 		CT_OfPieChart::~CT_OfPieChart()
 		{
@@ -6285,10 +6283,10 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_ser[i];
 			m_ser.clear();
 			
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 
-			if (NULL != m_custSplit)
+			if (nullptr != m_custSplit)
 				delete m_custSplit;
 
 			for (size_t i = 0; i < m_serLines.size(); ++i)
@@ -6369,12 +6367,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_PieSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
@@ -6382,7 +6380,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			m_splitType.toXML(L"c:splitType", writer);
 			m_splitPos.toXML(L"c:splitPos", writer);
 
-			if (NULL != m_custSplit)
+			if (nullptr != m_custSplit)
 			{
 				m_custSplit->toXML(L"c:custSplit", writer);
 			}
@@ -6391,7 +6389,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_serLines.size(); ++i)
 			{
 				CT_ChartLines* pElem = m_serLines[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:serLines", writer);
 				}
@@ -6408,9 +6406,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_PieSer::CT_PieSer()
 		{
-			m_dLbls = NULL;
-			m_cat = NULL;
-			m_val = NULL;
+			m_dLbls = nullptr;
+			m_cat = nullptr;
+			m_val = nullptr;
 		}
 		CT_PieSer::~CT_PieSer()
 		{
@@ -6418,11 +6416,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_dPt[i];
 			m_dPt.clear();
 			
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 				delete m_cat;
-			if (NULL != m_val)
+			if (nullptr != m_val)
 				delete m_val;
 		}
 		void CT_PieSer::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -6482,22 +6480,22 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 			{
 				CT_DPt* pElem = m_dPt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:dPt", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				std::wstring sNodeName = L"c:dLbls";
 				m_dLbls->toXML(sNodeName, writer);
 			}
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 			{
 				std::wstring sNodeName = L"c:cat";
 				m_cat->toXML(sNodeName, writer);
 			}
-			if (NULL != m_val)
+			if (nullptr != m_val)
 			{
 				std::wstring sNodeName = L"c:val";
 				m_val->toXML(sNodeName, writer);
@@ -6572,7 +6570,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_Bar3DChart::CT_Bar3DChart()
 		{
-			m_dLbls = NULL;
+			m_dLbls = nullptr;
 		}
 		CT_Bar3DChart::~CT_Bar3DChart()
 		{
@@ -6580,7 +6578,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_ser[i];
 			m_ser.clear();
 			
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 		}
 		void CT_Bar3DChart::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -6651,12 +6649,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_BarSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
@@ -6703,7 +6701,10 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 					gapVal = stoi(m_gapWidth.get());
 				}
 				catch (std::exception)
-				{}
+				{
+					// malformed gap width: keep the default 0
+					(void)0;
+				}
 				chartType->pcGap = gapVal;
 			}
 			auto chart3Dpart = new XLS::Chart3d;
@@ -6746,29 +6747,29 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		CT_BarSer::CT_BarSer()
 		{
-			m_pictureOptions = NULL;
-			m_dLbls = NULL;
-			m_errBars = NULL;
-			m_cat = NULL;
-			m_val = NULL;
+			m_pictureOptions = nullptr;
+			m_dLbls = nullptr;
+			m_errBars = nullptr;
+			m_cat = nullptr;
+			m_val = nullptr;
 		}
 		CT_BarSer::~CT_BarSer()
 		{
-			if (NULL != m_pictureOptions)
+			if (nullptr != m_pictureOptions)
 				delete m_pictureOptions;
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 				delete m_dPt[i];
 			m_dPt.clear();
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 			for (size_t i = 0; i < m_trendline.size(); ++i)
 				delete m_trendline[i];
 			m_trendline.clear();
-			if (NULL != m_errBars)
+			if (nullptr != m_errBars)
 				delete m_errBars;
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 				delete m_cat;
-			if (NULL != m_val)
+			if (nullptr != m_val)
 				delete m_val;
 		}
 		void CT_BarSer::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -6847,39 +6848,39 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 			m_invertIfNegative.toXML(L"c:invertIfNegative", writer);
 
-			if (NULL != m_pictureOptions)
+			if (nullptr != m_pictureOptions)
 			{
 				m_pictureOptions->toXML(L"c:pictureOptions", writer);
 			}
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 			{
 				CT_DPt* pElem = m_dPt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:dPt", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
 			for (size_t i = 0; i < m_trendline.size(); ++i)
 			{
 				CT_Trendline* pElem = m_trendline[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:trendline", writer);
 				}
 			}
-			if (NULL != m_errBars)
+			if (nullptr != m_errBars)
 			{
 				m_errBars->toXML(L"c:errBars", writer);
 			}
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 			{
 				m_cat->toXML(L"c:cat", writer);
 			}
-			if (NULL != m_val)
+			if (nullptr != m_val)
 			{
 				m_val->toXML(L"c:val", writer);
 			}
@@ -6967,7 +6968,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		CT_BarChart::CT_BarChart()
 		{
-			m_dLbls = NULL;
+			m_dLbls = nullptr;
 		}
 		CT_BarChart::~CT_BarChart()
 		{
@@ -6975,7 +6976,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_ser[i];
 			m_ser.clear();
 
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 
 			for (size_t i = 0; i < m_serLines.size(); ++i)
@@ -7052,14 +7053,13 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_BarSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
-				std::wstring sNodeName = L"c:dLbls";
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
 			m_gapWidth.toXML(L"c:gapWidth", writer);
@@ -7068,7 +7068,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_serLines.size(); ++i)
 			{
 				CT_ChartLines* pElem = m_serLines[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:serLines", writer);
 				}
@@ -7109,7 +7109,10 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 					overlapVal = stoi(m_overlap.get());
 				}
 				catch (std::exception)
-				{}
+				{
+					// malformed overlap: keep the default 0
+					(void)0;
+				}
 				chartType->pcOverlap -= overlapVal;
 			}
 			if(m_barDir.IsInit() && m_barDir->m_eValue == 0)
@@ -7123,7 +7126,10 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 					gapVal = stoi(m_gapWidth.get());
 				}
 				catch (std::exception)
-				{}
+				{
+					// malformed gap width: keep the default 0
+					(void)0;
+				}
 				chartType->pcGap = gapVal;
 			}
 			return XLS::BaseObjectPtr(ptr);
@@ -7132,7 +7138,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_DoughnutChart::CT_DoughnutChart()
 		{
-			m_dLbls = NULL;
+			m_dLbls = nullptr;
 		}
 		CT_DoughnutChart::~CT_DoughnutChart()
 		{
@@ -7140,7 +7146,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_ser[i];
 			m_ser.clear();
 
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 		}
 		void CT_DoughnutChart::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -7192,12 +7198,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_PieSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
@@ -7216,14 +7222,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		CT_Pie3DChart::CT_Pie3DChart()
 		{
-			m_dLbls = NULL;
+			m_dLbls = nullptr;
 		}
 		CT_Pie3DChart::~CT_Pie3DChart()
 		{
 			for (size_t i = 0; i < m_ser.size(); ++i)
 				delete m_ser[i];
 			m_ser.clear();
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 		}
 		void CT_Pie3DChart::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -7267,12 +7273,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_PieSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
@@ -7315,7 +7321,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_PieChart::CT_PieChart()
 		{
-			m_dLbls = NULL;
+			m_dLbls = nullptr;
 		}
 		CT_PieChart::~CT_PieChart()
 		{
@@ -7323,7 +7329,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_ser[i];
 			m_ser.clear();
 
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 		}
 		void CT_PieChart::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -7371,12 +7377,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_PieSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
@@ -7415,21 +7421,21 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_ScatterSer::CT_ScatterSer()
 		{
-			m_marker = NULL;
-			m_dLbls = NULL;
-			m_xVal = NULL;
-			m_yVal = NULL;
+			m_marker = nullptr;
+			m_dLbls = nullptr;
+			m_xVal = nullptr;
+			m_yVal = nullptr;
 		}
 		CT_ScatterSer::~CT_ScatterSer()
 		{
-			if (NULL != m_marker)
+			if (nullptr != m_marker)
 				delete m_marker;
 
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 				delete m_dPt[i];
 			m_dPt.clear();
 
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 			for (size_t i = 0; i < m_trendline.size(); ++i)
 				delete m_trendline[i];
@@ -7437,9 +7443,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_errBars.size(); ++i)
 				delete m_errBars[i];
 			m_errBars.clear();
-			if (NULL != m_xVal)
+			if (nullptr != m_xVal)
 				delete m_xVal;
-			if (NULL != m_yVal)
+			if (nullptr != m_yVal)
 				delete m_yVal;
 		}
 		void CT_ScatterSer::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -7512,7 +7518,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			
 			CBaseSer::toXML(writer);
 
-			if (NULL != m_marker)
+			if (nullptr != m_marker)
 			{
 				std::wstring sNodeName = L"c:marker";
 				m_marker->toXML(sNodeName, writer);
@@ -7520,13 +7526,13 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 			{
 				CT_DPt* pElem = m_dPt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:dPt";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				std::wstring sNodeName = L"c:dLbls";
 				m_dLbls->toXML(sNodeName, writer);
@@ -7534,7 +7540,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_trendline.size(); ++i)
 			{
 				CT_Trendline* pElem = m_trendline[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:trendline";
 					pElem->toXML(sNodeName, writer);
@@ -7543,18 +7549,18 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_errBars.size(); ++i)
 			{
 				CT_ErrBars* pElem = m_errBars[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:errBars";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_xVal)
+			if (nullptr != m_xVal)
 			{
 				std::wstring sNodeName = L"c:xVal";
 				m_xVal->toXML(sNodeName, writer);
 			}
-			if (NULL != m_yVal)
+			if (nullptr != m_yVal)
 			{
 				std::wstring sNodeName = L"c:yVal";
 				m_yVal->toXML(sNodeName, writer);
@@ -7646,7 +7652,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		}
 		CT_ScatterChart::CT_ScatterChart()
 		{
-			m_dLbls = NULL;
+			m_dLbls = nullptr;
 		}
 		CT_ScatterChart::~CT_ScatterChart()
 		{
@@ -7654,7 +7660,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_ser[i];
 			m_ser.clear();
 			
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 		}
 		void CT_ScatterChart::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -7708,12 +7714,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_ScatterSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
@@ -7751,25 +7757,25 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_ScatterChart::getType() { return et_ct_scatterchart; }
 		CT_RadarSer::CT_RadarSer()
 		{
-			m_marker = NULL;
-			m_dLbls = NULL;
-			m_cat = NULL;
-			m_val = NULL;
+			m_marker = nullptr;
+			m_dLbls = nullptr;
+			m_cat = nullptr;
+			m_val = nullptr;
 		}
 		CT_RadarSer::~CT_RadarSer()
 		{
-			if (NULL != m_marker)
+			if (nullptr != m_marker)
 				delete m_marker;
 
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 				delete m_dPt[i];
 			m_dPt.clear();
 
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 				delete m_cat;
-			if (NULL != m_val)
+			if (nullptr != m_val)
 				delete m_val;
 		}
 		void CT_RadarSer::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -7825,7 +7831,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			
 			CBaseSer::toXML(writer);
 
-			if (NULL != m_marker)
+			if (nullptr != m_marker)
 			{
 				std::wstring sNodeName = L"c:marker";
 				m_marker->toXML(sNodeName, writer);
@@ -7833,23 +7839,23 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 			{
 				CT_DPt* pElem = m_dPt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:dPt";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				std::wstring sNodeName = L"c:dLbls";
 				m_dLbls->toXML(sNodeName, writer);
 			}
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 			{
 				std::wstring sNodeName = L"c:cat";
 				m_cat->toXML(sNodeName, writer);
 			}
-			if (NULL != m_val)
+			if (nullptr != m_val)
 			{
 				std::wstring sNodeName = L"c:val";
 				m_val->toXML(sNodeName, writer);
@@ -7936,7 +7942,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		CT_RadarChart::CT_RadarChart()
 		{
-			m_dLbls = NULL;
+			m_dLbls = nullptr;
 		}
 		CT_RadarChart::~CT_RadarChart()
 		{
@@ -7944,7 +7950,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_ser[i];
 			m_ser.clear();
 			
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 		}
 		void CT_RadarChart::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -7998,12 +8004,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_RadarSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
@@ -8045,23 +8051,23 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_RadarChart::getType() { return et_ct_radarchart; }
 		CT_StockChart::CT_StockChart()
 		{
-			m_dLbls = NULL;
-			m_dropLines = NULL;
-			m_hiLowLines = NULL;
-			m_upDownBars = NULL;
+			m_dLbls = nullptr;
+			m_dropLines = nullptr;
+			m_hiLowLines = nullptr;
+			m_upDownBars = nullptr;
 		}
 		CT_StockChart::~CT_StockChart()
 		{
 			for (size_t i = 0; i < m_ser.size(); ++i)
 				delete m_ser[i];
 			m_ser.clear();
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
-			if (NULL != m_dropLines)
+			if (nullptr != m_dropLines)
 				delete m_dropLines;
-			if (NULL != m_hiLowLines)
+			if (nullptr != m_hiLowLines)
 				delete m_hiLowLines;
-			if (NULL != m_upDownBars)
+			if (nullptr != m_upDownBars)
 				delete m_upDownBars;
 		}
 		void CT_StockChart::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -8121,28 +8127,28 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_LineSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:ser";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				std::wstring sNodeName = L"c:dLbls";
 				m_dLbls->toXML(sNodeName, writer);
 			}
-			if (NULL != m_dropLines)
+			if (nullptr != m_dropLines)
 			{
 				std::wstring sNodeName = L"c:dropLines";
 				m_dropLines->toXML(sNodeName, writer);
 			}
-			if (NULL != m_hiLowLines)
+			if (nullptr != m_hiLowLines)
 			{
 				std::wstring sNodeName = L"c:hiLowLines";
 				m_hiLowLines->toXML(sNodeName, writer);
 			}
-			if (NULL != m_upDownBars)
+			if (nullptr != m_upDownBars)
 			{
 				std::wstring sNodeName = L"c:upDownBars";
 				m_upDownBars->toXML(sNodeName, writer);
@@ -8162,29 +8168,29 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_StockChart::getType() { return et_ct_stockchart; }
 		CT_LineSer::CT_LineSer()
 		{
-			m_marker = NULL;
-			m_dLbls = NULL;
-			m_errBars = NULL;
-			m_cat = NULL;
-			m_val = NULL;
+			m_marker = nullptr;
+			m_dLbls = nullptr;
+			m_errBars = nullptr;
+			m_cat = nullptr;
+			m_val = nullptr;
 		}
 		CT_LineSer::~CT_LineSer()
 		{
-			if (NULL != m_marker)
+			if (nullptr != m_marker)
 				delete m_marker;
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 				delete m_dPt[i];
 			m_dPt.clear();
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 			for (size_t i = 0; i < m_trendline.size(); ++i)
 				delete m_trendline[i];
 			m_trendline.clear();
-			if (NULL != m_errBars)
+			if (nullptr != m_errBars)
 				delete m_errBars;
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 				delete m_cat;
-			if (NULL != m_val)
+			if (nullptr != m_val)
 				delete m_val;
 		}
 		void CT_LineSer::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -8257,7 +8263,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			
 			CBaseSer::toXML(writer);
 
-			if (NULL != m_marker)
+			if (nullptr != m_marker)
 			{
 				std::wstring sNodeName = L"c:marker";
 				m_marker->toXML(sNodeName, writer);
@@ -8265,13 +8271,13 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 			{
 				CT_DPt* pElem = m_dPt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:dPt";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				std::wstring sNodeName = L"c:dLbls";
 				m_dLbls->toXML(sNodeName, writer);
@@ -8279,23 +8285,23 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_trendline.size(); ++i)
 			{
 				CT_Trendline* pElem = m_trendline[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:trendline";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_errBars)
+			if (nullptr != m_errBars)
 			{
 				std::wstring sNodeName = L"c:errBars";
 				m_errBars->toXML(sNodeName, writer);
 			}
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 			{
 				std::wstring sNodeName = L"c:cat";
 				m_cat->toXML(sNodeName, writer);
 			}
-			if (NULL != m_val)
+			if (nullptr != m_val)
 			{
 				std::wstring sNodeName = L"c:val";
 				m_val->toXML(sNodeName, writer);
@@ -8375,14 +8381,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_LineSer::getType() { return et_ct_lineser; }
 		CT_UpDownBars::CT_UpDownBars()
 		{
-			m_upBars = NULL;
-			m_downBars = NULL;
+			m_upBars = nullptr;
+			m_downBars = nullptr;
 		}
 		CT_UpDownBars::~CT_UpDownBars()
 		{
-			if (NULL != m_upBars)
+			if (nullptr != m_upBars)
 				delete m_upBars;
-			if (NULL != m_downBars)
+			if (nullptr != m_downBars)
 				delete m_downBars;
 		}
 		void CT_UpDownBars::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -8423,12 +8429,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			
 			m_gapWidth.toXML(L"c:gapWidth", writer);
 
-			if (NULL != m_upBars)
+			if (nullptr != m_upBars)
 			{
 				std::wstring sNodeName = L"c:upBars";
 				m_upBars->toXML(sNodeName, writer);
 			}
-			if (NULL != m_downBars)
+			if (nullptr != m_downBars)
 			{
 				std::wstring sNodeName = L"c:downBars";
 				m_downBars->toXML(sNodeName, writer);
@@ -8479,8 +8485,8 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_Line3DChart::CT_Line3DChart()
 		{
-			m_dLbls = NULL;
-			m_dropLines = NULL;
+			m_dLbls = nullptr;
+			m_dropLines = nullptr;
 		}
 		CT_Line3DChart::~CT_Line3DChart()
 		{
@@ -8488,9 +8494,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_ser[i];
 			m_ser.clear();
 			
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
-			if (NULL != m_dropLines)
+			if (nullptr != m_dropLines)
 				delete m_dropLines;
 		}
 		void CT_Line3DChart::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -8555,16 +8561,16 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_LineSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
-			if (NULL != m_dropLines)
+			if (nullptr != m_dropLines)
 			{
 				m_dropLines->toXML(L"c:dropLines", writer);
 			}
@@ -8626,10 +8632,10 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		}
 		CT_LineChart::CT_LineChart()
 		{
-			m_dLbls = NULL;
-			m_dropLines = NULL;
-			m_hiLowLines = NULL;
-			m_upDownBars = NULL;
+			m_dLbls = nullptr;
+			m_dropLines = nullptr;
+			m_hiLowLines = nullptr;
+			m_upDownBars = nullptr;
 		}
 		CT_LineChart::~CT_LineChart()
 		{
@@ -8637,13 +8643,13 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				delete m_ser[i];
 			m_ser.clear();
 
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
-			if (NULL != m_dropLines)
+			if (nullptr != m_dropLines)
 				delete m_dropLines;
-			if (NULL != m_hiLowLines)
+			if (nullptr != m_hiLowLines)
 				delete m_hiLowLines;
-			if (NULL != m_upDownBars)
+			if (nullptr != m_upDownBars)
 				delete m_upDownBars;
 		}
 		void CT_LineChart::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -8723,24 +8729,24 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_LineSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
-			if (NULL != m_dropLines)
+			if (nullptr != m_dropLines)
 			{
 				m_dropLines->toXML(L"c:dropLines", writer);
 			}
-			if (NULL != m_hiLowLines)
+			if (nullptr != m_hiLowLines)
 			{
 				m_hiLowLines->toXML(L"c:hiLowLines", writer);
 			}
-			if (NULL != m_upDownBars)
+			if (nullptr != m_upDownBars)
 			{
 				m_upDownBars->toXML(L"c:upDownBars", writer);
 			}
@@ -8783,17 +8789,17 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_Area3DChart::CT_Area3DChart()
 		{
-			m_dLbls = NULL;
-			m_dropLines = NULL;
+			m_dLbls = nullptr;
+			m_dropLines = nullptr;
 		}
 		CT_Area3DChart::~CT_Area3DChart()
 		{
 			for (size_t i = 0; i < m_ser.size(); ++i)
 				delete m_ser[i];
 			m_ser.clear();
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
-			if (NULL != m_dropLines)
+			if (nullptr != m_dropLines)
 				delete m_dropLines;
 		}
 		void CT_Area3DChart::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -8857,16 +8863,16 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_AreaSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
-			if (NULL != m_dropLines)
+			if (nullptr != m_dropLines)
 			{
 				m_dropLines->toXML(L"c:dropLines", writer);
 			}
@@ -8919,19 +8925,19 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_Area3DChart::getType() { return et_ct_area3dchart; }
 		CT_AreaSer::CT_AreaSer()
 		{
-			m_pictureOptions = NULL;
-			m_dLbls = NULL;
-			m_cat = NULL;
-			m_val = NULL;
+			m_pictureOptions = nullptr;
+			m_dLbls = nullptr;
+			m_cat = nullptr;
+			m_val = nullptr;
 		}
 		CT_AreaSer::~CT_AreaSer()
 		{
-			if (NULL != m_pictureOptions)
+			if (nullptr != m_pictureOptions)
 				delete m_pictureOptions;
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 				delete m_dPt[i];
 			m_dPt.clear();
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
 			for (size_t i = 0; i < m_trendline.size(); ++i)
 				delete m_trendline[i];
@@ -8939,9 +8945,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_errBars.size(); ++i)
 				delete m_errBars[i];
 			m_errBars.clear();
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 				delete m_cat;
-			if (NULL != m_val)
+			if (nullptr != m_val)
 				delete m_val;
 		}
 		void CT_AreaSer::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -9013,7 +9019,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			
 			CBaseSer::toXML(writer);
 
-			if (NULL != m_pictureOptions)
+			if (nullptr != m_pictureOptions)
 			{
 				std::wstring sNodeName = L"c:pictureOptions";
 				m_pictureOptions->toXML(sNodeName, writer);
@@ -9021,13 +9027,13 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_dPt.size(); ++i)
 			{
 				CT_DPt* pElem = m_dPt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:dPt";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				std::wstring sNodeName = L"c:dLbls";
 				m_dLbls->toXML(sNodeName, writer);
@@ -9035,7 +9041,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_trendline.size(); ++i)
 			{
 				CT_Trendline* pElem = m_trendline[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:trendline";
 					pElem->toXML(sNodeName, writer);
@@ -9044,18 +9050,18 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_errBars.size(); ++i)
 			{
 				CT_ErrBars* pElem = m_errBars[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:errBars";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_cat)
+			if (nullptr != m_cat)
 			{
 				std::wstring sNodeName = L"c:cat";
 				m_cat->toXML(sNodeName, writer);
 			}
-			if (NULL != m_val)
+			if (nullptr != m_val)
 			{
 				std::wstring sNodeName = L"c:val";
 				m_val->toXML(sNodeName, writer);
@@ -9130,17 +9136,17 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_AreaChart::CT_AreaChart()
 		{
-			m_dLbls = NULL;
-			m_dropLines = NULL;
+			m_dLbls = nullptr;
+			m_dropLines = nullptr;
 		}
 		CT_AreaChart::~CT_AreaChart()
 		{
 			for (size_t i = 0; i < m_ser.size(); ++i)
 				delete m_ser[i];
 			m_ser.clear();
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 				delete m_dLbls;
-			if (NULL != m_dropLines)
+			if (nullptr != m_dropLines)
 				delete m_dropLines;
 		}
 		void CT_AreaChart::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -9200,16 +9206,16 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ser.size(); ++i)
 			{
 				CT_AreaSer* pElem = m_ser[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					pElem->toXML(L"c:ser", writer);
 				}
 			}
-			if (NULL != m_dLbls)
+			if (nullptr != m_dLbls)
 			{
 				m_dLbls->toXML(L"c:dLbls", writer);
 			}
-			if (NULL != m_dropLines)
+			if (nullptr != m_dropLines)
 			{
 				m_dropLines->toXML(L"c:dropLines", writer);
 			}
@@ -9249,12 +9255,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		EElementType CT_AreaChart::getType() { return et_ct_areachart; }
 		CT_PlotArea::CT_PlotArea()
 		{
-			m_layout = NULL;
-			m_dTable = NULL;
+			m_layout = nullptr;
+			m_dTable = nullptr;
 		}
 		CT_PlotArea::~CT_PlotArea()
 		{
-			if (NULL != m_layout)
+			if (nullptr != m_layout)
 				delete m_layout;
 			for (size_t i = 0; i < m_Items.size() && i < m_ItemsElementName0.size(); ++i)
 				toDelete(*m_ItemsElementName0[i], m_Items[i]);
@@ -9268,7 +9274,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_ItemsElementName1.size(); ++i)
 				delete m_ItemsElementName1[i];
 			m_ItemsElementName1.clear();
-			if (NULL != m_dTable)
+			if (nullptr != m_dTable)
 				delete m_dTable;
 		}
 		void CT_PlotArea::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -9485,7 +9491,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(L"<");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
-			if (NULL != m_layout)
+			if (nullptr != m_layout)
 			{
 				std::wstring sNodeName = L"c:layout";
 				m_layout->toXML(sNodeName, writer);
@@ -9500,7 +9506,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				ItemsChoiceType6 eType = *m_ItemsElementName1[i];
 				toXML(writer, false, eType, m_Items1[i]);
 			}
-			if (NULL != m_dTable)
+			if (nullptr != m_dTable)
 			{
 				std::wstring sNodeName = L"c:dTable";
 				m_dTable->toXML(sNodeName, writer);
@@ -9524,9 +9530,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5AREA3DCHART:
 			{
 				CT_Area3DChart* pTypeVal = static_cast<CT_Area3DChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:area3DChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9537,9 +9543,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5AREACHART:
 			{
 				CT_AreaChart* pTypeVal = static_cast<CT_AreaChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:areaChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9550,9 +9556,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5BAR3DCHART:
 			{
 				CT_Bar3DChart* pTypeVal = static_cast<CT_Bar3DChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:bar3DChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9563,9 +9569,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5BARCHART:
 			{
 				CT_BarChart* pTypeVal = static_cast<CT_BarChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:barChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9576,9 +9582,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5BUBBLECHART:
 			{
 				CT_BubbleChart* pTypeVal = static_cast<CT_BubbleChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:bubbleChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9589,9 +9595,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5DOUGHNUTCHART:
 			{
 				CT_DoughnutChart* pTypeVal = static_cast<CT_DoughnutChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:doughnutChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9602,9 +9608,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5LINE3DCHART:
 			{
 				CT_Line3DChart* pTypeVal = static_cast<CT_Line3DChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:line3DChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9615,9 +9621,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5LINECHART:
 			{
 				CT_LineChart* pTypeVal = static_cast<CT_LineChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:lineChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9628,9 +9634,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5OFPIECHART:
 			{
 				CT_OfPieChart* pTypeVal = static_cast<CT_OfPieChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:ofPieChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9641,9 +9647,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5PIE3DCHART:
 			{
 				CT_Pie3DChart* pTypeVal = static_cast<CT_Pie3DChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:pie3DChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9654,9 +9660,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5PIECHART:
 			{
 				CT_PieChart* pTypeVal = static_cast<CT_PieChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:pieChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9667,9 +9673,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5RADARCHART:
 			{
 				CT_RadarChart* pTypeVal = static_cast<CT_RadarChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:radarChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9680,9 +9686,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5SCATTERCHART:
 			{
 				CT_ScatterChart* pTypeVal = static_cast<CT_ScatterChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:scatterChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9693,9 +9699,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5STOCKCHART:
 			{
 				CT_StockChart* pTypeVal = static_cast<CT_StockChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:stockChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9706,9 +9712,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5SURFACE3DCHART:
 			{
 				CT_Surface3DChart* pTypeVal = static_cast<CT_Surface3DChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:surface3DChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9719,9 +9725,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype5SURFACECHART:
 			{
 				CT_SurfaceChart* pTypeVal = static_cast<CT_SurfaceChart*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:surfaceChart";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9838,9 +9844,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype6CATAX:
 			{
 				CT_CatAx* pTypeVal = static_cast<CT_CatAx*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:catAx";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9851,9 +9857,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype6DATEAX:
 			{
 				CT_DateAx* pTypeVal = static_cast<CT_DateAx*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:dateAx";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9864,9 +9870,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype6SERAX:
 			{
 				CT_SerAx* pTypeVal = static_cast<CT_SerAx*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:serAx";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9877,9 +9883,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			case itemschoicetype6VALAX:
 			{
 				CT_ValAx* pTypeVal = static_cast<CT_ValAx*>(pVal);
-				if (NULL != pTypeVal)
+				if (nullptr != pTypeVal)
 				{
-					if (false == bIsAttribute)
+					if (!bIsAttribute)
 					{
 						std::wstring sNodeName = L"c:valAx";
 						pTypeVal->toXML(sNodeName, writer);
@@ -9921,11 +9927,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		CT_Surface::CT_Surface()
 		{
-			m_pictureOptions = NULL;
+			m_pictureOptions = nullptr;
 		}
 		CT_Surface::~CT_Surface()
 		{
-			if (NULL != m_pictureOptions)
+			if (nullptr != m_pictureOptions)
 				delete m_pictureOptions;
 		}
 		void CT_Surface::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -9968,7 +9974,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			{
 				writer.WriteString(m_spPr->toXML());
 			}
-			if (NULL != m_pictureOptions)
+			if (nullptr != m_pictureOptions)
 			{
 				std::wstring sNodeName = L"c:pictureOptions";
 				m_pictureOptions->toXML(sNodeName, writer);
@@ -10053,14 +10059,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_PivotFmt::CT_PivotFmt()
 		{
-			m_marker = NULL;
-			m_dLbl = NULL;
+			m_marker = nullptr;
+			m_dLbl = nullptr;
 		}
 		CT_PivotFmt::~CT_PivotFmt()
 		{
-			if (NULL != m_marker)
+			if (nullptr != m_marker)
 				delete m_marker;
-			if (NULL != m_dLbl)
+			if (nullptr != m_dLbl)
 				delete m_dLbl;
 		}
 		void CT_PivotFmt::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -10118,12 +10124,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				m_txPr->m_name = L"c:txPr";
 				writer.WriteString(m_txPr->toXML());
 			}
-			if (NULL != m_marker)
+			if (nullptr != m_marker)
 			{
 				std::wstring sNodeName = L"c:marker";
 				m_marker->toXML(sNodeName, writer);
 			}
-			if (NULL != m_dLbl)
+			if (nullptr != m_dLbl)
 			{
 				std::wstring sNodeName = L"c:dLbl";
 				m_dLbl->toXML(sNodeName, writer);
@@ -10171,7 +10177,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_pivotFmt.size(); ++i)
 			{
 				CT_PivotFmt* pElem = m_pivotFmt[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"c:pivotFmt";
 					pElem->toXML(sNodeName, writer);
@@ -10185,32 +10191,32 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		
 		CT_Chart::CT_Chart()
 		{
-			m_title = NULL;
-			m_pivotFmts = NULL;
-			m_view3D = NULL;
-			m_floor = NULL;
-			m_sideWall = NULL;
-			m_backWall = NULL;
-			m_plotArea = NULL;
-			m_legend = NULL;
+			m_title = nullptr;
+			m_pivotFmts = nullptr;
+			m_view3D = nullptr;
+			m_floor = nullptr;
+			m_sideWall = nullptr;
+			m_backWall = nullptr;
+			m_plotArea = nullptr;
+			m_legend = nullptr;
 		}
 		CT_Chart::~CT_Chart()
 		{
-			if (NULL != m_title)
+			if (nullptr != m_title)
 				delete m_title;
-			if (NULL != m_pivotFmts)
+			if (nullptr != m_pivotFmts)
 				delete m_pivotFmts;
-			if (NULL != m_view3D)
+			if (nullptr != m_view3D)
 				delete m_view3D;
-			if (NULL != m_floor)
+			if (nullptr != m_floor)
 				delete m_floor;
-			if (NULL != m_sideWall)
+			if (nullptr != m_sideWall)
 				delete m_sideWall;
-			if (NULL != m_backWall)
+			if (nullptr != m_backWall)
 				delete m_backWall;
-			if (NULL != m_plotArea)
+			if (nullptr != m_plotArea)
 				delete m_plotArea;
-			if (NULL != m_legend)
+			if (nullptr != m_legend)
 				delete m_legend;
 		}
 		void CT_Chart::fromXML(XmlUtils::CXmlLiteReader& oReader) 
@@ -10295,37 +10301,37 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		{
 			writer.WriteString(L"<c:chart>");
 
-			if (NULL != m_title)
+			if (nullptr != m_title)
 			{
 				m_title->toXML(L"c:title", writer);
 			}
 			m_autoTitleDeleted.toXML(L"c:autoTitleDeleted", writer);
 
-			if (NULL != m_pivotFmts)
+			if (nullptr != m_pivotFmts)
 			{
 				m_pivotFmts->toXML(L"c:pivotFmts", writer);
 			}
-			if (NULL != m_view3D)
+			if (nullptr != m_view3D)
 			{
 				m_view3D->toXML(L"c:view3D", writer);
 			}
-			if (NULL != m_floor)
+			if (nullptr != m_floor)
 			{
 				m_floor->toXML(L"c:floor", writer);
 			}
-			if (NULL != m_sideWall)
+			if (nullptr != m_sideWall)
 			{
 				m_sideWall->toXML(L"c:sideWall", writer);
 			}
-			if (NULL != m_backWall)
+			if (nullptr != m_backWall)
 			{
 				m_backWall->toXML(L"c:backWall", writer);
 			}
-			if (NULL != m_plotArea)
+			if (nullptr != m_plotArea)
 			{
 				m_plotArea->toXML(L"c:plotArea", writer);
 			}
-			if (NULL != m_legend)
+			if (nullptr != m_legend)
 			{
 				m_legend->toXML(L"c:legend", writer);
 			}
@@ -10484,14 +10490,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 		AlternateContent::AlternateContent()
 		{
-			m_Fallback = NULL;
+			m_Fallback = nullptr;
 		}
 		AlternateContent::~AlternateContent()
 		{
 			for (size_t i = 0; i < m_Choice.size(); ++i)
 				delete m_Choice[i];
 			m_Choice.clear();
-			if (NULL != m_Fallback)
+			if (nullptr != m_Fallback)
 				delete m_Fallback;
 		}
 		void AlternateContent::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -10524,13 +10530,13 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			for (size_t i = 0; i < m_Choice.size(); ++i)
 			{
 				AlternateContentChoice* pElem = m_Choice[i];
-				if (NULL != pElem)
+				if (nullptr != pElem)
 				{
 					std::wstring sNodeName = L"mc:Choice";
 					pElem->toXML(sNodeName, writer);
 				}
 			}
-			if (NULL != m_Fallback)
+			if (nullptr != m_Fallback)
 			{
 				std::wstring sNodeName = L"mc:Fallback";
 				m_Fallback->toXML(sNodeName, writer);
@@ -10545,11 +10551,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		}
 		AlternateContentChoice::AlternateContentChoice()
 		{
-			m_style = NULL;
+			m_style = nullptr;
 		}
 		AlternateContentChoice::~AlternateContentChoice()
 		{
-			if (NULL != m_style)
+			if (nullptr != m_style)
 				delete m_style;
 		}
 		void AlternateContentChoice::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -10578,7 +10584,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 				WritingStringAttrEncodeXmlString(L"Requires", *m_Requires);
 			}
 			writer.WriteString(L">");
-			if (NULL != m_style)
+			if (nullptr != m_style)
 			{
 				m_style->m_namespace = L"c14";
 				m_style->toXML(writer);
@@ -10599,11 +10605,11 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		}
 		AlternateContentFallback::AlternateContentFallback()
 		{
-			m_style = NULL;
+			m_style = nullptr;
 		}
 		AlternateContentFallback::~AlternateContentFallback()
 		{
-			if (NULL != m_style)
+			if (nullptr != m_style)
 				delete m_style;
 		}
 		void AlternateContentFallback::fromXML(XmlUtils::CXmlLiteReader& oReader)
@@ -10626,7 +10632,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(L"<");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
-			if (NULL != m_style)
+			if (nullptr != m_style)
 			{
 				m_style->toXML(writer);
 			}

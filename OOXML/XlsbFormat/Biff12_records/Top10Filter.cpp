@@ -45,7 +45,7 @@ namespace XLSB
 
     void Top10Filter::readFields(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
         record >> flags >> xNumValue >> xNumFilter;
 
         fTop     = GETBIT(flags, 0);
