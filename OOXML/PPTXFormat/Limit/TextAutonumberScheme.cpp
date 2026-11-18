@@ -156,7 +156,7 @@ namespace PPTX
 				case 24: m_strValue = L"hebrew2Minus"; break;
 				case 25: m_strValue = L"hindiAlpha1Period"; break;
 				case 26: m_strValue = L"hindiAlphaPeriod"; break;
-				case 27:
+				case 27: m_strValue = L"hindiNumPeriod"; break;
 				case 28: m_strValue = L"hindiNumPeriod"; break;
 				case 29: m_strValue = L"romanLcParenBoth"; break;
 				case 30: m_strValue = L"romanLcParenR"; break;

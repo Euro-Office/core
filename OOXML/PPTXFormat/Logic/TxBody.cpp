@@ -57,7 +57,7 @@ namespace PPTX
 			fromXML(oReader);
 			return *this;
 		}
-		// NOLINT(bugprone-copy-constructor-init): the base is default-constructed and *this = oSrc copies the inherited members too; behaviour unchanged.
+		// NOLINT(bugprone-copy-constructor-init): the base is default-constructed and *this = oSrc copies the parent pointers too; behaviour unchanged.
 		TxBody::TxBody(const TxBody& oSrc) { *this = oSrc; } // NOLINT(bugprone-copy-constructor-init)
 		TxBody& TxBody::operator=(const TxBody& oSrc)
 		{

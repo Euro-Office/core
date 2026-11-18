@@ -435,7 +435,7 @@ namespace PPTX
 		ChartRec::ChartRec()
 		{
 		}
-		// NOLINT(bugprone-copy-constructor-init): the base is default-constructed and *this = oSrc copies the inherited members too; behaviour unchanged.
+		// NOLINT(bugprone-copy-constructor-init): the base is default-constructed and *this = oSrc copies the parent pointers too; behaviour unchanged.
 		ChartRec::ChartRec(const ChartRec& oSrc) // NOLINT(bugprone-copy-constructor-init)
 		{
 			*this = oSrc;

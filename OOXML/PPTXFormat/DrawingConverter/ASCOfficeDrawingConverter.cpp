@@ -3166,10 +3166,6 @@ void CDrawingConverter::ConvertWordArtShape(PPTX::Logic::SpTreeElem* elem, XmlUt
 		}
 		sTxbxContent += L"</w:txbxContent>";
 		pShape->strTextBoxShape = sTxbxContent;
-
-		if (!sStroked.is_init() && !wordArtString.empty())
-		{
-		}
 	}
 
 	// old wordArt has no indents

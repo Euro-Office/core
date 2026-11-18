@@ -39,7 +39,7 @@ namespace PPTX
 			saturation	= 0;
 			luminance	= 0;
 		}
-		// NOLINT(bugprone-copy-constructor-init): the base is default-constructed and *this = oSrc copies the inherited members too; behaviour unchanged.
+		// NOLINT(bugprone-copy-constructor-init): the base is default-constructed and *this = oSrc copies the parent pointers too; behaviour unchanged.
 		ColorBase::ColorBase(const ColorBase& oSrc) // NOLINT(bugprone-copy-constructor-init)
 		{
 			*this = oSrc;
