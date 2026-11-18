@@ -189,6 +189,21 @@ namespace
 		return result;
 	}
 
+	// [Content_Types].xml lists its Default and Override entries in no fixed order (the macOS build writes
+	// them in a different order than the Linux one), so compare the entries as a sorted list.
+	std::string SortedContentTypes(const std::string& xml)
+	{
+		static const std::regex entry(R"(<(Default|Override)\s[^>]*/>)");
+		std::vector<std::string> entries;
+		for (std::sregex_iterator it(xml.begin(), xml.end(), entry), end; it != end; ++it)
+			entries.push_back(it->str());
+		std::sort(entries.begin(), entries.end());
+		std::string result;
+		for (const std::string& item : entries)
+			result += item + "\n";
+		return result;
+	}
+
 	void ExpectSameFile(const std::wstring& withPath, const std::wstring& withoutPath, const std::string& part,
 						bool renumber)
 	{
@@ -196,7 +211,10 @@ namespace
 		ASSERT_TRUE(ReadBytes(withPath, with)) << "missing: " << U_TO_UTF8(withPath);
 		ASSERT_TRUE(ReadBytes(withoutPath, without)) << "missing: " << U_TO_UTF8(withoutPath);
 		EXPECT_FALSE(with.empty()) << part;
-		if (renumber)
+		if (part == "[Content_Types].xml")
+			EXPECT_EQ(SortedContentTypes(Renumber(with)), SortedContentTypes(Renumber(without)))
+				<< part << " differs when the Editor.bin carries the record";
+		else if (renumber)
 			EXPECT_EQ(Renumber(with), Renumber(without)) << part << " differs when the Editor.bin carries the record";
 		else
 			EXPECT_EQ(with, without) << part << " differs when the Editor.bin carries the record";
