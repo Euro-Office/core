@@ -2478,6 +2478,8 @@ namespace Word
 	{
 		WritingElement_ReadAttributes_Start(oReader)
 		if ( L"w:end" == wsName || L"w:right" == wsName ) m_oEnd = oReader.GetText();
+		// w:right-charss is the historic spelling this reader accepted; the set of accepted
+		// attributes stays as it was
 		else if ( L"w:endChars" == wsName || L"w:rightChars" == wsName || L"w:right-charss" == wsName ) m_oEndChars = oReader.GetText();
 		else if ( L"w:firstLine" == wsName || L"w:first-line" == wsName ) m_oFirstLine = oReader.GetText();
 		else if ( L"w:firstLineChars" == wsName || L"w:first-line-chars" == wsName ) m_oFirstLineChars = oReader.GetText();

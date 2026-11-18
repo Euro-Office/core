@@ -120,6 +120,7 @@ namespace StreamUtils
 		if (pStream == nullptr) return ("");
 
 		char* pData = new char[lLen + 1];
+		memset(pData, 0, lLen + 1); // a short read leaves the rest of the buffer defined
 		pStream->read((unsigned char*)pData, lLen);
 
 		pData[lLen] = 0;
