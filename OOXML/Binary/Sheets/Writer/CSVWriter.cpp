@@ -136,7 +136,7 @@ void CSVWriter::Xlsx2Csv(const std::wstring &sFileDst, OOX::Spreadsheet::CXlsx &
 											   // For JSON, rId must be used, because when opened they are used
 		if (oXlsx.m_pWorkbook->m_oSheets.IsInit() && !oXlsx.m_pWorkbook->m_oSheets->m_arrItems.empty())
 		{
-			OOX::Spreadsheet::CSheet* pSheet = NULL;
+			OOX::Spreadsheet::CSheet* pSheet = nullptr;
 			if (lActiveSheet >= 0 && lActiveSheet < (LONG)oXlsx.m_pWorkbook->m_oSheets->m_arrItems.size())
 			{
 				pSheet = oXlsx.m_pWorkbook->m_oSheets->m_arrItems[lActiveSheet];
@@ -152,7 +152,7 @@ void CSVWriter::Xlsx2Csv(const std::wstring &sFileDst, OOX::Spreadsheet::CXlsx &
 		if (pFind != oXlsx.m_mapWorksheets.end())
 		{
 			OOX::Spreadsheet::CWorksheet *pWorksheet = pFind->second;
-			if (NULL != pWorksheet && pWorksheet->m_oSheetData.IsInit())
+			if (nullptr != pWorksheet && pWorksheet->m_oSheetData.IsInit())
 			{
 				impl_->WriteSheetStart(pWorksheet);
 
@@ -219,7 +219,7 @@ void CSVWriter::SetColStartBeginning(int val)
 		impl_->m_nColStartBeginning = val;
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-static std::wstring replace_unwanted(boost::wsmatch const & what)
+static std::wstring replace_unwanted(boost::wsmatch const &  /*what*/)
 {
 	return L"";
 }
@@ -248,11 +248,15 @@ int CSVWriter::Impl::detect_format(std::wstring & format_code)
 			ss << std::hex << result[2];
 			ss >> language_code;
 		}
-		catch (...) {}
+		catch (...)
+		{
+			/* unparsable format code: keep the string as-is */
+			(void)0;
+		}
 
 		//format_code = boost::regex_replace( format_code,re,L"");
 	}
-	if (false == format_code.empty()) //any
+	if (!format_code.empty()) //any
 	{
 		boost::wregex re1(L"([mMhHs{2,}S{2,}]+)");
 		boost::wregex re2(L"([mMdDy{2,}Y{2,}]+)");
@@ -378,7 +382,6 @@ std::wstring CSVWriter::Impl::convert_date_time(const std::wstring & sValue, std
                             if (currentTime->tm_year >= 1000)
                             {
                                 auto sringYear = std::to_wstring(currentTime->tm_year);
-                                auto lastTwoChars = sringYear.substr(sringYear.length() - 2);
                                 date_str += sringYear;
                             }
                             else
@@ -432,16 +435,12 @@ std::wstring CSVWriter::Impl::convert_date_time(const std::wstring & sValue, std
 				size_t pos = format_code.find(L"]");
 				format_code = format_code.substr(pos + 1);
 			}
-			int CodePage = 0;
 			std::string LCID;
 
 			if (language_code > 0 && language_code != 0xf800 && language_code != 0xf400)
 			{
 				unsigned short LanguageID = GETBITS(language_code, 0, 15);
-				BYTE CalendarType = GETBITS(language_code, 16, 23);
-				BYTE NumberType = GETBITS(language_code, 24, 31);
 
-				CodePage = m_lcidConverter.get_codepage(LanguageID);
 				std::wstring wsLCID = m_lcidConverter.get_wstring(LanguageID);
 
 				LCID = std::string(wsLCID.begin(), wsLCID.end());
@@ -648,7 +647,7 @@ void escapeJson(const std::wstring& sInput, NSStringUtils::CStringBuilder& oBuil
 }
 void WriteFile(NSFile::CFileBinary *pFile, wchar_t **pWriteBuffer, int &nCurrentIndex, const std::wstring &sWriteString, unsigned int &nCodePage, bool bIsEnd = false)
 {
-	if (NULL == pFile || NULL == pWriteBuffer)
+	if (nullptr == pFile || nullptr == pWriteBuffer)
 		return;
 	size_t nCountChars = sWriteString.length();
 	if (0 == nCountChars && !bIsEnd)
@@ -657,7 +656,7 @@ void WriteFile(NSFile::CFileBinary *pFile, wchar_t **pWriteBuffer, int &nCurrent
 	const size_t c_nSize = 1048576; // 1024 * 1024
 	const size_t nSizeWchar = sizeof(wchar_t);
 
-	if (NULL == *pWriteBuffer)
+	if (nullptr == *pWriteBuffer)
 	{
 		*pWriteBuffer = new wchar_t[c_nSize];
 		memset(*pWriteBuffer, 0, nSizeWchar * c_nSize);
@@ -691,7 +690,7 @@ void WriteFile(NSFile::CFileBinary *pFile, wchar_t **pWriteBuffer, int &nCurrent
 }
 CSVWriter::Impl::Impl(OOX::Spreadsheet::CXlsx &m_oXlsx, unsigned int m_nCodePage, const std::wstring& m_sDelimiter, int Lcid,  bool m_bJSON) : m_oXlsx(m_oXlsx), m_nCodePage(m_nCodePage), m_sDelimiter(m_sDelimiter), m_bJSON(m_bJSON), loc_(""), m_nLcid(Lcid)
 {
-	m_pWriteBuffer = NULL;
+	m_pWriteBuffer = nullptr;
 	m_nCurrentIndex = 0;
 	m_sEscape = _T("\"\n");
 	m_sEscape += m_sDelimiter;
@@ -741,7 +740,7 @@ void CSVWriter::Impl::WriteSheetStart(OOX::Spreadsheet::CWorksheet* pWorksheet)
 		WriteFile(&m_oFile, &m_pWriteBuffer, m_nCurrentIndex, g_sBkt, m_nCodePage);
 	}
 	
-	if (pWorksheet && pWorksheet->m_oSheetViews.IsInit() && false == pWorksheet->m_oSheetViews->m_arrItems.empty())
+	if (pWorksheet && pWorksheet->m_oSheetViews.IsInit() && !pWorksheet->m_oSheetViews->m_arrItems.empty())
 	{
 		if (pWorksheet->m_oSheetViews->m_arrItems[0]->m_oShowFormulas.IsInit() &&
 			pWorksheet->m_oSheetViews->m_arrItems[0]->m_oShowFormulas->ToBool())
@@ -789,7 +788,7 @@ void CSVWriter::Impl::WriteCell(OOX::Spreadsheet::CCell *pCell)
 
 	while (nCol > m_nColCurrent)
 	{
-		if (m_bJSON && false == m_bIsWriteCell)
+		if (m_bJSON && !m_bIsWriteCell)
 		{
 			// Write empty lines (for JSON)
 			WriteFile(&m_oFile, &m_pWriteBuffer, m_nCurrentIndex, g_sDoubleQuote, m_nCodePage);
@@ -831,7 +830,7 @@ void CSVWriter::Impl::WriteCell(OOX::Spreadsheet::CCell *pCell)
 			if (nValue >= 0 && nValue < (int)m_oXlsx.m_pSharedStrings->m_arrItems.size())
 			{
 				OOX::Spreadsheet::CSi *pSi = m_oXlsx.m_pSharedStrings->m_arrItems[nValue];
-				if (NULL != pSi)
+				if (nullptr != pSi)
 				{
 					sCellValue = pSi->ToString();
 					bString = true;
@@ -912,7 +911,7 @@ void CSVWriter::Impl::WriteCell(OOX::Spreadsheet::CCell *pCell)
 	m_bIsWriteCell = true;
 	m_bStartCell = false;
 }
-void CSVWriter::Impl::WriteRowEnd(OOX::Spreadsheet::CRow* pWorksheet, bool bLast)
+void CSVWriter::Impl::WriteRowEnd(OOX::Spreadsheet::CRow*  /*pWorksheet*/, bool bLast)
 {
 	if (m_bJSON)
 		WriteFile(&m_oFile, &m_pWriteBuffer, m_nCurrentIndex, g_sEndJson, m_nCodePage);
@@ -927,7 +926,7 @@ void CSVWriter::Impl::WriteRowEnd(OOX::Spreadsheet::CRow* pWorksheet, bool bLast
 		}
 	}
 }
-void CSVWriter::Impl::WriteSheetEnd(OOX::Spreadsheet::CWorksheet* pWorksheet)
+void CSVWriter::Impl::WriteSheetEnd(OOX::Spreadsheet::CWorksheet*  /*pWorksheet*/)
 {
 	if (m_bJSON)
 	{
@@ -1058,7 +1057,7 @@ void CSVWriter::Impl::GetDefaultFormatCode(int numFmt, std::wstring & format_cod
 }
 std::wstring CSVWriter::Impl::ConvertValueCellToString(const std::wstring &value, boost::optional<int> format_type, std::wstring format_code)
 {
-	if (false == format_code.empty())
+	if (!format_code.empty())
 	{
 		format_code.erase(std::remove(format_code.begin(), format_code.end(), L'"'), format_code.end());//remove escape quotes from format
 		std::vector<std::wstring> format_codes;
