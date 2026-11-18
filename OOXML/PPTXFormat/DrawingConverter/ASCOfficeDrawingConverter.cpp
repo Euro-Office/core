@@ -3597,7 +3597,7 @@ std::wstring CDrawingConverter::GetDrawingMainProps(XmlUtils::CXmlNode& oNode, P
 	else
 	{
         pFind = oCssStyles.m_mapSettings.find(L"margin-right");
-		if (oCssStyles.m_mapSettings.end() != oCssStyles.m_mapSettings.end())
+		if (oCssStyles.m_mapSettings.end() != pFind)
 			width = (LONG)(dKoefSize * parserPoint.FromString(pFind->second) + 0.5) - left;
 	}
 
@@ -3609,7 +3609,7 @@ std::wstring CDrawingConverter::GetDrawingMainProps(XmlUtils::CXmlNode& oNode, P
 	else
 	{
         pFind = oCssStyles.m_mapSettings.find(L"margin-bottom");
-		if (oCssStyles.m_mapSettings.end() != oCssStyles.m_mapSettings.end())
+		if (oCssStyles.m_mapSettings.end() != pFind)
 			height = (LONG)(dKoefSize * parserPoint.FromString(pFind->second) + 0.5) - top;
 	}
 
