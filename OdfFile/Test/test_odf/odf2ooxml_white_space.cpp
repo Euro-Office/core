@@ -4,8 +4,8 @@
 // White space in the text of ODF paragraphs (ODF 1.3 part 3, 6.1.2): every
 // run of SPACE, TAB, LF and CR is one space, white space at the start of a
 // paragraph and after white space is ignored, also across spans; text:s,
-// text:tab and text:line-break are not white space. LibreOffice Calc keeps
-// the characters of cell text as they are.
+// text:tab and text:line-break are not white space. LibreOffice keeps the
+// characters of spreadsheet cell text and of chart text as they are.
 
 #include "gtest/gtest.h"
 
@@ -112,6 +112,23 @@ TEST_F(OdtToDocxWhiteSpace, WhiteSpaceAcrossSpansIsOneSpace)
     EXPECT_EQ(text_of(L"Omicron"), L"Omicron Pi");
 }
 
+TEST_F(OdtToDocxWhiteSpace, HeadingTextFollowsTheRules)
+{
+    EXPECT_EQ(text_of(L"Sigma"), L"Sigma Tau");
+}
+
+TEST_F(OdtToDocxWhiteSpace, LinkTextFollowsTheRules)
+{
+    EXPECT_EQ(text_of(L"Upsilon"), L"Upsilon Phi");
+}
+
+TEST_F(OdtToDocxWhiteSpace, TextBeforeSequenceFieldFollowsTheRules)
+{
+    // The text in front of a text:sequence is written by the field.
+    const std::wstring text = text_of(L"Figure");
+    EXPECT_EQ(text.find(L"Figure "), 0u) << text;
+}
+
 TEST(OdpToPptxWhiteSpace, LineBreaksInTextAreSpaces)
 {
     const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/white_space_slide.odp");
@@ -128,4 +145,22 @@ TEST(OdsToXlsxWhiteSpace, CellTextKeepsSpaces)
     const std::wstring strings = read_part(dir, L"xl/sharedStrings.xml");
 
     EXPECT_NE(strings.find(L"Rho  Sigma"), std::wstring::npos) << strings;
+}
+
+TEST(OdsToXlsxWhiteSpace, ShapeTextFollowsTheRules)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/white_space_cell.ods");
+    ASSERT_FALSE(dir.empty()) << "ODS -> XLSX conversion failed";
+    const std::wstring drawing = read_part(dir, L"xl/drawings/drawing1.xml");
+
+    EXPECT_EQ(paragraph_text(drawing, L"<a:p", L"a:t", L"Psi"), L"Psi Omega") << drawing;
+}
+
+TEST(OdtChartToDocxWhiteSpace, ChartTextKeepsSpaces)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/white_space_chart.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+    const std::wstring chart = read_part(dir, L"word/charts/chart1.xml");
+
+    EXPECT_NE(chart.find(L"Sales  2024"), std::wstring::npos) << chart;
 }

@@ -266,6 +266,34 @@ office_element_ptr text::create_in_paragraph(const std::wstring & Text)
     return elm;
 }
 
+static void process_white_space(std::wstring & value, bool collapse, bool & ignore)
+{
+    std::wstring result;
+    result.reserve(value.length());
+    for (size_t j = 0; j < value.length(); j++)
+    {
+        const wchar_t c = value[j];
+        if (c == L' ' || c == L'\t' || c == L'\n' || c == L'\r')
+        {
+            if (!collapse)
+            {
+                if (c == L' ') result += c;
+            }
+            else
+            {
+                if (!ignore) result += L' ';
+                ignore = true;
+            }
+        }
+        else
+        {
+            result += c;
+            ignore = false;
+        }
+    }
+    value = result;
+}
+
 void process_white_space(office_element_ptr_array & content, bool collapse, bool & ignore)
 {
     for (size_t i = 0; i < content.size(); i++)
@@ -275,35 +303,18 @@ void process_white_space(office_element_ptr_array & content, bool collapse, bool
         switch (content[i]->get_type())
         {
         case typeTextText:
-        {
-            text * t = dynamic_cast<text*>(content[i].get());
-            if (!t) break;
-
-            std::wstring result;
-            result.reserve(t->text_.length());
-            for (size_t j = 0; j < t->text_.length(); j++)
+            if (text * t = dynamic_cast<text*>(content[i].get()))
+                process_white_space(t->text_, collapse, ignore);
+            break;
+        case typeTextSequence:
+            // the paragraph moved the text in front of the field into the field
+            if (sequence * q = dynamic_cast<sequence*>(content[i].get()))
             {
-                const wchar_t c = t->text_[j];
-                if (c == L' ' || c == L'\t' || c == L'\n' || c == L'\r')
-                {
-                    if (!collapse)
-                    {
-                        if (c == L' ') result += c;
-                    }
-                    else
-                    {
-                        if (!ignore) result += L' ';
-                        ignore = true;
-                    }
-                }
-                else
-                {
-                    result += c;
-                    ignore = false;
-                }
+                if (q->template_)
+                    process_white_space(*q->template_, collapse, ignore);
             }
-            t->text_ = result;
-        }break;
+            ignore = false;
+            break;
         case typeTextSpan:
             if (span * s = dynamic_cast<span*>(content[i].get()))
                 process_white_space(s->content_, collapse, ignore);
@@ -334,6 +345,7 @@ void process_white_space(office_element_ptr_array & content, bool collapse, bool
         case typeFieldFieldmark:
         case typeFieldFieldmarkStart:
         case typeFieldFieldmarkEnd:
+        case typeDrawA:
             break;
         // text:s, text:tab, text:line-break, fields, frames, notes, ...
         default:

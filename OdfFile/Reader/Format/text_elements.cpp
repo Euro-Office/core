@@ -156,14 +156,22 @@ void paragraph::add_space(const std::wstring & Text)
 }
 void paragraph::process_white_space(document_context * Context)
 {
-	// LibreOffice Calc keeps the characters of a cell paragraph as they are; Writer, Impress, Draw
-	// and the headers and footers of every document type apply the ODF white-space rules.
+	// LibreOffice takes the text of spreadsheet cells and of charts as it is. Every other paragraph
+	// text follows the ODF white-space rules: Writer, Impress, Draw, headers and footers, and shapes
+	// and comments, also when they sit in a spreadsheet. The innermost of these containers decides.
 	bool collapse = true;
 	if (Context)
 	{
-		for (size_t i = 0; i < Context->levels.size(); i++)
+		for (size_t i = Context->levels.size(); i > 0; i--)
 		{
-			if (Context->levels[i] && Context->levels[i]->get_type() == typeOfficeSpreadsheet)
+			const office_element * elm = Context->levels[i - 1];
+			if (!elm) continue;
+
+			const ElementType type = elm->get_type();
+			const wchar_t * ns = elm->get_ns();
+			if (type == typeOfficeAnnotation || (ns && std::wstring(ns) == L"draw"))
+				break;
+			if (type == typeOfficeChart || type == typeOfficeSpreadsheet)
 			{
 				collapse = false;
 				break;
