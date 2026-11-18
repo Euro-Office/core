@@ -68,6 +68,15 @@ std::wstring xlsx_header_footer_text(const std::wstring & xml_text)
 
 }
 
+void xlsx_serialize_header_footer_text(std::wostream & _Wostream, const office_element_ptr & Elm)
+{
+	if (!Elm)
+		return;
+	std::wstringstream val;
+	Elm->text_to_stream(val, true);
+	_Wostream << xlsx_header_footer_text(val.str());
+}
+
 //------------------------------------------------------------------------------------------------------------
 const wchar_t * paragraph_content_element::ns = L"";
 const wchar_t * paragraph_content_element::name = L"";

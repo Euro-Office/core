@@ -46,6 +46,10 @@ namespace odf_reader {
 
 namespace text {
 
+// Writes the text of Elm into an XLSX header or footer string, with a '&' of the text written as "&&"
+// (in those strings '&' starts a code such as &P or &D).
+void xlsx_serialize_header_footer_text(std::wostream & _Wostream, const office_element_ptr & Elm);
+
 class paragraph_content_element :  public office_element_impl<paragraph_content_element>
 {
 public:

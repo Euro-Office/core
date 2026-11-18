@@ -25,6 +25,18 @@ namespace
 		return read_part(dir, L"xl/worksheets/sheet1.xml");
 	}
 
+	// The second fixture puts the '&' into header and footer children that are not paragraph content:
+	// sheet 1 (no regions): header heading "H&S", footer "F " + variable input "T&C";
+	// sheet 2 (regions): left "L " + variable input "P&L", right a list with the item "A&B".
+	std::wstring fallback_sheet_xml(int sheet)
+	{
+		static const std::wstring dir =
+			convert_odf_to_ooxml_dir(L"ExampleFiles/sheet_header_footer_ampersand_fallback.ods");
+		if (dir.empty())
+			return std::wstring();
+		return read_part(dir, L"xl/worksheets/sheet" + std::to_wstring(sheet) + L".xml");
+	}
+
 	void replace_all(std::wstring& text, const std::wstring& from, const std::wstring& to)
 	{
 		for (size_t pos = text.find(from); pos != std::wstring::npos; pos = text.find(from, pos + to.size()))
@@ -91,4 +103,25 @@ TEST(OdsToXlsxHeaderFooterAmpersand, FooterWithoutRegions)
 
 	const std::wstring footer = header_footer(sheet, L"oddFooter");
 	EXPECT_EQ(footer, L"A && B &&");
+}
+
+// A header or footer child that is not a text:p, or a paragraph child that is not paragraph content, is written
+// as plain text. Its '&' is escaped too, and a paragraph child writes only its own text, not the whole paragraph.
+TEST(OdsToXlsxHeaderFooterAmpersand, FallbackWithoutRegions)
+{
+	const std::wstring sheet = fallback_sheet_xml(1);
+	ASSERT_FALSE(sheet.empty()) << "ODS -> XLSX conversion failed";
+	EXPECT_TRUE(is_well_formed(sheet));
+
+	EXPECT_EQ(header_footer(sheet, L"oddHeader"), L"H&&S");
+	EXPECT_EQ(header_footer(sheet, L"oddFooter"), L"F T&&C");
+}
+
+TEST(OdsToXlsxHeaderFooterAmpersand, FallbackInRegions)
+{
+	const std::wstring sheet = fallback_sheet_xml(2);
+	ASSERT_FALSE(sheet.empty()) << "ODS -> XLSX conversion failed";
+	EXPECT_TRUE(is_well_formed(sheet));
+
+	EXPECT_EQ(header_footer(sheet, L"oddHeader"), L"&LL P&&L&RA&&B");
 }
