@@ -163,7 +163,7 @@ namespace SimpleTypes
 			case parameterValue :	return L"value";
 			case parameterCell :	return L"cell";
 			case parameterPrompt :
-			default :				return L"promt"; // codespell:ignore -- external format string
+			default :				return L"promt"; // TODO: the format value is "prompt"; fix separately
 			}
 		}
 
@@ -2668,6 +2668,7 @@ namespace SimpleTypes
 			case dataAsPercentOfCol:	return L"percentOfCol";
 			case dataAsPercentOfRow:	return L"percentOfRow";
 			case dataAsPercentOfTotal:
+			// TODO: dataAsRunTotal is only grouped here because main returned this for both; fix separately
 			case dataAsRunTotal:		return L"percentOfTotal";
 			default :					return L"runTotal";
 			}
