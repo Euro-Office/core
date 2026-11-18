@@ -18,6 +18,7 @@ SOURCES += main.cpp\
            richvalue.cpp\
            conversion.cpp\
            editorbin_pivots.cpp\
+           pivot_show_data_as.cpp\
            vml_shape_size.cpp\
            workbook_facts.cpp\
 

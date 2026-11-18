@@ -310,6 +310,7 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 [[annotations]]
 path = [
     "OOXML/test/ExampleFiles/docx2odt/vml_margin.docx",
+    "OOXML/test/ExampleFiles/pivot_show_data_as/runTotal.xlsx",
     "OOXML/test/ExampleFiles/xlsx2bin/checkbox.xlsx",
     "OOXML/test/ExampleFiles/xlsx2bin/richvalue-fallback.xlsx",
 ]
