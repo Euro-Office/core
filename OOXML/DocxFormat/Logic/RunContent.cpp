@@ -110,7 +110,7 @@ namespace OOX
 		void CContentPart::fromXML(XmlUtils::CXmlNode& oNode)
 		{
 			XmlMacroReadAttributeBase( oNode, L"r:id", m_oId );
-			if (false == m_oId.IsInit())
+			if (!m_oId.IsInit())
 			{
 				XmlMacroReadAttributeBase( oNode, L"relationships:id", m_oId );
 			}

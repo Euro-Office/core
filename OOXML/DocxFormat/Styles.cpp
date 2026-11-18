@@ -306,7 +306,7 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrLsdException.size(); nIndex++ )
 			{
 				if ( m_arrLsdException[nIndex] ) delete m_arrLsdException[nIndex];
-				m_arrLsdException[nIndex] = NULL;
+				m_arrLsdException[nIndex] = nullptr;
 			}
 			m_arrLsdException.clear();
 		}
@@ -425,7 +425,7 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrTblStylePr.size(); nIndex++ )
 			{
 				if ( m_arrTblStylePr[nIndex] ) delete m_arrTblStylePr[nIndex];
-				m_arrTblStylePr[nIndex] = NULL;
+				m_arrTblStylePr[nIndex] = nullptr;
 			}
 			m_arrTblStylePr.clear();
 		}
@@ -617,22 +617,22 @@ namespace OOX
 				else						docx->m_oMain.styles = this;
 			}
 
-			read( oPath );
+			CStyles::read( oPath );
 		}
-		CStyles::CStyles(XmlUtils::CXmlNode& oNode) : File(NULL), WritingElement(NULL)
+		CStyles::CStyles(XmlUtils::CXmlNode& oNode) : File(nullptr), WritingElement(nullptr)
 		{
-			fromXML( oNode );
+			CStyles::fromXML( oNode );
 		}
-		CStyles::CStyles(XmlUtils::CXmlLiteReader& oReader) : File(NULL), WritingElement(NULL)
+		CStyles::CStyles(XmlUtils::CXmlLiteReader& oReader) : File(nullptr), WritingElement(nullptr)
 		{
-			fromXML( oReader );
+			CStyles::fromXML( oReader );
 		}
 		CStyles::~CStyles()
 		{
 			for (size_t nIndex = 0; nIndex < m_arrStyle.size(); nIndex++ )
 			{
 				if ( m_arrStyle[nIndex] )delete m_arrStyle[nIndex];
-				m_arrStyle[nIndex] = NULL;
+				m_arrStyle[nIndex] = nullptr;
 			}
 			m_arrStyle.clear();
 
@@ -663,7 +663,7 @@ namespace OOX
 			std::wstring sName = oReader.GetName();
 			if ( L"w:styles" == sName)
 			{
-				fromXML(oReader);
+				CStyles::fromXML(oReader);
 			}
 		}
 		void CStyles::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const

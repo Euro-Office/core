@@ -39,7 +39,7 @@ namespace OOX
 	}
 	CBibliography::CBibliography(OOX::Document* pMain, const CPath& oPath) : OOX::File(pMain)
 	{
-		read( oPath );
+		CBibliography::read( oPath );
 	}
 	void CBibliography::read(const CPath& oFilePath)
 	{

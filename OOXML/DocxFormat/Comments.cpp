@@ -68,7 +68,7 @@ namespace OOX
 		while( oReader.ReadNextSiblingNode( nParentDepth ) )
 		{
 			std::wstring sName = oReader.GetNameNoNS();
-			WritingElement *pItem = NULL;
+			WritingElement *pItem = nullptr;
 
 			if ( L"altChunk" ==sName )
 				AssignPtrXmlContent(pItem, Logic::CAltChunk, oReader)
@@ -163,7 +163,7 @@ namespace OOX
 		for ( size_t i = 0; i < arrItems.size(); ++i)
 		{
 			WritingElement* item = arrItems[i];
-			if (item == NULL) continue;
+			if (item == nullptr) continue;
 
 			switch(item->getType())
 			{
@@ -298,14 +298,14 @@ namespace OOX
 			if (docx->m_bGlossaryRead)	docx->m_oGlossary.comments = this;
 			else						docx->m_oMain.comments = this;
 		}
-		read( oPath );
+		CComments::read( oPath );
 	}
 	CComments::~CComments()
 	{
 		for(size_t i = 0, length = m_arrComments.size(); i < length; ++i)
 		{
 			if (m_arrComments[i]) delete m_arrComments[i];
-			m_arrComments[i] = NULL;
+			m_arrComments[i] = nullptr;
 		}
 		m_arrComments.clear();
 	}
@@ -313,7 +313,7 @@ namespace OOX
 	{
 		//don't use this. use read(const CPath& oRootPath, const CPath& oFilePath)
 		CPath oRootPath;
-		read(oRootPath, oPath);
+		CComments::read(oRootPath, oPath);
 	}
 	void CComments::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
@@ -364,13 +364,13 @@ namespace OOX
 		}
 	}
 
-	CDocumentComments::CDocumentComments(OOX::Document *pMain) : CComments(NULL)
+	CDocumentComments::CDocumentComments(OOX::Document *pMain) : CComments(nullptr)
 	{
 		File::m_pMainDocument = pMain;
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
 		if (docx) docx->m_pDocumentComments = this;
 	}
-	CDocumentComments::CDocumentComments(OOX::Document *pMain, const CPath& oPath) : CComments(NULL, oPath)
+	CDocumentComments::CDocumentComments(OOX::Document *pMain, const CPath& oPath) : CComments(nullptr, oPath)
 	{
 		File::m_pMainDocument = pMain;
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
@@ -432,14 +432,14 @@ namespace OOX
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
 		if (docx) docx->m_pCommentsExt = this;
 
-		read( oPath );
+		CCommentsExt::read( oPath );
 	}
 	CCommentsExt::~CCommentsExt()
 	{
 		for(size_t i = 0, length = m_arrComments.size(); i < length; ++i)
 		{
 			if (m_arrComments[i]) delete m_arrComments[i];
-			m_arrComments[i] = NULL;
+			m_arrComments[i] = nullptr;
 		}
 		m_arrComments.clear();
 	}
@@ -447,7 +447,7 @@ namespace OOX
 	{
 		//don't use this. use read(const CPath& oRootPath, const CPath& oFilePath)
 		CPath oRootPath;
-		read(oRootPath, oPath);
+		CCommentsExt::read(oRootPath, oPath);
 	}
 	void CCommentsExt::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
@@ -464,7 +464,7 @@ namespace OOX
 	{
 		return type().DefaultFileName();
 	}
-	void CCommentsExt::read(const CPath& oRootPath, const CPath& oFilePath)
+	void CCommentsExt::read(const CPath& /*oRootPath*/, const CPath& oFilePath)
 	{
 		//IFileContainer::Read( oRootPath, oFilePath );
 
@@ -493,18 +493,22 @@ namespace OOX
 						m_mapComments.insert( std::make_pair( pCommentExt->m_oParaId->GetValue(), m_arrComments.size()));
 						m_arrComments.push_back( pCommentExt );
 					}
+					else
+					{
+						delete pCommentExt;
+					}
 				}
 			}
 		}
 	}
 
-	CDocumentCommentsExt::CDocumentCommentsExt(OOX::Document *pMain) : CCommentsExt(NULL)
+	CDocumentCommentsExt::CDocumentCommentsExt(OOX::Document *pMain) : CCommentsExt(nullptr)
 	{
 		File::m_pMainDocument = pMain;
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
 		if (docx) docx->m_pDocumentCommentsExt = this;
 	}
-	CDocumentCommentsExt::CDocumentCommentsExt(OOX::Document *pMain, const CPath& oPath) : CCommentsExt(NULL, oPath)
+	CDocumentCommentsExt::CDocumentCommentsExt(OOX::Document *pMain, const CPath& oPath) : CCommentsExt(nullptr, oPath)
 	{
 		File::m_pMainDocument = pMain;
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
@@ -566,18 +570,18 @@ namespace OOX
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
 		if (docx) docx->m_pCommentsExtensible = this;
 
-		read( oPath );
+		CCommentsExtensible::read( oPath );
 	}
 	CCommentsExtensible::~CCommentsExtensible()
 	{
 		for(size_t i = 0, length = m_arrComments.size(); i < length; ++i)
 		{
 			if (m_arrComments[i]) delete m_arrComments[i];
-			m_arrComments[i] = NULL;
+			m_arrComments[i] = nullptr;
 		}
 		m_arrComments.clear();
 	}
-	void CCommentsExtensible::read(const CPath& oRootPath, const CPath& oFilePath)
+	void CCommentsExtensible::read(const CPath& /*oRootPath*/, const CPath& oFilePath)
 	{
 		//IFileContainer::Read( oRootPath, oFilePath );
 
@@ -609,7 +613,7 @@ namespace OOX
 	{
 		//don't use this. use read(const CPath& oRootPath, const CPath& oFilePath)
 		CPath oRootPath;
-		read(oRootPath, oPath);
+		CCommentsExtensible::read(oRootPath, oPath);
 	}
 	void CCommentsExtensible::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
@@ -627,13 +631,13 @@ namespace OOX
 		return type().DefaultFileName();
 	}
 
-	CDocumentCommentsExtensible::CDocumentCommentsExtensible(OOX::Document *pMain) : CCommentsExtensible(NULL)
+	CDocumentCommentsExtensible::CDocumentCommentsExtensible(OOX::Document *pMain) : CCommentsExtensible(nullptr)
 	{
 		File::m_pMainDocument = pMain;
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
 		if (docx) docx->m_pDocumentCommentsExtensible = this;
 	}
-	CDocumentCommentsExtensible::CDocumentCommentsExtensible(OOX::Document *pMain, const CPath& oPath) : CCommentsExtensible(NULL, oPath)
+	CDocumentCommentsExtensible::CDocumentCommentsExtensible(OOX::Document *pMain, const CPath& oPath) : CCommentsExtensible(nullptr, oPath)
 	{
 		File::m_pMainDocument = pMain;
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
@@ -644,13 +648,13 @@ namespace OOX
 		return FileTypes::DocumentCommentsExtensible;
 	}
 
-	CCommentsUserData::CCommentsUserData(OOX::Document *pMain) : CCommentsExtensible(NULL)
+	CCommentsUserData::CCommentsUserData(OOX::Document *pMain) : CCommentsExtensible(nullptr)
 	{
 		File::m_pMainDocument = pMain;
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
 		if (docx) docx->m_pCommentsUserData = this;
 	}
-	CCommentsUserData::CCommentsUserData(OOX::Document *pMain, const CPath& oPath) : CCommentsExtensible(NULL, oPath)
+	CCommentsUserData::CCommentsUserData(OOX::Document *pMain, const CPath& oPath) : CCommentsExtensible(nullptr, oPath)
 	{
 		File::m_pMainDocument = pMain;
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
@@ -703,14 +707,14 @@ namespace OOX
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
 		if (docx) docx->m_pCommentsIds = this;
 
-		read( oPath );
+		CCommentsIds::read( oPath );
 	}
 	CCommentsIds::~CCommentsIds()
 	{
 		for(size_t i = 0, length = m_arrComments.size(); i < length; ++i)
 		{
 			if (m_arrComments[i]) delete m_arrComments[i];
-			m_arrComments[i] = NULL;
+			m_arrComments[i] = nullptr;
 		}
 		m_arrComments.clear();
 	}
@@ -740,6 +744,10 @@ namespace OOX
 					{
 						m_arrComments.push_back( pCommentExt );
 					}
+					else
+					{
+						delete pCommentExt;
+					}
 				}
 			}
 		}
@@ -760,13 +768,13 @@ namespace OOX
 		return type().DefaultFileName();
 	}
 
-	CDocumentCommentsIds::CDocumentCommentsIds(OOX::Document *pMain) : CCommentsIds(NULL)
+	CDocumentCommentsIds::CDocumentCommentsIds(OOX::Document *pMain) : CCommentsIds(nullptr)
 	{
 		File::m_pMainDocument = pMain;
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
 		if (docx) docx->m_pDocumentCommentsIds = this;
 	}
-	CDocumentCommentsIds::CDocumentCommentsIds(OOX::Document *pMain, const CPath& oPath) : CCommentsIds(NULL, oPath)
+	CDocumentCommentsIds::CDocumentCommentsIds(OOX::Document *pMain, const CPath& oPath) : CCommentsIds(nullptr, oPath)
 	{
 		File::m_pMainDocument = pMain;
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
@@ -858,7 +866,7 @@ namespace OOX
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
 		if (docx) docx->m_pPeople = this;
 
-		read( oPath );
+		CPeople::read( oPath );
 	}
 	CPeople::~CPeople()
 	{
@@ -908,13 +916,13 @@ namespace OOX
 		return type().DefaultFileName();
 	}
 
-	CDocumentPeople::CDocumentPeople(OOX::Document *pMain) : CPeople(NULL)
+	CDocumentPeople::CDocumentPeople(OOX::Document *pMain) : CPeople(nullptr)
 	{
 		File::m_pMainDocument = pMain;
 		CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);
 		if (docx) docx->m_pDocumentPeople = this;
 	}
-	CDocumentPeople::CDocumentPeople(OOX::Document *pMain, const CPath& oPath) : CPeople(NULL, oPath)
+	CDocumentPeople::CDocumentPeople(OOX::Document *pMain, const CPath& oPath) : CPeople(nullptr, oPath)
 {
 	File::m_pMainDocument = pMain;
 	CDocx* docx = dynamic_cast<CDocx*>(File::m_pMainDocument);

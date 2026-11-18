@@ -46,7 +46,7 @@ namespace OOX
 	CHdrFtr::CHdrFtr(OOX::Document *pMain, const CPath& oRootPath, const CPath& oFilePath) : OOX::File(pMain), IFileContainer(pMain), WritingElement(pMain)
 	{
 		m_eType = et_Unknown;
-		read( oRootPath, oFilePath );
+		CHdrFtr::read( oRootPath, oFilePath );
 	}
 	CHdrFtr::~CHdrFtr()
 	{
@@ -77,7 +77,7 @@ namespace OOX
 		if ( !oReader.ReadNextNode() )
 			return;
 
-		fromXML(oReader);
+		CHdrFtr::fromXML(oReader);
 	}
 	void CHdrFtr::fromXML(XmlUtils::CXmlNode& oNode)
 	{
@@ -108,7 +108,7 @@ namespace OOX
 		while (oReader.ReadNextSiblingNode(Depth))
 		{
 			std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
-			WritingElement* pItem = NULL;
+			WritingElement* pItem = nullptr;
 
 			if (L"altChunk" == sName)
 				pItem = new Logic::CAltChunk(document);

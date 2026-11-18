@@ -293,11 +293,7 @@ namespace OOX
 					{
 						std::wstring sName = oReader.GetName();
 
-						if (L"mc:Choice" == sName)
-						{
-							ReadElements(oReader, nDepth + 2);
-						}
-						else if (L"mc:Fallback" == sName)
+						if (L"mc:Choice" == sName || L"mc:Fallback" == sName)
 						{
 							ReadElements(oReader, nDepth + 2);
 						}
@@ -375,7 +371,7 @@ namespace OOX
 			for ( size_t nIndex = 0; nIndex < m_arrLvl.size(); nIndex++ )
 			{
 				if ( m_arrLvl[nIndex] ) delete m_arrLvl[nIndex];
-				m_arrLvl[nIndex] = NULL;
+				m_arrLvl[nIndex] = nullptr;
 			}
 			m_arrLvl.clear();
 		}
@@ -501,8 +497,7 @@ namespace OOX
 		void CAbstractNum::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
 				WritingElement_ReadAttributes_Start( oReader )
-					WritingElement_ReadAttributes_Read_if		( oReader, _T("w:abstractNumId"), m_oAbstractNumId )
-					WritingElement_ReadAttributes_Read_else_if	( oReader, _T("w:listDefId"), m_oAbstractNumId )
+					if ( _T("w:abstractNumId") == wsName || _T("w:listDefId") == wsName ) m_oAbstractNumId = oReader.GetText();
 				WritingElement_ReadAttributes_End( oReader )
 			}
 
@@ -584,7 +579,7 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrLvlOverride.size(); nIndex++ )
 			{
 				if ( m_arrLvlOverride[nIndex] ) delete m_arrLvlOverride[nIndex];
-				m_arrLvlOverride[nIndex] = NULL;
+				m_arrLvlOverride[nIndex] = nullptr;
 			}
 			m_arrLvlOverride.clear();
 		}
@@ -680,8 +675,7 @@ namespace OOX
 		void CNum::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
 				WritingElement_ReadAttributes_Start( oReader )
-					WritingElement_ReadAttributes_Read_if		( oReader, _T("w:numId"), m_oNumId )
-					WritingElement_ReadAttributes_Read_else_if	( oReader, _T("w:ilfo"), m_oNumId )
+					if ( _T("w:numId") == wsName || _T("w:ilfo") == wsName ) m_oNumId = oReader.GetText();
 				WritingElement_ReadAttributes_End( oReader )
 			}
 
@@ -726,7 +720,7 @@ namespace OOX
 		}
 		std::wstring CNumPicBullet::toXML() const
 		{
-			if (false == m_oNumPicBulletId.IsInit()) return L"";
+			if (!m_oNumPicBulletId.IsInit()) return L"";
 
 			std::wstring sResult = L"<w:numPicBullet ";
 
@@ -771,35 +765,35 @@ namespace OOX
 			if (docx->m_bGlossaryRead)	docx->m_oGlossary.numbering = this;
 			else						docx->m_oMain.numbering = this;
 		}
-		read( oRootPath, oPath );
+		CNumbering::read( oRootPath, oPath );
 	}
-	CNumbering::CNumbering(XmlUtils::CXmlNode& oNode) : File(NULL), OOX::IFileContainer(NULL)
+	CNumbering::CNumbering(XmlUtils::CXmlNode& oNode) : File(nullptr), OOX::IFileContainer(nullptr)
 	{
-		fromXML( oNode );
+		CNumbering::fromXML( oNode );
 	}
-	CNumbering::CNumbering(XmlUtils::CXmlLiteReader& oReader) : File(NULL), OOX::IFileContainer(NULL)
+	CNumbering::CNumbering(XmlUtils::CXmlLiteReader& oReader) : File(nullptr), OOX::IFileContainer(nullptr)
 	{
-		fromXML( oReader );
+		CNumbering::fromXML( oReader );
 	}
 	CNumbering::~CNumbering()
 	{
 		for ( unsigned int nIndex = 0; nIndex < m_arrNumPicBullet.size(); nIndex++ )
 		{
 			if (m_arrNumPicBullet[nIndex])delete m_arrNumPicBullet[nIndex];
-			m_arrNumPicBullet[nIndex] = NULL;
+			m_arrNumPicBullet[nIndex] = nullptr;
 		}
 		m_arrNumPicBullet.clear();
 
 		for ( unsigned int nIndex = 0; nIndex < m_arrNum.size(); nIndex++ )
 		{
 			if (m_arrNum[nIndex])delete m_arrNum[nIndex];
-			m_arrNum[nIndex] = NULL;
+			m_arrNum[nIndex] = nullptr;
 		}
 		m_arrNum.clear();
 		for ( unsigned int nIndex = 0; nIndex < m_arrAbstractNum.size(); nIndex++ )
 		{
 			if (m_arrAbstractNum[nIndex])delete m_arrAbstractNum[nIndex];
-			m_arrAbstractNum[nIndex] = NULL;
+			m_arrAbstractNum[nIndex] = nullptr;
 		}
 
 		m_arrAbstractNum.clear();
@@ -835,7 +829,7 @@ namespace OOX
 		std::wstring sName = oReader.GetName();
 		if ( _T("w:numbering") == sName && !oReader.IsEmptyNode() )
 		{
-			fromXML(oReader);
+			CNumbering::fromXML(oReader);
 		}
 	}
 	void CNumbering::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
@@ -867,6 +861,10 @@ namespace OOX
 				{
 					m_mapAbstractNum.insert(std::make_pair(*pAbstractNum->m_oAbstractNumId, m_arrAbstractNum.size()));
 					m_arrAbstractNum.push_back(pAbstractNum);
+				}
+				else
+				{
+					delete pAbstractNum;
 				}
 			}
 			else if ( L"w:num" == sName || L"w:list" == sName)
