@@ -81,8 +81,6 @@ namespace ASC
 	public:
 		NSCriticalSection::CRITICAL_SECTION m_oCS;
 
-		NSNetwork::NSFileTransport::CSession m_oSession;
-
 		std::list<CDownloadTask*> m_arTasks;
 		std::list<CDownloadTask*> m_arWaitTasks;
 
@@ -212,8 +210,6 @@ namespace ASC
 	DWORD CDownloadTask::ThreadProc()
 	{
 		NSNetwork::NSFileTransport::CFileDownloader oDownloader(Url, false);
-		oDownloader.SetSession(&m_manager->m_oSession);
-
 		oDownloader.SetFilePath(GetPath());
 
 		oDownloader.Start( 0 );
@@ -240,11 +236,6 @@ namespace ASC
 	{
 		Clear();
 		delete m_internal;
-	}
-
-	NSNetwork::NSFileTransport::CSession* CDownloadManager::GetSession()
-	{
-		return &m_internal->m_oSession;
 	}
 
 	void CDownloadManager::SetMaxConcurrentDownloadCount(const int& count)

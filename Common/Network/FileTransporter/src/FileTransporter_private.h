@@ -50,8 +50,6 @@ namespace NSNetwork
 				m_cData = NULL;
 				m_nSize = 0;
 
-				m_pSession = NULL;
-
 				//                m_bIsExit = nullptr;
 			}
 
@@ -69,8 +67,6 @@ namespace NSNetwork
 				m_cData = cData;
 				m_nSize = nSize;
 
-				m_pSession = NULL;
-
 				//                m_bIsExit = nullptr;
 			}
 
@@ -87,8 +83,6 @@ namespace NSNetwork
 
 				m_cData = NULL;
 				m_nSize = 0;
-
-				m_pSession = NULL;
 
 				//                m_bIsExit = nullptr;
 			}
@@ -133,8 +127,6 @@ namespace NSNetwork
 			std::function<void(int)> m_func_onComplete = nullptr;
 			std::function<void(int)> m_func_onProgress = nullptr;
 			std::function<bool(void)> m_check_aborted = nullptr;
-
-			CSession* m_pSession;
 
 			//            std::atomic<bool>* m_bIsExit; // To stop and exit the thread
 		};
@@ -221,11 +213,6 @@ namespace NSNetwork
 			void TransferAsync()
 			{
 				this->Start( 1 );
-			}
-
-			void SetSession(CSession* session)
-			{
-				m_pInternal->m_pSession = session;
 			}
 
 		protected :

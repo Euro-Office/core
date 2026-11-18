@@ -44,14 +44,12 @@ add_library(kernel_network SHARED
 
     # filetransporter.pri
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/Session.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/manager.cpp
     
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/include/FileTransporter.h
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/include/manager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_private.h
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/transport_external.h
-	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/Session.h
 )
 
 # filetransporter.pri
