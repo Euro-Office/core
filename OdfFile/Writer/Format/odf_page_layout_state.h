@@ -111,6 +111,10 @@ public:
 	_CP_OPT(odf_types::length) header_min_size_;
 	_CP_OPT(odf_types::length) footer_min_size_;
 
+	// page margin-top (margin-bottom) to use once the page layout has a header (footer)
+	_CP_OPT(odf_types::length) header_margin_;
+	_CP_OPT(odf_types::length) footer_margin_;
+
 	_CP_OPT(odf_types::style_numformat) page_number_format;
 
 private:

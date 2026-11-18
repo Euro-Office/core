@@ -72,7 +72,7 @@ void Sector::ReleaseData()
     data.clear();
 }
 
-void Sector::Dispose(bool disposing)
+void Sector::Dispose(bool /*disposing*/)
 {
     try
     {
@@ -86,7 +86,11 @@ void Sector::Dispose(bool disposing)
         }
     }
     catch(...)
-    {}
+    {
+        // Dispose must not throw even if the data release fails
+        _disposed = true;
+        return;
+    }
     _disposed = true;
 }
 

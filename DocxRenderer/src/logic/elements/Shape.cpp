@@ -33,7 +33,7 @@ namespace NSDocxRenderer
 
 	CShape::~CShape()
 	{
-		Clear();
+		CShape::Clear();
 	}
 
 	void CShape::Clear()
@@ -71,9 +71,6 @@ namespace NSDocxRenderer
 			switch (path_command.type)
 			{
 			case CVectorGraphics::ePathCommandType::pctMove:
-				nPeacks++;
-				break;
-
 			case CVectorGraphics::ePathCommandType::pctLine:
 				nPeacks++;
 				break;
@@ -466,14 +463,9 @@ namespace NSDocxRenderer
 			}
 			else if (pSecondShape->m_eSimpleLineType == eSimpleLineType::sltHDash)
 			{
-				if ((pFirstShape->m_eLineType == eLineType::ltDotDash || pFirstShape->m_eLineType == eLineType::ltDashDotHeavy) &&
+				if (((pFirstShape->m_eLineType == eLineType::ltDotDash || pFirstShape->m_eLineType == eLineType::ltDashDotHeavy) ||
+				     (pFirstShape->m_eLineType == eLineType::ltDotDotDash || pFirstShape->m_eLineType == eLineType::ltDashDotDotHeavy)) &&
 				        pSecondShape->m_eLineType == eLineType::ltUnknown)
-				{
-					pFirstShape->m_eSimpleLineType = eSimpleLineType::sltHDash;
-					passed = true;
-				}
-				else if ((pFirstShape->m_eLineType == eLineType::ltDotDotDash || pFirstShape->m_eLineType == eLineType::ltDashDotDotHeavy) &&
-				         pSecondShape->m_eLineType == eLineType::ltUnknown)
 				{
 					pFirstShape->m_eSimpleLineType = eSimpleLineType::sltHDash;
 					passed = true;
@@ -698,7 +690,7 @@ namespace NSDocxRenderer
 		oWriter.WriteString(L"\">");
 		oWriter.WriteString(L"<a:alphaModFix/>");
 		oWriter.WriteString(L"</a:blip>");
-		if (m_oBrush.Image != NULL)
+		if (m_oBrush.Image != nullptr)
 		{
 			oWriter.WriteString(L"<a:tile sx=\"100%\" sy=\"100%\" flip=\"none\" algn=\"tl\"/>");
 		}
@@ -1279,7 +1271,7 @@ namespace NSDocxRenderer
 			oWriter.EndRecord();
 			// end of WriteBlip
 
-			if (m_oBrush.Image == NULL)
+			if (m_oBrush.Image == nullptr)
 			{
 				oWriter.StartRecord(1);
 				oWriter.WriteBYTE(kBin_g_nodeAttributeStart);

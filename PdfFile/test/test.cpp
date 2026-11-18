@@ -583,3 +583,46 @@ TEST_F(CPdfFileTest, GlyphIdOutsideTheFont)
 	std::unique_ptr<CPdfFile> pRead = Load(wsPdf);
 	EXPECT_EQ(1, pRead->GetPagesCount());
 }
+
+// Color (COLRv1) glyphs are drawn as images over invisible text: each glyph,
+// size and color is rasterized once and reused, and stored losslessly
+TEST_F(CPdfFileTest, ColorGlyphsAsCachedLosslessImages)
+{
+	const std::wstring wsFont = UTF8_TO_U(std::string(PDFFILE_TEST_COLR_FONT));
+	ASSERT_TRUE(NSFile::CFileBinary::Exists(wsFont)) << PDFFILE_TEST_COLR_FONT;
+
+	const std::wstring wsPdf = Path(L"color.pdf");
+	std::unique_ptr<CPdfFile> pPdf = NewPdf();
+	pPdf->CreatePdf();
+	pPdf->NewPage();
+	pPdf->put_Width(c_oA4.dWidthMM);
+	pPdf->put_Height(c_oA4.dHeightMM);
+	pPdf->put_FontPath(wsFont);
+	pPdf->put_FontSize(12);
+	// glyph 3 is U+E000 (solid), glyph 4 is U+E001 (gradient)
+	for (int i = 0; i < 3; ++i)
+		EXPECT_EQ(S_OK, pPdf->CommandDrawTextExCHAR(0xE000, 3, 10 + 10 * i, 10, 10, 10));
+	EXPECT_EQ(S_OK, pPdf->CommandDrawTextExCHAR(0xE001, 4, 50, 10, 10, 10));
+	// a standard 14 font after the color font must not reuse it, glyph 5 is a color glyph there
+	pPdf->put_FontPath(L"");
+	pPdf->put_FontName(L"Embedded: Helvetica");
+	EXPECT_EQ(S_OK, pPdf->CommandDrawTextExCHAR(L'A', 5, 70, 10, 10, 10));
+	ASSERT_EQ(0, pPdf->SaveToFile(wsPdf));
+
+	BYTE* pData = nullptr;
+	DWORD dwSize = 0;
+	ASSERT_TRUE(NSFile::CFileBinary::ReadAllBytes(wsPdf, &pData, dwSize));
+	std::string sPdf((const char*)pData, dwSize);
+	RELEASEARRAYOBJECTS(pData);
+	auto count = [&](const std::string& sNeedle) {
+		size_t n = 0;
+		for (size_t pos = sPdf.find(sNeedle); pos != std::string::npos; pos = sPdf.find(sNeedle, pos + 1))
+			++n;
+		return n;
+	};
+	EXPECT_EQ(2u, count("/SMask")) << "one image per distinct color glyph, none for the standard font";
+	EXPECT_EQ(0u, count("DCTDecode")) << "no JPEG";
+
+	std::unique_ptr<CPdfFile> pRead = Load(wsPdf);
+	EXPECT_EQ(1, pRead->GetPagesCount());
+}

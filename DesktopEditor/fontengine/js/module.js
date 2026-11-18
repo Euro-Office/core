@@ -65,6 +65,7 @@ function onLoadFontsModule(window, undefined)
 	AscFonts.FT_Get_Glyph_Measure_Params = AscFonts["FT_Get_Glyph_Measure_Params"];
 	AscFonts.FT_Get_Glyph_Render_Params = AscFonts["FT_Get_Glyph_Render_Params"];
 	AscFonts.FT_Get_Glyph_Render_Buffer2 = AscFonts["FT_Get_Glyph_Render_Buffer"];
+	AscFonts.FT_Get_Glyph_Color_Render = AscFonts["FT_Get_Glyph_Color_Render"];
 
 	AscFonts.HB_FontFree = AscFonts["HB_FontFree"];
 	AscFonts.HB_ShapeText = AscFonts["HB_ShapeText"];

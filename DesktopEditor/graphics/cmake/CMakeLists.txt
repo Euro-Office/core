@@ -378,6 +378,7 @@ add_library(graphics SHARED
     ${FONT_ENGINE_SOURCES_DIR}/ApplicationFonts.cpp
     ${FONT_ENGINE_SOURCES_DIR}/ApplicationFontsWorker.cpp
     ${FONT_ENGINE_SOURCES_DIR}/fontconverter/StringExt.cpp
+    ${FONT_ENGINE_SOURCES_DIR}/ColrV1Renderer.cpp
     ${FONT_ENGINE_SOURCES_DIR}/FontFile.cpp
     ${FONT_ENGINE_SOURCES_DIR}/FontManager.cpp
     ${FONT_ENGINE_SOURCES_DIR}/FontPath.cpp

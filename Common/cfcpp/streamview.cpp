@@ -64,7 +64,7 @@ void StreamView::write(const char *buffer, _INT64 count)
     if ((position + count) > length)
         adjustLength((position + count));
 
-    if (sectorChain.empty() == false)
+    if (!sectorChain.empty())
     {
         _INT32 sectorOffset = (int)(position / (_INT64)sectorSize);
         _INT32 sectorShift = (int)(position % sectorSize);
@@ -130,11 +130,11 @@ _INT64 StreamView::read(char *buffer, _INT64 len)
     _INT32 nRead = 0;
     _INT32 nToRead = 0;
     _INT32 offset = 0;
-    if (sectorChain.empty() == false && sectorChain.size() > 0)
+    if (!sectorChain.empty())
     {
         _INT32 sectorIndex = (int)(position / (_INT64)sectorSize);
 
-        nToRead = (std::min)((_INT64)sectorChain[0]->GetData().size() - ((_INT64)position % sectorSize), len);
+        nToRead = (std::min)((_INT64)sectorChain[0]->GetData().size() - (position % sectorSize), len);
 
         if (sectorIndex < (int)sectorChain.size())
         {

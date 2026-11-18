@@ -198,7 +198,8 @@ def build_and_install():
                 "CXX=g++",
                 "AR=ar",
                 "RANLIB=ranlib",
-                "CXXFLAGS=-static-libstdc++ -static-libgcc -std=c++11",
+                "CFLAGS=" + " ".join( [ "-O2" ] + nc.baseline_arch_flags() ),
+                "CXXFLAGS=" + " ".join( [ "-O2", "-static-libstdc++", "-static-libgcc", "-std=c++11" ] + nc.baseline_arch_flags() ),
                 "LDFLAGS=-Wl,-rpath,$ORIGIN"
             ],
             "Configure",
