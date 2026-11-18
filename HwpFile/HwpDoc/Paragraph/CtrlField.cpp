@@ -10,7 +10,7 @@ CCtrlField::CCtrlField(const HWP_STRING& sCtrlID)
 	UpdateType(sCtrlID);
 }
 
-CCtrlField::CCtrlField(const HWP_STRING& sCtrlID, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CCtrlField::CCtrlField(const HWP_STRING& sCtrlID, int /*nSize*/, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 	: CCtrl(sCtrlID), m_eType(EFieldType::Unknown)
 {
 	UpdateType(sCtrlID);

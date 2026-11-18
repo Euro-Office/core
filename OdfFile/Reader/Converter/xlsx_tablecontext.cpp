@@ -454,6 +454,31 @@ namespace oox {
 			xlsx_data_ranges_[it->second]->serialize_sort(_Wostream);
 		}
 	}
+	// A range to the last row or column of the sheet (LibreOffice's __Anonymous_Sheet_DB__
+	// often covers the whole sheet) ends at the last used cell, or a table or filter
+	// spans a million rows and the sheet prints them all.
+	void xlsx_table_context::trim_database_ranges()
+	{
+		const int last_row = 1048575, last_column = 1023; // AMJ, the last column before LibreOffice's 16384
+
+		std::pair<std::multimap<std::wstring, int>::iterator, std::multimap<std::wstring, int>::iterator> range;
+		range = xlsx_data_ranges_map_.equal_range(state()->get_table_name());
+
+		for (std::multimap<std::wstring, int>::iterator it = range.first; it != range.second; ++it)
+		{
+			xlsx_data_range& data_range = *xlsx_data_ranges_[it->second];
+			const std::pair<int, int> cell_end = data_range.cell_end;
+
+			if (cell_end.second >= last_row) // a header row and at least one more
+				data_range.cell_end.second = (std::min)(cell_end.second, (std::max)(data_range.cell_start.second + 1, state()->last_used_row_));
+			if (cell_end.first >= last_column)
+				data_range.cell_end.first = (std::min)(cell_end.first, (std::max)(data_range.cell_start.first, state()->last_used_column_));
+
+			if (data_range.cell_end != cell_end)
+				data_range.ref = getCellAddress(data_range.cell_start.first, data_range.cell_start.second) + L":" +
+					getCellAddress(data_range.cell_end.first, data_range.cell_end.second);
+		}
+	}
 	void xlsx_table_context::serialize_tableParts(std::wostream& _Wostream, rels& Rels)
 	{
 		if (xlsx_data_ranges_.empty()) return;

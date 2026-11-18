@@ -11,7 +11,7 @@ CCtrlNote::CCtrlNote(const HWP_STRING& sCtrlID)
 	: CCtrl(sCtrlID)
 {}
 
-CCtrlNote::CCtrlNote(const HWP_STRING& sCtrlID, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CCtrlNote::CCtrlNote(const HWP_STRING& sCtrlID, int /*nSize*/, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 	: CCtrl(sCtrlID)
 {
 	oBuffer.Skip(8);

@@ -23,6 +23,8 @@
  *
  */
 #include "FontManager.h"
+#include "ColrV1Renderer.h"
+#include <new>
 #include "internal/ftobjs.h"
 #include "../common/Types.h"
 #include "../common/File.h"
@@ -878,7 +880,14 @@ TFontCacheSizes CFontFile::CacheGlyph(const int& code, const bool& isRaster, CVe
 	{
 		if (bIsNeedBold)
 			FT_Outline_EmboldenXY(&((FT_OutlineGlyph)pGlyph)->outline, (m_unHorDpi * 64 / 25.4) / 3, 0);
-		FT_Outline_Decompose( &((FT_OutlineGlyph)pGlyph)->outline, pWorker->func_interface, pWorker->user );
+		// color glyphs have no outline of their own: draw the layers' silhouette
+		FT_Outline* pOutline = &((FT_OutlineGlyph)pGlyph)->outline;
+		FT_Outline oSilhouette = {};
+		bool bSilhouette = 0 == pOutline->n_points && ColrV1_GetSilhouette(m_pFace, unGID, &oSilhouette);
+		FT_Outline_Decompose(bSilhouette ? &oSilhouette : pOutline, pWorker->func_interface, pWorker->user);
+		if (bSilhouette)
+			FT_Outline_Done(m_pFace->glyph->library, &oSilhouette);
+		FT_Done_Glyph(pGlyph);
 		return oSizes;
 	}
 
@@ -1561,4 +1570,47 @@ void CFontFile::FillFontSelectFormat(NSFonts::CFontSelectFormat& oFormat)
 		if (NULL == oFormat.usType)
 			oFormat.usType = new USHORT(pOS2->fsType);
 	}
+}
+
+bool CFontFile::HasColorGlyphs()
+{
+	FT_ULong ulLength = 0;
+	return m_pFace && !FT_Load_Sfnt_Table(m_pFace, FT_MAKE_TAG('C', 'O', 'L', 'R'), 0, NULL, &ulLength) && ulLength > 0;
+}
+
+BYTE* CFontFile::GetColorGlyphRGBA(unsigned int unGID, double dPixelsPerEm, unsigned int unForegroundRGBA, int& nLeft, int& nTop, int& nWidth, int& nHeight)
+{
+	if (!m_pFace || dPixelsPerEm <= 0 || !ColrV1_HasGlyph(m_pFace, unGID))
+		return NULL;
+
+	// Own size object and identity transform, so the state the font manager set up stays untouched
+	FT_Size pOldSize = m_pFace->size;
+	FT_Size pSize = NULL;
+	if (FT_New_Size(m_pFace, &pSize))
+		return NULL;
+	FT_Activate_Size(pSize);
+	FT_Matrix oOldMatrix;
+	FT_Vector oOldDelta;
+	FT_Get_Transform(m_pFace, &oOldMatrix, &oOldDelta);
+	FT_Set_Transform(m_pFace, NULL, NULL);
+
+	CColrV1Bitmap oBitmap;
+	bool bRes = !FT_Set_Char_Size(m_pFace, 0, (FT_F26Dot6)(dPixelsPerEm * 64), 72, 72) &&
+				ColrV1_RenderGlyph(m_pFace, unGID, unForegroundRGBA, oBitmap);
+
+	FT_Set_Transform(m_pFace, &oOldMatrix, &oOldDelta);
+	FT_Activate_Size(pOldSize);
+	FT_Done_Size(pSize);
+
+	if (!bRes)
+		return NULL;
+
+	nLeft = oBitmap.Left;
+	nTop = oBitmap.Top;
+	nWidth = oBitmap.Width;
+	nHeight = oBitmap.Height;
+	BYTE* pData = new (std::nothrow) BYTE[oBitmap.Rgba.size()];
+	if (pData)
+		memcpy(pData, oBitmap.Rgba.data(), oBitmap.Rgba.size());
+	return pData;
 }

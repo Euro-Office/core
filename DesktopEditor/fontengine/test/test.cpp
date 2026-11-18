@@ -10,6 +10,8 @@
 #include "gtest/gtest.h"
 
 #include "../../graphics/pro/Fonts.h"
+#include "../ApplicationFontsWorker.h"
+#include "../../common/Directory.h"
 #include "../../common/File.h"
 
 #include <algorithm>
@@ -234,4 +236,171 @@ TEST_F(CFontEngineTest, FailsOnMissingOrInvalidFont)
 	CPtr<NSFonts::IFontManager> pManager(s_pApplication->GenerateFontManager());
 	EXPECT_FALSE(pManager->LoadFontFromFile(FontPath("does-not-exist.ttf"), 0, 100, 72, 72));
 	EXPECT_FALSE(pManager->LoadFontFromFile(FontPath("generate.py"), 0, 100, 72, 72));
+}
+
+// COLRv1 color glyphs (CFontFile::GetColorGlyphRGBA). EOTestColrV1.ttf has
+// full-em squares: U+E000 solid red, U+E001 linear red to blue left to right,
+// U+E002 green with an inner square (250..750) in the text color.
+class CColrV1Test : public CFontEngineTest
+{
+protected:
+	struct CPixels
+	{
+		BYTE* pData = nullptr;
+		int nLeft = 0, nTop = 0, nWidth = 0, nHeight = 0;
+		~CPixels() { delete[] pData; }
+		const BYTE* At(int x, int y) const { return pData + 4 * (y * nWidth + x); }
+	};
+
+	static bool Render(NSFonts::IFontManager* pManager, int nUnicode, unsigned int unForeground, CPixels& oPixels, double dPixelsPerEm = 100)
+	{
+		unsigned int unGID = pManager->GetGIDByUnicode(nUnicode);
+		oPixels.pData = pManager->GetFile()->GetColorGlyphRGBA(unGID, dPixelsPerEm, unForeground, oPixels.nLeft, oPixels.nTop, oPixels.nWidth, oPixels.nHeight);
+		return oPixels.pData != nullptr;
+	}
+
+	static void ExpectColor(const BYTE* p, int r, int g, int b, int a, int nTolerance = 2)
+	{
+		EXPECT_NEAR(r, p[0], nTolerance);
+		EXPECT_NEAR(g, p[1], nTolerance);
+		EXPECT_NEAR(b, p[2], nTolerance);
+		EXPECT_NEAR(a, p[3], nTolerance);
+	}
+};
+
+TEST_F(CColrV1Test, DetectsColorFont)
+{
+	CPtr<NSFonts::IFontManager> pColor = LoadFont(FontPath("EOTestColrV1.ttf"));
+	CPtr<NSFonts::IFontManager> pPlain = LoadFont(FontPath("EOTestTrueType.ttf"));
+	ASSERT_NE(nullptr, pColor);
+	ASSERT_NE(nullptr, pPlain);
+	EXPECT_TRUE(pColor->GetFile()->HasColorGlyphs());
+	EXPECT_FALSE(pPlain->GetFile()->HasColorGlyphs());
+
+	CPixels oPixels;
+	EXPECT_FALSE(Render(pPlain.get(), 'A', 0x000000FF, oPixels));
+}
+
+TEST_F(CColrV1Test, RendersSolidFill)
+{
+	CPtr<NSFonts::IFontManager> pManager = LoadFont(FontPath("EOTestColrV1.ttf"));
+	ASSERT_NE(nullptr, pManager);
+
+	CPixels oPixels;
+	ASSERT_TRUE(Render(pManager.get(), 0xE000, 0x000000FF, oPixels));
+	// 1000 units at 100 px per em, from the baseline up
+	EXPECT_EQ(0, oPixels.nLeft);
+	EXPECT_EQ(100, oPixels.nTop);
+	EXPECT_EQ(100, oPixels.nWidth);
+	EXPECT_EQ(100, oPixels.nHeight);
+	ExpectColor(oPixels.At(50, 50), 255, 0, 0, 255);
+}
+
+TEST_F(CColrV1Test, RendersLinearGradient)
+{
+	CPtr<NSFonts::IFontManager> pManager = LoadFont(FontPath("EOTestColrV1.ttf"));
+	ASSERT_NE(nullptr, pManager);
+
+	CPixels oPixels;
+	ASSERT_TRUE(Render(pManager.get(), 0xE001, 0x000000FF, oPixels));
+	ExpectColor(oPixels.At(0, 50), 252, 0, 3, 255, 4);
+	ExpectColor(oPixels.At(99, 50), 3, 0, 252, 255, 4);
+	ExpectColor(oPixels.At(50, 10), 127, 0, 127, 255, 4);
+}
+
+TEST_F(CColrV1Test, UsesTextColorForForegroundPaletteIndex)
+{
+	CPtr<NSFonts::IFontManager> pManager = LoadFont(FontPath("EOTestColrV1.ttf"));
+	ASSERT_NE(nullptr, pManager);
+
+	CPixels oPixels;
+	ASSERT_TRUE(Render(pManager.get(), 0xE002, 0x3366CCFF, oPixels));
+	ExpectColor(oPixels.At(10, 10), 0, 255, 0, 255);
+	ExpectColor(oPixels.At(50, 50), 0x33, 0x66, 0xCC, 255);
+}
+
+// allfontsgen hands code points from U+1F000 to the color font, although the
+// smaller text fixtures rank higher; U+2764 keeps its text presentation
+TEST(CFontRangesTest, ColorFontWinsEmojiFallback)
+{
+	std::wstring sDir = NSDirectory::CreateDirectoryWithUniqueName(NSDirectory::GetTempPath());
+	ASSERT_FALSE(sDir.empty());
+
+	CApplicationFontsWorker oWorker;
+	oWorker.m_bIsUseSystemFonts = false;
+	oWorker.m_bIsUseOpenType = true;
+	oWorker.m_bIsNeedThumbnails = false;
+	oWorker.m_arAdditionalFolders = { ToWString(FONTENGINE_TEST_FONTS_DIR) };
+	oWorker.m_sDirectory = sDir;
+	oWorker.m_sAllFontsJSPath = sDir + L"/AllFonts.js";
+
+	NSFonts::IApplicationFonts* pFonts = oWorker.Check();
+	ASSERT_NE(nullptr, pFonts);
+	EXPECT_EQ(L"EO Test COLRv1", pFonts->GetFontBySymbol(0x1F600));
+	EXPECT_NE(L"EO Test COLRv1", pFonts->GetFontBySymbol(0x2764));
+	EXPECT_FALSE(pFonts->GetFontBySymbol(0x2764).empty());
+
+	RELEASEINTERFACE(pFonts);
+	NSDirectory::DeleteDirectory(sDir);
+}
+
+// Fonts come from documents, so hostile paint graphs must be refused (the
+// caller falls back to the outline) instead of looping, burning CPU or memory.
+// U+E003 references itself, U+E004 has 2^40 paths through shared children,
+// U+E005 nests 20 composites that each hold two full-size layers.
+TEST_F(CColrV1Test, RefusesCyclicPaintGraph)
+{
+	CPtr<NSFonts::IFontManager> pManager = LoadFont(FontPath("EOTestColrV1.ttf"));
+	ASSERT_NE(nullptr, pManager);
+	CPixels oPixels;
+	EXPECT_FALSE(Render(pManager.get(), 0xE003, 0x000000FF, oPixels));
+}
+
+TEST_F(CColrV1Test, RefusesExponentialFanOut)
+{
+	CPtr<NSFonts::IFontManager> pManager = LoadFont(FontPath("EOTestColrV1.ttf"));
+	ASSERT_NE(nullptr, pManager);
+	CPixels oPixels;
+	EXPECT_FALSE(Render(pManager.get(), 0xE004, 0x000000FF, oPixels));
+}
+
+TEST_F(CColrV1Test, RefusesNestedCompositesAboveMemoryLimit)
+{
+	CPtr<NSFonts::IFontManager> pManager = LoadFont(FontPath("EOTestColrV1.ttf"));
+	ASSERT_NE(nullptr, pManager);
+	CPixels oSmall, oLarge, oSolid;
+	// a 100 px glyph fits, 1000 px needs 20 x 32 MB of layers
+	EXPECT_TRUE(Render(pManager.get(), 0xE005, 0x000000FF, oSmall));
+	EXPECT_FALSE(Render(pManager.get(), 0xE005, 0x000000FF, oLarge, 1000));
+	EXPECT_TRUE(Render(pManager.get(), 0xE000, 0x000000FF, oSolid, 1000));
+}
+
+// Warped text (WordArt) needs outlines, and color glyphs have none of their
+// own: the path is the silhouette of their layers, here the full-em square
+TEST_F(CColrV1Test, GlyphPathIsSilhouetteOfLayers)
+{
+	struct CBounds : public NSFonts::ISimpleGraphicsPath
+	{
+		int nPoints = 0;
+		double dMinX = 1e9, dMinY = 1e9, dMaxX = -1e9, dMaxY = -1e9;
+		void Add(double x, double y)
+		{
+			++nPoints;
+			dMinX = std::min(dMinX, x); dMaxX = std::max(dMaxX, x);
+			dMinY = std::min(dMinY, y); dMaxY = std::max(dMaxY, y);
+		}
+		bool _MoveTo(double x, double y) override { Add(x, y); return true; }
+		bool _LineTo(double x, double y) override { Add(x, y); return true; }
+		bool _CurveTo(double x1, double y1, double x2, double y2, double x3, double y3) override { Add(x3, y3); return true; }
+		bool _Close() override { return true; }
+	};
+
+	CPtr<NSFonts::IFontManager> pManager = LoadFont(FontPath("EOTestColrV1.ttf"));
+	ASSERT_NE(nullptr, pManager);
+	pManager->LoadString2(L"\uE000", 0, 0);
+	CBounds oBounds;
+	pManager->GetStringPath(&oBounds);
+	ASSERT_GT(oBounds.nPoints, 0);
+	EXPECT_NEAR(oBounds.dMaxX - oBounds.dMinX, oBounds.dMaxY - oBounds.dMinY, 1.0);
+	EXPECT_GT(oBounds.dMaxX - oBounds.dMinX, 0.0);
 }

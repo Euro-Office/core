@@ -130,7 +130,7 @@ void CHWPRecordCharShape::ReadContainerData(CXMLReader& oReader, short arValues[
 	END_READ_ATTRIBUTES(oReader)
 }
 
-CHWPRecordCharShape::CHWPRecordCharShape(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CHWPRecordCharShape::CHWPRecordCharShape(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 	: CHWPRecord(nTagNum, nLevel, nSize), m_pParent(&oDocInfo)
 {
 	oBuffer.SavePosition();
@@ -155,7 +155,8 @@ CHWPRecordCharShape::CHWPRecordCharShape(CHWPDocInfo& oDocInfo, int nTagNum, int
 
 	for (int nIndex = 0; nIndex < MAX_ELEMENTS; ++nIndex)
 	{
-		m_arSpacings[nIndex] = READ_ELEMENT(HWP_BYTE);
+		const unsigned char chSpacing = (unsigned char)READ_ELEMENT(HWP_BYTE);
+		m_arSpacings[nIndex] = (short)(0x80 <= chSpacing ? chSpacing - 0x100 : chSpacing);
 	}
 
 	for (int nIndex = 0; nIndex < MAX_ELEMENTS; ++nIndex)
@@ -165,7 +166,8 @@ CHWPRecordCharShape::CHWPRecordCharShape(CHWPDocInfo& oDocInfo, int nTagNum, int
 
 	for (int nIndex = 0; nIndex < MAX_ELEMENTS; ++nIndex)
 	{
-		m_arCharOffset[nIndex] = READ_ELEMENT(HWP_BYTE);
+		const unsigned char chOffset = (unsigned char)READ_ELEMENT(HWP_BYTE);
+		m_arCharOffset[nIndex] = (short)(0x80 <= chOffset ? chOffset - 0x100 : chOffset);
 	}
 
 	oBuffer.ReadInt(m_nHeight);
@@ -244,7 +246,7 @@ CHWPRecordCharShape::CHWPRecordCharShape(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 			{\
 				pFaceName = dynamic_cast<const CHWPRecordFaceName*>(m_pParent->GetFaceName(oReader.GetInt()));\
 				if (nullptr != pFaceName)\
-					m_arFontNames[(int)elang_type] = pFaceName->GetFaceName();\
+					m_arFontNames[(int)(elang_type)] = pFaceName->GetFaceName();\
 			}
 
 			START_READ_ATTRIBUTES(oReader)
@@ -299,9 +301,9 @@ CHWPRecordCharShape::CHWPRecordCharShape(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 				{
 					const std::string sType{oReader.GetTextA()};
 
-					if (GetValueName(EValue::Drop, eType))
+					if (GetValueName(EValue::Drop, eType) == sType)
 						m_eShadow = EShadow::DISCRETE;
-					else if (GetValueName(EValue::Continuous, eType))
+					else if (GetValueName(EValue::Continuous, eType) == sType)
 						m_eShadow = EShadow::CONTINUOUS;
 					else
 						m_eShadow = EShadow::NONE;

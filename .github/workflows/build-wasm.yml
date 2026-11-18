@@ -75,6 +75,10 @@ jobs:
       - name: Build with Emscripten
         run: ccache --zero-stats && scripts/build.sh --wasm --ccache -- -DEO_NO_WARNINGS=ON
 
+      # The editors read and write every zip in the browser with this engine
+      - name: Test zip engine
+        run: node OfficeUtils/js/test/zip_engine_test.js build/package/libfont/engine
+
       - name: ccache statistics
         if: always()
         run: ccache --show-stats || true
@@ -82,7 +86,7 @@ jobs:
       # A PR that started from main's cache doesn't save its own: the repo's
       # 10 GB of caches would evict main's, which every new PR starts from
       - name: Save ccache
-        if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
+        if: always() && steps.ccache.outcome == 'success' && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
         uses: actions/cache/save@v4
         with:
           path: .cache/ccache
