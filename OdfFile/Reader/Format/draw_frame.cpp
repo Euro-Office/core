@@ -23,6 +23,7 @@
  *
  */
 
+#include <map>
 #include <ostream>
 #include <sstream>
 #include <string>
@@ -456,13 +457,61 @@ void draw_object_ole::detectObject(const std::wstring &fileName, std::wstring &p
 	}
 }
 
+namespace
+{
+// Objects inside objects (draw:object naming a text or sheet document) are converted into documents
+// of their own, whose objects are converted in turn. Per thread:
+// - nesting: the embedded documents being converted, one inside the other. An object inside an
+//   object is converted; one level further down only the replacement image is shown.
+// - conversions: what the objects of one top-level conversion share, kept by the outermost
+//   draw_object::conversion_scope. A document named by several objects is converted once (its
+//   result is written into its folder, so they all use the same file), and at most
+//   max_embedded_conversions documents are converted for objects inside embedded documents.
+//   Objects in the document itself are not counted: there is one conversion per document they
+//   name, so the document bounds them.
+const int max_nesting = 2;
+const int max_embedded_conversions = 32;
+
+struct embedded_conversions
+{
+	embedded_conversions() : count(0) {}
+
+	int count;
+	std::map<std::pair<std::wstring, int>, std::wstring> results; // folder and type -> converted file
+};
+
+thread_local int nesting = 0;
+thread_local embedded_conversions * conversions = NULL;
+
+bool embedded_budget_used()
+{
+	return nesting > 0 && conversions && conversions->count >= max_embedded_conversions;
+}
+}
+
+draw_object::conversion_scope::conversion_scope() : owner_(conversions == NULL)
+{
+	if (owner_) conversions = new embedded_conversions();
+}
+
+draw_object::conversion_scope::~conversion_scope()
+{
+	if (owner_)
+	{
+		delete conversions;
+		conversions = NULL;
+	}
+}
 
 // The folder of the document an object's href names inside the package folder root, or "" when
 // the href names the package itself or a folder above it ("." or "..", also from inside an
 // object): such an object would convert its own or an outer document again, so only its
-// replacement image is shown.
+// replacement image is shown. Also "" when the object would not be converted anyway (too deep,
+// or the budget is used up, see office_convert), so its document is not read for nothing.
 std::wstring draw_object::object_document_path(const std::wstring & href, const std::wstring & root)
 {
+	if (nesting >= max_nesting || embedded_budget_used()) return L"";
+
 	std::vector<std::wstring> parts;
 	for (size_t start = 0; start <= href.size();)
 	{
@@ -493,10 +542,20 @@ std::wstring draw_object::office_convert(odf_document_ptr odfDocument, int type)
 	if (!odfDocument) return L"";
 
 	// Objects that name their own or an outer document are not opened (object_document_path).
-	// As a backstop, objects inside objects stop after two levels; deeper ones show only their
-	// replacement image.
-	static thread_local int nesting = 0;
-	if (nesting >= 2) return L"";
+	// As a backstop, objects inside objects stop after max_nesting levels, a document is
+	// converted once per top-level conversion, and documents inside embedded documents only
+	// while the budget lasts (see embedded_conversions).
+	if (nesting >= max_nesting) return L"";
+
+	const std::pair<std::wstring, int> key(odfDocument->get_folder(), type);
+	if (conversions)
+	{
+		std::map<std::pair<std::wstring, int>, std::wstring>::const_iterator done = conversions->results.find(key);
+		if (done != conversions->results.end()) return done->second;
+
+		if (embedded_budget_used()) return L"";
+		if (nesting > 0) ++conversions->count;
+	}
 	struct nesting_level
 	{
 		nesting_level()		{ ++nesting; }
@@ -555,7 +614,8 @@ std::wstring draw_object::office_convert(odf_document_ptr odfDocument, int type)
 		oCOfficeUtils.CompressFileOrDirectory(objectOutPath, temp_file, true);
 	}	
     NSDirectory::DeleteDirectory(objectOutPath);
-	
+
+	if (conversions) conversions->results[key] = href_result;
 	return href_result;
 }
 //------------------------------------------------------------------------------------------------------------

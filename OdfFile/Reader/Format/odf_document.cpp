@@ -25,6 +25,7 @@
 
 #include "odf_document.h"
 #include "odf_document_impl.h"
+#include "draw_frame.h"
 
 namespace cpdoccore { 
 namespace odf_reader {
@@ -46,15 +47,18 @@ odf_read_context & odf_document::odf_context()
 
 bool odf_document::docx_convert(oox::docx_conversion_context & Context)
 {
+    draw_object::conversion_scope scope;
     return impl_->docx_convert(Context);
 }
 
 bool odf_document::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
+    draw_object::conversion_scope scope;
     return impl_->xlsx_convert(Context);
 }
 bool odf_document::pptx_convert(oox::pptx_conversion_context & Context)
 {
+    draw_object::conversion_scope scope;
     return impl_->pptx_convert(Context);
 }
 

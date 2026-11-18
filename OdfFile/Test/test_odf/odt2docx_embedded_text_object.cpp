@@ -10,6 +10,8 @@
 #include "common.h"
 
 #include "DesktopEditor/common/Directory.h"
+#include "DesktopEditor/common/File.h"
+#include "OfficeUtils/src/OfficeUtils.h"
 #include "Reader/Converter/mediaitems.h"
 
 #include <string>
@@ -34,6 +36,25 @@ std::vector<std::wstring> relationship_ids(const std::wstring& xml)
         ids.push_back(xml.substr(begin, xml.find(L"\"", begin) - begin));
     }
     return ids;
+}
+
+size_t occurrences(const std::wstring& xml, const std::wstring& what)
+{
+    size_t n = 0;
+    for (size_t pos = xml.find(what); pos != std::wstring::npos; pos = xml.find(what, pos + 1))
+        ++n;
+    return n;
+}
+
+// An embedded package of a conversion (a .docx in word/embeddings), unpacked next to it, or ""
+// if it is missing.
+std::wstring unpack(const std::wstring& file)
+{
+    if (!NSFile::CFileBinary::Exists(file))
+        return L"";
+    const std::wstring dir = NSDirectory::CreateDirectoryWithUniqueName(NSDirectory::GetFolderPath(file));
+    COfficeUtils utils(NULL);
+    return !dir.empty() && S_OK == utils.ExtractToDirectory(file, dir, NULL, 0) ? dir : std::wstring();
 }
 } // namespace
 
@@ -122,4 +143,49 @@ TEST(OdtToDocxEmbeddedTextObject, SiblingFolderIsNotInsideTheObject)
     EXPECT_FALSE(items.is_internal_path(L"Missing", object1));
 
     NSDirectory::DeleteDirectory(root);
+}
+
+// K objects name the same subfolder on three levels: the document has K naming "Object 1", which
+// has K naming "Object 2", which has K naming "Object 3". Each document is converted once and all
+// objects naming it use that file; the third level is not opened and shows only its replacement
+// image. Before, every object on the first two levels was converted again (K + K * K conversions).
+TEST(OdtToDocxEmbeddedTextObject, RepeatedObjectsAreConvertedOnce)
+{
+    const size_t K = 20;
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/embedded_text_object_repeated.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    const std::wstring document = read_part(dir, L"word/document.xml");
+    EXPECT_TRUE(is_well_formed(document));
+    EXPECT_EQ(occurrences(document, L"Word.Document.12"), K);
+    EXPECT_TRUE(read_part(dir, L"word/embeddings/msObject2.docx").empty()) << "the objects share one document";
+
+    const std::wstring first = unpack(dir + FILE_SEPARATOR_STR + L"word/embeddings/msObject1.docx");
+    ASSERT_FALSE(first.empty()) << "the first object is missing";
+    const std::wstring firstDocument = read_part(first, L"word/document.xml");
+    EXPECT_NE(firstDocument.find(L"Text in the first object."), std::wstring::npos);
+    EXPECT_EQ(occurrences(firstDocument, L"Word.Document.12"), K) << "every object inside it is embedded";
+
+    const std::wstring second = unpack(first + FILE_SEPARATOR_STR + L"word/embeddings/msObject1.docx");
+    ASSERT_FALSE(second.empty()) << "the second object is missing";
+    const std::wstring secondDocument = read_part(second, L"word/document.xml");
+    EXPECT_NE(secondDocument.find(L"Text in the second object."), std::wstring::npos);
+    EXPECT_EQ(occurrences(secondDocument, L"Word.Document.12"), 0u) << "the third level shows only images";
+}
+
+// One object holds 40 objects naming 40 different documents. Objects inside embedded documents are
+// converted while the budget of 32 conversions per conversion lasts; the others show only their
+// replacement image. Before, there was no limit.
+TEST(OdtToDocxEmbeddedTextObject, ObjectsInsideObjectsStopAtTheBudget)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/embedded_text_object_nested_many.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_EQ(occurrences(read_part(dir, L"word/document.xml"), L"Word.Document.12"), 1u);
+
+    const std::wstring first = unpack(dir + FILE_SEPARATOR_STR + L"word/embeddings/msObject1.docx");
+    ASSERT_FALSE(first.empty()) << "the object is missing";
+    const std::wstring document = read_part(first, L"word/document.xml");
+    EXPECT_TRUE(is_well_formed(document));
+    EXPECT_NE(document.find(L"Text in the first object."), std::wstring::npos);
+    EXPECT_EQ(occurrences(document, L"Word.Document.12"), 32u);
 }
