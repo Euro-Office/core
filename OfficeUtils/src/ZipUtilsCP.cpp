@@ -511,7 +511,7 @@ namespace ZLibZipUtils
 
 		unz_file_info file_info;
 
-		unzGetCurrentFileInfo(uf, &file_info, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0);
+		unzGetCurrentFileInfo(uf, &file_info, filename_inzip, sizeof(filename_inzip), nullptr, 0, nullptr, 0);
 
 		std::wstring filenameW = codepage_issue_fixFromOEM(filename_inzip);
 
