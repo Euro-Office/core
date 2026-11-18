@@ -146,10 +146,10 @@ TEST(OdtToDocxEmbeddedTextObject, SiblingFolderIsNotInsideTheObject)
 }
 
 // K objects name the same subfolder on three levels: the document has K naming "Object 1", which
-// has K naming "Object 2", which has K naming "Object 3". Each document is converted once and all
-// objects naming it use that file; the third level is not opened and shows only its replacement
-// image. Before, every object on the first two levels was converted again (K + K * K conversions).
-TEST(OdtToDocxEmbeddedTextObject, RepeatedObjectsAreConvertedOnce)
+// has K naming "Object 2", which has K naming "Object 3". Reusing one conversion per document keeps
+// every object on the first two levels embedded (they share one embedded file, as before); the third
+// level shows only its replacement image.
+TEST(OdtToDocxEmbeddedTextObject, RepeatedObjectsStayEmbedded)
 {
     const size_t K = 20;
     const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/embedded_text_object_repeated.odt");
@@ -188,4 +188,20 @@ TEST(OdtToDocxEmbeddedTextObject, ObjectsInsideObjectsStopAtTheBudget)
     EXPECT_TRUE(is_well_formed(document));
     EXPECT_NE(document.find(L"Text in the first object."), std::wstring::npos);
     EXPECT_EQ(occurrences(document, L"Word.Document.12"), 32u);
+}
+
+// One object holds 40 objects naming the same document, then 40 naming different documents. The
+// 40 share one conversion, so they take one place in the budget of 32: they and 31 of the others
+// are embedded, the rest show only their replacement image. Converting each of them again would use
+// up the budget on the first 32 (32 embedded); with no budget all 80 were embedded.
+TEST(OdtToDocxEmbeddedTextObject, RepeatedObjectsUseOneConversionOfTheBudget)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/embedded_text_object_repeated_budget.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    const std::wstring first = unpack(dir + FILE_SEPARATOR_STR + L"word/embeddings/msObject1.docx");
+    ASSERT_FALSE(first.empty()) << "the object is missing";
+    const std::wstring document = read_part(first, L"word/document.xml");
+    EXPECT_TRUE(is_well_formed(document));
+    EXPECT_EQ(occurrences(document, L"Word.Document.12"), 40u + 31u);
 }

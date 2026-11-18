@@ -468,7 +468,9 @@ namespace
 //   result is written into its folder, so they all use the same file), and at most
 //   max_embedded_conversions documents are converted for objects inside embedded documents.
 //   Objects in the document itself are not counted: there is one conversion per document they
-//   name, so the document bounds them.
+//   name, so the document bounds them. The type of an object is only known once its document is
+//   read, so when the budget is used up, the later objects inside embedded documents are not read:
+//   charts and formulas among them show only their replacement image too.
 const int max_nesting = 2;
 const int max_embedded_conversions = 32;
 
@@ -506,8 +508,9 @@ draw_object::conversion_scope::~conversion_scope()
 // The folder of the document an object's href names inside the package folder root, or "" when
 // the href names the package itself or a folder above it ("." or "..", also from inside an
 // object): such an object would convert its own or an outer document again, so only its
-// replacement image is shown. Also "" when the object would not be converted anyway (too deep,
-// or the budget is used up, see office_convert), so its document is not read for nothing.
+// replacement image is shown. Also "" one level below an object inside an object, and inside
+// embedded documents once the budget is used up (see embedded_conversions): such objects show only
+// their replacement image, whatever their type, and their documents are not read.
 std::wstring draw_object::object_document_path(const std::wstring & href, const std::wstring & root)
 {
 	if (nesting >= max_nesting || embedded_budget_used()) return L"";

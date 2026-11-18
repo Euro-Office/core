@@ -238,6 +238,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/embedded_text_object_self_many.odt",
     "OdfFile/Test/test_odf/ExampleFiles/embedded_text_object_repeated.odt",
     "OdfFile/Test/test_odf/ExampleFiles/embedded_text_object_nested_many.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/embedded_text_object_repeated_budget.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
