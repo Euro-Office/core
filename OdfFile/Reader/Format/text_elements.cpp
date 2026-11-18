@@ -146,13 +146,32 @@ void paragraph::add_child_element( xml::sax * Reader, const std::wstring & Ns, c
 
 void paragraph::add_text(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text) ;
+    office_element_ptr elm = text::create_in_paragraph(Text) ;
 	content_.push_back( elm );
 }
 void paragraph::add_space(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text) ;
+    office_element_ptr elm = text::create_in_paragraph(Text) ;
 	content_.push_back( elm );
+}
+void paragraph::process_white_space(document_context * Context)
+{
+	// LibreOffice Calc keeps the characters of a cell paragraph as they are; Writer, Impress, Draw
+	// and the headers and footers of every document type apply the ODF white-space rules.
+	bool collapse = true;
+	if (Context)
+	{
+		for (size_t i = 0; i < Context->levels.size(); i++)
+		{
+			if (Context->levels[i] && Context->levels[i]->get_type() == typeOfficeSpreadsheet)
+			{
+				collapse = false;
+				break;
+			}
+		}
+	}
+	bool ignore = true;
+	cpdoccore::odf_reader::text::process_white_space(content_, collapse, ignore);
 }
 const wchar_t * emptyParagraphContent = L"<w:pPr></w:pPr><w:r><w:rPr></w:rPr></w:r>";
 
@@ -571,6 +590,11 @@ void h::add_space(const std::wstring & Text)
 {
     paragraph_.add_space(Text);
 }
+void h::afterReadContent()
+{
+    paragraph_.process_white_space(getContext());
+    office_element::afterReadContent();
+}
 
 void h::docx_convert(oox::docx_conversion_context & Context) 
 {
@@ -634,6 +658,11 @@ void p::add_text(const std::wstring & Text)
 void p::add_space(const std::wstring & Text)
 {
     paragraph_.add_space(Text);
+}
+void p::afterReadContent()
+{
+    paragraph_.process_white_space(getContext());
+    office_element::afterReadContent();
 }
 
 void p::docx_convert(oox::docx_conversion_context & Context)

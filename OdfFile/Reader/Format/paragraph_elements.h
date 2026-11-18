@@ -83,6 +83,8 @@ class text : public paragraph_content_element
 {
 public:
     static office_element_ptr create(const std::wstring & Text);
+    // Text of a paragraph, a span or a link: keeps TAB, LF and CR for process_white_space.
+    static office_element_ptr create_in_paragraph(const std::wstring & Text);
 
 	static const wchar_t * ns;
     static const wchar_t * name;
@@ -112,6 +114,13 @@ private:
     virtual void add_text(const std::wstring & Text);
 	virtual void add_space(const std::wstring & Text);
 };
+
+// White-space processing of paragraph text (ODF 1.3 part 3, 6.1.2), applied by text:p and text:h
+// once they are read: with collapse, every run of SPACE, TAB, LF and CR becomes one space, and white
+// space at the start of the paragraph or after white space (also across spans and links) is dropped.
+// Without collapse (spreadsheet cells) TAB, LF and CR are dropped and spaces kept.
+// ignore is true at the start of the paragraph and carries the state from one element to the next.
+void process_white_space(office_element_ptr_array & content, bool collapse, bool & ignore);
 
 //-------------------------------------------------------------------------------------------------------------------
 // text:s
@@ -483,6 +492,8 @@ private:
 	virtual void add_space(const std::wstring & Text);
 
 	odf_types::common_xlink_attlist			xlink_attlist_;
+
+    friend void process_white_space(office_element_ptr_array & content, bool collapse, bool & ignore);
 
     std::wstring							office_name_;
     _CP_OPT(odf_types::target_frame_name)	office_target_frame_name_;

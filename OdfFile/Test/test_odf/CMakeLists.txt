@@ -64,6 +64,7 @@ add_core_gtest(
             chart_title.cpp
             odt2docx_underline.cpp
             odt2docx_heading_spaces.cpp
+            odf2ooxml_white_space.cpp
             odt2docx_keep_next.cpp
             odt2docx_header_footer_spacing.cpp
             odt2docx_links.cpp

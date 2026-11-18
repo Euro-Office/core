@@ -254,6 +254,94 @@ office_element_ptr text::create(const std::wstring & Text)
 {
     return boost::make_shared<text>(Text);
 }
+office_element_ptr text::create_in_paragraph(const std::wstring & Text)
+{
+    boost::shared_ptr<text> elm = boost::make_shared<text>();
+    elm->text_.reserve(Text.length());
+    for (size_t i = 0; i < Text.length(); i++)
+    {
+        if (Text[i] < 0x20 && Text[i] != L'\t' && Text[i] != L'\n' && Text[i] != L'\r') continue;
+        elm->text_ += Text[i];
+    }
+    return elm;
+}
+
+void process_white_space(office_element_ptr_array & content, bool collapse, bool & ignore)
+{
+    for (size_t i = 0; i < content.size(); i++)
+    {
+        if (!content[i]) continue;
+
+        switch (content[i]->get_type())
+        {
+        case typeTextText:
+        {
+            text * t = dynamic_cast<text*>(content[i].get());
+            if (!t) break;
+
+            std::wstring result;
+            result.reserve(t->text_.length());
+            for (size_t j = 0; j < t->text_.length(); j++)
+            {
+                const wchar_t c = t->text_[j];
+                if (c == L' ' || c == L'\t' || c == L'\n' || c == L'\r')
+                {
+                    if (!collapse)
+                    {
+                        if (c == L' ') result += c;
+                    }
+                    else
+                    {
+                        if (!ignore) result += L' ';
+                        ignore = true;
+                    }
+                }
+                else
+                {
+                    result += c;
+                    ignore = false;
+                }
+            }
+            t->text_ = result;
+        }break;
+        case typeTextSpan:
+            if (span * s = dynamic_cast<span*>(content[i].get()))
+                process_white_space(s->content_, collapse, ignore);
+            break;
+        case typeTextA:
+            if (a * l = dynamic_cast<a*>(content[i].get()))
+                process_white_space(l->content_, collapse, ignore);
+            break;
+        // marks: white space after them still follows the white space before them
+        case typeTextBookmark:
+        case typeTextBookmarkStart:
+        case typeTextBookmarkEnd:
+        case typeTextReferenceMark:
+        case typeTextReferenceMarkStart:
+        case typeTextReferenceMarkEnd:
+        case typeTextTocMark:
+        case typeTextTocMarkStart:
+        case typeTextTocMarkEnd:
+        case typeTextUserIndexMark:
+        case typeTextUserIndexMarkStart:
+        case typeTextUserIndexMarkEnd:
+        case typeTextAlphabeticalIndexMark:
+        case typeTextAlphabeticalIndexMarkStart:
+        case typeTextAlphabeticalIndexMarkEnd:
+        case typeTextChange:
+        case typeTextChangeStart:
+        case typeTextChangeEnd:
+        case typeFieldFieldmark:
+        case typeFieldFieldmarkStart:
+        case typeFieldFieldmarkEnd:
+            break;
+        // text:s, text:tab, text:line-break, fields, frames, notes, ...
+        default:
+            ignore = false;
+            break;
+        }
+    }
+}
 
 //------------------------------------------------------------------------------------------------------------
 const wchar_t * s::ns = L"text";
@@ -581,12 +669,12 @@ void span::add_child_element( xml::sax * Reader, const std::wstring & Ns, const 
 
 void span::add_text(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text);
+    office_element_ptr elm = text::create_in_paragraph(Text);
     content_.push_back( elm );
 }
 void span::add_space(const std::wstring & Text) 
 {
-    office_element_ptr elm = text::create(Text);
+    office_element_ptr elm = text::create_in_paragraph(Text);
     content_.push_back( elm );
 }
 void span::docx_convert(oox::docx_conversion_context & Context)
@@ -735,12 +823,12 @@ void a::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std
 
 void a::add_text(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text) ;
+    office_element_ptr elm = text::create_in_paragraph(Text);
     content_.push_back( elm );
 }
 void a::add_space(const std::wstring & Text) 
 {
-    office_element_ptr elm = text::create(Text);
+    office_element_ptr elm = text::create_in_paragraph(Text);
     content_.push_back( elm );
 }
 void a::docx_convert(oox::docx_conversion_context & Context)
