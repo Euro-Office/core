@@ -309,13 +309,16 @@ namespace NSBase32
 
 	bool Decode(unsigned char* in, int inLen, unsigned char* out)
 	{
-		for (size_t i = 0, j = 0; (i + 8) <= inLen; i += 8, j += 5)
+        if( inLen < 0 )
+        { return false; }
+
+		for (size_t i = 0, j = 0; (i + 8) <= static_cast<size_t>(inLen); i += 8, j += 5)
 		{
 			int n = decode_sequence(&in[i], &out[j]);
 			if (n == -2)
-				return false;
+            { return false; }
 			if (n < 5)
-				break;
+            { break; }
 		}
 		return true;
 	}

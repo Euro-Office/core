@@ -61,9 +61,11 @@ bool get_file(unzFile unzip_file_handle, BYTE* arr, uInt array_size)
 	if (UNZ_OK == unzOpenCurrentFile(unzip_file_handle))
 	{
 		int data_read_size = unzReadCurrentFile(unzip_file_handle, arr, array_size);
+        if( data_read_size < 0 )
+        { return false; }
 
 		unzCloseCurrentFile(unzip_file_handle);
-		return data_read_size == array_size;
+		return static_cast<uInt>(data_read_size) == array_size;
 	}
 	return false;
 }

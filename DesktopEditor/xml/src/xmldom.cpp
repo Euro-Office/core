@@ -900,13 +900,13 @@ namespace XmlUtils
 		}
 	};
 
-	static int buffer_xmlBufferIOWrite(CXmlBuffer* buf, const char* buffer, size_t len)
+	static int buffer_xmlBufferIOWrite(void* buf, const char* buffer, int len)
 	{
-		buf->builder.WriteString(buffer, len);
-		return (int)len;
+		static_cast<CXmlBuffer*>(buf)->builder.WriteString(buffer, static_cast<size_t>(len));
+		return len;
 	}
 
-	static int buffer_xmlBufferIOClose(CXmlBuffer* buf)
+	static int buffer_xmlBufferIOClose(void* buf)
 	{
 		XML_UNUSED(buf);
 		return 0;
@@ -936,7 +936,7 @@ namespace XmlUtils
 		xmlDocPtr xmlDoc = xmlReadMemory(sXml.c_str(), (int)sXml.length(), NULL, NULL, 0);
 
 		CXmlBuffer bufferC14N;
-		xmlOutputBufferPtr _buffer = xmlOutputBufferCreateIO((xmlOutputWriteCallback)buffer_xmlBufferIOWrite, (xmlOutputCloseCallback)buffer_xmlBufferIOClose, &bufferC14N, NULL);
+		xmlOutputBufferPtr _buffer = xmlOutputBufferCreateIO(buffer_xmlBufferIOWrite, buffer_xmlBufferIOClose, &bufferC14N, NULL);
 
 		xmlC14NExecute(xmlDoc, buffer_xmlC14NIsVisibleCallback, NULL, mode, NULL, withComments ? 1 : 0, _buffer);
 
