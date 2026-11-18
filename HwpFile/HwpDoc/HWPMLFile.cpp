@@ -105,21 +105,15 @@ void CHWPMLFile::ReadSection(CXMLReader &oReader)
 
 void CHWPMLFile::ReadBinData(CXMLReader &oReader)
 {
-	size_t unSize = 0;
 	std::string sEncoding;
 	HWP_STRING sId;
-	bool bCompress = true;
 
 	START_READ_ATTRIBUTES(oReader)
 	{
-		if ("Size" == sAttributeName)
-			unSize = oReader.GetInt();
-		else if ("Encoding" == sAttributeName)
+		if ("Encoding" == sAttributeName)
 			sEncoding = oReader.GetTextA();
 		else if ("Id" == sAttributeName)
 			sId = oReader.GetText();
-		else if ("Compress" == sAttributeName)
-			bCompress = oReader.GetBool();
 	}
 	END_READ_ATTRIBUTES(oReader)
 

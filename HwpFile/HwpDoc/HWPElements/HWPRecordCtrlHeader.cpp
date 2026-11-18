@@ -21,7 +21,7 @@ CHWPRecordCtrlHeader::CHWPRecordCtrlHeader(int nTagNum, int nLevel, int nSize)
 	: CHWPRecord(nTagNum, nLevel, nSize)
 {}
 
-CCtrl* CHWPRecordCtrlHeader::Parse(int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CCtrl* CHWPRecordCtrlHeader::Parse(int /*nTagNum*/, int /*nLevel*/, int nSize, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 {
 	oBuffer.SavePosition();
 

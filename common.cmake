@@ -222,6 +222,16 @@ else()
 
             # cef and qt need old build environment, cannot be built here
             set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}${PREBUILT_EXCLUDE}")
+
+            # On x86_64 Linux the Rocky 9 compiler may emit SSE4.2 or higher
+            # instructions without an explicit -march constraint. Pass CFLAGS/CXXFLAGS
+            # so that cmake-based and autoconf-based dep builds stay at x86-64 baseline.
+            if(LINUX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+                set(THIRD_PARTY_ENV
+                    "CFLAGS=-march=x86-64"
+                    "CXXFLAGS=-march=x86-64"
+                )
+            endif()
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -822,6 +832,13 @@ else() # if( LINUX )
         -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
         -O2 #Remove for debugging
     )
+
+    # On x86_64 the Rocky 9 build environment may emit SSE4.2 or higher instructions
+    # without an explicit -march constraint, breaking baseline x86_64 VPS deployments.
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        list(PREPEND COMMON_CXX_FLAGS -march=x86-64)
+        list(PREPEND COMMON_C_FLAGS   -march=x86-64)
+    endif()
 
     set(COMMON_LINK_OPTIONS
         "-Wl,--disable-new-dtags"

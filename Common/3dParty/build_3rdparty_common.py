@@ -62,7 +62,9 @@ def init_for_dep(
     work_dir = workdir
     install_dir = installdir
     force_redo = forceredo
-    dep_version = version
+    # Every dep, so one that is added later gets it too and an old install
+    # (local marker or remote archive) built without the baseline flag misses.
+    dep_version = version + baseline_version_tag()
     debug_mode = debugmode
     log_cleared = False
     
@@ -121,6 +123,26 @@ def target_arch() -> str:
 
 def is_arm64() -> bool:
     return target_arch() == "arm64"
+
+def baseline_arch_flags() -> list[ str ]:
+    """Compiler flags that pin the x86_64 Linux baseline (no x86-64-v2).
+
+    Some toolchains (GCC on Rocky 9) default to -march=x86-64-v2 and emit
+    SSE4.2/POPCNT, which crashes on baseline x86_64 hosts. Builds that pass
+    their own CFLAGS/CXXFLAGS (b2, ICU's configure) add these explicitly,
+    because they don't pick up the environment from common.cmake.
+    """
+    if is_linux() and not is_android() and not is_wasm() and target_arch() == "x64":
+        return [ "-march=x86-64" ]
+    return []
+
+def baseline_version_tag() -> str:
+    """Suffix init_for_dep() adds to every dep's version where
+    baseline_arch_flags() applies. Installs and archives built before the
+    flag existed (and so may need x86-64-v2) have the plain version, so they
+    miss on x86_64 Linux only; other platforms keep theirs.
+    """
+    return "-x86v1" if baseline_arch_flags() else ""
 
 def is_apple_silicon() -> bool:
     return sys.platform == "darwin" and platform.machine() == "arm64"

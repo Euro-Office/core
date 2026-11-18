@@ -43,19 +43,19 @@ CStyleConverter::CStyleConverter()
 	m_mUsedStyleNames.insert(std::make_pair(DEFAULT_STYLE_NAME, 0));
 }
 
-std::wstring CStyleConverter::CreateStyle(short shParaShapeId, short shParaStyleId, CWriterContext& oContext, TConversionState& oState)
+std::wstring CStyleConverter::CreateStyle(short /*shParaShapeId*/, short shParaStyleId, CWriterContext& oContext, TConversionState& /*oState*/)
 {
 	std::map<unsigned short, std::wstring>::const_iterator itFound = m_mUsedStyles.find(shParaStyleId);
 
 	if (m_mUsedStyles.cend() != itFound)
 		return itFound->second;
 
-	const CHWPRecordStyle *pParaStyle = dynamic_cast<const CHWPRecordStyle*>(oContext.GetParaStyle(shParaStyleId));
+	const CHWPRecordStyle *pParaStyle = oContext.GetParaStyle(shParaStyleId);
 
 	if (nullptr == pParaStyle)
 		return std::wstring();
 
-	const CHWPRecordParaShape* pParaShapeRecord = dynamic_cast<const CHWPRecordParaShape*>(oContext.GetParaShape(pParaStyle->GetParaShapeId()));
+	const CHWPRecordParaShape* pParaShapeRecord = oContext.GetParaShape(pParaStyle->GetParaShapeId());
 
 	if (nullptr == pParaShapeRecord)
 		return  std::wstring();
@@ -78,7 +78,7 @@ std::wstring CStyleConverter::CreateStyle(short shParaShapeId, short shParaStyle
 	WriteParagraphProperties(GenerateParagraphStyle(*pParaShapeRecord), m_oStylesXml);
 	m_oStylesXml.WriteString(L"</w:pPr>");
 
-	const CHWPRecordCharShape *pCharShapeRecord = dynamic_cast<const CHWPRecordCharShape*>(oContext.GetCharShape(pParaStyle->GetCharShapeId()));
+	const CHWPRecordCharShape *pCharShapeRecord = oContext.GetCharShape(pParaStyle->GetCharShapeId());
 
 	if (nullptr != pCharShapeRecord)
 	{
@@ -99,12 +99,12 @@ std::wstring CStyleConverter::CreateStyle(short shParaShapeId, short shParaStyle
 
 bool CStyleConverter::WriteDifferenceParagraphStyles(short shFirtsParaShapeId, short shSecondParaShapeId, CWriterContext& oContext, NSStringUtils::CStringBuilder& oBuilder)
 {
-	const CHWPRecordParaShape* pFirstParaShape = dynamic_cast<const CHWPRecordParaShape*>(oContext.GetParaShape(shFirtsParaShapeId));
+	const CHWPRecordParaShape* pFirstParaShape = oContext.GetParaShape(shFirtsParaShapeId);
 
 	if (nullptr == pFirstParaShape)
 		return false;
 
-	const CHWPRecordParaShape* pSecondParaShape = dynamic_cast<const CHWPRecordParaShape*>(oContext.GetParaShape(shSecondParaShapeId));
+	const CHWPRecordParaShape* pSecondParaShape = oContext.GetParaShape(shSecondParaShapeId);
 
 	if (nullptr == pSecondParaShape)
 		return false;
@@ -121,12 +121,12 @@ bool CStyleConverter::WriteDifferenceParagraphStyles(short shFirtsParaShapeId, s
 
 bool CStyleConverter::WriteDifferenceRunnerStyles(short shFirtsCharShapeId, short shSecondCharShapeId, CWriterContext& oContext, NSStringUtils::CStringBuilder& oBuilder)
 {
-	const CHWPRecordCharShape* pFirstCharShape = dynamic_cast<const CHWPRecordCharShape*>(oContext.GetCharShape(shFirtsCharShapeId));
+	const CHWPRecordCharShape* pFirstCharShape = oContext.GetCharShape(shFirtsCharShapeId);
 
 	if (nullptr == pFirstCharShape)
 		return false;
 
-	const CHWPRecordCharShape* pSecondCharShape = dynamic_cast<const CHWPRecordCharShape*>(oContext.GetCharShape(shSecondCharShapeId));
+	const CHWPRecordCharShape* pSecondCharShape = oContext.GetCharShape(shSecondCharShapeId);
 
 	if (nullptr == pSecondCharShape)
 		return false;
@@ -615,11 +615,11 @@ bool CParagraphsStyle::Empty() const
 #define CREATE_BODY_METHODS_FOR_PROPERTY(class_name, type, name, variable_name)\
 	void class_name::Set##name(type oValue)\
 	{\
-		variable_name = oValue;\
+		(variable_name) = oValue;\
 	}\
 	bool class_name::name##IsSet() const\
 	{\
-		return variable_name.IsSet();\
+		return (variable_name).IsSet();\
 	}\
 	type class_name::Get##name() const\
 	{\
@@ -629,11 +629,11 @@ bool CParagraphsStyle::Empty() const
 #define CREATE_BODY_METHODS_FOR_PROPERTY_BOOL(class_name, name, variable_name)\
 	void class_name::Set##name(bool oValue)\
 	{\
-		variable_name = oValue;\
+		(variable_name) = oValue;\
 	}\
 	bool class_name::name##IsSet() const\
 	{\
-		return variable_name.IsSet();\
+		return (variable_name).IsSet();\
 	}\
 	bool class_name::name() const\
 	{\
@@ -653,7 +653,7 @@ CREATE_BODY_METHODS_FOR_PROPERTY(CParagraphsStyle, int, SpacingAfter, m_oSpacing
 
 template<class T>
 CProperty<T>::CProperty()
-	: m_bIsSet(false)
+	: m_bIsSet(false), m_oValue()
 {}
 
 template<class T>

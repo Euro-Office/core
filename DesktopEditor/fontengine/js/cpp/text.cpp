@@ -23,6 +23,7 @@
  *
  */
 #include "../../TextShaper_p.h"
+#include "../../ColrV1Renderer.h"
 
 #ifdef _WIN32
 #define WASM_EXPORT __declspec(dllexport)
@@ -518,7 +519,12 @@ WASM_EXPORT int* ASC_FT_Get_Glyph_Measure_Params(FT_Face face, int isVector)
 			0, 0
 		};
 
-		FT_Outline_Decompose(&((FT_OutlineGlyph)glyph)->outline, &pOutlineFuncs, &buffer);
+		FT_Outline* outline = &((FT_OutlineGlyph)glyph)->outline;
+		FT_Outline silhouette = {};
+		bool isSilhouette = 0 == outline->n_points && ColrV1_GetSilhouette(face, slot->glyph_index, &silhouette);
+		FT_Outline_Decompose(isSilhouette ? &silhouette : outline, &pOutlineFuncs, &buffer);
+		if (isSilhouette)
+			FT_Outline_Done(slot->library, &silhouette);
 	}
 
 	buffer.buffer[0] = buffer.pos;
@@ -546,6 +552,24 @@ WASM_EXPORT int* ASC_FT_Get_Glyph_Render_Params(FT_Face face, int render_mode)
 WASM_EXPORT unsigned char* ASC_FT_Get_Glyph_Render_Buffer(FT_Face face)
 {
 	return face->glyph->bitmap.buffer;
+}
+
+// COLRv1 glyph at the face's current size: [left, top, width, height] as int32, then straight RGBA
+WASM_EXPORT int* ASC_FT_Get_Glyph_Color_Render(FT_Face face, FT_UInt gid, unsigned int foreground)
+{
+	CColrV1Bitmap bitmap;
+	if (!ColrV1_RenderGlyph(face, gid, foreground, bitmap))
+		return NULL;
+
+	int* res = (int*)ASC_FT_Malloc(4 * sizeof(int) + bitmap.Rgba.size());
+	if (!res)
+		return NULL;
+	res[0] = bitmap.Left;
+	res[1] = bitmap.Top;
+	res[2] = bitmap.Width;
+	res[3] = bitmap.Height;
+	memcpy(res + 4, bitmap.Rgba.data(), bitmap.Rgba.size());
+	return res;
 }
 
 // ------------------------------------------------------------

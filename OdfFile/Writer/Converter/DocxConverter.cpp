@@ -1903,34 +1903,43 @@ void DocxConverter::convert( ComplexTypes::Word::CShading* shading, _CP_OPT(odf_
 		}
 	}
 }
+// A section keeps the inherited header/footer of every type it does not define itself. The section
+// converter converts every reference in the list and the last one of each type wins, so the reference
+// replaces the last one of the same type (a section may list a type twice) or is added if there is none.
+static void set_hdr_ftr_ref(std::vector<nullable<ComplexTypes::Word::CHdrFtrRef>> & refs,
+							const nullable<ComplexTypes::Word::CHdrFtrRef> & other)
+{
+	if (false == other.IsInit()) return;
+
+	nullable < ComplexTypes::Word::CHdrFtrRef> ref; ref.Init();
+
+	ref->m_oId= other->m_oId;
+	ref->m_oType= other->m_oType;
+
+	const int type = other->m_oType.IsInit() ? other->m_oType->GetValue() : 0;
+	for (size_t i = refs.size(); i > 0; i--)
+	{
+		if (false == refs[i - 1].IsInit()) continue;
+
+		if ((refs[i - 1]->m_oType.IsInit() ? refs[i - 1]->m_oType->GetValue() : 0) == type)
+		{
+			refs[i - 1] = ref;
+			return;
+		}
+	}
+	refs.push_back(ref);
+}
 void DocxConverter::apply_HF_from(OOX::Logic::CSectionProperty *props, OOX::Logic::CSectionProperty *other)
 {
 	if (props == NULL || other== NULL)return;
 
-	if (other->m_arrFooterReference.size() > 0)
+	for (size_t i =0 ; i < other->m_arrFooterReference.size() ; i++)
 	{
-		for (size_t i =0 ; i < other->m_arrFooterReference.size() ; i++)
-		{
-			nullable < ComplexTypes::Word::CHdrFtrRef> ref; ref.Init();
-
-			ref->m_oId= other->m_arrFooterReference[i]->m_oId;
-			ref->m_oType= other->m_arrFooterReference[i]->m_oType;
-
-			props->m_arrFooterReference.push_back(ref);
-		}
-		
+		set_hdr_ftr_ref(props->m_arrFooterReference, other->m_arrFooterReference[i]);
 	}
-	if (other->m_arrHeaderReference.size() > 0)
+	for (size_t i =0 ; i < other->m_arrHeaderReference.size() ; i++)
 	{
-		for (size_t i =0 ; i < other->m_arrHeaderReference.size() ; i++)
-		{
-			nullable < ComplexTypes::Word::CHdrFtrRef> ref; ref.Init();
-
-			ref->m_oId= other->m_arrHeaderReference[i]->m_oId;
-			ref->m_oType= other->m_arrHeaderReference[i]->m_oType;
-
-			props->m_arrHeaderReference.push_back(ref);
-		}
+		set_hdr_ftr_ref(props->m_arrHeaderReference, other->m_arrHeaderReference[i]);
 	}
 }
 void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool bSection, const std::wstring& master_name, bool bAlways)
@@ -1990,69 +1999,45 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 		convert(oox_section_pr->m_oPgMar->m_oFooter.GetPointer(), footer);
 		convert(oox_section_pr->m_oPgMar->m_oGutter.GetPointer(), gutter);
 
-		footer_min = footer;
-		header_min = header;
-
-		if (bottom)
-		{
-			double bottom_cm = bottom->get_value_unit(length::cm);
-			double footer_cm = footer ? footer->get_value_unit(length::cm) : 0;
-			double length_cm = bottom_cm - footer_cm;
-
-			if (length_cm < 0)
-			{
-				footer_min = length(-length_cm, length::cm);
-				footer.reset();
-			}
-			else //if(length_cm > 2.4)
-			{
-				bottom = footer;
-				footer = length(fabs(length_cm), length::cm);
-			}
-		}
-		else
-		{
-			bottom = footer;
-		}
+		// Word measures w:top (w:bottom) from the page edge to the body and w:header (w:footer) from the page edge
+		// to the header (footer), which grows into the body when its content is taller than the rest. In ODF the
+		// page margin is the distance to the header (footer) and the header (footer) area takes the rest of the
+		// Word margin as its minimum height. The layout context switches the page margin to the header (footer)
+		// distance only when the master page gets a header (footer); without one the margin stays w:top (w:bottom).
 		if (top)
 		{
-			double length_cm = top->get_value_unit(length::cm);
-			
+			double top_cm = fabs(top->get_value_unit(length::cm));
+			top = length(top_cm, length::cm);
 			if (header)
 			{
-				double header_length_cm = header->get_value_unit(length::cm);
-				//if (abs(length_cm - header_length_cm) > 0.001)
-				//	length_cm -= header_length_cm;
-			}
-
-			if (length_cm > 2.4)
-			{
-				top = header;
-				header = length(fabs(length_cm), length::cm);
-			}
-			else if (length_cm < 0)
-			{
-				header_min = length(-length_cm, length::cm);
-				header.reset();
-			}
-			else if (length_cm < 0.)
-			{
-				header_min = length(-length_cm, length::cm);
-				header.reset();
-			}
-			else
-			{
-				top = length(length_cm, length::cm);
+				double rest_cm = top_cm - header->get_value_unit(length::cm);
+				header_min = length(rest_cm > 0.1 ? rest_cm : 0.1, length::cm);
 			}
 		}
 		else
 		{
 			top = header;
+			header.reset();
+		}
+		if (bottom)
+		{
+			double bottom_cm = fabs(bottom->get_value_unit(length::cm));
+			bottom = length(bottom_cm, length::cm);
+			if (footer)
+			{
+				double rest_cm = bottom_cm - footer->get_value_unit(length::cm);
+				footer_min = length(rest_cm > 0.1 ? rest_cm : 0.1, length::cm);
+			}
+		}
+		else
+		{
+			bottom = footer;
+			footer.reset();
 		}
 		odt_context->page_layout_context()->set_page_margin(top, left, bottom, right);
 		odt_context->page_layout_context()->set_page_gutter(gutter);
-		odt_context->page_layout_context()->set_header_size(header, header_min);
-		odt_context->page_layout_context()->set_footer_size(footer, footer_min);
+		odt_context->page_layout_context()->set_header_size(boost::none, header_min, header);
+		odt_context->page_layout_context()->set_footer_size(boost::none, footer_min, footer);
 	}
 	if (oox_section_pr->m_oPgBorders.IsInit())
 	{
@@ -3210,7 +3195,7 @@ void DocxConverter::convert(OOX::Logic::CPicture* oox_pic)
 	{
 		odt_context->start_drawing_context();
 
-		if (odt_context->table_context()->empty())
+		if (!in_table())
 			odf_context()->drawing_context()->set_anchor(anchor_type::Char);//default
 		else
 		{
@@ -3243,7 +3228,7 @@ void DocxConverter::convert(OOX::Logic::CObject* oox_obj)
 
 	odt_context->start_drawing_context();
 			
-	if (odt_context->table_context()->empty())
+	if (!in_table())
 		odf_context()->drawing_context()->set_anchor(odf_types::anchor_type::AsChar);//default
 	else
 	{
@@ -3530,7 +3515,7 @@ void DocxConverter::convert(OOX::Drawing::CAnchor* oox_anchor)
 
 	if ((oox_anchor->m_oLayoutInCell.IsInit()) && (oox_anchor->m_oLayoutInCell->ToBool()))
 	{
-		if (odt_context->table_context()->empty() == false)
+		if (in_table())
 		{//VillageofSchaumburg.docx
 			odt_context->drawing_context()->set_anchor(3); 
 			odt_context->drawing_context()->set_vertical_rel(1); //paragraph content
@@ -4455,7 +4440,24 @@ void DocxConverter::convert(OOX::CStyle	*oox_style)
 		}
 	}
 	if (oox_style->m_oBasedOn.IsInit() && oox_style->m_oBasedOn->m_sVal.IsInit())
-		odt_context->styles_context()->last_state()->set_parent_style_name(*oox_style->m_oBasedOn->m_sVal);
+	{
+		// A w:basedOn naming a style of another type is ignored (ISO/IEC 29500-1 17.7.4.3).
+		// As an ODF parent it would name a style of another family, which the style
+		// lookups never find.
+		const std::wstring & parent_id = *oox_style->m_oBasedOn->m_sVal;
+
+		OOX::CStyles* styles = docx_document ? docx_document->m_oMain.styles : (docx_flat_document ? docx_flat_document->m_pStyles.GetPointer() : NULL);
+		if (styles)
+		{
+			std::map<std::wstring, size_t>::iterator pFind = styles->m_mapStyleNames.find(parent_id);
+			if (pFind != styles->m_mapStyleNames.end() && pFind->second < styles->m_arrStyle.size())
+			{
+				OOX::CStyle* parent_style = styles->m_arrStyle[pFind->second];
+				if (parent_style && parent_style->m_oType.IsInit() && parent_style->m_oType->GetValue() == oox_style->m_oType->GetValue())
+					odt_context->styles_context()->last_state()->set_parent_style_name(parent_id);
+			}
+		}
+	}
 
     //nullable<ComplexTypes::Word::COnOff2> m_oQFormat;
 	//nullable<ComplexTypes::Word::std::wstring_> m_oAliases;
@@ -4702,11 +4704,19 @@ void DocxConverter::convert_hdr_ftr(std::wstring sId)
 	OOX::IFileContainer* back_document = oox_current_child_document;
 	oox_current_child_document = dynamic_cast<OOX::IFileContainer*>(oox_hdr_ftr);
 
+	const size_t back_tables = tables_around_hdr_ftr;
+	tables_around_hdr_ftr = odt_context->table_context()->depth();
+
     for (size_t i = 0; i < oox_hdr_ftr->m_arrItems.size(); ++i)
 	{
 		convert(oox_hdr_ftr->m_arrItems[i]);
 	}
+	tables_around_hdr_ftr = back_tables;
 	oox_current_child_document  = back_document;
+}
+bool DocxConverter::in_table()
+{
+	return odt_context->table_context()->depth() > tables_around_hdr_ftr;
 }
 
 void DocxConverter::convert(OOX::Logic::CTbl *oox_table)

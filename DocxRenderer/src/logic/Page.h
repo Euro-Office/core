@@ -111,25 +111,25 @@ namespace NSDocxRenderer
 		// returns std::vector of conts with diac. symbols and remove it from m_arConts
 		std::vector<cont_ptr_t> MoveDiacriticalSymbols();
 
-		// returns std::vector of text lines builded from m_arConts
+		// returns std::vector of text lines built from m_arConts
 		std::vector<text_line_ptr_t> BuildTextLines(const std::vector<cont_ptr_t>& arConts);
 
 		// build text line groups
 		std::vector<text_line_group_ptr_t> BuildTextLineGroups();
 
-		// returns std::vector of paragraphs builded from m_arTextLines
+		// returns std::vector of paragraphs built from m_arTextLines
 		std::vector<paragraph_ptr_t> BuildParagraphs(const std::vector<text_line_group_ptr_t>& arTextLineGroups);
 
 		// return groups of text cells
 		std::vector<text_cell_group_ptr_t> BuildTextCellGroups(const std::vector<text_line_group_ptr_t>& arTextLineGroups);
 
-		// returns std::vector of tables builded from shapes and paragraphes
+		// returns std::vector of tables built from shapes and paragraphes
 		std::vector<table_ptr_t> BuildTables(const std::vector<text_line_group_ptr_t>& arTextLineGroups);
 
 		// return std::vector of graphical cells (from shapes)
 		std::vector<graphical_cell_ptr_t> BuildGraphicalCells();
 
-		// returns std::vector of base items builded from m_arParagraphs
+		// returns std::vector of base items built from m_arParagraphs
 		std::vector<ooxml_item_ptr_t> BuildOutputObjects();
 
 		// analyze shapes (set lines type)

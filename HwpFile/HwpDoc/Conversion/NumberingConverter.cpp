@@ -17,7 +17,7 @@ std::wstring HeadingTypeToWSTR(EHeadingType eHeadingType)
 {
 	switch(eHeadingType)
 	{
-		case EHeadingType::NONE: return std::wstring();
+		case EHeadingType::NONE:
 		case EHeadingType::OUTLINE: return std::wstring();
 		case EHeadingType::NUMBER: return std::wstring(L"decimal");
 		case EHeadingType::BULLET: return std::wstring(L"bullet");
@@ -128,6 +128,7 @@ int CNumberingConverter::CreateNumbering(const CHWPRecordNumbering* pNumbering, 
 					sFontName = L"Wingdings";
 					break;
 				}
+				default: break;
 			}
 
 			m_oNumberXml.WriteString(L"<w:lvlText w:val=\"" + sLvlText + L"\"/>");
@@ -207,8 +208,8 @@ bool CNumberingConverter::SaveToFile(const std::wstring& wsDirectory)
 	}
 	else
 	{
-		for (unsigned short ushIndex = 1; ushIndex <= m_arUsedNumbering.size(); ++ushIndex)
-			oNumberingData.WriteString(L"<w:num w:numId=\"" + std::to_wstring(ushIndex) + L"\"><w:abstractNumId w:val=\"" + std::to_wstring(ushIndex) + L"\"/></w:num>");
+		for (size_t numIndex = 1; numIndex <= m_arUsedNumbering.size(); ++numIndex)
+			oNumberingData.WriteString(L"<w:num w:numId=\"" + std::to_wstring(numIndex) + L"\"><w:abstractNumId w:val=\"" + std::to_wstring(numIndex) + L"\"/></w:num>");
 	}
 
 	oNumberingData.WriteString(L"</w:numbering>");

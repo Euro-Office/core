@@ -240,7 +240,7 @@ namespace NSNetwork
 			}
 			virtual int UploadData() override
 			{
-				if (!m_sUploadUrl.empty() && m_cData != NULL && m_nSize != 0)
+				if (!m_sUploadUrl.empty() && m_cData != nullptr && m_nSize != 0)
 				{
 					return uploaddata_external(m_sUploadUrl, m_cData, m_nSize);
 				}

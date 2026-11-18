@@ -43,22 +43,22 @@ _INT64 CFCPP::StreamRW::Tell()
     return stream->tell();
 }
 
-void StreamRW::ReadArray(char *data, _INT32 lenght)
+void StreamRW::ReadArray(char *data, _INT32 length)
 {
-    stream->read(data, lenght);
+    stream->read(data, length);
 }
 
-void StreamRW::ReadArray(BYTE* data, _INT32 lenght)
+void StreamRW::ReadArray(BYTE* data, _INT32 length)
 {
-    stream->read(reinterpret_cast<char*>(data), lenght);
+    stream->read(reinterpret_cast<char*>(data), length);
 }
 
-void StreamRW::WriteArray(const BYTE *arr, _INT32 lenght)
+void StreamRW::WriteArray(const BYTE *arr, _INT32 length)
 {
-    stream->write(reinterpret_cast<const char*>(arr), lenght);
+    stream->write(reinterpret_cast<const char*>(arr), length);
 }
 
-void StreamRW::WriteArray(const char *arr, _INT32 lenght)
+void StreamRW::WriteArray(const char *arr, _INT32 length)
 {
-    stream->write(arr, lenght);
+    stream->write(arr, length);
 }

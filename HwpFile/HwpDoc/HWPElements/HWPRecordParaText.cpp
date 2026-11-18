@@ -24,7 +24,7 @@ CHWPRecordParaText::CHWPRecordParaText(int nTagNum, int nLevel, int nSize)
 	: CHWPRecord(nTagNum, nLevel, nSize)
 {}
 
-LIST<CCtrl*> CHWPRecordParaText::Parse(int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+LIST<CCtrl*> CHWPRecordParaText::Parse(int /*nTagNum*/, int /*nLevel*/, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 
@@ -207,6 +207,7 @@ LIST<CCtrl*> CHWPRecordParaText::Parse(int nTagNum, int nLevel, int nSize, CHWPS
 					arParas.push_back(new CCtrlCharacter(L"   _", ECtrlCharType::HARD_SPACE));
 					break;
 				}
+				default: break;
 			}
 		}
 		else
