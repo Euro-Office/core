@@ -703,6 +703,9 @@ public:
     
     void docx_convert(oox::docx_conversion_context & Context);
 
+	// text:track-changes; the ODF default is true, so an element without the attribute means "on"
+	bool is_record_changes() const { return track_changes_ ? track_changes_->get() : true; }
+
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);

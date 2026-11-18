@@ -401,12 +401,15 @@ void text_tracked_changes::add_child_element( const office_element_ptr & child_e
 
 void text_tracked_changes::serialize(std::wostream & _Wostream)
 {
-	if (content_.empty()) return;
+	// With recording on, write the element also when there are no changes yet (as LibreOffice does).
+	const bool record_changes = text_track_changes_ && text_track_changes_->get();
+	if (content_.empty() && !record_changes) return;
 
 	CP_XML_WRITER(_Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         {   
+			CP_XML_ATTR_OPT(L"text:track-changes", text_track_changes_);
 			for (size_t i = 0 ; i < content_.size(); i++)
 			{
 				content_[i]->serialize (CP_XML_STREAM());

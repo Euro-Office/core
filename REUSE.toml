@@ -323,6 +323,10 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/track_changes_on.docx",
     "OdfFile/Test/test_odf/ExampleFiles/track_changes_on.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/track_changes_insert_off.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/track_changes_lo_on.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/track_changes_lo_off.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/track_changes_no_attr.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

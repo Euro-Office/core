@@ -1114,8 +1114,19 @@ std::wstring  docx_conversion_context::dump_settings_document()
 					}
 				}
 			}
-			strVal = root()->odf_context().Settings().find_by_name(L"RecordChanges");
-			if (strVal && *strVal == L"true")
+			// The text:track-changes attribute of the body (as LibreOffice writes it) has priority.
+			// The RecordChanges config item is read only when the body has no text:tracked-changes.
+			bool record_changes = false;
+			if (record_changes_)
+			{
+				record_changes = *record_changes_;
+			}
+			else
+			{
+				strVal = root()->odf_context().Settings().find_by_name(L"RecordChanges");
+				record_changes = strVal && *strVal == L"true";
+			}
+			if (record_changes)
 			{
 				CP_XML_NODE(L"w:trackRevisions");
 			}

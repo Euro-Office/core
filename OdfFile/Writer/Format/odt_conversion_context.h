@@ -58,6 +58,8 @@ public:
 	virtual void start_document();
 	virtual void end_document();
 
+	void set_record_changes(bool val);
+
 	virtual bool is_child_text_context();
 
 	virtual odf_drawing_context		* drawing_context();

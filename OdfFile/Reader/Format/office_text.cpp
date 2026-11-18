@@ -25,6 +25,7 @@
 
 #include "office_text.h"
 #include "office_meta.h"
+#include "text_elements.h"
 
 #include <xml/xmlchar.h>
 #include <xml/utils.h>
@@ -156,7 +157,11 @@ void office_text::docx_convert(oox::docx_conversion_context & Context)
 		sequences_->docx_convert(Context);
 	
 	if (tracked_changes_)
+	{
+		if (text::tracked_changes* changes = dynamic_cast<text::tracked_changes*>(tracked_changes_.get()))
+			Context.set_record_changes(changes->is_record_changes());
 		tracked_changes_->docx_convert(Context);
+	}
 
  	//if (forms_)
 		//forms_->docx_convert(Context);

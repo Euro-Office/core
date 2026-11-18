@@ -816,6 +816,8 @@ public:
 	bool get_delete_text_state	()					{ return is_delete_text_;	}
 	void set_delete_text_state	(bool Val)			{ is_delete_text_ = Val;	}
 
+	void set_record_changes		(bool Val)			{ record_changes_ = Val;	}
+
 	bool get_drawing_state_content()			{ return in_drawing_content_;	}
 	void set_drawing_state_content(bool val)	{ in_drawing_content_ = val;	}
 
@@ -1132,6 +1134,7 @@ private:
 
 	bool in_header_;
 	bool is_delete_text_;
+	_CP_OPT(bool) record_changes_; // text:track-changes of the body; empty when the body has no text:tracked-changes
     bool is_rtl_; // right-to-left
  
 	NoteType			current_process_note_;
