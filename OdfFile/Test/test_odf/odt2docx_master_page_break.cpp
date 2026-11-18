@@ -143,3 +143,56 @@ TEST(OdtToDocxMasterPageBreak, MasterPageBreakOnceAndOnlyOnPages)
     ASSERT_FALSE(last.empty());
     EXPECT_FALSE(has_page_break(last));
 }
+
+// A master page with another page layout also starts a new section. The page break is then written as
+// w:pageBreakBefore, never as a page break run at the start of the paragraph: after a section break that already
+// starts a new page, such a run gives an empty page. This holds for a named paragraph style, for an automatic style
+// without paragraph properties and for one with them.
+TEST(OdtToDocxMasterPageBreak, PageLayoutChangeGivesNoEmptyPage)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/master_page_layout_break.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    const std::wstring xml = read_part(dir, L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "word/document.xml is missing";
+    EXPECT_TRUE(is_well_formed(xml));
+
+    const std::wstring page_break_run = L"<w:br w:type=\"page\"/>";
+    const std::wstring page_break_before = L"<w:pageBreakBefore w:val=\"true\"/>";
+    const std::wstring section = L"<w:sectPr";
+
+    // the section handling is unchanged: the paragraph before each switch ends a section
+    const std::wstring first = paragraph_with_text(xml, L"First paragraph");
+    ASSERT_FALSE(first.empty());
+    EXPECT_NE(first.find(section), std::wstring::npos);
+    EXPECT_FALSE(has_page_break(first));
+
+    const std::wstring named = paragraph_with_text(xml, L"Named style paragraph");
+    ASSERT_FALSE(named.empty());
+    EXPECT_EQ(named.find(page_break_run), std::wstring::npos);
+    EXPECT_NE(named.find(page_break_before), std::wstring::npos);
+    EXPECT_NE(named.find(section), std::wstring::npos);
+
+    const std::wstring automatic = paragraph_with_text(xml, L"Automatic style paragraph");
+    ASSERT_FALSE(automatic.empty());
+    EXPECT_EQ(automatic.find(page_break_run), std::wstring::npos);
+    EXPECT_NE(automatic.find(page_break_before), std::wstring::npos);
+    EXPECT_NE(automatic.find(section), std::wstring::npos);
+
+    const std::wstring with_properties = paragraph_with_text(xml, L"Automatic style with properties paragraph");
+    ASSERT_FALSE(with_properties.empty());
+    EXPECT_EQ(with_properties.find(page_break_run), std::wstring::npos);
+    EXPECT_NE(with_properties.find(page_break_before), std::wstring::npos);
+    EXPECT_EQ(with_properties.find(section), std::wstring::npos);
+
+    const std::wstring last = paragraph_with_text(xml, L"Last paragraph");
+    ASSERT_FALSE(last.empty());
+    EXPECT_FALSE(has_page_break(last));
+
+    // one section per master page switch and the last one in w:body: no page break run at all
+    size_t sections = 0;
+    for (size_t pos = xml.find(section); pos != std::wstring::npos; pos = xml.find(section, pos + 1))
+        sections++;
+    EXPECT_EQ(sections, 4u);
+    EXPECT_EQ(xml.find(page_break_run), std::wstring::npos);
+}
