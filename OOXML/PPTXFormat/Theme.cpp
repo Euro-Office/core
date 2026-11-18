@@ -30,7 +30,7 @@ namespace PPTX
 	Theme::Theme(OOX::Document *pMain) : WrapperFile(pMain), PPTX::FileContainer(pMain)
 	{
 		isThemeOverride = false;
-		m_map = NULL;
+		m_map = nullptr;
 
 		OOX::CDocx* docx = dynamic_cast<OOX::CDocx*>(File::m_pMainDocument);
 		if (docx) docx->m_pTheme = this;
@@ -40,7 +40,7 @@ namespace PPTX
 		FileMap map;
 
 		isThemeOverride = false;
-		m_map = NULL;
+		m_map = nullptr;
 
 		read(contentTheme, map);
 
@@ -57,9 +57,9 @@ namespace PPTX
 		FileMap map;
 
 		isThemeOverride = false;
-		m_map = NULL;
+		m_map = nullptr;
 
-		read(filename, map);
+		Theme::read(filename, map);
 
 		OOX::CDocx* docx = dynamic_cast<OOX::CDocx*>(File::m_pMainDocument);
 		if (docx && !docx->m_pTheme && !isThemeOverride)
@@ -70,9 +70,9 @@ namespace PPTX
 	Theme::Theme(OOX::Document *pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain), PPTX::FileContainer(pMain)
 	{
 		isThemeOverride = false;
-		m_map = NULL;
+		m_map = nullptr;
 
-		read(filename, map);
+		Theme::read(filename, map);
 
 		OOX::CDocx* docx = dynamic_cast<OOX::CDocx*>(File::m_pMainDocument);
 		if (docx && !docx->m_pTheme && !isThemeOverride)
@@ -87,7 +87,7 @@ namespace PPTX
 	{
 		isThemeOverride = false;
 		//FileContainer::read(filename, map);
-		m_map = NULL;
+		m_map = nullptr;
 
 		XmlUtils::CXmlNode oNode;
 		oNode.FromXmlStringA(contentTheme);
@@ -98,14 +98,14 @@ namespace PPTX
 	{
 		isThemeOverride = false;
 		//FileContainer::read(filename, map);
-		m_map = NULL;
+		m_map = nullptr;
 
 		XmlUtils::CXmlNode oNode;
 		oNode.FromXmlFile(filename.m_strFilename);
 
 		read(oNode, map);
 	}
-	void Theme::read(XmlUtils::CXmlNode &oNode, FileMap& map)
+	void Theme::read(XmlUtils::CXmlNode &oNode, FileMap&  /*map*/)
 	{
 		extraClrSchemeLst.clear();
 
@@ -228,7 +228,7 @@ namespace PPTX
 	}
 	void Theme::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 	{
-		BYTE type = pReader->GetUChar();
+		pReader->GetUChar();
 
 		LONG _rec_start = pReader->GetPos();
 		LONG _end_rec = _rec_start + pReader->GetRecordSize() + 4;
@@ -294,6 +294,7 @@ namespace PPTX
 						extraClrSchemeLst[i].fromPPTY(pReader);
 					}
 				}
+				default: break;
 			}
 		}
 
@@ -365,6 +366,6 @@ namespace PPTX
 	};
 	bool Theme::isMapPresent()
 	{
-		return (m_map != NULL);
+		return (m_map != nullptr);
 	}
 } // namespace PPTX

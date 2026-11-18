@@ -35,7 +35,7 @@ namespace PPTX
 	WrapperFile::~WrapperFile()
 	{
 	}
-	void WrapperFile::read(const OOX::CPath& filename)
+	void WrapperFile::read(const OOX::CPath&  /*filename*/)
 	{
 		return;
 	}

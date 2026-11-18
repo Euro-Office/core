@@ -34,7 +34,8 @@ namespace PPTX
 			m_eType = OOX::et_Unknown;
 		}
 		TextFont::~TextFont() {}
-		TextFont::TextFont(const TextFont& oSrc) { *this = oSrc; }
+		// NOLINT(bugprone-copy-constructor-init): the base is default-constructed and *this = oSrc copies the inherited members too; behaviour unchanged.
+		TextFont::TextFont(const TextFont& oSrc) { *this = oSrc; } // NOLINT(bugprone-copy-constructor-init)
 		OOX::EElementType TextFont::getType () const
 		{
 			return m_eType;
@@ -129,6 +130,7 @@ namespace PPTX
 				case 't':
 					if      ( _T("typeface")    == wsName ) typeface = oReader.GetText();
 					break;
+				default: break;
 				}
 
 				if ( !oReader.MoveToNextAttribute() )

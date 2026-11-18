@@ -341,7 +341,7 @@ namespace PPTX
 			{
 				XmlUtils::CXmlNode& oNode = oNodes[i];
 				std::wstring strName = XmlUtils::GetNameNoNS(oNode.GetName());
-				WrapperWritingElement *pItem = NULL;
+				WrapperWritingElement *pItem = nullptr;
 
 				if (strName == L"docMk")
 					AssignPtrXmlContentNoMain(pItem, DocumentMoniker, oNode)
@@ -405,7 +405,7 @@ namespace PPTX
 			while (pReader->GetPos() < _end_rec)
 			{
 				BYTE _at = pReader->GetUChar();
-				WrapperWritingElement* pItem = NULL;
+				WrapperWritingElement* pItem = nullptr;
 				switch (_at)
 				{
 					case 1: pItem = new GraphicFrameMoniker(); break;
@@ -728,7 +728,7 @@ namespace PPTX
 			}
 
 			//check comment guid
-			if (!(additional_data.IsInit() && 0 == additional_data->compare(0, 13, L"teamlab_data:") && std::wstring::npos != additional_data->find(L"4;38;")))
+			if (!additional_data.IsInit() || 0 != additional_data->compare(0, 13, L"teamlab_data:") || std::wstring::npos == additional_data->find(L"4;38;"))
 			{
 				if (!additional_data.IsInit())
 				{
@@ -1129,12 +1129,12 @@ namespace PPTX
 	}
 	Comments::Comments(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain)
 	{
-		read(filename, map);
+		Comments::read(filename, map);
 	}
 	Comments::~Comments()
 	{
 	}
-	void Comments::read(const OOX::CPath& filename, FileMap& map)
+	void Comments::read(const OOX::CPath& filename, FileMap&  /*map*/)
 	{
 		XmlUtils::CXmlNode oNode;
 		oNode.FromXmlFile(filename.m_strFilename);
@@ -1246,7 +1246,7 @@ namespace PPTX
 		PPTX::Document* pptxDocument = dynamic_cast<PPTX::Document*>(this->m_pMainDocument);
 		if (!bModern && (pptxDocument) && (pptxDocument->main))
 		{
-			if (false == pptxDocument->main->commentAuthors.IsInit())
+			if (!pptxDocument->main->commentAuthors.IsInit())
 			{
 				pptxDocument->main->commentAuthors = new PPTX::Authors(pptxDocument);
 			}
@@ -1254,7 +1254,7 @@ namespace PPTX
 			int ind = 1;
 			for (auto &comm : m_arComments)
 			{
-				if (true == comm.idx.IsInit() && true == comm.authorIdx.IsInit())
+				if (comm.idx.IsInit() && comm.authorIdx.IsInit())
 					break;
 
 				std::map<std::wstring, int>::iterator pFind = authors->mapAuthors.find(*comm.authorId);

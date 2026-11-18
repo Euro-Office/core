@@ -98,7 +98,7 @@ namespace PPTX
 			OOX::RId rid(rId);
 
 			std::wstring sLink = L"";
-			if (pRels != NULL)
+			if (pRels != nullptr)
 			{
 				smart_ptr<OOX::Media> p = pRels->Get<OOX::Media>(rid);
 				if (p.is_init())

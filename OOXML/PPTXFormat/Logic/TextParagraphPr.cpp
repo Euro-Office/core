@@ -89,7 +89,7 @@ namespace PPTX
 					spcBef = oReader;
 				else if ( _T("a:tabLst") == sName )
 				{
-					if (false == oReader.IsEmptyNode())
+					if (!oReader.IsEmptyNode())
 					{
 						int nParentDepth1 = oReader.GetDepth();
 						while (oReader.ReadNextSiblingNode(nParentDepth1))
@@ -424,11 +424,11 @@ namespace PPTX
 
 								while (true)
 								{
-									BYTE __at = pReader->GetUChar_TypeNode();
-									if (__at == NSBinPptxRW::g_nodeAttributeEnd)
+									BYTE _at = pReader->GetUChar_TypeNode();
+									if (_at == NSBinPptxRW::g_nodeAttributeEnd)
 										break;
 
-									switch (__at)
+									switch (_at)
 									{
 										case 0:
 										{

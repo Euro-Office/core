@@ -100,7 +100,7 @@ namespace PPTX
 		void Blend::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar();
+			pReader->GetUChar();
 			LONG _end_rec = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);

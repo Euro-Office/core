@@ -62,6 +62,7 @@ namespace PPTX
 			case 2: m_strValue = L"none"; break;
 			case 3: m_strValue = L"repl"; break;
 			case 4: m_strValue = L"sum"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

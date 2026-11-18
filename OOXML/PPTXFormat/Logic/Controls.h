@@ -38,7 +38,7 @@ namespace PPTX
 		{
 		public:
 			PPTX_LOGIC_BASE_NC(Control)
-			Control(OOX::Document *pMain = NULL) : WrapperWritingElement(pMain)
+			Control(OOX::Document *pMain = nullptr) : WrapperWritingElement(pMain)
 			{
 			}
 			std::wstring GetVmlXmlBySpid(std::wstring spid, OOX::IFileContainer*& rels) const ;
@@ -74,7 +74,7 @@ namespace PPTX
 		public:
 			PPTX_LOGIC_BASE_NC(Controls)
 			
-			Controls(OOX::Document *pMain = NULL) : WrapperWritingElement(pMain)
+			Controls(OOX::Document *pMain = nullptr) : WrapperWritingElement(pMain)
 			{
 			}
 

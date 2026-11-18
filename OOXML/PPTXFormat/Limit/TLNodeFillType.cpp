@@ -68,6 +68,7 @@ namespace PPTX
 			case 1: m_strValue = L"hold"; break;
 			case 2: m_strValue = L"remove"; break;
 			case 3: m_strValue = L"transition"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

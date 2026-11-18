@@ -56,6 +56,7 @@ namespace PPTX
 			case 0: m_strValue = L"discrete"; break;
 			case 1: m_strValue = L"lin"; break;
 			case 2: m_strValue = L"fmla"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

@@ -53,6 +53,7 @@ namespace PPTX
 			{
 			case 0: m_strValue = L"fixed"; break;
 			case 1: m_strValue = L"relative"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

@@ -41,7 +41,7 @@ namespace PPTX
 		TxBody::~TxBody() {}
 		TxBody::TxBody(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			TxBody::fromXML(node);
 		}
 		const TxBody& TxBody::operator =(XmlUtils::CXmlNode& node)
 		{
@@ -50,14 +50,15 @@ namespace PPTX
 		}
 		TxBody::TxBody(XmlUtils::CXmlLiteReader& oReader)
 		{
-			fromXML(oReader);
+			TxBody::fromXML(oReader);
 		}
 		const TxBody& TxBody::operator =(XmlUtils::CXmlLiteReader& oReader)
 		{
 			fromXML(oReader);
 			return *this;
 		}
-		TxBody::TxBody(const TxBody& oSrc) { *this = oSrc; }
+		// NOLINT(bugprone-copy-constructor-init): the base is default-constructed and *this = oSrc copies the inherited members too; behaviour unchanged.
+		TxBody::TxBody(const TxBody& oSrc) { *this = oSrc; } // NOLINT(bugprone-copy-constructor-init)
 		TxBody& TxBody::operator=(const TxBody& oSrc)
 		{
 			parentFile		= oSrc.parentFile;
@@ -451,8 +452,7 @@ namespace PPTX
 						oWriter.EndNode(_T("w:ind"));
 					}
 
-                    if (true)
-					{
+                    {
 						oWriter.WriteString(_T("<w:spacing w:before=\"0\" w:after=\"0\"/>"));
 					}
 

@@ -37,12 +37,12 @@ namespace PPTX
 	}
 	NotesMaster::NotesMaster(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain), FileContainer(pMain)
 	{
-		read(filename, map);
+		NotesMaster::read(filename, map);
 	}
 	NotesMaster::~NotesMaster()
 	{
 	}
-	void NotesMaster::read(const OOX::CPath& filename, FileMap& map)
+	void NotesMaster::read(const OOX::CPath& filename, FileMap&  /*map*/)
 	{
 		//FileContainer::read(filename, map);
 
@@ -170,13 +170,13 @@ namespace PPTX
 
 		if (!pShape && !pPic) return;
 
-		Logic::NvPr *pNvPr = NULL;
+		Logic::NvPr *pNvPr = nullptr;
 
 		if (pShape)	pNvPr = &pShape->nvSpPr.nvPr;
 		if (pPic)	pNvPr = &pPic->nvPicPr.nvPr;
 
 		if (!pNvPr) return;
-		if (pNvPr->ph.is_init() == false) return;
+		if (!pNvPr->ph.is_init()) return;
 
 		std::wstring idx = pNvPr->ph->idx.get_value_or(L"");
 		std::wstring type = pNvPr->ph->type.get_value_or(L"body");
@@ -196,13 +196,7 @@ namespace PPTX
 
 					if (lType == L"ctrTitle") lType = L"title";
 
-					if ((type == lType) && (idx == lIdx) && !idx.empty())
-					{
-						if (pShape)	pShape->SetLevelUpElement(pMasterShape.GetPointer());
-						if (pPic)	pPic->SetLevelUpElement(pMasterShape.GetPointer());
-						return;
-					}
-					else if ((type == lType) && idx.empty() && lIdx.empty())
+					if ((type == lType) && (((idx == lIdx) && !idx.empty()) || (idx.empty() && lIdx.empty())))
 					{
 						if (pShape)	pShape->SetLevelUpElement(pMasterShape.GetPointer());
 						if (pPic)	pPic->SetLevelUpElement(pMasterShape.GetPointer());

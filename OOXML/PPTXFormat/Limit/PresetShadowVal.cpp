@@ -109,6 +109,7 @@ namespace PPTX
 				case 18: m_strValue = L"shdw19"; break;
 				case 19: m_strValue = L"shdw20"; break;
 
+				default: break;
 			}
 		}
 	} // namespace Limit

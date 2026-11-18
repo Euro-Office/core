@@ -82,7 +82,7 @@ namespace PPTX
 		void SoftEdge::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar();
+			pReader->GetUChar();
 			LONG _e = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);

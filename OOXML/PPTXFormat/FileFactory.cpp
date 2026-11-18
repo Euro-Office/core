@@ -70,9 +70,9 @@ namespace PPTX
 {
 	const smart_ptr<OOX::File> FileFactory::CreateFilePPTX(const OOX::CPath& filename, OOX::Rels::CRelationShip& relation, FileMap& map, OOX::Document *pMain)
 	{
-		if (NSFile::CFileBinary::Exists(filename.GetPath()) == false && !relation.IsExternal())
+		if (!NSFile::CFileBinary::Exists(filename.GetPath()) && !relation.IsExternal())
 		{
-			return smart_ptr<OOX::File>(NULL);
+			return smart_ptr<OOX::File>(nullptr);
 		}
 		
 		if (relation.Type() == OOX::FileTypes::App)

@@ -41,7 +41,7 @@ namespace PPTX
 		}
 		Bg::Bg(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			Bg::fromXML(node);
 		}
 		const Bg& Bg::operator =(XmlUtils::CXmlNode& node)
 		{
@@ -54,7 +54,7 @@ namespace PPTX
 			bgPr	= node.ReadNodeNoNS(_T("bgPr"));
 			bgRef	= node.ReadNodeNoNS(_T("bgRef"));
 
-			FillParentPointersForChilds();
+			Bg::FillParentPointersForChilds();
 		}
 		std::wstring Bg::toXML() const
 		{

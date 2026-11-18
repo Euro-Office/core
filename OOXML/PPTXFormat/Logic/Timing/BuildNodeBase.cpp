@@ -41,7 +41,7 @@ namespace PPTX
 		}
 		BuildNodeBase::BuildNodeBase(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			BuildNodeBase::fromXML(node);
 		}
 		const BuildNodeBase& BuildNodeBase::operator =(XmlUtils::CXmlNode& node)
 		{

@@ -58,7 +58,7 @@ namespace PPTX
 			pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeStart);
 			pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
 
-			if (false == list.empty())
+			if (!list.empty())
 			{
 				pWriter->StartRecord(0);
 
@@ -99,7 +99,7 @@ namespace PPTX
 					{
 						list.push_back(Tmpl());
 
-						BYTE type = pReader->GetUChar(); //skip ..
+						pReader->GetUChar(); //skip ..
 						list[i].fromPPTY(pReader);
 					}
 				}break;

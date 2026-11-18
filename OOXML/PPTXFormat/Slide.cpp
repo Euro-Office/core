@@ -45,7 +45,7 @@ namespace PPTX
 	}
 	Slide::Slide(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain), FileContainer(pMain)
 	{
-		read(filename, map);
+		Slide::read(filename, map);
 	}
 	Slide::~Slide()
 	{
@@ -80,7 +80,7 @@ namespace PPTX
 				else if (L"AlternateContent" == strName)
 				{
 					XmlUtils::CXmlNode oNodeChoice;
-					if (false == oNode.GetNode(L"mc:Choice", oNodeChoice))
+					if (!oNode.GetNode(L"mc:Choice", oNodeChoice))
 					{
 						oNode.GetNode(L"mc:Fallback", oNodeChoice);
 					}
@@ -92,7 +92,7 @@ namespace PPTX
 			}
 		}
 	}
-	void Slide::read(const OOX::CPath& filename, FileMap& map)
+	void Slide::read(const OOX::CPath& filename, FileMap&  /*map*/)
 	{
 		XmlUtils::CXmlNode oNode;
 		oNode.FromXmlFile(filename.m_strFilename);
@@ -293,7 +293,7 @@ xmlns:p188=\"http://schemas.microsoft.com/office/powerpoint/2018/8/main\" r:id=\
 		Note		= FileContainer::Get(OOX::Presentation::FileTypes::NotesSlide).smart_dynamic_cast<PPTX::NotesSlide>();
 		comments	= FileContainer::Get(OOX::Presentation::FileTypes::SlideComments).smart_dynamic_cast<PPTX::Comments>();
 
-		if (false == comments.IsInit())
+		if (!comments.IsInit())
 		{
 			comments = FileContainer::Get(OOX::Presentation::FileTypes::ModernComments).smart_dynamic_cast<PPTX::Comments>();
 		}

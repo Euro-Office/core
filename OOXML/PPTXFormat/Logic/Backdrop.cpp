@@ -72,9 +72,9 @@ namespace PPTX
 		void Backdrop::ReadAttributes(XmlUtils::CXmlLiteReader& oReader, nullable_int & x, nullable_int & y, nullable_int & z )
 		{
 			WritingElement_ReadAttributes_Start_No_NS( oReader )
-				WritingElement_ReadAttributes_Read_if		( oReader, _T("x"), x)
-				WritingElement_ReadAttributes_Read_else_if	( oReader, _T("y"), y)
-				WritingElement_ReadAttributes_Read_else_if	( oReader, _T("z"), z)
+				WritingElement_ReadAttributes_Read_if		( oReader, _T("x"), x) // NOLINT(bugprone-branch-clone): "x" and "dx" are distinct attribute names read into the same field
+				WritingElement_ReadAttributes_Read_else_if	( oReader, _T("y"), y) // NOLINT(bugprone-branch-clone): "y" and "dy" are distinct attribute names read into the same field
+				WritingElement_ReadAttributes_Read_else_if	( oReader, _T("z"), z) // NOLINT(bugprone-branch-clone): "z" and "dz" are distinct attribute names read into the same field
 				WritingElement_ReadAttributes_Read_else_if	( oReader, _T("dx"), x)
 				WritingElement_ReadAttributes_Read_else_if	( oReader, _T("dy"), y)
 				WritingElement_ReadAttributes_Read_else_if	( oReader, _T("dz"), z)

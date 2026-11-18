@@ -74,6 +74,7 @@ namespace PPTX
 			case 6: m_strValue = L"tmRoot"; break;
 			case 7: m_strValue = L"withEffect"; break;
 			case 8: m_strValue = L"withGroup"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

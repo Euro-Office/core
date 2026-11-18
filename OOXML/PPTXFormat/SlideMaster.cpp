@@ -41,13 +41,13 @@ namespace PPTX
 		}
 		SlideMaster::SlideMaster(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain), FileContainer(pMain)
 		{
-			read(filename, map);
+			SlideMaster::read(filename, map);
 		}
 		SlideMaster::~SlideMaster()
 		{
 		}
 
-		void SlideMaster::read(const OOX::CPath& filename, FileMap& map)
+		void SlideMaster::read(const OOX::CPath& filename, FileMap&  /*map*/)
 		{
 			m_sOutputFilename = filename.GetFilename();
 
@@ -113,15 +113,14 @@ namespace PPTX
 
 			if (!pShape && !pPic) return;
 
-			Logic::NvPr *pNvPr = NULL;
+			Logic::NvPr *pNvPr = nullptr;
 
 			if (pShape)	pNvPr = &pShape->nvSpPr.nvPr;
 			if (pPic)	pNvPr = &pPic->nvPicPr.nvPr;
 
 			if (!pNvPr) return;
-			if (pNvPr->ph.is_init() == false) return;
+			if (!pNvPr->ph.is_init()) return;
 
-			std::wstring idx = pNvPr->ph->idx.get_value_or(_T("0"));
 			std::wstring type = pNvPr->ph->type.get_value_or(_T("body"));
 
 			if (type == _T("ctrTitle")) type = _T("title");
@@ -133,7 +132,6 @@ namespace PPTX
 				{
 					if (pMasterShape->nvSpPr.nvPr.ph.is_init())
 					{
-						std::wstring lIdx	= pMasterShape->nvSpPr.nvPr.ph->idx.get_value_or(_T("0"));
 						std::wstring lType	= pMasterShape->nvSpPr.nvPr.ph->type.get_value_or(_T("body"));
 
 						if (lType == L"ctrTitle")	lType = L"title";

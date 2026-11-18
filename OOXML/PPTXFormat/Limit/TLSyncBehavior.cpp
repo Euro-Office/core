@@ -53,6 +53,7 @@ namespace PPTX
 			{
 			case 0: m_strValue = L"canSlip";	break;
 			case 1: m_strValue = L"locked";		break;
+			default: break;
 			}
 		}
 	} // namespace Limit

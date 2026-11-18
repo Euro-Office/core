@@ -142,7 +142,7 @@ namespace PPTX
 
 			pReader->Seek(_end_rec);
 			
-			if (false == idx.IsInit())
+			if (!idx.IsInit())
 			{
 				bModern = true;
 			}
@@ -157,12 +157,12 @@ namespace PPTX
 	}
 	Authors::Authors(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain)
 	{
-		read(filename, map);
+		Authors::read(filename, map);
 	}
 	Authors::~Authors()
 	{
 	}
-	void Authors::read(const OOX::CPath& filename, FileMap& map)
+	void Authors::read(const OOX::CPath& filename, FileMap&  /*map*/)
 	{
 		XmlUtils::CXmlNode oNode;
 		oNode.FromXmlFile(filename.m_strFilename);
@@ -272,9 +272,9 @@ namespace PPTX
 
 			for (auto &auth : m_arAuthors)
 			{
-				if (true == auth.idx.IsInit())
+				if (auth.idx.IsInit())
 					break;
-				if (false == auth.id.IsInit())
+				if (!auth.id.IsInit())
 					break;
 
 				if (bNew)

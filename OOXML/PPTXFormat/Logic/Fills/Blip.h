@@ -55,8 +55,8 @@ namespace PPTX
 			virtual void toPPTY(NSBinPptxRW::CBinaryFileWriter* pWriter) const;
 			virtual void fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader);
 			
-			virtual std::wstring GetFullPicName(OOX::IFileContainer* pRels = NULL) const;
-			virtual std::wstring GetFullOleName(const OOX::RId& pRId, OOX::IFileContainer* pRels = NULL) const;
+			virtual std::wstring GetFullPicName(OOX::IFileContainer* pRels = nullptr) const;
+			virtual std::wstring GetFullOleName(const OOX::RId& pRId, OOX::IFileContainer* pRels = nullptr) const;
 
 			std::vector<UniEffect>	Effects;
 			std::vector<Ext>		ExtLst;

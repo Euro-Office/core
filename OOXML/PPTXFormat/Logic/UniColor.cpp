@@ -44,7 +44,7 @@ namespace PPTX
 		}
 		UniColor::UniColor(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			UniColor::fromXML(node);
 		}
 		const UniColor& UniColor::operator =(XmlUtils::CXmlNode& node)
 		{
@@ -263,6 +263,7 @@ namespace PPTX
 							}
 						}
 					}break;
+					default: break;
 				}
 			}
 

@@ -179,7 +179,7 @@ namespace PPTX
 			{
 				if (ExtLst[i].link_svg.IsInit())
 				{
-					if (pRels != NULL)
+					if (pRels != nullptr)
 					{
 						smart_ptr<OOX::Image> p = pRels->Get<OOX::Image>(*ExtLst[i].link_svg);
 						if (p.is_init())
@@ -196,11 +196,11 @@ namespace PPTX
 					}
 				}
 			}
-			if (false == result.empty()) return result;
+			if (!result.empty()) return result;
 			
 			if (embed.IsInit())
 			{
-				if (pRels != NULL)
+				if (pRels != nullptr)
 				{
 					smart_ptr<OOX::Image> p = pRels->Get<OOX::Image>(*embed);
 					if (p.is_init())
@@ -214,7 +214,7 @@ namespace PPTX
 			}
 			else if (link.IsInit())
 			{
-				if (pRels != NULL)
+				if (pRels != nullptr)
 				{
 					smart_ptr<OOX::Image> p = pRels->Get<OOX::Image>(*link);
 					if (p.is_init())
@@ -232,7 +232,7 @@ namespace PPTX
 		{
 			smart_ptr<OOX::OleObject> pOleObject;
 			
-			if (pRels != NULL)
+			if (pRels != nullptr)
 				pOleObject = pRels->Get<OOX::OleObject>(oRId);
 			else
 			{
@@ -398,7 +398,7 @@ namespace PPTX
 							Effects.push_back(UniEffect());
 							Effects.back().fromPPTY(pReader);
 
-							if (false == Effects.back().is_init())
+							if (!Effects.back().is_init())
 							{
 								Effects.pop_back();
 							}
@@ -435,14 +435,14 @@ namespace PPTX
 							if (std::wstring::npos != strImagePath.find(strPath))
 							{
 								CImageFileFormatChecker checker;
-								if (false == checker.isImageFile(strImagePath))
+								if (!checker.isImageFile(strImagePath))
 								{
 									strImagePath.clear();
 								}				
 							}
 							else strImagePath.clear();
 						}	
-						if (false == strImagePath.empty())
+						if (!strImagePath.empty())
 						{
 							std::vector<smart_ptr<OOX::File>> additionalFiles;
 							NSBinPptxRW::_relsGeneratorInfo oRelsGeneratorInfo = pReader->m_pRels->WriteImage(strImagePath, additionalFiles, L"", L"");

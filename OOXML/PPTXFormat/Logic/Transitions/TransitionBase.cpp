@@ -47,7 +47,7 @@ namespace PPTX
 		}
 		TransitionBase::TransitionBase(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			TransitionBase::fromXML(node);
 		}
 		const TransitionBase& TransitionBase::operator =(XmlUtils::CXmlNode& node)
 		{
@@ -124,7 +124,7 @@ namespace PPTX
 		}
 		TransitionSerialize::TransitionSerialize(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			TransitionSerialize::fromXML(node);
 		}
 		const TransitionSerialize& TransitionSerialize::operator =(XmlUtils::CXmlNode& node)
 		{

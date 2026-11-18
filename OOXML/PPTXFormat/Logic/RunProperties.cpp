@@ -84,8 +84,6 @@ namespace PPTX
 			int nParentDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
-				std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
-
 				Fill.fromXML(oReader);
 			}
 
@@ -168,8 +166,6 @@ namespace PPTX
 			int nParentDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
-				std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
-
 				Color.fromXML(oReader);
 			}
 

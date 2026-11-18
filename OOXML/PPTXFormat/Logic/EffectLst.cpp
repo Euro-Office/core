@@ -82,7 +82,7 @@ namespace PPTX
 			if (reflection.IsInit())	str += reflection->toXML();
 			if (softEdge.IsInit())		str += softEdge->toXML();
 
-			if (false == str.empty())
+			if (!str.empty())
 			{
 				str = L"<a:effectLst>" + str + L"</a:effectLst>";
 			}
@@ -133,7 +133,7 @@ namespace PPTX
 		void EffectLst::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar(); 
+			pReader->GetUChar(); 
 			LONG _end_rec = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			while (pReader->GetPos() < _end_rec)

@@ -53,6 +53,7 @@ namespace PPTX
 			{
 			case 0: m_strValue = L"childStyle"; break;
 			case 1: m_strValue = L"normal"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

@@ -118,7 +118,7 @@ namespace PPTX
 		void XfrmEffect::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar();
+			pReader->GetUChar();
 			LONG _end_rec = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);
@@ -137,6 +137,7 @@ namespace PPTX
 					case 3: sy	= pReader->GetLong(); break;
 					case 4: tx	= (size_t)pReader->GetULong(); break;
 					case 5: ty	= (size_t)pReader->GetULong(); break;
+					default: break;
 				}
 			}
 			pReader->Seek(_end_rec);

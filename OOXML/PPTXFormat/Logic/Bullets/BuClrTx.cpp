@@ -50,8 +50,6 @@ namespace PPTX
 			int nCurDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-				std::wstring sName = oReader.GetName();
-
 			}
 		}
 		void BuClrTx::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)

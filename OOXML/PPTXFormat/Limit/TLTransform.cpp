@@ -54,6 +54,7 @@ namespace PPTX
 			{
 			case 0: m_strValue = L"img"; break;
 			case 1: m_strValue = L"pt"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

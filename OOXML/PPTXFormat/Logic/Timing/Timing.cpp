@@ -93,12 +93,12 @@ namespace PPTX
 			pWriter->StartNode(L"p:timing");
 			pWriter->EndAttributes();
 
-			if ((tnLst.IsInit()) && (false == tnLst->list.empty()))
+			if ((tnLst.IsInit()) && (!tnLst->list.empty()))
 			{
 				tnLst->toXmlWriter(pWriter);
 			}
 
-			if ((bldLst.IsInit()) && (false == bldLst->list.empty()))
+			if ((bldLst.IsInit()) && (!bldLst->list.empty()))
 			{
 				bldLst->toXmlWriter(pWriter);
 			}

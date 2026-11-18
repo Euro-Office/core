@@ -71,7 +71,7 @@ namespace PPTX
 	class WrapperWritingElement : public OOX::WritingElement
 	{
 	public:
-		WrapperWritingElement(OOX::Document *pMain = NULL);
+		WrapperWritingElement(OOX::Document *pMain = nullptr);
 		virtual ~WrapperWritingElement();
 
 	protected:
@@ -92,7 +92,7 @@ namespace PPTX
 
 		template<class T> const bool parentIs() const
 		{
-			if (NULL == parentElement)
+			if (nullptr == parentElement)
 				return false;
 			T* pResult = dynamic_cast<T*>(const_cast<PPTX::WrapperWritingElement*>(parentElement));
 			return (NULL != pResult);
@@ -104,7 +104,7 @@ namespace PPTX
 		}
 		template<class T> const bool parentFileIs() const
 		{
-			if (NULL == parentFile)
+			if (nullptr == parentFile)
 				return false;
 			T* pResult = dynamic_cast<T*>(const_cast<PPTX::WrapperFile*>(parentFile));
 			return (NULL != pResult);

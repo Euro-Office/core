@@ -99,6 +99,7 @@ namespace PPTX
 				case 14:  m_strValue = L"phClr";  break;
 				case 15:  m_strValue = L"tx1";  break;
 				case 16:  m_strValue = L"tx2";  break;
+				default: break;
 			}
 		}
 	} // namespace Limit

@@ -40,11 +40,7 @@ namespace PPTX
 				Media.reset(CreatePtrXmlContent<Logic::AudioCD>(oReader));
 			else if (name == _T("wavAudioFile"))
 				Media.reset(CreatePtrXmlContent<Logic::WavAudioFile>(oReader));
-			else if (name == _T("audioFile"))
-				Media.reset(CreatePtrXmlContent<Logic::MediaFile>(oReader));
-			else if (name == _T("videoFile"))
-				Media.reset(CreatePtrXmlContent<Logic::MediaFile>(oReader));
-			else if (name == _T("quickTimeFile"))
+			else if (name == _T("audioFile") || name == _T("videoFile") || name == _T("quickTimeFile"))
 				Media.reset(CreatePtrXmlContent<Logic::MediaFile>(oReader));
 			else Media.reset();
 		}
@@ -56,11 +52,7 @@ namespace PPTX
 				Media.reset(CreatePtrXmlContent<Logic::AudioCD>(node));
 			else if (name == _T("wavAudioFile"))
 				Media.reset(CreatePtrXmlContent<Logic::WavAudioFile>(node));
-			else if (name == _T("audioFile"))
-				Media.reset(CreatePtrXmlContent<Logic::MediaFile>(node));
-			else if (name == _T("videoFile"))
-				Media.reset(CreatePtrXmlContent<Logic::MediaFile>(node));
-			else if (name == _T("quickTimeFile"))
+			else if (name == _T("audioFile") || name == _T("videoFile") || name == _T("quickTimeFile"))
 				Media.reset(CreatePtrXmlContent<Logic::MediaFile>(node));
 			else Media.reset();
 		}
@@ -71,11 +63,7 @@ namespace PPTX
 				Media.reset(CreatePtrXmlContent<Logic::AudioCD>(oNode));
 			else if (element.GetNode(_T("a:wavAudioFile"), oNode))
 				Media.reset(CreatePtrXmlContent<Logic::WavAudioFile>(oNode));
-			else if (element.GetNode(_T("a:audioFile"), oNode))
-				Media.reset(CreatePtrXmlContent<Logic::MediaFile>(oNode));
-			else if (element.GetNode(_T("a:videoFile"), oNode))
-				Media.reset(CreatePtrXmlContent<Logic::MediaFile>(oNode));
-			else if (element.GetNode(_T("a:quickTimeFile"), oNode))
+			else if (element.GetNode(_T("a:audioFile"), oNode) || element.GetNode(_T("a:videoFile"), oNode) || element.GetNode(_T("a:quickTimeFile"), oNode))
 				Media.reset(CreatePtrXmlContent<Logic::MediaFile>(oNode));
 			else Media.reset();
 		}

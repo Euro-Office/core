@@ -151,10 +151,10 @@ namespace PPTX
 	{
 		bool bIsSlide = false;
 		OOX::File* pSrcFile = dynamic_cast<OOX::File*>(this);
-		if (NULL != pSrcFile)
+		if (nullptr != pSrcFile)
 		{
-			bIsSlide = (pSrcFile->type() == OOX::Presentation::FileTypes::Slide || 
-						pSrcFile->type() == OOX::Presentation::FileTypes::NotesSlide) ? true : false;
+			bIsSlide = pSrcFile->type() == OOX::Presentation::FileTypes::Slide || 
+						pSrcFile->type() == OOX::Presentation::FileTypes::NotesSlide;
 		}
 
 		for (size_t i = 0; i <  rels.m_arRelations.size(); ++i)
@@ -192,7 +192,7 @@ namespace PPTX
 				{
 					smart_ptr<OOX::File> file = PPTX::FileFactory::CreateFilePPTX(normPath, *pRelation, map, OOX::IFileContainer::m_pMainDocument);
 
-					if (file.IsInit() == false)
+					if (!file.IsInit())
 						continue;
 					
 					map.add(normPath, file);
@@ -219,7 +219,7 @@ namespace PPTX
 		rels.Write(filename);
 	}
 
-	void FileContainer::write(OOX::CRels& rels, const OOX::CPath& curdir, const OOX::CPath& directory, OOX::CContentTypes& content) const
+	void FileContainer::write(OOX::CRels& rels, const OOX::CPath& /*curdir*/, const OOX::CPath& directory, OOX::CContentTypes& content) const
 	{
 		std::map<std::wstring, size_t> mNamePair;
        
@@ -237,7 +237,7 @@ namespace PPTX
 
 				if (file.IsInit())
 				{
-					if (file->GetWrittenStatus() == false)
+					if (!file->GetWrittenStatus())
 					{
 						OOX::CPath defdir	= pFile->DefaultDirectory();
 						OOX::CPath name		= pFile->DefaultFileName();
@@ -308,18 +308,16 @@ namespace PPTX
 
 		OOX::CPath filename = path / relation->Target();
 		
-		if ( NSFile::CFileBinary::Exists(filename.GetPath()) == true ) return filename;
+		if ( NSFile::CFileBinary::Exists(filename.GetPath()) ) return filename;
 		
 		//tf22977542_win32.potx
-
-		PPTX::Document *pPptxDocument = dynamic_cast<PPTX::Document *>(m_pMainDocument);
 
 		if (m_pMainDocument)
 		{
 			OOX::CPath main_path(m_pMainDocument->m_sDocumentPath);
 			filename = main_path / relation->Target();
 			
-			if (NSFile::CFileBinary::Exists(filename.GetPath()) == true) return filename;
+			if (NSFile::CFileBinary::Exists(filename.GetPath())) return filename;
 		}
 		//file_1_ (1).pptx			
 		std::wstring strDefDirectory;
@@ -347,11 +345,11 @@ namespace PPTX
 		
 		filename = path / new_filename;
 		
-		if (NSFile::CFileBinary::Exists(filename.GetPath()) == false) 
+		if (!NSFile::CFileBinary::Exists(filename.GetPath())) 
 		{
 			filename = FindFileInDirectory(path.GetPath(), relation->Filename().GetFilename()); // find true path by filename
 
-			if (NSFile::CFileBinary::Exists(filename.GetPath()) == false) 
+			if (!NSFile::CFileBinary::Exists(filename.GetPath())) 
 				return filename;
 		}
 

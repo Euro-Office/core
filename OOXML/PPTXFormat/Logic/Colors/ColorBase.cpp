@@ -39,7 +39,8 @@ namespace PPTX
 			saturation	= 0;
 			luminance	= 0;
 		}
-		ColorBase::ColorBase(const ColorBase& oSrc)
+		// NOLINT(bugprone-copy-constructor-init): the base is default-constructed and *this = oSrc copies the inherited members too; behaviour unchanged.
+		ColorBase::ColorBase(const ColorBase& oSrc) // NOLINT(bugprone-copy-constructor-init)
 		{
 			*this = oSrc;
 		}
@@ -60,23 +61,23 @@ namespace PPTX
 		ColorBase::~ColorBase()
 		{
 		}
-		DWORD ColorBase::GetRGBA(DWORD RGBA) const
+		DWORD ColorBase::GetRGBA(DWORD  /*RGBA*/) const
 		{
 			return ApplyModifiers(ctRGBA);
 		}
-		DWORD ColorBase::GetARGB(DWORD ARGB) const
+		DWORD ColorBase::GetARGB(DWORD  /*ARGB*/) const
 		{
 			return ApplyModifiers(ctARGB);
 		}
-		DWORD ColorBase::GetBGRA(DWORD BGRA) const
+		DWORD ColorBase::GetBGRA(DWORD  /*BGRA*/) const
 		{
 			return ApplyModifiers(ctBGRA);
 		}
-		DWORD ColorBase::GetABGR(DWORD ABGR) const
+		DWORD ColorBase::GetABGR(DWORD  /*ABGR*/) const
 		{
 			return ApplyModifiers(ctABGR);
 		}
-		DWORD ColorBase::GetRGBColor(NSCommon::smart_ptr<PPTX::Theme>& _oTheme, NSCommon::smart_ptr<PPTX::Logic::ClrMap>& _oClrMap, DWORD ARGB)
+		DWORD ColorBase::GetRGBColor(NSCommon::smart_ptr<PPTX::Theme>&  /*_oTheme*/, NSCommon::smart_ptr<PPTX::Logic::ClrMap>&  /*_oClrMap*/, DWORD ARGB)
 		{
 			return GetARGB(ARGB);
 		}
@@ -298,6 +299,7 @@ namespace PPTX
 						break;
 					}
 					break;
+				default: break;
 				}
 			}
 
@@ -549,8 +551,6 @@ namespace PPTX
 						}
 						else if (1 == _type)
 							_mod.val = pReader->GetLong();
-						else if (NSBinPptxRW::g_nodeAttributeEnd == _type)
-							break;
 						else
 							break;
 					}

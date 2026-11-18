@@ -35,12 +35,12 @@ namespace PPTX
 	}
 	NotesSlide::NotesSlide(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain), FileContainer(pMain)
 	{
-		read(filename, map);
+		NotesSlide::read(filename, map);
 	}
 	NotesSlide::~NotesSlide()
 	{
 	}
-	void NotesSlide::read(const OOX::CPath& filename, FileMap& map)
+	void NotesSlide::read(const OOX::CPath& filename, FileMap&  /*map*/)
 	{
 		//FileContainer::read(filename, map);
 

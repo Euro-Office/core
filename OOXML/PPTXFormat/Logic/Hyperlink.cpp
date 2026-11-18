@@ -67,7 +67,7 @@ namespace PPTX
 		void Hyperlink::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
 			WritingElement_ReadAttributes_Start	( oReader )
-				WritingElement_ReadAttributes_Read_if     ( oReader, (L"r:id"), id )
+				WritingElement_ReadAttributes_Read_if     ( oReader, (L"r:id"), id ) // NOLINT(bugprone-branch-clone): "r:id" and "relationships:id" are distinct attribute names read into the same field
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"relationships:id"), id )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"invalidUrl"), invalidUrl )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"action"), action )
@@ -94,7 +94,7 @@ namespace PPTX
 			XmlMacroReadAttributeBase(node, L"highlightClick", highlightClick);
 			XmlMacroReadAttributeBase(node, L"endSnd", endSnd);
 
-			if (false == id.IsInit())
+			if (!id.IsInit())
 			{
 				XmlMacroReadAttributeBase( node, L"relationships:id", id );
 			}
@@ -133,7 +133,7 @@ namespace PPTX
 			OOX::RId rid(rId);
 
 			std::wstring sLink = L"";
-			if (pRels != NULL)
+			if (pRels != nullptr)
 			{
 				smart_ptr<OOX::HyperLink> p = pRels->Get<OOX::HyperLink>(rid);
 				if (p.is_init())

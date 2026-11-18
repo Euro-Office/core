@@ -154,7 +154,7 @@ namespace PPTX
 			XmlMacroReadAttributeBase(node, L"imgH", height);
 			XmlMacroReadAttributeBase(node, L"showAsIcon", showAsIcon);
 
-			if (false == rId.IsInit())
+			if (!rId.IsInit())
 				XmlMacroReadAttributeBase(node, L"id", rId);
 			pic = node.ReadNode(L"p:pic");
 
@@ -230,10 +230,10 @@ namespace PPTX
 				std::wstring s = *spid;
 				if (s.length() < 8) s = L"_x0000_s" + s;
 
-				OOX::IFileContainer* rels = NULL;
+				OOX::IFileContainer* rels = nullptr;
 				std::wstring xml = GetVmlXmlBySpid(s, rels);
 
-				if (false == xml.empty())
+				if (!xml.empty())
 				{
 					std::wstring temp = L"<v:object>";
 					temp += xml;
@@ -250,7 +250,7 @@ namespace PPTX
 					nullable<OOX::WritingElement> anchor;
 					
 					oDrawingConverter.ConvertVml(temp, elements, anchor);
-					oDrawingConverter.m_pBinaryWriter->m_pCommon->m_pMediaManager = NULL;
+					oDrawingConverter.m_pBinaryWriter->m_pCommon->m_pMediaManager = nullptr;
 
 					OOX::IFileContainer* rels_old = pWriter->GetRelsPtr();
 					pWriter->SetRelsPtr(rels);
@@ -306,7 +306,7 @@ namespace PPTX
 					case 0:
 					{
 						pReader->Skip(1); // type (0)
-						LONG nElemLength = pReader->GetLong(); // len
+						pReader->GetLong(); // len
 
 						pic.Init();
 						pic->fromPPTY(pReader);

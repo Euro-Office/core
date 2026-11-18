@@ -59,6 +59,7 @@ namespace PPTX
 			case 0: m_strValue = L"maximized"; break;
 			case 1: m_strValue = L"minimized"; break;
 			case 2: m_strValue = L"restored"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

@@ -112,6 +112,7 @@ namespace PPTX
 					if(str == _T("windowFrame")) { RGB = ::GetSysColor(COLOR_WINDOWFRAME); break;}
 					if(str == _T("windowText")) { RGB = ::GetSysColor(COLOR_WINDOWTEXT); break;}
 					break;
+				default: break;
 				}
 			}
 			blue	= static_cast<unsigned char>(RGB & 0xFF);
@@ -138,8 +139,6 @@ namespace PPTX
 			int nCurDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-				std::wstring strName = oReader.GetName();
-
 				ColorModifier m;
 				Modifiers.push_back(m);
 				Modifiers.back().fromXML(oReader);

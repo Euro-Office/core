@@ -60,7 +60,7 @@ namespace PPTX
 			virtual void fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader);
 
 			bool LoadDrawing(OOX::IFileContainer* pRels);
-			void LoadDrawing(NSBinPptxRW::CBinaryFileWriter* pWriter = NULL);
+			void LoadDrawing(NSBinPptxRW::CBinaryFileWriter* pWriter = nullptr);
 
 			nullable<OOX::RId> id_data;
 			nullable<OOX::RId> id_color;

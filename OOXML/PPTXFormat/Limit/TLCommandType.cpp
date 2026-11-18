@@ -56,6 +56,7 @@ namespace PPTX
 				case 0: m_strValue = L"call"; break;
 				case 1: m_strValue = L"evt"; break;
 				case 2: m_strValue = L"verb"; break;
+				default: break;
 				}
 			}
 

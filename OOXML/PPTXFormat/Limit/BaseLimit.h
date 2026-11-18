@@ -32,13 +32,7 @@
 	virtual unsigned char GetBYTECode() const;								\
 	virtual void SetBYTECode(const unsigned char& val);
 
-#define DEFINE_LIMIT_BASE(Class)											\
-	class Class : public BaseLimit                                          \
-	{                                                                       \
-	public:                                                                 \
-		Class();															\
-		DEFINE_LIMIT_PVIRTUAL												\
-	};
+#define DEFINE_LIMIT_BASE(Class) class Class : public BaseLimit { public: Class(); DEFINE_LIMIT_PVIRTUAL }; // NOLINT(bugprone-macro-parentheses): a class name cannot be parenthesized
 
 namespace PPTX
 {
