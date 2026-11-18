@@ -2021,13 +2021,16 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPrintOptions *oox_print_options)
 void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page, OOX::Spreadsheet::CSheetPr *oox_sheet_pr)
 {
 	// With sheetPr/pageSetUpPr fitToPage the sheet is fitted to fitToWidth x fitToHeight pages (1 each by
-	// default, 0 = no limit) and scale does not apply, as LibreOffice reads it.
+	// default, 0 = no limit, at most 1000) and scale does not apply, as LibreOffice reads it.
+	const bool fit_to_page = oox_sheet_pr && oox_sheet_pr->m_oPageSetUpPr.IsInit() &&
+		oox_sheet_pr->m_oPageSetUpPr->m_oFitToPage.IsInit() && oox_sheet_pr->m_oPageSetUpPr->m_oFitToPage->ToBool();
 	unsigned int fit_width = 0, fit_height = 0;
-	if (oox_sheet_pr && oox_sheet_pr->m_oPageSetUpPr.IsInit() &&
-		oox_sheet_pr->m_oPageSetUpPr->m_oFitToPage.IsInit() && oox_sheet_pr->m_oPageSetUpPr->m_oFitToPage->ToBool())
+	if (fit_to_page)
 	{
 		fit_width	= (oox_page && oox_page->m_oFitToWidth.IsInit()) ? oox_page->m_oFitToWidth->GetValue() : 1;
 		fit_height	= (oox_page && oox_page->m_oFitToHeight.IsInit()) ? oox_page->m_oFitToHeight->GetValue() : 1;
+		fit_width	= (std::min)(fit_width, 1000u);
+		fit_height	= (std::min)(fit_height, 1000u);
 	}
 	if (fit_width > 0)
 		ods_context->page_layout_context()->set_page_scaleToX(fit_width);
@@ -2142,7 +2145,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page, OOX::Spreads
 	}
 	ods_context->page_layout_context()->set_page_size(width, height);
 
-	if (oox_page->m_oScale.IsInit() && fit_width == 0 && fit_height == 0)
+	if (oox_page->m_oScale.IsInit() && !fit_to_page)
 	{
 		ods_context->page_layout_context()->set_page_scale(oox_page->m_oScale->GetValue());
 	}

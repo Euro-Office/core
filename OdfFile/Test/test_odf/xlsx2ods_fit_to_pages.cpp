@@ -146,3 +146,31 @@ TEST(XlsxToOds, ScaleWithoutFitToPage)
 	EXPECT_EQ(scale_to(props, L"Y"), L"") << props;
 	EXPECT_EQ(attribute(props, L"style:scale-to"), L"80%") << props;
 }
+
+// fitToPage with fitToWidth="0" and fitToHeight="0": no page limit, and scale stays off because fitToPage is set.
+TEST(XlsxToOds, FitToPageWithoutLimitsIgnoresScale)
+{
+	const std::wstring props = sheet_properties(L"ZeroZero");
+	ASSERT_FALSE(props.empty()) << "no page style for sheet ZeroZero";
+	EXPECT_EQ(scale_to(props, L"X"), L"") << props;
+	EXPECT_EQ(scale_to(props, L"Y"), L"") << props;
+	EXPECT_EQ(attribute(props, L"style:scale-to"), L"") << props;
+}
+
+// A page count above 1000 is limited to 1000.
+TEST(XlsxToOds, FitToPageLimitsPageCount)
+{
+	const std::wstring props = sheet_properties(L"Huge");
+	ASSERT_FALSE(props.empty()) << "no page style for sheet Huge";
+	EXPECT_EQ(scale_to(props, L"X"), L"1000") << props;
+	EXPECT_EQ(scale_to(props, L"Y"), L"1") << props;
+}
+
+// fitToPage on a sheet without <pageSetup>: one page each way.
+TEST(XlsxToOds, FitToPageWithoutPageSetup)
+{
+	const std::wstring props = sheet_properties(L"NoSetup");
+	ASSERT_FALSE(props.empty()) << "no page style for sheet NoSetup";
+	EXPECT_EQ(scale_to(props, L"X"), L"1") << props;
+	EXPECT_EQ(scale_to(props, L"Y"), L"1") << props;
+}
