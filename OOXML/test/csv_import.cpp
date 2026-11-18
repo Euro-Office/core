@@ -10,6 +10,7 @@
 
 #include "../../DesktopEditor/common/Directory.h"
 #include "../../DesktopEditor/common/File.h"
+#include "../../UnicodeConverter/UnicodeConverter_Encodings.h"
 
 #include <gtest/gtest.h>
 
@@ -39,18 +40,18 @@ namespace
 		return bytes;
 	}
 
-	// Rows x2t writes for a CSV imported with that code page; a sheet that
-	// could not be converted has none.
-	size_t ImportedRows(const std::wstring& csvPath, int codePage, std::string& error)
+	// Rows x2t writes for a CSV imported with that code page: 0 when the code
+	// page reads nothing, -1 when the workbook could not be read back.
+	int ImportedRows(const std::wstring& csvPath, int codePage, std::string& error)
 	{
 		std::wstring workDir = GetWorkDir();
 		std::wstring xlsx = workDir + FILE_SEPARATOR_STR + L"csv2xlsx.xlsx";
 		if (!ConvertTo(csvPath, xlsx, workDir, error, codePage))
-			return 0;
+			return -1;
 
 		std::wstring sheetDir = workDir + FILE_SEPARATOR_STR + L"csv2xlsx";
 		if (!Unpack(xlsx, sheetDir, error))
-			return 0;
+			return -1;
 
 		std::wstring sheetPath = sheetDir + FILE_SEPARATOR_STR + L"xl" + FILE_SEPARATOR_STR +
 								 L"worksheets" + FILE_SEPARATOR_STR + L"sheet1.xml";
@@ -58,23 +59,43 @@ namespace
 		if (!NSFile::CFileBinary::ReadAllTextUtf8A(sheetPath, sheet))
 		{
 			error = "cannot read " + U_TO_UTF8(sheetPath);
-			return 0;
+			return -1;
 		}
 
-		size_t rows = 0;
+		int rows = 0;
 		for (size_t found = sheet.find("<row"); found != std::string::npos; found = sheet.find("<row", found + 1))
 			++rows;
 		return rows;
 	}
+
+	void ExpectRows(const std::wstring& csv, int codePage, int expected)
+	{
+		std::string error;
+		EXPECT_EQ(expected, ImportedRows(csv, codePage, error)) << error;
+		EXPECT_TRUE(error.empty()) << error;
+	}
 }
 
-// 1000 is converted by ansi_2_unicode and has no entry in the encodings table,
-// so it must not index it.
-TEST(CsvImport, AnsiCodePageDoesNotIndexTheEncodingsTable)
+// 1000 has its own conversion, so the encodings table is never indexed with it
+// and the text still comes through.
+TEST(CsvImport, AnsiCodePageUsesItsOwnConversion)
 {
-	std::wstring csv = WriteCsv("a,b\r\n1,2\r\n", L"ansi.csv");
-	std::string error;
-	EXPECT_EQ((size_t)2, ImportedRows(csv, 1000, error)) << error;
+	ExpectRows(WriteCsv("a,b\r\n1,2\r\n", L"ansi.csv"), 1000, 2);
+}
+
+// An index at the end of the table and one well past it have no entry: they
+// must read nothing instead of reading outside Encodings[].
+TEST(CsvImport, CodePagePastTheEncodingsTableReadsNothing)
+{
+	ExpectRows(WriteCsv("a,b\r\n1,2\r\n", L"past-table.csv"), UNICODE_CONVERTER_ENCODINGS_COUNT, 0);
+	ExpectRows(WriteCsv("a,b\r\n1,2\r\n", L"unknown-codepage.csv"), 12345, 0);
+}
+
+// A code page from the table still converts, so the guard only skips the ones
+// the table cannot answer for. 44 is windows-1252, where 0xE9 is "é".
+TEST(CsvImport, TableCodePageStillConverts)
+{
+	ExpectRows(WriteCsv("caf\xE9\r\n", L"cp1252.csv"), 44, 1);
 }
 
 // A lone surrogate makes the strict UTF-16 conversion fail; the ICU fallback
@@ -85,7 +106,5 @@ TEST(CsvImport, Utf16FallbackKeepsTheSheet)
 	text += L'\xD800'; // lone high surrogate
 	text += L",1\r\n";
 
-	std::wstring csv = WriteCsv(Utf16Le(text), L"utf16.csv");
-	std::string error;
-	EXPECT_EQ((size_t)2, ImportedRows(csv, 48 /*UTF-16LE*/, error)) << error;
+	ExpectRows(WriteCsv(Utf16Le(text), L"utf16.csv"), 48 /*UTF-16LE*/, 2);
 }
