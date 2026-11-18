@@ -530,7 +530,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CWorksheet *oox_sheet)
 
 /////////////////////////////////////////////////////////////////////////
 	convert(oox_sheet->m_oSheetViews.GetPointer());
-	convert(oox_sheet->m_oPageSetup.GetPointer());
+	convert(oox_sheet->m_oPageSetup.GetPointer(), oox_sheet->m_oSheetPr.GetPointer());
 	convert(oox_sheet->m_oPageMargins.GetPointer(), oox_sheet->m_oHeaderFooter.GetPointer());
 	convert(oox_sheet->m_oPrintOptions.GetPointer());
 	convert(oox_sheet->m_oPicture.GetPointer());
@@ -2018,8 +2018,22 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPrintOptions *oox_print_options)
 	}
 	ods_context->page_layout_context()->set_page_centered(bHorizontal, bVertical);
 }
-void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page)
+void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page, OOX::Spreadsheet::CSheetPr *oox_sheet_pr)
 {
+	// With sheetPr/pageSetUpPr fitToPage the sheet is fitted to fitToWidth x fitToHeight pages (1 each by
+	// default, 0 = no limit) and scale does not apply, as LibreOffice reads it.
+	unsigned int fit_width = 0, fit_height = 0;
+	if (oox_sheet_pr && oox_sheet_pr->m_oPageSetUpPr.IsInit() &&
+		oox_sheet_pr->m_oPageSetUpPr->m_oFitToPage.IsInit() && oox_sheet_pr->m_oPageSetUpPr->m_oFitToPage->ToBool())
+	{
+		fit_width	= (oox_page && oox_page->m_oFitToWidth.IsInit()) ? oox_page->m_oFitToWidth->GetValue() : 1;
+		fit_height	= (oox_page && oox_page->m_oFitToHeight.IsInit()) ? oox_page->m_oFitToHeight->GetValue() : 1;
+	}
+	if (fit_width > 0)
+		ods_context->page_layout_context()->set_page_scaleToX(fit_width);
+	if (fit_height > 0)
+		ods_context->page_layout_context()->set_page_scaleToY(fit_height);
+
 	if (!oox_page) return;
 
 	int type = 1;	
@@ -2128,7 +2142,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page)
 	}
 	ods_context->page_layout_context()->set_page_size(width, height);
 
-	if (oox_page->m_oScale.IsInit())
+	if (oox_page->m_oScale.IsInit() && fit_width == 0 && fit_height == 0)
 	{
 		ods_context->page_layout_context()->set_page_scale(oox_page->m_oScale->GetValue());
 	}
