@@ -37,8 +37,8 @@ namespace NSCommon
 	public:
 		smart_ptr()
 		{
-			m_pData		= NULL;
-			m_pCountRef = NULL;
+			m_pData		= nullptr;
+			m_pCountRef = nullptr;
 		}
 		smart_ptr(Type* pPointer)
 		{
@@ -47,8 +47,8 @@ namespace NSCommon
 		}
 		smart_ptr(const smart_ptr<Type>& pPointer)
 		{
-			m_pData		= NULL;
-			m_pCountRef	= NULL;
+			m_pData		= nullptr;
+			m_pCountRef	= nullptr;
 			*this = pPointer;
 		}
 		~smart_ptr()
@@ -58,7 +58,7 @@ namespace NSCommon
 
 		inline void Release()
 		{
-			if (NULL == m_pCountRef)
+			if (nullptr == m_pCountRef)
 				return;
 
 			*m_pCountRef -= 1;
@@ -68,12 +68,12 @@ namespace NSCommon
 					delete m_pData;
 				delete m_pCountRef;
 			}
-			m_pData		= NULL;
-			m_pCountRef	= NULL;
+			m_pData		= nullptr;
+			m_pCountRef	= nullptr;
 		}
 		inline void AddRef()
 		{
-			if (!IsInit() || (NULL == m_pCountRef))
+			if (!IsInit() || (nullptr == m_pCountRef))
 				return;
 			*m_pCountRef += 1;
 		}
@@ -105,7 +105,7 @@ namespace NSCommon
 		{
 			Release();
 
-			if ((NULL == oSrc.m_pData) || (NULL == oSrc.m_pCountRef))
+			if ((nullptr == oSrc.m_pData) || (nullptr == oSrc.m_pCountRef))
 				return *this;
 			
 			*oSrc.m_pCountRef += 1;
@@ -115,7 +115,7 @@ namespace NSCommon
 
 		inline bool IsInit() const
 		{ 
-			return (NULL != m_pData); 
+			return (nullptr != m_pData); 
 		}
 		inline bool is_init() const
 		{
@@ -127,7 +127,7 @@ namespace NSCommon
 			if (!IsInit())
 				return false;
 			T* pResult = dynamic_cast<T*>(const_cast<Type*>(m_pData));
-			return (NULL != pResult);
+			return (nullptr != pResult);
 		}
 		template<class T> inline const T& as()const
 		{
@@ -136,7 +136,7 @@ namespace NSCommon
 		}
 		template<class T> inline T& as()
 		{
-			T* pResult = dynamic_cast<T*>(const_cast<Type*>(m_pData));
+			T* pResult = dynamic_cast<T*>(m_pData);
 			return *pResult;
 		}
 
@@ -152,12 +152,12 @@ namespace NSCommon
 		{
 			smart_ptr<T> new_type;
 			
-			if ((NULL == m_pData) || (NULL == m_pCountRef))
+			if ((nullptr == m_pData) || (nullptr == m_pCountRef))
 				return new_type;
 			
 			T* pCast = dynamic_cast<T*>(m_pData);
 
-			if (NULL == pCast)
+			if (nullptr == pCast)
 				return new_type;
 
 			*m_pCountRef += 1;
