@@ -1536,7 +1536,7 @@ namespace NSFile
 	std::wstring CFileBinary::GetTempPath()
 	{
 		if (!g_overrideTmpPath.empty())
-			return g_overrideTmpPath;
+        { return g_overrideTmpPath; }
 
 #if defined(_WIN32) || defined(_WIN32_WCE) || defined(_WIN64)
 		wchar_t pBuffer[MAX_PATH + 1];
@@ -1547,27 +1547,32 @@ namespace NSFile
 
 		size_t nSeparatorPos = sRet.find_last_of(wchar_t('/'));
 		if (std::wstring::npos == nSeparatorPos)
-		{
-			nSeparatorPos = sRet.find_last_of(wchar_t('\\'));
-		}
+		{ nSeparatorPos = sRet.find_last_of(wchar_t('\\')); }
 
 		if (std::wstring::npos == nSeparatorPos)
-			return L"";
+        { return L""; }
 
 		return sRet.substr(0, nSeparatorPos);
 #else
+        auto folder_str = std::string( "/tmp" );
+
 		char *folder = getenv("TEMP");
 
-		if (NULL == folder)
-			folder = getenv("TMP");
-		if (NULL == folder)
-			folder = getenv("TMPDIR");
-		if (NULL == folder)
-			folder = "/tmp";
+		if (nullptr == folder)
+        { folder = getenv("TMP"); }
 
-		return NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)folder, strlen(folder));
+		if (nullptr == folder)
+        { folder = getenv("TMPDIR"); }
+
+		if (nullptr != folder)
+        { folder_str = std::string( folder ); }
+
+		return NSFile::CUtf8Converter::GetUnicodeStringFromUTF8(
+            reinterpret_cast<BYTE*>( folder_str.data() ),
+            static_cast<LONG>( folder_str.size()));
 #endif
 	}
+
 	std::wstring CFileBinary::CreateTempFileWithUniqueName(const std::wstring& strFolderPathRoot, const std::wstring& Prefix)
 	{
 #if defined(_WIN32) || defined(_WIN32_WCE) || defined(_WIN64)
@@ -1592,6 +1597,7 @@ namespace NSFile
 		return NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)sRes.c_str(), sRes.length());
 #endif
 	}
+
 	bool CFileBinary::OpenTempFile(std::wstring *pwsName, FILE **ppFile, wchar_t *wsMode, wchar_t *wsExt, wchar_t *wsFolder, wchar_t* wsName)
 	{
 		// TODO: Implement when wsName != NULL
@@ -1662,6 +1668,7 @@ namespace NSFile
 
 		return FALSE;
 	}
+
 	FILE* CFileBinary::OpenFileNative(const std::wstring& sFileName, const std::wstring& sMode)
 	{
 #if defined(_WIN32) || defined(_WIN32_WCE) || defined(_WIN64)
