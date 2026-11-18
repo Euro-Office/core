@@ -77,6 +77,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/row_format_default_columns.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/row_format_columns_past_last.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/row_format_columns_start_past_last.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/row_format_columns_malformed.xlsx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

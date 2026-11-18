@@ -126,3 +126,10 @@ TEST(XlsxToOds, ColumnsStartingPastXfdAreDropped)
 {
 	expect_rows_end_at_last_column(L"ExampleFiles/row_format_columns_start_past_last.xlsx", 1024, 1024);
 }
+
+// <col> elements with min past the range of int or min greater than max are dropped too; the sheet keeps its 1024 default
+// columns.
+TEST(XlsxToOds, MalformedColumnRangesAreDropped)
+{
+	expect_rows_end_at_last_column(L"ExampleFiles/row_format_columns_malformed.xlsx", 1024, 1024);
+}
