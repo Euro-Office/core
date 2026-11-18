@@ -245,9 +245,8 @@ namespace OOX
 			fMouseIcon = GETBIT(mask, 27);
 			fPicture = GETBIT(mask, 28);
 			fAccelerator = GETBIT(mask, 29);
-			// TODO: the group name is bit 32 of the mask, but GETBIT shifts an int, so this
-			// was always false in GCC builds and the reader skipped the group name. Fix in its own PR.
-			fGroupName = false;
+			// bit 32 of a 64-bit mask: GETBIT shifts an int, so it cannot reach it
+			fGroupName = ((mask >> 32) & 1) != 0;
 		}
 		MorphDataPropMask & operator = (_UINT32 flag)
 		{
