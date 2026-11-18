@@ -86,6 +86,18 @@ int style_outline_level(const std::wstring& styles, const std::wstring& name)
     return std::stoi(style.substr(level + tag.size()));
 }
 
+// The style named `name`, from its w:name up to its end, or an empty string.
+std::wstring style_xml(const std::wstring& styles, const std::wstring& name)
+{
+    const size_t marker = styles.find(L"<w:name w:val=\"" + name + L"\"/>");
+    if (marker == std::wstring::npos)
+        return std::wstring();
+    const size_t end = styles.find(L"</w:style>", marker);
+    if (end == std::wstring::npos)
+        return std::wstring();
+    return styles.substr(marker, end - marker);
+}
+
 struct ConvertedParts
 {
     std::wstring document;
@@ -125,6 +137,13 @@ const ConvertedParts& converted_with_outline_numbering()
 const ConvertedParts& converted_with_outline_style()
 {
     static const ConvertedParts parts = convert(L"ExampleFiles/outline_levels_outline_style.odt");
+    return parts;
+}
+
+// Outline numbering on level 1 only ("Chapter 1"), the other levels show no number.
+const ConvertedParts& converted_with_chapter_numbering()
+{
+    static const ConvertedParts parts = convert(L"ExampleFiles/outline_levels_chapter_numbered.odt");
     return parts;
 }
 
@@ -264,5 +283,42 @@ TEST_F(OdtToDocxOutlineLevelWithOutlineNumbering, LevelZeroGetsNoNegativeListLev
     EXPECT_EQ(paragraph_list_level(document_, L"Level zero"), 0);
     EXPECT_NE(paragraph_xml(document_, L"Level zero").find(L"<w:numId w:val=\"0\"/>"), std::wstring::npos);
     EXPECT_EQ(paragraph_outline_level(document_, L"Level zero"), 9);
+}
+class OdtToDocxOutlineLevelWithChapterNumbering : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        ASSERT_FALSE(document_.empty()) << "ODT -> DOCX conversion failed or word/document.xml is missing";
+        ASSERT_FALSE(styles_.empty()) << "word/styles.xml is missing";
+    }
+
+    const std::wstring& document_ = converted_with_chapter_numbering().document;
+    const std::wstring& styles_   = converted_with_chapter_numbering().styles;
+};
+
+// The number format is looked up on the style's own outline level: level 1 shows numbers,
+// so "Heading 1" keeps the outline numbering and its heading keeps the chapter number.
+TEST_F(OdtToDocxOutlineLevelWithChapterNumbering, NumberedLevelKeepsOutlineNumbering)
+{
+    const std::wstring style = style_xml(styles_, L"Heading 1");
+    ASSERT_FALSE(style.empty());
+    EXPECT_NE(style.find(L"<w:ilvl w:val=\"0\"/>"), std::wstring::npos);
+    EXPECT_NE(style.find(L"<w:numId w:val=\""), std::wstring::npos);
+    EXPECT_EQ(style.find(L"<w:numId w:val=\"0\"/>"), std::wstring::npos);
+    EXPECT_EQ(style_outline_level(styles_, L"Heading 1"), 0);
+
+    const std::wstring paragraph = paragraph_xml(document_, L"Chapter one");
+    ASSERT_FALSE(paragraph.empty());
+    EXPECT_EQ(paragraph.find(L"<w:numPr>"), std::wstring::npos);
+}
+
+// Level 2 shows no number: w:numId 0 cancels the outline numbering for "Heading 2".
+TEST_F(OdtToDocxOutlineLevelWithChapterNumbering, UnnumberedLevelGetsNoNumbering)
+{
+    const std::wstring style = style_xml(styles_, L"Heading 2");
+    ASSERT_FALSE(style.empty());
+    EXPECT_NE(style.find(L"<w:numId w:val=\"0\"/>"), std::wstring::npos);
+    EXPECT_EQ(style_outline_level(styles_, L"Heading 2"), 1);
 }
 } // namespace

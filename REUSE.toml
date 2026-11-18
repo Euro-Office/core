@@ -204,6 +204,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/outline_levels.odt",
     "OdfFile/Test/test_odf/ExampleFiles/outline_levels_outline_style.odt",
     "OdfFile/Test/test_odf/ExampleFiles/outline_levels_numbered.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/outline_levels_chapter_numbered.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
