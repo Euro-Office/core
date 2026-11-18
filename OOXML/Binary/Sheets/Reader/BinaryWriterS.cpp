@@ -9188,12 +9188,20 @@ NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXM
         }
 	}
 
-	if (BinXlsxRW::c_oFileTypes::JSON == saveFileType && nullptr != pXlsx)
+	if (BinXlsxRW::c_oFileTypes::JSON == saveFileType)
 	{
+		if (nullptr == pXlsx)
+		{
+			// the flat XML fallback carries no workbook model to export as JSON
+			result = AVS_FILEUTILS_ERROR_CONVERT;
+		}
+		else
+		{
 //todo 46 temporarily CP_UTF8
-		
-		CSVWriter oCSVWriter;
-		oCSVWriter.Xlsx2Csv(sFileDst, *pXlsx, 46, std::wstring(L","), Lcid, true);
+
+			CSVWriter oCSVWriter;
+			oCSVWriter.Xlsx2Csv(sFileDst, *pXlsx, 46, std::wstring(L","), Lcid, true);
+		}
 	}
 	else
 	{
