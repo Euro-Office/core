@@ -195,7 +195,7 @@ namespace Oox2Odf
 		void convert(OOX::Spreadsheet::CSheetPr				*oox_sheet_pr);
 		void convert(OOX::Spreadsheet::CSheetViews			*oox_sheet_views);
 		void convert(OOX::Spreadsheet::CPageSetup			*oox_page);
-		void convert(OOX::Spreadsheet::CPageMargins			*oox_page);
+		void convert(OOX::Spreadsheet::CPageMargins			*oox_page, OOX::Spreadsheet::CHeaderFooter *oox_hf);
 		void convert(OOX::Spreadsheet::CPrintOptions		*oox_print_options);
 		void convert(OOX::Spreadsheet::CWorkbookView		*oox_book_views);
 		void convert(OOX::Spreadsheet::CExternalLink		*oox_external_link);
