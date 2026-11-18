@@ -499,6 +499,8 @@ XLS::BaseObjectPtr CSlicerStyleElement::toBin()
 {
 	auto ptr(new XLSB::SlicerStyleElement);
 	XLS::BaseObjectPtr objectPtr(ptr);
+	// TODO: dxfId is optional and get() dereferences null when it is missing; the guard that
+	// used to be here had a stray semicolon, so guard it properly in a follow-up
 	ptr->dxfId = m_oDxfId.get();
 	if( m_oType->GetValue() == SimpleTypes::Spreadsheet::ESlicerStyleType::cslicerstyletypeUnselectedItemWithData)
 		ptr->tseType = 0x0000001C;

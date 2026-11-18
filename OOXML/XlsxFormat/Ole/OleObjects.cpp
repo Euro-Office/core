@@ -256,8 +256,10 @@ namespace OOX
 			}
 			if (m_OleObjectFile.IsInit())
 			{
+				// TODO: the macro below expands to several statements, so the trailing writes run
+				// only for MSPackage objects; that is a bug, kept as it is in this cleanup
 				if (m_OleObjectFile->isMsPackage())
-					WritingStringAttrString(L"mspackage", L"true"); // NOLINT(bugprone-multiple-statement-macro): braces would drop the unconditional trailing writes only for non-MSPackage objects, changing serialized output
+					WritingStringAttrString(L"mspackage", L"true"); // NOLINT(bugprone-multiple-statement-macro): kept to preserve the output
 
 				WritingStringAttrEncodeXmlString(L"pathbin", m_OleObjectFile->filename().GetPath());
 				WritingStringAttrEncodeXmlString(L"pathimg", m_OleObjectFile->filename_cache().GetPath());

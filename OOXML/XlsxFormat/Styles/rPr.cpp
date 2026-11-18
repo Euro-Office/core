@@ -1140,7 +1140,7 @@ namespace OOX
 			{
 				m_oSz.Init();
 				m_oSz->m_oVal.Init();
-				m_oSz->m_oVal->SetValue(dyHeight / 20); // NOLINT(bugprone-integer-division): SetValue takes a double; a floating-point division would change the stored font size whenever dyHeight is not a multiple of 20
+				m_oSz->m_oVal->SetValue(dyHeight / 20); // NOLINT(bugprone-integer-division): TODO: this truncates 10.5 pt to 10; kept so the stored size does not change
 			}
 			_UINT16 grbit = oStream.GetUShort();
 			if(0 != (grbit & 0x2))
