@@ -228,6 +228,8 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/numbered_paragraph_first.odt",
     "OdfFile/Test/test_odf/ExampleFiles/page_sequence_first.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/master_page_break.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/master_page_layout_break.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

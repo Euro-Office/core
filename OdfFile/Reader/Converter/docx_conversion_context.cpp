@@ -1529,6 +1529,21 @@ int twips(double points)
 	return (int)(points * 20 + (points < 0 ? -0.5 : 0.5));
 }
 
+// True, and the request cleared, if a page break (2) is pending for a body paragraph. A master page switch asks for
+// it. Written as w:pageBreakBefore it adds no empty page when a section break has already started a new page; a page
+// break run at the start of the paragraph would. Inside a table, a pending break comes from the table itself and goes
+// to the first paragraph of its first cell: Word and LibreOffice start the table on a new page only for
+// w:pageBreakBefore there.
+bool take_page_break_before(docx_conversion_context & Context, bool in_drawing)
+{
+	if (Context.get_page_break_before() != 2 || in_drawing || Context.process_headers_footers_
+		|| Context.get_process_note() != docx_conversion_context::noNote)
+		return false;
+
+	Context.set_page_break_before(0);
+	return true;
+}
+
 // Text width in points of a page layout (page width less the page margins), 0 if unknown.
 // Section margins are left out: a section of its own gets them neither in its w:pgMar.
 double text_width(odf_reader::page_layout_container & layouts, const std::wstring & page_layout_name)
@@ -1777,7 +1792,10 @@ void docx_conversion_context::serialize_paragraph_style(std::wostream & strm, co
 		//	start_paragraph();
 		//}
 
-		if (!paragraph_style.str().empty() || !ParentId.empty())
+		// an automatic paragraph style without paragraph properties has not written the page break yet
+		const bool page_break_before = !in_styles && in_automatic_style_ && take_page_break_before(*this, in_drawing);
+
+		if (!paragraph_style.str().empty() || !ParentId.empty() || page_break_before)
 		{		
 			CP_XML_NODE(L"w:pPr")
 			{
@@ -1791,6 +1809,13 @@ void docx_conversion_context::serialize_paragraph_style(std::wostream & strm, co
 					CP_XML_NODE(L"w:pStyle")
 					{
 						CP_XML_ATTR(L"w:val", ParentId);
+					}
+				}
+				if (page_break_before)
+				{
+					CP_XML_NODE(L"w:pageBreakBefore")
+					{
+						CP_XML_ATTR(L"w:val", L"true");
 					}
 				}
 				CP_XML_STREAM() << paragraph_style.str();
@@ -2355,6 +2380,9 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 				}
 				output_stream() << L"<w:pStyle w:val=\"" << id << L"\" />";
 
+				if (take_page_break_before(*this, in_drawing))
+					output_stream() << L"<w:pageBreakBefore w:val=\"true\"/>";
+
 				if (!get_text_tracked_context().dumpPPr_.empty())
 				{
 					output_stream() << get_text_tracked_context().dumpPPr_;
@@ -2404,6 +2432,8 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 	// distance between a header/footer and the page body is all it gets.
 	header_footer_edge_spacing edge_spacing(*this, Attr, NULL);
 	const std::wstring edge_attr = header_footer_context_.edge_attr();
+	// or the page break of a table that starts a new page, for the first paragraph of its first cell
+	const bool page_break_before = take_page_break_before(*this, in_drawing);
 
 	if (!get_section_context().dump_.empty() 
 		&& !get_table_context().in_table()
@@ -2416,12 +2446,19 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 			output_stream() << get_section_context().dump_;
 			get_section_context().dump_.clear();
 			//TODO find out if headers are real without styles and properties
+			if (page_break_before)
+				output_stream() << L"<w:pageBreakBefore w:val=\"true\"/>";
 		output_stream() << L"</w:pPr>";
 		return 3;
 	}
-	if (!edge_attr.empty())
+	if (!edge_attr.empty() || page_break_before)
 	{
-		output_stream() << L"<w:pPr><w:spacing " << edge_attr << L"/></w:pPr>";
+		output_stream() << L"<w:pPr>";
+		if (page_break_before)
+			output_stream() << L"<w:pageBreakBefore w:val=\"true\"/>";
+		if (!edge_attr.empty())
+			output_stream() << L"<w:spacing " << edge_attr << L"/>";
+		output_stream() << L"</w:pPr>";
 		return 3;
 	}
 

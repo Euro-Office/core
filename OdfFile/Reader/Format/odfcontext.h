@@ -178,6 +178,9 @@ public:
 	style_instance * style_default_by_type	(odf_types::style_family::type Type) const;
     
 	const _CP_OPT(std::wstring) master_page_name_by_name(const std::wstring & StyleName) const;
+	// style:master-page-name of the style or the nearest parent style that sets it; none when empty
+	_CP_OPT(std::wstring) master_page_name_inherited(const std::wstring & StyleName,
+		odf_types::style_family::type Type) const;
 
     instances_array & instances() { return instances_; } 
 

@@ -338,10 +338,35 @@ namespace cpdoccore {
 		{
 			_CP_OPT(std::wstring) master_page;
 
+			// An empty name only stops the inheritance (see master_page_name_inherited), it is no master page.
 			map_wstring_wstring::const_iterator res = master_page_name_.find(StyleName);
-			if (res != master_page_name_.end())
+			if (res != master_page_name_.end() && !res->second.empty())
 				master_page = res->second;
 			return master_page;
+		}
+
+		_CP_OPT(std::wstring) styles_container::master_page_name_inherited(const std::wstring& StyleName,
+			odf_types::style_family::type Type) const
+		{
+			// LibreOffice keeps the master page as a paragraph attribute, so child styles inherit it.
+			// An empty value stops the inheritance. The depth limit guards against parent cycles.
+			std::wstring name = StyleName;
+			style_instance* inst = style_by_name(StyleName, Type, false);
+
+			for (int depth = 0; depth < 32; depth++)
+			{
+				map_wstring_wstring::const_iterator res = master_page_name_.find(name);
+				if (res != master_page_name_.end())
+				{
+					if (res->second.empty())
+						return boost::none;
+					return res->second;
+				}
+				if (!inst || !(inst = inst->parent()))
+					break;
+				name = inst->name();
+			}
+			return boost::none;
 		}
 		
 		void styles_container::set_new_name_master_page(std::wstring ws_name_layout, std::wstring ws_new_name)

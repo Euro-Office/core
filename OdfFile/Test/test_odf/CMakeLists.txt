@@ -74,6 +74,7 @@ add_core_gtest(
             xlsx2ods_page_margins.cpp
             chart_vary_colors.cpp
             odt2docx_first_body_element.cpp
+            odt2docx_master_page_break.cpp
             odt2docx_meta_template.cpp
             chart_subtitle.cpp
             math_property_values.cpp

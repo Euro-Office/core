@@ -32,6 +32,7 @@
 
 #include "serialize_elements.h"
 #include "odfcontext.h"
+#include "text_elements.h"
 #include "style_paragraph_properties.h"
 
 namespace cpdoccore { 
@@ -273,6 +274,7 @@ void office_text::docx_convert(oox::docx_conversion_context & Context)
 				}
 			}
 		} 
+		text::break_before_master_page(Context, content_[i]);
 		content_[i]->docx_convert(Context);
     }
     Context.end_office_text();
