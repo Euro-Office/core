@@ -129,8 +129,8 @@ void odf_text_context::add_text_content(const std::wstring & text)
 	//}
 
 	// ODF white space (ODF 1.2 part 1, 6.1.2): a reader drops a space at the start of a paragraph and a space that
-	// follows another white-space character, also when the two sit in different spans. Such a space goes out as
-	// text:s, as LibreOffice writes it; so does every run of two or more spaces.
+	// follows another white-space character (a space, or a TAB, LF or CR written as text), also when the two sit in
+	// different spans. Such a space goes out as text:s; so does every run of two or more spaces.
 	std::wstring chars;
 	size_t pos = 0;
 	while (pos < text.length())
@@ -707,7 +707,12 @@ void odf_text_context::add_hyperlink (const std::wstring & link, const std::wstr
 	if (!hyperlink)return;
 
 	if (!display.empty())
-		hyperlink->add_text(display);
+	{
+		// The link text follows the same white-space rules as the rest of the paragraph.
+		current_level_.push_back(odf_element_state(elm, L"", office_element_ptr(), current_level_.size()));
+		add_text_content(display);
+		current_level_.pop_back();
+	}
 ////////////////////////////
 	
 	if (!link.empty())
