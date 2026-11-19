@@ -722,11 +722,16 @@ void xlsx_table_state::serialize_table_format (std::wostream & strm)
 			CP_XML_NODE(L"sheetPr")
 			{
 				//at filterMode="false">
-				if (table_prop && table_prop->content().tableooo_tab_color_)
+				// ODF 1.3 table:tab-color wins over the older tableooo:tab-color.
+				_CP_OPT(odf_types::color) tab_color;
+				if (table_prop)
+					tab_color = table_prop->content().table_tab_color_ ? table_prop->content().table_tab_color_
+																		: table_prop->content().tableooo_tab_color_;
+				if (tab_color)
 				{
 					CP_XML_NODE(L"tabColor")
 					{
-						CP_XML_ATTR(L"rgb", table_prop->content().tableooo_tab_color_->get_hex_value());	
+						CP_XML_ATTR(L"rgb", tab_color->get_hex_value());
 					}
 				}
 				if (fit_to_pages)
