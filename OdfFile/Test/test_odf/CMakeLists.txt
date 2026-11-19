@@ -95,6 +95,7 @@ add_core_gtest(
             odt2docx_database_display.cpp
             ods2xlsx_fill_character.cpp
             odf_font_family.cpp
+            docx2odt_line_break_after_text.cpp
             odt2docx_character_style_based_on.cpp
             docx2odt_style_based_on.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp

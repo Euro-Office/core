@@ -1059,6 +1059,11 @@ void DocxConverter::convert(OOX::Logic::CRun *oox_run)//wordprocessing 22.1.2.87
 						if (need_restart_para)
 							odt_context->add_paragraph_break(type);
 					}
+					else if (pBr->m_oType.GetValue() == SimpleTypes::brtypeTextWrapping)
+					{
+						// a line break after text in the same run belongs where it is, not before the next paragraph
+						odt_context->text_context()->set_type_break(type, pBr->m_oClear.GetValue());
+					}
 					else
 					{
 						if( !odt_context->pendingBreakType ) // for bug when we have text and after conversion we have early break column (check bug 73365)
