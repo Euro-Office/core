@@ -37,6 +37,8 @@ subfolders = [
     'openssl',
     'qt',
     'socketio',
+    'nlohmann_json',
+    'sioxx',
     'v8',
     'zlib-ng',
     'zlib-ng-wasm',
