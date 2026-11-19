@@ -84,10 +84,11 @@ namespace Oox2Odf
 {
 
 	// Adds to refs a copy of each reference in from whose type (default, even or first page) refs does not have yet.
+	// A section may list a type twice; the last one counts (as in set_hdr_ftr_ref), so walk from the end.
 	void add_missing_hf_refs(std::vector<nullable<ComplexTypes::Word::CHdrFtrRef>>& refs,
 		const std::vector<nullable<ComplexTypes::Word::CHdrFtrRef>>& from)
 	{
-		for (size_t i = 0; i < from.size(); i++)
+		for (size_t i = from.size(); i-- > 0;)
 		{
 			if (false == from[i].IsInit()) continue;
 
