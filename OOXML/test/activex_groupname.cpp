@@ -15,6 +15,9 @@
 
 #include "../DocxFormat/Media/ActiveX.h"
 
+#include "../../DesktopEditor/common/File.h"
+#include "common.h"
+
 #include <gtest/gtest.h>
 
 #include <cstdint>
@@ -152,4 +155,54 @@ TEST(ActiveXMorphData, ConsumesCompressedGroupName)
 	ASSERT_TRUE(morph.m_oFontName.IsInit())
 		<< "TextProps started at the wrong offset: the group name was not consumed";
 	EXPECT_EQ(*morph.m_oFontName, std::wstring(L"Arial"));
+}
+
+// The conversions below are guards, not a check of the group name. No writer
+// consumes what MorphData Parse reads from behind the group name: the font name
+// has no reader at all, the caption is read before the group name, and the ODT
+// writer drops ActiveX controls. The size, caption and font of the two controls
+// therefore cannot be observed in any output, so only the unit test above can
+// tell the fix from its parent commit. What these tests do check is that a
+// document whose controls carry a compressed group name goes through the
+// readers, bins included, and keeps its ActiveX parts.
+
+TEST(ActiveXGroupedDocument, ConvertsToOdt)
+{
+	std::string error;
+	std::wstring work = GetWorkDir();
+	std::wstring odt = work + FILE_SEPARATOR_STR L"groupname.odt";
+
+	ASSERT_TRUE(ConvertTo(kGroupedDocument, odt, work, error)) << error;
+
+	std::wstring unpacked = work + FILE_SEPARATOR_STR L"odt";
+	ASSERT_TRUE(Unpack(odt, unpacked, error)) << error;
+	EXPECT_TRUE(NSFile::CFileBinary::Exists(Part(unpacked, L"content.xml")));
+}
+
+TEST(ActiveXGroupedDocument, KeepsTheControlPartsThroughTheEditorBin)
+{
+	const wchar_t* const parts[] = {
+		L"word/activeX/activeX1.xml", L"word/activeX/activeX1.bin",
+		L"word/activeX/activeX2.xml", L"word/activeX/activeX2.bin"};
+
+	std::string error;
+	std::wstring work = GetWorkDir();
+	std::wstring source = work + FILE_SEPARATOR_STR L"source";
+	ASSERT_TRUE(Unpack(kGroupedDocument, source, error)) << error;
+
+	std::wstring bin = work + FILE_SEPARATOR_STR L"Editor.bin";
+	std::wstring back = work + FILE_SEPARATOR_STR L"groupname.docx";
+	ASSERT_TRUE(ConvertTo(kGroupedDocument, bin, work, error)) << error;
+	ASSERT_TRUE(ConvertTo(bin, back, work, error)) << error;
+
+	std::wstring unpacked = work + FILE_SEPARATOR_STR L"roundtrip";
+	ASSERT_TRUE(Unpack(back, unpacked, error)) << error;
+
+	for (const wchar_t* part : parts)
+	{
+		ASSERT_TRUE(NSFile::CFileBinary::Exists(Part(unpacked, part))) << part;
+		// The parts are copied, not regenerated, so the compressed group name in
+		// the .bin must come out byte for byte.
+		EXPECT_EQ(ReadBytes(Part(unpacked, part)), ReadBytes(Part(source, part))) << part;
+	}
 }

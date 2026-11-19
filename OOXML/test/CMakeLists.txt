@@ -60,6 +60,13 @@ target_compile_definitions(ooxml_test PRIVATE
     BUILD_X2T_AS_LIBRARY_DYLIB
 )
 
+# activex_groupname.cpp includes the DocxFormat headers, which instantiate the
+# header's static PPTX::g_Namespaces; its constructor lives in PPTXFormatLib.
+# x2tlib links that archive privately and only pulls in the members it needs,
+# so the .so does not export the constructor. The qmake build links the archive
+# directly (X2tConverter.pri) and does not need this.
+target_link_libraries(ooxml_test PRIVATE PPTXFormatLib)
+
 # main.cpp/common.{h,cpp} include core headers with paths anchored at the
 # X2tConverter.pri location (e.g. "../../../OOXML/Base/Base.h",
 # "../../src/dylib/x2t.h"). In the qmake build those resolved against the .pri's
