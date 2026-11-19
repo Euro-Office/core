@@ -1030,6 +1030,14 @@ void note::docx_convert(oox::docx_conversion_context & Context)
 const wchar_t * ruby::ns = L"text";
 const wchar_t * ruby::name = L"ruby";
 
+void ruby::docx_convert(oox::docx_conversion_context & Context)
+{
+    // The editor has no ruby model, so a w:ruby would lose the text again: write the base text as normal runs
+    // and drop the annotation.
+    if (text_ruby_base_)
+        text_ruby_base_->docx_convert(Context);
+}
+
 std::wostream & ruby::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
 {
     if (text_ruby_base_)

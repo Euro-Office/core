@@ -40,6 +40,14 @@ namespace text {
 const wchar_t * ruby_base::ns = L"text";
 const wchar_t * ruby_base::name = L"ruby-base";
 
+void ruby_base::docx_convert(oox::docx_conversion_context & Context)
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        content_[i]->docx_convert(Context);
+    }
+}
+
 std::wostream & ruby_base::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
 {
     serialize_elements_text(_Wostream, content_, bXmlEncode);

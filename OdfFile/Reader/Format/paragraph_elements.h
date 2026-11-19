@@ -581,6 +581,7 @@ public:
 	CPDOCCORE_DEFINE_VISITABLE();
     CPDOCCORE_OFFICE_DOCUMENT_IMPL_NAME_FUNCS_; 
 
+    virtual void docx_convert(oox::docx_conversion_context & Context);
     virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
 
 private:
