@@ -833,7 +833,7 @@ if(LINUX)
     # Re-enable exporting symbols
     target_compile_options(graphics PRIVATE
         -fvisibility=default
-        -fvisibility-inlines-hidden
+        $<$<COMPILE_LANGUAGE:CXX>:-fvisibility-inlines-hidden>
     )
 
     # Don't leak the bundled third-party C libraries (libpng, zlib, ...),

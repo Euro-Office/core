@@ -72,6 +72,7 @@ namespace Jpeg2000
 		CReaderFile(const std::wstring& wsFileName, long lMode);
 		virtual ~CReaderFile(void);
 
+		using CReader::Open;
 		bool         Open(const std::wstring& wsFileName, int nSizeStream);
 		void         Close();
 		void         Read(BYTE* pData, int nSize);

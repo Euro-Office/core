@@ -377,12 +377,13 @@ namespace NSStructures
 			centerX(0.0f), centerY(0.0f),
 			angle(0.0f),
 			discrete_step(0.0f),
-			reflected(false),
-			periods(0.5f), periodic(false),
 			xsize(1.0f), ysize(1.0f),
+			reflected(false),
+			periodic(false),
+			periods(0.5f),
 			linstretch(1.0f), linoffset(0.0f),
-			continue_shading_f(false),
 			continue_shading_b(false),
+			continue_shading_f(false),
 			luminocity(false)
 		{
 		}
