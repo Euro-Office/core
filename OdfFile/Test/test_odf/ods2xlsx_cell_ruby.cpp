@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 // ODS -> XLSX conversion of text:ruby inside cells: a cell has no ruby, so the base text stays in the
-// cell text and the annotation is dropped, as LibreOffice Calc does on import.
+// cell text and the annotation is dropped, as LibreOffice Calc does on import. The same holds for the
+// page header and footer text.
 
 #include "gtest/gtest.h"
 #include "common.h"
@@ -12,10 +13,20 @@
 
 namespace
 {
-std::wstring shared_strings()
+const std::wstring& out_dir()
 {
     static const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/cell_ruby.ods");
-    return dir.empty() ? std::wstring() : read_part(dir, L"xl/sharedStrings.xml");
+    return dir;
+}
+
+std::wstring shared_strings()
+{
+    return out_dir().empty() ? std::wstring() : read_part(out_dir(), L"xl/sharedStrings.xml");
+}
+
+std::wstring sheet()
+{
+    return out_dir().empty() ? std::wstring() : read_part(out_dir(), L"xl/worksheets/sheet1.xml");
 }
 
 // The text of every <si>, with the <t> parts of its runs joined.
@@ -82,4 +93,16 @@ TEST(OdsToXlsxCellRuby, CellWithoutRubyUnchanged)
 {
     ASSERT_FALSE(shared_strings().empty()) << "ODS -> XLSX conversion failed";
     EXPECT_TRUE(has_item(L"plain")) << shared_strings();
+}
+
+TEST(OdsToXlsxCellRuby, HeaderKeepsBaseTextOnly)
+{
+    ASSERT_FALSE(sheet().empty()) << "ODS -> XLSX conversion failed";
+    EXPECT_NE(sheet().find(L"<oddHeader>Head 本 end</oddHeader>"), std::wstring::npos) << sheet();
+}
+
+TEST(OdsToXlsxCellRuby, FooterRegionKeepsBaseTextOnly)
+{
+    ASSERT_FALSE(sheet().empty()) << "ODS -> XLSX conversion failed";
+    EXPECT_NE(sheet().find(L"<oddFooter>&amp;LFoot 木 end</oddFooter>"), std::wstring::npos) << sheet();
 }

@@ -584,6 +584,7 @@ public:
     virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
 
     virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
+    virtual void xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context);
 
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
