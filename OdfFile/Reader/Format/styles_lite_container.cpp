@@ -24,12 +24,17 @@
  */
 
 #include <vector>
+#include <algorithm>
+#include <cmath>
+#include <locale>
+#include <sstream>
 #include <boost/unordered_map.hpp>
 
 #include "styles_lite_container.h"
 #include "office_settings.h"
 #include "../../Common/xml/simple_xml_writer.h"
 #include "../../../DesktopEditor/common/SystemUtils.h"
+#include "../../Common/utils.h"
 #include "../../../OOXML/Base/Base.h"
 
 namespace cpdoccore { 
@@ -81,81 +86,40 @@ office_element_ptr styles_lite_container::find_by_style_name(const std::wstring 
 
 namespace
 {
-	bool read_digits(const std::wstring & s, size_t & pos, size_t count, int & value)
+	std::wstring trimmed(const std::wstring & value)
 	{
-		if (pos + count > s.size()) return false;
-		value = 0;
-		for (size_t i = 0; i < count; ++i)
-		{
-			const wchar_t c = s[pos + i];
-			if (c < L'0' || c > L'9') return false;
-			value = value * 10 + (c - L'0');
-		}
-		pos += count;
-		return true;
-	}
-	bool read_char(const std::wstring & s, size_t & pos, wchar_t c)
-	{
-		if (pos >= s.size() || s[pos] != c) return false;
-		++pos;
-		return true;
-	}
-
-	// An ODF date (xsd:dateTime or xsd:date) as a W3CDTF value for docProps/core.xml:
-	// YYYY-MM-DDThh:mm:ss, without the fraction, and with the value's own time zone or "Z" when it has
-	// none (the wall-clock time, as LibreOffice writes it). Editors read a value without a zone as local
-	// time and save it back shifted by the UTC offset. Empty when the value is no date or its year is
-	// outside 1601..9999 (Office reports such a core.xml as corrupt).
-	std::wstring w3cdtf_date(const std::wstring & odf_value)
-	{
-		const size_t first = odf_value.find_first_not_of(L" \t\r\n");
+		const size_t first = value.find_first_not_of(L" \t\r\n");
 		if (first == std::wstring::npos) return L"";
-		const std::wstring s = odf_value.substr(first, odf_value.find_last_not_of(L" \t\r\n") - first + 1);
+		return value.substr(first, value.find_last_not_of(L" \t\r\n") - first + 1);
+	}
 
-		size_t pos = 0;
-		int year = 0, month = 0, day = 0;
-		if (!read_digits(s, pos, 4, year) || !read_char(s, pos, L'-') || !read_digits(s, pos, 2, month)
-			|| !read_char(s, pos, L'-') || !read_digits(s, pos, 2, day))
+	// An ODF float, percentage or currency value as vt:r8 text: the shortest text that reads back as the
+	// same number, with '.' as the decimal point. Empty when the value is no finite number.
+	std::wstring vt_r8_number(const std::wstring & odf_value)
+	{
+		const std::wstring s = trimmed(odf_value);
+		if (s.empty()) return L"";
+
+		std::wistringstream in(s);
+		in.imbue(std::locale::classic());
+		double value = 0;
+		if (!(in >> value) || !std::isfinite(value)) return L"";
+		in >> std::ws;
+		if (!in.eof()) return L"";
+		// A number too small for a double reads as 0: that is not the value the file holds.
+		if (value == 0 && s.substr(0, s.find_first_of(L"eE")).find_first_of(L"123456789") != std::wstring::npos)
 			return L"";
-		if (year < 1601 || year > 9999 || month < 1 || month > 12 || day < 1) return L"";
-		const bool leap = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
-		const int days_in_month[12] = { 31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-		if (day > days_in_month[month - 1]) return L"";
 
-		const std::wstring date = s.substr(0, pos);
-		if (pos == s.size()) return date + L"T00:00:00Z";
+		return _doc_props_utils_::shortest_number(value);
+	}
 
-		int hour = 0, minute = 0, second = 0;
-		if (!read_char(s, pos, L'T') || !read_digits(s, pos, 2, hour) || !read_char(s, pos, L':')
-			|| !read_digits(s, pos, 2, minute) || !read_char(s, pos, L':') || !read_digits(s, pos, 2, second))
-			return L"";
-		if (hour > 23 || minute > 59 || second > 59) return L"";
-		const std::wstring time = s.substr(date.size() + 1, 8);
-
-		if (pos < s.size() && (s[pos] == L'.' || s[pos] == L','))
-		{
-			const size_t fraction = ++pos;
-			while (pos < s.size() && s[pos] >= L'0' && s[pos] <= L'9') ++pos;
-			if (pos == fraction) return L"";
-		}
-
-		std::wstring zone = L"Z";
-		if (pos < s.size() && s[pos] == L'Z')
-		{
-			++pos;
-		}
-		else if (pos < s.size() && (s[pos] == L'+' || s[pos] == L'-'))
-		{
-			const size_t start = pos++;
-			int zone_hour = 0, zone_minute = 0;
-			if (!read_digits(s, pos, 2, zone_hour) || !read_char(s, pos, L':') || !read_digits(s, pos, 2, zone_minute)
-				|| zone_hour > 14 || zone_minute > 59 || (zone_hour == 14 && zone_minute != 0))
-				return L"";
-			zone = s.substr(start, pos - start);
-		}
-		if (pos != s.size()) return L"";
-
-		return date + L"T" + time + zone;
+	// An ODF boolean value as vt:bool text, empty when it is none.
+	std::wstring vt_bool(const std::wstring & odf_value)
+	{
+		const std::wstring s = trimmed(odf_value);
+		if (s == L"true" || s == L"1") return L"true";
+		if (s == L"false" || s == L"0") return L"false";
+		return L"";
 	}
 }
 
@@ -164,7 +128,12 @@ class doc_props_container::Impl
 public:
 	Impl() {}
 
-	std::map<std::wstring, std::wstring> map_user_defineds;
+	struct user_defined
+	{
+		std::wstring value;
+		_CP_OPT(odf_types::office_value_type) value_type;
+	};
+	std::map<std::wstring, user_defined> map_user_defineds;
 };
 
 doc_props_container::doc_props_container() : impl_(new doc_props_container::Impl())
@@ -174,15 +143,19 @@ doc_props_container::doc_props_container() : impl_(new doc_props_container::Impl
 doc_props_container::~doc_props_container()
 {
 }
-void doc_props_container::add_user_defined(const std::wstring & name, const std::wstring & value)
+void doc_props_container::add_user_defined(const std::wstring & name, const std::wstring & value,
+	_CP_OPT(odf_types::office_value_type) value_type)
 {
-	impl_->map_user_defineds.insert(std::make_pair(name, value));
+	Impl::user_defined property;
+	property.value = value;
+	property.value_type = value_type;
+	impl_->map_user_defineds.insert(std::make_pair(name, property));
 }
 std::wstring doc_props_container::get_user_defined(const std::wstring & name)
 {
-	std::map<std::wstring, std::wstring>::iterator pFind = impl_->map_user_defineds.find(name);
+	std::map<std::wstring, Impl::user_defined>::iterator pFind = impl_->map_user_defineds.find(name);
 
-	return pFind != impl_->map_user_defineds.end() ? pFind->second : L"";
+	return pFind != impl_->map_user_defineds.end() ? pFind->second.value : L"";
 }
 std::wstring doc_props_container::dump_user_defined()
 {
@@ -191,16 +164,43 @@ std::wstring doc_props_container::dump_user_defined()
 	CP_XML_WRITER(output)
 	{
 		int pid = 2;
-		for (std::map<std::wstring, std::wstring>::iterator it = impl_->map_user_defineds.begin(); it != impl_->map_user_defineds.end(); ++it)
+		for (std::map<std::wstring, Impl::user_defined>::iterator it = impl_->map_user_defineds.begin(); it != impl_->map_user_defineds.end(); ++it)
 		{
+			// Numbers, yes/no values and dates keep their type, as LibreOffice writes them. A time value
+			// (a duration), and any value that does not parse as its type, stays text.
+			std::wstring node = L"vt:lpwstr", value = it->second.value;
+			if (it->second.value_type)
+			{
+				std::wstring typed;
+				switch (it->second.value_type->get_type())
+				{
+				case odf_types::office_value_type::Float:
+				case odf_types::office_value_type::Percentage:
+				case odf_types::office_value_type::Currency:
+					typed = vt_r8_number(value);
+					if (!typed.empty()) node = L"vt:r8";
+					break;
+				case odf_types::office_value_type::Boolean:
+					typed = vt_bool(value);
+					if (!typed.empty()) node = L"vt:bool";
+					break;
+				case odf_types::office_value_type::Date:
+					typed = _doc_props_utils_::w3cdtf_date(value);
+					if (!typed.empty()) node = L"vt:filetime";
+					break;
+				default:
+					break;
+				}
+				if (!typed.empty()) value = typed;
+			}
 			CP_XML_NODE(L"property")
 			{
 				CP_XML_ATTR(L"fmtid", L"{D5CDD505-2E9C-101B-9397-08002B2CF9AE}");
 				CP_XML_ATTR(L"pid", pid++);
 				CP_XML_ATTR(L"name", XmlUtils::EncodeXmlString(it->first));
-				CP_XML_NODE(L"vt:lpwstr")
+				CP_XML_NODE(node)
 				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(it->second);
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(value);
 				}
 			}
 		}
@@ -240,7 +240,7 @@ std::wstring doc_props_container::dump_core()
 			CP_XML_ATTR(L"xmlns:dcmitype", L"http://purl.org/dc/dcmitype/");
 			CP_XML_ATTR(L"xmlns:dcterms", L"http://purl.org/dc/terms/");
 			
-			const std::wstring created = w3cdtf_date(creation_date_);
+			const std::wstring created = _doc_props_utils_::w3cdtf_date(creation_date_);
 			if (!created.empty())
 			{
 				CP_XML_NODE(L"dcterms:created")
@@ -249,7 +249,7 @@ std::wstring doc_props_container::dump_core()
 					CP_XML_STREAM() << created;
 				}
 			}
-			const std::wstring modified = w3cdtf_date(dc_date_);
+			const std::wstring modified = _doc_props_utils_::w3cdtf_date(dc_date_);
 			if (!modified.empty())
 			{
 				CP_XML_NODE(L"dcterms:modified")

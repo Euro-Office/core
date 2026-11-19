@@ -216,3 +216,85 @@ TEST(OdfToOoxmlDocProps, InvalidDatesAreLeftOut)
 		EXPECT_FALSE(contains(core, L"dcterms:modified")) << value << L"\n" << core;
 	}
 }
+
+namespace
+{
+	// The custom.xml property element written for one user-defined property, e.g.
+	// <vt:r8>42</vt:r8>, from <property ...> to </property>.
+	std::wstring custom_value(const std::wstring& custom, const std::wstring& name)
+	{
+		const size_t start = custom.find(L"name=\"" + name + L"\"");
+		if (start == std::wstring::npos) return L"";
+		const size_t open = custom.find(L'>', start);
+		const size_t close = custom.find(L"</property>", open);
+		if (open == std::wstring::npos || close == std::wstring::npos) return L"";
+		return custom.substr(open + 1, close - open - 1);
+	}
+
+	std::wstring custom_for(const std::wstring& value, cpdoccore::odf_types::office_value_type::type type)
+	{
+		cpdoccore::odf_reader::doc_props_container props;
+		props.add_user_defined(L"P", value, cpdoccore::odf_types::office_value_type(type));
+		return props.dump_custom();
+	}
+}
+
+// Numbers, yes/no values and dates keep their type in custom.xml, as LibreOffice writes them; a duration
+// and values that do not parse as their type stay text.
+TEST(OdtToDocxDocProps, TypedCustomProperties)
+{
+	const std::wstring dir = converted_dir(L"ExampleFiles/doc_props_typed.odt");
+	ASSERT_FALSE(dir.empty()) << "conversion failed";
+
+	const std::wstring custom = read_part(dir, L"docProps/custom.xml");
+	ASSERT_FALSE(custom.empty()) << "docProps/custom.xml is missing";
+	EXPECT_TRUE(is_well_formed(custom)) << custom;
+	EXPECT_EQ(L"<vt:lpwstr>plain text</vt:lpwstr>", custom_value(custom, L"Note"));
+	EXPECT_EQ(L"<vt:lpwstr>labelled</vt:lpwstr>", custom_value(custom, L"Label"));
+	EXPECT_EQ(L"<vt:r8>42</vt:r8>", custom_value(custom, L"Count"));
+	EXPECT_EQ(L"<vt:r8>19.99</vt:r8>", custom_value(custom, L"Price"));
+	EXPECT_EQ(L"<vt:r8>0.25</vt:r8>", custom_value(custom, L"Share"));
+	EXPECT_EQ(L"<vt:bool>true</vt:bool>", custom_value(custom, L"Approved"));
+	EXPECT_EQ(L"<vt:bool>false</vt:bool>", custom_value(custom, L"Archived"));
+	EXPECT_EQ(L"<vt:filetime>2026-03-04T00:00:00Z</vt:filetime>", custom_value(custom, L"Due"));
+	EXPECT_EQ(L"<vt:filetime>2026-03-04T10:20:30Z</vt:filetime>", custom_value(custom, L"Signed"));
+	EXPECT_EQ(L"<vt:lpwstr>PT1H30M</vt:lpwstr>", custom_value(custom, L"Duration"));
+	EXPECT_EQ(L"<vt:lpwstr>abc</vt:lpwstr>", custom_value(custom, L"NotANumber"));
+	EXPECT_EQ(L"<vt:lpwstr>soon</vt:lpwstr>", custom_value(custom, L"NotADate"));
+	EXPECT_EQ(L"<vt:lpwstr>yes</vt:lpwstr>", custom_value(custom, L"NotABoolean"));
+}
+
+TEST(OdfToOoxmlDocProps, TypedUserDefinedValues)
+{
+	using cpdoccore::odf_types::office_value_type;
+	const struct { const wchar_t* odf; office_value_type::type type; const wchar_t* value; } cases[] = {
+		{ L"1", office_value_type::Float, L"<vt:r8>1</vt:r8>" },
+		{ L" -2.5\n", office_value_type::Float, L"<vt:r8>-2.5</vt:r8>" },
+		{ L"0.1", office_value_type::Float, L"<vt:r8>0.1</vt:r8>" },
+		{ L"1E20", office_value_type::Float, L"<vt:r8>1e+20</vt:r8>" },
+		{ L"1e-7", office_value_type::Float, L"<vt:r8>0.0000001</vt:r8>" },
+		{ L"2000", office_value_type::Float, L"<vt:r8>2000</vt:r8>" },
+		{ L"4.56e4", office_value_type::Float, L"<vt:r8>45600</vt:r8>" },
+		{ L"1e15", office_value_type::Float, L"<vt:r8>1000000000000000</vt:r8>" },
+		{ L"1.25e-15", office_value_type::Float, L"<vt:r8>1.25e-15</vt:r8>" },
+		{ L"1,5", office_value_type::Float, L"<vt:lpwstr>1,5</vt:lpwstr>" },
+		{ L"1.5x", office_value_type::Float, L"<vt:lpwstr>1.5x</vt:lpwstr>" },
+		{ L"1e999", office_value_type::Float, L"<vt:lpwstr>1e999</vt:lpwstr>" },
+		{ L"1e-400", office_value_type::Float, L"<vt:lpwstr>1e-400</vt:lpwstr>" },
+		{ L"0.0e-400", office_value_type::Float, L"<vt:r8>0</vt:r8>" },
+		{ L"1", office_value_type::Boolean, L"<vt:bool>true</vt:bool>" },
+		{ L"0", office_value_type::Boolean, L"<vt:bool>false</vt:bool>" },
+		{ L"TRUE", office_value_type::Boolean, L"<vt:lpwstr>TRUE</vt:lpwstr>" },
+		{ L"2024-06-05T16:03:40+02:00", office_value_type::Date, L"<vt:filetime>2024-06-05T16:03:40+02:00</vt:filetime>" },
+		{ L"1600-01-01", office_value_type::Date, L"<vt:lpwstr>1600-01-01</vt:lpwstr>" },
+		{ L"2024-02-30", office_value_type::Date, L"<vt:lpwstr>2024-02-30</vt:lpwstr>" },
+		{ L"<b>&amp;", office_value_type::Date, L"<vt:lpwstr>&lt;b&gt;&amp;amp;</vt:lpwstr>" },
+		{ L"PT2H", office_value_type::Time, L"<vt:lpwstr>PT2H</vt:lpwstr>" },
+	};
+	for (const auto& c : cases)
+	{
+		const std::wstring custom = custom_for(c.odf, c.type);
+		EXPECT_TRUE(is_well_formed(custom)) << custom;
+		EXPECT_EQ(std::wstring(c.value), custom_value(custom, L"P")) << c.odf;
+	}
+}

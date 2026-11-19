@@ -47,6 +47,10 @@ TEST(DocxToOdtCustomProps, TypedValuesAreKept)
 	// A file time that is no date stays text.
 	EXPECT_NE(meta.find(user_defined(L"Later", L"string", L"soon")), std::wstring::npos) << meta;
 	EXPECT_NE(meta.find(user_defined(L"Never", L"string", L"2026-13-45T00:00:00Z")), std::wstring::npos) << meta;
+	// A day the month does not have, or text after the date, is no date either.
+	EXPECT_NE(meta.find(user_defined(L"Feb31", L"string", L"2026-02-31T00:00:00Z")), std::wstring::npos) << meta;
+	EXPECT_NE(meta.find(user_defined(L"JunkTime", L"string", L"2026-01-05Tjunk")), std::wstring::npos) << meta;
+	EXPECT_NE(meta.find(user_defined(L"LeapDay", L"date", L"2024-02-29T08:00:00Z")), std::wstring::npos) << meta;
 }
 
 // The property name is an attribute value: markup in it must stay text, or meta.xml is no XML.

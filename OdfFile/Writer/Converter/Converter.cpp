@@ -35,8 +35,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <iomanip>
-#include <locale>
 #include <sstream>
 
 #include "../Format/office_document.h"
@@ -385,55 +383,6 @@ void OoxConverter::convert_meta(OOX::CApp *app, OOX::CCore *core)
 			odf_context()->add_meta(L"dc", L"language", *core->m_sLanguage);
 	}
 }
-namespace
-{
-	// ODF float values are xsd:double: '.' as the decimal point and the fewest digits that read back
-	// as the same number. As in LibreOffice, whole numbers below 2^53 and numbers with a decimal
-	// exponent from -14 to 14 are written without an exponent (2000, not 2e+03).
-	std::wstring custom_property_number(double value)
-	{
-		for (int precision = 1; precision <= 17; ++precision)
-		{
-			std::wostringstream scientific;
-			scientific.imbue(std::locale::classic());
-			scientific << std::scientific << std::setprecision(precision - 1) << value;
-
-			std::wistringstream back(scientific.str());
-			back.imbue(std::locale::classic());
-			double read = 0;
-			if (!(back >> read) || read != value)
-				continue;
-
-			const std::wstring text = scientific.str();
-			const int exponent = std::stoi(text.substr(text.find(L'e') + 1));
-			const bool whole = std::fabs(value) < 9007199254740992.0 && value == std::floor(value);
-			if (!whole && (exponent <= -15 || exponent >= 15))
-				return text;
-
-			std::wostringstream fixed;
-			fixed.imbue(std::locale::classic());
-			fixed << std::fixed << std::setprecision(whole ? 0 : std::max(0, precision - 1 - exponent)) << value;
-			return fixed.str();
-		}
-		return L"";
-	}
-
-	// vt:filetime and vt:date hold an xsd:dateTime. Anything that does not start like a date (YYYY-MM-DD, then the end or 'T')
-	// stays text: readers drop a "date" property whose value they cannot parse.
-	bool custom_property_is_date(const std::wstring& value)
-	{
-		if (value.size() < 10 || value[4] != L'-' || value[7] != L'-') return false;
-		if (value.size() > 10 && value[10] != L'T') return false;
-		for (size_t i : {0, 1, 2, 3, 5, 6, 8, 9})
-		{
-			if (value[i] < L'0' || value[i] > L'9') return false;
-		}
-		const int month = (value[5] - L'0') * 10 + (value[6] - L'0');
-		const int day = (value[8] - L'0') * 10 + (value[9] - L'0');
-		return month >= 1 && month <= 12 && day >= 1 && day <= 31;
-	}
-}
-
 void OoxConverter::convert_customs(OOX::IFileContainer* container)
 {
 	if (!container) return;
@@ -489,7 +438,7 @@ void OoxConverter::convert_customs(OOX::IFileContainer* container)
 				{
 					if (prop.m_oContent->m_dContent.IsInit() && std::isfinite(*prop.m_oContent->m_dContent))
 					{
-						content = custom_property_number(*prop.m_oContent->m_dContent);
+						content = _doc_props_utils_::shortest_number(*prop.m_oContent->m_dContent);
 						if (false == content.empty())
 							value_type = odf_types::office_value_type::Float;
 					}
@@ -500,7 +449,8 @@ void OoxConverter::convert_customs(OOX::IFileContainer* container)
 					if (prop.m_oContent->m_strContent.IsInit())
 					{
 						content = *prop.m_oContent->m_strContent;
-						if (custom_property_is_date(content))
+						// A value that is no valid date stays text: readers drop a "date" property they cannot parse.
+						if (false == _doc_props_utils_::w3cdtf_date(content).empty())
 							value_type = odf_types::office_value_type::Date;
 					}
 				}break;

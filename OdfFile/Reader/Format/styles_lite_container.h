@@ -28,6 +28,8 @@
 #include <CPOptional.h>
 #include <CPSharedPtr.h>
 
+#include "../../DataTypes/officevaluetype.h"
+
 namespace cpdoccore { 
 namespace odf_reader {
 
@@ -55,7 +57,9 @@ public:
 	doc_props_container();
 	~doc_props_container();
 
-	void add_user_defined(const std::wstring & name, const std::wstring & value);
+	// value_type = meta:value-type; without one the value is text
+	void add_user_defined(const std::wstring & name, const std::wstring & value,
+		_CP_OPT(odf_types::office_value_type) value_type = _CP_OPT(odf_types::office_value_type)());
 	std::wstring get_user_defined(const std::wstring & name);
 	std::wstring dump_user_defined();
 	// docProps/core.xml and docProps/custom.xml (empty if there are no user-defined properties)

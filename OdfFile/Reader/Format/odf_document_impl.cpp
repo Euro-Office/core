@@ -709,7 +709,7 @@ void odf_document::Impl::parse_meta(office_element *element)
 
 		if (user_defined->meta_name_.empty()) continue;
 		
-		context_->DocProps().add_user_defined(user_defined->meta_name_, user_defined->content_);
+		context_->DocProps().add_user_defined(user_defined->meta_name_, user_defined->content_, user_defined->meta_value_type_);
 	}
 
 	dc_creator * dc_creator_ = dynamic_cast<dc_creator*>(meta->dc_creator_.get());

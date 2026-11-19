@@ -277,6 +277,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/doc_props_core_markup.docx",
     "OdfFile/Test/test_odf/ExampleFiles/doc_props_editor_only.ods",
     "OdfFile/Test/test_odf/ExampleFiles/doc_props_markup.ods",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_typed.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
