@@ -97,6 +97,78 @@ void table_database_range::serialize(std::wostream & _Wostream)
 			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:name", table_name_);
 			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:target-range-address", table_target_range_address_);
 			CP_XML_ATTR_OPT(L"table:display-filter-buttons", table_display_filter_buttons_);
+
+			size_t count_conditions = 0;
+			bool has_or = false;
+			for (size_t i = 0; i < filter_columns_.size(); i++)
+			{
+				count_conditions += filter_columns_[i].conditions.size();
+				if (filter_columns_[i].is_or && filter_columns_[i].conditions.size() > 1)
+					has_or = true;
+			}
+			if (count_conditions > 0)
+			{
+				CP_XML_NODE(L"table:filter")
+				{
+					if (count_conditions == 1)
+					{
+						for (size_t i = 0; i < filter_columns_.size(); i++)
+							serialize_filter_conditions(CP_XML_STREAM(), filter_columns_[i].conditions);
+					}
+					else if (has_or && filter_columns_.size() == 1)
+					{
+						CP_XML_NODE(L"table:filter-or")
+						{
+							serialize_filter_conditions(CP_XML_STREAM(), filter_columns_[0].conditions);
+						}
+					}
+					else
+					{
+						// table:filter-and may hold table:filter-or: (a) and (b1 or b2)
+						CP_XML_NODE(L"table:filter-and")
+						{
+							for (size_t i = 0; i < filter_columns_.size(); i++)
+							{
+								if (filter_columns_[i].is_or && filter_columns_[i].conditions.size() > 1)
+								{
+									CP_XML_NODE(L"table:filter-or")
+									{
+										serialize_filter_conditions(CP_XML_STREAM(), filter_columns_[i].conditions);
+									}
+								}
+								else
+									serialize_filter_conditions(CP_XML_STREAM(), filter_columns_[i].conditions);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+void table_database_range::serialize_filter_conditions(std::wostream & _Wostream,
+	const std::vector<table_filter_condition_state> & conditions)
+{
+	CP_XML_WRITER(_Wostream)
+	{
+		for (size_t i = 0; i < conditions.size(); i++)
+		{
+			CP_XML_NODE(L"table:filter-condition")
+			{
+				CP_XML_ATTR(L"table:field-number", conditions[i].field_number);
+				CP_XML_ATTR_ENCODE_STRING(L"table:value", conditions[i].value);
+				CP_XML_ATTR_ENCODE_STRING(L"table:operator", conditions[i].operator_);
+				if (conditions[i].is_number)
+					CP_XML_ATTR(L"table:data-type", L"number");
+
+				for (size_t j = 0; j < conditions[i].set_items.size(); j++)
+				{
+					CP_XML_NODE(L"table:filter-set-item")
+					{
+						CP_XML_ATTR_ENCODE_STRING(L"table:value", conditions[i].set_items[j]);
+					}
+				}
+			}
 		}
 	}
 }

@@ -82,6 +82,10 @@ void ods_conversion_context::add_autofilter(std::wstring ref)
 {
 	table_context_.add_autofilter(ref);
 }
+void ods_conversion_context::set_database_range_filter(const std::vector<table_filter_column_state> & columns)
+{
+	table_context_.set_database_range_filter(columns);
+}
 void ods_conversion_context::start_conditional_formats()
 {
 	current_table()->start_conditional_formats();

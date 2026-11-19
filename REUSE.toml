@@ -87,6 +87,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/print_area_local_sheet_past_end.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/print_area_no_local_sheet.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_header_footer_no_section.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/xlsx_autofilter_conditions.xlsx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

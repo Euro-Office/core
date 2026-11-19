@@ -66,6 +66,10 @@
 
 #include "../../Common/utils.h"
 
+#include <cmath>
+#include <cwchar>
+#include <sstream>
+
 using namespace cpdoccore;
 
 namespace Oox2Odf
@@ -1081,6 +1085,215 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPictureWorksheet *oox_background)
 
 	page_props->add_child_element(fill_image_element);
 }
+namespace
+{
+	// A filter value that is a plain decimal number is compared as a number.
+	bool is_filter_number(const std::wstring & value)
+	{
+		if (value.empty()) return false;
+		for (size_t i = 0; i < value.size(); i++)
+		{
+			const wchar_t c = value[i];
+			if (!((c >= L'0' && c <= L'9') || c == L'.' || c == L'-' || c == L'+' || c == L'e' || c == L'E'))
+				return false;
+		}
+		wchar_t * end = NULL;
+		std::wcstod(value.c_str(), &end);
+		return end != value.c_str() && end && *end == 0;
+	}
+	std::wstring filter_number_string(double value)
+	{
+		std::wstringstream stream;
+		stream.precision(15);
+		stream << value;
+		return stream.str();
+	}
+
+	enum filter_condition_result
+	{
+		filter_condition_ok,
+		filter_condition_all,		// matches every row: no condition needed
+		filter_condition_no_form	// no ODF form for it: write no condition for the column
+	};
+
+	// The customFilter rules of LibreOffice's XLSX import: an empty value with equal or
+	// not equal is (not) empty, "*v*", "v*" and "*v" are contains, begins with and ends
+	// with (or their negations). Other wildcards would need a regular expression.
+	filter_condition_result convert_custom_filter(OOX::Spreadsheet::CCustomFilter * oox_filter,
+												  odf_writer::table_filter_condition_state & condition)
+	{
+		int op = oox_filter->m_oOperator.IsInit() ? oox_filter->m_oOperator->GetValue()
+												  : SimpleTypes::Spreadsheet::customfilterEqual;
+		std::wstring value = oox_filter->m_oVal.IsInit() ? *oox_filter->m_oVal : L"";
+		// LibreOffice trims the value: Excel writes "non-blanks" as not equal " "
+		size_t trim_start = 0, trim_end = value.size();
+		while (trim_start < trim_end && value[trim_start] <= L' ') trim_start++;
+		while (trim_end > trim_start && value[trim_end - 1] <= L' ') trim_end--;
+		value = value.substr(trim_start, trim_end - trim_start);
+
+		switch (op)
+		{
+		case SimpleTypes::Spreadsheet::customfilterGreaterThan:			condition.operator_ = L">";		break;
+		case SimpleTypes::Spreadsheet::customfilterGreaterThanOrEqual:	condition.operator_ = L">=";	break;
+		case SimpleTypes::Spreadsheet::customfilterLessThan:			condition.operator_ = L"<";		break;
+		case SimpleTypes::Spreadsheet::customfilterLessThanOrEqual:		condition.operator_ = L"<=";	break;
+		case SimpleTypes::Spreadsheet::customfilterNotEqual:
+		case SimpleTypes::Spreadsheet::customfilterEqual:
+		{
+			const bool bNot = (op == SimpleTypes::Spreadsheet::customfilterNotEqual);
+			if (value.empty())
+			{
+				condition.operator_ = bNot ? L"!empty" : L"empty";
+				return filter_condition_ok;
+			}
+			const size_t first = value.find_first_not_of(L'*');
+			if (first == std::wstring::npos)
+				return bNot ? filter_condition_no_form : filter_condition_all;
+			const size_t last = value.find_last_not_of(L'*');
+			const bool bLeading = first > 0, bTrailing = last + 1 < value.size();
+			value = value.substr(first, last + 1 - first);
+
+			if (std::wstring::npos != value.find_first_of(L"*?~"))
+				return filter_condition_no_form;
+
+			if (bLeading && bTrailing)	condition.operator_ = bNot ? L"does-not-contain"	: L"contains";
+			else if (bLeading)			condition.operator_ = bNot ? L"does-not-end-with"	: L"ends-with";
+			else if (bTrailing)			condition.operator_ = bNot ? L"does-not-begin-with" : L"begins-with";
+			else
+			{
+				condition.operator_ = bNot ? L"!=" : L"=";
+				condition.is_number = is_filter_number(value);
+			}
+			condition.value = value;
+			return filter_condition_ok;
+		}
+		default:
+			return filter_condition_no_form;
+		}
+		if (value.empty())
+			return filter_condition_no_form;
+
+		condition.value = value;
+		condition.is_number = is_filter_number(value);
+		return filter_condition_ok;
+	}
+
+	// One filterColumn -> the conditions of one ODF field. Returns false when the column
+	// has no condition with an ODF form (colour, dynamic and date group filters).
+	bool convert_filter_column(OOX::Spreadsheet::CFilterColumn * oox_column, int field_number,
+							   odf_writer::table_filter_column_state & column)
+	{
+		odf_writer::table_filter_condition_state condition;
+		condition.field_number = field_number;
+
+		if (oox_column->m_oFilters.IsInit())
+		{
+			std::vector<std::wstring> values;
+			for (size_t i = 0; i < oox_column->m_oFilters->m_arrItems.size(); i++)
+			{
+				OOX::WritingElement * item = oox_column->m_oFilters->m_arrItems[i];
+				if (!item) continue;
+				if (item->getType() != OOX::et_x_Filter)
+					return false; // dateGroupItem
+				OOX::Spreadsheet::CFilter * filter = static_cast<OOX::Spreadsheet::CFilter *>(item);
+				if (filter->m_oVal.IsInit() && !filter->m_oVal->empty())
+					values.push_back(*filter->m_oVal);
+			}
+			const bool bBlank = oox_column->m_oFilters->m_oBlank.IsInit() && oox_column->m_oFilters->m_oBlank->ToBool();
+			if (values.empty())
+			{
+				if (!bBlank) return false;
+				condition.operator_ = L"empty";
+			}
+			else
+			{
+				if (bBlank)
+					values.push_back(L"");
+				condition.operator_ = L"=";
+				condition.value = values[0];
+				if (values.size() > 1)
+					condition.set_items = values;
+			}
+			column.conditions.push_back(condition);
+		}
+		else if (oox_column->m_oTop10.IsInit())
+		{
+			if (!oox_column->m_oTop10->m_oVal.IsInit())
+				return false;
+			const double top_value = oox_column->m_oTop10->m_oVal->GetValue();
+			if (!std::isfinite(top_value) || top_value < 0)
+				return false;
+			OOX::Spreadsheet::CTop10 * top10 = oox_column->m_oTop10.GetPointer();
+			const bool bTop = !top10->m_oTop.IsInit() || top10->m_oTop->ToBool();
+			const bool bPercent = top10->m_oPercent.IsInit() && top10->m_oPercent->ToBool();
+
+			condition.operator_ = bTop ? (bPercent ? L"top percent" : L"top values")
+									   : (bPercent ? L"bottom percent" : L"bottom values");
+			condition.value = filter_number_string(top_value);
+			condition.is_number = true;
+			column.conditions.push_back(condition);
+		}
+		else if (oox_column->m_oCustomFilters.IsInit())
+		{
+			const size_t count = oox_column->m_oCustomFilters->m_arrItems.size();
+			if (count < 1 || count > 2)
+				return false;
+
+			OOX::Spreadsheet::CCustomFilters * custom_filters = oox_column->m_oCustomFilters.GetPointer();
+			const bool bAnd = custom_filters->m_oAnd.IsInit() && custom_filters->m_oAnd->ToBool();
+			for (size_t i = 0; i < count; i++)
+			{
+				OOX::Spreadsheet::CCustomFilter * filter = oox_column->m_oCustomFilters->m_arrItems[i];
+				if (!filter) return false;
+
+				odf_writer::table_filter_condition_state custom = condition;
+				switch (convert_custom_filter(filter, custom))
+				{
+				case filter_condition_ok:		column.conditions.push_back(custom);	break;
+				case filter_condition_all:		if (!bAnd || count == 1) return false;	break;
+				case filter_condition_no_form:	return false;
+				}
+			}
+			column.is_or = !bAnd && column.conditions.size() > 1;
+		}
+		return !column.conditions.empty();
+	}
+
+	// The filter columns of an autoFilter as the conditions of an ODF database range filter,
+	// mirroring LibreOffice's XLSX import. colId counts from the first column of the autoFilter,
+	// field numbers from the first column of the database range.
+	std::vector<odf_writer::table_filter_column_state> convert_filter_columns(
+		OOX::Spreadsheet::CAutofilter * oox_filter, const std::wstring & range_ref)
+	{
+		std::vector<odf_writer::table_filter_column_state> columns;
+		if (!oox_filter || !oox_filter->m_oRef.IsInit() || oox_filter->m_arrItems.empty()) return columns;
+
+		const std::wstring filter_ref = oox_filter->m_oRef->GetValue();
+		const size_t pos_filter = filter_ref.find(L":"), pos_range = range_ref.find(L":");
+		if (pos_filter == std::wstring::npos || pos_range == std::wstring::npos) return columns;
+
+		_INT32 filter_col = -1, row = -1, range_col_start = -1, range_col_end = -1;
+		odf_writer::utils::parsing_ref(filter_ref.substr(0, pos_filter), filter_col, row);
+		odf_writer::utils::parsing_ref(range_ref.substr(0, pos_range), range_col_start, row);
+		odf_writer::utils::parsing_ref(range_ref.substr(pos_range + 1), range_col_end, row);
+		if (filter_col < 1 || range_col_start < 1 || range_col_end < range_col_start) return columns;
+
+		for (size_t i = 0; i < oox_filter->m_arrItems.size(); i++)
+		{
+			OOX::Spreadsheet::CFilterColumn * oox_column = oox_filter->m_arrItems[i];
+			if (!oox_column || !oox_column->m_oColId.IsInit()) continue;
+
+			const long long field = (long long)oox_column->m_oColId->GetValue() + filter_col - range_col_start;
+			if (field < 0 || field > range_col_end - range_col_start) continue;
+
+			odf_writer::table_filter_column_state column;
+			if (convert_filter_column(oox_column, (int)field, column))
+				columns.push_back(column);
+		}
+		return columns;
+	}
+}
+
 void XlsxConverter::convert(OOX::Spreadsheet::CTable *oox_table_part)
 {
 	if (!oox_table_part) return;
@@ -1103,7 +1316,14 @@ void XlsxConverter::convert(OOX::Spreadsheet::CTable *oox_table_part)
 	ods_context->start_table_part(name, ref);
 
 	if (oox_table_part->m_oAutoFilter.IsInit())
+	{
 		ods_context->set_table_part_autofilter(true);
+		if (!ref.empty())
+		{
+			OOX::Spreadsheet::CAutofilter * oox_filter = oox_table_part->m_oAutoFilter.GetPointer();
+			ods_context->set_database_range_filter(convert_filter_columns(oox_filter, ref));
+		}
+	}
 
 	convert(oox_table_part->m_oTableColumns.GetPointer());
 	OoxConverter::convert(oox_table_part->m_oExtLst.GetPointer());
@@ -3757,18 +3977,6 @@ void XlsxConverter::convert(OOX::Spreadsheet::CFormulaCF *oox_cond_formula)
 	if (!oox_cond_formula)return;
 	ods_context->current_table()->set_conditional_formula(oox_cond_formula->m_sText);
 }
-void XlsxConverter::convert(OOX::Spreadsheet::CFilterColumn *oox_filter_column)
-{
-	//nullable<SimpleTypes::CUnsignedDecimalNumber<> > m_oColId;
-	//nullable<SimpleTypes::COnOff<> > m_oHiddenButton;
-	//nullable<SimpleTypes::COnOff<> > m_oShowButton;
-
-	//nullable<CColorFilter > m_oColorFilter;
-	//nullable<CDynamicFilter > m_oDynamicFilter;
-	//nullable<CCustomFilters > m_oCustomFilters;
-	//nullable<CFilters > m_oFilters;
-	//nullable<CTop10 > m_oTop10;
-}
 void XlsxConverter::convert(OOX::Spreadsheet::CAutofilter *oox_filter)
 {
 	if (!oox_filter)return;
@@ -3786,6 +3994,8 @@ void XlsxConverter::convert(OOX::Spreadsheet::CAutofilter *oox_filter)
 			caseSensitive = true;
 	}
 	ods_context->add_autofilter(ref);//target
+	if (!ref.empty())
+		ods_context->set_database_range_filter(convert_filter_columns(oox_filter, ref));
 	
 	//for (size_t i=0; i < oox_filter->m_arrItems.size(); i++)//set items TODO
 	//{

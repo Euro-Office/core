@@ -169,6 +169,17 @@ void ods_table_context::set_table_part_autofilter(bool val)
 void ods_table_context::end_table_part()
 {
 }
+void ods_table_context::set_database_range_filter(const std::vector<table_filter_column_state> & columns)
+{
+	if (columns.empty()) return;
+	if (table_database_ranges_.elements.empty()) return;
+
+	table_database_range * d_range = dynamic_cast<table_database_range*>(table_database_ranges_.elements.back().get());
+
+	if (!d_range) return;
+
+	d_range->filter_columns_ = columns;
+}
 void ods_table_context::add_autofilter(std::wstring ref)
 {
 	if (ref.empty()) return;

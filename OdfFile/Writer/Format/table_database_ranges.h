@@ -25,6 +25,8 @@
 #pragma once
 
 #include <iosfwd>
+#include <string>
+#include <vector>
 #include <CPOptional.h>
 #include <xml/xmlelement.h>
 #include <xml/nodetype.h>
@@ -35,6 +37,23 @@
 
 namespace cpdoccore { 
 namespace odf_writer {
+
+/// \brief  one table:filter-condition of a database range filter
+struct table_filter_condition_state
+{
+	int							field_number = 0;	// column offset in the range
+	std::wstring				operator_;			// table:operator
+	std::wstring				value;
+	bool						is_number = false;	// table:data-type="number"
+	std::vector<std::wstring>	set_items;			// table:filter-set-item values
+};
+
+/// \brief  the conditions of one filtered column, joined by and or by or
+struct table_filter_column_state
+{
+	bool										is_or = false;
+	std::vector<table_filter_condition_state>	conditions;
+};
 
 /// \brief  table:named-expressions
 class table_database_ranges : public office_element_impl<table_database_ranges>
@@ -73,12 +92,16 @@ public:
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
     virtual void serialize(std::wostream & _Wostream);
+	void serialize_filter_conditions(std::wostream & _Wostream,
+		const std::vector<table_filter_condition_state> & conditions);
 
     _CP_OPT(std::wstring)		table_name_;
     _CP_OPT(std::wstring)		table_target_range_address_;
 
 	_CP_OPT(odf_types::Bool)	table_display_filter_buttons_;
 
+	// table:filter: the columns are joined by and
+	std::vector<table_filter_column_state> filter_columns_;
 
 };
 
