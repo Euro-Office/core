@@ -64,6 +64,28 @@ add_library(graphics SHARED
     ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_markers_term.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_smooth_poly1.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_stroke.cpp
+)
+
+set_source_files_properties(
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_arc.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_arrowhead.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_bezier_arc.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_bspline.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_curves.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_image_filters.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_line_aa_basics.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_line_profile_aa.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_trans_affine.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_bspline.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_contour.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_dash.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_markers_term.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_smooth_poly1.cpp
+    ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_stroke.cpp
+    PROPERTIES COMPILE_OPTIONS "$<IF:$<CXX_COMPILER_ID:MSVC>,/w,-w>"
+)
+
+target_sources(graphics PRIVATE
 
     ${GRAPHICS_ROOT_DIR}/AlphaMask.cpp
     ${GRAPHICS_ROOT_DIR}/ArrowHead.cpp
