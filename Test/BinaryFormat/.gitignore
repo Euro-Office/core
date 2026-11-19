@@ -1,0 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+__pycache__/
+# The root .gitignore drops *.txt; snapshots must be committed.
+!snapshots/**/*.txt
