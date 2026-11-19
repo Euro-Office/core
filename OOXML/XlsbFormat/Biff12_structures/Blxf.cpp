@@ -36,7 +36,7 @@ namespace XLSB
 
     Blxf::Blxf(XLS::CFRecord& record)
     {
-        load(record);
+        Blxf::load(record);
     }
 
     Blxf::~Blxf()

@@ -36,7 +36,7 @@ namespace XLSB
 
     PRuleHeaderData::PRuleHeaderData(XLS::CFRecord& record)
     {
-        load(record);
+        PRuleHeaderData::load(record);
     }
 
     PRuleHeaderData::~PRuleHeaderData()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void PRuleHeaderData::load(XLS::CFRecord& record)
     {
-        _UINT32 flags;
+        _UINT32 flags = 0;
         record >> isxvd >> flags;
 
         isxrtype        = GETBITS(flags, 0, 7);

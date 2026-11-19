@@ -49,7 +49,7 @@ namespace OOX
 				{
 					xlsx->m_pWorkbookComments = this;
 				}
-				read( oRootPath, oPath );
+				WorkbookComments::read( oRootPath, oPath );
 			}
 			virtual ~WorkbookComments()
 			{

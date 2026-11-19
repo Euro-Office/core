@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginPCDSCSet::readFields(XLS::CFRecord& record)
     {
-        _UINT32 index;
+        _UINT32 index = 0;
         BYTE    flags;
 
         for(size_t i = 0; i < 4; ++i)

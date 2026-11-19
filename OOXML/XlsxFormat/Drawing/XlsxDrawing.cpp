@@ -134,7 +134,7 @@ namespace OOX
 		CDrawing::CDrawing(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 		{
 			m_bSpreadsheets = true;
-			read( oRootPath, oPath );
+			CDrawing::read( oRootPath, oPath );
 		}
 		CDrawing::~CDrawing()
 		{
@@ -170,7 +170,7 @@ namespace OOX
 					{
 						sName = XmlUtils::GetNameNoNS(oReader.GetName());
 
-						CCellAnchor *pItem = NULL;
+						CCellAnchor *pItem = nullptr;
 
 						if ( (L"absoluteAnchor") == sName )
 						{
@@ -203,7 +203,7 @@ namespace OOX
 									WritingElement_ReadAttributes_Read_if ( oReader, (L"Requires"), sRequires )
 								WritingElement_ReadAttributes_End( oReader )
 
-								if (sRequires.IsInit() == false) continue;
+								if (!sRequires.IsInit()) continue;
 								if (*sRequires != (L"a14"))continue;
 
 								nCurDepth++;
@@ -466,7 +466,7 @@ namespace OOX
 				if ( m_arrItems[nIndex] )
 					delete m_arrItems[nIndex];
 				
-				m_arrItems[nIndex] = NULL;
+				m_arrItems[nIndex] = nullptr;
 			}
 			m_arrItems.clear();
 		}

@@ -358,7 +358,7 @@ namespace OOX
 			WritingElement_AdditionMethods(CConditionalFormatting)
             WritingElement_XlsbConstructors(CConditionalFormatting)
 
-			CConditionalFormatting(OOX::Document *pMain = NULL);
+			CConditionalFormatting(OOX::Document *pMain = nullptr);
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
 			virtual std::wstring toXML() const;

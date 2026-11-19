@@ -46,7 +46,7 @@ namespace XLSB
     void BeginIconSet14::readFields(XLS::CFRecord& record)
     {
         record >> FRTheader;
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> iSet >> flags;
 
         fCustom			= GETBIT(flags, 0);

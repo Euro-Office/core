@@ -41,8 +41,8 @@ BiffStructurePtr ParameterParsedFormula::clone()
 
 void ParameterParsedFormula::load(XLS::CFRecord& record)
 {   
-    _UINT32 cce;
-    _UINT32 cb;
+    _UINT32 cce = 0;
+    _UINT32 cb = 0;
 
     record >> cce;
 
