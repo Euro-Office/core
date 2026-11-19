@@ -89,7 +89,7 @@ namespace PPTX
 		void Blur::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar();
+			pReader->GetUChar();
 			LONG _e = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);
@@ -104,6 +104,7 @@ namespace PPTX
 				{
 					case 0:	rad = (size_t)pReader->GetULong(); break;
 					case 1:	grow = pReader->GetBool(); break;
+					default: break;
 				}
 			}
 			pReader->Seek(_e);

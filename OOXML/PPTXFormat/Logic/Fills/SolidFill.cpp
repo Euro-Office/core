@@ -53,8 +53,6 @@ namespace PPTX
 			int nCurDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-				std::wstring sName = oReader.GetName();
-
 				Color.fromXML(oReader);
 			}
 			FillParentPointersForChilds();
@@ -105,7 +103,7 @@ namespace PPTX
 		void SolidFill::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar(); // FILL_TYPE_SOLID
+			pReader->GetUChar(); // FILL_TYPE_SOLID
 			LONG _e = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);

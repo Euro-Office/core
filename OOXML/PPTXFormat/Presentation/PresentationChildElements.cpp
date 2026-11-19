@@ -502,7 +502,7 @@ namespace PPTX
 			{
 				pWriter->StartNode(L"p:sldId");
 				std::wstring sRid = sld.ToString();
-				if (sRid.empty() == false)
+				if (!sRid.empty())
 				{
 					pWriter->WriteAttribute(L"r:id", sRid);
 				}

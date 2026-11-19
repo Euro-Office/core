@@ -213,7 +213,7 @@ namespace PPTX
 		void GradFill::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar(); // FILL_TYPE_GRAD
+			pReader->GetUChar(); // FILL_TYPE_GRAD
 			LONG _e = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);

@@ -53,6 +53,7 @@ namespace PPTX
 			{
 			case 0: m_strValue = L"none"; break;
 			case 1: m_strValue = L"skipTimed"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

@@ -64,7 +64,7 @@ namespace PPTX
 			pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeStart);
 			pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
 
-			if (false == list.empty())
+			if (!list.empty())
 			{
 				pWriter->StartRecord(0);
 

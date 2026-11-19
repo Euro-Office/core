@@ -59,8 +59,6 @@ namespace PPTX
 			int nCurDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-				std::wstring strName = oReader.GetName();
-
 				ColorModifier m;
 				Modifiers.push_back(m);
 				Modifiers.back().fromXML(oReader);

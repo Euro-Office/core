@@ -174,7 +174,7 @@ namespace PPTX
 					}break;
 					case 3:
 					{
-						_UINT32 sz = pReader->GetULong();
+						pReader->GetULong();
 						creationId = pReader->GetULong();
 					}break;
 					default:

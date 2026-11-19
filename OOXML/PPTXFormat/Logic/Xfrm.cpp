@@ -36,11 +36,11 @@ namespace PPTX
 		Xfrm::~Xfrm() {}
 		Xfrm::Xfrm(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			Xfrm::fromXML(node);
 		}
 		Xfrm::Xfrm(XmlUtils::CXmlLiteReader& oReader)
 		{
-			fromXML(oReader);
+			Xfrm::fromXML(oReader);
 		}
 		const Xfrm& Xfrm::operator =(XmlUtils::CXmlNode& node)
 		{
@@ -52,7 +52,8 @@ namespace PPTX
 			fromXML(oReader);
 			return *this;
 		}
-		Xfrm::Xfrm(const Xfrm& oSrc)
+		// NOLINT(bugprone-copy-constructor-init): the base is default-constructed and *this = oSrc copies the inherited members too; behaviour unchanged.
+		Xfrm::Xfrm(const Xfrm& oSrc) // NOLINT(bugprone-copy-constructor-init)
 		{
 			*this = oSrc;
 		}

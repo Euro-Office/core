@@ -45,11 +45,11 @@ namespace PPTX
 		}
 		SpPr::SpPr(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			SpPr::fromXML(node);
 		}
 		SpPr::SpPr(XmlUtils::CXmlLiteReader& oReader)
 		{
-			fromXML(oReader);
+			SpPr::fromXML(oReader);
 		}
 		const SpPr& SpPr::operator =(XmlUtils::CXmlNode& node)
 		{

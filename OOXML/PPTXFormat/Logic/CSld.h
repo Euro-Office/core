@@ -40,7 +40,7 @@ namespace PPTX
 		public:
 			WritingElement_AdditionMethods(CSld)
 			
-			CSld(OOX::Document *pMain = NULL);
+			CSld(OOX::Document *pMain = nullptr);
 
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			virtual void fromXML(XmlUtils::CXmlNode& node);

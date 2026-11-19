@@ -53,6 +53,7 @@ namespace PPTX
 			{
 			case 0: m_strValue = L"lpstr"; break;
 			case 1: m_strValue = L"i4"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

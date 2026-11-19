@@ -41,7 +41,7 @@ namespace PPTX
 
 		const bool isValid(const OOX::CPath& path) const;
 
-		Presentation* main = NULL;
+		Presentation* main = nullptr;
 
 	private:
 		long CountFiles(const OOX::CPath& path);

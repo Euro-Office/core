@@ -43,7 +43,7 @@ namespace PPTX
 		}
 		CxnSp::CxnSp(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			CxnSp::fromXML(node);
 		}
 		const CxnSp& CxnSp::operator =(XmlUtils::CXmlNode& node)
 		{
@@ -52,7 +52,7 @@ namespace PPTX
 		}
 		CxnSp::CxnSp(XmlUtils::CXmlLiteReader& oReader)
 		{
-			fromXML(oReader);
+			CxnSp::fromXML(oReader);
 		}
 		const CxnSp& CxnSp::operator =(XmlUtils::CXmlLiteReader& oReader)
 		{

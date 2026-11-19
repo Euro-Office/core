@@ -64,6 +64,7 @@ namespace PPTX
 			case 0: m_strValue = L"always"; break;
 			case 1: m_strValue = L"never"; break;
 			case 2: m_strValue = L"whenNotActive"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

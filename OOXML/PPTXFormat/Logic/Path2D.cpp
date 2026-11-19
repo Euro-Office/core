@@ -59,8 +59,6 @@ namespace PPTX
 			int nParentDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
-				std::wstring sName = oReader.GetName();
-
 				UniPath2D p;
 				Paths.push_back(p);
 				Paths.back().fromXML(oReader);

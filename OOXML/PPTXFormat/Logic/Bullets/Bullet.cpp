@@ -173,7 +173,7 @@ namespace PPTX
 					delete pBuBlip;
 
 					Logic::BuChar *pBuChar = new Logic::BuChar();
-					pBuChar->Char = wchar_t(L'\x2022');
+					pBuChar->Char = L'\x2022';
 					m_Bullet.reset(pBuChar);
 				}
 			}break;

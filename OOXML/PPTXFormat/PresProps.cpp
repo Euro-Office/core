@@ -39,12 +39,12 @@ namespace PPTX
 	}
 	PresProps::PresProps(OOX::Document* pMain, const OOX::CPath& filename, FileMap& map) : WrapperFile(pMain), PPTX::FileContainer(pMain)
 	{
-		read(filename, map);
+		PresProps::read(filename, map);
 	}
 	PresProps::~PresProps()
 	{
 	}
-	void PresProps::read(const OOX::CPath& filename, FileMap& map)
+	void PresProps::read(const OOX::CPath& filename, FileMap&  /*map*/)
 	{
 		XmlUtils::CXmlNode oNode;
 		oNode.FromXmlFile(filename.m_strFilename); // 

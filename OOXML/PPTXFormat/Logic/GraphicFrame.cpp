@@ -64,7 +64,7 @@ namespace PPTX
 
 		GraphicFrame::GraphicFrame(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			GraphicFrame::fromXML(node);
 		}
 
 		const GraphicFrame& GraphicFrame::operator =(XmlUtils::CXmlNode& node)
@@ -74,7 +74,7 @@ namespace PPTX
 		}
 		GraphicFrame::GraphicFrame(XmlUtils::CXmlLiteReader& oReader)
 		{
-			fromXML(oReader);
+			GraphicFrame::fromXML(oReader);
 		}
 
 		const GraphicFrame& GraphicFrame::operator =(XmlUtils::CXmlLiteReader& oReader)
@@ -107,8 +107,7 @@ namespace PPTX
 
 			WritingElement_ReadAttributes_Start(oReader)
 				WritingElement_ReadAttributes_Read_if(oReader, L"progId", olePic->oleObject->m_sProgId)
-				WritingElement_ReadAttributes_Read_else_if(oReader, L"r:id", olePic->oleObject->m_oId)
-				WritingElement_ReadAttributes_Read_else_if(oReader, L"relationships:id", olePic->oleObject->m_oId)
+				else if (L"r:id" == wsName || L"relationships:id" == wsName) olePic->oleObject->m_oId = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"imgW", olePic->oleObject->m_oDxaOrig)
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"imgH", olePic->oleObject->m_oDyaOrig)
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"showAsIcon", olePic->oleObject->m_oShowAsIcon)
@@ -137,7 +136,6 @@ namespace PPTX
 		void GraphicFrame::fromXML2(XmlUtils::CXmlLiteReader& oReader)
 		{
 			std::wstring strName		= XmlUtils::GetNameNoNS(oReader.GetName());
-			std::wstring strNamespace	= XmlUtils::GetNamespace(oReader.GetName());
 			
 			if (L"xfrm" == strName)
 				xfrm = oReader;
@@ -260,13 +258,7 @@ namespace PPTX
 					{
 						std::wstring strName1 = oReader.GetName();
 
-						if (strName1 == L"mc:Choice")
-						{
-							result = fromXML3(oReader);
-							if (result)
-								break;
-						}
-						else if (strName1 == L"mc:Fallback")
+						if (strName1 == L"mc:Choice" || strName1 == L"mc:Fallback")
 						{
 							result = fromXML3(oReader);
 							if (result)
@@ -321,7 +313,7 @@ namespace PPTX
 							olePic->fromXMLOle(oNode);
 							result = true;
 						}
-						if (olePic->spPr.xfrm.IsInit() == false)
+						if (!olePic->spPr.xfrm.IsInit())
 							olePic->spPr.xfrm = xfrm;
 					}
 					else if (L"AlternateContent" == strName)
@@ -332,8 +324,8 @@ namespace PPTX
 
 						if (result)
 						{
-							if ((olePic->blipFill.blip.IsInit()) && (false == olePic->blipFill.blip->embed.IsInit()) 
-								&& (olePic->oleObject.IsInit()) && (false == olePic->oleObject->m_sShapeId.IsInit()))
+							if ((olePic->blipFill.blip.IsInit()) && (!olePic->blipFill.blip->embed.IsInit()) 
+								&& (olePic->oleObject.IsInit()) && (!olePic->oleObject->m_sShapeId.IsInit()))
 							{
 								result = false;
 							}
@@ -394,7 +386,6 @@ namespace PPTX
 					XmlUtils::CXmlNode& oNode = oNodes[i];
 
 					std::wstring strName		= XmlUtils::GetNameNoNS(oNode.GetName());
-					std::wstring strNamespace	= XmlUtils::GetNamespace(oNode.GetName());
 
 					if (L"xfrm" == strName)
 						xfrm = oNode;
@@ -419,8 +410,8 @@ namespace PPTX
 			if (nvGraphicFramePr.IsInit())
 				nvGraphicFramePr->toXmlWriter(pWriter);
             
-			if (xfrm.IsInit() && (!(pWriter->m_lDocType == XMLWRITER_DOC_TYPE_DOCX ||
-									pWriter->m_lDocType == XMLWRITER_DOC_TYPE_DOCX_GLOSSARY) || pWriter->m_lGroupIndex >= 0))
+			if (xfrm.IsInit() && ((pWriter->m_lDocType != XMLWRITER_DOC_TYPE_DOCX &&
+									pWriter->m_lDocType != XMLWRITER_DOC_TYPE_DOCX_GLOSSARY) || pWriter->m_lGroupIndex >= 0))
 			{				
 				if (pWriter->m_lDocType == XMLWRITER_DOC_TYPE_XLSX && pWriter->m_lGroupIndex >= 0)	xfrm->node_name = L"xdr:xfrm";
 				else if ((pWriter->m_lDocType == XMLWRITER_DOC_TYPE_DOCX ||
@@ -529,14 +520,14 @@ namespace PPTX
 			}
 
 			std::wstring xml_object_vml;
-			OOX::IFileContainer* xml_object_rels = NULL;
+			OOX::IFileContainer* xml_object_rels = nullptr;
 
 			if (vmlSpid.is_init())
 			{
 				xml_object_vml = GetVmlXmlBySpid(xml_object_rels);
 			}
 
-			if (false == xml_object_vml.empty() && !table.IsInit() && !chartRec.IsInit() && !slicer.IsInit() && !slicerExt.IsInit() && !smartArt.IsInit())
+			if (!xml_object_vml.empty() && !table.IsInit() && !chartRec.IsInit() && !slicer.IsInit() && !slicerExt.IsInit() && !smartArt.IsInit())
 			{
 				std::wstring temp = L"<v:object>";
                 temp += xml_object_vml;
@@ -554,7 +545,7 @@ namespace PPTX
 				nullable<OOX::WritingElement> anchor;
 
 				oDrawingConverter.ConvertVml(temp, elements, anchor);
-				oDrawingConverter.m_pBinaryWriter->m_pCommon->m_pMediaManager = NULL;
+				oDrawingConverter.m_pBinaryWriter->m_pCommon->m_pMediaManager = nullptr;
 
 				OOX::IFileContainer* rels_old = pWriter->GetRelsPtr();
 				pWriter->SetRelsPtr(xml_object_rels);
@@ -719,7 +710,7 @@ namespace PPTX
 
 		void GraphicFrame::GetRect(Aggplus::RECT& pRect)const
 		{
-			if (xfrm.IsInit() == false) return;
+			if (!xfrm.IsInit()) return;
 
 			pRect.left		= xfrm->offX.get();
 			pRect.top		= xfrm->offY.get();
@@ -840,7 +831,7 @@ namespace PPTX
 			if (sXlsxFile.empty()) return;
 
 			DWORD nativeDataSize = 0;
-			BYTE* nativeData = NULL;
+			BYTE* nativeData = nullptr;
 			
 			if (!NSFile::CFileBinary::ReadAllBytes(sXlsxFile, &nativeData, nativeDataSize))
 				return;
@@ -867,7 +858,7 @@ namespace PPTX
 					,0x00,0x00,0x00,0x00,0x00,0xc0,0x00,0x00,0x00,0x00,0x00,0x00,0x46};
 				POLE::Stream oStream1(storageOut, L"\001CompObj", true, 28 +	(sUserType.length() + 5) + 
 																				(sClipboardFormat.length() + 5) + 
-																				(sProgram.length() + 5) + 4 * 4);
+																				(sProgram.length() + 5) + size_t(4) * 4);
 				oStream1.write(dataCompObjHeader, 28);
 
 				str_size = sUserType.length() + 1;
@@ -930,7 +921,7 @@ namespace PPTX
 
 			olePic->oleObject.Init();
 
-			olePic->oleObject->m_OleObjectFile = new OOX::OleObject(NULL, false, true);
+			olePic->oleObject->m_OleObjectFile = new OOX::OleObject(nullptr, false, true);
 			olePic->oleObject->m_OleObjectFile->set_filename(sOleFile, false);
 
 			olePic->oleObject->m_sObjectId = std::wstring(L"_3617162112") + std::to_wstring(nCurrentGenerateId);
@@ -953,11 +944,11 @@ namespace PPTX
 			if(chartRec->id_data.IsInit())
 			{
 				if(parentFileIs<OOX::IFileContainer>())	file = parentFileAs<OOX::IFileContainer>().Find(*chartRec->id_data);
-				else if (pRels != NULL)					file = pRels->Find(*chartRec->id_data);
+				else if (pRels != nullptr)					file = pRels->Find(*chartRec->id_data);
 			}
 			smart_ptr<OOX::Spreadsheet::CChartFile> pChart = file.smart_dynamic_cast<OOX::Spreadsheet::CChartFile>();
 
-            if (pChart.IsInit() == false) return L"";
+            if (!pChart.IsInit()) return L"";
 
 			if (!pChart->m_oChartSpace.m_externalData) return L"";
 			if (!pChart->m_oChartSpace.m_externalData->m_id.IsInit()) return L"";
@@ -969,10 +960,10 @@ namespace PPTX
 
 			std::wstring sUnpackedXlsx = sTempDirectory + FILE_SEPARATOR_STR + (L"xslx_unpacked");
 
-			if (false == NSDirectory::CreateDirectory(sUnpackedXlsx)) return L"";
+			if (!NSDirectory::CreateDirectory(sUnpackedXlsx)) return L"";
 
-			COfficeUtils oCOfficeUtils(NULL);
-			if (S_OK != oCOfficeUtils.ExtractToDirectory(pExternalXslxPackage->filename().GetPath(), sUnpackedXlsx, NULL, 0)) return L"";
+			COfficeUtils oCOfficeUtils(nullptr);
+			if (S_OK != oCOfficeUtils.ExtractToDirectory(pExternalXslxPackage->filename().GetPath(), sUnpackedXlsx, nullptr, 0)) return L"";
 //-------------------------------------------------------
 			std::wstring sXlPath			= sUnpackedXlsx + FILE_SEPARATOR_STR + L"xl";
 			std::wstring sChartPath			= sXlPath + FILE_SEPARATOR_STR + L"charts";
@@ -986,7 +977,7 @@ namespace PPTX
             NSDirectory::CreateDirectory(sChartSheetsPath + FILE_SEPARATOR_STR + L"_rels");
 
 			OOX::Spreadsheet::CT_ExternalData* keepExternalData = pChart->m_oChartSpace.m_externalData;
-			pChart->m_oChartSpace.m_externalData = NULL;
+			pChart->m_oChartSpace.m_externalData = nullptr;
 
 			pChart->write2(sChartPath + FILE_SEPARATOR_STR + L"chart1.xml");
 //----------------

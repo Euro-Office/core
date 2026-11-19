@@ -56,6 +56,7 @@ namespace PPTX
 			case 0: m_strValue = L"el"; break;
 			case 1: m_strValue = L"lt"; break;
 			case 2: m_strValue = L"wd"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

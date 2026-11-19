@@ -64,7 +64,6 @@ namespace PPTX
 			int nCurDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-				std::wstring strName = oReader.GetName();
 				Color.fromXML(oReader);
 			}
 
@@ -173,7 +172,7 @@ namespace PPTX
 		void OuterShdw::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar();
+			pReader->GetUChar();
 			LONG _end_rec = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);
@@ -195,6 +194,7 @@ namespace PPTX
 					case 6:	sx		= pReader->GetLong(); break;
 					case 7:	sy		= pReader->GetLong(); break;
 					case 8:	rotWithShape = pReader->GetBool(); break;
+					default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)

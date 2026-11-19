@@ -220,7 +220,7 @@ namespace PPTX
 				{
 					case 0:
 					{
-						if (xfrm.is_init() == false)
+						if (!xfrm.is_init())
 						{
 							xfrm = new Xfrm();
 						}

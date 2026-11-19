@@ -119,7 +119,7 @@ namespace PPTX
 		void ClrChange::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar();
+			pReader->GetUChar();
 			LONG _end_rec = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);
@@ -134,6 +134,7 @@ namespace PPTX
 				{
 					case 0:
 						useA = pReader->GetBool(); break;
+					default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)

@@ -31,7 +31,7 @@ namespace PPTX
 	{		
 		TextWrap::TextWrap(const unsigned char& src)
 		{
-							SetBYTECode(src);
+							TextWrap::SetBYTECode(src);
 		}
 		void TextWrap::set(const std::wstring& strValue)
 		{

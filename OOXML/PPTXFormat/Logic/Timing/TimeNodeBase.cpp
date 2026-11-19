@@ -50,7 +50,7 @@ namespace PPTX
 		}
 		TimeNodeBase::TimeNodeBase(XmlUtils::CXmlNode& node)
 		{
-			fromXML(node);
+			TimeNodeBase::fromXML(node);
 		}
 		const TimeNodeBase& TimeNodeBase::operator =(XmlUtils::CXmlNode& node)
 		{
@@ -129,7 +129,7 @@ namespace PPTX
 		}
 		void TimeNodeBase::toXmlWriter(NSBinPptxRW::CXmlWriter* pWriter) const
 		{
-			if (false == m_node.IsInit()) return;
+			if (!m_node.IsInit()) return;
 
 			m_node->toXmlWriter(pWriter);
 		}
@@ -165,7 +165,7 @@ namespace PPTX
 		}
 		void TimeNodeBase::toPPTY(NSBinPptxRW::CBinaryFileWriter* pWriter) const
 		{
-			if (false == m_node.IsInit()) return;
+			if (!m_node.IsInit()) return;
 
 			switch (m_node->getType())
 			{

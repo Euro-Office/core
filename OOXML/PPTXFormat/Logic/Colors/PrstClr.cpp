@@ -43,8 +43,6 @@ namespace PPTX
 			int nCurDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-				std::wstring strName = oReader.GetName();
-
 				ColorModifier m;
 				Modifiers.push_back(m);
 				Modifiers.back().fromXML(oReader);
@@ -381,6 +379,7 @@ namespace PPTX
 					if(str == _T("yellow"))			{RGB = 0xFFFF00; break;} // (Yellow Preset Color)			Specifies a color with RGB value (255,255,0)
 					if(str == _T("yellowGreen"))	{RGB = 0x9ACD32; break;} // (Yellow Green Preset Color)		Specifies a color with RGB value (154,205,50)
 					break;
+				default: break;
 				}
 			}
 

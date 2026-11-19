@@ -39,8 +39,6 @@ namespace PPTX
 			int nCurDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-                std::wstring sName = oReader.GetName();
-				
 				UniEffect uni;
 				Effects.push_back(uni);
 				Effects.back().fromXML(oReader);
@@ -108,7 +106,7 @@ namespace PPTX
 		void EffectDag::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar(); 
+			pReader->GetUChar(); 
 			LONG _end_rec = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			pReader->Skip(1);
@@ -125,6 +123,7 @@ namespace PPTX
 						name = pReader->GetString2(); break;
 					case 1:
 						type = pReader->GetUChar(); break; 
+					default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -142,7 +141,7 @@ namespace PPTX
 							Effects.push_back(UniEffect());
 							Effects.back().fromPPTY(pReader);
 
-							if (false == Effects.back().is_init())
+							if (!Effects.back().is_init())
 							{
 								Effects.pop_back();
 							}

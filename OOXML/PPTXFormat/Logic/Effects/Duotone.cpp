@@ -49,8 +49,6 @@ namespace PPTX
 			int nCurDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-				std::wstring strName = oReader.GetName();
-
 				UniColor col;
 				Colors.push_back(col);
 				Colors.back().fromXML(oReader);
@@ -82,7 +80,7 @@ namespace PPTX
 		void Duotone::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 		{
 			pReader->Skip(4); // len
-			BYTE _type = pReader->GetUChar();
+			pReader->GetUChar();
 			LONG _e = pReader->GetPos() + pReader->GetRecordSize() + 4;
 
 			ULONG count = pReader->GetULong();
@@ -93,7 +91,7 @@ namespace PPTX
 				Colors.push_back(UniColor());
 				Colors.back().fromPPTY(pReader);
 
-				if (false == Colors.back().is_init())
+				if (!Colors.back().is_init())
 				{
 					Colors.pop_back();
 				}

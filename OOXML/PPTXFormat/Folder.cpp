@@ -67,7 +67,7 @@ namespace PPTX
 		if (_presentation.is_init())
 		{
 			_presentation->commentAuthors = _presentation->Get(OOX::Presentation::FileTypes::CommentAuthors).smart_dynamic_cast<PPTX::Authors>();
-            if (false == _presentation->commentAuthors.IsInit())
+            if (!_presentation->commentAuthors.IsInit())
             {
                 _presentation->commentAuthors = _presentation->Get(OOX::Presentation::FileTypes::ModernCommentAuthors).smart_dynamic_cast<PPTX::Authors>();
             }
@@ -192,7 +192,7 @@ namespace PPTX
 		//read(path);
 	}
 
-	const bool Document::isValid(const OOX::CPath& path) const
+	const bool Document::isValid(const OOX::CPath& /*path*/) const
 	{
 		return true;//FileContainer::exist(OOX::Presentation::FileTypes::Presentation);
 	}

@@ -52,8 +52,6 @@ namespace PPTX
 			int nCurDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-                std::wstring strName = oReader.GetName();
-
 				ColorModifier m;
 				Modifiers.push_back(m);
 				Modifiers.back().fromXML(oReader);
@@ -236,7 +234,7 @@ namespace PPTX
 			std::wstring sVal = node.GetAttribute(_T("val"));
 
 			if (sVal == L"auto") bAuto = true;
-			else if (false == sVal.empty()) val = sVal;
+			else if (!sVal.empty()) val = sVal;
 
 			Modifiers.clear();
 			XmlMacroLoadArray(node, _T("*"), Modifiers, ColorModifier);
@@ -251,7 +249,6 @@ namespace PPTX
 			int nCurDepth = oReader.GetDepth();
 			while (oReader.ReadNextSiblingNode(nCurDepth))
 			{
-				std::wstring strName = oReader.GetName();
 
 				ColorModifier m;
 				Modifiers.push_back(m);

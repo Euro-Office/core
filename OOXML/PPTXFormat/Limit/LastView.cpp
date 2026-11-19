@@ -71,6 +71,7 @@ namespace PPTX
 			case 5: m_strValue = L"sldSorterView"; break;
 			case 6: m_strValue = L"sldThumbnailView"; break;
 			case 7: m_strValue = L"sldView"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

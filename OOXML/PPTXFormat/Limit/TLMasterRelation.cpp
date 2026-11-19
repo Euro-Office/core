@@ -56,6 +56,7 @@ namespace PPTX
 			case 0: m_strValue = L"lastClick"; break;
 			case 1: m_strValue = L"nextClick"; break;
 			case 2: m_strValue = L"sameClick"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

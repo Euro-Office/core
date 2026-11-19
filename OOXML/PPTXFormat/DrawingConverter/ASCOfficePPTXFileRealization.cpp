@@ -44,7 +44,7 @@ CPPTXFile::CPPTXFile()
 	m_bIsNoBase64 = false;
 	m_bIsMacro = false;
 
-	m_pPptxDocument		= NULL;
+	m_pPptxDocument		= nullptr;
 }
 
 CPPTXFile::~CPPTXFile()
@@ -57,7 +57,7 @@ _UINT32 CPPTXFile::LoadFromFile(std::wstring sSrcFileName, std::wstring sDstPath
     if(!localTempDir.empty())
 	{
         bool res = NSDirectory::CreateDirectory(localTempDir);
-        if (res == false) return AVS_FILEUTILS_ERROR_CONVERT;
+        if (!res) return AVS_FILEUTILS_ERROR_CONVERT;
 
 		put_TempDirectory(sDstPath);
 	}
@@ -70,8 +70,6 @@ _UINT32 CPPTXFile::LoadFromFile(std::wstring sSrcFileName, std::wstring sDstPath
 	}
 	localTempDir = m_strTempDir;
 
-	std::wstring srcFileName = sSrcFileName;
-
 	localTempDir = sSrcFileName;
 
 	RELEASEOBJECT(m_pPptxDocument);
@@ -82,7 +80,7 @@ _UINT32 CPPTXFile::LoadFromFile(std::wstring sSrcFileName, std::wstring sDstPath
 		RELEASEOBJECT(m_pPptxDocument);
 		return AVS_FILEUTILS_ERROR_CONVERT;
 	}
-	if(false == m_pPptxDocument->read(localTempDir))
+	if(!m_pPptxDocument->read(localTempDir))
 	{
 		return AVS_FILEUTILS_ERROR_CONVERT;
 	}
@@ -100,9 +98,9 @@ _UINT32 CPPTXFile::LoadFromFile(std::wstring sSrcFileName, std::wstring sDstPath
 
 	return 0;
 }
-_UINT32 CPPTXFile::SaveToFile(std::wstring sDstFileName, std::wstring sSrcPath)
+_UINT32 CPPTXFile::SaveToFile(std::wstring /*sDstFileName*/, std::wstring sSrcPath)
 {
-	if (NULL == m_pPptxDocument)
+	if (nullptr == m_pPptxDocument)
 		return AVS_FILEUTILS_ERROR_CONVERT;
 
 	OOX::CPath oPath;
@@ -195,7 +193,7 @@ _UINT32 CPPTXFile::OpenDirectoryToPPTY(std::wstring bsInput, std::wstring bsOutp
 	}
 
 	bool res = m_pPptxDocument->read(pathInputDirectory.GetPath() + FILE_SEPARATOR_STR);
-	if (false == res)
+	if (!res)
 	{
 		RELEASEOBJECT(m_pPptxDocument);
 		return AVS_FILEUTILS_ERROR_CONVERT;
@@ -229,7 +227,7 @@ _UINT32 CPPTXFile::OpenDirectoryToPPTY(std::wstring bsInput, std::wstring bsOutp
 	{
         NSDirectory::CreateDirectory(m_strEmbeddedFontsDirectory);
 
-		if (NULL != oBinaryWriter.m_pCommon->m_pFontPicker)
+		if (nullptr != oBinaryWriter.m_pCommon->m_pFontPicker)
 		{
             oBinaryWriter.m_pCommon->m_pNativePicker->m_bIsEmbeddedFonts = true;
 			oBinaryWriter.m_pCommon->m_pNativePicker->m_oEmbeddedFonts.m_strEmbeddedFontsFolder = m_strEmbeddedFontsDirectory;

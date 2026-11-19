@@ -91,7 +91,7 @@ namespace PPTX
 				pWriter->WriteAttribute(_T("id"), id);
 
 				std::wstring sRid = rid.ToString();
-				if (sRid.empty() == false)
+				if (!sRid.empty())
 				{
 					pWriter->WriteAttribute(_T("r:id"), sRid);
 				}

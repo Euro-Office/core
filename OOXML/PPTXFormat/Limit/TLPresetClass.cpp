@@ -66,6 +66,7 @@ namespace PPTX
 			case 3: m_strValue = L"mediacall"; break;
 			case 4: m_strValue = L"path"; break;
 			case 5: m_strValue = L"verb"; break;
+			default: break;
 			}
 		}
 	} // namespace Limit

@@ -238,6 +238,7 @@ namespace PPTX
 						m_type = grpFill;
 						Fill = new PPTX::Logic::GrpFill();						
 					}break;
+					default: break;
 				}
 			}
 			pReader->Seek(read_end);
@@ -257,7 +258,7 @@ namespace PPTX
 		{
 			if (Fill.is_init())
 			{
-				if (false == m_namespace.empty())
+				if (!m_namespace.empty())
 				{
 					PPTX::Logic::SolidFill* solid = dynamic_cast<PPTX::Logic::SolidFill*>(Fill.GetPointer());
 					if (solid) solid->m_namespace = m_namespace;

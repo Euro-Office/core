@@ -162,7 +162,7 @@ namespace PPTX
 			{
 				if (levels[i].IsInit())
 				{
-					if (levels[i]->ParagraphBullet.is_init() == false) continue;
+					if (!levels[i]->ParagraphBullet.is_init()) continue;
 					if (levels[i]->ParagraphBullet.is<PPTX::Logic::BuNone>())continue;
 
 					return false;
