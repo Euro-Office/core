@@ -63,6 +63,7 @@ odf_text_context::odf_text_context(odf_conversion_context *odf_context, odf_styl
 
 	is_hyperlink_ = false;
 	level_hyperlink_ = 0;
+	prev_char_is_space_ = true;
 }
 odf_text_context::~odf_text_context()
 {
@@ -82,6 +83,8 @@ void odf_text_context::clear_params()
 	list_state_.levels.clear();
 	list_state_.started_list	= false;
 	list_state_.style_name		= L"";
+
+	prev_char_is_space_			= true;
 }
 void odf_text_context::set_styles_context(odf_style_context_ptr  styles_context)
 {
@@ -125,29 +128,38 @@ void odf_text_context::add_text_content(const std::wstring & text)
 	//		current_level_.back().elm->add_text(text);
 	//}
 
-	//std::string expression = "1a234bc43";
-	boost::wregex re(L"[ ]{2,}");
-	boost::wsregex_iterator i(
-	  text.begin (),     
-	  text.end (),     
-	  re);
-	boost::wsregex_iterator j;
-	size_t pos=0;
-	for(; i!=j;++i) 
+	// ODF white space (ODF 1.2 part 1, 6.1.2): a reader drops a space at the start of a paragraph and a space that
+	// follows another white-space character, also when the two sit in different spans. Such a space goes out as
+	// text:s, as LibreOffice writes it; so does every run of two or more spaces.
+	std::wstring chars;
+	size_t pos = 0;
+	while (pos < text.length())
 	{
-		std::wstring s = text.substr(pos, (*i).position()-pos); 
-		if (s.length() > 0)current_level_.back().elm->add_text(s);
+		const wchar_t c = text[pos];
+		if (c != L' ')
+		{
+			chars += c;
+			prev_char_is_space_ = (c == L'\t' || c == L'\n' || c == L'\r');
+			pos++;
+			continue;
+		}
+		size_t end = text.find_first_not_of(L' ', pos);
+		if (end == std::wstring::npos) end = text.length();
 
-		std::wstringstream s1;
-		s1 << (*i);
-		s= s1.str();
-		if (s.length() > 0)
-			add_text_space((int)s.length());
-	  
-		pos = (*i).position() + s.length();
+		if (end - pos == 1 && false == prev_char_is_space_)
+		{
+			chars += c;
+		}
+		else
+		{
+			if (false == chars.empty()) current_level_.back().elm->add_text(chars);
+			chars.clear();
+			add_text_space((int)(end - pos));
+		}
+		prev_char_is_space_ = true;
+		pos = end;
 	}
-	std::wstring last = text.substr(pos);
-	if (last.length() > 0)current_level_.back().elm->add_text(last);
+	if (false == chars.empty()) current_level_.back().elm->add_text(chars);
 }
 void odf_text_context::add_text_date(const std::wstring & text)
 {
@@ -223,6 +235,7 @@ void odf_text_context::add_text_space(int count)
 
 	text_s* s = dynamic_cast<text_s*>(s_elm.get());
 	if (s) s->text_c_ = count;
+	prev_char_is_space_ = true;
 
 	//no need to store...
 	//int level = current_level_.size();
@@ -274,6 +287,7 @@ std::wstring odf_text_context::get_current_style_name()
 void odf_text_context::start_paragraph(office_element_ptr & elm, bool styled)
 {
 	size_t level = current_level_.size();
+	prev_char_is_space_ = true;
 	
 	if (single_paragraph_ && level > 0)
 	{
@@ -339,6 +353,7 @@ void odf_text_context::end_paragraph()
 	{
 		current_level_.pop_back();
 	}
+	prev_char_is_space_ = true;
 	paragraph_properties_ = NULL;
 	text_properties_ = NULL;
 }

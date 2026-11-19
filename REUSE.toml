@@ -162,6 +162,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/white_space_slide.odp",
     "OdfFile/Test/test_odf/ExampleFiles/white_space_cell.ods",
     "OdfFile/Test/test_odf/ExampleFiles/white_space_chart.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/white_space_runs.docx",
     "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_centered.odt",
     "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_drop_cap.odt",
     "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_drop_cap_unaligned.odt",
