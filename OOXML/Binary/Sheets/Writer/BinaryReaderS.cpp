@@ -8781,7 +8781,7 @@ int BinaryWorkbookTableReader::ReadRichValueData(BYTE type, long length, void* p
 		res = c_oSerConstants::ReadUnknown;
 	return res;
 }
-int BinaryWorkbookTableReader::ReadRichValueFallback(BYTE  /*type*/, long  /*length*/, void*  /*poResult*/)
+int BinaryWorkbookTableReader::ReadRichValueFallback(BYTE type, long length, void* poResult)
 {
 	int res = c_oSerConstants::ReadOk;
 	OOX::Spreadsheet::CRichValueFallback* pFallback = static_cast<OOX::Spreadsheet::CRichValueFallback*>(poResult);
