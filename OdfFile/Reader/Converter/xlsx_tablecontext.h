@@ -118,7 +118,8 @@ public:
 		void set_database_orientation (bool val);
 		void set_database_header (bool val);
 		void set_database_filter_button(bool val);
-		void add_database_filter_conditional(int field_number, int type, const std::wstring & value, int operator_);
+		void add_database_filter_conditional(int field_number, int type, const std::wstring & value, int operator_,
+			const std::vector<std::wstring> & items);
 		void add_database_sort	(int field_number, int order, int type);
 		void start_filters_or();
 		void start_filters_and();
@@ -137,7 +138,11 @@ private:
 	std::vector<xlsx_table_state_ptr>		xlsx_table_states_;
 	std::vector<xlsx_data_range_ptr>		xlsx_data_ranges_;
 	
-	std::multimap<std::wstring, int>		xlsx_data_ranges_map_;		
+	std::multimap<std::wstring, int>		xlsx_data_ranges_map_;
+
+	std::vector<bool> filter_groups_; // the open table:filter-or (true) and table:filter-and (false) elements
+	int filter_or_depth_ = -1; // index in filter_groups_ of the outermost open filter-or, -1 if there is none
+	int filter_or_count_ = 0; // outermost filter-or elements read so far, the id of the current one
 
 };
 

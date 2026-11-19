@@ -90,6 +90,8 @@ add_core_gtest(
             ods2xlsx_hidden_header_footer.cpp
             ods2xlsx_font_size_column_width.cpp
             ods2xlsx_database_range.cpp
+            ods2xlsx_autofilter.cpp
+            ods2xlsx_autofilter_groups.cpp
             odt2docx_section_columns.cpp
             odt2docx_chapter_field.cpp
             odt2docx_database_display.cpp

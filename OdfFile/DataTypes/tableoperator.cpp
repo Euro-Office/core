@@ -40,12 +40,12 @@ std::wostream & operator << (std::wostream & _Wostream, const table_operator& _V
     case table_operator::GreaterThan:           _Wostream << L">"; break;
     case table_operator::LessThanOrEqual:       _Wostream << L"<="; break;
     case table_operator::GreaterThanOrEqual:    _Wostream << L">="; break;
-    case table_operator::BeginsWith:            _Wostream << L"begins"; break;
-    case table_operator::EndsWith:              _Wostream << L"ends"; break;
+    case table_operator::BeginsWith:            _Wostream << L"begins-with"; break;
+    case table_operator::EndsWith:              _Wostream << L"ends-with"; break;
     case table_operator::Contains:              _Wostream << L"contains"; break;
-    case table_operator::NotContains:           _Wostream << L"!contains"; break;
-    case table_operator::NotBeginsWith:         _Wostream << L"!begins"; break;
-    case table_operator::NotEndsWith:           _Wostream << L"!ends"; break;
+    case table_operator::NotContains:           _Wostream << L"does-not-contain"; break;
+    case table_operator::NotBeginsWith:         _Wostream << L"does-not-begin-with"; break;
+    case table_operator::NotEndsWith:           _Wostream << L"does-not-end-with"; break;
     case table_operator::BottomPercent:         _Wostream << L"bottom percent"; break;
     case table_operator::BottomValues:          _Wostream << L"bottom values"; break;
     case table_operator::Empty:                 _Wostream << L"empty"; break;
@@ -74,17 +74,17 @@ table_operator table_operator::parse(const std::wstring & Str)
         return table_operator(LessThanOrEqual);
     else if (Str == L">=")
         return table_operator(GreaterThanOrEqual);
-    else if (Str == L"begins")
+    else if (Str == L"begins-with")
         return table_operator(BeginsWith);
-    else if (Str == L"ends")
+    else if (Str == L"ends-with")
         return table_operator(EndsWith);
-    else if (Str == L"!begins")
+    else if (Str == L"does-not-begin-with")
         return table_operator(NotBeginsWith);
-    else if (Str == L"!ends")
+    else if (Str == L"does-not-end-with")
         return table_operator(NotEndsWith);
     else if (Str == L"contains")
         return table_operator(Contains);
-    else if (Str == L"!contains")
+    else if (Str == L"does-not-contain")
         return table_operator(NotContains);
     else if (Str == L"bottom percent")
         return table_operator(BottomPercent);

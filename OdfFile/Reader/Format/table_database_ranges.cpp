@@ -263,7 +263,15 @@ void table_filter_condition::xlsx_convert(oox::xlsx_conversion_context & Context
 		int dxfId = Context.add_dxfId_style(value, type == odf_types::table_data_type::background_color);
 		value = dxfId >= 0 ? std::to_wstring(dxfId) : L"";
 	}
-	Context.get_table_context().add_database_filter_conditional(field_number, type, value, operator_);
+	// A value list (several values for one field) lists every value as a filter-set-item.
+	std::vector<std::wstring> items;
+	for (size_t i = 0; i < content_.size(); i++)
+	{
+		table_filter_set_item* item = dynamic_cast<table_filter_set_item*>(content_[i].get());
+		if (item && item->table_value_)
+			items.push_back(*item->table_value_);
+	}
+	Context.get_table_context().add_database_filter_conditional(field_number, type, value, operator_, items);
 }
 //--------------------------------------------------------------------------------------------------
 const wchar_t * table_filter_set_item::ns	= L"table";

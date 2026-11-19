@@ -294,29 +294,49 @@ namespace oox {
 		}
 		return -1;
 	}
-	void xlsx_table_context::add_database_filter_conditional(int field_number, int type, const std::wstring& value, int operator_)
+	void xlsx_table_context::add_database_filter_conditional(int field_number, int type, const std::wstring& value, int operator_,
+		const std::vector<std::wstring>& items)
 	{
 		xlsx_data_ranges_.back()->filter_conditions.emplace_back();
 		xlsx_data_ranges_.back()->filter_conditions.back().field_number = field_number;
 		xlsx_data_ranges_.back()->filter_conditions.back().type = type;
 		xlsx_data_ranges_.back()->filter_conditions.back().value = value;
 		xlsx_data_ranges_.back()->filter_conditions.back().operator_ = operator_;
+		xlsx_data_ranges_.back()->filter_conditions.back().items = items;
+
+		if (filter_or_depth_ >= 0)
+		{
+			xlsx_data_ranges_.back()->filter_conditions.back().or_group = filter_or_count_;
+			for (size_t i = filter_or_depth_ + 1; i < filter_groups_.size(); ++i)
+			{
+				if (!filter_groups_[i])
+					xlsx_data_ranges_.back()->filter_conditions.back().and_in_or = true;
+			}
+		}
 	}
 	void xlsx_table_context::start_filters_or()
 	{
-		xlsx_data_ranges_.back()->bFilterAndOr = true;
+		if (filter_or_depth_ < 0)
+		{
+			filter_or_depth_ = (int)filter_groups_.size();
+			++filter_or_count_;
+		}
+		filter_groups_.push_back(true);
 	}
 	void xlsx_table_context::start_filters_and()
 	{
-		xlsx_data_ranges_.back()->bFilterAndOr = false;
+		filter_groups_.push_back(false);
 	}
 	void xlsx_table_context::end_filters_or()
 	{
-
+		end_filters_and();
 	}
 	void xlsx_table_context::end_filters_and()
 	{
-
+		if (!filter_groups_.empty())
+			filter_groups_.pop_back();
+		if (filter_or_depth_ >= (int)filter_groups_.size())
+			filter_or_depth_ = -1;
 	}
 	void xlsx_table_context::add_database_sort(int field_number, int order, int type)
 	{
@@ -644,8 +664,11 @@ namespace oox {
 				//in the autofilter only simple ranges .. for complex ones - tablePart
 				CP_XML_ATTR(L"ref", getCellAddress(cell_start.first, cell_start.second) + L":" + getCellAddress(cell_end.first, cell_end.second));
 				//CP_XML_ATTR(L"ref", ref);
-				if (ind_filter != -1)
-					xlsx_data_ranges_[ind_filter]->serialize_filterColumn(CP_XML_STREAM(), 0);
+				// A filter hides whole rows: the conditions of one range only fit an autoFilter over the same rows.
+				if (ind_filter != -1 && xlsx_data_ranges_[ind_filter]->cell_start.second == cell_start.second &&
+					xlsx_data_ranges_[ind_filter]->cell_end.second == cell_end.second)
+					xlsx_data_ranges_[ind_filter]->serialize_filterColumns(CP_XML_STREAM(),
+						xlsx_data_ranges_[ind_filter]->cell_start.first - cell_start.first);
 			}
 		}
 	}
