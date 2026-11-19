@@ -101,16 +101,15 @@ void note_body::add_child_element( xml::sax * Reader, const std::wstring & Ns, c
     CP_CREATE_ELEMENT(content_);
 }
 
+// text:note-body holds block content only (paragraphs, headings, lists, tables, sections, ...).
+// Character data between them is insignificant (indentation of a pretty-printed file) and must not
+// become a run outside a paragraph.
 void note_body::add_text(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text) ;
-    content_.push_back( elm );
 }
 
 void note_body::add_space(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text) ;
-    content_.push_back( elm );
 }
 void note_body::docx_convert(oox::docx_conversion_context & Context)
 {
