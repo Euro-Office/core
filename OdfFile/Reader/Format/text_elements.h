@@ -168,6 +168,8 @@ public:
     void docx_convert(oox::docx_conversion_context & Context);
 	void pptx_convert(oox::pptx_conversion_context & Context) ;
 
+	const office_element_ptr_array & items() const { return list_items_; }
+
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
@@ -218,6 +220,8 @@ public:
     
 	virtual void afterCreate();
     virtual void afterReadContent();
+
+	std::wstring style_name() const { return section_attr_.style_name_.get_value_or(L""); }
 
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );

@@ -1028,6 +1028,11 @@ public:
 	std::unordered_map<std::wstring,bool> status_para{};
 	bool		process_headers_footers_;
 	bool		delayed_converting_;
+
+	// the endnote page of the document (office_text::docx_convert): the paragraph that ends the
+	// body before it, and whether the section properties written next are those of that page
+	const void*	endnote_page_paragraph_ = NULL;
+	bool		endnote_page_section_ = false;
 	bool		convert_delayed_enabled_;
 
 	void		start_changes(bool in_para);

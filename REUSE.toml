@@ -123,6 +123,24 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_columns.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_continuous.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_inherited_header.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_line_numbers.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_missing_endnote.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_no_endnotes.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_no_type.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_numbering.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_section_end.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_section_end_in_section.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_with_text.docx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OdfFile/Test/test_odf/ExampleFiles/page_background_image_no_page_size.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers_duplicate.docx",
@@ -303,6 +321,21 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/chapter_fields.odt",
     "OdfFile/Test/test_odf/ExampleFiles/database_display_fields.odt",
     "OdfFile/Test/test_odf/ExampleFiles/styleref_fields.docx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_continuous.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_footnote.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_heading.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_section.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_list.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_no_configuration.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_no_page_style.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_table.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

@@ -60,6 +60,7 @@ add_core_gtest(
             xlsx2ods_header_footer_codes.cpp
             docx2odt_page_background.cpp
             docx2odt_section_footers.cpp
+            docx2odt_endnote_page.cpp
             math_bar.cpp
             chart_title.cpp
             odt2docx_underline.cpp
@@ -93,6 +94,7 @@ add_core_gtest(
             odt2docx_section_columns.cpp
             odt2docx_chapter_field.cpp
             odt2docx_database_display.cpp
+            odt2docx_endnote_page.cpp
             ods2xlsx_fill_character.cpp
             ods_formula_function_names.cpp
             odf_font_family.cpp
