@@ -12,7 +12,8 @@ on:
 
 jobs:
   prune:
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    # Not in a private copy: its pull request numbers match packages of ours.
+    if: github.event.pull_request.head.repo.full_name == github.repository && !github.event.repository.private
     runs-on: ubuntu-latest
     environment: build-cache
     steps:
