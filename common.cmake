@@ -218,6 +218,9 @@ else()
             if(EO_CORE_PREBUILT_DIR)
                 # Only doctrenderer links V8, and the package has it built in
                 set(PREBUILT_EXCLUDE ",v8")
+            elseif(USE_JAVASCRIPT_CORE)
+                # Only doctrenderer links V8, and it runs on JavaScriptCore
+                set(PREBUILT_EXCLUDE ",v8")
             endif()
 
             # cef and qt need old build environment, cannot be built here
