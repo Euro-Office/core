@@ -41,6 +41,27 @@
 namespace cpdoccore {
 namespace oox {
 
+namespace
+{
+	// sheetPr/tabColor/@rgb for an ODF tab colour, or empty when the value is not "#rrggbb"
+	// (the ODF colour type), so the other tab colour attribute still applies.
+	std::wstring tab_color_rgb(const _CP_OPT(odf_types::color) & color)
+	{
+		if (!color)
+			return std::wstring();
+		const std::wstring& value = color->get_color();
+		if (value.size() != 7 || value[0] != L'#')
+			return std::wstring();
+		for (size_t i = 1; i < value.size(); i++)
+		{
+			const wchar_t c = value[i];
+			if (!((c >= L'0' && c <= L'9') || (c >= L'a' && c <= L'f') || (c >= L'A' && c <= L'F')))
+				return std::wstring();
+		}
+		return color->get_hex_value();
+	}
+}
+
 void xlsx_data_range::serialize_autofilter(std::wostream& _Wostream)
 {
 	if (!filter_button && filter_conditions.empty()) return;
@@ -722,16 +743,20 @@ void xlsx_table_state::serialize_table_format (std::wostream & strm)
 			CP_XML_NODE(L"sheetPr")
 			{
 				//at filterMode="false">
-				// ODF 1.3 table:tab-color wins over the older tableooo:tab-color.
-				_CP_OPT(odf_types::color) tab_color;
+				// ODF 1.3 table:tab-color wins over the older tableooo:tab-color; a value
+				// that is not a colour is skipped.
+				std::wstring tab_color;
 				if (table_prop)
-					tab_color = table_prop->content().table_tab_color_ ? table_prop->content().table_tab_color_
-																		: table_prop->content().tableooo_tab_color_;
-				if (tab_color)
+				{
+					tab_color = tab_color_rgb(table_prop->content().table_tab_color_);
+					if (tab_color.empty())
+						tab_color = tab_color_rgb(table_prop->content().tableooo_tab_color_);
+				}
+				if (!tab_color.empty())
 				{
 					CP_XML_NODE(L"tabColor")
 					{
-						CP_XML_ATTR(L"rgb", tab_color->get_hex_value());
+						CP_XML_ATTR(L"rgb", tab_color);
 					}
 				}
 				if (fit_to_pages)

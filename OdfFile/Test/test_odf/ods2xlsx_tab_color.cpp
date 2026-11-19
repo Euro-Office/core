@@ -25,6 +25,20 @@ namespace
 		return read_part(dir, L"xl/worksheets/sheet" + std::to_wstring(sheet) + L".xml");
 	}
 
+	// Values that are not "#rrggbb", one sheet per case:
+	// 1 table:tab-color="bluish" and tableooo:tab-color="#ff0000"
+	// 2 table:tab-color="rgb(1,2,3)"
+	// 3 tableooo:tab-color="nonsense"
+	// 4 table:tab-color="#12"
+	// 5 table:tab-color="#gg0000"
+	std::wstring malformed_sheet_xml(int sheet)
+	{
+		static const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/sheet_tab_color_malformed.ods");
+		if (dir.empty())
+			return std::wstring();
+		return read_part(dir, L"xl/worksheets/sheet" + std::to_wstring(sheet) + L".xml");
+	}
+
 	// sheetPr/tabColor/@rgb in upper case, "(none)" if there is no tabColor.
 	std::wstring tab_color(const std::wstring& sheet)
 	{
@@ -71,4 +85,24 @@ TEST(OdsToXlsx, NoTabColor)
 	ASSERT_FALSE(sheet.empty()) << "ODS -> XLSX conversion failed";
 	EXPECT_TRUE(is_well_formed(sheet));
 	EXPECT_EQ(tab_color(sheet), L"(none)");
+}
+
+// An invalid table:tab-color does not hide a valid tableooo:tab-color.
+TEST(OdsToXlsx, InvalidTabColorFallsBackToOld)
+{
+	const std::wstring sheet = malformed_sheet_xml(1);
+	ASSERT_FALSE(sheet.empty()) << "ODS -> XLSX conversion failed";
+	EXPECT_EQ(tab_color(sheet), L"FF0000");
+}
+
+// A value that is not a colour gives no tab colour, not a black tab and not an invalid rgb.
+TEST(OdsToXlsx, InvalidTabColorIsSkipped)
+{
+	for (int i = 2; i <= 5; i++)
+	{
+		const std::wstring sheet = malformed_sheet_xml(i);
+		ASSERT_FALSE(sheet.empty()) << "ODS -> XLSX conversion failed";
+		EXPECT_TRUE(is_well_formed(sheet)) << "sheet " << i;
+		EXPECT_EQ(tab_color(sheet), L"(none)") << "sheet " << i;
+	}
 }
