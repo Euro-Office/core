@@ -8785,7 +8785,19 @@ int BinaryWorkbookTableReader::ReadRichValueData(BYTE type, long length, void* p
 int BinaryWorkbookTableReader::ReadRichValueFallback(BYTE type, long length, void* poResult)
 {
 	int res = c_oSerConstants::ReadOk;
+	OOX::Spreadsheet::CRichValueFallback* pFallback = static_cast<OOX::Spreadsheet::CRichValueFallback*>(poResult);
 
+	if (c_oSer_RichValue::FallbackValue == type)
+	{
+		pFallback->m_sContent = m_oBufferedStream.GetString3(length);
+	}
+	else if (c_oSer_RichValue::FallbackType == type)
+	{
+		pFallback->m_oT.Init();
+		pFallback->m_oT->SetValue((SimpleTypes::Spreadsheet::ERichValueValueType)m_oBufferedStream.GetUChar());
+	}
+	else
+		res = c_oSerConstants::ReadUnknown;
 	return res;
 }
 int BinaryWorkbookTableReader::ReadRichValue(BYTE type, long length, void* poResult)

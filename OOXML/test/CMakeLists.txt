@@ -29,6 +29,7 @@ set(_ooxml_test_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/common.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/checkbox.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/richvalue.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/conversion.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/csv_import.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/editorbin_pivots.cpp

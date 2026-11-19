@@ -308,7 +308,10 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
-path = "OOXML/test/ExampleFiles/xlsx2bin/checkbox.xlsx"
+path = [
+    "OOXML/test/ExampleFiles/xlsx2bin/checkbox.xlsx",
+    "OOXML/test/ExampleFiles/xlsx2bin/richvalue-fallback.xlsx",
+]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
