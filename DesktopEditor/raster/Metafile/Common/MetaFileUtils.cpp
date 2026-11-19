@@ -811,7 +811,7 @@ namespace MetaFile
 	}
 	void ReadImage(BYTE* pHeaderBuffer, unsigned int ulHeaderBufferLen, BYTE* pImageBuffer, unsigned int ulImageBufferLen, BYTE** ppDstBuffer, unsigned int* pulWidth, unsigned int* pulHeight, unsigned int& unColorUsed)
 	{
-		if (ulHeaderBufferLen <= 0 || NULL == pHeaderBuffer || NULL == pImageBuffer || ulImageBufferLen < 0)
+		if (ulHeaderBufferLen <= 0 || nullptr == pHeaderBuffer || nullptr == pImageBuffer)
 			return;
 
 		CDataStream oHeaderStream;
