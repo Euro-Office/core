@@ -763,7 +763,7 @@ namespace SimpleTypes
 
 	enum EBorderType
 	{
-		bordertypeDash = 0, // (pecifies a line border consisting of a dashed line around the parent object.)
+		bordertypeDash = 0, // (specifies a line border consisting of a dashed line around the parent object.)
 		bordertypeDashDotDot, // (Dash Dot Dot Border)
 		bordertypeDashDotStroked, // (Stroked Dash Dot Border)
 		bordertypeDashedSmall, // (Small Dash Border)
