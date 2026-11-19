@@ -22,6 +22,7 @@ namespace
 	// 6 300mm x 200mm (no paper size id), landscape
 	// 7 A4 portrait, portrait
 	// 8 style:print-orientation="landscape" and style:scale-to="71%", no page size
+	// 9 A4 landscape as LibreOffice writes it: 29.699cm x 20.999cm, landscape
 	std::wstring sheet_xml(int sheet)
 	{
 		static const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/sheet_page_setup_size.ods");
@@ -158,4 +159,17 @@ TEST(OdsToXlsxPageSetupSize, ScaleWithoutSizeKeepsItsPageSetup)
 	EXPECT_EQ(attribute(setup, L"scale"), L"71") << setup;
 	EXPECT_EQ(attribute(setup, L"orientation"), L"portrait");
 	EXPECT_EQ(attribute(setup, L"paperSize"), L"(none)");
+}
+
+// LibreOffice writes A4 as 20.999cm x 29.699cm, just under 210 mm: it is still A4.
+TEST(OdsToXlsxPageSetupSize, A4LandscapeJustUnder210mmIsA4)
+{
+	const std::wstring sheet = sheet_xml(9);
+	ASSERT_FALSE(sheet.empty()) << "ODS -> XLSX conversion failed";
+	EXPECT_TRUE(is_well_formed(sheet));
+
+	const std::wstring setup = page_setup(sheet);
+	EXPECT_EQ(attribute(setup, L"paperSize"), L"9") << setup;
+	EXPECT_EQ(attribute(setup, L"paperWidth"), L"(none)");
+	EXPECT_EQ(attribute(setup, L"orientation"), L"landscape");
 }

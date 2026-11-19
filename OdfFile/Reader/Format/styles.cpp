@@ -1474,7 +1474,7 @@ int style_page_layout_properties::DetectPageSize(double w, double h)
 {
 	int result = 0;
 
-	if (w > 209.99) // A4 and more
+	if (w > 209.5) // A4 and more (LibreOffice writes A4 as 20.999cm x 29.699cm)
 	{
 		if		(			w < 211 && h > 296 && h < 298) result = 9;	//  pagesizeA4Paper;
 		else if (w > 279 && w < 280 && h > 431 && h < 433) result = 3;	//  pagesizeTabloidPaper;
