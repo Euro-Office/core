@@ -93,6 +93,7 @@ add_core_gtest(
             ods2xlsx_font_size_column_width.cpp
             ods2xlsx_database_range.cpp
             ods2xlsx_autofilter.cpp
+            ods2xlsx_unnamed_database_range.cpp
             ods2xlsx_autofilter_groups.cpp
             xlsx2ods_sort_sheet_names.cpp
             odt2docx_section_columns.cpp

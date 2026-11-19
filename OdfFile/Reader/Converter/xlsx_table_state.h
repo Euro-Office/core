@@ -74,6 +74,8 @@ public:
 	bool byRow = true;
 	bool filter_button = false;
 	bool withHeader = false;
+	bool bUnnamed = false; // table:database-range without table:name
+	bool bReplaced = false; // an unnamed range followed by another unnamed range on its sheet
 
 	std::vector<std::pair<size_t, bool>> bySort;  //field + order
 	

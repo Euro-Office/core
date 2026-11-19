@@ -113,7 +113,7 @@ public:
 	void dump_rels_hyperlinks	(rels & Rels);
 	void dump_rels_ole_objects	(rels & Rels);
 
-	bool start_database_range(const std::wstring &table_name, const std::wstring &ref, bool bNamedRangeOnly);
+	bool start_database_range(const std::wstring &table_name, const std::wstring &ref, bool bNamedRangeOnly, bool bUnnamed = false);
 		void set_database_source_ref(const std::wstring& ref);
 		void set_database_orientation (bool val);
 		void set_database_header (bool val);
@@ -139,6 +139,7 @@ private:
 	std::vector<xlsx_data_range_ptr>		xlsx_data_ranges_;
 	
 	std::multimap<std::wstring, int>		xlsx_data_ranges_map_;
+	std::map<std::wstring, int>				xlsx_unnamed_ranges_; // sheet -> index of its current unnamed range
 
 	std::vector<bool> filter_groups_; // the open table:filter-or (true) and table:filter-and (false) elements
 	int filter_or_depth_ = -1; // index in filter_groups_ of the outermost open filter-or, -1 if there is none
