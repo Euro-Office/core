@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 // ODS -> XLSX conversion of text:ruby inside cells: a cell has no ruby, so the base text stays in the
-// cell text and the annotation is dropped, as LibreOffice Calc does on import. The same holds for the
-// page header and footer text.
+// cell text and the annotation is dropped, as LibreOffice Calc does on import. Page headers and footers
+// get the base text only as well, as LibreOffice writes them to XLSX.
 
 #include "gtest/gtest.h"
 #include "common.h"
