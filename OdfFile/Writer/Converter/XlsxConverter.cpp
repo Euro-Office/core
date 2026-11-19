@@ -322,6 +322,11 @@ void XlsxConverter::convert(OOX::Spreadsheet::CDefinedName *oox_defined)
 		ods_context->add_defined_expression (name, *oox_defined->m_oRef, sheet_id, printable);
 	}
 }
+namespace
+{
+	// defined with the autofilter helpers below
+	odf_writer::table_sort_state convert_sort_state(OOX::Spreadsheet::CSortState * oox_sort, const std::wstring & range_ref);
+}
 void XlsxConverter::convert(OOX::Spreadsheet::CWorksheet *oox_sheet)
 {
 	if (!oox_sheet) return;
@@ -437,9 +442,13 @@ void XlsxConverter::convert(OOX::Spreadsheet::CWorksheet *oox_sheet)
 	convert(oox_sheet->m_oOleObjects.GetPointer(), oox_sheet);
 	convert(oox_sheet->m_oControls.GetPointer(), oox_sheet);
 
-	//convert(oox_sheet->m_oSortState.GetPointer());
-	
 	convert(oox_sheet->m_oAutofilter.GetPointer());
+
+	if (oox_sheet->m_oSortState.IsInit() && oox_sheet->m_oSortState->m_oRef.IsInit())
+	{
+		const std::wstring sort_ref = oox_sheet->m_oSortState->m_oRef->GetValue();
+		ods_context->set_sheet_sort(sort_ref, convert_sort_state(oox_sheet->m_oSortState.GetPointer(), sort_ref));
+	}
 
 	if (!oox_sheet->m_arrConditionalFormatting.empty() || oox_sheet->m_oExtLst.IsInit())
 	{
@@ -1292,6 +1301,49 @@ namespace
 		}
 		return columns;
 	}
+
+	// A sortState as the table:sort of an ODF database range, the inverse of the ODS -> XLSX
+	// conversion: the field number of a key is the column of its sortCondition counted from the
+	// first column of the database range (the row when the range sorts columns). Conditions on
+	// cell colour, font colour or icon have no ODF counterpart and are skipped.
+	odf_writer::table_sort_state convert_sort_state(OOX::Spreadsheet::CSortState * oox_sort, const std::wstring & range_ref)
+	{
+		odf_writer::table_sort_state sort;
+		if (!oox_sort) return sort;
+
+		const size_t pos_range = range_ref.find(L":");
+		if (pos_range == std::wstring::npos) return sort;
+
+		_INT32 col_start = -1, row_start = -1, col_end = -1, row_end = -1;
+		odf_writer::utils::parsing_ref(range_ref.substr(0, pos_range), col_start, row_start);
+		odf_writer::utils::parsing_ref(range_ref.substr(pos_range + 1), col_end, row_end);
+		if (col_start < 1 || row_start < 1 || col_end < col_start || row_end < row_start) return sort;
+
+		sort.by_column = oox_sort->m_oColumnSort.IsInit() && oox_sort->m_oColumnSort->ToBool();
+		sort.case_sensitive = oox_sort->m_oCaseSensitive.IsInit() && oox_sort->m_oCaseSensitive->ToBool();
+
+		for (size_t i = 0; i < oox_sort->m_arrItems.size(); i++)
+		{
+			OOX::Spreadsheet::CSortCondition * oox_condition = oox_sort->m_arrItems[i];
+			if (!oox_condition || !oox_condition->m_oRef.IsInit()) continue;
+			if (oox_condition->m_oSortBy.IsInit() && oox_condition->m_oSortBy->GetValue() != SimpleTypes::Spreadsheet::sortbyValue)
+				continue;
+
+			const std::wstring ref = oox_condition->m_oRef->GetValue();
+			_INT32 col = -1, row = -1;
+			odf_writer::utils::parsing_ref(ref.substr(0, ref.find(L":")), col, row);
+			if (col < 1 || row < 1) continue;
+
+			const _INT32 field = sort.by_column ? row - row_start : col - col_start;
+			if (field < 0 || field > (sort.by_column ? row_end - row_start : col_end - col_start)) continue;
+
+			odf_writer::table_sort_key_state key;
+			key.field_number = (int)field;
+			key.descending = oox_condition->m_oDescending.IsInit() && oox_condition->m_oDescending->ToBool();
+			sort.keys.push_back(key);
+		}
+		return sort;
+	}
 }
 
 void XlsxConverter::convert(OOX::Spreadsheet::CTable *oox_table_part)
@@ -1323,6 +1375,13 @@ void XlsxConverter::convert(OOX::Spreadsheet::CTable *oox_table_part)
 			OOX::Spreadsheet::CAutofilter * oox_filter = oox_table_part->m_oAutoFilter.GetPointer();
 			ods_context->set_database_range_filter(convert_filter_columns(oox_filter, ref));
 		}
+	}
+	if (!ref.empty())
+	{
+		OOX::Spreadsheet::CSortState * oox_sort = oox_table_part->m_oSortState.GetPointer();
+		if (!oox_sort && oox_table_part->m_oAutoFilter.IsInit())
+			oox_sort = oox_table_part->m_oAutoFilter->m_oSortState.GetPointer();
+		ods_context->set_database_range_sort(convert_sort_state(oox_sort, ref));
 	}
 
 	convert(oox_table_part->m_oTableColumns.GetPointer());
@@ -3981,21 +4040,15 @@ void XlsxConverter::convert(OOX::Spreadsheet::CAutofilter *oox_filter)
 {
 	if (!oox_filter)return;
 	
-	std::wstring ref, sort_ref;	
-	bool sort = false, caseSensitive = false;
+	std::wstring ref;
 	if (oox_filter->m_oRef.IsInit())
 		ref = oox_filter->m_oRef->GetValue();
-	if (oox_filter->m_oSortState.IsInit())
-	{
-		sort = true;
-		if (oox_filter->m_oSortState->m_oRef.IsInit())
-			sort_ref = 	oox_filter->m_oSortState->m_oRef->GetValue();
-		if (oox_filter->m_oSortState->m_oCaseSensitive.IsInit() && oox_filter->m_oSortState->m_oCaseSensitive->GetValue()==1)
-			caseSensitive = true;
-	}
 	ods_context->add_autofilter(ref);//target
 	if (!ref.empty())
+	{
 		ods_context->set_database_range_filter(convert_filter_columns(oox_filter, ref));
+		ods_context->set_database_range_sort(convert_sort_state(oox_filter->m_oSortState.GetPointer(), ref));
+	}
 	
 	//for (size_t i=0; i < oox_filter->m_arrItems.size(); i++)//set items TODO
 	//{

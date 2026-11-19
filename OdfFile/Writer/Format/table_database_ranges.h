@@ -55,6 +55,21 @@ struct table_filter_column_state
 	std::vector<table_filter_condition_state>	conditions;
 };
 
+/// \brief  one table:sort-by key of a database range sort
+struct table_sort_key_state
+{
+	int		field_number = 0;	// column offset in the range (row offset when the range sorts columns)
+	bool	descending = false;	// table:order
+};
+
+/// \brief  the table:sort of a database range
+struct table_sort_state
+{
+	bool								case_sensitive = false;	// table:case-sensitive
+	bool								by_column = false;		// table:orientation="column" on the range
+	std::vector<table_sort_key_state>	keys;
+};
+
 /// \brief  table:named-expressions
 class table_database_ranges : public office_element_impl<table_database_ranges>
 {
@@ -102,6 +117,9 @@ public:
 
 	// table:filter: the columns are joined by and
 	std::vector<table_filter_column_state> filter_columns_;
+
+	// table:sort, written after table:filter
+	table_sort_state sort_;
 
 };
 

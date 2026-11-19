@@ -54,6 +54,7 @@ add_core_gtest(
             xlsx2ods_date_cells.cpp
             xlsx2ods_print_area.cpp
             xlsx2ods_autofilter.cpp
+            xlsx2ods_sort.cpp
             xlsx2ods_header_footer.cpp
             odt2docx_fields.cpp
             chart_series_name.cpp
@@ -93,6 +94,7 @@ add_core_gtest(
             ods2xlsx_database_range.cpp
             ods2xlsx_autofilter.cpp
             ods2xlsx_autofilter_groups.cpp
+            xlsx2ods_sort_sheet_names.cpp
             odt2docx_section_columns.cpp
             odt2docx_chapter_field.cpp
             odt2docx_database_display.cpp

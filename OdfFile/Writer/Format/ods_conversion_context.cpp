@@ -86,6 +86,14 @@ void ods_conversion_context::set_database_range_filter(const std::vector<table_f
 {
 	table_context_.set_database_range_filter(columns);
 }
+void ods_conversion_context::set_database_range_sort(const table_sort_state & sort)
+{
+	table_context_.set_database_range_sort(sort);
+}
+void ods_conversion_context::set_sheet_sort(const std::wstring & ref, const table_sort_state & sort)
+{
+	table_context_.set_sheet_sort(ref, sort);
+}
 void ods_conversion_context::start_conditional_formats()
 {
 	current_table()->start_conditional_formats();
