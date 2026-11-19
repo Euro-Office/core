@@ -340,14 +340,39 @@ void OoxConverter::convert_meta(OOX::CApp *app, OOX::CCore *core)
 	}
 	if (core)
 	{
-		if (core->m_sCreator.IsInit())
-			odf_context()->add_meta(L"dc", L"creator", *core->m_sCreator);
+		// OOXML dc:creator is the author who created the document (ODF meta:initial-creator),
+		// cp:lastModifiedBy the one who saved it last (ODF dc:creator).
+		if (core->m_sCreator.IsInit() && !core->m_sCreator->empty())
+			odf_context()->add_meta(L"meta", L"initial-creator", *core->m_sCreator);
+		if (core->m_sLastModifiedBy.IsInit() && !core->m_sLastModifiedBy->empty())
+			odf_context()->add_meta(L"dc", L"creator", *core->m_sLastModifiedBy);
+		if (core->m_sModified.IsInit() && !core->m_sModified->empty())
+			odf_context()->add_meta(L"dc", L"date", *core->m_sModified);
 		if (core->m_sCreated.IsInit())
 			odf_context()->add_meta(L"meta", L"creation-date", *core->m_sCreated);
 		if (core->m_sKeywords.IsInit())
-			odf_context()->add_meta(L"meta", L"keyword", *core->m_sKeywords);
+		{
+			// OOXML has one cp:keywords string, ODF one meta:keyword per keyword: split it at spaces,
+			// commas, semicolons, colons and tabs.
+			const std::wstring separators = L" ,;:\t";
+			const std::wstring& keywords = *core->m_sKeywords;
+			std::wstring keyword;
+			for (size_t i = 0; i <= keywords.size(); i++)
+			{
+				if (i == keywords.size() || separators.find(keywords[i]) != std::wstring::npos)
+				{
+					if (!keyword.empty())
+						odf_context()->add_meta(L"meta", L"keyword", keyword);
+					keyword.clear();
+				}
+				else
+					keyword += keywords[i];
+			}
+		}
 		if (core->m_sTitle.IsInit())
 			odf_context()->add_meta(L"dc", L"title", *core->m_sTitle);
+		if (core->m_sSubject.IsInit() && !core->m_sSubject->empty())
+			odf_context()->add_meta(L"dc", L"subject", *core->m_sSubject);
 		if (core->m_sDescription.IsInit())
 			odf_context()->add_meta(L"dc", L"description", *core->m_sDescription);
 		if (core->m_sLanguage.IsInit())

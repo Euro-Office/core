@@ -271,6 +271,11 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/doc_props.odp",
     "OdfFile/Test/test_odf/ExampleFiles/doc_props.ods",
     "OdfFile/Test/test_odf/ExampleFiles/doc_props.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_core.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_core.pptx",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_core.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_core_markup.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_editor_only.ods",
     "OdfFile/Test/test_odf/ExampleFiles/doc_props_markup.ods",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"

@@ -175,11 +175,16 @@ std::wstring doc_props_container::dump_core()
 					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_date_);
 				}
 			}
-			if (!dc_creator_.empty())
+			// OOXML dc:creator is the author who created the document (ODF meta:initial-creator),
+			// cp:lastModifiedBy the one who saved it last (ODF dc:creator). Files without
+			// meta:initial-creator, such as the ones older versions of this converter wrote, keep
+			// dc:creator as the author too: otherwise the next save would lose the only name they have.
+			const std::wstring & author = initial_creator_.empty() ? dc_creator_ : initial_creator_;
+			if (!author.empty())
 			{
 				CP_XML_NODE(L"dc:creator")
 				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_creator_);
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(author);
 				}
 			}
 			if (!dc_title_.empty())
@@ -210,16 +215,14 @@ std::wstring doc_props_container::dump_core()
 					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_language_);
 				}
 			}
-			CP_XML_NODE(L"cp:lastModifiedBy")
+			// Only a person who saved the document: the application name here would be saved back to ODF
+			// as the last author.
+			if (!dc_creator_.empty())
 			{
-				std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
-				if (sApplication.empty())
-					sApplication = NSSystemUtils::gc_EnvApplicationNameDefault;
-				CP_XML_STREAM() << sApplication;
-#if defined(INTVER)
-				std::string s = VALUE2STR(INTVER);
-				CP_XML_STREAM() << L"/" << std::wstring(s.begin(), s.end());
-#endif	
+				CP_XML_NODE(L"cp:lastModifiedBy")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_creator_);
+				}
 			}
 			if (!keyword_.empty())
 			{

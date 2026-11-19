@@ -76,6 +76,7 @@ add_core_gtest(
             odt2docx_first_body_element.cpp
             odt2docx_meta_template.cpp
             odf2ooxml_doc_props.cpp
+            ooxml2odf_doc_props.cpp
             chart_subtitle.cpp
             math_property_values.cpp
             pptx2odp_table_styles.cpp

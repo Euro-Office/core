@@ -71,7 +71,7 @@ void meta_creation_date::serialize(std::wostream & _Wostream)
 	{
 		CP_XML_NODE_SIMPLE()
 		{
-			CP_XML_STREAM() << content_;
+			CP_XML_STREAM() << XmlUtils::EncodeXmlString(content_);
 		}
 	}
 }
@@ -143,7 +143,7 @@ void dc_language::serialize(std::wostream & _Wostream)
 	{
 		CP_XML_NODE_SIMPLE()
 		{
-			CP_XML_STREAM() << content_;
+			CP_XML_STREAM() << XmlUtils::EncodeXmlString(content_);
 		}
 	}
 }
@@ -155,7 +155,7 @@ void dc_date::serialize(std::wostream & _Wostream)
 	{
 		CP_XML_NODE_SIMPLE()
 		{
-			CP_XML_STREAM() << content_;
+			CP_XML_STREAM() << XmlUtils::EncodeXmlString(content_);
 		}
 	}
 }

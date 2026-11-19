@@ -62,7 +62,8 @@ public:
 	std::wstring dump_core();
 	std::wstring dump_custom();
 	
-	std::wstring dc_creator_;
+	std::wstring dc_creator_;		// ODF dc:creator = the last author who saved the document
+	std::wstring initial_creator_;	// ODF meta:initial-creator = the author who created it
 	std::wstring dc_date_;
 	std::wstring dc_description_;
 	std::wstring dc_language_;

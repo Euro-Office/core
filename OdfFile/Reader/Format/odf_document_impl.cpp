@@ -748,9 +748,20 @@ void odf_document::Impl::parse_meta(office_element *element)
 	if (meta_creation_date_)
 		context_->DocProps().creation_date_ = meta_creation_date_->content_;
 	
-	meta_keyword * meta_keyword_ = dynamic_cast<meta_keyword*>(meta->meta_keyword_.get());
-	if (meta_keyword_)
-		context_->DocProps().keyword_ = meta_keyword_->content_;
+	meta_initial_creator * meta_initial_creator_ = dynamic_cast<meta_initial_creator*>(meta->meta_initial_creator_.get());
+	if (meta_initial_creator_)
+		context_->DocProps().initial_creator_ = meta_initial_creator_->content_;
+
+	// ODF has one meta:keyword element per keyword, OOXML one cp:keywords string: join them with a space.
+	for (size_t i = 0; i < meta->meta_keyword_.size(); i++)
+	{
+		meta_keyword * meta_keyword_ = dynamic_cast<meta_keyword*>(meta->meta_keyword_[i].get());
+		if (!meta_keyword_ || meta_keyword_->content_.empty()) continue;
+
+		if (!context_->DocProps().keyword_.empty())
+			context_->DocProps().keyword_ += L" ";
+		context_->DocProps().keyword_ += meta_keyword_->content_;
+	}
 	meta_document_statistic * meta_document_statistic_ = dynamic_cast<meta_document_statistic*>(meta->meta_document_statistic_.get());
 	if (meta_document_statistic_)
 	{
