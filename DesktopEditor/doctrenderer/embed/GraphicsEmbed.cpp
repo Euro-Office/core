@@ -18,8 +18,8 @@ public:
 
 	CGraphicsAppImage_private()
 	{
-		m_pFonts = NULL;
-		m_pImageCache = NULL;
+		m_pFonts = nullptr;
+		m_pImageCache = nullptr;
 		m_sFontsDirectory = L"";
 		m_sImagesDirectory = L"";
 		m_sThemesDirectory = L"";
@@ -40,11 +40,9 @@ public:
 
 	bool IsNeedDownload(const std::wstring& sUrl)
 	{
-		if ((0 == sUrl.find(L"www.")) ||
+		return (0 == sUrl.find(L"www.")) ||
 			(0 == sUrl.find(L"http://")) ||
-			(0 == sUrl.find(L"https://")))
-			return true;
-		return false;
+			(0 == sUrl.find(L"https://"));
 	}
 
 	std::wstring GetImagePath(const std::wstring& sUrl)
@@ -143,13 +141,13 @@ bool CGraphicsAppImage::GetRgba()
 	return m_internal->m_bIsRgba;
 }
 
-unsigned char* CGraphicsAppImage::GetBits(int& w, int& h)
+unsigned char* CGraphicsAppImage::GetBits(int&  /*w*/, int&  /*h*/)
 {
-	return NULL;
+	return nullptr;
 }
 unsigned char* CGraphicsAppImage::AllocBits(const int& w, const int& h)
 {
-	return new unsigned char[4 * w * h];
+	return new unsigned char[static_cast<size_t>(4) * w * h];
 }
 
 // APPLICATION INFO END
@@ -182,10 +180,10 @@ JSSmart<CJSValue> CGraphicsEmbed::create(JSSmart<CJSValue> Native, JSSmart<CJSVa
 		if (m_pInternal->m_pAppImage && pNativeEmbedObject)
 		{
 			delete m_pInternal->m_pAppImage;
-			m_pInternal->m_pAppImage = NULL;
+			m_pInternal->m_pAppImage = nullptr;
 		}
 
-		if (NULL == m_pInternal->m_pAppImage)
+		if (nullptr == m_pInternal->m_pAppImage)
 			m_pInternal->m_pAppImage = new CGraphicsAppImage();
 
 		if (pNativeEmbedObject)
@@ -197,7 +195,7 @@ JSSmart<CJSValue> CGraphicsEmbed::create(JSSmart<CJSValue> Native, JSSmart<CJSVa
 		else
 		{
 			JSSmart<CJSValue> checkResources = pNativeObject->get("isResourcesObject");
-			if (checkResources->isBool() && true == checkResources->toBool())
+			if (checkResources->isBool() && checkResources->toBool())
 			{
 				m_pInternal->m_pAppImage->SetFontsDirectory(pNativeObject->get("fontsDirectory")->toStringW());
 				m_pInternal->m_pAppImage->SetImagesDirectory(pNativeObject->get("imagesDirectory")->toStringW());
@@ -206,244 +204,244 @@ JSSmart<CJSValue> CGraphicsEmbed::create(JSSmart<CJSValue> Native, JSSmart<CJSVa
 	}
 
 	m_pInternal->init(width_px->toDouble(), height_px->toDouble(), width_mm->toDouble(), height_mm->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::Destroy()
 {
 	// For save image bits, if needed.
 	m_pInternal->Destroy();
 	RELEASEOBJECT(m_pInternal);
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::EndDraw()
 {
 	m_pInternal->EndDraw();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::put_GlobalAlpha(JSSmart<CJSValue> enable, JSSmart<CJSValue> globalAlpha)
 {
 	m_pInternal->put_GlobalAlpha(enable->toBool(), globalAlpha->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::Start_GlobalAlpha()
 {
 	m_pInternal->Start_GlobalAlpha();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::End_GlobalAlpha()
 {
 	m_pInternal->End_GlobalAlpha();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::p_color(JSSmart<CJSValue> r, JSSmart<CJSValue> g, JSSmart<CJSValue> b, JSSmart<CJSValue> a)
 {
 	m_pInternal->p_color(r->toInt32(), g->toInt32(), b->toInt32(), a->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::p_width(JSSmart<CJSValue> w)
 {
 	m_pInternal->p_width(w->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::p_dash(JSSmart<CJSValue> params)
 {
 	JSSmart<CJSArray> items = params->toArray();
 	size_t length = items->getCount();
-	double* dash = NULL;
+	double* dash = nullptr;
 	if(length > 0)
 		dash = new double[length];
 	for(size_t i = 0; i < length; i++)
 		dash[i] = items->get(i)->toDouble();
 	m_pInternal->p_dash(length, dash);
 	RELEASEARRAYOBJECTS(dash);
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::b_color1(JSSmart<CJSValue> r, JSSmart<CJSValue> g, JSSmart<CJSValue> b, JSSmart<CJSValue> a)
 {
 	m_pInternal->b_color1(r->toInt32(), g->toInt32(), b->toInt32(), a->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::b_color2(JSSmart<CJSValue> r, JSSmart<CJSValue> g, JSSmart<CJSValue> b, JSSmart<CJSValue> a)
 {
 	m_pInternal->b_color2(r->toInt32(), g->toInt32(), b->toInt32(), a->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::transform(JSSmart<CJSValue> sx, JSSmart<CJSValue> shy, JSSmart<CJSValue> shx, JSSmart<CJSValue> sy, JSSmart<CJSValue> tx, JSSmart<CJSValue> ty)
 {
 	m_pInternal->transform(sx->toDouble(), shy->toDouble(), shx->toDouble(), sy->toDouble(), tx->toDouble(), ty->toDouble());
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::CalculateFullTransform(JSSmart<CJSValue> isInvertNeed)
+JSSmart<CJSValue> CGraphicsEmbed::CalculateFullTransform(JSSmart<CJSValue>  /*isInvertNeed*/)
 {
 	m_pInternal->CalculateFullTransform();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::_s()
 {
 	m_pInternal->_s();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::_e()
 {
 	m_pInternal->_e();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::_z()
 {
 	m_pInternal->_z();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::_m (JSSmart<CJSValue> x,  JSSmart<CJSValue> y)
 {
 	m_pInternal->_m(x->toDouble(), y->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::_l (JSSmart<CJSValue> x,  JSSmart<CJSValue> y)
 {
 	m_pInternal->_l(x->toDouble(), y->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::_c (JSSmart<CJSValue> x1, JSSmart<CJSValue> y1, JSSmart<CJSValue> x2, JSSmart<CJSValue> y2, JSSmart<CJSValue> x3, JSSmart<CJSValue> y3)
 {
 	m_pInternal->_c(x1->toDouble(), y1->toDouble(), x2->toDouble(), y2->toDouble(), x3->toDouble(), y3->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::_c2(JSSmart<CJSValue> x1, JSSmart<CJSValue> y1, JSSmart<CJSValue> x2, JSSmart<CJSValue> y2)
 {
 	m_pInternal->_c2(x1->toDouble(), y1->toDouble(), x2->toDouble(), y2->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::ds()
 {
 	m_pInternal->ds();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::df()
 {
 	m_pInternal->df();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::save()
 {
 	m_pInternal->save();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::restore()
 {
 	m_pInternal->restore();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::clip()
 {
 	m_pInternal->clip();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::reset()
 {
 	m_pInternal->reset();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::FreeFont()
 {
 	m_pInternal->FreeFont();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::ClearLastFont()
 {
 	m_pInternal->ClearLastFont();
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::drawImage2(JSSmart<CJSValue> img, JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h, JSSmart<CJSValue> alpha, JSSmart<CJSValue> srcRect)
+JSSmart<CJSValue> CGraphicsEmbed::drawImage2(JSSmart<CJSValue> img, JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h, JSSmart<CJSValue> alpha, JSSmart<CJSValue>  /*srcRect*/)
 {
 	std::wstring sUrl = img->toStringW();
 	if (m_pInternal->m_pAppImage && m_pInternal->m_pAppImage->m_internal->IsNeedDownload(sUrl))
 		sUrl = m_pInternal->m_pAppImage->m_internal->GetImagePath(sUrl);
 
 	m_pInternal->drawImage(sUrl, x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble(), alpha->toInt32());
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::drawImage (JSSmart<CJSValue> img, JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h, JSSmart<CJSValue> alpha, JSSmart<CJSValue> srcRect, JSSmart<CJSValue> nativeImage)
+JSSmart<CJSValue> CGraphicsEmbed::drawImage (JSSmart<CJSValue> img, JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h, JSSmart<CJSValue> alpha, JSSmart<CJSValue>  /*srcRect*/, JSSmart<CJSValue>  /*nativeImage*/)
 {
 	std::wstring sUrl = img->toStringW();
 	if (m_pInternal->m_pAppImage && m_pInternal->m_pAppImage->m_internal->IsNeedDownload(sUrl))
 		sUrl = m_pInternal->m_pAppImage->m_internal->GetImagePath(sUrl);
 
 	m_pInternal->drawImage(img->toStringW(), x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble(), alpha->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::GetFont()
 {
 	return CJSContext::createString(m_pInternal->GetFont());
 }
-JSSmart<CJSValue> CGraphicsEmbed::font(JSSmart<CJSValue> font_id, JSSmart<CJSValue> font_size)
+JSSmart<CJSValue> CGraphicsEmbed::font(JSSmart<CJSValue>  /*font_id*/, JSSmart<CJSValue>  /*font_size*/)
 {
 	m_pInternal->font();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::SetFont(JSSmart<CJSValue> path, JSSmart<CJSValue> face, JSSmart<CJSValue> size, JSSmart<CJSValue> style)
 {
 	m_pInternal->SetFont(path->toStringW(), face->toInt32(), size->toDouble(), style->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::GetTextPr()
 {
 	m_pInternal->GetTextPr();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::FillText(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> text)
 {
 	m_pInternal->FillText(x->toDouble(), y->toDouble(), text->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::t(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> _arr)
 {
 	m_pInternal->t(x->toDouble(), y->toDouble(), _arr->toStringW());
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::FillText2(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> text, JSSmart<CJSValue> cropX, JSSmart<CJSValue> cropW)
+JSSmart<CJSValue> CGraphicsEmbed::FillText2(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> text, JSSmart<CJSValue>  /*cropX*/, JSSmart<CJSValue>  /*cropW*/)
 {
 	m_pInternal->FillText(x->toDouble(), y->toDouble(), text->toInt32());
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::t2(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> _arr, JSSmart<CJSValue> cropX, JSSmart<CJSValue> cropW)
+JSSmart<CJSValue> CGraphicsEmbed::t2(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> _arr, JSSmart<CJSValue>  /*cropX*/, JSSmart<CJSValue>  /*cropW*/)
 {
 	m_pInternal->t(x->toDouble(), y->toDouble(), _arr->toStringW());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::FillTextCode(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> lUnicode)
 {
 	m_pInternal->FillText(x->toDouble(), y->toDouble(), lUnicode->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::tg(JSSmart<CJSValue> text, JSSmart<CJSValue> x, JSSmart<CJSValue> y)
 {
 	m_pInternal->tg(text->toInt32(), x->toDouble(), y->toDouble());
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::charspace(JSSmart<CJSValue> space)
+JSSmart<CJSValue> CGraphicsEmbed::charspace(JSSmart<CJSValue>  /*space*/)
 {
 	m_pInternal->charspace();
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::private_FillGlyph (JSSmart<CJSValue> pGlyph, JSSmart<CJSValue> _bounds)
+JSSmart<CJSValue> CGraphicsEmbed::private_FillGlyph (JSSmart<CJSValue>  /*pGlyph*/, JSSmart<CJSValue>  /*_bounds*/)
 {
 	m_pInternal->private_FillGlyph();
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::private_FillGlyphC(JSSmart<CJSValue> pGlyph, JSSmart<CJSValue> cropX, JSSmart<CJSValue> cropW)
+JSSmart<CJSValue> CGraphicsEmbed::private_FillGlyphC(JSSmart<CJSValue>  /*pGlyph*/, JSSmart<CJSValue>  /*cropX*/, JSSmart<CJSValue>  /*cropW*/)
 {
 	m_pInternal->private_FillGlyphC();
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::private_FillGlyph2(JSSmart<CJSValue> pGlyph)
+JSSmart<CJSValue> CGraphicsEmbed::private_FillGlyph2(JSSmart<CJSValue>  /*pGlyph*/)
 {
 	m_pInternal->private_FillGlyph2();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::SetIntegerGrid(JSSmart<CJSValue> param)
 {
 	m_pInternal->SetIntegerGrid(param->toBool());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::GetIntegerGrid()
 {
@@ -452,156 +450,156 @@ JSSmart<CJSValue> CGraphicsEmbed::GetIntegerGrid()
 JSSmart<CJSValue> CGraphicsEmbed::DrawStringASCII (JSSmart<CJSValue> text, JSSmart<CJSValue> x, JSSmart<CJSValue> y)
 {
 	m_pInternal->DrawStringASCII(text->toStringW(), x->toDouble(), y->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::DrawStringASCII2(JSSmart<CJSValue> text, JSSmart<CJSValue> x, JSSmart<CJSValue> y)
 {
 	m_pInternal->DrawStringASCII(text->toStringW(), x->toDouble(), y->toDouble());
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::DrawHeaderEdit(JSSmart<CJSValue> yPos, JSSmart<CJSValue> lock_type, JSSmart<CJSValue> sectionNum, JSSmart<CJSValue> bIsRepeat, JSSmart<CJSValue> type)
+JSSmart<CJSValue> CGraphicsEmbed::DrawHeaderEdit(JSSmart<CJSValue> yPos, JSSmart<CJSValue>  /*lock_type*/, JSSmart<CJSValue>  /*sectionNum*/, JSSmart<CJSValue>  /*bIsRepeat*/, JSSmart<CJSValue>  /*type*/)
 {
 	m_pInternal->DrawHeaderEdit(yPos->toDouble());
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::DrawFooterEdit(JSSmart<CJSValue> yPos, JSSmart<CJSValue> lock_type, JSSmart<CJSValue> sectionNum, JSSmart<CJSValue> bIsRepeat, JSSmart<CJSValue> type)
+JSSmart<CJSValue> CGraphicsEmbed::DrawFooterEdit(JSSmart<CJSValue> yPos, JSSmart<CJSValue>  /*lock_type*/, JSSmart<CJSValue>  /*sectionNum*/, JSSmart<CJSValue>  /*bIsRepeat*/, JSSmart<CJSValue>  /*type*/)
 {
 	m_pInternal->DrawFooterEdit(yPos->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::DrawLockParagraph (JSSmart<CJSValue> x, JSSmart<CJSValue> y1, JSSmart<CJSValue> y2)
 {
 	m_pInternal->DrawLockParagraph(x->toDouble(), y1->toDouble(), y2->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::DrawLockObjectRect(JSSmart<CJSValue> x, JSSmart<CJSValue> y,  JSSmart<CJSValue> w, JSSmart<CJSValue> h)
 {
 	m_pInternal->DrawLockObjectRect(x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::DrawEmptyTableLine(JSSmart<CJSValue> x1, JSSmart<CJSValue> y1, JSSmart<CJSValue> x2, JSSmart<CJSValue> y2)
 {
 	m_pInternal->DrawEmptyTableLine(x1->toDouble(), y1->toDouble(), x2->toDouble(), y2->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::DrawSpellingLine  (JSSmart<CJSValue> y0, JSSmart<CJSValue> x0, JSSmart<CJSValue> x1, JSSmart<CJSValue> w)
 {
 	m_pInternal->DrawSpellingLine(y0->toDouble(), x0->toDouble(), x1->toDouble(), w->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::drawHorLine (JSSmart<CJSValue> align, JSSmart<CJSValue> y, JSSmart<CJSValue> x, JSSmart<CJSValue> r, JSSmart<CJSValue> penW)
 {
 	m_pInternal->drawHorLine(align->toInt32(), y->toDouble(), x->toDouble(), r->toDouble(), penW->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::drawHorLine2(JSSmart<CJSValue> align, JSSmart<CJSValue> y, JSSmart<CJSValue> x, JSSmart<CJSValue> r, JSSmart<CJSValue> penW)
 {
 	m_pInternal->drawHorLine2(align->toInt32(), y->toDouble(), x->toDouble(), r->toDouble(), penW->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::drawVerLine (JSSmart<CJSValue> align, JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> b, JSSmart<CJSValue> penW)
 {
 	m_pInternal->drawVerLine(align->toInt32(), x->toDouble(), y->toDouble(), b->toDouble(), penW->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::drawHorLineExt(JSSmart<CJSValue> align, JSSmart<CJSValue> y, JSSmart<CJSValue> x, JSSmart<CJSValue> r, JSSmart<CJSValue> penW, JSSmart<CJSValue> leftMW, JSSmart<CJSValue> rightMW)
 {
 	m_pInternal->drawHorLineExt(align->toInt32(), y->toDouble(), x->toDouble(), r->toDouble(), penW->toDouble(), leftMW->toDouble(), rightMW->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::rect     (JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h)
 {
 	m_pInternal->rect(x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::TableRect(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h)
 {
 	m_pInternal->TableRect(x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::AddClipRect(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h)
 {
 	m_pInternal->AddClipRect(x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::RemoveClipRect()
 {
 	m_pInternal->RemoveClipRect();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::SetClip(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h)
 {
 	m_pInternal->SetClip(x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::RemoveClip()
 {
 	m_pInternal->restore();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::drawMailMergeField(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h)
 {
 	m_pInternal->drawMailMergeField(x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::drawSearchResult  (JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h)
 {
 	m_pInternal->drawSearchResult(x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble());
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::drawFlowAnchor    (JSSmart<CJSValue> x, JSSmart<CJSValue> y)
+JSSmart<CJSValue> CGraphicsEmbed::drawFlowAnchor    (JSSmart<CJSValue>  /*x*/, JSSmart<CJSValue>  /*y*/)
 {
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::SavePen()
 {
 	m_pInternal->SavePen();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::RestorePen()
 {
 	m_pInternal->RestorePen();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::SaveBrush()
 {
 	m_pInternal->SaveBrush();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::RestoreBrush()
 {
 	m_pInternal->RestoreBrush();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::SavePenBrush()
 {
 	m_pInternal->SavePenBrush();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::RestorePenBrush()
 {
 	m_pInternal->RestorePenBrush();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::SaveGrState()
 {
 	m_pInternal->SaveGrState();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::RestoreGrState()
 {
 	m_pInternal->RestoreGrState();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::StartClipPath()
 {
 	m_pInternal->StartClipPath();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::EndClipPath()
 {
 	m_pInternal->EndClipPath();
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::StartCheckTableDraw()
 {
@@ -610,41 +608,41 @@ JSSmart<CJSValue> CGraphicsEmbed::StartCheckTableDraw()
 JSSmart<CJSValue> CGraphicsEmbed::SetTextClipRect(JSSmart<CJSValue> _l, JSSmart<CJSValue> _t, JSSmart<CJSValue> _r, JSSmart<CJSValue> _b)
 {
 	m_pInternal->SetTextClipRect(_l->toDouble(), _t->toDouble(), _r->toDouble(), _b->toDouble());
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::AddSmartRect   (JSSmart<CJSValue> x,  JSSmart<CJSValue> y,  JSSmart<CJSValue> w,  JSSmart<CJSValue> h, JSSmart<CJSValue> pen_w)
+JSSmart<CJSValue> CGraphicsEmbed::AddSmartRect   (JSSmart<CJSValue> x,  JSSmart<CJSValue> y,  JSSmart<CJSValue> w,  JSSmart<CJSValue> h, JSSmart<CJSValue>  /*pen_w*/)
 {
 	m_pInternal->rect(x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble());
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::CheckUseFonts2 (JSSmart<CJSValue> _transform)
+JSSmart<CJSValue> CGraphicsEmbed::CheckUseFonts2 (JSSmart<CJSValue>  /*_transform*/)
 {
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::UncheckUseFonts2()
 {
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::Drawing_StartCheckBounds(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h)
+JSSmart<CJSValue> CGraphicsEmbed::Drawing_StartCheckBounds(JSSmart<CJSValue>  /*x*/, JSSmart<CJSValue>  /*y*/, JSSmart<CJSValue>  /*w*/, JSSmart<CJSValue>  /*h*/)
 {
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::Drawing_EndCheckBounds()
 {
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::DrawPresentationComment(JSSmart<CJSValue> type, JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h)
+JSSmart<CJSValue> CGraphicsEmbed::DrawPresentationComment(JSSmart<CJSValue>  /*type*/, JSSmart<CJSValue>  /*x*/, JSSmart<CJSValue>  /*y*/, JSSmart<CJSValue>  /*w*/, JSSmart<CJSValue>  /*h*/)
 {
-	return NULL;
+	return nullptr;
 }
-JSSmart<CJSValue> CGraphicsEmbed::DrawPolygon(JSSmart<CJSValue> oPath, JSSmart<CJSValue> lineWidth, JSSmart<CJSValue> shift)
+JSSmart<CJSValue> CGraphicsEmbed::DrawPolygon(JSSmart<CJSValue>  /*oPath*/, JSSmart<CJSValue>  /*lineWidth*/, JSSmart<CJSValue>  /*shift*/)
 {
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::DrawFootnoteRect(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h)
 {
 	m_pInternal->DrawFootnoteRect(x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::toDataURL(JSSmart<CJSValue> type)
 {
@@ -677,46 +675,49 @@ JSSmart<CJSValue> CGraphicsEmbed::put_brushTexture(JSSmart<CJSValue> src, JSSmar
 		sUrl = m_pInternal->m_pAppImage->m_internal->GetImagePath(sUrl);
 
 	m_pInternal->put_brushTexture(sUrl, type->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::put_brushTextureMode(JSSmart<CJSValue> mode)
 {
 	m_pInternal->put_brushTextureMode(mode->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::put_BrushTextureAlpha(JSSmart<CJSValue> a)
 {
 	m_pInternal->put_BrushTextureAlpha(a->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::put_BrushGradient(JSSmart<CJSValue> colors, JSSmart<CJSValue> transparent, JSSmart<CJSValue> x0, JSSmart<CJSValue> y0, JSSmart<CJSValue> x1, JSSmart<CJSValue> y1, JSSmart<CJSValue> r0, JSSmart<CJSValue> r1)
 {
 	JSSmart<CJSArray> items = colors->toArray();
 	size_t length = items->getCount() / 5;
-	LONG* color = NULL;
-	double* pos = NULL;
+	LONG* color = nullptr;
+	double* pos = nullptr;
 	if (length > 0)
 	{
 		color = new LONG[length];
 		pos = new double[length];
-	}
-	LONG R, G, B, A;
-	for (size_t i = 0; i < 5 * length; i++)
-	{
-		JSSmart<CJSValue> item = items->get(i);
-		size_t nDel = i % 5;
-		switch (nDel)
+
+		LONG R, G, B, A;
+		for (size_t i = 0; i < 5 * length; i++)
 		{
-		case 0: pos[i / 5] = item->toDouble() / 100000.0; break;
-		case 1: R = item->toInt32(); break;
-		case 2: G = item->toInt32(); break;
-		case 3: B = item->toInt32(); break;
-		case 4:
-			A = item->toInt32();
-			if (!transparent->isNull())
-				A = transparent->toInt32();
-			color[i / 5] = R | (G << 8) | (B << 16) | (A << 24);
-			break;
+			JSSmart<CJSValue> item = items->get(i);
+			size_t nDel = i % 5;
+			switch (nDel)
+			{
+			case 0: pos[i / 5] = item->toDouble() / 100000.0; break;
+			case 1: R = item->toInt32(); break;
+			case 2: G = item->toInt32(); break;
+			case 3: B = item->toInt32(); break;
+			case 4:
+				A = item->toInt32();
+				if (!transparent->isNull())
+					A = transparent->toInt32();
+				color[i / 5] = R | (G << 8) | (B << 16) | (A << 24);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -731,7 +732,7 @@ JSSmart<CJSValue> CGraphicsEmbed::put_BrushGradient(JSSmart<CJSValue> colors, JS
 
 	RELEASEARRAYOBJECTS(color);
 	RELEASEARRAYOBJECTS(pos);
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::TransformPointX(JSSmart<CJSValue> x, JSSmart<CJSValue> y)
 {
@@ -744,7 +745,7 @@ JSSmart<CJSValue> CGraphicsEmbed::TransformPointY(JSSmart<CJSValue> x, JSSmart<C
 JSSmart<CJSValue> CGraphicsEmbed::put_LineJoin(JSSmart<CJSValue> join)
 {
 	m_pInternal->put_LineJoin(join->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::get_LineJoin()
 {
@@ -753,7 +754,7 @@ JSSmart<CJSValue> CGraphicsEmbed::get_LineJoin()
 JSSmart<CJSValue> CGraphicsEmbed::put_TextureBounds(JSSmart<CJSValue> x, JSSmart<CJSValue> y, JSSmart<CJSValue> w, JSSmart<CJSValue> h)
 {
 	m_pInternal->put_TextureBounds(x->toDouble(), y->toDouble(), w->toDouble(), h->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::GetlineWidth()
 {
@@ -762,12 +763,12 @@ JSSmart<CJSValue> CGraphicsEmbed::GetlineWidth()
 JSSmart<CJSValue> CGraphicsEmbed::DrawPath(JSSmart<CJSValue> path)
 {
 	m_pInternal->DrawPath(path->toInt32());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::CoordTransformOffset(JSSmart<CJSValue> tx, JSSmart<CJSValue> ty)
 {
 	m_pInternal->CoordTransformOffset(tx->toDouble(), ty->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::GetTransform()
 {
@@ -785,10 +786,10 @@ JSSmart<CJSValue> CGraphicsEmbed::GetTransform()
 JSSmart<CJSValue> CGraphicsEmbed::CreateLayer(JSSmart<CJSValue> opacity)
 {
 	m_pInternal->CreateLayer(opacity->toDouble());
-	return NULL;
+	return nullptr;
 }
 JSSmart<CJSValue> CGraphicsEmbed::BlendLayer()
 {
 	m_pInternal->BlendLayer();
-	return NULL;
+	return nullptr;
 }

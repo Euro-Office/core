@@ -21,7 +21,7 @@ namespace NSGraphics
 		if (!m_pAppImage)
 			return;
 
-		if (NULL == m_pAppImage->GetFonts())
+		if (nullptr == m_pAppImage->GetFonts())
 		{
 			NSFonts::IApplicationFonts* pFonts = NSFonts::NSApplication::Create();
 			std::wstring sFontsDir = m_pAppImage->GetFontsDirectory();
@@ -55,8 +55,8 @@ namespace NSGraphics
 		if (nMax > nLimit)
 		{
 			double dKoef = (double)nLimit / nMax;
-			nRasterW = (int)(0.5 + dKoef * nRasterW);
-			nRasterH = (int)(0.5 + dKoef * nRasterH);
+			nRasterW = static_cast<int>(std::lround(dKoef * nRasterW));
+			nRasterH = static_cast<int>(std::lround(dKoef * nRasterH));
 
 			if (nRasterW < 1) nRasterW = 0;
 			if (nRasterH < 1) nRasterH = 0;
@@ -65,7 +65,7 @@ namespace NSGraphics
 		int nExistW = 0;
 		int nExistH = 0;
 		BYTE* pData =  m_pAppImage->GetBits(nExistW, nExistH);
-		if (pData != NULL)
+		if (pData != nullptr)
 		{
 			nRasterW = nExistW;
 			nRasterH = nExistH;
@@ -77,7 +77,7 @@ namespace NSGraphics
 
 		unsigned int back = 0xffffff;
 		unsigned int* pData32 = (unsigned int*)pData;
-		unsigned int* pData32End = pData32 + nRasterW * nRasterH;
+		unsigned int* pData32End = pData32 + static_cast<ptrdiff_t>(nRasterW) * nRasterH;
 		while (pData32 < pData32End)
 			*pData32++ = back;
 
@@ -871,10 +871,10 @@ namespace NSGraphics
 			m_pRenderer->GetFullTransform()->TransformPoint(x, y);
 			m_pRenderer->GetFullTransform()->TransformPoint(r, b);
 
-			x = (int)(x + 0.5);
-			y = (int)(y + 0.5);
-			r = (int)(r + 0.5);
-			b = (int)(b + 0.5);
+			x = std::lround(x);
+			y = std::lround(y);
+			r = std::lround(r);
+			b = std::lround(b);
 
 			m_pRenderer->AddRect(x, y, r - x, b - y);
 		}
@@ -1173,7 +1173,7 @@ namespace NSGraphics
 #endif
 		std::wstring sFormat = (type.length() > 6) ? type.substr(6) : type;
 
-		BYTE* pDataImage = NULL;
+		BYTE* pDataImage = nullptr;
 		int nDataImageSize = 0;
 		int nImageFormat = _CXIMAGE_FORMAT_PNG;
 		if ((L"jpg" == sFormat) ||(L"jpeg" == sFormat))
@@ -1182,7 +1182,7 @@ namespace NSGraphics
 		std::string sRes = "";
 		if (m_oFrame.Encode(pDataImage, nDataImageSize, nImageFormat))
 		{
-			char* cData64 = NULL;
+			char* cData64 = nullptr;
 			int nData64Dst = 0;
 			if (NSFile::CBase64Converter::Encode(pDataImage, nDataImageSize, cData64, nData64Dst, NSBase64::B64_BASE64_FLAG_NOCRLF))
 			{
@@ -1307,7 +1307,7 @@ namespace NSGraphics
 #endif
 		m_pRenderer->put_BrushTextureAlpha(a == 0 ? 255 : a);
 	}
-	void CGraphics::put_BrushGradient(LONG* pColors, double* pPositions, size_t nCount, double x0, double y0, double x1, double y1, double r0, double r1)
+	void CGraphics::put_BrushGradient(LONG* pColors, double* pPositions, size_t nCount, double x0, double y0, double x1, double y1, double r0, double  /*r1*/)
 	{
 #ifdef ENABLE_GR_LOGS
 		std::cout << "put_BrushGradient " << nCount << "  " << x0 << "  " << y0 << "  " << x1 << "  " << y1 << "  " << r0 << "  " << r1 << std::endl;

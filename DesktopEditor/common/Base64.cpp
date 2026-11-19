@@ -171,15 +171,15 @@ namespace NSBase64
 		// walk the source buffer
 		// each four character sequence is converted to 3 bytes
 		// CRLFs and =, and any characters not in the encoding table
-		// are skiped
+		// are skipped
 
-		if (szSrc == NULL || pnDestLen == NULL)
+		if (szSrc == nullptr || pnDestLen == nullptr)
 			return FALSE;
 		
 		const T* szSrcEnd = szSrc + nSrcLen;
 		int nWritten = 0;
 		
-		INT bOverflow = (pbDest == NULL) ? TRUE : FALSE;
+		INT bOverflow = (pbDest == nullptr) ? TRUE : FALSE;
 		
 		while (szSrc < szSrcEnd &&(*szSrc) != 0)
 		{

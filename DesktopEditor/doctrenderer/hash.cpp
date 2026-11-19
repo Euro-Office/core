@@ -32,7 +32,7 @@ CHash::~CHash()
 unsigned char* CHash::hash(const unsigned char* data, int size, int alg)
 {
 	unsigned int nBufLen = 0;
-	unsigned char* pBufData = NULL;
+	unsigned char* pBufData = nullptr;
 	size_t d = (size_t)size;
 
 	switch (alg)
@@ -110,19 +110,19 @@ unsigned char* CHash::hash(const unsigned char* data, int size, int alg)
 namespace NSUtfs
 {
 #define WriteUtf16_byte(code, p)							\
-	*p++ = code & 0xFF;										\
-	*p++ = (code >> 8) & 0xFF;
+	*(p)++ = (code) & 0xFF;										\
+	*(p)++ = ((code) >> 8) & 0xFF;
 
 #define WriteUtf16(code, p)									\
-	if (code < 0x10000)										\
+	if ((code) < 0x10000)										\
 	{														\
 	WriteUtf16_byte(code, p)								\
 	}														\
 	else													\
 	{														\
-	code -= 0x10000;										\
-	WriteUtf16_byte((0xD800 | ((code >> 10) & 0x03FF)), p);	\
-	WriteUtf16_byte((0xDC00 | (code & 0x03FF)), p);			\
+	(code) -= 0x10000;										\
+	WriteUtf16_byte((0xD800 | (((code) >> 10) & 0x03FF)), p);	\
+	WriteUtf16_byte((0xDC00 | ((code) & 0x03FF)), p);			\
 	}
 
 	void Utf8_to_utf16le(const char* utf8, unsigned char*& utf16, size_t& utf16_len)
@@ -147,7 +147,7 @@ namespace NSUtfs
 				int val = 0;
 				if ((index + 1) < utf8_count)
 				{
-					val = (int)(((byteMain & 0x1F) << 6) |
+					val = (((byteMain & 0x1F) << 6) |
 								(utf8[index + 1] & 0x3F));
 				}
 
@@ -160,7 +160,7 @@ namespace NSUtfs
 				int val = 0;
 				if ((index + 2) < utf8_count)
 				{
-					val = (int)(((byteMain & 0x0F) << 12) |
+					val = (((byteMain & 0x0F) << 12) |
 								((utf8[index + 1] & 0x3F) << 6) |
 							(utf8[index + 2] & 0x3F));
 				}
@@ -174,7 +174,7 @@ namespace NSUtfs
 				int val = 0;
 				if ((index + 3) < utf8_count)
 				{
-					val = (int)(((byteMain & 0x07) << 18) |
+					val = (((byteMain & 0x07) << 18) |
 								((utf8[index + 1] & 0x3F) << 12) |
 							((utf8[index + 2] & 0x3F) << 6) |
 							(utf8[index + 3] & 0x3F));
@@ -189,7 +189,7 @@ namespace NSUtfs
 				int val = 0;
 				if ((index + 3) < utf8_count)
 				{
-					val = (int)(((byteMain & 0x07) << 18) |
+					val = (((byteMain & 0x07) << 18) |
 								((utf8[index + 1] & 0x3F) << 12) |
 							((utf8[index + 2] & 0x3F) << 6) |
 							(utf8[index + 3] & 0x3F));
@@ -204,7 +204,7 @@ namespace NSUtfs
 				int val = 0;
 				if ((index + 4) < utf8_count)
 				{
-					val = (int)(((byteMain & 0x03) << 24) |
+					val = (((byteMain & 0x03) << 24) |
 								((utf8[index + 1] & 0x3F) << 18) |
 							((utf8[index + 2] & 0x3F) << 12) |
 							((utf8[index + 3] & 0x3F) << 6) |
@@ -220,7 +220,7 @@ namespace NSUtfs
 				int val = 0;
 				if ((index + 5) < utf8_count)
 				{
-					val = (int)(((byteMain & 0x01) << 30) |
+					val = (((byteMain & 0x01) << 30) |
 								((utf8[index + 1] & 0x3F) << 24) |
 							((utf8[index + 2] & 0x3F) << 18) |
 							((utf8[index + 3] & 0x3F) << 12) |
@@ -303,7 +303,7 @@ void hash_iteration(unsigned char*& input, int iter, unsigned char*& tmp, int al
 unsigned char* CHash::hash2(const char* password, const char* salt, int spinCount, int alg)
 {
 	int inputSaltLen = std::strlen(salt);
-	unsigned char* passwordUtf16 = NULL;
+	unsigned char* passwordUtf16 = nullptr;
 	size_t passwordUtf16Len = 0;
 	NSUtfs::Utf8_to_utf16le(password, passwordUtf16, passwordUtf16Len);
 
@@ -316,7 +316,7 @@ unsigned char* CHash::hash2(const char* password, const char* salt, int spinCoun
 	free(passwordUtf16);
 
 	size_t alg_size = 0;
-	unsigned char* pBuffer1 = NULL;
+	unsigned char* pBuffer1 = nullptr;
 	switch (alg)
 	{
 	case haMD2:
@@ -388,7 +388,7 @@ unsigned char* CHash::hash2(const char* password, const char* salt, int spinCoun
 
 	free(inputData);
 
-	if (0 == spinCount)
+	if (0 == spinCount || pBuffer1 == nullptr)
 		return pBuffer1;
 
 	unsigned char* pBuffer2 = (unsigned char*)malloc(alg_size + 4);
