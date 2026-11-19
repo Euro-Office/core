@@ -158,3 +158,32 @@ TEST(DocxToOdt, ContinuousSectionPageNumbersStartPage)
 	EXPECT_NE(master_page_of(content, L"FOURTH"), L"") << "page number format changes";
 	EXPECT_NE(master_page_of(content, L"FOURTH"), L"?");
 }
+
+// A two-column section (FIRST), then a one-column section that starts with a table (CELL), then AFTER. The table's
+// first paragraph opens the new text section while the table is still open; the table must keep its place after FIRST
+// and not move to the document root in front of all sections. (It ends up in the previous section.)
+TEST(DocxToOdt, SectionStartingWithTableKeepsOrder)
+{
+	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/section_starts_with_table.docx");
+	ASSERT_FALSE(dir.empty()) << "DOCX -> ODT conversion failed";
+
+	const std::wstring content = read_part(dir, L"content.xml");
+	ASSERT_FALSE(content.empty()) << "content.xml is missing";
+	EXPECT_TRUE(is_well_formed(content));
+
+	const size_t section = content.find(L"<text:section ");
+	const size_t first = content.find(L">FIRST<");
+	const size_t table = content.find(L"<table:table");
+	const size_t cell = content.find(L">CELL<");
+	const size_t after = content.find(L">AFTER<");
+	ASSERT_NE(section, std::wstring::npos) << "the two-column section is missing";
+	ASSERT_NE(first, std::wstring::npos);
+	ASSERT_NE(table, std::wstring::npos);
+	ASSERT_NE(cell, std::wstring::npos);
+	ASSERT_NE(after, std::wstring::npos);
+
+	EXPECT_LT(section, table) << "the table moved in front of every section";
+	EXPECT_LT(first, table) << "the table moved in front of FIRST";
+	EXPECT_LT(table, cell);
+	EXPECT_LT(cell, after);
+}

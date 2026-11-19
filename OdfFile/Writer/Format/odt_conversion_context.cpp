@@ -1095,8 +1095,8 @@ int odt_conversion_context::get_current_section_columns()
 }
 void odt_conversion_context::add_section(bool continuous)
 {
-	// Elements still open (a table whose first paragraph starts the new section) stay in the current section, in
-	// their place; only elements before the first section go to the root.
+	// Elements still open (a table whose first paragraph starts the new section) go to the end of the previous
+	// section, so they keep their order; only elements before the first section go to the root.
 	flush_section();
 //--dump first elements to root------------------------------------------------
 	for (size_t i = 0; i< current_root_elements_.size(); i++)
