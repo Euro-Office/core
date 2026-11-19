@@ -75,7 +75,7 @@ namespace OOX
 			oAttr.Write(L"Type", m_sType );
 			std::wstring sTarget = m_oTarget.m_strFilename;
 
-			if (false == IsExternal())
+			if (!IsExternal())
 				XmlUtils::replace_all(sTarget,L"\\",L"/");
 
 			sTarget = XmlUtils::EncodeXmlString(sTarget);
@@ -220,7 +220,7 @@ namespace OOX
 
 		std::wstring strDir = oPath.GetDirectory() + L"";
 
-		Rels::CRelationShip* pRel = NULL;
+		Rels::CRelationShip* pRel = nullptr;
 
 		if (L"" == oPath.GetExtention())
 		{
@@ -254,7 +254,7 @@ namespace OOX
 
 		std::wstring strDir = oPath.GetDirectory() +L"";
 
-		Rels::CRelationShip* pRel = NULL;
+		Rels::CRelationShip* pRel = nullptr;
 
 		if ( L"" == oPath.GetExtention() )
 		{
@@ -289,7 +289,7 @@ namespace OOX
 	}
 	void CRels::GetRel(const RId& rId, Rels::CRelationShip** ppRelationShip)
 	{
-		(*ppRelationShip) = NULL;
+		(*ppRelationShip) = nullptr;
 
 		boost::unordered_map<std::wstring, Rels::CRelationShip*>::iterator pFind = m_mapRelations.find(rId.get());
 		if (pFind != m_mapRelations.end())
