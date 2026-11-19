@@ -334,7 +334,9 @@ void odf_chart_context::Impl::set_default_series_color()
 	if (current_level_.empty()) return;
 	if (!current_level_.back().graphic_properties) return;
 
-	color col = color(default_MS_series_colors[current_series_count_]);
+	// The table has a fixed size, a chart can have more series: start over, as LibreOffice does.
+	const int colors_count = static_cast<int>(sizeof(default_MS_series_colors) / sizeof(default_MS_series_colors[0]));
+	color col = color(default_MS_series_colors[current_series_count_ % colors_count]);
 	
 	current_level_.back().graphic_properties->common_draw_fill_attlist_.draw_fill_color_ = col;
 	current_level_.back().graphic_properties->svg_stroke_color_ = col;
