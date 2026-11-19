@@ -27,6 +27,7 @@ endif()
 
 set(_ooxml_test_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/activex_groupname.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/common.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/checkbox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/richvalue.cpp
