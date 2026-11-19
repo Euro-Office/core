@@ -7,8 +7,7 @@ from pathlib import Path
 
 script_path = Path(sys.argv[0]).resolve()
 script_dir = script_path.parent
-icu_major = "74"
-icu_minor = "2"
+icu_tag = "release-74-2"
 
 third_party_root = ( script_dir / ".." ).resolve()
 if str( third_party_root ) not in sys.path:
@@ -31,7 +30,7 @@ def fetch_and_patch():
     
     nc.run_command(
         [ "git", "-c", "core.autocrlf=false", "-c", "core.eol=lf", "clone",
-          "--depth", "1", "--branch", f"release-{icu_major}-{icu_minor}",
+          "--depth", "1", "--branch", icu_tag,
           "https://github.com/unicode-org/icu.git", str(nc.work_dir / "icu2")
         ],
         "Checkout git repo",
