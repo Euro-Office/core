@@ -47,6 +47,8 @@ namespace OOX
 	namespace Spreadsheet
 	{
 		class CPersonList;
+		class CPivotCacheDefinitionFile;
+		class CWorksheet;
 
 	//raw child:
 		//<customWorkbookViews>
@@ -123,7 +125,27 @@ namespace OOX
 
 			void readBin(const CPath& oPath);
 			XLS::BaseObjectPtr WriteBin() const;
-			XLS::BaseObjectPtr toXLS() const;
+			// A <sheet> with the worksheet or chart sheet part its r:id resolves to, or nullptr if it resolves to none.
+			typedef std::pair<CSheet*, CWorksheet*> SheetForXLS;
+			// A <pivotCache> with its pivot cache definition part.
+			typedef std::pair<CWorkbookPivotCache*, CPivotCacheDefinitionFile*> PivotCacheForXLS;
+
+			// The globals substream of an XLS. CXlsx::WriteXLS gets both lists once and writes the sheet substreams and
+			// the cache streams from the same lists, so the n-th BoundSheet8 is the n-th sheet substream and the n-th
+			// cache in the globals is the n-th cache stream.
+			XLS::BaseObjectPtr toXLS(const std::vector<SheetForXLS>& sheets, const std::vector<PivotCacheForXLS>& pivotCaches) const;
+			// Every <sheet>, in tab order (see SheetForXLS). A sheet part that no <sheet> points at is not written. A
+			// <sheet> without a part still keeps its place (CXlsx::WriteXLS writes it as an empty worksheet): sheet
+			// references in formulas and defined names are written as positions in <sheets> (CSheets::AddSheetRef),
+			// so leaving it out would move every reference to a later sheet one tab to the left.
+			std::vector<SheetForXLS> GetSheetsForXLS() const;
+			// The <pivotCache>s that XLS export writes, in order; a cache's position here is its index in the XLS. Left
+			// out: a cache without a cacheId or with the cacheId of an earlier one; one whose XLS stream id (cacheId + 1)
+			// does not fit the field a pivot view finds its cache by (SxView::iCache); one whose r:id does not resolve to
+			// a pivot cache definition part or whose definition does not parse; a worksheet source without its range.
+			// CWorksheet::toXLS writes only the pivot views of the caches listed here, so a cache is written whole or
+			// not at all.
+			std::vector<PivotCacheForXLS> GetPivotCachesForXLS() const;
 			virtual void read(const CPath& oPath);
 			virtual void read(const CPath& oRootPath, const CPath& oPath);
 			virtual void fromXML(XmlUtils::CXmlNode& node);

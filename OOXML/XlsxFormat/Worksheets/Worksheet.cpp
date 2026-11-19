@@ -367,7 +367,7 @@ namespace OOX
 			}
 
 		}
-		XLS::BaseObjectPtr CWorksheet::toXLS()
+		XLS::BaseObjectPtr CWorksheet::toXLS(const std::set<unsigned int>& pivotCacheIds)
 		{
 			if(m_bIsChartSheet)
 			{
@@ -521,8 +521,10 @@ namespace OOX
 				{
 					auto tempPivot = static_cast<CPivotTableFile*>(file.GetPointer());
 					tempPivot->EnsureDefinition();
-					if(tempPivot->m_oPivotTableDefinition.IsInit())
-						worksheetPtr->m_arPIVOTVIEW.push_back(tempPivot->m_oPivotTableDefinition->toXLS());
+					// a view whose cache is not written would point at a cache stream that does not exist
+					const auto& definition = tempPivot->m_oPivotTableDefinition;
+					if(definition.IsInit() && definition->m_oCacheId.IsInit() && pivotCacheIds.count(definition->m_oCacheId->GetValue()))
+						worksheetPtr->m_arPIVOTVIEW.push_back(definition->toXLS());
 				}
 			}
 			return sheetPtr;
