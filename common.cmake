@@ -381,6 +381,21 @@ else()
         set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a")
     endif()
 
+    # Setup nlohmann_json
+    set(NLOHMANN_JSON_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/nlohmann_json")
+    get_filename_component(NLOHMANN_JSON_INSTALL_DIR_ABS "${NLOHMANN_JSON_INSTALL_DIR}" ABSOLUTE)
+    list( APPEND CMAKE_PREFIX_PATH "${NLOHMANN_JSON_INSTALL_DIR_ABS}" )
+
+    # Setup sioxx
+    set(SIOXX_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/sioxx")
+    get_filename_component(SIOXX_INSTALL_DIR_ABS "${SIOXX_INSTALL_DIR}" ABSOLUTE)
+    list( APPEND CMAKE_PREFIX_PATH "${SIOXX_INSTALL_DIR_ABS}" )
+    if( MSVC )
+        set(SIOXX_LIB "${SIOXX_INSTALL_DIR_ABS}/lib/sioxx.lib")
+    else()
+        set(SIOXX_LIB "${SIOXX_INSTALL_DIR_ABS}/lib/libsioxx.a")
+    endif()
+
     # Setup zlib-ng
     set(ZLIBNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/zlib-ng")
     get_filename_component(ZLIBNG_INSTALL_DIR_ABS "${ZLIBNG_INSTALL_DIR}" ABSOLUTE)
