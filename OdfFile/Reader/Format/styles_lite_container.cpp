@@ -78,6 +78,87 @@ office_element_ptr styles_lite_container::find_by_style_name(const std::wstring 
         return office_element_ptr();
     }
 }
+
+namespace
+{
+	bool read_digits(const std::wstring & s, size_t & pos, size_t count, int & value)
+	{
+		if (pos + count > s.size()) return false;
+		value = 0;
+		for (size_t i = 0; i < count; ++i)
+		{
+			const wchar_t c = s[pos + i];
+			if (c < L'0' || c > L'9') return false;
+			value = value * 10 + (c - L'0');
+		}
+		pos += count;
+		return true;
+	}
+	bool read_char(const std::wstring & s, size_t & pos, wchar_t c)
+	{
+		if (pos >= s.size() || s[pos] != c) return false;
+		++pos;
+		return true;
+	}
+
+	// An ODF date (xsd:dateTime or xsd:date) as a W3CDTF value for docProps/core.xml:
+	// YYYY-MM-DDThh:mm:ss, without the fraction, and with the value's own time zone or "Z" when it has
+	// none (the wall-clock time, as LibreOffice writes it). Editors read a value without a zone as local
+	// time and save it back shifted by the UTC offset. Empty when the value is no date or its year is
+	// outside 1601..9999 (Office reports such a core.xml as corrupt).
+	std::wstring w3cdtf_date(const std::wstring & odf_value)
+	{
+		const size_t first = odf_value.find_first_not_of(L" \t\r\n");
+		if (first == std::wstring::npos) return L"";
+		const std::wstring s = odf_value.substr(first, odf_value.find_last_not_of(L" \t\r\n") - first + 1);
+
+		size_t pos = 0;
+		int year = 0, month = 0, day = 0;
+		if (!read_digits(s, pos, 4, year) || !read_char(s, pos, L'-') || !read_digits(s, pos, 2, month)
+			|| !read_char(s, pos, L'-') || !read_digits(s, pos, 2, day))
+			return L"";
+		if (year < 1601 || year > 9999 || month < 1 || month > 12 || day < 1) return L"";
+		const bool leap = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+		const int days_in_month[12] = { 31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		if (day > days_in_month[month - 1]) return L"";
+
+		const std::wstring date = s.substr(0, pos);
+		if (pos == s.size()) return date + L"T00:00:00Z";
+
+		int hour = 0, minute = 0, second = 0;
+		if (!read_char(s, pos, L'T') || !read_digits(s, pos, 2, hour) || !read_char(s, pos, L':')
+			|| !read_digits(s, pos, 2, minute) || !read_char(s, pos, L':') || !read_digits(s, pos, 2, second))
+			return L"";
+		if (hour > 23 || minute > 59 || second > 59) return L"";
+		const std::wstring time = s.substr(date.size() + 1, 8);
+
+		if (pos < s.size() && (s[pos] == L'.' || s[pos] == L','))
+		{
+			const size_t fraction = ++pos;
+			while (pos < s.size() && s[pos] >= L'0' && s[pos] <= L'9') ++pos;
+			if (pos == fraction) return L"";
+		}
+
+		std::wstring zone = L"Z";
+		if (pos < s.size() && s[pos] == L'Z')
+		{
+			++pos;
+		}
+		else if (pos < s.size() && (s[pos] == L'+' || s[pos] == L'-'))
+		{
+			const size_t start = pos++;
+			int zone_hour = 0, zone_minute = 0;
+			if (!read_digits(s, pos, 2, zone_hour) || !read_char(s, pos, L':') || !read_digits(s, pos, 2, zone_minute)
+				|| zone_hour > 14 || zone_minute > 59 || (zone_hour == 14 && zone_minute != 0))
+				return L"";
+			zone = s.substr(start, pos - start);
+		}
+		if (pos != s.size()) return L"";
+
+		return date + L"T" + time + zone;
+	}
+}
+
 class doc_props_container::Impl
 {
 public:
@@ -159,20 +240,22 @@ std::wstring doc_props_container::dump_core()
 			CP_XML_ATTR(L"xmlns:dcmitype", L"http://purl.org/dc/dcmitype/");
 			CP_XML_ATTR(L"xmlns:dcterms", L"http://purl.org/dc/terms/");
 			
-			if (!creation_date_.empty())
+			const std::wstring created = w3cdtf_date(creation_date_);
+			if (!created.empty())
 			{
 				CP_XML_NODE(L"dcterms:created")
 				{
 					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(creation_date_);
+					CP_XML_STREAM() << created;
 				}
 			}
-			if (!dc_date_.empty())
+			const std::wstring modified = w3cdtf_date(dc_date_);
+			if (!modified.empty())
 			{
 				CP_XML_NODE(L"dcterms:modified")
 				{
 					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_date_);
+					CP_XML_STREAM() << modified;
 				}
 			}
 			// OOXML dc:creator is the author who created the document (ODF meta:initial-creator),

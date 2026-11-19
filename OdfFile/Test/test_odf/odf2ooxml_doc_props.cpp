@@ -8,6 +8,8 @@
 
 #include "common.h"
 
+#include "OdfFile/Reader/Format/styles_lite_container.h"
+
 #include <map>
 #include <string>
 
@@ -50,8 +52,9 @@ namespace
 		EXPECT_TRUE(contains(core, L"<dc:title>Budget &amp; plan</dc:title>")) << core;
 		EXPECT_TRUE(contains(core, L"<dc:subject>Quarterly figures</dc:subject>")) << core;
 		EXPECT_TRUE(contains(core, L"<dc:description>Numbers for the review</dc:description>")) << core;
-		EXPECT_TRUE(contains(core, L">2026-01-02T03:04:05</dcterms:created>")) << core;
-		EXPECT_TRUE(contains(core, L">2026-01-03T04:05:06</dcterms:modified>")) << core;
+		// The fixture's dates have no time zone: core.xml marks them as the wall-clock time.
+		EXPECT_TRUE(contains(core, L">2026-01-02T03:04:05Z</dcterms:created>")) << core;
+		EXPECT_TRUE(contains(core, L">2026-01-03T04:05:06Z</dcterms:modified>")) << core;
 		// OOXML dc:creator is the author who created the file, cp:lastModifiedBy the last one who
 		// saved it; several ODF keywords become one cp:keywords string.
 		EXPECT_TRUE(contains(core, L"<dc:creator>Ada Author</dc:creator>")) << core;
@@ -116,7 +119,8 @@ TEST(OdsToXlsxDocProps, LastAuthorOnly)
 	EXPECT_TRUE(contains(core, L"<dc:creator>Bob Editor</dc:creator>")) << core;
 }
 
-// Authors, dates and custom properties come from the file: markup in them must stay text.
+// Authors and custom properties come from the file: markup in them must stay text. Dates that are
+// no dates are left out.
 TEST(OdsToXlsxDocProps, MarkupInValuesIsEscaped)
 {
 	const std::wstring dir = converted_dir(L"ExampleFiles/doc_props_markup.ods");
@@ -124,8 +128,8 @@ TEST(OdsToXlsxDocProps, MarkupInValuesIsEscaped)
 
 	const std::wstring core = read_part(dir, L"docProps/core.xml");
 	EXPECT_TRUE(is_well_formed(core)) << core;
-	EXPECT_TRUE(contains(core, L">&lt;/dcterms:created&gt;&lt;dc:creator&gt;x</dcterms:created>")) << core;
-	EXPECT_TRUE(contains(core, L">1 &amp; 2</dcterms:modified>")) << core;
+	EXPECT_FALSE(contains(core, L"dcterms:created")) << core;
+	EXPECT_FALSE(contains(core, L"dcterms:modified")) << core;
 	EXPECT_FALSE(contains(core, L"<dc:creator>x")) << core;
 	EXPECT_TRUE(contains(core, L"<dc:creator>&lt;a&gt; &amp; b</dc:creator>")) << core;
 	EXPECT_TRUE(contains(core, L"<cp:lastModifiedBy>&lt;/cp:lastModifiedBy&gt;x</cp:lastModifiedBy>")) << core;
@@ -154,4 +158,61 @@ TEST(OdtToDocxDocProps, CoreProperties)
 TEST(OdtToDocxDocProps, CustomProperties)
 {
 	expect_custom(L"ExampleFiles/doc_props.odt");
+}
+
+namespace
+{
+	// docProps/core.xml written for a meta:creation-date and a dc:date with the given value.
+	std::wstring core_for_dates(const std::wstring& value)
+	{
+		cpdoccore::odf_reader::doc_props_container props;
+		props.creation_date_ = value;
+		props.dc_date_ = value;
+		return props.dump_core();
+	}
+}
+
+// ODF dates are xsd:dateTime, mostly without a time zone and with up to nine fraction digits; core.xml
+// takes W3CDTF. A value without a zone is the wall-clock time, written with "Z" as LibreOffice does: an
+// editor would read it as local time and save it shifted by its UTC offset.
+TEST(OdfToOoxmlDocProps, DatesAreW3CDTF)
+{
+	const struct { const wchar_t* odf; const wchar_t* core; } cases[] = {
+		{ L"2024-06-05T16:03:40", L"2024-06-05T16:03:40Z" },
+		{ L"2024-06-05T16:03:40.809199394", L"2024-06-05T16:03:40Z" },
+		{ L"2024-06-05T16:03:40,5", L"2024-06-05T16:03:40Z" },
+		{ L" 2024-06-05T16:03:40\n", L"2024-06-05T16:03:40Z" },
+		{ L"2024-06-05T16:03:40Z", L"2024-06-05T16:03:40Z" },
+		{ L"2024-06-05T16:03:40.25+02:00", L"2024-06-05T16:03:40+02:00" },
+		{ L"2024-06-05T16:03:40-05:30", L"2024-06-05T16:03:40-05:30" },
+		{ L"2024-06-05", L"2024-06-05T00:00:00Z" },
+		{ L"2024-02-29T12:00:00", L"2024-02-29T12:00:00Z" },
+		{ L"2000-02-29T12:00:00+14:00", L"2000-02-29T12:00:00+14:00" },
+	};
+	for (const auto& c : cases)
+	{
+		const std::wstring core = core_for_dates(c.odf);
+		EXPECT_TRUE(is_well_formed(core)) << core;
+		EXPECT_TRUE(contains(core, std::wstring(L"\">") + c.core + L"</dcterms:created>")) << c.odf << L"\n" << core;
+		EXPECT_TRUE(contains(core, std::wstring(L"\">") + c.core + L"</dcterms:modified>")) << c.odf << L"\n" << core;
+	}
+}
+
+// Office reports a core.xml with a year before 1601 or after 9999 as corrupt; values that are no dates
+// carry nothing to keep.
+TEST(OdfToOoxmlDocProps, InvalidDatesAreLeftOut)
+{
+	const wchar_t* values[] = {
+		L"1600-12-31T23:59:59", L"10000-01-01T00:00:00", L"-0001-01-01T00:00:00", L"0000-01-01",
+		L"2024-13-01T00:00:00", L"2024-06-05T25:00:00", L"2024-06-05T16:03", L"2024-06-05T16:03:40.",
+		L"2024-06-05T16:03:40+2:00", L"2024-06-05T16:03:40 CET", L"05.06.2024", L"1 & 2", L"",
+		L"2024-02-30T00:00:00", L"2023-02-29", L"1900-02-29", L"2024-04-31", L"2024-06-05T16:03:40+14:30",
+	};
+	for (const wchar_t* value : values)
+	{
+		const std::wstring core = core_for_dates(value);
+		EXPECT_TRUE(is_well_formed(core)) << core;
+		EXPECT_FALSE(contains(core, L"dcterms:created")) << value << L"\n" << core;
+		EXPECT_FALSE(contains(core, L"dcterms:modified")) << value << L"\n" << core;
+	}
 }
