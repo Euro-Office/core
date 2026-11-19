@@ -1530,7 +1530,8 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 			m_oCaption = readString(&mem_stream, sizeCaption);
 		}
 		std::wstring oGroupName;
-		if (sizeGroupName > 0 && sizeGroupName < 0xfff0)
+		// readString masks off bit 31 (the compression flag), so any non-zero size is a string
+		if (sizeGroupName > 0)
 		{
 			oGroupName = readString(&mem_stream, sizeGroupName);
 		}
