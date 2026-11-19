@@ -550,7 +550,8 @@ void h::add_attributes( const xml::attributes_wc_ptr & Attributes )
     CP_APPLY_ATTR(L"text:restart-numbering"	, restart_numbering_);
     CP_APPLY_ATTR(L"text:start-value"		, start_value_);
     CP_APPLY_ATTR(L"text:is-list-header"	, is_list_header_);
-	CP_APPLY_ATTR(L"text:level"				, outline_level_); // openoffice xml 1.0
+	if (!outline_level_)
+		CP_APPLY_ATTR(L"text:level"			, outline_level_); // openoffice xml 1.0
 
     paragraph_.add_attributes(Attributes);
 

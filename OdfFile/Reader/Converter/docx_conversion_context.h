@@ -32,6 +32,7 @@
 #include <unordered_map>
 #include <boost/shared_ptr.hpp>
 #include <list>
+#include <algorithm>
 
 #include "docx_table_context.h"
 #include "oox_conversion_context.h"
@@ -767,6 +768,14 @@ private:
 	std::vector<std::wstring>		sequences;
 };
 //---------------------------------------------------------------------------------------------------------
+// ODF outline levels start at 1 (0 = body text) and go up to 10; w:outlineLvl starts at 0, has 9
+// levels and uses 9 for body text. Levels 9 and 10 both become Word's last level, as in LibreOffice.
+inline int docx_outline_level(int odf_level)
+{
+	if (odf_level <= 0) { return 9; }
+	return (std::min)(odf_level, 9) - 1;
+}
+//---------------------------------------------------------------------------------------------------------
 class docx_conversion_context : boost::noncopyable
 {
 public:
@@ -936,6 +945,8 @@ public:
 	const std::vector<std::wstring>& get_list_style_stack() const { return list_style_stack_; }
 
 	void serialize_list_properties(std::wostream & strm);
+	// True while serialize_list_properties will still write the list's w:numPr for the current paragraph.
+	bool list_properties_pending() const { return !list_style_stack_.empty() && first_element_list_item_; }
 	void serialize_paragraph_style(std::wostream & strm, const std::wstring & ParentId, bool in_styles = false);
    
 	std::wstring find_list_rename(const std::wstring & ListStyleName) const;
