@@ -45,7 +45,7 @@ namespace XLSB
 
     void Border::readFields(XLS::CFRecord& record)
     {
-        unsigned char flags;
+        unsigned char flags = 0;
 
         record >> flags;
 

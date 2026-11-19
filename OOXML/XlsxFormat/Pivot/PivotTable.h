@@ -1014,17 +1014,17 @@ namespace OOX
 			{
 				m_bSpreadsheets = true;
 
-				m_pData = NULL;
+				m_pData = nullptr;
 				m_nDataLength = 0;
 			}
 			CPivotTableFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 			{
 				m_bSpreadsheets = true;
 
-				m_pData = NULL;
+				m_pData = nullptr;
 				m_nDataLength = 0;
 
-				read( oRootPath, oPath );
+				CPivotTableFile::read( oRootPath, oPath );
 			}
 			virtual ~CPivotTableFile()
 			{
@@ -1066,7 +1066,7 @@ namespace OOX
 				return m_oReadPath;
 			}
 
-			BYTE *m_pData = NULL;
+			BYTE *m_pData = nullptr;
 			DWORD m_nDataLength = 0;
 
 			mutable nullable<CPivotTableDefinition> m_oPivotTableDefinition;

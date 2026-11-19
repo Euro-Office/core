@@ -74,7 +74,7 @@ namespace OOX
 
 			for ( size_t i = 0; i < m_arrItems.size(); ++i)
 			{
-				if ( m_arrItems[i] == NULL) continue;
+				if ( m_arrItems[i] == nullptr) continue;
 
 				OOX::Spreadsheet::WritingElement* we = m_arrItems[i];
 
@@ -111,7 +111,7 @@ namespace OOX
 			{
 				std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
 
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 				if ( _T("phoneticPr") == sName )
 					AssignPtrXmlContent(pItem, CPhonetic, oReader)
 				else if ( _T("r") == sName )
@@ -121,7 +121,7 @@ namespace OOX
 				else if ( _T("t") == sName )
 					AssignPtrXmlContent(pItem, CText, oReader)
 
-				if ( NULL != pItem )
+				if ( nullptr != pItem )
 					m_arrItems.push_back( pItem );
 			}
 		}

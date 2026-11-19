@@ -45,7 +45,7 @@ namespace XLSB
 
     void PCDH14::readFields(XLS::CFRecord& record)
     {
-        BYTE    flags;
+        BYTE    flags = 0;
         _INT32  value;
         record >> FRTheader >> flags;
 

@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginSparklineGroup::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> FRTheader >> flags;
 
         fDateAxis              = GETBIT(flags, 0);

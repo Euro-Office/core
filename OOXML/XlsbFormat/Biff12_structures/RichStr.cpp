@@ -45,7 +45,7 @@ namespace XLSB
 
     void RichStr::load(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
 
         record >> flags >> str;
 

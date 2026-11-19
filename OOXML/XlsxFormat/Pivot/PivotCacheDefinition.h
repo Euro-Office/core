@@ -632,7 +632,7 @@ namespace OOX
 			{
 				return m_oReadPath;
 			}
-			BYTE* m_pData = NULL;
+			BYTE* m_pData = nullptr;
 			DWORD m_nDataLength = 0;
 
 			mutable nullable<CPivotCacheDefinition> m_oPivotCashDefinition;

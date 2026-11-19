@@ -107,7 +107,7 @@ namespace OOX
 			writer.WriteString(L"<" + node_name);
 			if (bExtendedWrite)
 			{
-				if (false == m_oUuid.IsInit())
+				if (!m_oUuid.IsInit())
 				{
 					m_oUuid = L"{" + XmlUtils::GenerateGuid() + L"}";
 				}
@@ -215,9 +215,7 @@ xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\">");
 			XLS::BaseObjectPtr objectPtr(ptr);
             if(m_oType.IsInit())
             {
-                if (m_oType->GetValue() == SimpleTypes::Spreadsheet::EDataValidationType::validationTypeNone)
-                    ptr->valType = XLS::typeDvNone;
-                else if (m_oType->GetValue() == SimpleTypes::Spreadsheet::EDataValidationType::validationTypeWhole)
+                if (m_oType->GetValue() == SimpleTypes::Spreadsheet::EDataValidationType::validationTypeWhole)
                     ptr->valType = XLS::typeDvWhole;
                 else if (m_oType->GetValue() == SimpleTypes::Spreadsheet::EDataValidationType::validationTypeDecimal)
                     ptr->valType = XLS::typeDvDecimal;
@@ -282,9 +280,7 @@ xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\">");
                  ptr->mdImeMode = 0;
             if(m_oOperator.IsInit())
             {
-                if (m_oOperator->GetValue() == SimpleTypes::Spreadsheet::EDataValidationOperator::operatorBetween)
-                    ptr->typOperator = XLS::_typOperatorDv::operatorDvBetween;
-                else if (m_oOperator->GetValue() == SimpleTypes::Spreadsheet::EDataValidationOperator::operatorNotBetween)
+                if (m_oOperator->GetValue() == SimpleTypes::Spreadsheet::EDataValidationOperator::operatorNotBetween)
                     ptr->typOperator = XLS::_typOperatorDv::operatorDvNotBetween;
                 else if (m_oOperator->GetValue() == SimpleTypes::Spreadsheet::EDataValidationOperator::operatorEqual)
                     ptr->typOperator = XLS::_typOperatorDv::operatorDvEquals;
@@ -331,9 +327,7 @@ xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\">");
 			auto ptr = new XLS::Dv;
 			if(m_oType.IsInit())
 			{
-				if (m_oType->GetValue() == SimpleTypes::Spreadsheet::EDataValidationType::validationTypeNone)
-					ptr->valType = XLS::typeDvNone;
-				else if (m_oType->GetValue() == SimpleTypes::Spreadsheet::EDataValidationType::validationTypeWhole)
+				if (m_oType->GetValue() == SimpleTypes::Spreadsheet::EDataValidationType::validationTypeWhole)
 					ptr->valType = XLS::typeDvWhole;
 				else if (m_oType->GetValue() == SimpleTypes::Spreadsheet::EDataValidationType::validationTypeDecimal)
 					ptr->valType = XLS::typeDvDecimal;
@@ -400,9 +394,7 @@ xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\">");
 				 ptr->mdImeMode = 0;
 			if(m_oOperator.IsInit())
 			{
-				if (m_oOperator->GetValue() == SimpleTypes::Spreadsheet::EDataValidationOperator::operatorBetween)
-					ptr->typOperator = XLS::_typOperatorDv::operatorDvBetween;
-				else if (m_oOperator->GetValue() == SimpleTypes::Spreadsheet::EDataValidationOperator::operatorNotBetween)
+				if (m_oOperator->GetValue() == SimpleTypes::Spreadsheet::EDataValidationOperator::operatorNotBetween)
 					ptr->typOperator = XLS::_typOperatorDv::operatorDvNotBetween;
 				else if (m_oOperator->GetValue() == SimpleTypes::Spreadsheet::EDataValidationOperator::operatorEqual)
 					ptr->typOperator = XLS::_typOperatorDv::operatorDvEquals;
@@ -804,7 +796,7 @@ xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\">");
 		{
 			if (m_arrItems.empty()) return;
 
-			if (false == m_oCount.IsInit())
+			if (!m_oCount.IsInit())
 			{
 				m_oCount = (int)m_arrItems.size();
 			}
@@ -863,6 +855,8 @@ xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\">");
                         auto validation(new CDataValidation(dval));
                         if(validation->m_oType.IsInit())
                             m_arrItems.push_back(validation);
+                        else
+                            delete validation;
 					}
 				}
 			}
@@ -878,6 +872,8 @@ xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\">");
                         auto validation(new CDataValidation(dval14));
                         if(validation->m_oType.IsInit())
                             m_arrItems.push_back(validation);
+                        else
+                            delete validation;
 					}
 				}
 			}

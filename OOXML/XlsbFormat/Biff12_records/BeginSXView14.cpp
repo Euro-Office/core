@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginSXView14::readFields(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
 
         record >> FRTheader >> flags >> sxma;
 

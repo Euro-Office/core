@@ -282,7 +282,7 @@ namespace OOX
 		{
 			m_bMacroEnabled = false;
 			m_bSpreadsheets = true;
-			m_pPersonList = NULL;
+			m_pPersonList = nullptr;
 
 			CXlsx* xlsx = dynamic_cast<CXlsx*>(pMain);
 			if ((xlsx) && (!xlsx->m_pWorkbook))
@@ -294,14 +294,14 @@ namespace OOX
 		{
 			m_bMacroEnabled = false;
 			m_bSpreadsheets = true;
-			m_pPersonList = NULL;
+			m_pPersonList = nullptr;
 
 			CXlsx* xlsx = dynamic_cast<CXlsx*>(File::m_pMainDocument);
 			if ((xlsx) && (!xlsx->m_pWorkbook))
 			{
 				xlsx->m_pWorkbook = this;
 			}
-			read(oRootPath, oPath);
+			CWorkbook::read(oRootPath, oPath);
 		}
 		CWorkbook::~CWorkbook()
 		{
@@ -556,7 +556,7 @@ namespace OOX
 				std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
 				if (L"workbook" == sName)
 				{
-					fromXML(oReader);
+					CWorkbook::fromXML(oReader);
 				}
 			}
 
@@ -671,10 +671,7 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 							WritingElement_ReadAttributes_Read_if(oReader, L"appName", m_oAppName)
 						WritingElement_ReadAttributes_End(oReader)
 					}
-					else if (L"WindowHeight" == sName)
-					{
-					}
-					else if (L"WindowWidth" == sName)
+					else if (L"WindowHeight" == sName || L"WindowWidth" == sName) // recognized but ignored
 					{
 					}
 					else if (L"RefModeR1C1" == sName)
@@ -747,7 +744,7 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 		void CWorkbook::PrepareToWrite()
 		{
 			//WorkbookPr
-			if (false == m_oWorkbookPr.IsInit())
+			if (!m_oWorkbookPr.IsInit())
 				m_oWorkbookPr.Init();
 			//todo if this parameter is set, then the standard theme is taken, and not from the file.
 			//if(false == m_oWorkbookPr->m_oDefaultThemeVersion.IsInit())
@@ -756,7 +753,7 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 			//	m_oWorkbookPr->m_oDefaultThemeVersion->SetValue(124226);
 			//}
 			//BookViews
-			if (false == m_oBookViews.IsInit())
+			if (!m_oBookViews.IsInit())
 				m_oBookViews.Init();
 
 			if (m_oBookViews->m_arrItems.empty())
@@ -764,22 +761,22 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 
 			OOX::Spreadsheet::CWorkbookView* pWorkbookView = m_oBookViews->m_arrItems.front();
 
-			if (false == pWorkbookView->m_oXWindow.IsInit())
+			if (!pWorkbookView->m_oXWindow.IsInit())
 			{
 				pWorkbookView->m_oXWindow.Init();
 				pWorkbookView->m_oXWindow->SetValue(360);
 			}
-			if (false == pWorkbookView->m_oYWindow.IsInit())
+			if (!pWorkbookView->m_oYWindow.IsInit())
 			{
 				pWorkbookView->m_oYWindow.Init();
 				pWorkbookView->m_oYWindow->SetValue(15);
 			}
-			if (false == pWorkbookView->m_oWindowWidth.IsInit())
+			if (!pWorkbookView->m_oWindowWidth.IsInit())
 			{
 				pWorkbookView->m_oWindowWidth.Init();
 				pWorkbookView->m_oWindowWidth->SetValue(20955);
 			}
-			if (false == pWorkbookView->m_oWindowHeight.IsInit())
+			if (!pWorkbookView->m_oWindowHeight.IsInit())
 			{
 				pWorkbookView->m_oWindowHeight.Init();
 				pWorkbookView->m_oWindowHeight->SetValue(9720);
@@ -788,8 +785,8 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 		LONG CWorkbook::GetActiveSheetIndex()
 		{
 			LONG lActiveSheet = 0;
-			std::wstring sSheetRId = L"Sheet1"; // Read not by rId, but by sheet name
-												// Get active sheet
+			// Read not by rId, but by sheet name
+			// Get active sheet
 			if (m_oBookViews.IsInit() && !m_oBookViews->m_arrItems.empty())
 			{
 				if (m_oBookViews->m_arrItems.front()->m_oActiveTab.IsInit())

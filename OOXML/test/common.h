@@ -28,11 +28,12 @@
 
 int ConvertFile(const std::wstring &fileName);
 // formatFrom/formatTo are AVS_OFFICESTUDIO_FILE_* values; 0 lets x2t detect the format
-std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &pathTo, const std::wstring &TempDir, int formatFrom = 0, int formatTo = 0);
+// csvEncoding is the code page index CSVReader expects (46 is UTF-8, 48 UTF-16LE)
+std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &pathTo, const std::wstring &TempDir, int formatFrom = 0, int formatTo = 0, int csvEncoding = 46);
 
 // Converts `from` into `to` with x2t (formats by extension). On failure,
 // returns false and describes it in `error`.
-bool ConvertTo(const std::wstring &from, const std::wstring &to, const std::wstring &tempDir, std::string &error);
+bool ConvertTo(const std::wstring &from, const std::wstring &to, const std::wstring &tempDir, std::string &error, int csvEncoding = 46);
 
 // Extracts a package into `dir`.
 bool Unpack(const std::wstring &file, const std::wstring &dir, std::string &error);
