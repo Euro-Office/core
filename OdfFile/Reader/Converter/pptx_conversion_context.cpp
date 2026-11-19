@@ -331,6 +331,8 @@ namespace cpdoccore {
 		output_document_->get_ppt_files().set_media(get_mediaitems());
 
 		output_document_->get_content_types_file().set_media(get_mediaitems());
+
+		output_document_->set_doc_props(root()->odf_context().DocProps().dump_core(), root()->odf_context().DocProps().dump_custom());
 	}
 
 	void pptx_conversion_context::start_body()

@@ -29,6 +29,8 @@
 #include "styles_lite_container.h"
 #include "office_settings.h"
 #include "../../Common/xml/simple_xml_writer.h"
+#include "../../../DesktopEditor/common/SystemUtils.h"
+#include "../../../OOXML/Base/Base.h"
 
 namespace cpdoccore { 
 
@@ -118,6 +120,119 @@ std::wstring doc_props_container::dump_user_defined()
 				CP_XML_NODE(L"vt:lpwstr")
 				{
 					CP_XML_STREAM() << XmlUtils::EncodeXmlString(it->second);
+				}
+			}
+		}
+	}
+	return output.str();
+}
+
+std::wstring doc_props_container::dump_custom()
+{
+	std::wstring user_defined = dump_user_defined();
+	if (user_defined.empty()) return L"";
+
+	std::wstringstream output;
+	CP_XML_WRITER(output)
+	{
+		CP_XML_NODE(L"Properties")
+		{
+			CP_XML_ATTR(L"xmlns", L"http://schemas.openxmlformats.org/officeDocument/2006/custom-properties");
+			CP_XML_ATTR(L"xmlns:vt", L"http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes");
+
+			CP_XML_STREAM() << user_defined;
+		}
+	}
+	return output.str();
+}
+std::wstring doc_props_container::dump_core()
+{
+	std::wstringstream output;
+	
+	CP_XML_WRITER(output)
+	{
+		CP_XML_NODE(L"cp:coreProperties")
+		{
+			CP_XML_ATTR(L"xmlns:cp", L"http://schemas.openxmlformats.org/package/2006/metadata/core-properties");
+			CP_XML_ATTR(L"xmlns:xsi", L"http://www.w3.org/2001/XMLSchema-instance");
+			CP_XML_ATTR(L"xmlns:dc", L"http://purl.org/dc/elements/1.1/");
+			CP_XML_ATTR(L"xmlns:dcmitype", L"http://purl.org/dc/dcmitype/");
+			CP_XML_ATTR(L"xmlns:dcterms", L"http://purl.org/dc/terms/");
+			
+			if (!creation_date_.empty())
+			{
+				CP_XML_NODE(L"dcterms:created")
+				{
+					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(creation_date_);
+				}
+			}
+			if (!dc_date_.empty())
+			{
+				CP_XML_NODE(L"dcterms:modified")
+				{
+					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_date_);
+				}
+			}
+			if (!dc_creator_.empty())
+			{
+				CP_XML_NODE(L"dc:creator")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_creator_);
+				}
+			}
+			if (!dc_title_.empty())
+			{
+				CP_XML_NODE(L"dc:title")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_title_);
+				}
+			}
+			if (!dc_subject_.empty())
+			{
+				CP_XML_NODE(L"dc:subject")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_subject_);
+				}
+			}
+			if (!dc_description_.empty())
+			{
+				CP_XML_NODE(L"dc:description")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_description_);
+				}
+			}
+			if (!dc_language_.empty())
+			{
+				CP_XML_NODE(L"dc:language")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_language_);
+				}
+			}
+			CP_XML_NODE(L"cp:lastModifiedBy")
+			{
+				std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
+				if (sApplication.empty())
+					sApplication = NSSystemUtils::gc_EnvApplicationNameDefault;
+				CP_XML_STREAM() << sApplication;
+#if defined(INTVER)
+				std::string s = VALUE2STR(INTVER);
+				CP_XML_STREAM() << L"/" << std::wstring(s.begin(), s.end());
+#endif	
+			}
+			if (!keyword_.empty())
+			{
+				CP_XML_NODE(L"cp:keywords")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(keyword_);
+				}
+			}
+			if (revision_)
+			{
+				CP_XML_NODE(L"cp:revision")
+				{
+					CP_XML_STREAM() << *revision_;
 				}
 			}
 		}

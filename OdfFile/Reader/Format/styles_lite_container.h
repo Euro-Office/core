@@ -58,6 +58,9 @@ public:
 	void add_user_defined(const std::wstring & name, const std::wstring & value);
 	std::wstring get_user_defined(const std::wstring & name);
 	std::wstring dump_user_defined();
+	// docProps/core.xml and docProps/custom.xml (empty if there are no user-defined properties)
+	std::wstring dump_core();
+	std::wstring dump_custom();
 	
 	std::wstring dc_creator_;
 	std::wstring dc_date_;
