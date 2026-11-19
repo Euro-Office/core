@@ -25,6 +25,8 @@
 
 #include "text_elements.h"
 
+#include <cwchar>
+
 #include <xml/xmlchar.h>
 #include <xml/utils.h>
 
@@ -169,7 +171,7 @@ void paragraph::process_white_space(document_context * Context)
 
 			const ElementType type = elm->get_type();
 			const wchar_t * ns = elm->get_ns();
-			if (type == typeOfficeAnnotation || (ns && std::wstring(ns) == L"draw"))
+			if (type == typeOfficeAnnotation || (ns && std::wcscmp(ns, L"draw") == 0))
 				break;
 			if (type == typeOfficeChart || type == typeOfficeSpreadsheet)
 			{
