@@ -120,6 +120,12 @@ namespace Oox2Odf
 			&& props->m_oPgSz->m_oOrient->GetValue() == SimpleTypes::pageorientLandscape;
 	}
 
+	int page_number_format(OOX::Logic::CSectionProperty* props)
+	{
+		return props->m_oPgNumType.IsInit() && props->m_oPgNumType->m_oFmt.IsInit()
+			? props->m_oPgNumType->m_oFmt->GetValue() : SimpleTypes::numberformatDecimal;
+	}
+
 	// A continuous section break does not start a new page, unless the orientation changes (as in Word and
 	// LibreOffice). Only sections without their own headers, footers or title page keep the page here.
 	bool keeps_page(OOX::Logic::CSectionProperty* prev, OOX::Logic::CSectionProperty* props)
@@ -134,7 +140,17 @@ namespace Oox2Odf
 		// has already written them if it has line numbering too.
 		if (props->m_oLnNumType.IsInit() && !prev->m_oLnNumType.IsInit())
 			return false;
+		// ODF restarts page numbers (style:page-number) and changes their format only with a new master page.
+		if ((props->m_oPgNumType.IsInit() && props->m_oPgNumType->m_oStart.IsInit())
+			|| page_number_format(prev) != page_number_format(props))
+			return false;
 		return is_landscape(prev) == is_landscape(props);
+	}
+
+	// Difference between two left (or right) margins in points, 0 if one of them is not set.
+	double margin_difference(SimpleTypes::CTwipsMeasure* margin, SimpleTypes::CTwipsMeasure* page_margin)
+	{
+		return margin && page_margin ? margin->ToPoints() - page_margin->ToPoints() : 0;
 	}
 
 DocxConverter::DocxConverter(const std::wstring & path, bool bTemplate) : docx_flat_document(NULL), docx_document(NULL)
@@ -1954,7 +1970,30 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 
 	odt_context->text_context()->set_type_break(-1, 0);
 
-	if (bKeepPage) return; // same columns, continuous: no new master page, so no page break
+	if (bKeepPage) // same columns, continuous: no new master page, so no page break
+	{
+		// Left and right margins that differ from the page's become the indents of a text section; a section
+		// with the page's margins after an indented one needs a new text section without indents.
+		double left = 0, right = 0;
+		if (page_section_properties && page_section_properties->m_oPgMar.IsInit() && oox_section_pr->m_oPgMar.IsInit())
+		{
+			left = margin_difference(oox_section_pr->m_oPgMar->m_oLeft.GetPointer(),
+				page_section_properties->m_oPgMar->m_oLeft.GetPointer());
+			right = margin_difference(oox_section_pr->m_oPgMar->m_oRight.GetPointer(),
+				page_section_properties->m_oPgMar->m_oRight.GetPointer());
+		}
+		if (left == 0 && right == 0 && !bSectionIndents)
+			return;
+		if (odt_context->get_current_section_columns() < 2)
+		{
+			odt_context->add_section(true);
+			odt_context->set_section_margins(left, right);
+			bSectionIndents = left != 0 || right != 0;
+			return;
+		}
+		// inside a text section with columns: a new page with the section's margins, as before
+	}
+	page_section_properties = oox_section_pr;
 
 	bool continuous = false;
 
@@ -2287,10 +2326,11 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 			//nullable<ComplexTypes::Word::CRel                            > m_oPrinterSettings;
 			//nullable<OOX::Logic::CSectPrChange                           > m_oSectPrChange;
 //--------------------------------------------------------------------------------------------------------------------------------------------		
-	if (bSection)
+	if (bSection || bSectionIndents) // a new page section also ends the indents of a kept section
 	{
 		odt_context->add_section(continuous);
 	}
+	bSectionIndents = false;
 	if ( oox_section_pr->m_oCols.IsInit() )
 	{
 		int num_columns = oox_section_pr->m_oCols->m_oNum.IsInit() ? oox_section_pr->m_oCols->m_oNum->GetValue() : 1;
