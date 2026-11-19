@@ -2061,10 +2061,10 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page)
 		switch(oox_page->m_oPaperSize->GetValue())
 		{
 		case SimpleTypes::Spreadsheet::pagesizeLetterPaper:
+		case SimpleTypes::Spreadsheet::pagesizeLetterSmall:
 			width	= odf_types::length(8.5, odf_types::length::inch);
 			height	= odf_types::length(11, odf_types::length::inch);
 			break;
-		//case SimpleTypes::Spreadsheet::pagesizeLetterSmall:
 		case SimpleTypes::Spreadsheet::pagesizeTabloidPaper:
 			width = odf_types::length(279.4, odf_types::length::mm);
 			height = odf_types::length(431.8, odf_types::length::mm);
@@ -2082,10 +2082,10 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page)
 			height	= odf_types::length(420, odf_types::length::mm);
 			break;
 		case SimpleTypes::Spreadsheet::pagesizeA4Paper:
+		case SimpleTypes::Spreadsheet::pagesizeA4SmallPaper:
 			width	= odf_types::length(210, odf_types::length::mm);
 			height	= odf_types::length(297, odf_types::length::mm);
 			break;
-		//case SimpleTypes::Spreadsheet::pagesizeA4SmallPaper:
 		case SimpleTypes::Spreadsheet::pagesizeA5Paper:
 			width = odf_types::length(148, odf_types::length::mm);
 			height = odf_types::length(210, odf_types::length::mm);
@@ -2125,6 +2125,21 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page)
 		default:
 			break;
 		}
+	}
+	// A pageSetup without a paper size means Letter (the default of paperSize). A landscape sheet
+	// needs its page size in ODF, or it is printed on an upright default page and loses its
+	// orientation when saved again, so a paper size id not mapped above also gets Letter.
+	if (type == SimpleTypes::pageorientLandscape && !width && !height)
+	{
+		width = odf_types::length(215.9, odf_types::length::mm);
+		height = odf_types::length(279.4, odf_types::length::mm);
+	}
+	// XLSX gives the paper upright and turns it with orientation="landscape"; ODF gives the page as
+	// it lies, and style:print-orientation alone does not turn it.
+	if (type == SimpleTypes::pageorientLandscape && width && height &&
+		width->get_value_unit(odf_types::length::mm) < height->get_value_unit(odf_types::length::mm))
+	{
+		std::swap(width, height);
 	}
 	ods_context->page_layout_context()->set_page_size(width, height);
 
