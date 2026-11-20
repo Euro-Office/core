@@ -22,10 +22,10 @@ namespace NSNetwork
         {
             const auto scheme_end = url.find("://");
             if (scheme_end == std::string::npos)
-                return {url, "/socket.io/"};
+            { return {url, "/socket.io/"}; }
             const auto path_start = url.find('/', scheme_end + 3);
             if (path_start == std::string::npos)
-                return {url, "/socket.io/"};
+            { return {url, "/socket.io/"}; }
             return {url.substr(0, path_start), url.substr(path_start)};
         }
     }

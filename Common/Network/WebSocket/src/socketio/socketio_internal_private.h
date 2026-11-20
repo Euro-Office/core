@@ -88,21 +88,21 @@ namespace NSNetwork
                     CTemporaryCS oCS(&m_oCS_Events);
                     m_connecting_in_process = false;
                     if (!m_closing_in_progress)
-                        m_base->listener->onOpen();
+                    { m_base->listener->onOpen(); }
                 });
 
                 m_socket->set_close_listener([this](const std::string&) {
                     CTemporaryCS oCS(&m_oCS_Events);
                     m_connecting_in_process = false;
                     if (!m_closing_in_progress)
-                        m_base->listener->onClose(0, "");
+                    { m_base->listener->onClose(0, ""); }
                 });
 
                 m_socket->set_fail_listener([this]() {
                     CTemporaryCS oCS(&m_oCS_Events);
                     m_connecting_in_process = false;
                     if (!m_closing_in_progress)
-                        m_base->listener->onError("");
+                    { m_base->listener->onError(""); }
                 });
 
                 m_socket->set_reconnecting_listener([this]() {
@@ -119,17 +119,17 @@ namespace NSNetwork
                 m_ns_socket->on("message", [this](const std::string&, sioxx::message data) {
                     CTemporaryCS oCS(&m_oCS_Events);
                     if (m_closing_in_progress)
-                        return;
+                    { return; }
                     // sioxx packs all emit() arguments into a JSON array; unwrap the first one.
                     const sioxx::message& payload = (data.is_array() && !data.empty()) ? data[0] : data;
                     if (payload.is_null())
-                        m_base->listener->onMessage("null");
+                    { m_base->listener->onMessage("null"); }
                     else if (payload.is_string())
-                        m_base->listener->onMessage(payload.get<std::string>());
+                    { m_base->listener->onMessage(payload.get<std::string>()); }
                     else if (payload.is_object())
-                        m_base->listener->onMessage(payload.dump());
+                    { m_base->listener->onMessage(payload.dump()); }
                     else
-                        m_base->listener->onMessage("");
+                    { m_base->listener->onMessage(""); }
                 });
 
                 m_connecting_in_process = true;
@@ -139,7 +139,7 @@ namespace NSNetwork
             virtual void send(const std::string& message_str) override
             {
                 if (!m_ns_socket)
-                    return;
+                { return; }
                 if (!message_str.empty() &&
                     (message_str.front() == '{' || message_str.front() == '['))
                 {
