@@ -29,8 +29,9 @@ namespace
     }
 }
 
-// Older LibreOffice versions write a page picture as fo:background-color="transparent" plus
-// style:background-image. The picture is the page background and must reach DOCX.
+// LibreOffice writes a page picture with fo:background-color="transparent", plus draw:fill="bitmap"
+// (current versions) or style:background-image (older versions, used here). The picture is the
+// page background and must reach DOCX.
 TEST(OdtToDocxPageBackground, TransparentColourWithImageKeepsImage)
 {
     const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/page_background_transparent_image.odt");

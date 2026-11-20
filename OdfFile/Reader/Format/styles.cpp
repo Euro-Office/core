@@ -1452,7 +1452,8 @@ bool style_page_layout_properties::docx_background_serialize(std::wostream & str
 		attlist_.common_background_color_attlist_.fo_background_color_->get_type() == background_color::Transparent;
 
 	// A transparent colour without a fill means no page background. A transparent colour with a fill
-	// (e.g. style:background-image, the form older LibreOffice versions write) keeps the fill.
+	// keeps the fill: LibreOffice writes a page picture with a transparent colour, as draw:fill="bitmap"
+	// (current versions) or style:background-image (older versions).
 	if (transparent && fill.type <= 0)
 		return true;
 
