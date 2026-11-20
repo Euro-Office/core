@@ -394,6 +394,13 @@ const RoundTripResult& MixedResult()
     return r;
 }
 
+const RoundTripResult& OrphanResult()
+{
+    static const RoundTripResult r =
+        RoundTrip("modern_comments_orphan_authorId.pptx", L"work_orphan");
+    return r;
+}
+
 } // namespace
 
 // ---------------------------------------------------------------------------
@@ -628,4 +635,79 @@ TEST(MissingAuthorIds, GracefulWrite)
         EXPECT_NE(element.find(std::string("initials=\"") + a->initials + "\""), std::string::npos)
             << "initials of " << a->name << " lost";
     }
+}
+
+// ---------------------------------------------------------------------------
+// Modern marker (review 2026-11-07): the flag must be a standalone record at
+// the authors-list level (CommentAuthors.cpp, Authors::toPPTY), never an
+// attribute inside an author record - readers that do not know an attribute
+// tag skip it without consuming its value bytes and desync. Unknown record
+// types are skipped by record length instead, current sdkjs included.
+// Byte signature asserted below:
+//   [01][int32 len = 1][01]        marker record: type 1, flag 1
+//   [00][int32 len][int32 count]   authors-array record (type 0), 3 authors
+//   [00]                           subtype of the first author record
+// ---------------------------------------------------------------------------
+
+TEST(ModernRoundTrip, BinModernMarkerIsAuthorsListRecord)
+{
+    const RoundTripResult& mr = ModernResult();
+    ASSERT_TRUE(mr.ok) << mr.error;
+    const RoundTripResult& cr = ClassicResult();
+    ASSERT_TRUE(cr.ok) << cr.error;
+
+    bool modernHit = false;
+    for (size_t i = 0; i + 16 <= mr.bin.size(); ++i)
+    {
+        if (static_cast<unsigned char>(mr.bin[i]) != 0x01) continue;
+        if (ReadInt32Le(mr.bin, i + 1) != 1) continue;
+        if (static_cast<unsigned char>(mr.bin[i + 5]) != 0x01) continue;
+        if (static_cast<unsigned char>(mr.bin[i + 6]) != 0x00) continue;
+        if (ReadInt32Le(mr.bin, i + 7) <= 0) continue;
+        if (ReadInt32Le(mr.bin, i + 11) != 3) continue;
+        if (static_cast<unsigned char>(mr.bin[i + 15]) != 0x00) continue;
+        modernHit = true;
+        break;
+    }
+    EXPECT_TRUE(modernHit)
+        << "modern bin lacks the authors-list marker record (the attribute-8 "
+           "form desyncs readers that do not know the tag - review 2026-11-07)";
+
+    for (size_t i = 0; i + 16 <= cr.bin.size(); ++i)
+    {
+        if (static_cast<unsigned char>(cr.bin[i]) != 0x01) continue;
+        if (ReadInt32Le(cr.bin, i + 1) != 1) continue;
+        if (static_cast<unsigned char>(cr.bin[i + 5]) != 0x01) continue;
+        if (static_cast<unsigned char>(cr.bin[i + 6]) != 0x00) continue;
+        if (ReadInt32Le(cr.bin, i + 7) <= 0) continue;
+        if (ReadInt32Le(cr.bin, i + 11) != 3) continue;
+        if (static_cast<unsigned char>(cr.bin[i + 15]) != 0x00) continue;
+        FAIL() << "classic bin carries the modern marker record - the "
+                  "marker must only be written for modern author lists";
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Orphan authorId (review 2026-11-07): Carol's comment references a GUID no
+// author record carries (see make_fixtures.py). It must fall back to the
+// FIRST author record's idx - not to mapAuthors.begin(), whose order stops
+// matching the author order as soon as an orphan id has been minted into it.
+// ---------------------------------------------------------------------------
+
+TEST(OrphanAuthorId, FallsBackToFirstAuthorRecord)
+{
+    const RoundTripResult& r = OrphanResult();
+    ASSERT_TRUE(r.ok) << r.error;
+
+    // Carol is the orphan; the first author record is Alice.
+    const size_t datePos = FindUtf16Le(r.bin, kCarol.commentDate);
+    ASSERT_NE(datePos, std::string::npos)
+        << "orphan comment date missing from the binary intermediate";
+    const size_t commentRecord = FindRecordStart(r.bin, datePos);
+    ASSERT_NE(commentRecord, std::string::npos) << "no 0xFA record byte before Carol's comment";
+    ASSERT_LT(commentRecord + 6, r.bin.size());
+    EXPECT_EQ(static_cast<unsigned char>(r.bin[commentRecord + 1]), 0x00u)
+        << "orphan comment carries no authorIdx attribute";
+    EXPECT_EQ(ReadInt32Le(r.bin, commentRecord + 2), kAlice.binIdx)
+        << "orphan comment did not fall back to the first author record";
 }

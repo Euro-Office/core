@@ -119,16 +119,16 @@ namespace PPTX
 									oComment.authorIdx = pFind->second;
 								}
 								else
-								if (false == pAuthors->mapAuthors.empty())
+								if (false == pAuthors->m_arAuthors.empty())
 								{
-									// #175 (review): orphan authorId - fall back to the first author
-									// instead of minting an authorIdx with no author behind it
-									oComment.authorIdx = pAuthors->mapAuthors.begin()->second;
-								}
-								else
-								{
-									oComment.authorIdx = pAuthors->mapAuthors.size() + 1;
-									pAuthors->mapAuthors.insert(std::make_pair(*oComment.authorId, *oComment.authorIdx));
+									// #175 (review): orphan authorId - fall back to the first
+									// author record: once another orphan has minted an id,
+									// the mapAuthors order no longer matches the author
+									// order. And when authors exist but none of them
+									// carries an id (modern_comments_no_author_ids.pptx),
+									// front().idx is unset and nothing is minted - the
+									// comment just keeps its authorId.
+									oComment.authorIdx = pAuthors->m_arAuthors.front().idx;
 								}
 							}
 						}
