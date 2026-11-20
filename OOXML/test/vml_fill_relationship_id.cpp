@@ -2,11 +2,11 @@
  * SPDX-FileCopyrightText: 2026 Euro-Office contributors
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-// A VML fill names its picture with r:id (Word writes the page background as
-// <w:background><v:background><v:fill r:id="..." type="frame"/>, and so does
-// x2t when it saves one). The drawing converter must resolve that id, or the
-// picture is dropped when the document is opened (docx -> Editor.bin) and the
-// next save writes the background without it.
+// A VML fill names its picture with r:id (a picture page background is stored as
+// <w:background><v:background><v:fill r:id="..." type="frame"/>; LibreOffice
+// writes it this way, and so does x2t when it saves one). The drawing converter
+// must resolve that id, or the picture is dropped when the document is opened
+// (docx -> Editor.bin) and the next save writes the background without it.
 
 #include "common.h"
 
@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <string>
+#include <vector>
 
 namespace
 {
@@ -25,6 +26,37 @@ namespace
 		std::string text;
 		NSFile::CFileBinary::ReadAllTextUtf8A(path, text);
 		return text;
+	}
+
+	// The tag of text that starts at pos, up to and including its '>', or "" if there is none.
+	std::string TagAt(const std::string& text, size_t pos)
+	{
+		size_t end = std::string::npos == pos ? pos : text.find('>', pos);
+		return std::string::npos == end ? std::string() : text.substr(pos, end + 1 - pos);
+	}
+
+	// The value of the attribute name in tag, or "" if the tag has none.
+	std::string AttributeValue(const std::string& tag, const std::string& name)
+	{
+		std::string key = " " + name + "=\"";
+		size_t begin = tag.find(key);
+		if (std::string::npos == begin)
+			return std::string();
+		begin += key.size();
+		size_t end = tag.find('"', begin);
+		return std::string::npos == end ? std::string() : tag.substr(begin, end - begin);
+	}
+
+	// The first tag of text that starts with open and has the attribute name = value, or "".
+	std::string FindTag(const std::string& text, const std::string& open, const std::string& name, const std::string& value)
+	{
+		for (size_t pos = text.find(open); std::string::npos != pos; pos = text.find(open, pos + 1))
+		{
+			std::string tag = TagAt(text, pos);
+			if (AttributeValue(tag, name) == value)
+				return tag;
+		}
+		return std::string();
 	}
 
 	class VmlFillRelationshipId : public ::testing::Test
@@ -89,17 +121,32 @@ namespace
 		EXPECT_EQ(1u, NSDirectory::GetFiles(mediaDir).size()) << "pictures in " << U_TO_UTF8(mediaDir);
 	}
 
-	// Saving: the background comes back with its picture.
+	// Saving: the background comes back with its picture, and its fill points to that picture.
 	TEST_F(VmlFillRelationshipId, SaveKeepsThePageBackgroundPicture)
 	{
 		std::wstring word = resultDir + FILE_SEPARATOR_STR + L"word";
-		EXPECT_EQ(1u, NSDirectory::GetFiles(word + FILE_SEPARATOR_STR + L"media").size())
-			<< "pictures in word/media of the saved docx";
+		std::vector<std::wstring> media = NSDirectory::GetFiles(word + FILE_SEPARATOR_STR + L"media");
+		ASSERT_EQ(1u, media.size()) << "pictures in word/media of the saved docx";
+		std::wstring name = media[0].substr(media[0].find_last_of(L"/\\") + 1);
+		std::string picture = "media/" + U_TO_UTF8(name);
 
 		std::string document = ReadText(word + FILE_SEPARATOR_STR + L"document.xml");
 		size_t begin = document.find("<w:background");
 		ASSERT_NE(std::string::npos, begin) << document;
-		std::string background = document.substr(begin, document.find("</w:background>", begin) - begin);
-		EXPECT_NE(std::string::npos, background.find("<v:fill r:id=\"")) << background;
+		size_t end = document.find("</w:background>", begin);
+		ASSERT_NE(std::string::npos, end) << document.substr(begin, 300);
+		std::string background = document.substr(begin, end - begin);
+
+		std::string fill = TagAt(background, background.find("<v:fill "));
+		ASSERT_FALSE(fill.empty()) << background;
+		std::string id = AttributeValue(fill, "r:id");
+		ASSERT_FALSE(id.empty()) << fill;
+
+		std::string rels = ReadText(word + FILE_SEPARATOR_STR + L"_rels" + FILE_SEPARATOR_STR + L"document.xml.rels");
+		std::string relationship = FindTag(rels, "<Relationship ", "Id", id);
+		ASSERT_FALSE(relationship.empty()) << "no relationship " << id << " in " << rels;
+		std::string target = AttributeValue(relationship, "Target");
+		ASSERT_GE(target.size(), picture.size()) << relationship;
+		EXPECT_EQ(picture, target.substr(target.size() - picture.size())) << relationship;
 	}
 }
