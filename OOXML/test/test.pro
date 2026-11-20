@@ -19,6 +19,7 @@ SOURCES += main.cpp\
            conversion.cpp\
            editorbin_pivots.cpp\
            vml_shape_size.cpp\
+           vml_fill_relationship_id.cpp\
            workbook_facts.cpp\
 
 HEADERS += common.h workbook_facts.h
