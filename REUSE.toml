@@ -300,6 +300,14 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/xlsx_pivot_tables.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/xlsx_pivot_tables_review.xlsx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OdfFile/Test/test_odf/ExampleFiles/chapter_fields.odt",
     "OdfFile/Test/test_odf/ExampleFiles/database_display_fields.odt",
     "OdfFile/Test/test_odf/ExampleFiles/styleref_fields.docx",

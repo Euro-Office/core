@@ -63,8 +63,14 @@
 #include "../Format/style_paragraph_properties.h"
 #include "../Format/style_graphic_properties.h"
 #include "../Format/style_page_layout_properties.h"
+#include "../Format/table_data_pilot_tables.h"
 
 #include "../../Common/utils.h"
+
+#include <algorithm>
+#include <cwctype>
+#include <iomanip>
+#include <sstream>
 
 using namespace cpdoccore;
 
@@ -519,12 +525,16 @@ void XlsxConverter::convert(OOX::Spreadsheet::CWorksheet *oox_sheet)
 	}
 	OoxConverter::convert(oox_sheet->m_oExtLst.GetPointer());
 
-	smart_ptr<OOX::File> oFile = oox_sheet->Find(OOX::Spreadsheet::FileTypes::PivotTable);
-	if (oFile.IsInit() && OOX::Spreadsheet::FileTypes::PivotTable == oFile->type())
+	std::vector<smart_ptr<OOX::File>>& sheet_files = oox_sheet->GetContainer();
+	for (size_t i = 0; i < sheet_files.size(); i++)
 	{
-		smart_ptr<OOX::Spreadsheet::CPivotTableFile> oPivotTable = oFile.smart_dynamic_cast<OOX::Spreadsheet::CPivotTableFile>();
-				
-		convert(oPivotTable.GetPointer());
+		if (sheet_files[i].IsInit() && OOX::Spreadsheet::FileTypes::PivotTable == sheet_files[i]->type())
+		{
+			smart_ptr<OOX::Spreadsheet::CPivotTableFile> oPivotTable =
+				sheet_files[i].smart_dynamic_cast<OOX::Spreadsheet::CPivotTableFile>();
+
+			convert(oPivotTable.GetPointer());
+		}
 	}
 
 
@@ -556,47 +566,478 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableFile *oox_pivot_table)
 		convert(oox_pivot_table->m_oPivotTableDefinition.GetPointer(), oPivotCache->m_oPivotCashDefinition.GetPointer());
 	}
 }
+namespace
+{
+	// The member name of shared item index of a pivot cache field, as LibreOffice names members: text as is, numbers in
+	// General format, errors by their text ("#N/A"), an empty item as "". Dates and booleans are named by the number
+	// format of the source cells, which the cache does not keep, so they have no name here.
+	bool pivot_item_name(OOX::Spreadsheet::CPivotCacheField *cache_field, size_t index, std::wstring &name)
+	{
+		if (!cache_field || !cache_field->m_oSharedItems.IsInit()) return false;
+		if (index >= cache_field->m_oSharedItems->m_arrItems.size()) return false;
+
+		OOX::WritingElement *item = cache_field->m_oSharedItems->m_arrItems[index];
+		if (OOX::Spreadsheet::CPivotCharacterValue *text = dynamic_cast<OOX::Spreadsheet::CPivotCharacterValue*>(item))
+		{
+			if (!text->m_oValue.IsInit()) return false;
+			name = *text->m_oValue;
+			return true;
+		}
+		if (OOX::Spreadsheet::CPivotNumericValue *number = dynamic_cast<OOX::Spreadsheet::CPivotNumericValue*>(item))
+		{
+			if (!number->m_oValue.IsInit()) return false;
+			std::wstringstream stream;
+			stream << std::setprecision(15) << *number->m_oValue;
+			name = stream.str();
+			return true;
+		}
+		if (OOX::Spreadsheet::CPivotErrorValue *error = dynamic_cast<OOX::Spreadsheet::CPivotErrorValue*>(item))
+		{
+			if (!error->m_oValue.IsInit()) return false;
+			name = *error->m_oValue;
+			return true;
+		}
+		if (dynamic_cast<OOX::Spreadsheet::CPivotNoValue*>(item))
+		{
+			name.clear();
+			return true;
+		}
+		return false;
+	}
+	// A cache field that is a column of the source range: not a calculated field and not a group field Excel derives
+	// from another field.
+	bool pivot_source_column(OOX::Spreadsheet::CPivotCacheField *cache_field)
+	{
+		return cache_field && !cache_field->m_oFormula.IsInit() &&
+			(!cache_field->m_oDatabaseField.IsInit() || *cache_field->m_oDatabaseField);
+	}
+	// The sheet and range of the Excel table with display name name, without its totals rows, as LibreOffice resolves a
+	// pivot cache source given by a table name; false when there is no such table or fewer than two rows are left.
+	bool pivot_table_source(OOX::Spreadsheet::CXlsx *xlsx, const std::wstring &name, std::wstring &sheet,
+							std::wstring &ref)
+	{
+		if (!xlsx || !xlsx->m_pWorkbook || !xlsx->m_pWorkbook->m_oSheets.IsInit()) return false;
+		for (OOX::Spreadsheet::CSheet *sheet_item : xlsx->m_pWorkbook->m_oSheets->m_arrItems)
+		{
+			if (!sheet_item || !sheet_item->m_oName.IsInit() || !sheet_item->m_oRid.IsInit()) continue;
+			std::map<std::wstring, OOX::Spreadsheet::CWorksheet*>::iterator worksheet =
+				xlsx->m_mapWorksheets.find(sheet_item->m_oRid->ToString());
+			if (worksheet == xlsx->m_mapWorksheets.end() || !worksheet->second || !worksheet->second->m_oTableParts.IsInit())
+				continue;
+			for (OOX::Spreadsheet::CTablePart *part : worksheet->second->m_oTableParts->m_arrItems)
+			{
+				if (!part || !part->m_oRId.IsInit()) continue;
+				smart_ptr<OOX::File> file = worksheet->second->Find(part->m_oRId->GetValue());
+				if (!file.IsInit() || !(OOX::Spreadsheet::FileTypes::Table == file->type())) continue;
+				OOX::Spreadsheet::CTableFile *table_file = static_cast<OOX::Spreadsheet::CTableFile*>(file.GetPointer());
+				if (!table_file->m_oTable.IsInit()) continue;
+				OOX::Spreadsheet::CTable *table = table_file->m_oTable.GetPointer();
+				if (!table->m_oDisplayName.IsInit() || !table->m_oRef.IsInit()) continue;
+				// Excel table names are case-insensitive.
+				const std::wstring &display_name = *table->m_oDisplayName;
+				if (display_name.size() != name.size() ||
+					!std::equal(name.begin(), name.end(), display_name.begin(),
+								[](wchar_t a, wchar_t b) { return std::towlower(a) == std::towlower(b); }))
+					continue;
+
+				// "A1:D10": the end row moves up over the totals rows.
+				const std::wstring range = table->m_oRef->GetValue();
+				const size_t colon = range.find(L':');
+				if (colon == std::wstring::npos) return false;
+				const size_t start_digits = range.find_first_of(L"0123456789");
+				const size_t end_digits = range.find_first_of(L"0123456789", colon);
+				if (start_digits == std::wstring::npos || start_digits > colon || end_digits == std::wstring::npos) return false;
+				const std::wstring start_row = range.substr(start_digits, colon - start_digits), end_row = range.substr(end_digits);
+				if (start_row.size() > 7 || end_row.size() > 7 ||
+					start_row.find_first_not_of(L"0123456789") != std::wstring::npos ||
+					end_row.find_first_not_of(L"0123456789") != std::wstring::npos) return false;
+				const long first = std::stol(start_row), totals = table->m_oTotalsRowCount.IsInit()
+					? static_cast<long>((std::min)(table->m_oTotalsRowCount->GetValue(), 1048576u)) : 0;
+				const long last = std::stol(end_row) - totals;
+				if (last - first < 1) return false;
+
+				sheet = *sheet_item->m_oName;
+				ref = range.substr(0, end_digits) + std::to_wstring(last);
+				return true;
+			}
+		}
+		return false;
+	}
+	// "Show values as" of a data field as table:type, as LibreOffice imports it; false for normal values.
+	bool pivot_reference_type(SimpleTypes::Spreadsheet::EShowDataAs show, odf_types::table_type::type &type)
+	{
+		switch (show)
+		{
+		case SimpleTypes::Spreadsheet::dataAsDifference:
+			type = odf_types::table_type::member_difference; return true;
+		case SimpleTypes::Spreadsheet::dataAsPercentOff:
+			type = odf_types::table_type::member_percentage; return true;
+		case SimpleTypes::Spreadsheet::dataAsPercentDiff:
+			type = odf_types::table_type::member_percentage_difference; return true;
+		case SimpleTypes::Spreadsheet::dataAsRunTotal:
+			type = odf_types::table_type::running_total; return true;
+		case SimpleTypes::Spreadsheet::dataAsPercentOfRow:
+			type = odf_types::table_type::row_percentage; return true;
+		case SimpleTypes::Spreadsheet::dataAsPercentOfCol:
+			type = odf_types::table_type::column_percentage; return true;
+		case SimpleTypes::Spreadsheet::dataAsPercentOfTotal:
+			type = odf_types::table_type::total_percentage; return true;
+		case SimpleTypes::Spreadsheet::dataAsIndex:
+			type = odf_types::table_type::index; return true;
+		default:
+			return false;
+		}
+	}
+	// Excel places page fields above the location range, ODF counts them into the target range (with one blank
+	// row between), so the target range starts page_fields + 1 rows higher.
+	std::wstring pivot_target_ref(const std::wstring &location, size_t page_fields)
+	{
+		if (page_fields == 0) return location;
+
+		const size_t colon = location.find(L':');
+		const std::wstring start = location.substr(0, colon);
+		const size_t digits = start.find_first_of(L"0123456789");
+		if (digits == std::wstring::npos || digits == 0) return location;
+
+		// At most 7 digits: rows end at 1048576, and a longer number is not a valid reference.
+		const std::wstring row_text = start.substr(digits);
+		if (row_text.empty() || row_text.size() > 7 || row_text.find_first_not_of(L"0123456789") != std::wstring::npos)
+			return location;
+		long row = 0;
+		for (wchar_t c : row_text)
+			row = row * 10 + (c - L'0');
+		const long shift = static_cast<long>((std::min)(page_fields, static_cast<size_t>(1048576))) + 1;
+		const long target_row = (std::max)(1L, row - shift);
+		return start.substr(0, digits) + std::to_wstring(target_row)
+			+ (colon == std::wstring::npos ? L"" : location.substr(colon));
+	}
+	odf_types::table_function pivot_function(SimpleTypes::Spreadsheet::EDataConsolidateFunction subtotal)
+	{
+		switch (subtotal)
+		{
+		case SimpleTypes::Spreadsheet::functionAverage:		return odf_types::table_function::average;
+		case SimpleTypes::Spreadsheet::functionCount:		return odf_types::table_function::count;
+		case SimpleTypes::Spreadsheet::functionCountNums:	return odf_types::table_function::countnums;
+		case SimpleTypes::Spreadsheet::functionMaximum:		return odf_types::table_function::max;
+		case SimpleTypes::Spreadsheet::functionMinimum:		return odf_types::table_function::min;
+		case SimpleTypes::Spreadsheet::functionProduct:		return odf_types::table_function::product;
+		case SimpleTypes::Spreadsheet::functionStdDev:		return odf_types::table_function::stdev;
+		case SimpleTypes::Spreadsheet::functionStdDevP:		return odf_types::table_function::stdevp;
+		case SimpleTypes::Spreadsheet::functionVariance:	return odf_types::table_function::var;
+		case SimpleTypes::Spreadsheet::functionVarP:		return odf_types::table_function::varp;
+		default:											return odf_types::table_function::sum;
+		}
+	}
+}
 void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_table, OOX::Spreadsheet::CPivotCacheDefinition* oox_pivot_cache)
 {
 	if (!oox_pivot_table || !oox_pivot_cache) return;
+	if (!oox_pivot_table->m_oLocation.IsInit() || !oox_pivot_table->m_oLocation->m_oRef.IsInit()) return;
+	if (!oox_pivot_cache->m_oCacheSource.IsInit() || !oox_pivot_cache->m_oCacheSource->m_oWorksheetSource.IsInit()) return;
 
-	ods_context->start_pivot_table(oox_pivot_table->m_oName.IsInit() ? *oox_pivot_table->m_oName : L"");
-
-	convert(oox_pivot_table->m_oLocation.GetPointer());
-	if (oox_pivot_table->m_oPivotFields.IsInit())
+	// Only a range of this workbook maps to table:source-cell-range; a source in another workbook (r:id of an external
+	// link) is skipped.
+	OOX::Spreadsheet::CWorksheetSource *source = oox_pivot_cache->m_oCacheSource->m_oWorksheetSource.GetPointer();
+	if (source->m_oRid.IsInit()) return;
+	std::wstring source_sheet, source_ref;
+	if (source->m_oRef.IsInit())
 	{
-		for (size_t i = 0; i < oox_pivot_table->m_oPivotFields->m_arrItems.size(); i++)
-		{
-			convert(oox_pivot_table->m_oPivotFields->m_arrItems[i]);
-		}
+		source_ref = *source->m_oRef;
+		source_sheet = source->m_oSheet.IsInit() ? *source->m_oSheet : ods_context->current_table()->office_table_name_;
 	}
-	//if (oox_pivot_table->m_oDataFields.IsInit())
-	//{
-	//	for (size_t i = 0; i < oox_pivot_table->m_oDataFields->m_arrItems.size(); i++)
-	//	{
-	//		convert(oox_pivot_table->m_oDataFields->m_arrItems[i]);
-	//	}
-	//}
-	//if (oox_pivot_table->m_oColFields.IsInit())
-	//{
-	//	for (size_t i = 0; i < oox_pivot_table->m_oColFields->m_arrItems.size(); i++)
-	//	{
-	//		convert(oox_pivot_table->m_oColFields->m_arrItems[i]);
-	//	}
-	//}
-	//if (oox_pivot_table->m_oRowFields.IsInit())
-	//{
-	//	for (size_t i = 0; i < oox_pivot_table->m_oRowFields->m_arrItems.size(); i++)
-	//	{
-	//		convert(oox_pivot_table->m_oRowFields->m_arrItems[i]);
-	//	}
-	//}
+	// A source given by the name of an Excel table: the table's range without its totals rows. Other names (defined
+	// names) are skipped.
+	else if (!source->m_oName.IsInit() || !pivot_table_source(xlsx_document, *source->m_oName, source_sheet, source_ref))
+		return;
+
+	std::vector<OOX::Spreadsheet::CPivotCacheField*> cache_fields;
+	if (oox_pivot_cache->m_oCacheFields.IsInit())
+		cache_fields = oox_pivot_cache->m_oCacheFields->m_arrItems;
+
+	std::vector<OOX::Spreadsheet::CPivotField*> pivot_fields;
+	if (oox_pivot_table->m_oPivotFields.IsInit())
+		pivot_fields = oox_pivot_table->m_oPivotFields->m_arrItems;
+
+	// Calculated fields, derived group fields and grouped items (date or number ranges, discrete groups) are not written
+	// (no table:data-pilot-groups yet): a pivot table that uses one is not written, its cells keep their values.
+	auto writable = [&](int index)
+	{
+		return index < 0 || static_cast<size_t>(index) >= cache_fields.size() ||
+			(pivot_source_column(cache_fields[index]) && !cache_fields[index]->m_oFieldGroup.IsInit());
+	};
+	if (oox_pivot_table->m_oRowFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CField *field : oox_pivot_table->m_oRowFields->m_arrItems)
+			if (field && field->m_oX.IsInit() && !writable(*field->m_oX)) return;
+	}
+	if (oox_pivot_table->m_oColFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CField *field : oox_pivot_table->m_oColFields->m_arrItems)
+			if (field && field->m_oX.IsInit() && !writable(*field->m_oX)) return;
+	}
 	if (oox_pivot_table->m_oPageFields.IsInit())
 	{
-		for (size_t i = 0; i < oox_pivot_table->m_oPageFields->m_arrItems.size(); i++)
+		for (OOX::Spreadsheet::CPageField *page_field : oox_pivot_table->m_oPageFields->m_arrItems)
+			if (page_field && page_field->m_oFld.IsInit() && !writable(*page_field->m_oFld)) return;
+	}
+	if (oox_pivot_table->m_oDataFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CDataField *data_field : oox_pivot_table->m_oDataFields->m_arrItems)
+			if (data_field && data_field->m_oFld.IsInit() && data_field->m_oFld->GetValue() < cache_fields.size() &&
+				!writable(static_cast<int>(data_field->m_oFld->GetValue()))) return;
+	}
+
+	// A hidden item or a selected page that has no member name here (a date or boolean item) cannot be written: the
+	// item would show again after a refresh. Such a pivot table is not written; its cells keep their values. Only the
+	// fields that get members count: fields on an axis and unused fields (written as hidden), not data-only fields.
+	// Which fields are on an axis or in the data area, collected once (not once per field).
+	std::vector<char> field_on_axis(cache_fields.size(), 0), field_in_data(cache_fields.size(), 0);
+	auto mark = [&](std::vector<char> &flags, int index)
+	{
+		if (index >= 0 && static_cast<size_t>(index) < flags.size()) flags[index] = 1;
+	};
+	if (oox_pivot_table->m_oRowFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CField *field : oox_pivot_table->m_oRowFields->m_arrItems)
+			if (field && field->m_oX.IsInit()) mark(field_on_axis, *field->m_oX);
+	}
+	if (oox_pivot_table->m_oColFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CField *field : oox_pivot_table->m_oColFields->m_arrItems)
+			if (field && field->m_oX.IsInit()) mark(field_on_axis, *field->m_oX);
+	}
+	if (oox_pivot_table->m_oPageFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CPageField *page_field : oox_pivot_table->m_oPageFields->m_arrItems)
+			if (page_field && page_field->m_oFld.IsInit()) mark(field_on_axis, *page_field->m_oFld);
+	}
+	if (oox_pivot_table->m_oDataFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CDataField *data_field : oox_pivot_table->m_oDataFields->m_arrItems)
+			if (data_field && data_field->m_oFld.IsInit() && data_field->m_oFld->GetValue() < field_in_data.size())
+				field_in_data[data_field->m_oFld->GetValue()] = 1;
+	}
+	std::wstring item_name;
+	for (size_t i = 0; i < pivot_fields.size() && i < cache_fields.size(); i++)
+	{
+		if (!pivot_fields[i] || !pivot_fields[i]->m_oItems.IsInit()) continue;
+		// An unused calculated or derived field is not written; an unused field with grouped items gets no members.
+		if (!field_on_axis[i] &&
+			(field_in_data[i] || !pivot_source_column(cache_fields[i]) || cache_fields[i]->m_oFieldGroup.IsInit()))
+			continue;
+		for (OOX::Spreadsheet::CFieldItem *item : pivot_fields[i]->m_oItems->m_arrItems)
 		{
-			convert(oox_pivot_table->m_oPageFields->m_arrItems[i]);
+			if (!item || !item->m_oHidden.IsInit() || !*item->m_oHidden || !item->m_oItemIndex.IsInit()) continue;
+			if (item->m_oItemType.IsInit() && item->m_oItemType->GetValue() != SimpleTypes::Spreadsheet::typeData) continue;
+			if (!pivot_item_name(cache_fields[i], item->m_oItemIndex->GetValue(), item_name)) return;
 		}
+	}
+	if (oox_pivot_table->m_oPageFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CPageField *page_field : oox_pivot_table->m_oPageFields->m_arrItems)
+		{
+			if (!page_field || !page_field->m_oFld.IsInit() || !page_field->m_oItem.IsInit()) continue;
+			const int index = *page_field->m_oFld;
+			if (index < 0 || static_cast<size_t>(index) >= pivot_fields.size() ||
+				static_cast<size_t>(index) >= cache_fields.size() || !pivot_fields[index] ||
+				!pivot_fields[index]->m_oItems.IsInit()) continue;
+			std::vector<OOX::Spreadsheet::CFieldItem*> &items = pivot_fields[index]->m_oItems->m_arrItems;
+			const size_t item_index = page_field->m_oItem->GetValue();
+			if (item_index < items.size() && items[item_index] && items[item_index]->m_oItemIndex.IsInit() &&
+				!pivot_item_name(cache_fields[index], items[item_index]->m_oItemIndex->GetValue(), item_name)) return;
+		}
+	}
+
+	const size_t page_count = oox_pivot_table->m_oPageFields.IsInit() ? oox_pivot_table->m_oPageFields->m_arrItems.size() : 0;
+
+	odf_writer::office_element_ptr table_elm = ods_context->start_pivot_table(
+		oox_pivot_table->m_oName.IsInit() ? *oox_pivot_table->m_oName : L"",
+		pivot_target_ref(*oox_pivot_table->m_oLocation->m_oRef, page_count), source_sheet, source_ref);
+
+	odf_writer::table_data_pilot_table *pilot_table = dynamic_cast<odf_writer::table_data_pilot_table*>(table_elm.get());
+	if (!pilot_table) return;
+
+	// As LibreOffice imports XLSX: grand totals from rowGrandTotals/colGrandTotals, no filter button.
+	const bool row_grand = oox_pivot_table->m_oRowGrandTotals.IsInit() ? *oox_pivot_table->m_oRowGrandTotals : true;
+	const bool col_grand = oox_pivot_table->m_oColGrandTotals.IsInit() ? *oox_pivot_table->m_oColGrandTotals : true;
+	if (!row_grand || !col_grand)
+		pilot_table->table_grand_total_ = odf_types::grand_total(row_grand ? odf_types::grand_total::row
+			: (col_grand ? odf_types::grand_total::column : odf_types::grand_total::none));
+	pilot_table->table_show_filter_button_ = odf_types::Bool(false);
+	if (oox_pivot_table->m_oEnableDrill.IsInit() && !*oox_pivot_table->m_oEnableDrill)
+		pilot_table->table_drill_down_ondouble_click_ = odf_types::Bool(false);
+
+	std::vector<bool> on_axis(cache_fields.size(), false), as_data(cache_fields.size(), false);
+	bool data_layout_written = false;
+
+	// One table:data-pilot-field; index -2 is Excel's placeholder for the data layout field ("Values").
+	auto add_field = [&](int index, odf_types::table_orientation::type orientation, const std::wstring *selected_page,
+						 const OOX::Spreadsheet::CDataField *data_field)
+	{
+		const bool data_layout = (index == -2 && !data_field);
+		if (data_layout && data_layout_written) return;
+		if (!data_layout && (index < 0 || static_cast<size_t>(index) >= cache_fields.size())) return;
+		// A field listed again on an axis is written once; a source field may be a data field several times.
+		if (!data_layout && !data_field && on_axis[index]) return;
+
+		odf_writer::office_element_ptr field_elm;
+		odf_writer::create_element(L"table", L"data-pilot-field", field_elm, ods_context);
+		odf_writer::table_data_pilot_field *field = dynamic_cast<odf_writer::table_data_pilot_field*>(field_elm.get());
+		if (!field) return;
+
+		OOX::Spreadsheet::CPivotCacheField *cache_field = data_layout ? NULL : cache_fields[index];
+		field->table_source_field_name_ = (cache_field && cache_field->m_oName.IsInit()) ? *cache_field->m_oName : L"";
+		field->table_orientation_ = odf_types::table_orientation(orientation);
+		if (data_layout)
+			field->table_is_data_layout_field_ = odf_types::Bool(true);
+		if (data_field)
+		{
+			field->table_function_ = pivot_function(data_field->m_oSubtotal.IsInit() ? data_field->m_oSubtotal->GetValue()
+																					 : SimpleTypes::Spreadsheet::functionSum);
+			if (data_field->m_oName.IsInit())
+				field->table_display_name_ = *data_field->m_oName;
+
+			// "Show values as" (% of total, difference to an item, running total, ...): table:data-pilot-field-reference on
+			// the cache field baseField, as LibreOffice imports it; none when baseField is no cache field.
+			odf_types::table_type::type reference_type;
+			const int base = data_field->m_oBaseField.IsInit() ? *data_field->m_oBaseField : -1;
+			if (data_field->m_oShowDataAs.IsInit() &&
+				pivot_reference_type(data_field->m_oShowDataAs->GetValue(), reference_type) && base >= 0 &&
+				static_cast<size_t>(base) < cache_fields.size() && cache_fields[base] && cache_fields[base]->m_oName.IsInit())
+			{
+				odf_writer::office_element_ptr reference_elm;
+				odf_writer::create_element(L"table", L"data-pilot-field-reference", reference_elm, ods_context);
+				odf_writer::table_data_pilot_field_reference *reference =
+					dynamic_cast<odf_writer::table_data_pilot_field_reference*>(reference_elm.get());
+				if (reference)
+				{
+					reference->table_type_ = odf_types::table_type(reference_type);
+					reference->table_field_name_ = *cache_fields[base]->m_oName;
+
+					// baseItem: the previous or next item (Excel's 0x001000FC / 0x001000FD) or a shared item of baseField.
+					const unsigned int previous_item = 0x001000FC, next_item = 0x001000FD;
+					const bool has_item = data_field->m_oBaseItem.IsInit();
+					const unsigned int base_item = has_item ? data_field->m_oBaseItem->GetValue() : 0;
+					std::wstring base_name;
+					if (has_item && base_item == previous_item)
+						reference->table_member_type_ = odf_types::member_type(odf_types::member_type::previous);
+					else if (has_item && base_item == next_item)
+						reference->table_member_type_ = odf_types::member_type(odf_types::member_type::next);
+					else
+					{
+						// ODF requires table:member-name with member-type named; it stays empty when baseItem is
+						// missing or names no member here.
+						reference->table_member_type_ = odf_types::member_type(odf_types::member_type::named);
+						if (!has_item || !pivot_item_name(cache_fields[base], base_item, base_name))
+							base_name.clear();
+						reference->table_member_name_ = base_name;
+					}
+					field_elm->add_child_element(reference_elm);
+				}
+			}
+		}
+		else
+			field->table_function_ = odf_types::table_function(odf_types::table_function::Auto);
+		if (selected_page)
+			field->table_selected_page_ = *selected_page;
+		else if (orientation == odf_types::table_orientation::page)
+		{
+			// ODF requires table:selected-page on a page field; with no single item selected ("All" or several items)
+			// write it empty and tell LibreOffice to ignore it, as LibreOffice does itself.
+			field->table_selected_page_ = std::wstring();
+			field->loext_ignore_selected_page_ = odf_types::Bool(true);
+		}
+
+		// Items hidden by a filter: table:data-pilot-member with table:display="false".
+		OOX::Spreadsheet::CPivotField *pivot_field =
+			(!data_layout && !data_field && static_cast<size_t>(index) < pivot_fields.size()) ? pivot_fields[index] : NULL;
+		// With grouped items the item indexes point into the group items, not the shared items: no members.
+		if (pivot_field && pivot_field->m_oItems.IsInit() && !(cache_field && cache_field->m_oFieldGroup.IsInit()))
+		{
+			odf_writer::office_element_ptr members_elm;
+			for (OOX::Spreadsheet::CFieldItem *item : pivot_field->m_oItems->m_arrItems)
+			{
+				std::wstring name;
+				if (!item || !item->m_oHidden.IsInit() || !*item->m_oHidden || !item->m_oItemIndex.IsInit()) continue;
+				if (item->m_oItemType.IsInit() && item->m_oItemType->GetValue() != SimpleTypes::Spreadsheet::typeData) continue;
+				if (!pivot_item_name(cache_field, item->m_oItemIndex->GetValue(), name)) continue;
+
+				if (!members_elm)
+					odf_writer::create_element(L"table", L"data-pilot-members", members_elm, ods_context);
+				odf_writer::office_element_ptr member_elm;
+				odf_writer::create_element(L"table", L"data-pilot-member", member_elm, ods_context);
+				odf_writer::table_data_pilot_member *member = dynamic_cast<odf_writer::table_data_pilot_member*>(member_elm.get());
+				if (!member || !members_elm) continue;
+				member->table_name_ = name;
+				member->table_display_ = odf_types::Bool(false);
+				member->table_show_details_ = odf_types::Bool(true);
+				members_elm->add_child_element(member_elm);
+			}
+			if (members_elm)
+			{
+				odf_writer::office_element_ptr level_elm;
+				odf_writer::create_element(L"table", L"data-pilot-level", level_elm, ods_context);
+				if (level_elm)
+				{
+					level_elm->add_child_element(members_elm);
+					field_elm->add_child_element(level_elm);
+				}
+			}
+		}
+		if (data_layout)
+			data_layout_written = true;
+		else
+		{
+			if (data_field) as_data[index] = true;
+			else on_axis[index] = true;
+		}
+		pilot_table->add_child_element(field_elm);
+	};
+
+	if (oox_pivot_table->m_oRowFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CField *field : oox_pivot_table->m_oRowFields->m_arrItems)
+			if (field && field->m_oX.IsInit()) add_field(*field->m_oX, odf_types::table_orientation::row, NULL, NULL);
+	}
+	if (oox_pivot_table->m_oColFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CField *field : oox_pivot_table->m_oColFields->m_arrItems)
+			if (field && field->m_oX.IsInit()) add_field(*field->m_oX, odf_types::table_orientation::column, NULL, NULL);
+	}
+	if (oox_pivot_table->m_oPageFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CPageField *page_field : oox_pivot_table->m_oPageFields->m_arrItems)
+		{
+			if (!page_field || !page_field->m_oFld.IsInit()) continue;
+			const int index = *page_field->m_oFld;
+
+			// The selected item: pageField item indexes the pivot field items, whose x indexes the shared items.
+			std::wstring selected;
+			bool has_selected = false;
+			if (page_field->m_oItem.IsInit() && index >= 0 && static_cast<size_t>(index) < pivot_fields.size() &&
+				static_cast<size_t>(index) < cache_fields.size() && pivot_fields[index] && pivot_fields[index]->m_oItems.IsInit())
+			{
+				const size_t item_index = page_field->m_oItem->GetValue();
+				std::vector<OOX::Spreadsheet::CFieldItem*> &items = pivot_fields[index]->m_oItems->m_arrItems;
+				if (item_index < items.size() && items[item_index] && items[item_index]->m_oItemIndex.IsInit())
+					has_selected = pivot_item_name(cache_fields[index], items[item_index]->m_oItemIndex->GetValue(), selected);
+			}
+			add_field(index, odf_types::table_orientation::page, has_selected ? &selected : NULL, NULL);
+		}
+	}
+	if (oox_pivot_table->m_oDataFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CDataField *data_field : oox_pivot_table->m_oDataFields->m_arrItems)
+		{
+			if (data_field && data_field->m_oFld.IsInit() && data_field->m_oFld->GetValue() < cache_fields.size())
+				add_field(static_cast<int>(data_field->m_oFld->GetValue()), odf_types::table_orientation::data, NULL, data_field);
+		}
+	}
+	for (size_t i = 0; i < cache_fields.size(); i++)
+	{
+		// An unused calculated or derived field is no column of the source range.
+		if (!on_axis[i] && !as_data[i] && pivot_source_column(cache_fields[i]))
+			add_field(static_cast<int>(i), odf_types::table_orientation::hidden, NULL, NULL);
 	}
 
 	ods_context->end_pivot_table();
