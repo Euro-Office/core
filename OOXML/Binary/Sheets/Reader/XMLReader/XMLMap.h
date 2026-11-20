@@ -51,7 +51,7 @@ struct XmlNode
     /// @brief inherited node columns
     std::set<std::wstring> childColumns;
     /// @brief descendants of the node
-    std::set<std::shared_ptr<XmlNode>> childs;
+    std::set<std::shared_ptr<XmlNode>> children;
     /// @brief node repetition counter to extend one node instead of using many with the same name
     _UINT32 counter;
     /// @brief all ancestor nodes
