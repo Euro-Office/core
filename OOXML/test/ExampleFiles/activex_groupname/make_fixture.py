@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
 """Builds groupname.docx: two option buttons that share an ActiveX group name.
 
 Word is not available where this fixture was written, so the ActiveX parts are
@@ -21,8 +23,8 @@ Layout of one MorphData (offsets for the first control):
   16  fGroupName CountOfChars+Compress. 0x80000006 (6)
   20  fSize.cx                         120
   24  fSize.cy                          45
-  28  fCaption characters               "Option A", padded to 32
-  32  fGroupName characters             "Group1", padded to 40
+  28  fCaption characters               "Option A", padded to 36
+  36  fGroupName characters             "Group1", padded to 44
   44  TextProps.MinorVersionText        0
   45  TextProps.MajorVersionText        0
   46  TextProps.cbTextProps             20
