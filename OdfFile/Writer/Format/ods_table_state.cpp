@@ -525,10 +525,11 @@ void ods_table_state::add_row(office_element_ptr & elm, _UINT32 repeated, office
     current_table_row_		+= repeated;
 	current_covered_cols_	= 0;
 
+	// the element may stand for several rows (a gap of default rows): count all of them
 	for (size_t i = 0; i < current_covered_rows_.size(); ++i)
 	{
-		current_covered_rows_[i].count_rows--;
-		if (current_covered_rows_[i].count_rows <= 0)
+		current_covered_rows_[i].count_rows -= (_INT32)(std::min)(repeated, (_UINT32)0x7FFFFFFF);
+		if (current_covered_rows_[i].count_rows < 0) // 0: this is the last row of the merged range
 		{
 			current_covered_rows_.erase(current_covered_rows_.begin() + i);
 			i--;
@@ -565,7 +566,7 @@ void ods_table_state::add_row_repeated()
 	for (size_t i = 0; i < current_covered_rows_.size(); ++i)
 	{
 		current_covered_rows_[i].count_rows--;
-		if (current_covered_rows_[i].count_rows <= 0)
+		if (current_covered_rows_[i].count_rows < 0) // 0: this is the last row of the merged range
 		{
 			current_covered_rows_.erase(current_covered_rows_.begin() + i);
 			i--;
@@ -678,12 +679,23 @@ bool ods_table_state::is_rows_plain(_INT32 row, _INT32 count)
 	std::map<_INT32, std::map<_INT32, _spanned_info>>::iterator pFindRow = map_merged_cells.lower_bound(row);
 	if (pFindRow != map_merged_cells.end() && pFindRow->first < row + count) return false;
 
-	// add_row of the first row drops the entries that end before it (count_rows 1)
+	// count_rows = rows still covered below the current row; add_row of the first row drops the entries at 0
 	for (size_t i = 0; i < current_covered_rows_.size(); i++)
 	{
-		if (current_covered_rows_[i].count_rows > 1) return false;
+		if (current_covered_rows_[i].count_rows > 0) return false;
 	}
 	return true;
+}
+// The number of rows below the current row that a range merged across rows still covers (the nearest end), 0 if none.
+_INT32 ods_table_state::get_covered_rows_ahead()
+{
+	_INT32 result = 0;
+	for (size_t i = 0; i < current_covered_rows_.size(); i++)
+	{
+		if (current_covered_rows_[i].count_rows > 0 && (result == 0 || current_covered_rows_[i].count_rows < result))
+			result = current_covered_rows_[i].count_rows;
+	}
+	return result;
 }
 _INT32 ods_table_state::is_cell_comment(_INT32 col, _INT32 row, _UINT32 repeate_col)
 {
@@ -1061,11 +1073,13 @@ bool ods_table_state::isCoveredCell(_INT32 col, _INT32 repeated_cols)
 {
 	if (current_covered_cols_ > 0) return true;
 
+	// col is 1-based (from the cell reference), start_col is 0-based (the column before the merged cell)
+	const _INT32 col0 = col - 1;
 	for (size_t i = 0; i < current_covered_rows_.size(); i++)
 	{
-		if (current_covered_rows_[i].start_col <= col && col < current_covered_rows_[i].start_col + current_covered_rows_[i].count_cols)
+		if (current_covered_rows_[i].start_col <= col0 && col0 < current_covered_rows_[i].start_col + current_covered_rows_[i].count_cols)
 		{
-			current_covered_cols_ = current_covered_rows_[i].count_cols - (col - current_covered_rows_[i].start_col);
+			current_covered_cols_ = current_covered_rows_[i].count_cols - (col0 - current_covered_rows_[i].start_col);
 			return true;
 		}
 	}

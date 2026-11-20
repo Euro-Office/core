@@ -191,6 +191,68 @@ TEST(XlsxToOds, CellAfterMergedRangeWithoutCoveredCellsIsNotCovered)
 	EXPECT_FALSE(row5[6].covered) << "G5";
 	EXPECT_EQ(row5[6].text, L"9");
 
+	// B7:C8 is merged over two rows: B8 and C8 are covered, A8 and D8 keep their values.
+	const std::vector<Cell> row8 = row_cells(xml, 7);
+	ASSERT_EQ(row8.size(), 4u);
+	EXPECT_FALSE(row8[0].covered) << "A8";
+	EXPECT_EQ(row8[0].text, L"11");
+	EXPECT_TRUE(row8[1].covered) << "B8";
+	EXPECT_TRUE(row8[2].covered) << "C8";
+	EXPECT_FALSE(row8[3].covered) << "D8";
+	EXPECT_EQ(row8[3].text, L"10");
+
+	// A14:D16 is merged over three rows: A to D are covered in rows 15 and 16, E keeps its value.
+	for (size_t row = 14; row < 16; ++row)
+	{
+		const std::vector<Cell> cells = row_cells(xml, row, 5);
+		ASSERT_EQ(cells.size(), 5u);
+		for (size_t col = 0; col < 4; ++col)
+			EXPECT_TRUE(cells[col].covered) << static_cast<char>('A' + col) << row + 1;
+		EXPECT_FALSE(cells[4].covered) << "E" << row + 1;
+		EXPECT_EQ(cells[4].text, std::to_wstring(row)) << "E" << row + 1;
+	}
+
+	// A18:C20 is merged and rows 19 and 20 are missing (one gap of two rows): the range ends there, so A21 and B21 are
+	// normal cells with their values.
+	const std::vector<Cell> row21 = row_cells(xml, 20, 3);
+	ASSERT_EQ(row21.size(), 3u);
+	EXPECT_FALSE(row21[0].covered) << "A21";
+	EXPECT_EQ(row21[0].text, L"21") << "A21";
+	EXPECT_FALSE(row21[1].covered) << "B21";
+	EXPECT_EQ(row21[1].text, L"22") << "B21";
+
+	// A23:B25 is merged and rows 24 to 26 are missing (one gap that goes past the range): A and B are covered in rows
+	// 24 and 25 only; A27 keeps its value.
+	for (size_t row = 23; row < 25; ++row)
+	{
+		const std::vector<Cell> cells = row_cells(xml, row, 2);
+		ASSERT_EQ(cells.size(), 2u);
+		EXPECT_TRUE(cells[0].covered) << "A" << row + 1;
+		EXPECT_TRUE(cells[1].covered) << "B" << row + 1;
+	}
+	const std::vector<Cell> row26 = row_cells(xml, 25, 2);
+	ASSERT_EQ(row26.size(), 2u);
+	EXPECT_FALSE(row26[0].covered) << "A26";
+	EXPECT_FALSE(row26[1].covered) << "B26";
+	const std::vector<Cell> row27 = row_cells(xml, 26, 1);
+	ASSERT_EQ(row27.size(), 1u);
+	EXPECT_FALSE(row27[0].covered) << "A27";
+	EXPECT_EQ(row27[0].text, L"27") << "A27";
+
+	// A30:B2030 is merged and rows 31 to 3029 are missing: the gap is split where the range ends, row 2030 is still
+	// covered, row 2031 is not, and A3030 stays in row 3030.
+	const std::vector<Cell> row2030 = row_cells(xml, 2029, 1);
+	ASSERT_EQ(row2030.size(), 1u);
+	EXPECT_TRUE(row2030[0].covered) << "A2030";
+	const std::vector<Cell> row3030 = row_cells(xml, 3029, 1);
+	ASSERT_EQ(row3030.size(), 1u) << "no row 3030";
+	EXPECT_FALSE(row3030[0].covered) << "A3030";
+	EXPECT_EQ(row3030[0].text, L"3030") << "A3030";
+
+	// A data validation in B3050:B3059 inside the gap of rows 3041 to 3099 splits the gap in three; A3100 stays in row 3100.
+	const std::vector<Cell> row3100 = row_cells(xml, 3099, 1);
+	ASSERT_EQ(row3100.size(), 1u) << "no row 3100";
+	EXPECT_EQ(row3100[0].text, L"3100") << "A3100";
 }
 
 // Empty cells with the same style (fill and borders) next to each other: the XLSX reader folds them into

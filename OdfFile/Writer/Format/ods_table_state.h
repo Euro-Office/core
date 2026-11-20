@@ -485,6 +485,7 @@ public:
 	_INT32 is_row_comment(_INT32 row, _INT32 repeate_row = 1);
 	_INT32 is_row_validation(_INT32 row, _INT32& repeate_row);
 	bool is_rows_plain(_INT32 row, _INT32 count);
+	_INT32 get_covered_rows_ahead();
 	_INT32 is_cell_data_validation(_INT32 col, _INT32 row, _UINT32 repeate_col, data_validation_state::_ref & ref);
 
 	_UINT32 get_last_row_repeated ();

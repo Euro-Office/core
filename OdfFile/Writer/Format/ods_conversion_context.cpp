@@ -536,9 +536,12 @@ void ods_conversion_context::add_repeated_cells(int repeated, int xfd_style)
 void ods_conversion_context::start_rows()
 {
 }
-void ods_conversion_context::add_default_row(int repeated)
+void ods_conversion_context::add_default_row(int repeated, bool check_last)
 {
 	if (repeated < 1) return;
+	// No rows after a row element repeated 1024 times or more. Checked once for the whole gap: the pieces of a split gap
+	// are written together, or a long first piece would drop the rest and move the rows after the gap up.
+	if (check_last && current_table()->get_last_row_repeated() >= 1024) return;
 
 	if (repeated > 1)
 	{
@@ -560,15 +563,24 @@ void ods_conversion_context::add_default_row(int repeated)
 		{//divide by 3 - before, with --, after;
 			int r = current_table()->current_row();
 
-			add_default_row(row_split - r - 1);
-			add_default_row(row_split_repeated);
-			add_default_row(repeated + r + row_split_repeated - row_split - 1);
+			add_default_row(row_split - r - 1, false);
+			add_default_row(row_split_repeated, false);
+			add_default_row(repeated - (row_split - r - 1) - row_split_repeated, false);
 
+			return;
+		}
+		// A range merged across rows that ends inside the gap: write its rows apart from the rows after it, so that
+		// only they are covered (one row element is covered as a whole).
+		const _INT32 covered = current_table()->get_covered_rows_ahead();
+		if (covered > 0 && covered < repeated)
+		{
+			add_default_row(covered, false);
+			add_default_row(repeated - covered, false);
 			return;
 		}
 	}
 	
-	if (repeated > 0 && current_table()->get_last_row_repeated() < 1024 && repeat_at_lasts_)
+	if (repeated > 0 && repeat_at_lasts_)
 	{
 		start_row(current_table()->current_row() + 1, repeated, 0, true);
 		end_row();
