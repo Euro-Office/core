@@ -199,8 +199,8 @@ void InitLocalInfo()
         {L"enero", L"febrero", L"marzo", L"abril", L"mayo", L"junio", L"julio", L"agosto", L"septiembre", L"octubre", L"noviembre", L"diciembre"},
         {L"一月", L"二月", L"三月", L"四月", L"五月", L"六月", L"七月", L"八月", L"九月", L"十月", L"十一月", L"十二月"},
         {L"leden", L"únor", L"březen", L"duben", L"květen", L"červen", L"červenec", L"srpen", L"září", L"říjen", L"listopad", L"prosinec"},
-        {L"januar", L"februar", L"marts", L"april", L"maj", L"juni", L"juli", L"august", L"september", L"oktober", L"november", L"december"},
-        {L"Januar", L"Februar", L"März", L"April", L"Mai", L"Juni", L"Juli", L"August", L"September", L"Oktober", L"November", L"Dezember"},
+        {L"januar", L"februar", L"marts", L"april", L"maj", L"juni", L"juli", L"august", L"september", L"oktober", L"november", L"december"}, // codespell:ignore: localized month names
+        {L"Januar", L"Februar", L"März", L"April", L"Mai", L"Juni", L"Juli", L"August", L"September", L"Oktober", L"November", L"Dezember"}, // codespell:ignore: localized month names
         {L"Ιανουάριος", L"Φεβρουάριος", L"Μάρτιος", L"Απρίλιος", L"Μάιος", L"Ιούνιος", L"Ιούλιος", L"Αύγουστος", L"Σεπτέμβριος", L"Οκτώβριος", L"Νοέμβριος", L"Δεκέμβριος"},
         {L"tammikuu", L"helmikuu", L"maaliskuu", L"huhtikuu", L"toukokuu", L"kesäkuu", L"heinäkuu", L"elokuu", L"syyskuu", L"lokakuu", L"marraskuu", L"joulukuu"},
         {L"janvier", L"février", L"mars", L"avril", L"mai", L"juin", L"juillet", L"août", L"septembre", L"octobre", L"novembre", L"décembre"},
@@ -210,11 +210,11 @@ void InitLocalInfo()
         {L"1월", L"2월", L"3월", L"4월", L"5월", L"6월", L"7월", L"8월", L"9월", L"10월", L"11월", L"12월"},
         {L"styczeń", L"luty", L"marzec", L"kwiecień", L"maj", L"czerwiec", L"lipiec", L"sierpień", L"wrzesień", L"październik", L"listopad", L"grudzień"},
         {L"janeiro", L"fevereiro", L"março", L"abril", L"maio", L"junho", L"julho", L"agosto", L"setembro", L"outubro", L"novembro", L"dezembro"},
-        {L"januari", L"februari", L"mars", L"april", L"maj", L"juni", L"juli", L"augusti", L"september", L"oktober", L"november", L"december"},
+        {L"januari", L"februari", L"mars", L"april", L"maj", L"juni", L"juli", L"augusti", L"september", L"oktober", L"november", L"december"}, // codespell:ignore: localized month names
         {L"Ocak", L"Şubat", L"Mart", L"Nisan", L"Mayıs", L"Haziran", L"Temmuz", L"Ağustos", L"Eylül", L"Ekim", L"Kasım", L"Aralık"},
-        {L"Januari", L"Februari", L"Maret", L"April", L"Mei", L"Juni", L"Juli", L"Agustus", L"September", L"Oktober", L"November", L"Desember"},
+        {L"Januari", L"Februari", L"Maret", L"April", L"Mei", L"Juni", L"Juli", L"Agustus", L"September", L"Oktober", L"November", L"Desember"}, // codespell:ignore: localized month names
         {L"січень", L"лютий", L"березень", L"квітень", L"травень", L"червень", L"липень", L"серпень", L"вересень", L"жовтень", L"листопад", L"грудень"},
-        {L"januar", L"februar", L"marec", L"april", L"maj", L"junij", L"julij", L"avgust", L"september", L"oktober", L"november", L"december"},
+        {L"januar", L"februar", L"marec", L"april", L"maj", L"junij", L"julij", L"avgust", L"september", L"oktober", L"november", L"december"}, // codespell:ignore: localized month names
         {L"janvāris", L"februāris", L"marts", L"aprīlis", L"maijs", L"jūnijs", L"jūlijs", L"augusts", L"septembris", L"oktobris", L"novembris", L"decembris"},
         {L"sausis", L"vasaris", L"kovas", L"balandis", L"gegužė", L"birželis", L"liepa", L"rugpjūtis", L"rugsėjis", L"spalis", L"lapkritis", L"gruodis"},
         {L"Tháng Giêng", L"Tháng Hai", L"Tháng Ba", L"Tháng Tư", L"Tháng Năm", L"Tháng Sáu", L"Tháng Bảy", L"Tháng Tám", L"Tháng Chín", L"Tháng Mười", L"Tháng Mười Một", L"Tháng Mười Hai"},
@@ -223,14 +223,14 @@ void InitLocalInfo()
         {L"Нэгдүгээр сар", L"Хоёрдугаар сар", L"Гуравдугаар сар", L"Дөрөвдүгээр сар", L"Тавдугаар сар", L"Зургаадугаар сар", L"Долоодугаар сар", L"Наймдугаар сар", L"Есдүгээр сар", L"Аравдугаар сар", L"Арван нэгдүгээр сар", L"Арван хоёрдугаар сар"},
         {L"януари", L"февруари", L"март", L"април", L"май", L"юни", L"юли", L"август", L"септември", L"октомври", L"ноември", L"декември"},
         {L"ذو الحجة", L"ذو القعدة", L"شوال", L"رمضان", L"شعبان", L"رجب", L"جمادى الثانية", L"جمادى الأولى", L"ربيع الثاني", L"ربيع الأول", L"صفر", L"محرم"},
-        {L"januari", L"februari", L"maart", L"april", L"mei", L"juni", L"juli", L"augustus", L"september", L"oktober", L"november", L"december"},
+        {L"januari", L"februari", L"maart", L"april", L"mei", L"juni", L"juli", L"augustus", L"september", L"oktober", L"november", L"december"}, // codespell:ignore: localized month names
         {L"siječanj", L"veljača", L"ožujak", L"travanj", L"svibanj", L"lipanj", L"srpanj", L"kolovoz", L"rujan", L"listopad", L"studeni", L"prosinac"},
         {L"január", L"február", L"marec", L"apríl", L"máj", L"jún", L"júl", L"august", L"september", L"október", L"november", L"december"},
         {L"كانون الأول", L"تشرين الثاني", L"تشرين الأول", L"أيلول", L"آب", L"تموز", L"حزيران", L"أيار", L"نيسان", L"آذار", L"شباط", L"كانون الثاني"},
         {L"jанвар", L"феврал", L"март", L"апрел", L"мај", L"ијун", L"ијул", L"август", L"сентјабр", L"октјабр", L"нојабр", L"декабр"},
         {L"ᠨᠢᠭᠡᠳᠦᠭᠡᠷ ᠰᠠᠷ᠎ᠠ", L"ᠬᠤᠶ᠋ᠠᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ", L"ᠭᠤᠷᠪᠠᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ", L"ᠲᠦᠷᠪᠡᠳᠦᠭᠡᠷ ᠰᠠᠷ᠎ᠠ", L"ᠲᠠᠪᠤᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ", L"ᠵᠢᠷᠭᠤᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ", L"ᠲᠤᠯᠤᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ", L"ᠨᠠᠢᠮᠠᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ", L"ᠶᠢᠰᠦᠳᠦᠭᠡᠷ ᠰᠠᠷ᠎ᠠ", L"ᠠᠷᠪᠠᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ", L"ᠠᠷᠪᠠᠨ ᠨᠢᠭᠡᠳᠦᠭᠡᠷ ᠰᠠᠷ᠎ᠠ", L"ᠠᠷᠪᠠᠨ ᠬᠤᠶ᠋ᠠᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ"},
         {L"ديسمبر", L"نوفمبر", L"أكتوبر", L"سبتمبر", L"أغسطس", L"يوليو", L"يونيو", L"مايو", L"أبريل", L"مارس", L"فبراير", L"يناير"},
-        {L"januar", L"februar", L"mart", L"april", L"maj", L"jun", L"jul", L"avgust", L"septembar", L"oktobar", L"novembar", L"decembar"},
+        {L"januar", L"februar", L"mart", L"april", L"maj", L"jun", L"jul", L"avgust", L"septembar", L"oktobar", L"novembar", L"decembar"}, // codespell:ignore: localized month names
         {L"јануар", L"фебруар", L"март", L"април", L"мај", L"јун", L"јул", L"август", L"септембар", L"октобар", L"новембар", L"децембар"}
     };
     ShortMonthNames = std::vector<std::vector<std::wstring>>
@@ -315,6 +315,8 @@ std::wstring LocalInfo::GetShortDateFormat()
             case L'5':
                 result+= L"yyyy";
                 break;
+        default:
+            break;
         };
         if (i != ShortDatePattern.size() - 1)
             result+= DateSeparator;

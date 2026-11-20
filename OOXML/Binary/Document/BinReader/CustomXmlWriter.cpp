@@ -84,9 +84,9 @@ namespace Writers
 		sCustomXmlFilename += OOX::FileTypes::CustomXml.DefaultFileName().GetExtention();
 
 		NSFile::CFileBinary oFile;
-		if (true == oFile.CreateFileW(sCustomXmlDir + FILE_SEPARATOR_STR + sCustomXmlFilename))
+		if (oFile.CreateFileW(sCustomXmlDir + FILE_SEPARATOR_STR + sCustomXmlFilename))
 		{
-			if (false == sCustomXmlContent.empty())
+			if (!sCustomXmlContent.empty())
 				oFile.WriteFile((BYTE*)sCustomXmlContent.c_str(), sCustomXmlContent.length());
 			oFile.CloseFile();
 		}
@@ -101,7 +101,7 @@ namespace Writers
 	void CustomXmlWriter::WriteCustomSettings(const std::wstring& sUrl, const std::wstring& sXml, bool bGlossaryMode)
 	{
 		m_nCount++;
-		OOX::CCustomXMLProps oCustomXMLProps(NULL);
+		OOX::CCustomXMLProps oCustomXMLProps(nullptr);
 		OOX::CCustomXMLProps::CShemaRef* pShemaRef = new OOX::CCustomXMLProps::CShemaRef();
 		pShemaRef->m_sUri = sUrl;
 	//todo guid

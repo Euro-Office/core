@@ -136,7 +136,7 @@ std::wstring CurrencyReader::GetCurrencyFormat(const std::wstring &inputFormat,c
         if(currency.at(0) >= L'\u0600' &&  currency.at(0) <= L'\u06FF')
         {
 
-            format += + L'\u200E';
+            format += L'\u200E';
             format += currency + L'\u200F';
             //format+= L'\u200E';
         }
@@ -149,7 +149,7 @@ std::wstring CurrencyReader::GetCurrencyFormat(const std::wstring &inputFormat,c
         if(currency.at(0) >= L'\u0600' &&  currency.at(0) <= L'\u06FF')
         {
 
-            format += + L'\u200E';
+            format += L'\u200E';
             format += currency + L'\u200F';
             //format+= L'\u200E';
         }

@@ -142,7 +142,7 @@ mc:Ignorable=\"w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14\">"));
 			for(size_t i = 0, length = m_oHeaderFooterWriter.m_aHeaders.size(); i < length; ++i)
 			{
 				HdrFtrItem* pHeader = m_oHeaderFooterWriter.m_aHeaders[i];
-				if(false == pHeader->rId.empty())
+				if(!pHeader->rId.empty())
 				{
 					if(SimpleTypes::hdrftrFirst == pHeader->eType)
 					{
@@ -162,7 +162,7 @@ mc:Ignorable=\"w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14\">"));
 			for(size_t i = 0, length = m_oHeaderFooterWriter.m_aFooters.size(); i < length; ++i)
 			{
 				HdrFtrItem* pFooter = m_oHeaderFooterWriter.m_aFooters[i];
-				if(false == pFooter->rId.empty())
+				if(!pFooter->rId.empty())
 				{
 					if(SimpleTypes::hdrftrFirst == pFooter->eType)
 					{
@@ -179,7 +179,7 @@ mc:Ignorable=\"w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14\">"));
 					}
 				}
 			}
-			if(true == bTitlePage)
+			if(bTitlePage)
 				sResult += L"<w:titlePg/>";
 		}
 		return sResult;
