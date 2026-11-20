@@ -322,3 +322,12 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = "Common/js/stringserialize.js"
 SPDX-FileCopyrightText = "2010-2024 Ascensio System SIA"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_edge.xlsx",
+    "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_rules.xlsx",
+    "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_x14.xlsx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
