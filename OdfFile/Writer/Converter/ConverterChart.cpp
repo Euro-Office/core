@@ -101,7 +101,7 @@ void OoxConverter::convert_chart_text(PPTX::Logic::BodyPr *oox_bodyPr)
 	}
 	if (oox_bodyPr->rot.IsInit())
 	{
-		odf_context()->chart_context()->set_textarea_rotation(oox_bodyPr->rot.get() / 60000.);
+		odf_context()->chart_context()->set_textarea_rotation(oox_bodyPr->rot.get() / 60000);
 	}
 }
 

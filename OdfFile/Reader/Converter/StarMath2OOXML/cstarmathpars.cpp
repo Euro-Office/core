@@ -1709,7 +1709,7 @@ namespace StarMath
 			if(enTypeSpecial != TypeElement::undefine)
 				return enTypeSpecial;
 			if(L"imag" == wsTempToken) return TypeElement::Im;
-			else if(L"inf" == wsTempToken || L"infinity" == wsTempToken || L"infty" == wsTempToken || L"infinite" == wsTempToken) return TypeElement::infinity;
+			else if(L"inf" == wsTempToken) return TypeElement::infinity;
 			else if(L"&" == wsTempToken) return TypeElement::grid;
 			else if(L"#" == wsTempToken) return TypeElement::transition;
 			else if(L"imath" == wsTempToken) return TypeElement::imath;
@@ -1759,6 +1759,8 @@ namespace StarMath
 			else if(L"setq" == wsTempToken) return TypeElement::setQ;
 			else if(L"setr" == wsTempToken) return TypeElement::setR;
 			else if(L"setc" == wsTempToken) return TypeElement::setC;
+			else if(L"infinity" == wsTempToken) return TypeElement::infinity;
+			else if(L"infty" == wsTempToken) return TypeElement::infinity;
 			else if(L"fact" == wsTempToken) return TypeElement::fact;
 			else if(L"abs" == wsTempToken) return TypeElement::abs;
 			else if(L"`" == wsTempToken) return TypeElement::interval;
@@ -1773,6 +1775,7 @@ namespace StarMath
 			else if(L"backepsilon" == wsTempToken) return TypeElement::backepsilon;
 			else if(L"leftarrow" == wsTempToken || L"<-" == wsTempToken) return TypeElement::leftarrow;
 			else if(L"rightarrow" == wsTempToken || L"->" == wsTempToken || L"tendto" == wsTempToken) return TypeElement::rightarrow;
+			else if(L"infinite" == wsTempToken) return TypeElement::infinity;
 			else if(L"dotslow" == wsTempToken) return TypeElement::dotslow;
 			else if(L"dotsaxis" == wsTempToken) return TypeElement::dotsaxis;
 			else if(L"dotsvert" == wsTempToken) return TypeElement::dotsvert;
