@@ -15,6 +15,7 @@ find_package(sioxx REQUIRED)
 add_library(kernel_network SHARED
     WebSocket/src/managerWebSocket.cpp
     WebSocket/src/socketio/socketio_internal.cpp
+    WebSocket/src/socketio/socketio_internal_private.cpp
 
     WebSocket/include/websocket.h
 	WebSocket/src/websocketbase.h
@@ -72,6 +73,7 @@ target_include_directories(kernel_network PRIVATE
     ${OPENSSL_INSTALL_DIR_ABS}/include
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter
+    ${CORE_ROOT_DIR}
 )
 
 if( NOT MSVC )

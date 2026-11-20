@@ -31,7 +31,7 @@
 #define _IO_WEB_SOCKET_H_
 
 #include "../websocketbase.h"
-#include "../../../../../DesktopEditor/graphics/TemporaryCS.h"
+#include "DesktopEditor/graphics/TemporaryCS.h"
 
 namespace NSNetwork
 {
