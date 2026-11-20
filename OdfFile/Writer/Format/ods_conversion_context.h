@@ -63,6 +63,7 @@ public:
 
 		void start_cell(std::wstring & ref, int xfd_style);
 		void end_cell();
+		void add_repeated_cells(int repeated, int xfd_style);
 
 		void add_row_repeated();
 		void add_default_row(int repeated);

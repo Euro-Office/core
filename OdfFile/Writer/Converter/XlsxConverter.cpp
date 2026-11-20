@@ -1419,6 +1419,13 @@ void XlsxConverter::convert(OOX::Spreadsheet::CCell *oox_cell)
 	}
 
 	ods_context->end_cell();
+
+	// The XLSX reader folds the empty cells that follow a cell without a value and have its style into that
+	// cell (CRow::compressCell sets m_oRepeated). Write them back as empty cells of that style.
+	if (oox_cell->m_oRepeated.IsInit() && *oox_cell->m_oRepeated > 1)
+	{
+		ods_context->add_repeated_cells((int)*oox_cell->m_oRepeated - 1, ifx_style);
+	}
 }
 
 void XlsxConverter::convert_sharing_string(int number)

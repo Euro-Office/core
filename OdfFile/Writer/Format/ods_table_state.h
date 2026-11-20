@@ -368,7 +368,7 @@ public:
 
 	void start_cell(office_element_ptr & elm ,office_element_ptr & style);
 	void end_cell();
-    void add_default_cell(_INT32 repeated);
+    void add_default_cell(_INT32 repeated, const std::wstring & style_name = L"");
 
 	void check_spanned_cells();
 

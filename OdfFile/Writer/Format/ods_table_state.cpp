@@ -1569,7 +1569,7 @@ void ods_table_state::end_cell()
 	}
 }
 
-void ods_table_state::add_default_cell(_INT32 repeated)
+void ods_table_state::add_default_cell(_INT32 repeated, const std::wstring & style_name)
 {
 	if (repeated < 1) return;
 
@@ -1579,9 +1579,9 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 		//divide by 3 - before, with a comment, after;
 		_INT32 c = current_table_column_;
 
-		add_default_cell(comments_[comment_idx].col - c - 1);
-		add_default_cell(1);
-		add_default_cell(repeated + c - comments_[comment_idx].col);
+		add_default_cell(comments_[comment_idx].col - c - 1, style_name);
+		add_default_cell(1, style_name);
+		add_default_cell(repeated + c - comments_[comment_idx].col, style_name);
 
 		return;
 	}
@@ -1600,9 +1600,9 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 					//divide by 3 - before, with spanned, after;
 					_INT32 c = current_table_column_;
 
-					add_default_cell(it->first - c - 1);
-					add_default_cell(1);
-					add_default_cell(repeated + c - current_table_column_);
+					add_default_cell(it->first - c - 1, style_name);
+					add_default_cell(1, style_name);
+					add_default_cell(repeated + c - current_table_column_, style_name);
 
 					return;
 				}
@@ -1625,9 +1625,9 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 		//divide by 3 - before, with validation, after;
 		_INT32 c = current_table_column_;
 
-		add_default_cell(ref.col_start - c - 1);
-		add_default_cell(repeated_validation);
-		add_default_cell(repeated + c - current_table_column_);
+		add_default_cell(ref.col_start - c - 1, style_name);
+		add_default_cell(repeated_validation, style_name);
+		add_default_cell(repeated + c - current_table_column_, style_name);
 
 		return;
 	}
@@ -1638,8 +1638,8 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 	{
 		_INT32 covered = current_covered_cols_;
 
-		add_default_cell(covered);
-		add_default_cell(repeated - covered);
+		add_default_cell(covered, style_name);
+		add_default_cell(repeated - covered, style_name);
 
 		return;
 	}
@@ -1663,14 +1663,18 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 
 				if (split != current_table_column_ && split != current_table_column_ + repeated)
 				{
-					add_default_cell(split - c);
-					add_default_cell(repeated + c - split);
+					add_default_cell(split - c, style_name);
+					add_default_cell(repeated + c - split, style_name);
 					return;
 				}
 			}
 		}		
 	}
 //-----------------------------------------------------------------------------------------
+	// A given style (empty cells of one style folded together by the XLSX reader) is written as it is,
+	// even where it equals the column default: the run may span columns with other defaults.
+	const std::wstring & cell_style_name = style_name.empty() ? row_default_cell_style_name_ : style_name;
+
 	office_element_ptr default_cell_elm;
 	if (bCovered)
 	{
@@ -1716,15 +1720,15 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 	{
 		cell->attlist_.table_number_columns_repeated_ = repeated;
 
-		if (!row_default_cell_style_name_.empty())
-			cell->attlist_.table_style_name_ = row_default_cell_style_name_;
+		if (!cell_style_name.empty())
+			cell->attlist_.table_style_name_ = cell_style_name;
 	}
 	if (covered_cell)
 	{
 		covered_cell->attlist_.table_number_columns_repeated_ = repeated;
 
-		if (!row_default_cell_style_name_.empty())
-			covered_cell->attlist_.table_style_name_ = row_default_cell_style_name_;
+		if (!cell_style_name.empty())
+			covered_cell->attlist_.table_style_name_ = cell_style_name;
 
 		current_covered_cols_ -= repeated;
 	}

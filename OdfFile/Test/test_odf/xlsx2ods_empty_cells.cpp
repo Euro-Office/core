@@ -1,13 +1,14 @@
 // SPDX-FileCopyrightText: 2026 Euro-Office contributors
 // SPDX-License-Identifier: AGPL-3.0-only
 
-// XLSX -> ODS: empty cells that the XLSX does not write one by one (gaps, merged ranges).
+// XLSX -> ODS: empty cells that are not converted one by one (gaps, merged ranges, runs of one style).
 
 #include "gtest/gtest.h"
 
 #include "common.h"
 
 #include <algorithm>
+#include <cwctype>
 #include <string>
 #include <vector>
 
@@ -182,4 +183,60 @@ TEST(XlsxToOds, CellAfterMergedRangeWithoutCoveredCellsIsNotCovered)
 	EXPECT_TRUE(row5[5].covered) << "F5";
 	EXPECT_FALSE(row5[6].covered) << "G5";
 	EXPECT_EQ(row5[6].text, L"9");
+}
+
+// Empty cells with the same style (fill and borders) next to each other: the XLSX reader folds them into
+// the first one, and every folded cell keeps the style.
+TEST(XlsxToOds, EmptyCellsOfOneStyleKeepTheStyle)
+{
+	const std::wstring xml = convert_xlsx_content(L"ExampleFiles/cell_repeated_empty_styled.xlsx");
+	ASSERT_FALSE(xml.empty()) << "XLSX -> ODS conversion failed";
+	EXPECT_TRUE(is_well_formed(xml));
+
+	// Row 1: A1:C1 empty with the style, D1 = 1.
+	const std::vector<Cell> row1 = row_cells(xml, 0);
+	ASSERT_EQ(row1.size(), 4u);
+	const std::wstring style = row1[0].style;
+	ASSERT_FALSE(style.empty()) << "A1 has no style";
+	const size_t name_pos = xml.find(L"style:name=\"" + style + L"\"");
+	ASSERT_NE(name_pos, std::wstring::npos) << "the style of A1 has no definition";
+	const size_t style_pos = xml.rfind(L"<style:style", name_pos);
+	ASSERT_NE(style_pos, std::wstring::npos);
+	std::wstring definition = xml.substr(style_pos, xml.find(L"</style:style>", style_pos) - style_pos);
+	std::transform(definition.begin(), definition.end(), definition.begin(),
+				   [](wchar_t c) { return static_cast<wchar_t>(std::towlower(c)); });
+	EXPECT_NE(definition.find(L"fo:background-color=\"#ffff00\""), std::wstring::npos) << "the style of A1 has no yellow fill";
+	EXPECT_EQ(row1[1].style, style) << "B1";
+	EXPECT_EQ(row1[2].style, style) << "C1";
+	EXPECT_EQ(row1[3].text, L"1");
+	EXPECT_NE(row1[3].style, style) << "D1";
+
+	// Row 2: A2 = 2, B2:C2 empty with the style at the end of the row.
+	const std::vector<Cell> row2 = row_cells(xml, 1);
+	ASSERT_EQ(row2.size(), 4u);
+	EXPECT_EQ(row2[0].text, L"2");
+	EXPECT_EQ(row2[1].style, style) << "B2";
+	EXPECT_EQ(row2[2].style, style) << "C2";
+	EXPECT_NE(row2[3].style, style) << "D2";
+
+	// Row 3: A3:C3 merged, all with the style; D3 = 3 stays a normal cell.
+	const std::vector<Cell> row3 = row_cells(xml, 2);
+	ASSERT_EQ(row3.size(), 4u);
+	EXPECT_FALSE(row3[0].covered);
+	EXPECT_EQ(row3[0].style, style) << "A3";
+	EXPECT_TRUE(row3[1].covered) << "B3";
+	EXPECT_EQ(row3[1].style, style) << "B3";
+	EXPECT_TRUE(row3[2].covered) << "C3";
+	EXPECT_EQ(row3[2].style, style) << "C3";
+	EXPECT_FALSE(row3[3].covered) << "D3";
+	EXPECT_EQ(row3[3].text, L"3");
+
+	// Row 4: empty cells without a style between two numbers stay without a style.
+	const std::vector<Cell> row4 = row_cells(xml, 3);
+	ASSERT_EQ(row4.size(), 4u);
+	EXPECT_EQ(row4[0].text, L"4");
+	EXPECT_EQ(row4[1].style, L"") << "B4";
+	EXPECT_EQ(row4[2].style, L"") << "C4";
+	EXPECT_EQ(row4[3].text, L"5");
+
 }

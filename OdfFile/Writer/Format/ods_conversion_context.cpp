@@ -519,6 +519,20 @@ void ods_conversion_context::end_columns()
 		add_column(current_table()->current_column() + 1, repeat, 0, true);
 	}
 }
+void ods_conversion_context::add_repeated_cells(int repeated, int xfd_style)
+{
+	if (repeated < 1) return;
+
+	std::wstring style_cell_name;
+	if (xfd_style >= 0)
+	{
+		odf_style_state_ptr style_state;
+		styles_context()->find_odf_style_state(xfd_style, style_family::TableCell, style_state, false, true);
+		if (style_state)
+			style_cell_name = style_state->get_name();
+	}
+	current_table()->add_default_cell(repeated, style_cell_name);
+}
 void ods_conversion_context::start_rows()
 {
 }
