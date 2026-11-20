@@ -1395,6 +1395,25 @@ void text_notes_configuration::create_child_element(const std::wstring & Ns, con
     else
         CP_NOT_APPLICABLE_ELM();    
 }
+void text_notes_configuration::serialize(std::wostream & strm)
+{
+	CP_XML_WRITER(strm)
+	{
+		CP_XML_NODE_SIMPLE()
+		{
+			CP_XML_ATTR(L"text:note-class", noteclass_);
+			CP_XML_ATTR_OPT(L"text:citation-style-name", text_citation_style_name_);
+			CP_XML_ATTR_OPT(L"text:citation-body-style-name", text_citation_body_style_name_);
+			CP_XML_ATTR_OPT(L"text:default-style-name", text_default_style_name_);
+			CP_XML_ATTR_OPT(L"text:master-page-name", text_master_page_name_);
+			CP_XML_ATTR_OPT(L"text:start-value", text_start_value_);
+			common_num_format_prefix_suffix_attlist_.serialize(CP_GET_XML_NODE());
+			common_num_format_attlist_.serialize(CP_GET_XML_NODE());
+			CP_XML_ATTR_OPT(L"text:start-numbering-at", text_start_numbering_at_);
+			CP_XML_ATTR_OPT(L"text:footnotes-position", text_footnotes_position_);
+		}
+	}
+}
 // text:linenumbering-configuration
 //-------------------------------------------------------------------------------------------------------
 const wchar_t * text_linenumbering_configuration::ns = L"text";

@@ -13,6 +13,9 @@
 
 #include "common.h"
 
+#include "OfficeUtils/src/OfficeUtils.h"
+#include "DesktopEditor/common/File.h"
+
 #include <string>
 #include <vector>
 
@@ -144,6 +147,52 @@ void expect_endnote_page_after_spacer(const std::wstring& xml, const std::wstrin
     EXPECT_GT(xml.find(L"<w:sectPr", carrier), xml.find(L"</w:p>", carrier)) << "the endnote page paragraph has a section";
 }
 
+struct odt_parts
+{
+    std::wstring content;
+    std::wstring styles;
+    std::wstring settings;
+};
+
+// ODT -> DOCX -> ODT, as a save of an opened ODT does.
+odt_parts round_trip(const std::wstring& name)
+{
+    odt_parts result;
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/" + name);
+    if (dir.empty())
+        return result;
+    const std::wstring docx = dir + L".docx";
+    COfficeUtils utils(NULL);
+    if (S_OK != utils.CompressFileOrDirectory(dir, docx, true))
+        return result;
+    const std::wstring back = convert_ooxml_to_odf_dir(docx);
+    NSFile::CFileBinary::Remove(docx);
+    if (back.empty())
+        return result;
+    result.content = read_part(back, L"content.xml");
+    result.styles = read_part(back, L"styles.xml");
+    result.settings = read_part(back, L"settings.xml");
+    return result;
+}
+
+// Paragraphs and headings of the body, without those inside notes.
+size_t body_paragraphs(const std::wstring& content)
+{
+    const size_t start = content.find(L"<office:text");
+    const size_t end = content.find(L"</office:text>");
+    if (start == std::wstring::npos || end == std::wstring::npos)
+        return 0;
+    std::wstring body = content.substr(start, end - start);
+    for (size_t note = body.find(L"<text:note-body"); note != std::wstring::npos; note = body.find(L"<text:note-body"))
+    {
+        const size_t close = body.find(L"</text:note-body>", note);
+        if (close == std::wstring::npos)
+            return 0;
+        body.erase(note, close + 17 - note);
+    }
+    return count(body, L"<text:p ") + count(body, L"<text:p>") + count(body, L"<text:p/>") + count(body, L"<text:h ") +
+           count(body, L"<text:h>");
+}
 } // namespace
 
 // The endnote configuration names the page style Endnote: the endnote page is
@@ -255,6 +304,25 @@ TEST(OdtToDocxEndnotePage, EndnotePageAfterATableAHeadingOrASection)
     expect_endnote_page_after_spacer(convert(L"endnote_page_table.odt"), L"CELL");
     expect_endnote_page_after_spacer(convert(L"endnote_page_heading.odt"), L"LAST");
     expect_endnote_page_after_spacer(convert(L"endnote_page_ends_in_section.odt"), L"LAST");
+}
+
+// Saving such a document again (DOCX -> ODT) gives the endnote page back: the
+// endnotes keep their page (no ContinuousEndnotes), and neither empty
+// paragraph is written into the body.
+TEST(OdtToDocxEndnotePage, RoundTripKeepsTheEndnotePage)
+{
+    for (const wchar_t* name : {L"endnote_page.odt", L"endnote_page_table.odt", L"endnote_page_heading.odt",
+                                L"endnote_page_ends_in_section.odt"})
+    {
+        const odt_parts odt = round_trip(name);
+        ASSERT_FALSE(odt.content.empty()) << "round trip failed";
+        EXPECT_EQ(std::wstring::npos, odt.settings.find(L"config:name=\"ContinuousEndnotes\""));
+        const size_t config = odt.styles.find(L"text:note-class=\"endnote\"");
+        ASSERT_NE(std::wstring::npos, config) << "no endnote configuration";
+        const size_t page = odt.styles.find(L"text:master-page-name=\"", odt.styles.rfind(L'<', config));
+        EXPECT_LT(page, odt.styles.find(L'>', config)) << "the endnote configuration names no page style";
+        EXPECT_EQ(2u, body_paragraphs(odt.content));
+    }
 }
 
 // With ContinuousEndnotes LibreOffice prints the endnotes right after the

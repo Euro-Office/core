@@ -123,6 +123,30 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_columns.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_continuous.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_inherited_header.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_line_numbers.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_missing_endnote.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_no_endnotes.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_no_type.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_numbered.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_numbering.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_numbering_continuous.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_section_end.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_section_end_in_section.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_with_text.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_spacer.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_spacer_centered.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_spacer_font.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_spacer_lines.docx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OdfFile/Test/test_odf/ExampleFiles/page_background_image_no_page_size.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers_duplicate.docx",
