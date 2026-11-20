@@ -387,7 +387,9 @@ TEST(XlsxToXls, NoSheetResolves)
 	std::wstring corrupt;
 	ASSERT_TRUE(EditXlsxPart(ExampleFile(L"fmla.xlsx"), kWorkbook, "r:id=\"rId[123]\"", "r:id=\"rId99\"", corrupt));
 	std::wstring out = GetWorkDir() + FILE_SEPARATOR_STR + L"out.xls";
-	EXPECT_NE(ConvertCmdLine(corrupt, out), 0);
+	// x2t reports a convert error (exit 80, AVS_FILEUTILS_ERROR_CONVERT) and writes no file.
+	EXPECT_EQ(ConvertCmdLine(corrupt, out), 80);
+	EXPECT_FALSE(NSFile::CFileBinary::Exists(out)) << "x2t wrote an XLS with no resolved sheets";
 }
 
 // A worksheet cache source without <worksheetSource> used to dereference a null range. Such a cache has no source

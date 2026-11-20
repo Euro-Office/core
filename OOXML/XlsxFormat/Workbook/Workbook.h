@@ -140,7 +140,7 @@ namespace OOX
 			// so leaving it out would move every reference to a later sheet one tab to the left.
 			std::vector<SheetForXLS> GetSheetsForXLS() const;
 			// The <pivotCache>s that XLS export writes, in order; a cache's position here is its index in the XLS. Left
-			// out: a cache without a cacheId or with the cacheId of an earlier one; one whose XLS stream id (cacheId + 1)
+			// out: a cache without a cacheId or with the cacheId of an earlier written one; one whose XLS stream id (cacheId + 1)
 			// does not fit the field a pivot view finds its cache by (SxView::iCache); one whose r:id does not resolve to
 			// a pivot cache definition part or whose definition does not parse; a worksheet source without its range.
 			// CWorksheet::toXLS writes only the pivot views of the caches listed here, so a cache is written whole or
