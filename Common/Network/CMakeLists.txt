@@ -10,6 +10,7 @@ if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
 
+set(OPENSSL_ROOT_DIR "${OPENSSL_INSTALL_DIR_ABS}")
 find_package(sioxx REQUIRED)
 
 add_library(kernel_network SHARED
