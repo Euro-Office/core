@@ -31,7 +31,7 @@ namespace Writers
 	{
 	}
 
-	void DocumentRelsWriter::Write(bool bGlossary)
+	void DocumentRelsWriter::Write(bool  /*bGlossary*/)
 	{
 		std::wstring s_Common;
 

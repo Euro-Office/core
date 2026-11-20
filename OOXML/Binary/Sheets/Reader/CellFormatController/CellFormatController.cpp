@@ -96,7 +96,7 @@ CellFormatController::CellFormatController(OOX::Spreadsheet::CStyles *styles, _I
 	m_pStyles->m_oCellXfs->m_oCount.Init();
 	m_pStyles->m_oCellXfs->m_oCount->SetValue(2);
 
-	// Normall default
+	// Normal default
 	auto pXfs = new OOX::Spreadsheet::CXfs();
 	pXfs->m_oBorderId.Init();		pXfs->m_oBorderId->SetValue(0);
 	pXfs->m_oFillId.Init();			pXfs->m_oFillId->SetValue(0);
@@ -272,7 +272,7 @@ int CellFormatController::ProcessCellType(OOX::Spreadsheet::CCell *pCell, const 
 		{
 			sFormula = ConvertFormulaArguments(value.substr(1));
 		}
-		if (false == sFormula.empty())
+		if (!sFormula.empty())
 		{
 			pCell_->m_oFormula.Init(); 
 			pCell_->m_oFormula->m_sText = sFormula;
@@ -323,10 +323,7 @@ std::wstring FormulaController::shielding_text(boost::wsmatch const& what)
 }
 bool CellFormatController::isFormula(const std::wstring& formula)
 {
-	if (std::wstring::npos != formula.find(L"=")) return false;
-
-	// ...
-	return true;
+	return std::wstring::npos == formula.find(L"=");
 }
 std::wstring CellFormatController::ConvertFormulaArguments(const std::wstring& formula)
 {
@@ -338,7 +335,7 @@ std::wstring CellFormatController::ConvertFormulaArguments(const std::wstring& f
 		boost::wregex(L"('.*?')|(\".*?\")"),
 		&FormulaController::shielding_text, boost::match_default | boost::format_all);
 
-	if (true == isFormula(res))
+	if (isFormula(res))
 	{
 		XmlUtils::replace_all(res, L";", L","); // in {} ? ->shielding
 
