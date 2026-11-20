@@ -1495,7 +1495,8 @@ void CFontList::LoadFromArrayFiles(std::vector<std::wstring>& oArray, int nFlag)
 }
 void CFontList::LoadFromFolder(const std::wstring& strDirectory)
 {
-	std::vector<std::wstring> oArray = NSDirectory::GetFiles(strDirectory, true);
+	std::vector<std::wstring> oArray;
+	NSDirectory::GetFilesFollowSymlinks(strDirectory, oArray, true);
 	this->LoadFromArrayFiles(oArray);
 }
 
@@ -1811,8 +1812,8 @@ std::vector<std::wstring> CApplicationFonts::GetSetupFontFiles(const bool& bIsUs
 			GetUserNameW(sUserName, &nUserNameLen);
 			std::wstring strUserName(sUserName, nUserNameLen - 1);
 
-			NSDirectory::GetFiles2(L"C:\\Users\\" + strUserName + L"\\AppData\\Local\\Microsoft\\Windows\\Fonts", oArray2, false);
-			NSDirectory::GetFiles2(L"C:\\Users\\" + strUserName + L"\\AppData\\Local\\Microsoft\\FontCache\\4\\CloudFonts", oArray2, true);
+			NSDirectory::GetFilesFollowSymlinks(L"C:\\Users\\" + strUserName + L"\\AppData\\Local\\Microsoft\\Windows\\Fonts", oArray2, false);
+			NSDirectory::GetFilesFollowSymlinks(L"C:\\Users\\" + strUserName + L"\\AppData\\Local\\Microsoft\\FontCache\\4\\CloudFonts", oArray2, true);
 		}
 
 		for (std::vector<std::wstring>::iterator i = oArray2.begin(); i != oArray2.end(); i++)
@@ -1826,18 +1827,19 @@ std::vector<std::wstring> CApplicationFonts::GetSetupFontFiles(const bool& bIsUs
 #endif
 
 #if defined(__linux__) && !defined(_MAC) && !defined(__ANDROID__)
-	std::vector<std::wstring> _array = NSDirectory::GetFiles(L"/usr/share/fonts", true);
-	NSDirectory::GetFiles2(L"/usr/share/X11/fonts", _array, true);
-	NSDirectory::GetFiles2(L"/usr/X11R6/lib/X11/fonts", _array, true);
-	NSDirectory::GetFiles2(L"/run/host/fonts", _array, true);
+	std::vector<std::wstring> _array;
+	NSDirectory::GetFilesFollowSymlinks(L"/usr/share/fonts", _array, true);
+	NSDirectory::GetFilesFollowSymlinks(L"/usr/share/X11/fonts", _array, true);
+	NSDirectory::GetFilesFollowSymlinks(L"/usr/X11R6/lib/X11/fonts", _array, true);
+	NSDirectory::GetFilesFollowSymlinks(L"/run/host/fonts", _array, true);
 
 	if (bIsUseUserFonts)
-		NSDirectory::GetFiles2(L"/usr/local/share/fonts", _array, true);
+		NSDirectory::GetFilesFollowSymlinks(L"/usr/local/share/fonts", _array, true);
 
 #ifndef BUILDING_WASM_MODULE
 	std::wstring custom_fonts_path = NSSystemUtils::GetEnvVariable(L"CUSTOM_FONTS_PATH");
 	if (!custom_fonts_path.empty())
-		NSDirectory::GetFiles2(custom_fonts_path, _array, true);
+		NSDirectory::GetFilesFollowSymlinks(custom_fonts_path, _array, true);
 #endif
 
 	return _array;
@@ -1845,7 +1847,7 @@ std::vector<std::wstring> CApplicationFonts::GetSetupFontFiles(const bool& bIsUs
 
 #if defined(_MAC) && !defined(_IOS)
 	std::vector<std::wstring> _array = NSDirectory::GetFiles(L"/Library/Fonts", true);
-	NSDirectory::GetFiles2(L"/System/Library/Fonts", _array, true);
+	NSDirectory::GetFilesFollowSymlinks(L"/System/Library/Fonts", _array, true);
 
 	std::set<std::wstring> installedList = GetInstalledFontsMac();
 	for (const auto& sysPath : installedList) {
