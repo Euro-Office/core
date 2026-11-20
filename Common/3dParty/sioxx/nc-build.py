@@ -20,7 +20,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "2"
+    version = "3"
 )
 
 sioxx_src = nc.work_dir / "sioxx"
@@ -30,6 +30,15 @@ def cmake_generator_args() -> list[str]:
 
 def cmake_build_args( cpu_count: int ) -> list[str]:
     return [] if nc.is_windows() else [ f"--parallel={cpu_count}" ]
+
+def cmake_android_args() -> list[str]:
+    if not nc.is_android():
+        return []
+    return [
+        f"-DCMAKE_TOOLCHAIN_FILE={ nc.android_ndk_root() / 'build' / 'cmake' / 'android.toolchain.cmake' }",
+        f"-DANDROID_ABI={ nc.android_abi() }",
+        f"-DANDROID_PLATFORM=android-{ nc.ANDROID_API_LEVEL }",
+    ]
 
 def fetch_and_patch():
     nc.create_workdir()
@@ -57,6 +66,7 @@ def build_and_install():
         [
             "cmake", "-S", str(sioxx_src), "-B", str(build_dir),
             *cmake_generator_args(),
+            *cmake_android_args(),
             "-DCMAKE_BUILD_TYPE=Release",
             f"-DCMAKE_INSTALL_PREFIX={nc.install_dir}",
             f"-DCMAKE_PREFIX_PATH={boost_install_dir};{nlohmann_json_install_dir};{openssl_install_dir}",

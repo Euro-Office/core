@@ -197,7 +197,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,cryptopp,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff,libwebp,libde265,libaom,libheif,leptonica,jbig2enc,djvulibre"
+                "--only=apple,boost,brotli,cryptopp,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,nlohmann_json,sioxx,v8,zlib-ng,libpng,libtiff,libwebp,libde265,libaom,libheif,leptonica,jbig2enc,djvulibre"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
