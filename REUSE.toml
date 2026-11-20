@@ -123,6 +123,9 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/deletion_around_note.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/deletion_over_paragraph_break.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/deletion_same_id_apart.docx",
     "OdfFile/Test/test_odf/ExampleFiles/page_background_image_no_page_size.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers_duplicate.docx",
