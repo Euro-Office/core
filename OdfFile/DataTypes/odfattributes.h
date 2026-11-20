@@ -51,7 +51,7 @@ public:
         {         
             attributes::value_type val = attr.get(QualifiedName);
 
-            _CP_LOG << L"[error] : invalud attribute value [" << QualifiedName << L":" << ( (val) ? (*val) : (L"?")) << L"]\n";
+            _CP_LOG << L"[error] : invalid attribute value [" << QualifiedName << L":" << ( (val) ? (*val) : (L"?")) << L"]\n";
         }
         return optional_v_type();
     }

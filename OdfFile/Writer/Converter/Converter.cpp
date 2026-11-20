@@ -76,7 +76,7 @@ namespace Oox2Odf
 {
     Converter::Converter(const std::wstring & path, const std::wstring  & type, const std::wstring & fontsPath, bool bTemplate, const std::wstring & tempPath)
     { 
-		impl_ = NULL;
+		impl_ = nullptr;
 		
         if (type == _T("text"))			impl_ = new DocxConverter(path, bTemplate);
         if (type == _T("spreadsheet"))	impl_ = new XlsxConverter(path, bTemplate);
@@ -113,7 +113,7 @@ bool OoxConverter::write(const std::wstring & out_path, const std::wstring & tem
 {
 	if (!output_document)return false;
 
-	if (false == documentID.empty())
+	if (!documentID.empty())
 	{
 		output_document->add_binary(L"documentID", NSFile::CUtf8Converter::GetUtf8StringFromUnicode(documentID));
 	}
@@ -127,7 +127,7 @@ bool OoxConverter::write(const std::wstring & out_path, const std::wstring & tem
 		//encrypt files
 		std::wstring temp_folder = NSDirectory::CreateDirectoryWithUniqueName(temp_path);
 
-		if (false == temp_folder.empty())
+		if (!temp_folder.empty())
 		{
 			output_document->write(temp_folder, true);
 
@@ -143,14 +143,14 @@ bool OoxConverter::write(const std::wstring & out_path, const std::wstring & tem
 std::wstring EncodeBase64(const std::string & value)
 {
 	int nLength = 0;
-	char *pData = NULL;
+	char *pData = nullptr;
 	std::wstring result;
 
 	NSFile::CBase64Converter::Encode((BYTE*)value.c_str(), (int)value.length(), pData, nLength, NSBase64::B64_BASE64_FLAG_NOCRLF);
 	if (pData)
 	{
 		result = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)pData, nLength);
-		delete []pData; pData = NULL;
+		delete []pData; pData = nullptr;
 	}
 	return result;
 }
@@ -190,8 +190,6 @@ bool OoxConverter::encrypt_file (const std::wstring &password, const std::wstrin
 	CRYPT::ODFEncryptor		encryptor;
 	CRYPT::_odfCryptData	cryptData;
 
-	std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvMethodEncrypt);
-
 //	if (sApplication == L"Weak")
 //	{
 ////-----------------------
@@ -223,14 +221,14 @@ bool OoxConverter::encrypt_file (const std::wstring &password, const std::wstrin
 //-----------------------
 	NSFile::CFileBinary file;
 
-	if (false == file.OpenFile(srcPath))
+	if (!file.OpenFile(srcPath))
 		return false;
 
 	DWORD	size_inp = 0;
 	size = file.GetFileSize();
 
 	unsigned char* data_inp	= new unsigned char[size];
-	unsigned char* data_out	= NULL;
+	unsigned char* data_out	= nullptr;
 	
 	file.ReadFile(data_inp, size, size_inp); 
 	file.CloseFile();	
@@ -244,7 +242,7 @@ bool OoxConverter::encrypt_file (const std::wstring &password, const std::wstrin
 //------------------------------------------------------------------------------------------------------------
 	if (!data_out) return false;
 
-	if (false == file.CreateFileW(dstPath)) return false;
+	if (!file.CreateFileW(dstPath)) return false;
 	
 	file.WriteFile(data_out, size_out);
 	file.CloseFile();
@@ -322,13 +320,13 @@ bool OoxConverter::encrypt_file (const std::wstring &password, const std::wstrin
 }
 void OoxConverter::set_temp_directory(const std::wstring & tempPath)
 {
-	if (odf_context() == NULL) return;
+	if (odf_context() == nullptr) return;
 
 	odf_context()->set_temp_directory(tempPath);
 }
 void OoxConverter::set_fonts_directory(const std::wstring &fontsPath)
 {
-	if (odf_context() == NULL) return;
+	if (odf_context() == nullptr) return;
 
     odf_context()->set_fonts_directory(fontsPath);
 }
@@ -359,7 +357,7 @@ void OoxConverter::convert_customs(OOX::IFileContainer* container)
 	if (!container) return;
 	smart_ptr<PPTX::CustomProperties> customProperties = container->Find(OOX::FileTypes::CustomProperties).smart_dynamic_cast<PPTX::CustomProperties>();
 
-	if (false == customProperties.IsInit()) return;
+	if (!customProperties.IsInit()) return;
 
 	for (auto prop : customProperties->m_arProperties)
 	{
@@ -418,7 +416,7 @@ void OoxConverter::convert(OOX::WritingElement  *oox_unknown)
 {
 	try
 	{
-		if (oox_unknown == NULL)return;
+		if (oox_unknown == nullptr)return;
 
 		switch(oox_unknown->getType())
 		{
@@ -566,7 +564,7 @@ void OoxConverter::convert(OOX::WritingElement  *oox_unknown)
 			}break;
 			case OOX::et_v_shape:
 			{
-				convert(dynamic_cast<OOX::Vml::CShape*>(oox_unknown), NULL);
+				convert(dynamic_cast<OOX::Vml::CShape*>(oox_unknown), nullptr);
 			}break;
 			case OOX::et_v_oval:
 			{

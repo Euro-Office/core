@@ -46,13 +46,13 @@ namespace Oox2Odf
 
 	void OoxConverter::convert(OOX::Vml::CShapeType *vml_shape_type)
 	{
-		if (vml_shape_type == NULL) return;
+		if (vml_shape_type == nullptr) return;
 
 		//save cash to other shape with this type
 		std::wstring strId = vml_shape_type->m_sId.get_value_or(L"");
 		if (strId.empty()) vml_shape_type->m_sType.get_value_or(L"");
 
-		if (false == strId.empty())
+		if (!strId.empty())
 		{
 			if (strId[0] == (wchar_t)('#'))
 			{
@@ -68,7 +68,7 @@ namespace Oox2Odf
 
 	void OoxConverter::convert(SimpleTypes::Vml::CCssStyle *vml_style)
 	{
-		if (vml_style == NULL) return;
+		if (vml_style == nullptr) return;
 
 		_CP_OPT(double) width, height, x, y, x2, y2; // in pt
 
@@ -79,7 +79,7 @@ namespace Oox2Odf
 
 		for (size_t i = 0; i < vml_style->m_arrProperties.size(); i++)
 		{
-			if (vml_style->m_arrProperties[i] == NULL) continue;
+			if (vml_style->m_arrProperties[i] == nullptr) continue;
 
 			switch (vml_style->m_arrProperties[i]->get_Type())
 			{
@@ -112,7 +112,7 @@ namespace Oox2Odf
 			{
 				switch (vml_style->m_arrProperties[i]->get_Value().eMsoPosHor)
 				{
-				case SimpleTypes::Vml::cssmsoposhorAbsolute:	odf_context()->drawing_context()->set_horizontal_pos(2); break;
+				case SimpleTypes::Vml::cssmsoposhorAbsolute:
 				case SimpleTypes::Vml::cssmsoposhorLeft:		odf_context()->drawing_context()->set_horizontal_pos(2); break;
 				case SimpleTypes::Vml::cssmsoposhorCenter:		odf_context()->drawing_context()->set_horizontal_pos(0); break;
 				case SimpleTypes::Vml::cssmsoposhorRight:		odf_context()->drawing_context()->set_horizontal_pos(4); break;
@@ -205,8 +205,8 @@ namespace Oox2Odf
 			{
 				switch (vml_style->m_arrProperties[i]->get_Value().ePosition)
 				{
-				case SimpleTypes::Vml::csspositionStatic:	break;
-				case SimpleTypes::Vml::csspositionAbsolute:	break;
+				case SimpleTypes::Vml::csspositionStatic:
+				case SimpleTypes::Vml::csspositionAbsolute:
 				case SimpleTypes::Vml::csspositionRelative:	break;
 				}
 				bPosition = true;
@@ -259,7 +259,7 @@ namespace Oox2Odf
 				case SimpleTypes::Vml::cssvtextanchorBottomCenterBaseline:	odf_context()->drawing_context()->set_textarea_vertical_align(0); break;
 				}break;
 			case SimpleTypes::Vml::cssptMsoFitShapeToText:
-				if (vml_style->m_arrProperties[i]->get_Value().bValue == true)
+				if (vml_style->m_arrProperties[i]->get_Value().bValue)
 				{
 					odf_context()->drawing_context()->set_text_box_min_size(0, 0);
 				}break;
@@ -279,14 +279,15 @@ namespace Oox2Odf
 			odf_context()->drawing_context()->set_size(width, height);
 			odf_context()->drawing_context()->set_position(x, y);
 
-			if (bTextRelativeX && bTextRelativeY)
+			const bool relative		= bTextRelativeX && bTextRelativeY;
+			const bool sameAnchor	= (anchor_type_x && anchor_type_y) && (*anchor_type_x == *anchor_type_y);
+
+			if (relative || (!sameAnchor && !(x && y) && !bPosition))
 				odf_context()->drawing_context()->set_anchor(4);
-			else if ((anchor_type_x && anchor_type_y) && (*anchor_type_x == *anchor_type_y))
+			else if (sameAnchor)
 				odf_context()->drawing_context()->set_anchor(*anchor_type_x);
 			else if (x && y)
 				odf_context()->drawing_context()->set_anchor(2);
-			else if (false == bPosition)
-				odf_context()->drawing_context()->set_anchor(4);
 
 
 			//if (x && y && !anchor_set) 
@@ -296,11 +297,11 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CShape *vml_shape, OOX::VmlOffice::COLEObject* vml_object)
 	{
-		if (vml_shape == NULL) return;
+		if (vml_shape == nullptr) return;
 
 		if (vml_shape->m_sType.IsInit())
 		{
-			if ((false == vml_shape->m_sType->empty()) && (vml_shape->m_sType->at(0) == (wchar_t)('#')))
+			if ((!vml_shape->m_sType->empty()) && (vml_shape->m_sType->at(0) == (wchar_t)('#')))
 			{
 				vml_shape->m_sType = vml_shape->m_sType->substr(1);
 			}
@@ -393,7 +394,7 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CImage *vml_image)
 	{
-		if (vml_image == NULL) return;
+		if (vml_image == nullptr) return;
 
 		odf_context()->drawing_context()->start_drawing();
 		odf_context()->drawing_context()->start_shape(3000);
@@ -405,7 +406,7 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CImageData *vml_image_data)
 	{
-		if (vml_image_data == NULL) return;
+		if (vml_image_data == nullptr) return;
 
 		std::wstring pathImage;
 		double Width = 0, Height = 0;
@@ -456,20 +457,20 @@ namespace Oox2Odf
 
 	void OoxConverter::convert(OOX::Vml::CArc *vml_arc)
 	{
-		if (vml_arc == NULL) return;
+		if (vml_arc == nullptr) return;
 
 		convert(dynamic_cast<OOX::Vml::CVmlCommonElements *>(vml_arc));
 	}
 	void OoxConverter::convert(OOX::Vml::CBackground *vml_background)
 	{
-		if (vml_background == NULL) return;
+		if (vml_background == nullptr) return;
 
 		convert(dynamic_cast<OOX::Vml::CVmlCommonElements *>(vml_background));
 	}
 
 	void OoxConverter::convert(OOX::Vml::CFill	*vml_fill)
 	{
-		if (vml_fill == NULL) return;
+		if (vml_fill == nullptr) return;
 
 		odf_context()->drawing_context()->start_area_properties();
 
@@ -480,7 +481,7 @@ namespace Oox2Odf
 
 		if (vml_fill->m_oColor.IsInit())
 		{
-			nRgbColor1 = ((unsigned int)(((BYTE)(vml_fill->m_oColor->Get_B())
+			nRgbColor1 = ((((BYTE)(vml_fill->m_oColor->Get_B())
 				| ((unsigned int)((BYTE)(vml_fill->m_oColor->Get_G())) << 8))
 				| (((unsigned int)(BYTE)(vml_fill->m_oColor->Get_R())) << 16)));
 
@@ -489,7 +490,7 @@ namespace Oox2Odf
 
 		if (vml_fill->m_oColor2.IsInit())
 		{
-			nRgbColor2 = ((unsigned int)(((BYTE)(vml_fill->m_oColor2->Get_B())
+			nRgbColor2 = ((((BYTE)(vml_fill->m_oColor2->Get_B())
 				| ((unsigned int)((BYTE)(vml_fill->m_oColor2->Get_G())) << 8))
 				| (((unsigned int)(BYTE)(vml_fill->m_oColor2->Get_R())) << 16)));
 			sRgbColor2 = XmlUtils::ToString(*nRgbColor2, L"%06X");
@@ -608,7 +609,7 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CLine	*vml_line)
 	{
-		if (vml_line == NULL) return;
+		if (vml_line == nullptr) return;
 
 		odf_context()->drawing_context()->start_drawing();
 
@@ -631,7 +632,7 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::COval *vml_oval)
 	{
-		if (vml_oval == NULL) return;
+		if (vml_oval == nullptr) return;
 
 		odf_context()->drawing_context()->start_drawing();
 
@@ -644,7 +645,7 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CPolyLine	*vml_polyline)
 	{
-		if (vml_polyline == NULL) return;
+		if (vml_polyline == nullptr) return;
 
 		odf_context()->drawing_context()->start_drawing();
 		odf_context()->drawing_context()->start_shape(1001);
@@ -656,7 +657,7 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CRect	*vml_rect)
 	{
-		if (vml_rect == NULL) return;
+		if (vml_rect == nullptr) return;
 
 		odf_context()->drawing_context()->start_drawing();
 		odf_context()->drawing_context()->start_shape(SimpleTypes::shapetypeRect);
@@ -669,7 +670,7 @@ namespace Oox2Odf
 
 	void OoxConverter::convert(OOX::Vml::CRoundRect	*vml_roundrect)
 	{
-		if (vml_roundrect == NULL) return;
+		if (vml_roundrect == nullptr) return;
 
 		odf_context()->drawing_context()->start_drawing();
 		odf_context()->drawing_context()->start_shape(SimpleTypes::shapetypeRect);
@@ -693,7 +694,7 @@ namespace Oox2Odf
 
 	void OoxConverter::convert(OOX::Vml::CCurve	*vml_curve)
 	{
-		if (vml_curve == NULL) return;
+		if (vml_curve == nullptr) return;
 
 		odf_context()->drawing_context()->start_drawing();
 
@@ -705,8 +706,8 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CShadow *vml_shadow)
 	{
-		if (vml_shadow == NULL) return;
-		if (vml_shadow->m_oOn.GetValue() == false) return;
+		if (vml_shadow == nullptr) return;
+		if (!static_cast<bool>(vml_shadow->m_oOn.GetValue())) return;
 
 		std::wstring hexColor = vml_shadow->m_oColor.ToString();
 		_CP_OPT(double) opacity;
@@ -721,9 +722,9 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CStroke *vml_stroke)
 	{
-		if (vml_stroke == NULL) return;
-		if (vml_stroke->m_oOn.IsInit() && vml_stroke->m_oOn->GetBool() == false) return;
-		if (vml_stroke->m_oColor.IsInit() == false) return; // ?????
+		if (vml_stroke == nullptr) return;
+		if (vml_stroke->m_oOn.IsInit() && !vml_stroke->m_oOn->GetBool()) return;
+		if (!vml_stroke->m_oColor.IsInit()) return; // ?????
 
 				//nullable<SimpleTypes::CColorType<SimpleTypes::colortypeBlack>>        m_oColor2;
 				//SimpleTypes::Vml::CVmlDashStyle<SimpleTypes::Vml::vmldashstyleSolid>  m_oDahsStyle;
@@ -791,9 +792,9 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CTextbox *vml_textbox)
 	{
-		if (vml_textbox == NULL) return;
+		if (vml_textbox == nullptr) return;
 
-		if (vml_textbox->m_oTxtbxContent.IsInit() == false) return;
+		if (!vml_textbox->m_oTxtbxContent.IsInit()) return;
 		if (vml_textbox->m_oTxtbxContent->m_arrItems.empty()) return;
 
 		convert(vml_textbox->m_oStyle.GetPointer());
@@ -831,9 +832,9 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CTextPath *vml_textpath)
 	{
-		if (vml_textpath == NULL) return; //this is some kind of curly text
+		if (vml_textpath == nullptr) return; //this is some kind of curly text
 
-		if (vml_textpath->m_sString.IsInit() == false) return;
+		if (!vml_textpath->m_sString.IsInit()) return;
 
 		odf_context()->drawing_context()->change_text_box_2_wordart();
 
@@ -846,7 +847,7 @@ namespace Oox2Odf
 
 			for (size_t i = 0; i < vml_textpath->m_oStyle->m_arrProperties.size(); i++)
 			{
-				if (vml_textpath->m_oStyle->m_arrProperties[i] == NULL) continue;
+				if (vml_textpath->m_oStyle->m_arrProperties[i] == nullptr) continue;
 
 				switch (vml_textpath->m_oStyle->m_arrProperties[i]->get_Type())
 				{
@@ -858,8 +859,6 @@ namespace Oox2Odf
 					text_properties->fo_font_size_ = odf_types::length(vml_textpath->m_oStyle->m_arrProperties[i]->get_Value().oValue.dValue, odf_types::length::pt);
 					break;
 				case SimpleTypes::Vml::cssptFontStyle:
-					//width = vml_textpath->m_oStyle->m_arrProperties[i]->get_Value().oValue.dValue;
-					break;
 				case SimpleTypes::Vml::cssptFontWeight:
 					//width = vml_textpath->m_oStyle->m_arrProperties[i]->get_Value().oValue.dValue;
 					break;
@@ -881,7 +880,6 @@ namespace Oox2Odf
 					case SimpleTypes::Vml::cssvtextalignJustify:
 						paragraph_properties->fo_text_align_ = odf_types::text_align(odf_types::text_align::Left); break;
 					case SimpleTypes::Vml::cssvtextalignLetterJustify:
-						paragraph_properties->fo_text_align_ = odf_types::text_align(odf_types::text_align::Justify); break;
 					case SimpleTypes::Vml::cssvtextalignStretchJustify:
 						paragraph_properties->fo_text_align_ = odf_types::text_align(odf_types::text_align::Justify); break;
 					}break;
@@ -905,7 +903,7 @@ namespace Oox2Odf
 
 	void OoxConverter::convert(OOX::VmlWord::CWrap	*vml_wrap)
 	{
-		if (vml_wrap == NULL) return;
+		if (vml_wrap == nullptr) return;
 
 		odf_context()->drawing_context()->set_default_wrap_style();
 
@@ -990,7 +988,7 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CVmlCommonElements *vml_common)
 	{
-		if (vml_common == NULL) return;
+		if (vml_common == nullptr) return;
 
 		convert(vml_common->m_oStyle.GetPointer());
 
@@ -1033,7 +1031,7 @@ namespace Oox2Odf
 
 			if (oRgbColor)
 			{
-				unsigned int nRgbColor = ((unsigned int)(((BYTE)(oRgbColor->Get_B())
+				unsigned int nRgbColor = ((((BYTE)(oRgbColor->Get_B())
 					| ((unsigned int)((BYTE)(oRgbColor->Get_G())) << 8))
 					| (((unsigned int)(BYTE)(oRgbColor->Get_R())) << 16)));
 
@@ -1060,7 +1058,7 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CGroup *vml_group)
 	{
-		if (vml_group == NULL) return;
+		if (vml_group == nullptr) return;
 
 		odf_context()->drawing_context()->start_group();
 

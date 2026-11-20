@@ -101,9 +101,9 @@ namespace StarMath
 		if(pElement != nullptr)
 		{
 
-			if(pReader->GetAttribute() != nullptr && !CheckForLeftArgument(pReader->GetGlobalType()))
-				pElement->SetBaseAttribute(pReader->GetAttribute());
-			else if(pReader->GetAttribute() != nullptr && (pReader->GetLocalType() == TypeElement::plus || TypeElement::minus == pReader->GetLocalType() || TypeElement::frac == pReader->GetLocalType() || TypeElement::neg == pReader->GetLocalType()))
+			if(pReader->GetAttribute() != nullptr &&
+				(!CheckForLeftArgument(pReader->GetGlobalType()) ||
+				 pReader->GetLocalType() == TypeElement::plus || TypeElement::minus == pReader->GetLocalType() || TypeElement::frac == pReader->GetLocalType() || TypeElement::neg == pReader->GetLocalType()))
 				pElement->SetBaseAttribute(pReader->GetAttribute());
 			pReader->ClearReader();
 			pElement->Parse(pReader);
@@ -242,9 +242,7 @@ namespace StarMath
 		if(pElement->GetBaseType() == TypeElement::SpecialSymbol)
 		{
 			CElementSpecialSymbol* pSpecial = dynamic_cast<CElementSpecialSymbol*>(pElement);
-			if(pSpecial->GetType() == TypeElement::grid || pSpecial->GetType() == TypeElement::transition)
-				return true;
-			else return false;
+			return pSpecial->GetType() == TypeElement::grid || pSpecial->GetType() == TypeElement::transition;
 		}
 		else return false;
 	}
@@ -717,24 +715,13 @@ namespace StarMath
 	{
 		if(isdigit(cToken))
 			return true;
-		if( L'A' == cToken) return true;
-		else if(L'B' == cToken) return true;
-		else if(L'C' == cToken) return true;
-		else if(L'D' == cToken) return true;
-		else if(L'E' == cToken) return true;
-		else if(L'F' == cToken) return true;
-		else
-			return false;
+		return L'A' == cToken || L'B' == cToken || L'C' == cToken || L'D' == cToken || L'E' == cToken || L'F' == cToken;
 	}
 	bool CAttribute::CheckAttribute()
 	{
-		if(m_bBold == true || m_bItal == true || m_bStrike == true || m_bPhantom == true)
-			return true;
-		else if(!m_wsColor.empty() || !m_wsNameFont.empty())
-			return true;
-		else if(m_iSize != 0 || (m_iAlignment == 1 || m_iAlignment == 2))
-			return true;
-		return false;
+		return m_bBold || m_bItal || m_bStrike || m_bPhantom
+			|| !m_wsColor.empty() || !m_wsNameFont.empty()
+			|| m_iSize != 0 || m_iAlignment == 1 || m_iAlignment == 2;
 	}
 	void CAttribute::RefundOfTheAmountRGB(CStarMathReader *pReader, const int &iRed, const int &iGreen, const int &iBlue)
 	{
@@ -1109,7 +1096,7 @@ namespace StarMath
 		case TypeElement::minus:
 			wsSymbol = L"-";
 			break;
-		case TypeElement::multipl:
+		case TypeElement::multiply:
 			wsSymbol = L"*" ;
 			break;
 		case TypeElement::cdot:
@@ -1188,15 +1175,14 @@ namespace StarMath
 			else if(L"over" == wsToken) return TypeElement::over;
 			else if(L"frac" == wsToken) return TypeElement::frac;
 			else if(L"div" == wsToken) return TypeElement::div;
-			else if(L"*" == wsToken) return TypeElement::multipl;
+			else if(L"*" == wsToken) return TypeElement::multiply;
 			else if(L"/" == wsToken) return TypeElement::division;
 			else if(L"odivide" == wsToken) return TypeElement::odivide;
 			else if(L"wideslash" == wsToken) return TypeElement::wideslash;
 			else if(L"widebslash" == wsToken) return TypeElement::widebslash;
 			else if(L"neg" == wsToken) return TypeElement::neg;
 			else if(L"or" == wsToken) return TypeElement::Or;
-			else if(L"and" == wsToken) return TypeElement::And;
-			else if(L"&" == wsToken) return TypeElement::And;
+			else if(L"and" == wsToken || L"&" == wsToken) return TypeElement::And;
 		}
 		return TypeElement::undefine;
 	}
@@ -1205,11 +1191,8 @@ namespace StarMath
 		switch (enType)
 		{
 		case TypeElement::plus:
-		return true;
 		case TypeElement::plus_minus:
-		return true;
 		case TypeElement::minus_plus:
-		return true;
 		case TypeElement::minus:
 		return true;
 		default:
@@ -1221,12 +1204,7 @@ namespace StarMath
 		pReader->ReadingTheNextToken();
 		if(MixedOperators(pReader->GetLocalType()))
 		{
-			if(CParserStarMathString::CheckNewline(pLastElement))
-				pReader->SetMarkForUnar(true);
-			else if(pReader->GetAttribute() != nullptr)
-				pReader->SetMarkForUnar(true);
-			else 
-				pReader->SetMarkForUnar(false);
+			pReader->SetMarkForUnar(CParserStarMathString::CheckNewline(pLastElement) || pReader->GetAttribute() != nullptr);
 		}
 		else pReader->SetMarkForUnar(false);
 	}
@@ -1234,11 +1212,8 @@ namespace StarMath
 	{
 		switch (m_enTypeBinOp) {
 		case TypeElement::oplus:
-		return true;
 		case TypeElement::ominus:
-		return true;
 		case TypeElement::circ:
-		return true;
 		case TypeElement::Or:
 		return true;
 		default:
@@ -1734,7 +1709,7 @@ namespace StarMath
 			if(enTypeSpecial != TypeElement::undefine)
 				return enTypeSpecial;
 			if(L"imag" == wsTempToken) return TypeElement::Im;
-			else if(L"inf" == wsTempToken) return TypeElement::infinity;
+			else if(L"inf" == wsTempToken || L"infinity" == wsTempToken || L"infty" == wsTempToken || L"infinite" == wsTempToken) return TypeElement::infinity;
 			else if(L"&" == wsTempToken) return TypeElement::grid;
 			else if(L"#" == wsTempToken) return TypeElement::transition;
 			else if(L"imath" == wsTempToken) return TypeElement::imath;
@@ -1776,9 +1751,7 @@ namespace StarMath
 			if(L"#" == wsTempToken) return TypeElement::grid;
 			else if(L"uparrow" == wsTempToken) return TypeElement::uparrow;
 			else if(L"varrho" == wsTempToken) return TypeElement::varrho;
-			else if(L"<?>" == wsTempToken) return TypeElement::emptySquare;
-			else if(L"<?" == wsTempToken) return TypeElement::emptySquare;
-			else if(L"?>" == wsTempToken) return TypeElement::emptySquare;
+			else if(L"<?>" == wsTempToken || L"<?" == wsTempToken || L"?>" == wsTempToken) return TypeElement::emptySquare;
 			else if(L"mline" == wsTempToken) return TypeElement::mline;
 			else if(L"##" == wsTempToken) return TypeElement::transition;
 			else if(L"setn" == wsTempToken) return TypeElement::setN;
@@ -1786,8 +1759,6 @@ namespace StarMath
 			else if(L"setq" == wsTempToken) return TypeElement::setQ;
 			else if(L"setr" == wsTempToken) return TypeElement::setR;
 			else if(L"setc" == wsTempToken) return TypeElement::setC;
-			else if(L"infinity" == wsTempToken) return TypeElement::infinity;
-			else if(L"infty" == wsTempToken) return TypeElement::infinity;
 			else if(L"fact" == wsTempToken) return TypeElement::fact;
 			else if(L"abs" == wsTempToken) return TypeElement::abs;
 			else if(L"`" == wsTempToken) return TypeElement::interval;
@@ -1801,7 +1772,7 @@ namespace StarMath
 			else if(L"fourier" == wsTempToken) return TypeElement::fourier;
 			else if(L"backepsilon" == wsTempToken) return TypeElement::backepsilon;
 			else if(L"leftarrow" == wsTempToken || L"<-" == wsTempToken) return TypeElement::leftarrow;
-			else if(L"rightarrow" == wsTempToken || L"->" == wsTempToken) return TypeElement::rightarrow;
+			else if(L"rightarrow" == wsTempToken || L"->" == wsTempToken || L"tendto" == wsTempToken) return TypeElement::rightarrow;
 			else if(L"dotslow" == wsTempToken) return TypeElement::dotslow;
 			else if(L"dotsaxis" == wsTempToken) return TypeElement::dotsaxis;
 			else if(L"dotsvert" == wsTempToken) return TypeElement::dotsvert;
@@ -1810,16 +1781,14 @@ namespace StarMath
 			else if(L"newline" == wsTempToken) return TypeElement::newline;
 			else if(L"\\" == wsTempToken) return TypeElement::slash;
 			else if(L"and" == wsTempToken) return TypeElement::And;
-			else if(L"infinite" == wsTempToken) return TypeElement::infinity;
 			else if(L"perthousand" == wsTempToken) return TypeElement::perthousand;
-			else if(L"angle" == wsTempToken) return TypeElement::notin;
+			else if(L"angle" == wsTempToken) return TypeElement::not_in;
 			else if(L"strictlygreaterthan" == wsTempToken) return TypeElement::dlriarrow;
 			else if(L"element" == wsTempToken) return TypeElement::in;
 			else if(L"notequal" == wsTempToken) return TypeElement::notequals;
 			else if(L"strictlylessthan" == wsTempToken) return TypeElement::dllearrow;
 			else if(L"identical" == wsTempToken) return TypeElement::equiv;
 			// else if(L"or" == wsTempToken) return TypeElement::Or;
-			else if(L"tendto" == wsTempToken) return TypeElement::rightarrow;
 		}
 		return TypeElement::undefine;
 	}
@@ -1884,12 +1853,10 @@ namespace StarMath
 		if(wsToken == L"LRARROW") return TypeElement::Lrarrow;
 		else if(wsToken == L"lrarrow") return TypeElement::lrarrow;
 		else if(wsToken == L"RARROW") return TypeElement::Rarrow;
-		else if(wsToken == L"rarrow") return TypeElement::rarrow;
-		else if(wsToken == L"->") return TypeElement::rarrow;
+		else if(wsToken == L"rarrow" || wsToken == L"->") return TypeElement::rarrow;
 		else if(wsToken == L"LARROW") return TypeElement::Larrow;
 		else if(wsToken == L"larrow") return TypeElement::larrow;
-		else if(wsToken == L"exarrow") return TypeElement::exarrow;
-		else if(wsToken == L"EXARROW") return TypeElement::exarrow;
+		else if(wsToken == L"exarrow" || wsToken == L"EXARROW") return TypeElement::exarrow;
 		else if(wsToken == L"UPARROW") return TypeElement::UPARROW;
 		else if(wsToken == L"uparrow") return TypeElement::uparrow;
 		else if(wsToken == L"DOWNARROW") return TypeElement::DOWNARROW;
@@ -2603,7 +2570,7 @@ namespace StarMath
 		case TypeElement::angle:
 		m_wsType = L"\u2222";
 		break;
-		case TypeElement::notin:
+		case TypeElement::not_in:
 		m_wsType = L"\u2209";
 		break;
 		case TypeElement::dlriarrow:
@@ -2802,7 +2769,7 @@ namespace StarMath
 			case TypeElement::owns:
 				wsSymbol = L"\u220B";
 				break;
-			case TypeElement::notin:
+			case TypeElement::not_in:
 				wsSymbol = L"\u2209";
 				break;
 		default:
@@ -2817,7 +2784,7 @@ namespace StarMath
 		else if(L"supseteq" == wsToken) return TypeElement::supseteq;
 		else if(L"in" == wsToken) return TypeElement::in;
 		else if(L"owns" == wsToken) return TypeElement::owns;
-		else if(L"notin" == wsToken) return TypeElement::notin;
+		else if(L"notin" == wsToken) return TypeElement::not_in;
 		if(bEQN)
 		{
 			if(L"superset" == wsToken) return TypeElement::supset;
@@ -3827,7 +3794,7 @@ namespace StarMath
 		}
 		else
 		{
-			if(L"lim" == wsToken) return TypeElement::lim;
+			if(L"lim" == wsToken || L"hadd" == wsToken) return TypeElement::lim;
 			else if(L"liminf" == wsToken) return TypeElement::liminf;
 			else if(L"limsup" == wsToken) return TypeElement::limsup;
 			else if(L"iint" == wsToken) return TypeElement::iint;
@@ -3836,7 +3803,6 @@ namespace StarMath
 			else if(L"llint" == wsToken) return TypeElement::llint;
 			else if(L"lllint" == wsToken) return TypeElement::lllint;
 			else if(L"maj" == wsToken) return TypeElement::sum;
-			else if(L"hadd" == wsToken) return TypeElement::lim;
 			else if(L"oper" == wsToken) return TypeElement::oper;
 		}
 		return TypeElement::undefine;
@@ -4294,7 +4260,8 @@ namespace StarMath
 			m_pBaseAttribute->SetAlignment(pAttribute.base_alignment);
 		if(!m_pBaseAttribute->CheckingForEmptiness())
 			m_pBaseAttribute = nullptr;
-		m_pBaseAttribute->SetParent();
+		if(m_pBaseAttribute)
+			m_pBaseAttribute->SetParent();
 	}
 	CAttribute* CStarMathReader::GetBaseAttribute()
 	{
@@ -4348,12 +4315,9 @@ namespace StarMath
 		std::wstring wsTokenHex{};
 		for(;m_itStart != m_itEnd;m_itStart++)
 		{
-			if(iswspace(*m_itStart))
+			if(iswspace(*m_itStart) || !CAttribute::CheckHexPosition(*m_itStart))
 				return wsTokenHex;
-			else if(CAttribute::CheckHexPosition(*m_itStart))
-				wsTokenHex.push_back(*m_itStart);
-			else
-				return wsTokenHex;
+			wsTokenHex.push_back(*m_itStart);
 		}
 		return wsTokenHex;
 	}
@@ -4392,7 +4356,7 @@ namespace StarMath
 		{
 			itStartBracketClose = m_itStart;
 			bool res = GetToken();
-			if (false == res)
+			if (!res)
 			{
 				break;
 			}
