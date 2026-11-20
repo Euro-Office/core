@@ -39,7 +39,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(COMathPara)
 
-			COMathPara(OOX::Document *pMain = NULL);
+			COMathPara(OOX::Document *pMain = nullptr);
 			virtual ~COMathPara();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);

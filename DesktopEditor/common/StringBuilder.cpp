@@ -23,6 +23,9 @@
  *
  */
 #include "StringBuilder.h"
+
+#include <limits>
+
 #include "File.h"
 
 namespace NSStringUtils
@@ -276,7 +279,7 @@ namespace NSStringUtils
 	}
 	void CStringBuilder::WriteString(const wchar_t* pString, size_t nLen)
 	{
-		if (-1 == nLen)
+		if (std::numeric_limits<size_t>::max() == nLen)
 		{
 			nLen = wcslen(pString);
 		}

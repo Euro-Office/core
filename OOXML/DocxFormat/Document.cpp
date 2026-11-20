@@ -259,7 +259,7 @@ namespace OOX
 		CDocx* docx = dynamic_cast<CDocx*>(pMain);
 		if (docx)
 		{
-			OOX::CDocument* current = NULL;
+			OOX::CDocument* current = nullptr;
 			if (type == OOX::FileTypes::Document || type == FileTypes::DocumentMacro)
 			{
 				current = docx->m_oMain.document;
@@ -288,24 +288,24 @@ namespace OOX
 			}
 		}
 
-		read(oRootPath, oPath);
+		CDocument::read(oRootPath, oPath);
 		
 		if (docx)
 		{
 			docx->m_bGlossaryRead = false;
 		}
 	}
-	CDocument::CDocument(XmlUtils::CXmlNode& oNode) : File(NULL), IFileContainer(NULL), WritingElement(NULL)
+	CDocument::CDocument(XmlUtils::CXmlNode& oNode) : File(nullptr), IFileContainer(nullptr), WritingElement(nullptr)
 	{
 		m_bMacroEnabled = false;
 			
-		fromXML( oNode );
+		CDocument::fromXML( oNode );
 	}
-	CDocument::CDocument(XmlUtils::CXmlLiteReader& oReader) : File(NULL), IFileContainer(NULL), WritingElement(NULL)
+	CDocument::CDocument(XmlUtils::CXmlLiteReader& oReader) : File(nullptr), IFileContainer(nullptr), WritingElement(nullptr)
 	{
 		m_bMacroEnabled = false;
 			
-		fromXML( oReader );
+		CDocument::fromXML( oReader );
 	}
 	void CDocument::CreateElements(XmlUtils::CXmlLiteReader &oReader, int Depth)
 	{
@@ -315,7 +315,7 @@ namespace OOX
 		{
 			std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
 				
-			WritingElement *pItem = NULL;
+			WritingElement *pItem = nullptr;
 
 			if (L"altChunk" == sName )
 				pItem = new Logic::CAltChunk( document );
@@ -383,7 +383,7 @@ namespace OOX
 				if (pSectPr->m_bEmpty)
 				{
 					delete pSectPr;
-					pSectPr = NULL;
+					pSectPr = nullptr;
 				}
 				else
 				{

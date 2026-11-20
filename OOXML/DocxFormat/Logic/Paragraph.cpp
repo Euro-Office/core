@@ -61,13 +61,13 @@ namespace OOX
 
 		CParagraph::CParagraph(OOX::Document *pMain, WritingElement *parent) : WritingElementWithChilds<>(pMain)
 		{
-			m_oParagraphProperty = NULL;
+			m_oParagraphProperty = nullptr;
 			m_oParent = parent;
 		}
 		CParagraph::~CParagraph()
 		{
-			m_oParagraphProperty = NULL;
-			m_oParent = NULL;
+			m_oParagraphProperty = nullptr;
+			m_oParent = nullptr;
 		}
 		const CParagraph& CParagraph::operator =(const XmlUtils::CXmlNode& oNode)
 		{
@@ -91,13 +91,13 @@ namespace OOX
 			m_oRsidRDefault.reset();
 			m_oRsidRPr.reset();
 
-			m_oParagraphProperty = NULL;
+			m_oParagraphProperty = nullptr;
 
 			WritingElementWithChilds<>::ClearItems();
 		}
 		void CParagraph::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			m_oParagraphProperty = NULL;
+			m_oParagraphProperty = nullptr;
 
             XmlMacroReadAttributeBase( oNode,L"w:rsidDel",      m_oRsidDel );
             XmlMacroReadAttributeBase( oNode,L"w:rsidP",        m_oRsidP );
@@ -114,7 +114,7 @@ namespace OOX
 					if (oItem.IsValid())
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if (L"w:bdo" == sName )
 							AssignPtrXmlContent(pItem, CBdo, oItem)
@@ -207,7 +207,7 @@ namespace OOX
 		}
 		void CParagraph::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
-			m_oParagraphProperty = NULL;
+			m_oParagraphProperty = nullptr;
 
 			ReadAttributes(oReader);
 
@@ -228,7 +228,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode(nDepth) )
 			{
 				std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if (L"bdo" == sName )
 					pItem = new CBdo( document );
@@ -268,7 +268,7 @@ namespace OOX
 							}
 							docx_flat->m_pComments->m_arrComments.push_back( pComment );	
 
-							pItem = NULL;
+							pItem = nullptr;
 						}
 					}
 				}
