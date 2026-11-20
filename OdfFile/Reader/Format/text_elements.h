@@ -168,6 +168,8 @@ public:
     void docx_convert(oox::docx_conversion_context & Context);
 	void pptx_convert(oox::pptx_conversion_context & Context) ;
 
+	const office_element_ptr_array & items() const { return list_items_; }
+
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
@@ -219,6 +221,10 @@ public:
 	virtual void afterCreate();
     virtual void afterReadContent();
 
+	std::wstring style_name() const { return section_attr_.style_name_.get_value_or(L""); }
+    // the index of this section in document_context::sections, -1 without a context
+    int index() const { return index_; }
+
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
@@ -226,6 +232,7 @@ private:
     odf_types::section_attlists	section_attr_;
     office_element_ptr			section_source_;
     office_element_ptr_array	content_;          
+    int                         index_ = -1;
 
 };
 

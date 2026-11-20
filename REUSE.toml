@@ -309,6 +309,27 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_continuous.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_duplicate_note_body.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_ends_in_section.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_footnote.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_heading.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_nested_section.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_plain_section.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_section.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_sibling_and_plain_sections.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_sibling_sections.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_list.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_no_configuration.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_no_page_style.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_table.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OOXML/test/ExampleFiles/xlsx2bin/checkbox.xlsx",
     "OOXML/test/ExampleFiles/xlsx2bin/richvalue-fallback.xlsx",
 ]

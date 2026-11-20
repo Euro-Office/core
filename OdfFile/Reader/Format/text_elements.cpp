@@ -363,6 +363,12 @@ void paragraph::docx_convert(oox::docx_conversion_context & Context, _CP_OPT(std
             is_empty = false;
         }
 	}
+	if (Context.endnote_page_paragraph_ == this)
+	{
+		// the last paragraph of the body ends its section: the endnote page follows
+		Context.endnote_page_paragraph_ = NULL;
+		Context.next_dump_page_properties(true);
+	}
     std::wstringstream strm;
     if (Context.process_page_properties(strm))
     {
@@ -785,6 +791,25 @@ void section::afterReadContent()
 void section::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     section_attr_.add_attributes(Attributes);
+
+	if (document_context * context = getContext())
+	{
+		// the innermost section around this one (the levels end with this section; the elements in
+		// them are being read, so they are alive)
+		int parent = -1;
+		for (size_t i = context->levels.size(); i > 0; i--)
+		{
+			const section * around = dynamic_cast<const section *>(context->levels[i - 1]);
+			if (around && around != this)
+			{
+				parent = around->index_;
+				break;
+			}
+		}
+		index_ = static_cast<int>(context->sections.size());
+		document_context::section_entry entry = { parent, style_name() };
+		context->sections.push_back(entry);
+	}
 }
 
 void section::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)

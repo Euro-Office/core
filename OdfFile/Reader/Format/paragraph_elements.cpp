@@ -40,6 +40,8 @@
 #include "styles.h"
 #include "note.h"
 #include "ruby.h"
+#include "text_elements.h"
+#include "documentcontext.h"
 #include "office_elements_create.h"
 
 #include "serialize_elements.h"
@@ -957,6 +959,23 @@ void note::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     CP_APPLY_ATTR(L"text:id", text_id_, std::wstring(L""));
     CP_APPLY_ATTR(L"text:note-class", text_note_class_, noteclass(noteclass::Footnote));
+
+    document_context * context = getContext();
+    if (context && text_note_class_.get_type() == noteclass::Endnote)
+    {
+        // the sections around the endnote decide where it is printed (office_text::docx_convert):
+        // the innermost one is enough, each section knows the section around it
+        int innermost = -1;
+        for (size_t i = context->levels.size(); i > 0; i--)
+        {
+            if (const section * around = dynamic_cast<const section *>(context->levels[i - 1]))
+            {
+                innermost = around->index();
+                break;
+            }
+        }
+        context->endnote_sections.insert(innermost);
+    }
 }
 
 void note::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)

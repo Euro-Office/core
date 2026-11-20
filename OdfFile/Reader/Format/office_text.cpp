@@ -26,6 +26,9 @@
 #include "office_text.h"
 #include "office_meta.h"
 
+#include <sstream>
+#include <vector>
+
 #include <xml/xmlchar.h>
 #include <xml/utils.h>
 #include "odf_document.h"
@@ -33,6 +36,10 @@
 #include "serialize_elements.h"
 #include "odfcontext.h"
 #include "style_paragraph_properties.h"
+#include "styles.h"
+#include "text_elements.h"
+#include "list.h"
+#include "documentcontext.h"
 
 namespace cpdoccore { 
 namespace odf_reader {
@@ -141,6 +148,75 @@ void office_text::add_child_element( xml::sax * Reader, const std::wstring & Ns,
         CP_NOT_APPLICABLE_ELM();
 }
 
+namespace
+{
+// An endnote is printed at the end of the document unless a section around it collects its endnotes.
+bool has_endnote_at_document_end(oox::docx_conversion_context & Context, const document_context * context)
+{
+	if (!context)
+		return false;
+
+	const std::vector<document_context::section_entry> & sections = context->sections;
+	// for each section: 0 not known yet, 1 it or a section around it collects endnotes, 2 none does
+	std::vector<char> collected(sections.size(), 0);
+	for (const int innermost : context->endnote_sections)
+	{
+		if (innermost < 0 || innermost >= static_cast<int>(sections.size()))
+			return true; // outside every section
+
+		std::vector<int> path;
+		char result = 2;
+		// a parent index is always lower than the index of its section: the walk ends
+		for (int s = innermost; s >= 0; s = sections[s].parent)
+		{
+			if (collected[s] != 0)
+			{
+				result = collected[s];
+				break;
+			}
+			path.push_back(s);
+
+			const style_instance * style = Context.root()->odf_context().styleContainer().style_by_name(
+				sections[s].style_name, odf_types::style_family::Section, false);
+			const style_section_properties * properties =
+				(style && style->content()) ? style->content()->get_style_section_properties() : NULL;
+			if (properties && properties->collects_endnotes())
+			{
+				result = 1;
+				break;
+			}
+		}
+		for (size_t i = 0; i < path.size(); i++)
+			collected[path[i]] = result;
+
+		if (result == 2)
+			return true;
+	}
+	return false;
+}
+
+// The paragraph that ends the body, when the body ends with a paragraph or a list. Not a heading:
+// a heading writes the section properties into an empty paragraph of its own before it, so the
+// heading would move to the endnote page. Without such a paragraph docx_convert adds one.
+const text::paragraph * last_body_paragraph(const office_element_ptr_array & content)
+{
+	const office_element * element = content.empty() ? NULL : content.back().get();
+	while (element)
+	{
+		if (const text::p * last = dynamic_cast<const text::p *>(element))
+			return &last->paragraph_;
+
+		const text::list * last_list = dynamic_cast<const text::list *>(element);
+		if (!last_list || last_list->items().empty())
+			return NULL;
+
+		const text::list_item * item = dynamic_cast<const text::list_item *>(last_list->items().back().get());
+		element = (item && !item->content().empty()) ? item->content().back().get() : NULL;
+	}
+	return NULL;
+}
+} // namespace
+
 void office_text::docx_convert(oox::docx_conversion_context & Context)
 {
 	if (sequences_)
@@ -162,6 +238,19 @@ void office_text::docx_convert(oox::docx_conversion_context & Context)
 		//forms_->docx_convert(Context);
 
 	Context.start_office_text();
+
+	// LibreOffice prints the endnotes that no section collects on a page of their own after the
+	// body, with the page style of the endnote configuration. Word and the editors print them
+	// after the last paragraph, so the body ends with a section for that page.
+	// With ContinuousEndnotes (set by LibreOffice's import of Word 97 files) LibreOffice prints them
+	// right after the text instead.
+	const _CP_OPT(std::wstring) continuous_endnotes =
+		Context.root()->odf_context().Settings().find_by_name(L"ContinuousEndnotes");
+	const bool continuous = continuous_endnotes && *continuous_endnotes == L"true";
+	const bool endnote_page = !continuous && has_endnote_at_document_end(Context, getContext());
+	const text::paragraph * last_paragraph = endnote_page ? last_body_paragraph(content_) : NULL;
+
+	Context.endnote_page_paragraph_ = last_paragraph;
 
 	_CP_OPT(std::wstring) masterPageName_first;
 
@@ -275,6 +364,58 @@ void office_text::docx_convert(oox::docx_conversion_context & Context)
 		} 
 		content_[i]->docx_convert(Context);
     }
+	// An empty paragraph of minimal height (the endnote page section and the save in DocxConverter
+	// know it by these properties).
+	static const wchar_t * minimal_paragraph_properties =
+		L"<w:spacing w:before=\"0\" w:after=\"0\" w:line=\"20\" w:lineRule=\"exact\"/>"
+		L"<w:rPr><w:sz w:val=\"2\"/><w:szCs w:val=\"2\"/></w:rPr>";
+
+	bool endnote_section = false;
+	if (last_paragraph)
+	{
+		endnote_section = !Context.endnote_page_paragraph_ && Context.get_section_context().dump_.empty();
+	}
+	else if (endnote_page && Context.get_section_context().dump_.empty() && !Context.get_table_context().in_table())
+	{
+		// The body ends with a table, a heading or a section: no paragraph of the body can take the
+		// section properties of the page style in force, so an empty paragraph of minimal height
+		// takes them.
+		Context.next_dump_page_properties(true);
+		std::wstringstream section_properties;
+		if (Context.process_page_properties(section_properties))
+		{
+			Context.output_stream() << L"<w:p><w:pPr>" << minimal_paragraph_properties
+				<< section_properties.str() << L"</w:pPr></w:p>";
+			endnote_section = true;
+		}
+	}
+	if (endnote_section)
+	{
+		// The last paragraph (or the empty one above) took the section properties of the page style
+		// in force, so the endnote page gets a section of its own that starts on a new page. Word
+		// wants a paragraph in it: an empty one of minimal height, the endnotes follow it. The page
+		// style is the one the endnote configuration names, "Endnote" by default as in LibreOffice;
+		// a document without that page style keeps the one in force.
+		const text_notes_configuration * endnotes =
+			Context.root()->odf_context().noteConfiguration().getConfiguration(odf_types::noteclass::Endnote);
+
+		const std::wstring master_page =
+			(endnotes && endnotes->text_master_page_name_) ? *endnotes->text_master_page_name_ : L"Endnote";
+		const std::wstring layout =
+			Context.root()->odf_context().pageLayoutContainer().page_layout_name_by_style(master_page);
+
+		if (false == layout.empty() && Context.set_master_page_name(master_page))
+		{
+			Context.remove_page_properties();
+			Context.add_page_properties(layout);
+		}
+		Context.output_stream() << L"<w:p><w:pPr>" << minimal_paragraph_properties << L"</w:pPr></w:p>";
+
+		Context.next_dump_page_properties(true);
+		Context.endnote_page_section_ = true;
+	}
+	Context.endnote_page_paragraph_ = NULL;
+
     Context.end_office_text();
 }
 
