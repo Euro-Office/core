@@ -33,7 +33,7 @@
 #include <chrono>
 #include <memory>
 #include <sioxx/sioxx.hpp>
-#include "../../../../../DesktopEditor/graphics/TemporaryCS.h"
+#include "DesktopEditor/graphics/TemporaryCS.h"
 
 namespace NSNetwork
 {
@@ -51,130 +51,14 @@ namespace NSNetwork
             std::chrono::milliseconds m_reconnect_delay_max{30000};
 
         public:
-            CIOWebSocket_private_tls(CIOWebSocket* base) : CIOWebSocket_private(base)
-            {
-                m_base = base;
-            }
-            ~CIOWebSocket_private_tls()
-            {
-                close();
-            }
+            CIOWebSocket_private_tls(CIOWebSocket* base);
+            ~CIOWebSocket_private_tls();
 
         public:
-            virtual void open(const std::map<std::string, std::string>& query) override
-            {
-                auto [base_url, engine_path] = split_url(m_base->url);
-
-                sioxx::client_options opts;
-                opts.engineio_path       = engine_path;
-                opts.reconnect_attempts  = m_reconnect_attempts;
-                opts.reconnect_delay     = m_reconnect_delay;
-                opts.reconnect_delay_max = m_reconnect_delay_max;
-
-                // Remaining query params (after extracting the auth token) go
-                // into the Engine.IO handshake query string.
-                opts.query = query;
-                sioxx::json auth;
-                auto it = opts.query.find("token");
-                if (it != opts.query.end())
-                {
-                    auth = {{"token", it->second}};
-                    opts.query.erase(it);
-                }
-
-                m_socket = std::make_unique<sioxx::client>(std::move(opts));
-
-                m_socket->set_open_listener([this]() {
-                    CTemporaryCS oCS(&m_oCS_Events);
-                    m_connecting_in_process = false;
-                    if (!m_closing_in_progress)
-                    { m_base->listener->onOpen(); }
-                });
-
-                m_socket->set_close_listener([this](const std::string&) {
-                    CTemporaryCS oCS(&m_oCS_Events);
-                    m_connecting_in_process = false;
-                    if (!m_closing_in_progress)
-                    { m_base->listener->onClose(0, ""); }
-                });
-
-                m_socket->set_fail_listener([this]() {
-                    CTemporaryCS oCS(&m_oCS_Events);
-                    m_connecting_in_process = false;
-                    if (!m_closing_in_progress)
-                    { m_base->listener->onError(""); }
-                });
-
-                m_socket->set_reconnecting_listener([this]() {
-                    CTemporaryCS oCS(&m_oCS_Events);
-                    m_connecting_in_process = true;
-                });
-
-                m_socket->set_reconnect_listener([this](unsigned, unsigned) {
-                    CTemporaryCS oCS(&m_oCS_Events);
-                    m_connecting_in_process = false;
-                });
-
-                m_ns_socket = m_socket->socket("/", auth);
-                m_ns_socket->on("message", [this](const std::string&, sioxx::message data) {
-                    CTemporaryCS oCS(&m_oCS_Events);
-                    if (m_closing_in_progress)
-                    { return; }
-                    // sioxx packs all emit() arguments into a JSON array; unwrap the first one.
-                    const sioxx::message& payload = (data.is_array() && !data.empty()) ? data[0] : data;
-                    if (payload.is_null())
-                    { m_base->listener->onMessage("null"); }
-                    else if (payload.is_string())
-                    { m_base->listener->onMessage(payload.get<std::string>()); }
-                    else if (payload.is_object())
-                    { m_base->listener->onMessage(payload.dump()); }
-                    else
-                    { m_base->listener->onMessage(""); }
-                });
-
-                m_connecting_in_process = true;
-                m_socket->connect(base_url);
-            }
-
-            virtual void send(const std::string& message_str) override
-            {
-                if (!m_ns_socket)
-                { return; }
-                if (!message_str.empty() &&
-                    (message_str.front() == '{' || message_str.front() == '['))
-                {
-                    try
-                    {
-                        m_ns_socket->emit("message", sioxx::json::parse(message_str));
-                        return;
-                    }
-                    catch (const sioxx::json::exception&) {}
-                }
-                m_ns_socket->emit("message", sioxx::json(message_str));
-            }
-
-            virtual void close() override
-            {
-                CTemporaryCS oCS(&m_oCS);
-
-                m_oCS_Events.Enter();
-                m_closing_in_progress = true;
-                m_oCS_Events.Leave();
-
-                if (m_socket)
-                {
-                    m_ns_socket.reset();
-                    m_socket->sync_close();
-                    m_socket.reset();
-                }
-            }
-
-            virtual void setReconnectInfo(const int& attemtCount, const int& delay, const int& delayMax) override
-            {
-                m_reconnect_attempts  = attemtCount;
-                m_reconnect_delay     = std::chrono::milliseconds(delay);
-                m_reconnect_delay_max = std::chrono::milliseconds(delayMax);
-            }
+            virtual void open(const std::map<std::string, std::string>& query) override;
+            virtual void send(const std::string& message_str) override;
+            virtual void close() override;
+            virtual void setReconnectInfo(const int& attemtCount, const int& delay, const int& delayMax) override;
         };
     }
 }
