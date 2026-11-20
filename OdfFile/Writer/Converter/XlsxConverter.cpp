@@ -1196,11 +1196,31 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHyperlink *oox_hyperlink,OOX::Spr
 	}
 }
 
+static bool is_row_hidden_or_grouped(OOX::Spreadsheet::CRow *oox_row)
+{
+	return (oox_row->m_oHidden.IsInit() && oox_row->m_oHidden->ToBool()) ||
+		(oox_row->m_oCollapsed.IsInit() && oox_row->m_oCollapsed->ToBool()) ||
+		(oox_row->m_oOutlineLevel.IsInit() && oox_row->m_oOutlineLevel->GetValue() > 0);
+}
 void XlsxConverter::convert(OOX::Spreadsheet::CRow *oox_row, OOX::Spreadsheet::CRow *oox_row_prev)
 {
 	if (oox_row == NULL)return;
 
 	int row_number = oox_row->m_oR.IsInit() ? oox_row->m_oR->GetValue() : -1;
+
+	// The XLSX reader folds rows that repeat the row before them (CSheetData::compressRow: empty rows, or rows of
+	// one run of empty cells of one style, with the same style and height) into that row. Write the folded rows
+	// back as repeats of the row element, unless one of them needs an element of its own (then they stay lost, as before).
+	// The reader folds without comparing hidden, collapsed and outline level, so the folded rows may differ from this row
+	// in those: a hidden, collapsed or outlined row is not repeated. A chart's local table (no rows added between rows)
+	// is left as it was.
+	int folded_rows = 0;
+	if (row_number > 0 && oox_row->m_oRepeated.IsInit() && *oox_row->m_oRepeated > 1 && *oox_row->m_oRepeated <= 1048576 &&
+		false == is_row_hidden_or_grouped(oox_row) && ods_context->get_repeat_at_lasts() &&
+		ods_context->current_table()->is_rows_plain(row_number, (int)*oox_row->m_oRepeated))
+	{
+		folded_rows = (int)*oox_row->m_oRepeated - 1;
+	}
 
 	if (oox_row_prev)
 	{
@@ -1306,7 +1326,9 @@ void XlsxConverter::convert(OOX::Spreadsheet::CRow *oox_row, OOX::Spreadsheet::C
 				else bEqual = false;
 			}
 
-			if (bEqual)
+			// Rows equal to the row before would have been folded into it by the reader, so a row with folded rows lacks
+			// the height or style of the row before: it gets an element of its own, and its folded rows repeat that one.
+			if (bEqual && folded_rows == 0)
 			{
 				int repeated = 1;
 				if ( ods_context->current_table()->is_row_comment(row_number, repeated) < 0 &&
@@ -1372,6 +1394,15 @@ void XlsxConverter::convert(OOX::Spreadsheet::CRow *oox_row, OOX::Spreadsheet::C
 		convert(oox_row->m_arrItems[cell]);
 	}
 	ods_context->end_row();
+
+	add_folded_rows(folded_rows);
+}
+void XlsxConverter::add_folded_rows(int count)
+{
+	// ods_conversion_context::add_default_row() writes no rows after a row element repeated 1024 times or more,
+	// so a gap after the folded rows would be lost and the next rows would move up: stop before that.
+	for (int i = 0; i < count && ods_context->current_table()->get_last_row_repeated() < 1023; i++)
+		ods_context->add_row_repeated();
 }
 void XlsxConverter::convert(OOX::Spreadsheet::CCell *oox_cell)
 {

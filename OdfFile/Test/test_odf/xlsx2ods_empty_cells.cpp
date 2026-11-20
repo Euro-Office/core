@@ -102,6 +102,13 @@ namespace
 		return L"";
 	}
 
+	// The table:style-name of the row with the given 0-based index in the first table.
+	std::wstring row_style(const std::wstring& xml, size_t row)
+	{
+		const std::wstring row_element = row_xml(xml, row);
+		return attr_value(row_element.substr(0, row_element.find(L'>') + 1), L"table:style-name");
+	}
+
 	// The first max_cols cells of the row with the given 0-based index in the first table, one entry per
 	// column (table:number-columns-repeated expanded).
 	std::vector<Cell> row_cells(const std::wstring& xml, size_t row, size_t max_cols = 4)
@@ -183,6 +190,7 @@ TEST(XlsxToOds, CellAfterMergedRangeWithoutCoveredCellsIsNotCovered)
 	EXPECT_TRUE(row5[5].covered) << "F5";
 	EXPECT_FALSE(row5[6].covered) << "G5";
 	EXPECT_EQ(row5[6].text, L"9");
+
 }
 
 // Empty cells with the same style (fill and borders) next to each other: the XLSX reader folds them into
@@ -239,4 +247,76 @@ TEST(XlsxToOds, EmptyCellsOfOneStyleKeepTheStyle)
 	EXPECT_EQ(row4[2].style, L"") << "C4";
 	EXPECT_EQ(row4[3].text, L"5");
 
+	// Rows 5 to 7: the same run of styled empty cells A:C in each row. The XLSX reader folds rows 6 and 7
+	// into row 5; every row keeps the style.
+	for (size_t row = 4; row < 7; ++row)
+	{
+		const std::vector<Cell> cells = row_cells(xml, row);
+		if (cells.size() < 4)
+		{
+			ADD_FAILURE() << "row " << row + 1 << " has " << cells.size() << " cells";
+			continue;
+		}
+		EXPECT_EQ(cells[0].style, style) << "A" << row + 1;
+		EXPECT_EQ(cells[1].style, style) << "B" << row + 1;
+		EXPECT_EQ(cells[2].style, style) << "C" << row + 1;
+		EXPECT_NE(cells[3].style, style) << "D" << row + 1;
+	}
+	const std::vector<Cell> row8 = row_cells(xml, 7);
+	ASSERT_FALSE(row8.empty());
+	EXPECT_EQ(row8[0].text, L"6");
+
+	// Rows 9 to 11: empty rows of one custom height, folded into row 9 by the reader, keep the height;
+	// row 12 has the default height.
+	const std::wstring height_style = row_style(xml, 8);
+	EXPECT_FALSE(height_style.empty()) << "row 9 has no style";
+	EXPECT_EQ(row_style(xml, 9), height_style) << "row 10";
+	EXPECT_EQ(row_style(xml, 10), height_style) << "row 11";
+	EXPECT_NE(row_style(xml, 11), height_style) << "row 12";
+	const std::vector<Cell> row12 = row_cells(xml, 11);
+	ASSERT_FALSE(row12.empty());
+	EXPECT_EQ(row12[0].text, L"7");
+
+	// Rows 13 to 1112: 1100 empty rows of one custom height, folded into row 13; rows 1113 to 1199 are
+	// missing. A1200 stays in row 1200.
+	const std::vector<Cell> row1200 = row_cells(xml, 1199);
+	ASSERT_FALSE(row1200.empty()) << "no row 1200";
+	EXPECT_EQ(row1200[0].text, L"8") << "A1200";
+
+	// Row 1201 is hidden; rows 1202 and 1203 hold the same run of styled empty cells and are visible. The reader
+	// folds them into row 1201 although the visibility differs: they must not become hidden.
+	const std::wstring row1201 = row_xml(xml, 1200);
+	EXPECT_NE(row1201.substr(0, row1201.find(L'>')).find(L"table:visibility=\"collapse\""), std::wstring::npos)
+		<< "row 1201 is not hidden";
+	for (size_t row = 1201; row < 1203; ++row)
+	{
+		const std::wstring row_element = row_xml(xml, row);
+		ASSERT_FALSE(row_element.empty()) << "no row " << row + 1;
+		EXPECT_EQ(row_element.substr(0, row_element.find(L'>')).find(L"table:visibility=\"collapse\""), std::wstring::npos)
+			<< "row " << row + 1 << " is hidden";
+	}
+	const std::vector<Cell> row1204 = row_cells(xml, 1203);
+	ASSERT_FALSE(row1204.empty()) << "no row 1204";
+	EXPECT_EQ(row1204[0].text, L"9") << "A1204";
+
+	// Row 1205 has a custom height, rows 1206 to 1208 are empty without attributes (the reader folds 1207 and 1208 into
+	// 1206): none of them takes the height of row 1205.
+	const std::wstring height_style_1205 = row_style(xml, 1204);
+	EXPECT_FALSE(height_style_1205.empty()) << "row 1205 has no style";
+	EXPECT_NE(row_style(xml, 1205), height_style_1205) << "row 1206";
+	EXPECT_NE(row_style(xml, 1206), height_style_1205) << "row 1207";
+	EXPECT_NE(row_style(xml, 1207), height_style_1205) << "row 1208";
+	const std::vector<Cell> row1209 = row_cells(xml, 1208);
+	ASSERT_FALSE(row1209.empty()) << "no row 1209";
+	EXPECT_EQ(row1209[0].text, L"10") << "A1209";
+
+	// Row 1210 has a style and a custom height, rows 1211 to 1213 the same style without a height (the reader folds 1212
+	// and 1213 into 1211): none of them takes the height of row 1210.
+	const std::wstring height_style_1210 = row_style(xml, 1209);
+	EXPECT_FALSE(height_style_1210.empty()) << "row 1210 has no style";
+	for (size_t row = 1210; row < 1213; ++row)
+		EXPECT_NE(row_style(xml, row), height_style_1210) << "row " << row + 1;
+	const std::vector<Cell> row1214 = row_cells(xml, 1213);
+	ASSERT_FALSE(row1214.empty()) << "no row 1214";
+	EXPECT_EQ(row1214[0].text, L"11") << "A1214";
 }

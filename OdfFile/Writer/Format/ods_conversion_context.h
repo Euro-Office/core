@@ -48,6 +48,7 @@ public:
 
 	void set_tables_structure_lock(bool val);
 	void set_repeat_at_lasts(bool val);
+	bool get_repeat_at_lasts() const { return repeat_at_lasts_; }
 
 	void start_sheet();
         void set_sheet_dimension(const std::wstring & ref);

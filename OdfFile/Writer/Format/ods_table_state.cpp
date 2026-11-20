@@ -656,6 +656,35 @@ _INT32 ods_table_state::is_row_validation(_INT32 row, _INT32 & repeate_row)
 	}
 	return -1;
 }
+// Rows [row, row + count) without a comment, data validation, hyperlink, merged cell or row break, and not
+// reached by a cell merged across rows above them: one row element repeated writes them all.
+bool ods_table_state::is_rows_plain(_INT32 row, _INT32 count)
+{
+	if (count < 1 || row < 0 || row > 0x7FFFFFFF - count) return false;
+
+	if (is_row_comment(row, count) >= 0) return false;
+
+	_INT32 repeated = count;
+	if (is_row_validation(row, repeated) >= 0) return false;
+
+	for (size_t i = 0; i < hyperlinks_.size(); i++)
+	{
+		if (hyperlinks_[i].row >= row && hyperlinks_[i].row < row + count) return false;
+	}
+	for (size_t i = 0; i < row_breaks_.size(); i++)
+	{
+		if (row_breaks_[i] >= row && row_breaks_[i] < row + count) return false;
+	}
+	std::map<_INT32, std::map<_INT32, _spanned_info>>::iterator pFindRow = map_merged_cells.lower_bound(row);
+	if (pFindRow != map_merged_cells.end() && pFindRow->first < row + count) return false;
+
+	// add_row of the first row drops the entries that end before it (count_rows 1)
+	for (size_t i = 0; i < current_covered_rows_.size(); i++)
+	{
+		if (current_covered_rows_[i].count_rows > 1) return false;
+	}
+	return true;
+}
 _INT32 ods_table_state::is_cell_comment(_INT32 col, _INT32 row, _UINT32 repeate_col)
 {
 	for (size_t i = 0; i < comments_.size(); i++)
