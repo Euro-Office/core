@@ -1307,8 +1307,11 @@ namespace NSGraphics
 #endif
 		m_pRenderer->put_BrushTextureAlpha(a == 0 ? 255 : a);
 	}
-	void CGraphics::put_BrushGradient(LONG* pColors, double* pPositions, size_t nCount, double x0, double y0, double x1, double y1, double r0, double  /*r1*/)
+	void CGraphics::put_BrushGradient(LONG* pColors, double* pPositions, size_t nCount, double x0, double y0, double x1, double y1, double r0, double r1)
 	{
+#ifndef ENABLE_GR_LOGS
+		(void)r1;
+#endif
 #ifdef ENABLE_GR_LOGS
 		std::cout << "put_BrushGradient " << nCount << "  " << x0 << "  " << y0 << "  " << x1 << "  " << y1 << "  " << r0 << "  " << r1 << std::endl;
 		for (size_t i = 0; i < nCount; i++)

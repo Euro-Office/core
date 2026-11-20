@@ -1678,6 +1678,7 @@ namespace MetaFile
 
 			// At the moment, we are disabling support for embedded MWF files (in bug #71100 - The plus-minus symbol is not displayed correctly)
 			// From the tests, it became clear that the embedded WMF files are ignored
+			if (EMR_COMMENT_WINDOWS_METAFILE == unPublicCommentIdentifier && false)
 			{
 				m_oStream.Skip(12); // Version, Reserved, Checksum, Flags
 
