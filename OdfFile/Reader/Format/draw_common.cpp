@@ -598,7 +598,10 @@ void Compute_GraphicFill(const common_draw_fill_attlist & props, const office_el
 				break;
 			}
 		}
-		if (props.draw_fill_image_width_ && props.draw_fill_image_height_)
+		// A stretched bitmap fills the whole area whatever size is given (as in LibreOffice); the size would only
+		// shrink it, down to nothing for a size of 0.
+		const bool bStretched = props.style_repeat_ && props.style_repeat_->get_type() == style_repeat::Stretch;
+		if (props.draw_fill_image_width_ && props.draw_fill_image_height_ && !bStretched)
 		{
 			if (props.draw_fill_image_width_->get_type() == odf_types::length_or_percent::Percent &&
 				props.draw_fill_image_height_->get_type() == odf_types::length_or_percent::Percent)
@@ -617,8 +620,16 @@ void Compute_GraphicFill(const common_draw_fill_attlist & props, const office_el
 			}
 			else
 			{
-				fill.bitmap->sx_pt = props.draw_fill_image_width_->get_length().get_value_unit(length::pt);
-				fill.bitmap->sy_pt = props.draw_fill_image_height_->get_length().get_value_unit(length::pt);
+				const double width_pt = props.draw_fill_image_width_->get_length().get_value_unit(length::pt);
+				const double height_pt = props.draw_fill_image_height_->get_length().get_value_unit(length::pt);
+				// For a bitmap drawn once, a size of 0 means the bitmap's own size, the same as no size at all, not
+				// a size of 0 %. Tiles keep it: the tile scale 0 is drawn at the bitmap's size and saved back as 0.
+				const bool bNoRepeat = props.style_repeat_ && props.style_repeat_->get_type() == style_repeat::NoRepeat;
+				if (!bNoRepeat || (width_pt > 0 && height_pt > 0))
+				{
+					fill.bitmap->sx_pt = width_pt;
+					fill.bitmap->sy_pt = height_pt;
+				}
 			}
 		}
 	}
