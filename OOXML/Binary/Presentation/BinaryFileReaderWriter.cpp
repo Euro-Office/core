@@ -291,7 +291,7 @@ namespace NSBinPptxRW
 				if (0 != (nDisplayType & 4))
 				{
 					smart_ptr<OOX::OleObject> oleFile = additionalFile.smart_dynamic_cast<OOX::OleObject>();
-					if (oleFile.IsInit())
+					if (oleFile.IsInit() && !oleFile->isLink())
 					{
 						if (OOX::CSystemUtility::IsFileExist(oleFile->filename()) == false)
 						{
@@ -1798,6 +1798,10 @@ namespace NSBinPptxRW
 			{
 				smart_ptr<OOX::OleObject> oleFile = additionalFile.smart_dynamic_cast<OOX::OleObject>();
 
+				// No link and no payload (e.g. a session cached before links were kept): a rel here would dangle and PowerPoint demands repair.
+				if (m_pManager->m_nDocumentType == XMLWRITER_DOC_TYPE_PPTX && !oleFile->isLink() && !OOX::CSystemUtility::IsFileExist(oleFile->filename()))
+					continue;
+
 				std::wstring strOleRelsPath;
 
 				oRelsGeneratorInfo.nOleRId = m_lNextRelsID++;
@@ -1806,6 +1810,14 @@ namespace NSBinPptxRW
 				if (m_pManager->m_nDocumentType != XMLWRITER_DOC_TYPE_XLSX)
 				{
 					std::wstring strRid = L"rId" + std::to_wstring(oRelsGeneratorInfo.nOleRId);
+
+					if (oleFile->isLink())
+					{
+						m_pWriter->WriteString(L"<Relationship Id=\"" + strRid
+							+ L"\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/oleObject\" Target=\""
+							+ XmlUtils::EncodeXmlString(oleFile->filename().GetPath()) + L"\" TargetMode=\"External\"/>");
+						continue;
+					}
 
 					if (m_pManager->m_nDocumentType == XMLWRITER_DOC_TYPE_DOCX)	strOleRelsPath = L"embeddings/";
 					else														strOleRelsPath = L"../embeddings/";

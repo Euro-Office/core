@@ -147,7 +147,12 @@ namespace PPTX
 		else if (relation.Type() == OOX::FileTypes::DiagramQuickStyle)
 			return smart_ptr<OOX::File>(new OOX::CDiagramQuickStyle(pMain, filename));
 		else if (relation.Type() == OOX::FileTypes::OleObject)
-			return smart_ptr<OOX::File>(new OOX::OleObject(pMain, filename));
+		{
+			smart_ptr<OOX::OleObject> oleFile(new OOX::OleObject(pMain, filename));
+			if (relation.IsExternal())
+				oleFile->set_filename(relation.Target().GetPath(), true);
+			return oleFile.smart_dynamic_cast<OOX::File>();
+		}
 		else if (relation.Type() == OOX::FileTypes::MicrosoftOfficeUnknown) //ms package
 			return smart_ptr<OOX::File>(new OOX::OleObject( pMain, filename, true ));
 		else if (relation.Type() == OOX::FileTypes::VbaProject)

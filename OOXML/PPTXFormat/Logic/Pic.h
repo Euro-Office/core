@@ -67,6 +67,7 @@ namespace PPTX
 			virtual void FillParentPointersForChilds();
 			
 			bool isValid();
+			void setLink(bool bAutoUpdate);
 			
 			smart_ptr<OOX::OleObject>	GetOleObject(const OOX::RId& oRId, OOX::IFileContainer* pRels)const;
 			std::wstring				GetOleData	(const std::wstring& sFilePath)const;

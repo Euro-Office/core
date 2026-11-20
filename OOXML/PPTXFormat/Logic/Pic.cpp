@@ -178,6 +178,10 @@ namespace PPTX
 
 	namespace Logic
 	{
+		// Linked OLE has no payload: its target crosses the editor in the object-file string, which sdkjs keeps verbatim.
+		static const std::wstring g_sOleLinkAuto	= L"oleLink:auto:";
+		static const std::wstring g_sOleLinkManual	= L"oleLink:manual:";
+
 		void COLEObject::fromXML(XmlUtils::CXmlNode& node)
 		{
             XmlMacroReadAttributeBase(node, L"DrawAspect",	m_oDrawAspect);
@@ -246,9 +250,11 @@ namespace PPTX
 			}
 			std::wstring sData;
 			std::wstring sProgID = m_sProgId.get_value_or(L"");
+			// A link target is not a local file: never probe, convert or copy it.
+			const bool bLink = ole_file.IsInit() && ole_file->isLink();
 
 			//test xls ole_file for convert to xlsx
-			if (ole_file.IsInit())
+			if (ole_file.IsInit() && !bLink)
 			{
 				COfficeFileFormatChecker checker;
 				checker.isOfficeFile(ole_file->filename().GetPath());
@@ -340,7 +346,7 @@ namespace PPTX
 				}
 			}
 
-			if (ole_file.IsInit() && 0 == sProgID.find(L"asc."))
+			if (ole_file.IsInit() && !bLink && 0 == sProgID.find(L"asc."))
 			{
 				sData = GetOleData(ole_file->filename().GetPath());
 			}
@@ -354,7 +360,12 @@ namespace PPTX
 				pWriter->WriteLimit2(5, m_oType);
 				pWriter->WriteLimit2(6, m_oUpdateMode);				
 				
-				if (ole_file.IsInit() && ole_file->isMsPackage() == false)
+				if (bLink)
+				{
+					const bool bAuto = m_oUpdateMode.IsInit() && m_oUpdateMode->GetBYTECode() == 0;
+					pWriter->WriteString1(7, (bAuto ? g_sOleLinkAuto : g_sOleLinkManual) + ole_file->filename().GetPath());
+				}
+				else if (ole_file.IsInit() && ole_file->isMsPackage() == false)
 				{
 					std::wstring sExt = ole_file->filename().GetExtention(false);
 					if (!sExt.empty())
@@ -373,7 +384,7 @@ namespace PPTX
 				pWriter->WriteBYTE(*m_oSizeWithCells);
 				pWriter->EndRecord();
 			}
-			if (ole_file.IsInit() == false) return;
+			if (ole_file.IsInit() == false || bLink) return;
 
 			if (ole_file->isMsPackage())
 			{
@@ -543,7 +554,14 @@ namespace PPTX
 				{
 					m_OleObjectFile = new OOX::OleObject(NULL, false, pReader->m_nDocumentType == XMLWRITER_DOC_TYPE_DOCX);
 					std::wstring strOlePath = pReader->GetString2(true);
-					m_OleObjectFile->set_filename(strOlePath, false); //temp !!! for ImageManager original file name
+					const bool bAuto = 0 == strOlePath.find(g_sOleLinkAuto);
+					if (bAuto || 0 == strOlePath.find(g_sOleLinkManual))
+					{
+						setLink(bAuto);
+						m_OleObjectFile->set_filename(strOlePath.substr((bAuto ? g_sOleLinkAuto : g_sOleLinkManual).length()), true);
+					}
+					else
+						m_OleObjectFile->set_filename(strOlePath, false); //temp !!! for ImageManager original file name
 				}
 				else
 					break;
@@ -660,6 +678,11 @@ namespace PPTX
 		bool COLEObject::isValid()
 		{
 			return m_sProgId.IsInit() && (m_sData.IsInit() || m_oId.IsInit() || m_OleObjectFile.IsInit());
+		}
+		void COLEObject::setLink(bool bAutoUpdate)
+		{
+			m_oType = (BYTE)1;
+			m_oUpdateMode = (BYTE)(bAutoUpdate ? 0 : 1);
 		}
 		smart_ptr<OOX::OleObject> COLEObject::GetOleObject(const OOX::RId& oRId, OOX::IFileContainer* pRels) const
 		{
@@ -965,7 +988,8 @@ namespace PPTX
 				pWriter->m_lDocType != XMLWRITER_DOC_TYPE_DOCX &&
 				pWriter->m_lDocType != XMLWRITER_DOC_TYPE_DOCX_GLOSSARY)
 			{
-				if (oleObject.IsInit() && oleObject->isValid())
+				// Without a rel there is nothing to activate: write the preview as a plain picture.
+				if (oleObject.IsInit() && oleObject->isValid() && oleObject->m_oId.IsInit())
 				{
 					int _id = nvPicPr.cNvPr.id;
 					if (_id <= 0)
@@ -1025,7 +1049,10 @@ namespace PPTX
 					pWriter->WriteAttribute2(L"progId", oleObject->m_sProgId);
 					pWriter->EndAttributes();
 
-					pWriter->WriteString(L"<p:embed/>");
+					if (oleObject->m_oType.IsInit() && oleObject->m_oType->GetBYTECode() == 1)
+						pWriter->WriteString(oleObject->m_oUpdateMode.IsInit() && oleObject->m_oUpdateMode->GetBYTECode() == 0 ? L"<p:link updateAutomatic=\"1\"/>" : L"<p:link/>");
+					else
+						pWriter->WriteString(L"<p:embed/>");
 				}
 			}
 			pWriter->StartNode(namespace_ + L":pic");
@@ -1087,7 +1114,7 @@ namespace PPTX
 
 							oleObject->m_OleObjectFile->set_filename_cache(blipFill.blip->oleFilepathImage);
 
-							if (NSFile::CFileBinary::Exists(oleObject->m_OleObjectFile->filename().GetPath()) == false)
+							if (oleObject->m_OleObjectFile->isLink() == false && NSFile::CFileBinary::Exists(oleObject->m_OleObjectFile->filename().GetPath()) == false)
 							{
 								oleObject->m_OleObjectFile->set_filename(blipFill.blip->oleFilepathBin, false);
 							}
@@ -1725,6 +1752,14 @@ namespace PPTX
             XmlMacroReadAttributeBase(node, L"r:id",	oleObject->m_oId);
 			XmlMacroReadAttributeBase(node, L"name", oleObject->m_oName);
 			XmlMacroReadAttributeBase(node, L"spid", oleObject->m_sShapeId);
+
+			XmlUtils::CXmlNode oNodeLink;
+			if (node.GetNode(L"p:link", oNodeLink))
+			{
+				nullable_bool oUpdateAutomatic;
+				XmlMacroReadAttributeBase(oNodeLink, L"updateAutomatic", oUpdateAutomatic);
+				oleObject->setLink(oUpdateAutomatic.get_value_or(false));
+			}
 
 			if (false == oleObject->m_oId.IsInit())
 			{
