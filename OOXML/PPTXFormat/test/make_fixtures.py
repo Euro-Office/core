@@ -34,6 +34,11 @@ import zipfile
 AUTHORS_PART = "ppt/authors.xml"
 MODERN_COMMENTS_DIR = "ppt/comments/"
 
+# Unknown GUID: exactly one comment in
+# modern_comments_orphan_authorId.pptx carries it, in no author
+# record - the orphan-authorId fallback case of the PR #175 review.
+ORPHAN_GUID = "{44444444-4444-4444-4444-444444444444}"
+
 GUID2INT = {
     "{11111111-1111-1111-1111-111111111111}": "0",  # Alice Author
     "{22222222-2222-2222-2222-222222222222}": "1",  # Bob Builder
@@ -241,6 +246,28 @@ def build_mixed(seed_path, out_path):
     print("wrote", out_path)
 
 
+def build_orphan(seed_path, out_path):
+    """Orphan authorId: Carol's comment carries an authorId GUID
+    that no author record lists, reproducing the orphan fallback
+    case of the PR #175 review."""
+    zin = zipfile.ZipFile(seed_path)
+    comments_name, comments_xml = modern_comment_part(zin)
+    carol = list(GUID2INT)[-1]
+    n = comments_xml.count('authorId="%s"' % carol)
+    if n != 1:
+        raise SystemExit("expected exactly one Carol comment, found %d" % n)
+    comments_xml = comments_xml.replace(
+        'authorId="%s"' % carol, 'authorId="%s"' % ORPHAN_GUID
+    )
+    with zipfile.ZipFile(out_path, "w", zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            data = zin.read(item.filename)
+            if item.filename == comments_name:
+                data = comments_xml.encode("utf-8")
+            zout.writestr(item, data)
+    print("wrote", out_path)
+
+
 def check(dir_path):
     def part(z, name):
         return z.read(name).decode("utf-8")
@@ -271,6 +298,15 @@ def check(dir_path):
     mca = part(mixed, "ppt/commentAuthors.xml")
     ok = ok and "p:cmAuthorLst" in mca and "p188" not in mca
 
+    orphan = zipfile.ZipFile(
+        os.path.join(dir_path, "modern_comments_orphan_authorId.pptx")
+    )
+    _name, oc = modern_comment_part(orphan)
+    ok = ok and oc.count("<p188:cm ") == 3
+    carol = list(GUID2INT)[-1]
+    ok = ok and ('authorId="%s"' % ORPHAN_GUID) in oc
+    ok = ok and ('authorId="%s"' % carol) not in oc
+
     print("FIXTURES OK" if ok else "FIXTURES BROKEN")
     return ok
 
@@ -286,6 +322,8 @@ def main(argv):
     build_classic(seed, os.path.join(base, "classic_comments.pptx"))
     build_no_ids(seed, os.path.join(base, "modern_comments_no_author_ids.pptx"))
     build_mixed(seed, os.path.join(base, "mixed_comments.pptx"))
+    build_orphan(seed, os.path.join(base,
+                                   "modern_comments_orphan_authorId.pptx"))
     return 0
 
 
