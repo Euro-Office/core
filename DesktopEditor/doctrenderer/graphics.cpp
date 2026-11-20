@@ -871,10 +871,10 @@ namespace NSGraphics
 			m_pRenderer->GetFullTransform()->TransformPoint(x, y);
 			m_pRenderer->GetFullTransform()->TransformPoint(r, b);
 
-			x = std::lround(x);
-			y = std::lround(y);
-			r = std::lround(r);
-			b = std::lround(b);
+			x = (int)(x + 0.5);
+			y = (int)(y + 0.5);
+			r = (int)(r + 0.5);
+			b = (int)(b + 0.5);
 
 			m_pRenderer->AddRect(x, y, r - x, b - y);
 		}

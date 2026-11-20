@@ -1317,7 +1317,10 @@ void CFontList::Add(FT_Library pLibrary, FT_Parameter* pParams, const std::wstri
 					{
 					case TT_MS_ID_SYMBOL_CS:
 					case TT_MS_ID_UNICODE_CS:
-						//sEncoding = "UCS4"; // see tt_ (same mapping as above)
+						sEncoding = "UTF-16BE";
+						break;
+					case TT_MS_ID_UCS_4:
+						//sEncoding = "UCS4"; // see tt_
 						sEncoding = "UTF-16BE";
 						break;
 						//case TT_MS_ID_SJIS:
