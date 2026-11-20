@@ -245,6 +245,7 @@ ods_table_state::ods_table_state(odf_conversion_context * Context, office_elemen
 
 	current_table_row_ = 0;
 	current_table_column_ = 0;
+	current_covered_cols_ = 0;
 
 	current_level_.push_back(office_table_);
 
@@ -1631,8 +1632,19 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 		return;
 	}
 //-----------------------------------------------------------------------------------------
-	bool bCovered = false;
-	if (!bSpanned)
+	// Columns still covered by a cell merged across columns of this row (isSpannedCell sets the count):
+	// these cells are covered, and the next cell after them is not.
+	if (!bSpanned && current_covered_cols_ > 0 && repeated > current_covered_cols_)
+	{
+		_INT32 covered = current_covered_cols_;
+
+		add_default_cell(covered);
+		add_default_cell(repeated - covered);
+
+		return;
+	}
+	bool bCovered = !bSpanned && current_covered_cols_ > 0;
+	if (!bSpanned && !bCovered)
 	{
 		for (size_t i = 0; i < current_covered_rows_.size(); i++)
 		{

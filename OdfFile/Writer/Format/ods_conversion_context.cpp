@@ -424,19 +424,21 @@ void ods_conversion_context::start_cell(std::wstring & ref, int xfd_style)
 	int col = 0, row = 0, spanned_rows = 0, spanned_cols = 0;
 	utils::parsing_ref ( ref, col, row);
 
+	// Write the missing cells before this one first: they may still be covered by a cell merged before them, and
+	// a cell merged from here on must not cover them.
+	if (col > current_table()->current_column() + 1)
+	{
+		int repeated = col - current_table()->current_column() - 1;
+		
+		current_table()->add_default_cell(repeated);
+	}
+
 	bool bCovered = false;
 	bool bSpanned = current_table()->isSpannedCell(col, row, spanned_cols, spanned_rows);
 
 	if (!bSpanned)
 	{
 		bCovered = current_table()->isCoveredCell(col, row);
-	}
-
-	if (col > current_table()->current_column() + 1)
-	{
-		int repeated = col - current_table()->current_column() - 1;
-		
-		current_table()->add_default_cell(repeated);//, bCovered);
 	}
 
 	office_element_ptr style_elm;
