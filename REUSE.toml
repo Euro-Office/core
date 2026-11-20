@@ -309,6 +309,7 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/page_background_first_style_missing_picture.odt",
     "OdfFile/Test/test_odf/ExampleFiles/page_background_first_style_none.odt",
     "OdfFile/Test/test_odf/ExampleFiles/page_background_first_style_picture.odt",
 ]

@@ -69,4 +69,19 @@ TEST(OdtToDocxPageBackgroundFirstStyle, NoBackgroundTakesOtherStyleColour)
     ASSERT_FALSE(document.empty()) << "word/document.xml is missing";
     ASSERT_NE(document.find(L"<w:background"), std::wstring::npos) << document.substr(0, 2000);
     EXPECT_EQ(attribute_of(document, L"<w:background", L"w:color"), L"C0C0C0");
+    EXPECT_EQ(attribute_of(document, L"<v:background", L"fillcolor"), L"#C0C0C0");
+}
+
+// A picture fill that names no fill image has no picture to keep: the first page style counts as
+// having no background, and the colour of the other page style is used.
+TEST(OdtToDocxPageBackgroundFirstStyle, MissingPictureTakesOtherStyleColour)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/page_background_first_style_missing_picture.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    const std::wstring document = read_part(dir, L"word/document.xml");
+    ASSERT_FALSE(document.empty()) << "word/document.xml is missing";
+    ASSERT_NE(document.find(L"<w:background"), std::wstring::npos) << document.substr(0, 2000);
+    EXPECT_EQ(attribute_of(document, L"<w:background", L"w:color"), L"C0C0C0");
+    EXPECT_EQ(attribute_of(document, L"<v:background", L"fillcolor"), L"#C0C0C0");
 }

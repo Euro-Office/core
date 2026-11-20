@@ -135,11 +135,14 @@ void office_body::docx_convert(oox::docx_conversion_context & Context)
 			style_page_layout_properties * layout_properties = backgroundLayout->properties();
 			Compute_GraphicFill(layout_properties->attlist_.common_draw_fill_attlist_,
 								layout_properties->style_background_image_, Context.root(), fill);
-			hasBackground = layout_properties->attlist_.common_background_color_attlist_.fo_background_color_ || fill.type != 0;
+			// The DOCX page background carries a picture (2) or a gradient (3) fill, but no hatch,
+			// no solid fill without a page colour and no incomplete fill (-1).
+			hasBackground = layout_properties->attlist_.common_background_color_attlist_.fo_background_color_ ||
+							fill.type == 2 || fill.type == 3;
 		}
 
-		// Only a first page style without a colour and without a fill (picture, gradient, hatch) of its
-		// own takes the colour of another page style.
+		// Only a first page style without a colour and without a picture or gradient fill of its own
+		// takes the colour of another page style.
 		if (!hasBackground)
 		{
 			std::vector<style_master_page*> & masterPagesAll = pgContainer.master_pages();
