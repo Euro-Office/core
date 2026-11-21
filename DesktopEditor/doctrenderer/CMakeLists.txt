@@ -316,8 +316,13 @@ target_link_libraries(doctrenderer INTERFACE
 target_link_libraries(doctrenderer PRIVATE
     ${OPENSSL_LIBSSL}
     ${OPENSSL_LIBCRYPTO}
-    ${V8_MONOLITH}
 )
+
+if(USE_JAVASCRIPT_CORE)
+    target_link_libraries(doctrenderer PRIVATE "-framework Foundation" "-framework JavaScriptCore")
+else()
+    target_link_libraries(doctrenderer PRIVATE ${V8_MONOLITH})
+endif()
 
 if(UNIX AND NOT APPLE AND NOT ANDROID)
     # V8 uses atomics the compiler can't inline everywhere (e.g. clang on
