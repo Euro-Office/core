@@ -81,6 +81,11 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/sheet_page_setup_landscape.xlsx"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/print_area_bad_local_sheet.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/print_area_local_sheet.xlsx",
@@ -273,6 +278,11 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = "OdfFile/Test/test_odf/ExampleFiles/sheet_hidden_header_footer.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/sheet_page_setup_size.ods"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 

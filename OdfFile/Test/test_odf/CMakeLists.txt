@@ -58,6 +58,7 @@ add_core_gtest(
             chart_series_name.cpp
             xlsx2ods_sheet_background.cpp
             xlsx2ods_header_footer_codes.cpp
+            xlsx2ods_page_setup.cpp
             docx2odt_page_background.cpp
             docx2odt_section_footers.cpp
             math_bar.cpp
@@ -88,6 +89,7 @@ add_core_gtest(
             ods2xlsx_fit_to_page.cpp
             ods2xlsx_page_margins.cpp
             ods2xlsx_hidden_header_footer.cpp
+            ods2xlsx_page_setup_size.cpp
             ods2xlsx_font_size_column_width.cpp
             ods2xlsx_database_range.cpp
             odt2docx_section_columns.cpp

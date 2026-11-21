@@ -1474,7 +1474,7 @@ int style_page_layout_properties::DetectPageSize(double w, double h)
 {
 	int result = 0;
 
-	if (w > 209.99) // A4 and more
+	if (w > 209.5) // A4 and more (LibreOffice writes A4 as 20.999cm x 29.699cm)
 	{
 		if		(			w < 211 && h > 296 && h < 298) result = 9;	//  pagesizeA4Paper;
 		else if (w > 279 && w < 280 && h > 431 && h < 433) result = 3;	//  pagesizeTabloidPaper;
@@ -1559,33 +1559,46 @@ void style_page_layout_properties::xlsx_serialize(std::wostream & strm, oox::xls
 		unsigned int fit_width = 0, fit_height = 0;
 		const bool fit_to_pages = attlist_.get_fit_to_pages(fit_width, fit_height);
 
-		if (attlist_.fo_page_width_ || attlist_.fo_page_height_ || attlist_.style_print_orientation_ || 
-			attlist_.style_scale_to_ || fit_to_pages ||
+		// LibreOffice prints a sheet on a page of fo:page-width x fo:page-height (its default page when
+		// they are missing); style:print-orientation does not turn that page. In XLSX the paper is
+		// given upright and the orientation turns it, so a page wider than high is written as its
+		// upright paper size plus orientation="landscape".
+		// Older versions of this converter wrote landscape sheets as an upright page plus
+		// style:print-orientation="landscape", so a page with a size that carries the flag stays
+		// landscape too. Without a size the flag still turns nothing.
+		double h = 0, w = 0;
+		if (attlist_.fo_page_height_)
+		{
+			h = attlist_.fo_page_height_->get_value_unit(length::mm);
+		}
+		if (attlist_.fo_page_width_)
+		{
+			w = attlist_.fo_page_width_->get_value_unit(length::mm);
+		}
+		const bool has_size = h > 0 && w > 0;
+		const bool landscape_flag = attlist_.style_print_orientation_ &&
+			*attlist_.style_print_orientation_ == L"landscape";
+		const bool landscape = has_size && (w > h || landscape_flag);
+
+		if (has_size || attlist_.style_scale_to_ || fit_to_pages ||
 			attlist_.common_page_number_attlist_.style_first_page_number_)
 		{
 			CP_XML_NODE(L"pageSetup")
 			{
-				double h = 0, w = 0;
-				if (attlist_.fo_page_height_)
+				if (has_size)
 				{
-					h = attlist_.fo_page_height_->get_value_unit(length::mm);
-				}		
-				if (attlist_.fo_page_width_)
-				{
-					w =  attlist_.fo_page_width_->get_value_unit(length::mm);
-				}
-
-				if (h > 0 && w > 0)
-				{
-					int paperSize = DetectPageSize(w, h);
+					// The paper upright: the shorter side is its width.
+					const double paper_width = w < h ? w : h;
+					const double paper_height = w < h ? h : w;
+					int paperSize = DetectPageSize(paper_width, paper_height);
 					if (0 < paperSize)
 					{
 						CP_XML_ATTR(L"paperSize", paperSize);
 					}
 					else
 					{
-						CP_XML_ATTR(L"paperHeight", (int)h);
-						CP_XML_ATTR(L"paperWidth", (int)w);
+						CP_XML_ATTR(L"paperHeight", (int)paper_height);
+						CP_XML_ATTR(L"paperWidth", (int)paper_width);
 						CP_XML_ATTR(L"paperUnits", L"mm");
 					}
 				}
@@ -1606,10 +1619,9 @@ void style_page_layout_properties::xlsx_serialize(std::wostream & strm, oox::xls
 				{
 					CP_XML_ATTR(L"fitToHeight", fit_height);
 				}
-				if (attlist_.style_print_orientation_)
-				{
-					CP_XML_ATTR(L"orientation", *attlist_.style_print_orientation_);
-				}
+				// Always written: Editor.bin -> XLSX writes a pageSetup only when it has a paper size or an
+				// orientation, so a sheet with a scale but no page size would lose its scale on the way.
+				CP_XML_ATTR(L"orientation", landscape ? L"landscape" : L"portrait");
 				if (attlist_.common_page_number_attlist_.style_first_page_number_)
 				{
 					CP_XML_ATTR(L"useFirstPageNumber", 1);
