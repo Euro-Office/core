@@ -84,6 +84,7 @@ add_core_gtest(
             audio.cpp
             interactions.cpp
             xlsx2ods_table_print_titles.cpp
+            xlsx2ods_pivot_tables.cpp
             ods2xlsx_trailing_cell_style.cpp
             ods2xlsx_fit_to_page.cpp
             ods2xlsx_page_margins.cpp

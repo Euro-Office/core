@@ -119,7 +119,8 @@ public:
 	void set_table_part_autofilter(bool val);
 	void add_table_part_column(std::wstring name);
 
-	void start_pivot_table(const std::wstring &name);
+	office_element_ptr start_pivot_table(const std::wstring &name, const std::wstring &target_ref,
+									 const std::wstring &source_sheet, const std::wstring &source_ref);
 	void end_pivot_table();
 
 	void start_conditional_formats();

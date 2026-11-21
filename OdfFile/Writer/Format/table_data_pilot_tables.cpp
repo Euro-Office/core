@@ -103,14 +103,14 @@ void table_data_pilot_table::serialize(std::wostream & _Wostream)
 		CP_XML_NODE_SIMPLE()
         {  
 			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:name"		, table_name_);
-			CP_XML_ATTR(L"table:application-data"			, table_application_data_);
-			CP_XML_ATTR(L"table:buttons"					, table_buttons_);
-			CP_XML_ATTR(L"table:drill-down-on-double-click"	, table_drill_down_ondouble_click_);
-			CP_XML_ATTR(L"table:grand-total"				, table_grand_total_);
-			CP_XML_ATTR(L"table:identify-categories"		, table_identify_categories_);
-			CP_XML_ATTR(L"table:ignore-empty-rows"			, table_ignore_empty_rows_);
-			CP_XML_ATTR(L"table:show-filter-button"			, table_show_filter_button_);
-			CP_XML_ATTR(L"table:target-range-address"		, table_target_range_address_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:application-data", table_application_data_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:buttons", table_buttons_);
+			CP_XML_ATTR_OPT(L"table:drill-down-on-double-click", table_drill_down_ondouble_click_);
+			CP_XML_ATTR_OPT(L"table:grand-total", table_grand_total_);
+			CP_XML_ATTR_OPT(L"table:identify-categories", table_identify_categories_);
+			CP_XML_ATTR_OPT(L"table:ignore-empty-rows", table_ignore_empty_rows_);
+			CP_XML_ATTR_OPT(L"table:show-filter-button", table_show_filter_button_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:target-range-address", table_target_range_address_);
 
 			if (source_)
 				source_->serialize(CP_XML_STREAM());
@@ -162,14 +162,14 @@ void table_data_pilot_field::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         { 
-			CP_XML_ATTR(L"table:source-field-name"		, table_source_field_name_);
-			CP_XML_ATTR(L"table:orientation"			, table_orientation_);
-			CP_XML_ATTR(L"table:used-hierarchy"			, table_used_hierarchy_);
-			CP_XML_ATTR(L"table:function"				, table_function_);
-			CP_XML_ATTR(L"loext:ignore-selected-page"	, loext_ignore_selected_page_);
-			CP_XML_ATTR(L"table:selected-page"			, table_selected_page_);
-			CP_XML_ATTR(L"table:is-data-layout-field"	, table_is_data_layout_field_);
-			CP_XML_ATTR(L"tableooo:display-name"		, table_display_name_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:source-field-name", table_source_field_name_);
+			CP_XML_ATTR_OPT(L"table:orientation", table_orientation_);
+			CP_XML_ATTR_OPT(L"table:used-hierarchy", table_used_hierarchy_);
+			CP_XML_ATTR_OPT(L"table:function", table_function_);
+			CP_XML_ATTR_OPT(L"loext:ignore-selected-page", loext_ignore_selected_page_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:selected-page", table_selected_page_);
+			CP_XML_ATTR_OPT(L"table:is-data-layout-field", table_is_data_layout_field_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"tableooo:display-name", table_display_name_);
 
 			if (level_)
 				level_->serialize(CP_XML_STREAM());
@@ -192,10 +192,10 @@ void table_data_pilot_field_reference::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         { 
-			CP_XML_ATTR(L"table:field-name"		, table_field_name_);
-			CP_XML_ATTR(L"table:member-name"	, table_member_name_);
-			CP_XML_ATTR(L"table:member-type"	, table_member_type_);
-			CP_XML_ATTR(L"table:type"			, table_type_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:field-name", table_field_name_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:member-name", table_member_name_);
+			CP_XML_ATTR_OPT(L"table:member-type", table_member_type_);
+			CP_XML_ATTR_OPT(L"table:type", table_type_);
 		}
 	}
 }
@@ -209,8 +209,8 @@ void table_database_source_table::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         { 
-			CP_XML_ATTR(L"table:database-name", table_database_name_);
-			CP_XML_ATTR(L"table:table-name"	, table_table_name_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:database-name", table_database_name_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:table-name", table_table_name_);
 		}
 	}
 }
@@ -224,8 +224,8 @@ void table_database_source_query::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         { 
-			CP_XML_ATTR(L"table:database-name"	, table_database_name_);
-			CP_XML_ATTR(L"table:query-name"		, table_query_name_);	
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:database-name", table_database_name_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:query-name", table_query_name_);	
 		}
 	}
 }
@@ -239,9 +239,9 @@ void table_database_source_sql::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         { 
-			CP_XML_ATTR(L"table:database-name"		, table_database_name_);
-			CP_XML_ATTR(L"table:parse-sql-statement", table_parse_sql_statement_);
-			CP_XML_ATTR(L"table:sql-statement"		, table_sql_statement_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:database-name", table_database_name_);
+			CP_XML_ATTR_OPT(L"table:parse-sql-statement", table_parse_sql_statement_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:sql-statement", table_sql_statement_);
 		}
 	}
 }
@@ -265,7 +265,7 @@ void table_source_cell_range::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			CP_XML_ATTR(L"table:cell-range-address", table_cell_range_address_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:cell-range-address", table_cell_range_address_);
 			
 			for (size_t i = 0; i < content_.size(); i++)
 			{
@@ -284,7 +284,7 @@ void table_source_cell_ranges::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			CP_XML_ATTR(L"table:cell-ranges-address", table_cell_ranges_address_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:cell-ranges-address", table_cell_ranges_address_);
 		}
 	}
 }
@@ -299,10 +299,10 @@ void table_source_service::serialize(std::wostream & _Wostream)
 		CP_XML_NODE_SIMPLE()
         {
 			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:name", table_name_);
-			CP_XML_ATTR(L"table:object-name", table_object_name_);
-			CP_XML_ATTR(L"table:password",	table_password_);
-			CP_XML_ATTR(L"table:source-name", table_source_name_);
-			CP_XML_ATTR(L"table:user-name",	table_user_name_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:object-name", table_object_name_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:password", table_password_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:source-name", table_source_name_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:user-name", table_user_name_);
 		}
 	}
 }
@@ -355,23 +355,23 @@ void table_data_pilot_level::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			CP_XML_ATTR(L"table:show-empty", table_show_empty_);
-			CP_XML_ATTR(L"calcext:repeat-item-labels", calcext_repeat_item_labels_);
+			CP_XML_ATTR_OPT(L"table:show-empty", table_show_empty_);
+			CP_XML_ATTR_OPT(L"calcext:repeat-item-labels", calcext_repeat_item_labels_);
+
+			if (subtotals_)
+				subtotals_->serialize(CP_XML_STREAM());
+
+			if (members_)
+				members_->serialize(CP_XML_STREAM());
 
 			if (display_info_)
 				display_info_->serialize(CP_XML_STREAM());
-
-			if (layout_info_)
-				layout_info_->serialize(CP_XML_STREAM());
 
 			if (sort_info_)
 				sort_info_->serialize(CP_XML_STREAM());
 
-			if (display_info_)
-				display_info_->serialize(CP_XML_STREAM());
-
-			if (subtotals_)
-				subtotals_->serialize(CP_XML_STREAM());
+			if (layout_info_)
+				layout_info_->serialize(CP_XML_STREAM());
 		}
 	}
 }
@@ -395,13 +395,13 @@ void table_data_pilot_groups::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			CP_XML_ATTR(L"table:date-start",		table_date_start_);
-			CP_XML_ATTR(L"table:date-end",			table_date_end_);
-			CP_XML_ATTR(L"table:start",				table_start);
-			CP_XML_ATTR(L"table:end",				table_end_);
-			CP_XML_ATTR(L"table:grouped-by",		table_grouped_by_);
-			CP_XML_ATTR(L"table:source-field-name",	table_source_field_name_);
-			CP_XML_ATTR(L"table:step",				table_step);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:date-start", table_date_start_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:date-end", table_date_end_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:start", table_start);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:end", table_end_);
+			CP_XML_ATTR_OPT(L"table:grouped-by", table_grouped_by_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:source-field-name", table_source_field_name_);
+			CP_XML_ATTR_OPT(L"table:step", table_step);
 			
 			for (size_t i = 0; i < content_.size(); i++)
 			{
@@ -477,8 +477,8 @@ void table_data_pilot_member::serialize(std::wostream & _Wostream)
 		CP_XML_NODE_SIMPLE()
         {
 			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:name", table_name_);
-			CP_XML_ATTR(L"table:display", table_display_);
-			CP_XML_ATTR(L"table:show-details", table_show_details_);
+			CP_XML_ATTR_OPT(L"table:display", table_display_);
+			CP_XML_ATTR_OPT(L"table:show-details", table_show_details_);
 		}
 	}
 }
@@ -533,7 +533,7 @@ void table_data_pilot_subtotal::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			CP_XML_ATTR(L"table:function",	table_function_);
+			CP_XML_ATTR_OPT(L"table:function", table_function_);
 		}
 	}
 }
@@ -547,10 +547,10 @@ void table_data_pilot_grand_total::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			CP_XML_ATTR(L"table:display"				, table_display_);
-			CP_XML_ATTR(L"table:orientation"			, table_orientation_);
+			CP_XML_ATTR_OPT(L"table:display", table_display_);
+			CP_XML_ATTR_OPT(L"table:orientation", table_orientation_);
 			//CP_XML_ATTR(L"table:display-name"			, table_display_name_);
-			CP_XML_ATTR(L"tableooo:display-name"		, table_display_name_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"tableooo:display-name", table_display_name_);
 		}
 	}
 }
@@ -564,8 +564,8 @@ void table_data_pilot_layout_info::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			CP_XML_ATTR(L"table:add-empty-lines"	, table_add_empty_lines_);
-			CP_XML_ATTR(L"table:layout-mode"		, table_layout_mode_);
+			CP_XML_ATTR_OPT(L"table:add-empty-lines", table_add_empty_lines_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:layout-mode", table_layout_mode_);
 		}
 	}
 }
@@ -579,9 +579,9 @@ void table_data_pilot_sort_info::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			CP_XML_ATTR(L"table:data-field"	, table_data_field_);
-			CP_XML_ATTR(L"table:order"		, table_order_);
-			CP_XML_ATTR(L"table:sort-mode"	, table_sort_mode_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:data-field", table_data_field_);
+			CP_XML_ATTR_OPT(L"table:order", table_order_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:sort-mode", table_sort_mode_);
 		}
 	}
 }
@@ -595,10 +595,10 @@ void table_data_pilot_display_info::serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			CP_XML_ATTR(L"table:data-field"			, table_data_field_);
-			CP_XML_ATTR(L"table:display-member-mode"	, table_display_member_mode_);
-			CP_XML_ATTR(L"table:enabled"				, table_enabled_);
-			CP_XML_ATTR(L"table:member-count"			, table_member_count_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:data-field", table_data_field_);
+			CP_XML_ATTR_OPT_ENCODE_STRING(L"table:display-member-mode", table_display_member_mode_);
+			CP_XML_ATTR_OPT(L"table:enabled", table_enabled_);
+			CP_XML_ATTR_OPT(L"table:member-count", table_member_count_);
 		}
 	}
 }

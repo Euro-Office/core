@@ -37,6 +37,8 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/make_shared.hpp>
 
+#include <cwctype>
+
 #include "../../Formulas/formulasconvert.h"
 
 namespace cpdoccore {
@@ -200,21 +202,49 @@ void ods_table_context::add_autofilter(std::wstring ref)
 	table_database_ranges_.elements.push_back(elm);
 
 }
-void ods_table_context::start_pivot_table(const std::wstring &name)
+// sheet!ref for oox2odf_converter, with the sheet name quoted unless it is a plain word.
+static std::wstring pivot_sheet_ref(const std::wstring &sheet, const std::wstring &ref)
 {
-	if (!table_pivots_.root) create_element(L"table", L"data-pilot-tables", table_pivots_.root, &context_);
-
+	for (wchar_t c : sheet)
+	{
+		if (!iswalnum(c) && c != L'_')
+			return L"'" + boost::algorithm::replace_all_copy(sheet, L"'", L"''") + L"'!" + ref;
+	}
+	return sheet + L"!" + ref;
+}
+office_element_ptr ods_table_context::start_pivot_table(const std::wstring &name, const std::wstring &target_ref,
+														const std::wstring &source_sheet, const std::wstring &source_ref)
+{
 	office_element_ptr elm;
+	// A pilot table without its source and place is not valid ODF; write none at all.
+	if (target_ref.empty() || source_sheet.empty() || source_ref.empty()) return elm;
+
 	create_element(L"table", L"data-pilot-table", elm, &context_);
 	table_data_pilot_table *pilot_table = dynamic_cast<table_data_pilot_table*>(elm.get());
 
-	if (!pilot_table) return;
+	if (!pilot_table) return office_element_ptr();
+
+	formulasconvert::oox2odf_converter formulas_converter;
 
 	pilot_table->table_name_ = name;
+	pilot_table->table_target_range_address_ =
+		formulas_converter.convert_named_ref(pivot_sheet_ref(state()->office_table_name_, target_ref));
 
+	office_element_ptr source_elm;
+	create_element(L"table", L"source-cell-range", source_elm, &context_);
+	table_source_cell_range *source = dynamic_cast<table_source_cell_range*>(source_elm.get());
+	if (source)
+	{
+		source->table_cell_range_address_ =
+			formulas_converter.convert_named_ref(pivot_sheet_ref(source_sheet, source_ref));
+		pilot_table->add_child_element(source_elm);
+	}
+
+	if (!table_pivots_.root) create_element(L"table", L"data-pilot-tables", table_pivots_.root, &context_);
 	table_pivots_.root->add_child_element(elm);
 
 	state()->start_pilot_table(elm);
+	return elm;
 }
 void ods_table_context::end_pivot_table()
 {
