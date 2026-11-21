@@ -13,6 +13,12 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
+# Only the third-party libraries (build.sh --third-party-only), which
+# common.cmake built and uploaded to the remote cache
+if(EO_THIRD_PARTY_ONLY)
+    return()
+endif()
+
 option(EO_BUILD_TESTS "Build C++ unit tests and register them with CTest" OFF)
 
 if(EMSCRIPTEN)
