@@ -23,6 +23,7 @@
  *
  */
 #include "../../../OOXML/Base/Base.h"
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -43,3 +44,20 @@ bool Unpack(const std::wstring &file, const std::wstring &dir, std::string &erro
 std::wstring GetWorkDir();
 void RemoveWorkDirs();
 
+
+// Unpacks `source`, replaces the part `part` (relative to the package root) with edit(<its bytes>) and zips the
+// result to a new .xlsx in `result`. Adds a test failure and returns false if the part is missing or the edit leaves
+// it unchanged, so a fixture edit cannot silently become the unmodified file.
+bool TransformXlsxPart(const std::wstring &source, const std::wstring &part,
+                       const std::function<std::string(const std::string &)> &edit, std::wstring &result);
+
+// The value of the first attribute named exactly `attr` (e.g. "r:id") in `xml` at or after `from`, or "" if there
+// is none. A string scan for small fixture parts, not an XML parser.
+std::string XmlAttribute(const std::string &xml, const std::string &attr, size_t from = 0);
+
+// The Target of the relationship with Id `id` in a .rels part, or "" if there is none.
+std::string RelTarget(const std::string &rels, const std::string &id);
+
+// TransformXlsxPart with std::regex_replace(pattern -> replacement) as the edit; fails if the pattern matches nothing.
+bool EditXlsxPart(const std::wstring &source, const std::wstring &part, const std::string &pattern,
+                  const std::string &replacement, std::wstring &result);
