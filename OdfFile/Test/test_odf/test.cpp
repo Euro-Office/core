@@ -84,6 +84,23 @@ TEST(TestOdfConversion, MotionOdpProducesValidPptxPackage)
 		<< sOutputPath << ": package is missing ppt/presentation.xml";
 }
 
+// Rows 2 to 4 are one repeated empty row with a height of 1in: each of them
+// needs its own row element, or it falls back to the default height
+TEST(ODS2XLSX, RepeatedEmptyRowsKeepHeight)
+{
+	ASSERT_EQ(S_OK, convert_single(L"ExampleFiles/empty_row_height.ods"));
+
+	const std::string sSheet = read_package_file(L"ExampleFiles/empty_row_height.ods-tmp.xlsx", L"xl/worksheets/sheet1.xml");
+	ASSERT_FALSE(sSheet.empty());
+	for (const std::string sRow : {"<row r=\"2\"", "<row r=\"3\"", "<row r=\"4\""})
+	{
+		const size_t nStart = sSheet.find(sRow);
+		ASSERT_NE(std::string::npos, nStart) << sRow;
+		const std::string sTag = sSheet.substr(nStart, sSheet.find('>', nStart) - nStart);
+		EXPECT_NE(std::string::npos, sTag.find("customHeight=\"1\"")) << sTag;
+	}
+}
+
 TEST(ODP2PPTX, EmptyCustomShapeFormula)
 {
 	EXPECT_EQ(S_OK, convert_single(L"ExampleFiles/empty_custom_shape_formula.odp"));
