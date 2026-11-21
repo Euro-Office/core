@@ -29,7 +29,9 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = V8_VERSION
+    # On Windows the version also names the C runtime, so that a V8 built
+    # against the static one before patch_dynamic_crt is built again.
+    version = V8_VERSION + ( "-dynamic-crt" if nc.is_windows() else "" )
 )
 
 depot_tools_path = nc.work_dir / "depot_tools"
@@ -140,6 +142,26 @@ def disable_crel():
     if crel_flags not in text:
         nc.abort_op( f"Could not find the CREL flags in { compiler_gn_path }. Did the V8 build config change?" )
     compiler_gn_path.write_text( text.replace( crel_flags, marker ) )
+
+def patch_dynamic_crt():
+    # Chromium links the static C runtime into every non-component desktop
+    # build, and V8's library tells the linker so. Core is built against the
+    # DLL runtime (common.cmake), as is an OpenSSL from vcpkg's static-md
+    # triplet, so doctrenderer.dll then pulled in libucrt.lib and could not
+    # resolve libcrypto's __imp__time64, __imp_strspn and the rest (LNK1120).
+    # Core's libraries also hand FILE* handles to one another, which needs one
+    # runtime. There is no gn arg for it; take the dynamic one here.
+    build_gn_path = v8_src_path / "build" / "config" / "win" / "BUILD.gn"
+    text = build_gn_path.read_text()
+    original = """      # Desktop Windows: static CRT.
+      configs = [ ":static_crt" ]"""
+    patched = """      # Desktop Windows: the DLL CRT, as the rest of core (nc-build.py).
+      configs = [ ":dynamic_crt" ]"""
+    if patched in text:
+        return
+    if original not in text:
+        nc.abort_op( f"Could not find the static CRT choice in { build_gn_path }. Did Chromium's build change?" )
+    build_gn_path.write_text( text.replace( original, patched ) )
 
 def patch_callable_run_type():
     # V8 extracts a functor's signature from &Functor::operator(), expecting a
@@ -558,6 +580,7 @@ def build_and_install():
         disable_crel()
     if nc.is_windows():
         patch_callable_run_type()
+        patch_dynamic_crt()
 
     targetarch = get_cpu()
     output_path = v8_src_path / "out.gn" / f"{targetarch}.release"
