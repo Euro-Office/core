@@ -74,6 +74,17 @@ if(NOT DEFINED LINUX AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LINUX TRUE)
 endif()
 
+# iOS apps can't use V8's JIT
+if(IOS)
+    set(USE_JAVASCRIPT_CORE 1)
+endif()
+
+# doctrenderer's JavaScriptCore backend is Objective-C++. Enabled here, so the
+# top-level project has the language too (CMake needs it there).
+if(USE_JAVASCRIPT_CORE)
+    enable_language(OBJCXX)
+endif()
+
 # Android builds (NDK toolchain file) use core's Linux code paths
 if(ANDROID)
     set(LINUX TRUE)
@@ -203,6 +214,21 @@ else()
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
                 "EO_ANDROID_API_LEVEL=${ANDROID_NATIVE_API_LEVEL}"
             )
+        elseif(IOS)
+            # Device or simulator, from the SDK this build uses. No v8: doctrenderer
+            # runs on JavaScriptCore on iOS.
+            if(CMAKE_OSX_SYSROOT MATCHES "[Ss]imulator")
+                set(IOS_3RD_PARTY_TARGET "ios-sim-arm64")
+            else()
+                set(IOS_3RD_PARTY_TARGET "ios-arm64")
+            endif()
+            set(THIRD_PARTY_ARGS
+                "--target=${IOS_3RD_PARTY_TARGET}"
+                "--only=apple,boost,brotli,harfbuzz,html,hyphen,icu,md,openssl,socketio"
+            )
+            set(THIRD_PARTY_ENV
+                "EO_IOS_MIN_VERSION=${CMAKE_OSX_DEPLOYMENT_TARGET}"
+            )
         else()
             if(NOT BUILD_DESKTOP)
                 set(NO_DESKTOP_EXCLUDE ",cef,qt")
@@ -215,8 +241,9 @@ else()
             endif()
 
             set(PREBUILT_EXCLUDE "")
-            if(EO_CORE_PREBUILT_DIR)
-                # Only doctrenderer links V8, and the package has it built in
+            if(EO_CORE_PREBUILT_DIR OR USE_JAVASCRIPT_CORE)
+                # Only doctrenderer links V8: the package has it built in, or
+                # doctrenderer runs on JavaScriptCore
                 set(PREBUILT_EXCLUDE ",v8")
             endif()
 
@@ -336,6 +363,10 @@ else()
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc${ICU_MAJOR_VER}.so")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata${ICU_MAJOR_VER}.so")
         set(LIBICUI "${ICU_INSTALL_DIR_ABS}/lib/libicui18n${ICU_MAJOR_VER}.so")
+    elseif( IOS )
+        set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.a")
+        set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.a")
+        set(LIBICUI "${ICU_INSTALL_DIR_ABS}/lib/libicui18n.a")
     elseif( APPLE )
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.${ICU_MAJOR_VER}.dylib")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.${ICU_MAJOR_VER}.dylib")
@@ -352,8 +383,8 @@ else()
     list( APPEND CMAKE_PREFIX_PATH "${BOOST_INSTALL_DIR_ABS}" )
     include_directories( "${BOOST_INSTALL_DIR_ABS}/include" )
     set(Boost_USE_STATIC_LIBS ON)
-    if( ANDROID )
-        # The NDK toolchain only searches its sysroot for packages by default
+    if( ANDROID OR IOS )
+        # Cross toolchains only search their sysroot for packages by default
         set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
     endif()
     find_package( Boost REQUIRED COMPONENTS system filesystem regex date_time )
@@ -729,6 +760,14 @@ elseif( APPLE )
         # Not sure about these:
         DONT_WRITE_EMBEDDED_FONTS
     )
+    if( IOS )
+        list(APPEND COMMON_DEFINES
+            _IOS
+            _XCODE
+            IOS
+            _ARM_ALIGN_
+        )
+    endif()
 else() # Assume win+msvc
     set(COMMON_DEFINES
         _REENTRANT
@@ -914,6 +953,21 @@ function(set_default_options target)
             Rpcrt4
         )
     endif()
+
+    # iOS apps can only ship libraries as frameworks
+    get_target_property(_type ${target} TYPE)
+    if( IOS AND _type STREQUAL "SHARED_LIBRARY" )
+        # Bundle identifiers allow letters, digits, '-' and '.'
+        string(REPLACE "_" "-" _identifier "${target}")
+        set_target_properties(${target} PROPERTIES
+            FRAMEWORK TRUE
+            MACOSX_FRAMEWORK_IDENTIFIER eu.eurooffice.core.${_identifier}
+            MACOSX_FRAMEWORK_BUNDLE_VERSION 1.0
+            MACOSX_FRAMEWORK_SHORT_VERSION_STRING 1.0
+            BUILD_RPATH "@loader_path/.."
+            INSTALL_RPATH "@loader_path/.."
+        )
+    endif()
 endfunction()
 
 # ---------------------------------------------------------------------------
@@ -1002,6 +1056,11 @@ endfunction()
 
 function(copy_artifacts_to_folder artifacts dest_dir)
     foreach(artifact ${artifacts})
+        get_target_property(_framework ${artifact} FRAMEWORK)
+        if( _framework )
+            copy_framework_to_folder(${artifact} "${dest_dir}")
+            continue()
+        endif()
         add_custom_command(TARGET ${artifact} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E make_directory "${dest_dir}"
             COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${artifact}> "${dest_dir}/"
@@ -1018,14 +1077,17 @@ function(copy_framework_to_folder target dest_dir)
     # ("bundle format is ambiguous"). cp -R preserves symlinks as symlinks.
     add_custom_command(TARGET ${target} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory "${dest_dir}"
-        COMMAND ${CMAKE_COMMAND} -E remove_directory "${dest_dir}/${target}.framework"
-        COMMAND cp -R "$<TARGET_BUNDLE_DIR:${target}>" "${dest_dir}/${target}.framework"
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${dest_dir}/$<TARGET_BUNDLE_DIR_NAME:${target}>"
+        COMMAND cp -R "$<TARGET_BUNDLE_DIR:${target}>" "${dest_dir}/$<TARGET_BUNDLE_DIR_NAME:${target}>"
         COMMENT "Copying ${target}.framework to ${dest_dir}"
     )
 endfunction()
 
 function(copy_icu_libs artifact)
-    if( MSVC )
+    if( IOS )
+        # Static on iOS, linked into the libraries
+        return()
+    elseif( MSVC )
 
         file(GLOB ICU_DLLS
             "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib/icu*74.dll"

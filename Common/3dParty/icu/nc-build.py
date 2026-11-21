@@ -91,12 +91,12 @@ def fix_macos_install_names( install_dir ):
                     f"Fix {Path(dep).name} reference in {dylib.name}"
                 )
 
-def build_android():
+def build_cross( host : str, target_name : str, tc : dict[ str, str ], flags : str ):
     # A cross build needs a host build of ICU for its data tools. Both are
     # built out of source so they don't collide in icu/source.
     icu_source_dir = nc.work_dir / "icu" / "source"
     host_build_dir = nc.work_dir / "build-host"
-    target_build_dir = nc.work_dir / f"build-android-{ nc.android_abi() }"
+    target_build_dir = nc.work_dir / f"build-{ target_name }"
 
     if not ( host_build_dir / "bin" / "icupkg" ).exists():
         nc.ensure_directory_exists( host_build_dir )
@@ -119,11 +119,9 @@ def build_android():
         shutil.rmtree( target_build_dir )
     nc.ensure_directory_exists( target_build_dir )
 
-    # Static archives first; the shared libraries are linked from them below
-    tc = nc.android_toolchain_env()
     nc.run_command(
         [   str( icu_source_dir / "configure" ),
-            f"--host={ nc.android_triple() }",
+            f"--host={ host }",
             f"--with-cross-build={ host_build_dir }",
             f"--prefix={ nc.install_dir }",
             "--enable-static",
@@ -137,8 +135,9 @@ def build_android():
             f"CXX={ tc[ 'CXX' ] }",
             f"AR={ tc[ 'AR' ] }",
             f"RANLIB={ tc[ 'RANLIB' ] }",
-            "CFLAGS=-fPIC -O2",
-            "CXXFLAGS=-fPIC -O2",
+            f"CFLAGS={ flags } -O2",
+            f"CXXFLAGS={ flags } -O2",
+            f"LDFLAGS={ flags }",
         ],
         "Configure",
         target_build_dir
@@ -156,6 +155,10 @@ def build_android():
         target_build_dir
     )
 
+def build_android():
+    # Static archives first; the shared libraries are linked from them below
+    tc = nc.android_toolchain_env()
+    build_cross( nc.android_triple(), f"android-{ nc.android_abi() }", tc, "-fPIC" )
     link_android_shared_libs( nc.install_dir / "lib", tc[ "CXX" ] )
 
 def link_android_shared_libs( lib_dir : Path, cxx : str ):
@@ -188,6 +191,9 @@ def build_and_install():
 
     if nc.is_android():
         build_android()
+
+    elif nc.is_ios():
+        build_cross( "aarch64-apple-darwin", nc.CROSS_TARGET, nc.ios_toolchain_env(), nc.ios_flags() )
 
     elif nc.is_linux():
         nc.run_command(

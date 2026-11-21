@@ -16,7 +16,7 @@ if(NOT DEFINED DRAWINGFILE_SUPPORT)
 endif()
 
 if(NOT DEFINED V8_USE_INSPECTOR)
-    if(ANDROID)
+    if(ANDROID OR USE_JAVASCRIPT_CORE)
         set(V8_USE_INSPECTOR 0) # no debugger on mobile
     else()
         set(V8_USE_INSPECTOR 1)
@@ -301,8 +301,15 @@ endif()
 
 if(APPLE)
     target_compile_options(doctrenderer PRIVATE
-        $<$<COMPILE_LANGUAGE:OBJC>:-fobjc-arc -fobjc-weak -framework Foundation -framework JavaScriptCore>
-        $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc -fobjc-weak -framework Foundation -framework JavaScriptCore>
+        $<$<COMPILE_LANGUAGE:OBJC>:-fobjc-arc -fobjc-weak>
+        $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc -fobjc-weak>
+    )
+endif()
+
+if(USE_JAVASCRIPT_CORE)
+    target_link_libraries(doctrenderer PRIVATE
+        "-framework Foundation"
+        "-framework JavaScriptCore"
     )
 endif()
 
@@ -316,8 +323,13 @@ target_link_libraries(doctrenderer INTERFACE
 target_link_libraries(doctrenderer PRIVATE
     ${OPENSSL_LIBSSL}
     ${OPENSSL_LIBCRYPTO}
-    ${V8_MONOLITH}
 )
+
+if(NOT USE_JAVASCRIPT_CORE)
+    target_link_libraries(doctrenderer PRIVATE
+        ${V8_MONOLITH}
+    )
+endif()
 
 if(UNIX AND NOT APPLE AND NOT ANDROID)
     # V8 uses atomics the compiler can't inline everywhere (e.g. clang on

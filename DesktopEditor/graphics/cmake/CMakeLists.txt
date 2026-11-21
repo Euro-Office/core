@@ -702,7 +702,8 @@ add_library(graphics SHARED
     ${BROTLI_INSTALL_DIR_ABS}/c/dec/static_init.c
 )
 
-if( APPLE )
+# Installed fonts of macOS; iOS apps have no access to the system's font files
+if( APPLE AND NOT IOS )
     target_sources( graphics PRIVATE
         ${FONT_ENGINE_SOURCES_DIR}/ApplicationFonts_mac.mm
     )
