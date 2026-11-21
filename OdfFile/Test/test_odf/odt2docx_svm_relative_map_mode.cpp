@@ -1,0 +1,110 @@
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-only
+
+// StarView metafile (SVM) map modes, as LibreOffice writes them for charts: a relative map mode
+// scales the current one, and POP returns to the state of the matching PUSH. The fixture fills
+// the picture blue, then, inside PUSH/POP, draws a red rectangle of the same size at half scale
+// (the top-left quarter), and after the POP a green rectangle in the bottom-right corner at full
+// scale. The PNG the DOCX gets must show the three colours there.
+
+#include "gtest/gtest.h"
+
+#include "common.h"
+
+#include "../../../DesktopEditor/raster/BgraFrame.h"
+
+#include <chrono>
+#include <cstdlib>
+#include <string>
+
+namespace
+{
+struct Rgb
+{
+    int r, g, b;
+};
+
+// The colour at a fraction of the picture's width and height; -1 values if it can't be read.
+Rgb colour_at(CBgraFrame& frame, double fx, double fy)
+{
+    const int x = static_cast<int>(frame.get_Width() * fx);
+    const int y = static_cast<int>(frame.get_Height() * fy);
+    BYTE* data = frame.get_Data();
+    if (!data || x >= frame.get_Width() || y >= frame.get_Height())
+        return {-1, -1, -1};
+    // A negative stride means the rows are stored bottom-up.
+    const int stride = frame.get_Stride() < 0 ? -frame.get_Stride() : frame.get_Stride();
+    const int row = frame.get_Stride() < 0 ? frame.get_Height() - 1 - y : y;
+    const BYTE* pixel = data + row * stride + x * 4;
+    return frame.get_IsRGBA() ? Rgb{pixel[0], pixel[1], pixel[2]} : Rgb{pixel[2], pixel[1], pixel[0]};
+}
+
+bool is(const Rgb& c, int r, int g, int b)
+{
+    return std::abs(c.r - r) < 40 && std::abs(c.g - g) < 40 && std::abs(c.b - b) < 40;
+}
+} // namespace
+
+TEST(OdtToDocxSvmMapMode, RelativeMapModeAndPopAreHonoured)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/svm_relative_map_mode.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    CBgraFrame frame;
+    ASSERT_TRUE(frame.OpenFile(dir + FILE_SEPARATOR_STR + L"word/media/image1.png")) << "no PNG for the SVM picture";
+    ASSERT_GT(frame.get_Width(), 0);
+
+    const Rgb top_left = colour_at(frame, 0.1, 0.1);
+    const Rgb middle = colour_at(frame, 0.7, 0.4);
+    const Rgb bottom_right = colour_at(frame, 0.95, 0.9);
+    EXPECT_TRUE(is(top_left, 255, 0, 0)) << "top left " << top_left.r << "," << top_left.g << "," << top_left.b;
+    EXPECT_TRUE(is(middle, 0, 0, 255)) << "middle " << middle.r << "," << middle.g << "," << middle.b;
+    EXPECT_TRUE(is(bottom_right, 0, 255, 0)) << "bottom right " << bottom_right.r << "," << bottom_right.g << "," << bottom_right.b;
+}
+
+// A crafted SVM: a map mode with a negative scale (ignored, as LibreOffice drops it), 5000 nested
+// PUSH records around 40 relative map modes of scale 4294967295 (bounded states and scales), then
+// 5000 POP. The picture still converts: red only in the top-left quarter, blue elsewhere, green in
+// the bottom-right corner at the base scale.
+TEST(OdtToDocxSvmMapMode, CraftedMapModesStayBounded)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/svm_crafted_map_mode.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    CBgraFrame frame;
+    ASSERT_TRUE(frame.OpenFile(dir + FILE_SEPARATOR_STR + L"word/media/image1.png")) << "no PNG for the SVM picture";
+    ASSERT_GT(frame.get_Width(), 0);
+
+    const Rgb top_left = colour_at(frame, 0.1, 0.1);
+    const Rgb top_right = colour_at(frame, 0.7, 0.25);
+    const Rgb bottom_right = colour_at(frame, 0.95, 0.9);
+    EXPECT_TRUE(is(top_left, 255, 0, 0)) << "top left " << top_left.r << "," << top_left.g << "," << top_left.b;
+    EXPECT_TRUE(is(top_right, 0, 0, 255)) << "top right " << top_right.r << "," << top_right.g << "," << top_right.b;
+    EXPECT_TRUE(is(bottom_right, 0, 255, 0)) << "bottom right " << bottom_right.r << "," << bottom_right.g << "," << bottom_right.b;
+}
+
+// A crafted SVM whose sizes come from the file and point far beyond it: a text array with 0x04000000
+// DX entries (two in the file), a compressed bitmap of 0xFFFFFF00 coded and 0xFFFFFFF0 uncoded bytes
+// (8 in the file), uncompressed bitmaps with an image or a header of 0xFFFFFF00 bytes, a valid
+// bitmap with a 124-byte header, a bitmap header of 0x1000 bytes and 1000 one-point polygons
+// claiming 65535 points each; the header announces 4294967295 records (the file has 1012). The
+// picture is blue, and a green rectangle in the bottom-right quarter comes after all of them: every
+// size stays inside its record and the reader goes on at the end of each record, so the green one
+// is still drawn, and no record reads the following ones, so the conversion is quick.
+TEST(OdtToDocxSvmMapMode, CraftedSizesStayInsideTheFile)
+{
+    const auto start = std::chrono::steady_clock::now();
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/svm_crafted_bitmap.odt");
+    const double seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_LT(seconds, 5.) << "the record loop ran past the end of the data";
+
+    CBgraFrame frame;
+    ASSERT_TRUE(frame.OpenFile(dir + FILE_SEPARATOR_STR + L"word/media/image1.png")) << "no PNG for the SVM picture";
+    ASSERT_GT(frame.get_Width(), 0);
+
+    const Rgb bottom_left = colour_at(frame, 0.25, 0.75);
+    const Rgb bottom_right = colour_at(frame, 0.75, 0.75);
+    EXPECT_TRUE(is(bottom_left, 0, 0, 255)) << "bottom left " << bottom_left.r << "," << bottom_left.g << "," << bottom_left.b;
+    EXPECT_TRUE(is(bottom_right, 0, 255, 0)) << "bottom right " << bottom_right.r << "," << bottom_right.g << "," << bottom_right.b;
+}

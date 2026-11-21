@@ -134,6 +134,9 @@ namespace MetaFile
 		{
 			unsigned int length;
 			stream >> length;
+			// The length comes from the file: no more characters than are left in the stream.
+			if (length > stream.CanRead() / 2)
+				length = stream.CanRead() / 2;
 			
 			string = NSStringExt::CConverter::GetUnicodeFromUTF16((unsigned short*)stream.GetCurPtr(), length);
 	
@@ -144,6 +147,8 @@ namespace MetaFile
 		{
 			unsigned short  length;
 			stream >> length;
+			if (length > stream.CanRead())
+				length = (unsigned short)stream.CanRead();
 		
 			if (charset < 1)
 			{
@@ -218,6 +223,10 @@ CDataStream& operator>>(CDataStream &stream, VersionCompat &compat)
 	stream >> compat.length;
 
 	return stream;
+}
+double FractionToScale(const Fraction &fract)
+{
+	return fract.numerator && fract.denominator ? (double)fract.numerator / fract.denominator : 1.;
 }
 CDataStream& operator>>(CDataStream &stream, Fraction &fract)
 {
@@ -382,6 +391,10 @@ CDataStream& operator>>(CDataStream &stream, TSvmPolygon &p)
 {
 	unsigned short count;
 	stream >> count;
+
+	// The count comes from the file: no more points than 8-byte values are left.
+	if (count > stream.CanRead() / 8)
+		count = (unsigned short)(stream.CanRead() / 8);
 
 	for (int i = 0; i < count; i++)
 	{
