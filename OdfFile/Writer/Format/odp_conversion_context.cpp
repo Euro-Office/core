@@ -271,6 +271,17 @@ std::wstring odp_conversion_context::map_indentifier(std::wstring id)
 	return odfId;
 }
 
+// A PPTX slide master and its layout go into one ODF master page, but PPTX
+// numbers the shapes of each part on its own, so a master shape and a layout
+// placeholder often share an id. Start a new map before the layout shapes so
+// that they get ODF ids of their own.
+void odp_conversion_context::reset_page_identifiers()
+{
+	const int page_index = slide_context_.page_index();
+	if (page_index >= 0 && page_index < map_identifiers_.size())
+		map_identifiers_[page_index].clear();
+}
+
 std::wstring odp_conversion_context::get_mapped_identifier(const std::wstring& id)
 {
 	for (int i = map_identifiers_.size() - 1; i >= 0 ; i--)

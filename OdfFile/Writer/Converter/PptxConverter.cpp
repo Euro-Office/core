@@ -1411,6 +1411,7 @@ void PptxConverter::convert_slides()
 						current_clrMap	= slide->Layout->clrMapOvr->overrideClrMapping.GetPointer();
 					current_slide = slide->Layout.GetPointer();
 					
+					odp_context->reset_page_identifiers();
 					convert_slide(&slide->Layout->cSld, current_txStyles, true, bShowLayoutMasterSp, Layout);	
 
 					if (slide->Layout->transition.IsInit())	convert	(slide->Layout->transition.GetPointer());

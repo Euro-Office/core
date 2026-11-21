@@ -87,6 +87,8 @@ public:
 	int next_id();
 	std::wstring map_indentifier(std::wstring id);
 	std::wstring get_mapped_identifier(const std::wstring& id);
+	// Forget the identifiers mapped on the current page (see the .cpp).
+	void reset_page_identifiers();
 
 	void add_page_name(const std::wstring& page_name);
 
