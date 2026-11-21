@@ -86,6 +86,7 @@ add_core_gtest(
             xlsx2ods_table_print_titles.cpp
             ods2xlsx_trailing_cell_style.cpp
             ods2xlsx_fit_to_page.cpp
+            ods2xlsx_tab_color.cpp
             ods2xlsx_page_margins.cpp
             ods2xlsx_hidden_header_footer.cpp
             ods2xlsx_font_size_column_width.cpp
