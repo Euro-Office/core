@@ -46,6 +46,7 @@ public:
     static const ElementType type = typeTextRubyBase;
     CPDOCCORE_DEFINE_VISITABLE();
 
+    virtual void docx_convert(oox::docx_conversion_context & Context);
     virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
     ruby_base() {}
 
