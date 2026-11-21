@@ -80,9 +80,13 @@ void table_database_range::add_child_element( xml::sax * Reader, const std::wstr
 void table_database_range::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
 	if (!table_target_range_address_)	return;
-	if (!table_name_)	return;
 
-	std::wstring name = table_name_.get();
+	// table:name is optional; a range without one is the sheet's anonymous range, as in LibreOffice.
+	// Without a filter, a sort or filter buttons such a range holds nothing that XLSX keeps.
+	const bool bUnnamed = !table_name_;
+	if (bUnnamed && content_.empty() && !(table_display_filter_buttons_ && table_display_filter_buttons_->get()))
+		return;
+	std::wstring name = bUnnamed ? L"__Anonymous_Sheet_DB__0" : table_name_.get();
 
 	std::map<std::wstring, int>::iterator pFind = Context.mapUsedNames_.find(name);
 	if (pFind == Context.mapUsedNames_.end())
@@ -95,7 +99,7 @@ void table_database_range::xlsx_convert(oox::xlsx_conversion_context & Context)
 		pFind->second++;
 	}	
 	
-	if (Context.get_table_context().start_database_range(name, *table_target_range_address_, content_.empty()))
+	if (Context.get_table_context().start_database_range(name, *table_target_range_address_, content_.empty(), bUnnamed))
 	{	
 		if (table_display_filter_buttons_)
 			Context.get_table_context().set_database_filter_button(table_display_filter_buttons_->get());
@@ -113,7 +117,7 @@ void table_database_range::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 		Context.get_table_context().end_database_range();
 	}
-	else
+	else if (!bUnnamed)
 	{
 		Context.get_xlsx_defined_names().add(name, table_target_range_address_.get(), false, -1);
 	}
@@ -263,7 +267,15 @@ void table_filter_condition::xlsx_convert(oox::xlsx_conversion_context & Context
 		int dxfId = Context.add_dxfId_style(value, type == odf_types::table_data_type::background_color);
 		value = dxfId >= 0 ? std::to_wstring(dxfId) : L"";
 	}
-	Context.get_table_context().add_database_filter_conditional(field_number, type, value, operator_);
+	// A value list (several values for one field) lists every value as a filter-set-item.
+	std::vector<std::wstring> items;
+	for (size_t i = 0; i < content_.size(); i++)
+	{
+		table_filter_set_item* item = dynamic_cast<table_filter_set_item*>(content_[i].get());
+		if (item && item->table_value_)
+			items.push_back(*item->table_value_);
+	}
+	Context.get_table_context().add_database_filter_conditional(field_number, type, value, operator_, items);
 }
 //--------------------------------------------------------------------------------------------------
 const wchar_t * table_filter_set_item::ns	= L"table";

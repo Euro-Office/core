@@ -113,6 +113,9 @@ public:
     void add_defined_range		(const std::wstring & name, const std::wstring & cell_range, int sheet_id, bool printable = false);
     void add_defined_expression	(const std::wstring & name, const std::wstring & value, int sheet_id, bool printable = false);
 	void add_autofilter			(std::wstring ref);
+	void set_database_range_filter(const std::vector<table_filter_column_state> & columns);
+	void set_database_range_sort(const table_sort_state & sort);
+	void set_sheet_sort			(const std::wstring & ref, const table_sort_state & sort);
 
 	void start_table_part	(std::wstring name, std::wstring ref);
 	void end_table_part		();

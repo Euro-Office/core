@@ -87,6 +87,8 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/print_area_local_sheet_past_end.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/print_area_no_local_sheet.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_header_footer_no_section.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/xlsx_autofilter_conditions.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/xlsx_sort_state.xlsx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
@@ -263,6 +265,31 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = "OdfFile/Test/test_odf/ExampleFiles/sheet_fit_to_page.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/sheet_autofilter.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/sheet_unnamed_database_range.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/sheet_autofilter_groups.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/sheet_database_range_single_cell.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/xlsx_sort_sheet_names.xlsx"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 

@@ -131,7 +131,7 @@ namespace oox {
 		}
 	}
 
-	bool xlsx_table_context::start_database_range(const std::wstring& name, const std::wstring& ref, bool bNamedRangeOnly)
+	bool xlsx_table_context::start_database_range(const std::wstring& name, const std::wstring& ref, bool bNamedRangeOnly, bool bUnnamed)
 	{
 		formulasconvert::odf2oox_converter convert;
 		std::wstring oox_ref = convert.convert_named_ref(ref);
@@ -178,6 +178,7 @@ namespace oox {
 				xlsx_data_ranges_.back()->bTablePart = false;
 			}
 			xlsx_data_ranges_.back()->name = name;
+			xlsx_data_ranges_.back()->bUnnamed = bUnnamed;
 			xlsx_data_ranges_.back()->table_name = xlsx_table_name;
 			xlsx_data_ranges_.back()->ref = ref1 + L":" + ref2;
 			xlsx_data_ranges_.back()->cell_start = std::pair<int, int>(col1, row1);
@@ -185,9 +186,24 @@ namespace oox {
 
 			xlsx_data_ranges_.back()->set_header(row1, col1, col2);
 		}
+		else
+		{
+			return false; // not a cell range: nothing to filter or sort
+		}
 		//-----------------------------------------------------------------------
 		if (!xlsx_table_name.empty())
 		{
+			if (bUnnamed)
+			{
+				// LibreOffice keeps one anonymous range per sheet, the last one it reads.
+				std::map<std::wstring, int>::iterator last = xlsx_unnamed_ranges_.find(xlsx_table_name);
+				if (last != xlsx_unnamed_ranges_.end())
+				{
+					xlsx_data_ranges_[last->second]->bReplaced = true;
+					xlsx_data_ranges_[last->second]->bTablePart = false;
+				}
+				xlsx_unnamed_ranges_[xlsx_table_name] = (int)xlsx_data_ranges_.size() - 1;
+			}
 			if (xlsx_data_ranges_.back()->bTablePart)
 			{
 				std::pair<std::multimap<std::wstring, int>::iterator, std::multimap<std::wstring, int>::iterator> range = xlsx_data_ranges_map_.equal_range(xlsx_table_name);
@@ -230,7 +246,11 @@ namespace oox {
 	}
 	void xlsx_table_context::end_database_range()
 	{
-		if (!xlsx_data_ranges_.back()->bTablePart && !xlsx_data_ranges_.back()->filter_button && !xlsx_data_ranges_.back()->table_name.empty())
+		if (xlsx_data_ranges_.empty()) return;
+
+		// A range without table:name has no name to define.
+		if (!xlsx_data_ranges_.back()->bTablePart && !xlsx_data_ranges_.back()->filter_button && !xlsx_data_ranges_.back()->bUnnamed &&
+			!xlsx_data_ranges_.back()->table_name.empty())
 		{
 			xlsx_conversion_context_->get_xlsx_defined_names().add(xlsx_data_ranges_.back()->name,
 				xlsx_data_ranges_.back()->table_name + L"!" + xlsx_data_ranges_.back()->ref, false, -1);
@@ -294,32 +314,56 @@ namespace oox {
 		}
 		return -1;
 	}
-	void xlsx_table_context::add_database_filter_conditional(int field_number, int type, const std::wstring& value, int operator_)
+	void xlsx_table_context::add_database_filter_conditional(int field_number, int type, const std::wstring& value, int operator_,
+		const std::vector<std::wstring>& items)
 	{
+		if (xlsx_data_ranges_.empty()) return;
+
 		xlsx_data_ranges_.back()->filter_conditions.emplace_back();
 		xlsx_data_ranges_.back()->filter_conditions.back().field_number = field_number;
 		xlsx_data_ranges_.back()->filter_conditions.back().type = type;
 		xlsx_data_ranges_.back()->filter_conditions.back().value = value;
 		xlsx_data_ranges_.back()->filter_conditions.back().operator_ = operator_;
+		xlsx_data_ranges_.back()->filter_conditions.back().items = items;
+
+		if (filter_or_depth_ >= 0)
+		{
+			xlsx_data_ranges_.back()->filter_conditions.back().or_group = filter_or_count_;
+			for (size_t i = filter_or_depth_ + 1; i < filter_groups_.size(); ++i)
+			{
+				if (!filter_groups_[i])
+					xlsx_data_ranges_.back()->filter_conditions.back().and_in_or = true;
+			}
+		}
 	}
 	void xlsx_table_context::start_filters_or()
 	{
-		xlsx_data_ranges_.back()->bFilterAndOr = true;
+		if (filter_or_depth_ < 0)
+		{
+			filter_or_depth_ = (int)filter_groups_.size();
+			++filter_or_count_;
+		}
+		filter_groups_.push_back(true);
 	}
 	void xlsx_table_context::start_filters_and()
 	{
-		xlsx_data_ranges_.back()->bFilterAndOr = false;
+		filter_groups_.push_back(false);
 	}
 	void xlsx_table_context::end_filters_or()
 	{
-
+		end_filters_and();
 	}
 	void xlsx_table_context::end_filters_and()
 	{
-
+		if (!filter_groups_.empty())
+			filter_groups_.pop_back();
+		if (filter_or_depth_ >= (int)filter_groups_.size())
+			filter_or_depth_ = -1;
 	}
 	void xlsx_table_context::add_database_sort(int field_number, int order, int type)
 	{
+		if (xlsx_data_ranges_.empty()) return;
+
 		xlsx_data_ranges_.back()->bySort.push_back(std::pair<int, bool>(field_number, order == 1 ? false : true));
 	}
 	xlsx_table_context::xlsx_table_context(xlsx_conversion_context* Context, xlsx_text_context& textContext) :
@@ -447,9 +491,21 @@ namespace oox {
 
 		range = xlsx_data_ranges_map_.equal_range(state()->tableName_);
 
+		// A worksheet has at most one sortState: a range without table:name adds its sort only when no named
+		// range that is no table part has one.
+		bool bNamedSort = false;
+		for (std::multimap<std::wstring, int>::iterator it = range.first; it != range.second; ++it)
+		{
+			const xlsx_data_range& data_range = *xlsx_data_ranges_[it->second];
+			if (!data_range.bTablePart && !data_range.bUnnamed && !data_range.bySort.empty())
+				bNamedSort = true;
+		}
+
 		for (std::multimap<std::wstring, int>::iterator it = range.first; it != range.second; ++it)
 		{
 			if (xlsx_data_ranges_[it->second]->bTablePart) continue;
+			if (xlsx_data_ranges_[it->second]->bReplaced) continue;
+			if (bNamedSort && xlsx_data_ranges_[it->second]->bUnnamed) continue;
 
 			xlsx_data_ranges_[it->second]->serialize_sort(_Wostream);
 		}
@@ -611,10 +667,22 @@ namespace oox {
 
 		int ind_filter = -1;
 
+		// A sheet has one autoFilter. When a named range that is no table part already needs it,
+		// a range without table:name stays out: merged into one ref, neither filter would fit.
+		bool bNamedFilter = false;
+		for (std::multimap<std::wstring, int>::iterator it = range.first; it != range.second; ++it)
+		{
+			const xlsx_data_range& data_range = *xlsx_data_ranges_[it->second];
+			if (!data_range.bTablePart && !data_range.bUnnamed && (data_range.filter_button || !data_range.filter_conditions.empty()))
+				bNamedFilter = true;
+		}
+
 		for (std::multimap<std::wstring, int>::iterator it = range.first; it != range.second; ++it)
 		{
 			if (xlsx_data_ranges_[it->second]->bTablePart) continue;
 			if (!xlsx_data_ranges_[it->second]->filter_button && xlsx_data_ranges_[it->second]->filter_conditions.empty()) continue;
+			if (bNamedFilter && xlsx_data_ranges_[it->second]->bUnnamed) continue;
+			if (xlsx_data_ranges_[it->second]->bReplaced) continue;
 
 			if (cell_start.first < 0 || xlsx_data_ranges_[it->second]->cell_start.first < cell_start.first)
 				cell_start.first = xlsx_data_ranges_[it->second]->cell_start.first;
@@ -644,8 +712,11 @@ namespace oox {
 				//in the autofilter only simple ranges .. for complex ones - tablePart
 				CP_XML_ATTR(L"ref", getCellAddress(cell_start.first, cell_start.second) + L":" + getCellAddress(cell_end.first, cell_end.second));
 				//CP_XML_ATTR(L"ref", ref);
-				if (ind_filter != -1)
-					xlsx_data_ranges_[ind_filter]->serialize_filterColumn(CP_XML_STREAM(), 0);
+				// A filter hides whole rows: the conditions of one range only fit an autoFilter over the same rows.
+				if (ind_filter != -1 && xlsx_data_ranges_[ind_filter]->cell_start.second == cell_start.second &&
+					xlsx_data_ranges_[ind_filter]->cell_end.second == cell_end.second)
+					xlsx_data_ranges_[ind_filter]->serialize_filterColumns(CP_XML_STREAM(),
+						xlsx_data_ranges_[ind_filter]->cell_start.first - cell_start.first);
 			}
 		}
 	}
