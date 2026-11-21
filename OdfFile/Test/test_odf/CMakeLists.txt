@@ -63,6 +63,8 @@ add_core_gtest(
             math_bar.cpp
             chart_title.cpp
             odt2docx_underline.cpp
+            odt2docx_heading_spaces.cpp
+            odf2ooxml_white_space.cpp
             odt2docx_keep_next.cpp
             odt2docx_header_footer_spacing.cpp
             odt2docx_links.cpp
@@ -98,6 +100,7 @@ add_core_gtest(
             odf_font_family.cpp
             odt2docx_character_style_based_on.cpp
             docx2odt_style_based_on.cpp
+            docx2odt_white_space.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
