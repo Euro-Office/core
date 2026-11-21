@@ -89,6 +89,16 @@ TEST(ODP2PPTX, EmptyCustomShapeFormula)
 	EXPECT_EQ(S_OK, convert_single(L"ExampleFiles/empty_custom_shape_formula.odp"));
 }
 
+// The cell holds the text "Key Partners" and then two images, as LibreOffice
+// writes it: the text must stay in the cell
+TEST(ODS2XLSX, CellTextBeforeSeveralImages)
+{
+	ASSERT_EQ(S_OK, convert_single(L"ExampleFiles/cell_text_with_images.ods"));
+
+	const std::string sStrings = read_package_file(L"ExampleFiles/cell_text_with_images.ods-tmp.xlsx", L"xl/sharedStrings.xml");
+	EXPECT_NE(std::string::npos, sStrings.find("Key Partners"));
+}
+
 int main(int argc, char* argv[])
 {
 	::testing::InitGoogleTest(&argc, argv);
