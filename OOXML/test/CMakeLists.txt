@@ -27,6 +27,7 @@ endif()
 
 set(_ooxml_test_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/activex_groupname.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/common.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/checkbox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/richvalue.cpp
@@ -59,6 +60,13 @@ add_core_gtest(
 target_compile_definitions(ooxml_test PRIVATE
     BUILD_X2T_AS_LIBRARY_DYLIB
 )
+
+# activex_groupname.cpp includes the DocxFormat headers, which instantiate the
+# header's static PPTX::g_Namespaces; its constructor lives in PPTXFormatLib.
+# x2tlib links that archive privately and only pulls in the members it needs,
+# so the .so does not export the constructor. The qmake build links the archive
+# directly (X2tConverter.pri) and does not need this.
+target_link_libraries(ooxml_test PRIVATE PPTXFormatLib)
 
 # main.cpp/common.{h,cpp} include core headers with paths anchored at the
 # X2tConverter.pri location (e.g. "../../../OOXML/Base/Base.h",
