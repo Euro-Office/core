@@ -26,6 +26,9 @@ on:
 
 jobs:
   publish:
+    # A private copy of this repository publishes nothing: its pull request
+    # numbers would collide with ours in the pr channel.
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     environment: ${{ github.event_name == 'push' && 'build-cache-main' || 'build-cache' }}
     steps:
