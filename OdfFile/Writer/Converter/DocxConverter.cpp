@@ -113,6 +113,13 @@ namespace Oox2Odf
 		}
 		return cols_1 == cols_2;
 	}
+
+	bool is_landscape(OOX::Logic::CSectionProperty* props)
+	{
+		return props->m_oPgSz.IsInit() && props->m_oPgSz->m_oOrient.IsInit()
+			&& props->m_oPgSz->m_oOrient->GetValue() == SimpleTypes::pageorientLandscape;
+	}
+
 DocxConverter::DocxConverter(const std::wstring & path, bool bTemplate) : docx_flat_document(NULL), docx_document(NULL)
 {
     const OOX::CPath oox_path(std::wstring(path.c_str()));
@@ -291,6 +298,13 @@ void DocxConverter::convert_document()
 		sections.push_back(section);
 	}					
 //----------------------------------------------------------------------------------------------------------
+
+	for (size_t i = 0; i < sections.size(); ++i)
+	{
+		sections[i].bFirst = (i == 0);
+		sections[i].bTurnsPage = i > 0 && sections[i - 1].props && sections[i].props
+			&& is_landscape(sections[i - 1].props) != is_landscape(sections[i].props);
+	}
 
 	convert(doc->m_oSectPr.GetPointer(), false, L"Standard", true);
 	
@@ -717,6 +731,12 @@ void DocxConverter::convert(OOX::Logic::CSdtContent *oox_sdt)
 void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 {
 	if (oox_paragraph == NULL) return; 
+
+	// The section conversion asks whether its first paragraph starts a page. A tracked change of the paragraph
+	// properties is converted first, with the old properties, so the answer is taken from the paragraph itself.
+	paragraph_page_break_before_ = oox_paragraph->m_oParagraphProperty
+		&& oox_paragraph->m_oParagraphProperty->m_oPageBreakBefore.IsInit()
+		&& oox_paragraph->m_oParagraphProperty->m_oPageBreakBefore->m_oVal.ToBool();
 	
 //---------------------------------------------------------------------------------------------------------------------
 	if (current_section_properties)
@@ -1738,7 +1758,8 @@ void DocxConverter::convert(OOX::Logic::CParagraphProperty	*oox_paragraph_pr,
 		{
 			paragraph_properties->style_page_number_ = current_section_properties->props->m_oPgNumType->m_oStart->GetValue();
 		}
-		convert(current_section_properties->props, !current_section_properties->bContinue);
+		convert(current_section_properties->props, !current_section_properties->bContinue, L"", false,
+				paragraph_page_break_before_);
 	
 		//odf_writer::odf_style_state_ptr state =  odt_context->styles_context()->last_state(odf_types::style_family::Paragraph);
 		//if (odt_context->is_paragraph_in_current_section_ && state)
@@ -1917,9 +1938,12 @@ void DocxConverter::apply_HF_from(OOX::Logic::CSectionProperty *props, OOX::Logi
 		set_hdr_ftr_ref(props->m_arrHeaderReference, other->m_arrHeaderReference[i]);
 	}
 }
-void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool bSection, const std::wstring& master_name, bool bAlways)
+void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool bSection,
+							const std::wstring& master_name, bool bAlways, bool bPageStart)
 {
 	if (oox_section_pr == NULL) return;
+	const bool first_section = current_section_properties && current_section_properties->bFirst;
+	const bool turns_page = current_section_properties && current_section_properties->bTurnsPage;
 	current_section_properties = NULL;
 
 	odt_context->text_context()->set_type_break(-1, 0);
@@ -1957,10 +1981,22 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 		}
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if (!bSection || continuous == false)
+	const bool new_master_page = !bSection || continuous == false;
+	if (new_master_page)
 	{
 		odt_context->page_layout_context()->add_master_page(master_name);
 	}
+	// A section that starts a new page needs its master page with its headers and footers, and a paragraph that names
+	// it. Without both it loses its headers, footers, page size and margins, and the page break in front of it. Naming
+	// a master page starts a new page, so this rule gives a continuous section its own only where a page starts
+	// anyway: at the start of the document, where the page orientation changes, or, when it has a header or footer
+	// of its own, at a paragraph with a page break before it (LibreOffice applies the page style of a continuous
+	// section at such a paragraph too). The older conditions below still name the master page of a continuous
+	// section with a title page, and of any section while no header or no footer is in force.
+	const bool own_reference = !oox_section_pr->m_arrHeaderReference.empty()
+		|| !oox_section_pr->m_arrFooterReference.empty();
+	const bool own_page_style = new_master_page
+		&& (continuous == false || first_section || turns_page || (bPageStart && own_reference));
 
 	if (oox_section_pr->m_oPgMar.IsInit())
 	{
@@ -2123,9 +2159,11 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 	}
 
 	OOX::Logic::CSectionProperty* sect = last_section_properties ? last_section_properties : oox_section_pr;
-	if (/*continuous == false || */oox_section_pr->m_oTitlePg.IsInit() || bAlways || sect->m_arrHeaderReference.empty() || sect->m_arrFooterReference.empty())
+	if (own_page_style || oox_section_pr->m_oTitlePg.IsInit() || bAlways
+		|| sect->m_arrHeaderReference.empty() || sect->m_arrFooterReference.empty())
 	{
-		bool present_title_page = sect->m_oTitlePg.IsInit() ? true : false;
+		// The title page setting belongs to the section itself; only the references are inherited.
+		bool present_title_page = oox_section_pr->m_oTitlePg.IsInit() ? true : false;
 		bool present_odd_even_pages = odt_context->page_layout_context()->even_and_left_headers_;
 
 		bool add_title_header = false, add_title_footer = false;
