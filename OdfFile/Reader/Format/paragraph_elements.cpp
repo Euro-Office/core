@@ -1041,6 +1041,20 @@ std::wostream & ruby::text_to_stream(std::wostream & _Wostream, bool bXmlEncode)
     return _Wostream;
 }
 
+void ruby::xlsx_convert(oox::xlsx_conversion_context & Context)
+{
+    // A cell has no ruby: keep the base text and drop the annotation, as LibreOffice Calc does.
+    if (text_ruby_base_)
+        text_ruby_base_->xlsx_convert(Context);
+}
+
+void ruby::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context)
+{
+    // Page headers and footers have no ruby either: write the base text only.
+    if (text_ruby_base_)
+        text_ruby_base_->text_to_stream(_Wostream, true);
+}
+
 void ruby::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     text_style_name_ = Attributes->get_val< std::wstring >(L"text:style-name").get_value_or(L"") ;
