@@ -49,7 +49,7 @@ namespace _graphics_utils_
 	bool GetResolution(const wchar_t* fileName, double & Width, double &Height) //px
 	{
 		NSFile::CFileBinary file;
-		if (false == file.OpenFile(fileName)) return false;
+		if (!file.OpenFile(fileName)) return false;
 
 		long file_size = file.GetFileSize();
 		file.CloseFile();
@@ -60,7 +60,8 @@ namespace _graphics_utils_
 		try
 		{
 			CBgraFrame image;
-			if (result = image.OpenFile(fileName, 0))
+			result = image.OpenFile(fileName, 0);
+			if (result)
 			{
 				Width = image.get_Width();
 				Height = image.get_Height();
@@ -107,6 +108,10 @@ namespace _graphics_utils_
 	{
 		std::pair<double, double> result = std::make_pair(7., 8.);
 
+#if !defined(_WIN32) && !defined(_WIN64)
+		// Parameters are only consumed by the GDI+ implementation below.
+		(void)name; (void)size; (void)italic; (void)bold; (void)test_str;
+#endif
 #if defined(_WIN32) || defined(_WIN64)
 		Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 		ULONG_PTR gdiplusToken=0;
@@ -161,7 +166,7 @@ namespace _graphics_utils_
 #endif
 		return result;
 	}
-	std::pair<double, double> calculate_size_symbol_asc(std::wstring name, double size, bool italic, bool bold , NSFonts::IApplicationFonts *appFonts)
+	std::pair<double, double> calculate_size_symbol_asc(std::wstring name, double size, bool /*italic*/, bool /*bold*/, NSFonts::IApplicationFonts *appFonts)
 	{
 		if (name.empty())
 			name = L"Calibri";

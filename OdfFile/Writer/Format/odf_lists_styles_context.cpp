@@ -340,7 +340,7 @@ int odf_lists_styles_context::start_style_level(int level, int type)
 			break;
 		case 49: //numberformatNumberInDash                 : //??
 			//suffix -
-			//preffix -
+			//prefix -
 			break;
 		case 50: //numberformatOrdinal                      : 
 			break;
