@@ -102,6 +102,23 @@ void odt_conversion_context::start_document()
 	root_text_->office_text_attlist_.text_use_soft_page_breaks_ = true;
 }
 
+// The "record changes" switch of the document goes in the text:track-changes attribute of the
+// text:tracked-changes element of the body, where LibreOffice reads and writes it. Call before the body
+// is converted: the changed regions are then added to this element.
+void odt_conversion_context::set_record_changes(bool val)
+{
+	if (!root_document_) return;
+
+	office_element_ptr elm;
+	create_element(L"text", L"tracked-changes", elm, this);
+
+	text_tracked_changes* changes = dynamic_cast<text_tracked_changes*>(elm.get());
+	if (!changes) return;
+
+	changes->text_track_changes_ = val;
+	root_document_->add_child_element(elm);
+}
+
 void odt_conversion_context::end_document()
 {
 	if (false == mapSequenceDecls.empty())

@@ -3636,6 +3636,10 @@ void DocxConverter::convert_settings()
 	if (!odt_context) return;
 
 	OOX::CSettings *settings = docx_document ? docx_document->m_oMain.settings : (docx_flat_document ? docx_flat_document->m_pSettings.GetPointer() : NULL);
+
+	// Always set: tracked changes with no text:track-changes attribute mean "recording on" in ODF.
+	odt_context->set_record_changes(settings && settings->m_oTrackRevisions.IsInit() && settings->m_oTrackRevisions->m_oVal.ToBool());
+
 	if (!settings) return;
 
 	if (settings->m_oWriteProtection.IsInit())
