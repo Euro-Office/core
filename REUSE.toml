@@ -267,6 +267,22 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props.odp",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props.ods",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_core.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_core.pptx",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_core.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_core_markup.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_editor_only.ods",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_markup.ods",
+    "OdfFile/Test/test_odf/ExampleFiles/doc_props_typed.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = "OdfFile/Test/test_odf/ExampleFiles/sheet_page_margins.ods"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
@@ -304,6 +320,11 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/database_display_fields.odt",
     "OdfFile/Test/test_odf/ExampleFiles/styleref_fields.docx",
 ]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/custom_props_typed.docx"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 

@@ -33,6 +33,10 @@
 #include "DocxConverter.h"
 #include "PptxConverter.h"
 
+#include <algorithm>
+#include <cmath>
+#include <sstream>
+
 #include "../Format/office_document.h"
 #include "../Format/odf_conversion_context.h"
 #include "../Format/odf_text_context.h"
@@ -340,14 +344,39 @@ void OoxConverter::convert_meta(OOX::CApp *app, OOX::CCore *core)
 	}
 	if (core)
 	{
-		if (core->m_sCreator.IsInit())
-			odf_context()->add_meta(L"dc", L"creator", *core->m_sCreator);
+		// OOXML dc:creator is the author who created the document (ODF meta:initial-creator),
+		// cp:lastModifiedBy the one who saved it last (ODF dc:creator).
+		if (core->m_sCreator.IsInit() && !core->m_sCreator->empty())
+			odf_context()->add_meta(L"meta", L"initial-creator", *core->m_sCreator);
+		if (core->m_sLastModifiedBy.IsInit() && !core->m_sLastModifiedBy->empty())
+			odf_context()->add_meta(L"dc", L"creator", *core->m_sLastModifiedBy);
+		if (core->m_sModified.IsInit() && !core->m_sModified->empty())
+			odf_context()->add_meta(L"dc", L"date", *core->m_sModified);
 		if (core->m_sCreated.IsInit())
 			odf_context()->add_meta(L"meta", L"creation-date", *core->m_sCreated);
 		if (core->m_sKeywords.IsInit())
-			odf_context()->add_meta(L"meta", L"keyword", *core->m_sKeywords);
+		{
+			// OOXML has one cp:keywords string, ODF one meta:keyword per keyword: split it at spaces,
+			// commas, semicolons, colons and tabs.
+			const std::wstring separators = L" ,;:\t";
+			const std::wstring& keywords = *core->m_sKeywords;
+			std::wstring keyword;
+			for (size_t i = 0; i <= keywords.size(); i++)
+			{
+				if (i == keywords.size() || separators.find(keywords[i]) != std::wstring::npos)
+				{
+					if (!keyword.empty())
+						odf_context()->add_meta(L"meta", L"keyword", keyword);
+					keyword.clear();
+				}
+				else
+					keyword += keywords[i];
+			}
+		}
 		if (core->m_sTitle.IsInit())
 			odf_context()->add_meta(L"dc", L"title", *core->m_sTitle);
+		if (core->m_sSubject.IsInit() && !core->m_sSubject->empty())
+			odf_context()->add_meta(L"dc", L"subject", *core->m_sSubject);
 		if (core->m_sDescription.IsInit())
 			odf_context()->add_meta(L"dc", L"description", *core->m_sDescription);
 		if (core->m_sLanguage.IsInit())
@@ -366,6 +395,7 @@ void OoxConverter::convert_customs(OOX::IFileContainer* container)
 		if (prop.m_strName.IsInit())
 		{
 			std::wstring content;
+			odf_types::office_value_type::type value_type = odf_types::office_value_type::String;
 			if (prop.m_oContent.IsInit())
 			{
 				switch (prop.m_oContent->getVariantType())
@@ -373,6 +403,7 @@ void OoxConverter::convert_customs(OOX::IFileContainer* container)
 				case PPTX::Logic::vtLpstr:
 				case PPTX::Logic::vtLpwstr:
 				case PPTX::Logic::vtBstr:
+				case PPTX::Logic::vtCy:
 				{
 					if (prop.m_oContent->m_strContent.IsInit())
 						content = *prop.m_oContent->m_strContent;
@@ -381,33 +412,59 @@ void OoxConverter::convert_customs(OOX::IFileContainer* container)
 				case PPTX::Logic::vtI2:
 				case PPTX::Logic::vtI4:
 				case PPTX::Logic::vtI8:
-				case PPTX::Logic::vtDecimal:
 				case PPTX::Logic::vtInt:
 				{
 					if (prop.m_oContent->m_iContent.IsInit())
+					{
 						content = std::to_wstring(*prop.m_oContent->m_iContent);
+						value_type = odf_types::office_value_type::Float;
+					}
 				}break;
 				case PPTX::Logic::vtUi1:
 				case PPTX::Logic::vtUi2:
 				case PPTX::Logic::vtUi4:
 				case PPTX::Logic::vtUi8:
+				case PPTX::Logic::vtUint:
 				{
 					if (prop.m_oContent->m_uContent.IsInit())
+					{
 						content = std::to_wstring(*prop.m_oContent->m_uContent);
+						value_type = odf_types::office_value_type::Float;
+					}
 				}break;
 				case PPTX::Logic::vtR4:
+				case PPTX::Logic::vtR8:
+				case PPTX::Logic::vtDecimal:
 				{
-					if (prop.m_oContent->m_dContent.IsInit())
-						content = std::to_wstring(*prop.m_oContent->m_dContent);
+					if (prop.m_oContent->m_dContent.IsInit() && std::isfinite(*prop.m_oContent->m_dContent))
+					{
+						content = _doc_props_utils_::shortest_number(*prop.m_oContent->m_dContent);
+						if (false == content.empty())
+							value_type = odf_types::office_value_type::Float;
+					}
+				}break;
+				case PPTX::Logic::vtDate:
+				case PPTX::Logic::vtFiletime:
+				{
+					if (prop.m_oContent->m_strContent.IsInit())
+					{
+						content = *prop.m_oContent->m_strContent;
+						// A value that is no valid date stays text: readers drop a "date" property they cannot parse.
+						if (false == _doc_props_utils_::w3cdtf_date(content).empty())
+							value_type = odf_types::office_value_type::Date;
+					}
 				}break;
 				case PPTX::Logic::vtBool:
 				{
 					if (prop.m_oContent->m_bContent.IsInit())
-						content = std::to_wstring(*prop.m_oContent->m_bContent);
+					{
+						content = *prop.m_oContent->m_bContent ? L"true" : L"false";
+						value_type = odf_types::office_value_type::Boolean;
+					}
 				}break;
 				}
 			}
-			odf_context()->add_meta_user_define(*prop.m_strName, content);
+			odf_context()->add_meta_user_define(*prop.m_strName, content, value_type);
 
 		}
 		//nullable_string m_strFmtid;

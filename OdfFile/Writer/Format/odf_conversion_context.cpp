@@ -521,7 +521,8 @@ void odf_conversion_context::add_meta(const office_element_ptr& elm)
 	if (!elm) return;
 	objects_[current_object_]->meta.push_back(elm);
 }
-void odf_conversion_context::add_meta_user_define(const std::wstring& name, const std::wstring& content)
+void odf_conversion_context::add_meta_user_define(const std::wstring& name, const std::wstring& content,
+	odf_types::office_value_type::type value_type)
 {
 	office_element_ptr elm;
 	create_element(L"meta", L"user-defined", elm, this, true);
@@ -531,7 +532,7 @@ void odf_conversion_context::add_meta_user_define(const std::wstring& name, cons
 	{
 		meta_user->meta_name_ = name;
 		meta_user->content_ = content;
-		meta_user->meta_value_type_ = odf_types::office_value_type::String;
+		meta_user->meta_value_type_ = odf_types::office_value_type(value_type);
 
 		add_meta(elm);
 	}

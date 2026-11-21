@@ -53,6 +53,7 @@ add_core_gtest(
             docx2odt_header_drawing_anchor.cpp
             xlsx2ods_date_cells.cpp
             xlsx2ods_print_area.cpp
+            ooxml2odf_custom_props.cpp
             xlsx2ods_header_footer.cpp
             odt2docx_fields.cpp
             chart_series_name.cpp
@@ -75,6 +76,8 @@ add_core_gtest(
             chart_vary_colors.cpp
             odt2docx_first_body_element.cpp
             odt2docx_meta_template.cpp
+            odf2ooxml_doc_props.cpp
+            ooxml2odf_doc_props.cpp
             chart_subtitle.cpp
             math_property_values.cpp
             pptx2odp_table_styles.cpp
