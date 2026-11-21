@@ -12,7 +12,11 @@ if(NOT DEFINED USE_JAVASCRIPT_CORE)
 endif()
 
 if(NOT DEFINED DRAWINGFILE_SUPPORT)
-    set(DRAWINGFILE_SUPPORT 1)
+    if(EMSCRIPTEN)
+        set(DRAWINGFILE_SUPPORT 0)
+    else()
+        set(DRAWINGFILE_SUPPORT 1)
+    endif()
 endif()
 
 if(NOT DEFINED V8_USE_INSPECTOR)
@@ -60,7 +64,18 @@ if(DRAWINGFILE_SUPPORT)
     endif()
 endif()
 
-add_library(doctrenderer SHARED
+if(EMSCRIPTEN)
+    # No V8 in the browser build: x2t gets a doctrenderer that reports every
+    # JS-based conversion as failed, see wasm/doctrenderer_stub.cpp.
+    set(DOCTRENDERER_SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/wasm/doctrenderer_stub.cpp
+
+        ${CMAKE_CURRENT_SOURCE_DIR}/config.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/docbuilder.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/doctrenderer.h
+    )
+else()
+    set(DOCTRENDERER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/docbuilder_p.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/docbuilder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/doctrenderer.cpp
@@ -116,7 +131,10 @@ add_library(doctrenderer SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/json/json_p.h
     ${CMAKE_CURRENT_SOURCE_DIR}/json/json_values.h
     ${CMAKE_CURRENT_SOURCE_DIR}/json/serialization.h
-)
+    )
+endif()
+
+add_library(doctrenderer SHARED ${DOCTRENDERER_SOURCES})
 
 set_default_options(doctrenderer)
 
@@ -133,7 +151,9 @@ if( MSVC )
     )
 endif()
 
-if(USE_JAVASCRIPT_CORE)
+if(EMSCRIPTEN)
+    # no JS engine sources, no embed classes
+elseif(USE_JAVASCRIPT_CORE)
     target_sources(doctrenderer PRIVATE
         ${DESKTOP_EDITOR_ROOT}/common/Mac/NSString+StringUtils.mm
         ${CMAKE_CURRENT_SOURCE_DIR}/js_internal/jsc/jsc_base.mm
@@ -176,6 +196,7 @@ if(DRAWINGFILE_SUPPORT)
     )
 endif()
 
+if(NOT EMSCRIPTEN)
 # BEGIN HACK
 # See "files for embedded classes" section in doctrenderer.pri
 # What it intends to do:
@@ -214,6 +235,7 @@ target_sources(doctrenderer PRIVATE
     ${EMBED_SRC_FILES}
 )
 # END HACK
+endif()
 
 target_include_directories(doctrenderer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -319,7 +341,7 @@ target_link_libraries(doctrenderer PRIVATE
     ${V8_MONOLITH}
 )
 
-if(UNIX AND NOT APPLE AND NOT ANDROID)
+if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
     # V8 uses atomics the compiler can't inline everywhere (e.g. clang on
     # arm64), which call into libatomic. Linked after the V8 library, else
     # --as-needed drops it.

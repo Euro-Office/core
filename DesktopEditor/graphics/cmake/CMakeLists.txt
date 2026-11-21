@@ -126,7 +126,6 @@ add_library(graphics SHARED
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/Pnm/PnmFile.cpp
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/Ras/RasFile.cpp
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/WebP/WebPFile.cpp
-	${DESKTOP_EDITOR_ROOT_DIR}/raster/heif/heif.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/raster/ImageFileFormatChecker.cpp
 
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/tif_xfile.cpp
@@ -748,14 +747,24 @@ target_compile_definitions(graphics PRIVATE
 
     # brotli.pri
     FT_CONFIG_OPTION_USE_BROTLI
-
-    # HEIC and AVIF through libheif (CXIMAGE_SUPPORT_HEIF)
-    SUPPORT_LIB_HEIF_SOURCES
 )
 
 if(LINUX)
     target_compile_definitions(graphics PRIVATE
         _LINUX
+    )
+endif()
+
+if( EMSCRIPTEN )
+    # x2t.wasm links graphics and HtmlFile2 into one static module, and both
+    # compile the NSCSS calculator. HtmlFile2 does so with
+    # CSS_CALCULATOR_WITH_XHTML, which changes the layout of NSCSS::CNode and
+    # CCssCalculator_Private. Natively each shared library keeps its own
+    # hidden copy; in the static link the linker mixes members of both, which
+    # corrupts memory when the SVG reader frees its styles. Build this copy
+    # (and the SVG code including its headers) the same way.
+    target_compile_definitions(graphics PRIVATE
+        CSS_CALCULATOR_WITH_XHTML
     )
 endif()
 
@@ -814,14 +823,16 @@ if(LINUX)
         -fvisibility-inlines-hidden
     )
 
-    # Don't leak the bundled third-party C libraries (libpng, zlib, ...),
-    # they would interpose the system ones used by GTK/gdk-pixbuf
-    target_link_options(graphics PRIVATE
-        "LINKER:--version-script=${CMAKE_CURRENT_LIST_DIR}/graphics.map"
-    )
-    set_property(TARGET graphics APPEND PROPERTY
-        LINK_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/graphics.map"
-    )
+    if(NOT EMSCRIPTEN) # wasm-ld has no version scripts
+        # Don't leak the bundled third-party C libraries (libpng, zlib, ...),
+        # they would interpose the system ones used by GTK/gdk-pixbuf
+        target_link_options(graphics PRIVATE
+            "LINKER:--version-script=${CMAKE_CURRENT_LIST_DIR}/graphics.map"
+        )
+        set_property(TARGET graphics APPEND PROPERTY
+            LINK_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/graphics.map"
+        )
+    endif()
 endif()
 
 # dynamic libs
@@ -837,7 +848,15 @@ target_link_libraries(graphics PUBLIC
 )
 
 target_link_libraries(graphics PUBLIC z)
-target_link_libraries(graphics PRIVATE jpeg png tiff webp webpdemux heif leptonica)
+target_link_libraries(graphics PRIVATE jpeg png tiff webp webpdemux leptonica)
+
+# HEIC and AVIF through libheif (CXIMAGE_SUPPORT_HEIF). libheif is not built
+# for WebAssembly, so x2t.wasm leaves these image formats out.
+if(NOT EMSCRIPTEN)
+    target_sources(graphics PRIVATE ${DESKTOP_EDITOR_ROOT_DIR}/raster/heif/heif.cpp)
+    target_compile_definitions(graphics PRIVATE SUPPORT_LIB_HEIF_SOURCES)
+    target_link_libraries(graphics PRIVATE heif)
+endif()
 
 if(WIN32)
     target_link_libraries(graphics PUBLIC

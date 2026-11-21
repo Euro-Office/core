@@ -23,7 +23,9 @@
  *
  */
 
+#ifndef __EMSCRIPTEN__
 #include "../../Common/3dParty/misc/proclimits.h"
+#endif
 #include "../../DesktopEditor/common/StringExt.h"
 #include "../../DesktopEditor/common/SystemUtils.h"
 #include "ASCConverters.h"
@@ -92,7 +94,7 @@ int wmain_lib(int argc, wchar_t *argv[])
 	if (sMemoryLimit.empty())
 		sMemoryLimit = NSSystemUtils::gc_EnvMemoryLimitDefault;
 
-#if !defined(_DEBUG) && !defined(__ANDROID__) && !defined(_IOS)
+#if !defined(_DEBUG) && !defined(__ANDROID__) && !defined(_IOS) && !defined(__EMSCRIPTEN__)
 	long long nMemoryLimit;
 	if (NSStringExt::FromHumanReadableByteCount(sMemoryLimit, nMemoryLimit) && nMemoryLimit > 0)
 		limit_memory((size_t)nMemoryLimit);
