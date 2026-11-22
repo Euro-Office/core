@@ -190,7 +190,9 @@ TEST_F(DocxToOdtDeletionSameIdApart, MarksStayInPlace)
 	const size_t body = content.find(L"<office:text");
 	ASSERT_NE(body, std::wstring::npos);
 	const size_t first = content.find(L"<text:change text:change-id=", body);
-	const size_t keep = content.find(L" keep ", body);
+	// Look for the word only: the writer may store the space before it as
+	// <text:s/>, because it follows the space at the end of "Start ".
+	const size_t keep = content.find(L"keep", body);
 	ASSERT_NE(first, std::wstring::npos);
 	ASSERT_NE(keep, std::wstring::npos);
 	const size_t second = content.find(L"<text:change text:change-id=", first + 1);
