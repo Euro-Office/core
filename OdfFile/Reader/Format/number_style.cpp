@@ -116,8 +116,12 @@ void number_style_base::oox_convert(oox::num_format_context & Context)
                     {
                         concrete_num_style->oox_convert_impl(Context);
 
+                        // In a text style the last map is for all other numbers, whatever its condition says:
+                        // LibreOffice writes "value()<=" the largest double there for a format like "YYYY.MM.DD;@".
+                        const bool otherNumbers = get_type() == typeNumberTextStyle && i + 1 == style_map_.size();
+
                         const std::wstring num_format = Context.get_last_format();
-                        Context.add_format(condition, num_format);
+                        Context.add_format(otherNumbers ? L"" : condition, num_format);
                     }
                 }
             }
@@ -126,8 +130,12 @@ void number_style_base::oox_convert(oox::num_format_context & Context)
 
     oox_convert_impl(Context);
     const std::wstring num_format = Context.get_last_format();
-    Context.add_format(L"", num_format);
 
+    // The content of a text style with maps is the text part; it must not replace the number part of the maps.
+    if (get_type() == typeNumberTextStyle && !style_map_.empty())
+        return;
+
+    Context.add_format(L"", num_format);
 }
 
 
