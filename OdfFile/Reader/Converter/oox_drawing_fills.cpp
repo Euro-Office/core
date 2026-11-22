@@ -138,7 +138,7 @@ void vml_serialize_bitmap_fill(std::wostream & strm, const _oox_fill & val)
 			
 			if (val.bitmap->bTile)
 			{
-				CP_XML_ATTR(L"type", L"pattern");
+				CP_XML_ATTR(L"type", L"tile");
 			}
 			else
 			{
