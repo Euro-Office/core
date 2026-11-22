@@ -145,6 +145,7 @@ docx_conversion_context::docx_conversion_context(odf_reader::odf_document * _odf
 	current_outline_level_		(-1),
 	is_rtl_						(false),
 	is_delete_text_				(false),
+	table_text_only_			(false),
 	delayed_converting_			(false),
 	process_headers_footers_	(false),
 	current_process_comment_	(false),

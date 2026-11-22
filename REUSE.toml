@@ -308,7 +308,10 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
-path = "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_table.odt"
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_table.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_text_box_table.odt",
+]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 

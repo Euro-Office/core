@@ -30,6 +30,31 @@ TEST(OdtToDocxTrackedDeletedTable, CellTextBecomesDeletedRuns)
         EXPECT_NE(document.find(deleted), std::wstring::npos) << "missing deleted cell text " << cell;
     }
 
+    // The text around the deletion stays normal text (w:t), not deleted text.
     for (const wchar_t* kept : {L"Before the table", L"Heading after the table", L"Text after the table"})
-        EXPECT_NE(document.find(kept), std::wstring::npos) << "missing text";
+    {
+        const std::wstring normal = std::wstring(L">") + kept + L"</w:t>";
+        EXPECT_NE(document.find(normal), std::wstring::npos) << "missing text " << kept;
+    }
+}
+
+// The deleted content holds a paragraph with a text box, and the text box holds a table. The text
+// box content starts outside a paragraph, so that table can stay a table inside w:txbxContent.
+TEST(OdtToDocxTrackedDeletedTable, TableInTextBoxStaysTable)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/tracked_deleted_text_box_table.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    const std::wstring document = read_part(dir, L"word/document.xml");
+    ASSERT_FALSE(document.empty()) << "word/document.xml is missing";
+    EXPECT_TRUE(is_well_formed(document)) << document.substr(0, 3000);
+
+    const size_t box = document.find(L"<w:txbxContent>");
+    ASSERT_NE(box, std::wstring::npos) << document.substr(0, 3000);
+    const size_t table = document.find(L"<w:tbl>", box);
+    ASSERT_NE(table, std::wstring::npos) << "the table in the text box was not written as a table";
+    const size_t boxEnd = document.find(L"</w:txbxContent>", box);
+    EXPECT_LT(table, boxEnd);
+    EXPECT_NE(document.find(L"<w:tc>", table), std::wstring::npos);
+    EXPECT_NE(document.find(L">BoxOne</w:delText>", table), std::wstring::npos);
 }
