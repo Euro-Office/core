@@ -136,6 +136,7 @@ docx_conversion_context::docx_conversion_context(odf_reader::odf_document * _odf
 	in_header_					(false),
 	in_drawing_content_			(false),
 	in_table_content_			(false),
+	index_text_only_			(false),
 	text_tracked_context_		(*this),
 	table_context_				(*this),
 	output_document_			(NULL),
@@ -350,6 +351,14 @@ void docx_conversion_context::end_math_formula()
 }
 void docx_conversion_context::start_sdt(int type)
 {
+	// An index inside a tracked deletion is written as deleted runs at the position of its change
+	// mark, inside a paragraph, where no sdt and no paragraph of its own can stand. Write only the
+	// entries' text, as deleted paragraphs are written: no sdt, no field paragraphs.
+	if (is_delete_text_ && state_.in_paragraph_)
+	{
+		index_text_only_ = true;
+		return;
+	}
 	in_table_content_ = true;
 
 	table_content_context_.type_table_content = type;
@@ -512,6 +521,12 @@ void docx_conversion_context::end_field()
 }
 void docx_conversion_context::end_sdt()
 {
+	if (index_text_only_)
+	{
+		index_text_only_ = false;
+		table_content_context_.clear_all();
+		return;
+	}
 	if (!in_table_content_) return;
 
 	if (table_content_context_.type_table_content < 4)

@@ -1132,6 +1132,7 @@ private:
 	bool in_automatic_style_; 
 	bool in_drawing_content_;
 	bool in_table_content_;
+	bool index_text_only_; // an index inside deleted content: entries only, no sdt and no field paragraphs
 
 	bool in_header_;
 	bool is_delete_text_;
