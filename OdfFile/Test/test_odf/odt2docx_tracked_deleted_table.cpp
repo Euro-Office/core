@@ -90,3 +90,30 @@ TEST(OdtToDocxTrackedDeletedTable, IndexEntriesBecomeDeletedRuns)
         EXPECT_NE(document.find(normal), std::wstring::npos) << "missing text " << kept;
     }
 }
+
+// A deleted table of contents whose entry holds a text box with an alphabetical index. The text box
+// content starts outside a paragraph, so the inner index keeps its own field; the outer index stays
+// text only. Each index must close only what it opened.
+TEST(OdtToDocxTrackedDeletedTable, IndexInTextBoxOfDeletedIndex)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/tracked_deleted_nested_index.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    const std::wstring document = read_part(dir, L"word/document.xml");
+    ASSERT_FALSE(document.empty()) << "word/document.xml is missing";
+    EXPECT_TRUE(is_well_formed(document)) << document.substr(0, 3000);
+
+    EXPECT_EQ(document.find(L"</w:sdt>"), std::wstring::npos) << "an sdt was closed that was never opened";
+    EXPECT_EQ(document.find(L" TOC"), std::wstring::npos) << "a contents field was written inside a paragraph";
+
+    for (const wchar_t* entry : {L"OuterTitle", L"OuterEntry", L"InnerTitle", L"InnerEntry"})
+    {
+        const std::wstring deleted = std::wstring(L"<w:delText>") + entry;
+        EXPECT_NE(document.find(deleted), std::wstring::npos) << "missing deleted index text " << entry;
+    }
+    for (const wchar_t* kept : {L"Kept text", L" after the contents mark", L"Last paragraph"})
+    {
+        const std::wstring normal = std::wstring(L">") + kept + L"</w:t>";
+        EXPECT_NE(document.find(normal), std::wstring::npos) << "missing text " << kept;
+    }
+}

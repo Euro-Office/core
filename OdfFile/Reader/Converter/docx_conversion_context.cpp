@@ -136,7 +136,6 @@ docx_conversion_context::docx_conversion_context(odf_reader::odf_document * _odf
 	in_header_					(false),
 	in_drawing_content_			(false),
 	in_table_content_			(false),
-	index_text_only_			(false),
 	text_tracked_context_		(*this),
 	table_context_				(*this),
 	output_document_			(NULL),
@@ -354,11 +353,13 @@ void docx_conversion_context::start_sdt(int type)
 	// An index inside a tracked deletion is written as deleted runs at the position of its change
 	// mark, inside a paragraph, where no sdt and no paragraph of its own can stand. Write only the
 	// entries' text, as deleted paragraphs are written: no sdt, no field paragraphs.
-	if (is_delete_text_ && state_.in_paragraph_)
-	{
-		index_text_only_ = true;
+	// Each start_sdt is paired with one end_sdt; an index can hold another one (in a text box of an
+	// entry), so the decision is kept per index.
+	const bool textOnly = is_delete_text_ && state_.in_paragraph_;
+	index_text_only_.push_back(textOnly);
+	if (textOnly)
 		return;
-	}
+
 	in_table_content_ = true;
 
 	table_content_context_.type_table_content = type;
@@ -521,10 +522,13 @@ void docx_conversion_context::end_field()
 }
 void docx_conversion_context::end_sdt()
 {
-	if (index_text_only_)
+	const bool textOnly = !index_text_only_.empty() && index_text_only_.back();
+	if (!index_text_only_.empty())
+		index_text_only_.pop_back();
+	if (textOnly)
 	{
-		index_text_only_ = false;
-		table_content_context_.clear_all();
+		if (!in_table_content_) // no enclosing index writes its sdt and field: drop what the source set
+			table_content_context_.clear_all();
 		return;
 	}
 	if (!in_table_content_) return;

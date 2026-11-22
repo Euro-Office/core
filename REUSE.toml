@@ -310,6 +310,7 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 [[annotations]]
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_index.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_nested_index.odt",
     "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_table.odt",
     "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_text_box_table.odt",
 ]
