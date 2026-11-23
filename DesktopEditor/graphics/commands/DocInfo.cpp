@@ -45,7 +45,7 @@ std::wstring CHyperlinkCommand::CHyperlinkCommand::GetToolTip() { return m_sTool
 void CHyperlinkCommand::SetUrl(const std::wstring& val) { m_sUrl = val; }
 void CHyperlinkCommand::SetToolTip(const std::wstring& val) { m_sToolTip = val; }
 
-bool CHyperlinkCommand::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter* pCorrector)
+bool CHyperlinkCommand::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter*  /*pCorrector*/)
 {
 	m_dX = pReader->ReadDouble();
 	m_dY = pReader->ReadDouble();
@@ -80,7 +80,7 @@ void CLinkCommand::SetPage(const int& val) { m_nPage = val; }
 void CLinkCommand::SetDestX(const double& val) { m_dDestX = val; }
 void CLinkCommand::SetDestY(const double& val) { m_dDestY = val; }
 
-bool CLinkCommand::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter* pCorrector)
+bool CLinkCommand::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter*  /*pCorrector*/)
 {
 	m_dX = pReader->ReadDouble();
 	m_dY = pReader->ReadDouble();
@@ -108,7 +108,7 @@ void CDocInfoCommand::SetCreator(const std::wstring& val) { m_sCreator = val; }
 void CDocInfoCommand::SetSubject(const std::wstring& val) { m_sSubject = val; }
 void CDocInfoCommand::SetKeywords(const std::wstring& val) { m_sKeywords = val; }
 
-bool CDocInfoCommand::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter* pCorrector)
+bool CDocInfoCommand::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter*  /*pCorrector*/)
 {
 	int nFlags = pReader->ReadInt();
 	if (nFlags & 1)
@@ -124,7 +124,7 @@ bool CDocInfoCommand::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMeta
 
 CShapeStart::CShapeStart() : IAdvancedCommand(AdvancedCommandType::ShapeStart)
 {
-	m_pImage = NULL;
+	m_pImage = nullptr;
 }
 CShapeStart::~CShapeStart()
 {
@@ -136,13 +136,13 @@ void CShapeStart::SetShapeImage(BYTE* pImgData, int nWidth, int nHeight)
 	if (pImgData)
 	{
 		m_pImage = new Aggplus::CImage();
-		m_pImage->Create(pImgData, nWidth, nHeight, -4 * nWidth);
+		m_pImage->Create(pImgData, nWidth, nHeight, -4 * static_cast<long>(nWidth));
 	}
 }
 std::string& CShapeStart::GetShapeXML() { return m_sShapeXML; }
 const std::vector<std::wstring>& CShapeStart::GetRedactID() { return m_arrRedactID; }
 Aggplus::CImage* CShapeStart::GetShapeImage() { return m_pImage; }
-bool CShapeStart::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter* pCorrector, int nLen)
+bool CShapeStart::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter*  /*pCorrector*/, int nLen)
 {
 	int nStart = pReader->Tell();
 	m_sShapeXML = pReader->ReadStringA();
@@ -161,7 +161,7 @@ CEmptyComand::CEmptyComand(AdvancedCommandType nType) : IAdvancedCommand(nType) 
 
 CPageRotate::CPageRotate() : IAdvancedCommand(AdvancedCommandType::PageRotate) {}
 int CPageRotate::GetPageRotate() { return m_nPageRotate; }
-bool CPageRotate::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter* pCorrector)
+bool CPageRotate::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter*  /*pCorrector*/)
 {
 	m_nPageRotate = pReader->ReadInt();
 	return true;
@@ -186,7 +186,7 @@ CHeadings::~CHeadings()
 		RELEASEOBJECT(m_arrHeading[i]);
 }
 const std::vector<CHeadings::CHeading*>& CHeadings::GetHeading() { return m_arrHeading; }
-bool CHeadings::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter* pCorrector)
+bool CHeadings::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter*  /*pCorrector*/)
 {
 	std::vector<CHeading*> arrParentStack;
 	int nHeadings = pReader->ReadInt();

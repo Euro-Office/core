@@ -72,7 +72,7 @@ bool DigitReader::ReadDigit(const std::wstring &value, std::wstring &digit, std:
 
 		if (0 != *pEndPtr)
 		{
-			if (false == postfix.empty())
+			if (!postfix.empty())
 			{
 				CurrencyReader currency{};
 				if (postfix[0] == L'%')
@@ -143,7 +143,7 @@ std::wstring DigitReader::createFractionFormat(const std::wstring &value, const 
 			for (size_t i = 0; i < fraction && fraction != std::wstring::npos; ++i)
 				data_format += L"0";
 		}
-		if (false == data_format.empty()) data_format = L"." + data_format;
+		if (!data_format.empty()) data_format = L"." + data_format;
         if(pos != std::string::npos && pos < (value.size() - postfix.size() - 1))
 		{
             std::wstring wholePart(pos, '0');

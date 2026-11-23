@@ -1383,7 +1383,7 @@ extern int g_nCurFormatVersion;
 		{
 			AlgorithmName = 0,
 			Edit = 1,
-			Enforcment = 2,
+			Enforcement = 2,
 			Formatting = 3,
 			HashValue = 4,
 			SaltValue = 5,

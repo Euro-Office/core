@@ -78,9 +78,9 @@ namespace MetaFile
 
 	bool CPathConverter::AddLineStartCap(CPath &oPath, const CEmfPlusPen &oPen, double& dX, double& dY, double dAngle)
 	{
-		if (NULL != oPen.pLineStartCapData)
+		if (nullptr != oPen.pLineStartCapData)
 		{
-			if (CustomLineCapDataTypeDefault == oPen.pLineStartCapData->GetType() && NULL != ((TEmfPlusCustomLineCapData*)oPen.pLineStartCapData)->pPath)
+			if (CustomLineCapDataTypeDefault == oPen.pLineStartCapData->GetType() && nullptr != ((TEmfPlusCustomLineCapData*)oPen.pLineStartCapData)->pPath)
 			{
 				return AddLineCap(oPath, *(((TEmfPlusCustomLineCapData*)oPen.pLineStartCapData)->pPath), dX, dY, dAngle, oPen.dWidth);
 			}
@@ -91,9 +91,9 @@ namespace MetaFile
 
 	bool CPathConverter::AddLineEndCap(CPath &oPath, const CEmfPlusPen &oPen, double &dX, double &dY, double dAngle)
 	{
-		if (NULL != oPen.pLineEndCapData)
+		if (nullptr != oPen.pLineEndCapData)
 		{
-			if (CustomLineCapDataTypeDefault == oPen.pLineEndCapData->GetType() && NULL != ((TEmfPlusCustomLineCapData*)oPen.pLineEndCapData)->pPath)
+			if (CustomLineCapDataTypeDefault == oPen.pLineEndCapData->GetType() && nullptr != ((TEmfPlusCustomLineCapData*)oPen.pLineEndCapData)->pPath)
 			{
 				return AddLineCap(oPath, *((TEmfPlusCustomLineCapData*)oPen.pLineEndCapData)->pPath, dX, dY, dAngle, oPen.dWidth);
 			}
@@ -143,9 +143,6 @@ namespace MetaFile
 				break;
 			}
 			case PATH_COMMAND_CURVETO:
-			{
-				break;
-			}
 			case PATH_COMMAND_ARCTO:
 			{
 				break;
