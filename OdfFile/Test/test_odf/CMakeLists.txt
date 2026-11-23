@@ -105,6 +105,7 @@ add_core_gtest(
             odt2docx_note_body_whitespace.cpp
             ods2xlsx_fill_character.cpp
             ods_formula_function_names.cpp
+            ods2xlsx_optimal_row_height.cpp
             odf_font_family.cpp
             docx2odt_line_break_after_text.cpp
             odt2docx_character_style_based_on.cpp

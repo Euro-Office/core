@@ -357,6 +357,7 @@ public:
 	bool empty();
 	bool empty_content_cells(bool bWithCellStyle = true);
 	bool trailing_cells_format(oox::xlsx_conversion_context & Context, size_t & xf);
+	bool cells_padded(oox::xlsx_conversion_context & Context);
 
 	bool bHeader = false;
 
