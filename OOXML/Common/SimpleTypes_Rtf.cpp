@@ -31,7 +31,6 @@ namespace SimpleTypes
 		if       ( _T("W3C XHTML+CSS1") == sValue ) this->m_eValue = optforbrowserXhtmlCSS1;
 		else if  ( _T("W3C HTML4+CSS1") == sValue ) this->m_eValue = optforbrowserHtml4CSS1;
 		else if  ( _T("W3C XHTML+CSS2") == sValue ) this->m_eValue = optforbrowserXhtmlCSS2;
-		else if  ( _T("W3C HTML4+CSS2") == sValue ) this->m_eValue = optforbrowserHtml4CSS2;
 		else                                        this->m_eValue = optforbrowserHtml4CSS2;
 
 		return this->m_eValue;
@@ -44,7 +43,6 @@ namespace SimpleTypes
 		case optforbrowserXhtmlCSS1 : return _T("W3C XHTML+CSS1");
 		case optforbrowserHtml4CSS1 : return _T("W3C HTML4+CSS1 ");
 		case optforbrowserXhtmlCSS2 : return _T("W3C XHTML+CSS2 ");
-		case optforbrowserHtml4CSS2 : return _T("W3C HTML4+CSS2 ");
 		default                     : return _T("W3C HTML4+CSS2 ");
 		}
 	}

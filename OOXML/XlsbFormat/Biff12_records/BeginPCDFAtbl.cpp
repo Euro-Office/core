@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginPCDFAtbl::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;        
+        _UINT16 flags = 0;        
         record >> flags;
 
         fTextEtcField               = GETBIT(flags, 0);

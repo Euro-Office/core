@@ -33,13 +33,13 @@ namespace OOX
 		CChartFile::CChartFile(OOX::Document* pMain, bool bDocument) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 		{
 			m_bDocument = bDocument;
-			m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+			m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
 		}
 		CChartFile::CChartFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 		{
-			m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-			m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
-			read( oRootPath, oPath );
+			m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+			m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+			CChartFile::read( oRootPath, oPath );
 		}
 		CChartFile::~CChartFile()
 		{
@@ -109,13 +109,13 @@ namespace OOX
 		CChartExFile::CChartExFile(OOX::Document* pMain, bool bDocument) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 		{
 			m_bDocument = bDocument;
-			m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+			m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
 		}
 		CChartExFile::CChartExFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 		{
-			m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-			m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
-			read( oRootPath, oPath );
+			m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+			m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+			CChartExFile::read( oRootPath, oPath );
 		}
 		CChartExFile::~CChartExFile()
 		{
@@ -189,7 +189,7 @@ namespace OOX
 		CChartStyleFile::CChartStyleFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain)/*, OOX::IFileContainer(pMain)*/
 		{
 			//m_bSpreadsheets = true;
-			read( oRootPath, oPath );
+			CChartStyleFile::read( oRootPath, oPath );
 		}
 		CChartStyleFile::~CChartStyleFile()
 		{
@@ -200,7 +200,7 @@ namespace OOX
 			CPath oRootPath;
 			read(oRootPath, oPath);
 		}
-		void CChartStyleFile::read(const CPath& oRootPath, const CPath& oPath)
+		void CChartStyleFile::read(const CPath&  /*oRootPath*/, const CPath& oPath)
 		{
 			m_oReadPath = oPath;
 			//IFileContainer::Read( oRootPath, oPath );
@@ -261,7 +261,7 @@ namespace OOX
 		CChartColorsFile::CChartColorsFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain)/*, OOX::IFileContainer(pMain)*/
 		{
 			//m_bSpreadsheets = true;
-			read( oRootPath, oPath );
+			CChartColorsFile::read( oRootPath, oPath );
 		}
 		CChartColorsFile::~CChartColorsFile()
 		{
@@ -272,7 +272,7 @@ namespace OOX
 			CPath oRootPath;
 			read(oRootPath, oPath);
 		}
-		void CChartColorsFile::read(const CPath& oRootPath, const CPath& oPath)
+		void CChartColorsFile::read(const CPath&  /*oRootPath*/, const CPath& oPath)
 		{
 			m_oReadPath = oPath;
 			//IFileContainer::Read( oRootPath, oPath );

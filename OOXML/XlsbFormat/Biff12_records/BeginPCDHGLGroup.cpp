@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginPCDHGLGroup::readFields(XLS::CFRecord& record)
     {
-        BYTE    flags;
+        BYTE    flags = 0;
 
         record >> iGrpNum >> flags;
 

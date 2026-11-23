@@ -401,7 +401,7 @@ namespace Spreadsheet
 			{
 				auto boolVal(new XLSB::ExternCellBool);
 				boolVal->col = valuePtr->m_Col;
-				boolVal->value = m_oValue->m_sText == L"1" ? true : false;
+				boolVal->value = m_oValue->m_sText == L"1";
 				valuePtr->m_source = XLS::BaseObjectPtr{boolVal};
 				break;
 			}
@@ -429,8 +429,6 @@ namespace Spreadsheet
 					errVal->value = 0x1D;
 				else if(m_oValue->m_sText ==  L"#NUM!")
 					errVal->value = 0x24;
-				else if(m_oValue->m_sText ==  L"#N/A")
-					errVal->value = 0x2A;
 				else if(m_oValue->m_sText ==  L"#GETTING_DATA")
 					errVal->value = 0x2B;
 				else
@@ -511,6 +509,7 @@ namespace Spreadsheet
 						case 0x24: m_oValue->m_sText = L"#NUM!"; break;
 						case 0x2A: m_oValue->m_sText = L"#N/A"; break;
 						case 0x2B: m_oValue->m_sText = L"#GETTING_DATA"; break;
+						default: break;
 						}
 					}
 					break;
@@ -523,6 +522,7 @@ namespace Spreadsheet
 						m_oValue->m_sText = pSt;
 					}
 					break;
+					default: break;
 					}
 				}
 
@@ -1131,6 +1131,7 @@ namespace Spreadsheet
 					case 0x24: val = L"#NUM!"; break;
 					case 0x2A: val = L"#N/A"; break;
 					case 0x2B: val = L"#GETTING_DATA"; break;
+					default: break;
 					}
 					text->fromBin(val);
 					m_arrItems.push_back(text);
@@ -1153,6 +1154,7 @@ namespace Spreadsheet
 					m_oType->SetValue(SimpleTypes::Spreadsheet::EDdeValueType::ddevaluetypeNil);;
 				}
 				break;
+				default: break;
 				}
 			}
 		}
@@ -1803,8 +1805,8 @@ namespace Spreadsheet
 	void COleLink::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 	{
 		WritingElement_ReadAttributes_Start(oReader)
-			WritingElement_ReadAttributes_Read_if(oReader, (L"r:id"), m_oRid)
-			WritingElement_ReadAttributes_Read_else_if(oReader, (L"relationships:id"), m_oRid)
+			if ( (L"r:id") == wsName || (L"relationships:id") == wsName )
+				m_oRid = oReader.GetText();
 			WritingElement_ReadAttributes_Read_else_if(oReader, (L"progId"), m_oProgId)
 		WritingElement_ReadAttributes_End(oReader)
 	}
@@ -1888,7 +1890,7 @@ namespace Spreadsheet
 	{
 		m_bSpreadsheets = true;
 		m_rId = rId;
-		read(oRootPath, oPath);
+		CExternalLink::read(oRootPath, oPath);
 	}
 	CExternalLink::~CExternalLink()
 	{
@@ -1940,6 +1942,7 @@ namespace Spreadsheet
 							case XLSB::ExternalReferenceType::OLE:
 								m_oOleLink = externalLinkStreamStream->m_EXTERNALLINK;
 								break;
+							default: break;
 							}
 						}
 					}

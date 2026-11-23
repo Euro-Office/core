@@ -44,7 +44,7 @@ namespace OOX
 {
     boost::unordered_map<std::wstring, size_t> IFileContainer::m_mapEnumeratedGlobal;
 
-    UnknowTypeFile IFileContainer::m_oUnknown(NULL);
+    UnknowTypeFile IFileContainer::m_oUnknown(nullptr);
 
 	IFileContainer::IFileContainer(OOX::Document* pMain) : m_pMainDocument(pMain)
 	{
@@ -99,7 +99,7 @@ namespace OOX
 			if (m_bVisioPages)
 				pFile = OOX::Draw::CreateFile(oRootPath, oPath, oRels.m_arRelations[i], m_pMainDocument);
 
-			if (pFile.IsInit() == false || pFile->type() == FileTypes::Unknown)
+			if (!pFile.IsInit() || pFile->type() == FileTypes::Unknown)
 				pFile = OOX::CreateFile(oRootPath, oPath, oRels.m_arRelations[i], m_pMainDocument);
 
 			if (oRels.m_arRelations[i]->IsExternal())
@@ -145,7 +145,7 @@ namespace OOX
 					oDefDir = L"../" + oDefDir;
 				}
 
-                if (false == pFile->m_sOutputFilename.empty())
+                if (!pFile->m_sOutputFilename.empty())
 					oName.SetName(pFile->m_sOutputFilename, false);
 
 				boost::unordered_map<std::wstring, std::wstring>::const_iterator itFind = m_mNoWriteContainer.find(pPair->first);
@@ -158,7 +158,7 @@ namespace OOX
 				{
 					oDefDir = itFind->second;
 				}
-				if(true != pFile->m_bDoNotAddRels)
+				if(!pFile->m_bDoNotAddRels)
                 {
                     if (oDefDir.GetPath().length() > 0)//TODO transfer to CPath
                         oRels.Registration( pPair->first, pFile->type(), oDefDir / oName );
@@ -335,11 +335,11 @@ namespace OOX
 		bool bEnumerated		= pFile->type().Enumerated();
 		bool bEnumeratedGlobal	= pFile->type().EnumeratedGlobal();
 
-		if((true == bEnumeratedGlobal || true == bEnumerated) && pFile->m_sOutputFilename.empty())
+		if((bEnumeratedGlobal || bEnumerated) && pFile->m_sOutputFilename.empty())
 		{
 			int nIndex = 0;
 
-			if(true == bEnumeratedGlobal)
+			if(bEnumeratedGlobal)
 			{
 				boost::unordered_map<std::wstring, size_t>::const_iterator pNamePair = m_mapEnumeratedGlobal.find (pFile->type().EnumerateType());
 				if (pNamePair != m_mapEnumeratedGlobal.end())
@@ -354,7 +354,7 @@ namespace OOX
 
 			nIndex++;
 
-			if(true == bEnumeratedGlobal)
+			if(bEnumeratedGlobal)
 			{
 				if(pFile.is<OOX::FileGlobalEnumerated>())
 				{
@@ -372,7 +372,7 @@ namespace OOX
 			}
 			pFile->m_sOutputFilename = sPath;
 			
-			if(true == bEnumeratedGlobal)
+			if(bEnumeratedGlobal)
 				m_mapEnumeratedGlobal [pFile->type().EnumerateType()] = nIndex;
 			else
 				m_mapAddNamePair [pFile->type().EnumerateType()] = nIndex;

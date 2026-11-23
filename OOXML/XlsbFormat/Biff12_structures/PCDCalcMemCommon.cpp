@@ -36,7 +36,7 @@ namespace XLSB
 
     PCDCalcMemCommon::PCDCalcMemCommon(XLS::CFRecord& record)
     {
-        load(record);
+        PCDCalcMemCommon::load(record);
     }
 
     PCDCalcMemCommon::~PCDCalcMemCommon()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void PCDCalcMemCommon::load(XLS::CFRecord& record)
     {
-        _UINT32 flags;
+        _UINT32 flags = 0;
         record >> flags;
 
         fLoadMemberName   = GETBIT(flags, 0);

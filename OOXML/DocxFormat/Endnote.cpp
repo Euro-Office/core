@@ -51,13 +51,13 @@ namespace OOX
 			if (docx->m_bGlossaryRead)	docx->m_oGlossary.endnotes = this;
 			else						docx->m_oMain.endnotes = this;
 		}
-		read( oRootPath, oPath );
+		CEndnotes::read( oRootPath, oPath );
 	}
 	CEndnotes::~CEndnotes()
 	{
 		for (unsigned int nIndex = 0; nIndex < m_arrEndnote.size(); nIndex++ )
 		{
-			if ( m_arrEndnote[nIndex] )	delete m_arrEndnote[nIndex]; m_arrEndnote[nIndex] = NULL;
+			if ( m_arrEndnote[nIndex] )	delete m_arrEndnote[nIndex]; m_arrEndnote[nIndex] = nullptr;
 		}
 
 		m_arrEndnote.clear();
@@ -161,7 +161,7 @@ mc:Ignorable=\"w14 w15 wp14\">");
 	OOX::CFtnEdn* CEndnotes::Find(const OOX::Logic::CEndnoteReference& oReference)
 	{
 		if ( !oReference.m_oId.IsInit() )
-			return NULL;
+			return nullptr;
 
 		//for ( unsigned int nIndex = 0; nIndex < m_arrEndnote.size(); nIndex++ )
 		//{
@@ -171,7 +171,7 @@ mc:Ignorable=\"w14 w15 wp14\">");
 		std::map<int, OOX::CFtnEdn*>::iterator pFind = m_mapEndnote.find(oReference.m_oId->GetValue());
 
 		if (pFind != m_mapEndnote.end())	return pFind->second;
-		else								return NULL;
+		else								return nullptr;
 	}
 	void CEndnotes::Add(OOX::CFtnEdn* pEndnote)
 	{

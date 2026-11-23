@@ -100,7 +100,7 @@ namespace Spreadsheet
         WritingStringCommonDouble(L" " name L"=\"", val, L"\"")
 
 #define WritingStringNullableAttr(name, func, elem, val) \
-        if(elem.IsInit()) \
+        if((elem).IsInit()) \
         { \
             WritingStringAttr(name, func, val) \
         }
@@ -117,27 +117,27 @@ namespace Spreadsheet
 #define WritingStringNullableAttrInt64(name, elem, val) \
         WritingStringNullableAttr(name, AddInt64, elem, val)
 #define WritingStringNullableAttrDouble(name, elem, val) \
-        if(elem.IsInit()) \
+        if((elem).IsInit()) \
         { \
             WritingStringAttrDouble(name, val) \
         }
 #define WritingStringNullableAttrBool(name, elem) \
-        WritingStringNullableAttrString(name, elem, elem->ToString3(SimpleTypes::onofftostring1))
+        WritingStringNullableAttrString(name, elem, (elem)->ToString3(SimpleTypes::onofftostring1))
 
 #define WritingStringNullableAttrBool2(name, elem) \
-        WritingStringNullableAttrString(name, elem, *elem ? L"1": L"0")
+        WritingStringNullableAttrString(name, elem, *(elem) ? L"1": L"0")
 
 #define WritingStringNullableAttrInt2(name, elem) \
-        WritingStringNullableAttrInt(name, elem, *elem)
+        WritingStringNullableAttrInt(name, elem, *(elem))
 
 #define WritingStringNullableAttrDouble2(name, elem) \
-        WritingStringNullableAttrDouble(name, elem, *elem)
+        WritingStringNullableAttrDouble(name, elem, *(elem))
 
 #define WritingStringNullableAttrEncodeXmlString2(name, elem) \
-        WritingStringNullableAttrEncodeXmlString(name, elem, *elem)
+        WritingStringNullableAttrEncodeXmlString(name, elem, *(elem))
 
 #define WritingNullable(elem, action) \
-        if(elem.IsInit()) \
+        if((elem).IsInit()) \
         { \
             action \
         }
@@ -148,7 +148,7 @@ namespace Spreadsheet
     class WritingElement : public OOX::WritingElement
     {
     public:
-        WritingElement(OOX::Document *pMain = NULL) : OOX::WritingElement(pMain) {}
+        WritingElement(OOX::Document *pMain = nullptr) : OOX::WritingElement(pMain) {}
         virtual EElementType    getType()   const
         {
             return OOX::et_x_Unknown;
@@ -160,11 +160,11 @@ namespace Spreadsheet
     class WritingElementWithChilds : public WritingElement
     {
     public:
-        WritingElementWithChilds(OOX::Document *pMain = NULL) : WritingElement(pMain) {}
+        WritingElementWithChilds(OOX::Document *pMain = nullptr) : WritingElement(pMain) {}
 
         virtual ~WritingElementWithChilds()
         {
-            ClearItems();
+            WritingElementWithChilds::ClearItems();
         }
         virtual void ClearItems()
         {

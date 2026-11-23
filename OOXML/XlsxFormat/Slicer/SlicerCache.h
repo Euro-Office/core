@@ -458,7 +458,7 @@ namespace OOX
 							 OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 			{
 				m_bSpreadsheets = true;
-				read( oRootPath, oPath );
+				CSlicerCacheFile::read( oRootPath, oPath );
 			}
             void readBin(const CPath& oPath);
 			XLS::BaseObjectPtr WriteBin() const;

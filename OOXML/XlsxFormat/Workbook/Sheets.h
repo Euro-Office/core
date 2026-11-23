@@ -49,7 +49,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CSheet)
             WritingElement_XlsbConstructors(CSheet)
-			CSheet(OOX::Document *pMain = NULL);
+			CSheet(OOX::Document *pMain = nullptr);
 			virtual ~CSheet();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -79,7 +79,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CSheets)
             WritingElement_XlsbVectorConstructors(CSheets)
-			CSheets(OOX::Document *pMain = NULL);
+			CSheets(OOX::Document *pMain = nullptr);
 			virtual ~CSheets();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -90,7 +90,9 @@ namespace OOX
 
 			void fromBin(std::vector<XLS::BaseObjectPtr>& obj);
 			std::vector<XLS::BaseObjectPtr> toBin();
-			void toXLS(XLS::BaseObjectPtr stream, const std::vector<_UINT16> &SheetTypes);
+			// Writes a BoundSheet8 for each entry of `sheets`: a <sheet> of this list, in tab order, with its sheet type
+			// (0 worksheet, 2 chart sheet). See CWorkbook::GetSheetsForXLS.
+			void toXLS(XLS::BaseObjectPtr stream, const std::vector<std::pair<CSheet*, _UINT16>> &sheets);
 			virtual EElementType getType () const;
             static void AddSheetRef(const std::wstring& link, const _INT32&  sheetIndex);
 		private:

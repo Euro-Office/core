@@ -81,7 +81,7 @@ namespace OOX
 		virtual const CPath DefaultFileName() const;
 
 	public:
-		// Childs
+		// Children
 		nullable<ComplexTypes::Word::COnOff2 > m_oAllowPNG;
 		nullable<ComplexTypes::Word::COptimizeForBrowser             > m_oOptimizeForBrowser;
 	};

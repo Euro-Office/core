@@ -30,7 +30,7 @@
 
 namespace PPTX2EditorAdvanced
 {
-	DWORD Convert(NSBinPptxRW::CBinaryFileWriter& oBinaryWriter, PPTX::Document& oFolder, const std::wstring& strSourceDirectory, const std::wstring& strDstFile, bool bIsNoBase64)
+	DWORD Convert(NSBinPptxRW::CBinaryFileWriter& oBinaryWriter, PPTX::Document& oFolder, const std::wstring&  /*strSourceDirectory*/, const std::wstring& strDstFile, bool bIsNoBase64)
 	{
 		NSBinPptxRW::CCommonWriter* pCommon = oBinaryWriter.m_pCommon;
 
@@ -44,17 +44,12 @@ namespace PPTX2EditorAdvanced
 
 		smart_ptr<PPTX::Presentation> presentation = oFolder.Get(OOX::Presentation::FileTypes::Presentation).smart_dynamic_cast<PPTX::Presentation>();
 
-#ifndef __ANDROID__
-		int cx = presentation->sldSz->cx;
-		int cy = presentation->sldSz->cy;
-#endif
-
 		size_t nCountMasters = presentation->sldMasterIdLst.size();
 		for (size_t nMaster = 0; nMaster < nCountMasters; ++nMaster)
 		{
 			smart_ptr<PPTX::SlideMaster> slideMaster = ((*presentation)[presentation->sldMasterIdLst[nMaster].rid.get()]).smart_dynamic_cast<PPTX::SlideMaster>();
 
-			if (slideMaster.IsInit() == false)
+			if (!slideMaster.IsInit())
 			{
 				//Вебкасты.pptx - rId assigned incorrectly
 				continue;
@@ -125,7 +120,7 @@ namespace PPTX2EditorAdvanced
 		for (size_t nNote = 0; nNote < nCountNoteMasters; ++nNote)
 		{
 			smart_ptr<PPTX::NotesMaster> noteMaster = ((*presentation)[presentation->notesMasterIdLst[nNote].rid.get()]).smart_dynamic_cast<PPTX::NotesMaster>();
-			if (false == noteMaster.IsInit())
+			if (!noteMaster.IsInit())
 			{
 				// this shouldn't happen
 				continue;
@@ -165,7 +160,7 @@ namespace PPTX2EditorAdvanced
 		for (size_t nHandout = 0; nHandout < nCountHandoutMasters; ++nHandout)
 		{
 			smart_ptr<PPTX::HandoutMaster> handoutMaster = ((*presentation)[presentation->handoutMasterIdLst[nHandout].rid.get()]).smart_dynamic_cast<PPTX::HandoutMaster>();
-			if (false == handoutMaster.IsInit())
+			if (!handoutMaster.IsInit())
 			{
 				// this shouldn't happen
 				continue;
@@ -207,7 +202,7 @@ namespace PPTX2EditorAdvanced
 			std::wstring rId = presentation->sldIdLst[i].rid.get();
 			smart_ptr<PPTX::Slide> slide = ((*presentation)[rId]).smart_dynamic_cast<PPTX::Slide>();
 
-			if (slide.IsInit() == false)
+			if (!slide.IsInit())
 			{
 				continue;// strange... slide 38 in FY10_September_Partner_Call.pptx
 			}
@@ -280,7 +275,7 @@ namespace PPTX2EditorAdvanced
 		// need to write everything in maintables. And besides the main tables there is nothing. Everything else is contained within them
 		// per table - 5 bytes (type and shift)
 		// the number of tables is known in advance (we'll make 30. If later it's not enough, a new version of the format)
-		oBinaryWriter.WriteReserved(5 * 30);
+		oBinaryWriter.WriteReserved((size_t)5 * 30);
 
 // Main
 		oBinaryWriter.StartMainRecord(NSBinPptxRW::NSMainTables::Main);
@@ -346,7 +341,7 @@ namespace PPTX2EditorAdvanced
 				customs.push_back(pCustomXml);
 			}
 		}
-		if (false == customs.empty())
+		if (!customs.empty())
 		{
 			oBinaryWriter.StartMainRecord(NSBinPptxRW::NSMainTables::Customs);
 			oBinaryWriter.WriteULONG(customs.size());
@@ -373,7 +368,7 @@ namespace PPTX2EditorAdvanced
 
 		for (size_t  i = 0; i < _themes.size(); ++i)
 		{
-			if (_themes[i].IsInit() == false) continue;
+			if (!_themes[i].IsInit()) continue;
 			_themes[i]->toPPTY(&oBinaryWriter);
 		}
 // slidemasters
@@ -388,7 +383,7 @@ namespace PPTX2EditorAdvanced
 
 		for (size_t i = 0; i < _slideMasters.size(); ++i)
 		{
-			if (_slideMasters[i].IsInit() == false) continue;
+			if (!_slideMasters[i].IsInit()) continue;
 
 			_slideMasters[i]->toPPTY(&oBinaryWriter);
 		}
@@ -404,7 +399,7 @@ namespace PPTX2EditorAdvanced
 
 		for (size_t i = 0; i < _layouts.size(); ++i)
 		{
-			if (_layouts[i].IsInit() == false)	continue;	//confusion with template 42 in FY10_September_Partner_Call.pptx
+			if (!_layouts[i].IsInit())	continue;	//confusion with template 42 in FY10_September_Partner_Call.pptx
 
 			_layouts[i]->toPPTY(&oBinaryWriter);
 		}
@@ -420,7 +415,7 @@ namespace PPTX2EditorAdvanced
 
 		for (size_t i = 0; i < _slides.size(); ++i)
 		{
-			if (_slides[i].IsInit() == false )	continue;
+			if (!_slides[i].IsInit() )	continue;
 
 			_slides[i]->toPPTY(&oBinaryWriter);
 		}
@@ -604,7 +599,7 @@ namespace PPTX2EditorAdvanced
 			int nBase64BufferLen = Base64::Base64EncodeGetRequiredLength(nBinBufferLen, Base64::B64_BASE64_FLAG_NOCRLF);
 			BYTE* pbBase64Buffer = new BYTE[nBase64BufferLen+64];
 	//		if (true == Base64::Base64Encode(pbBinBuffer, nBinBufferLen, (LPSTR)pbBase64Buffer, &nBase64BufferLen, Base64::B64_BASE64_FLAG_NOCRLF))
-			if (true == Base64_1::Base64Encode(pbBinBuffer, nBinBufferLen, pbBase64Buffer, &nBase64BufferLen))
+			if (Base64_1::Base64Encode(pbBinBuffer, nBinBufferLen, pbBase64Buffer, &nBase64BufferLen))
 			{
 				NSFile::CFileBinary oFile;
 				oFile.CreateFileW(strDstFile);

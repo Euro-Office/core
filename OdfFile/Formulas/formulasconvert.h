@@ -32,6 +32,12 @@ namespace cpdoccore {
 
 namespace formulasconvert {
 
+// Function names that differ between OpenFormula and OOXML, in a formula whose string literals are masked:
+// COM.MICROSOFT.CONCAT( <-> _xlfn.CONCAT(, LEGACY.FDIST( <-> FDIST(, FDIST( <-> _xlfn.F.DIST(
+std::wstring odf2oox_function_names(const std::wstring& expr);
+// mask, if given, replaces each converted name, so that later steps don't take LOG10 for a cell reference
+std::wstring oox2odf_function_names(const std::wstring& expr, void (*mask)(std::wstring&) = nullptr);
+
 
 // Working with OpenOffice formulas, conversion.
 // For examples, see the test ut_formulasconvert.cpp

@@ -122,7 +122,7 @@ namespace NSFontConverter
 			if ( c OP 0x80 )
 				break;
 
-			c = c_arrCharTable[c & 0x7F];
+			c = (FT_UInt)(unsigned char)c_arrCharTable[c & 0x7F];
 			if ( (unsigned)c >= 16 )
 				break;
 
@@ -155,8 +155,9 @@ namespace NSFontConverter
 		char *sBuffer;
 		int nLen = 0;
 
-		if ( !( sBuffer = CFontFileBase::ReadFile(wsFileName, &nLen) ) )
-			return NULL;
+		sBuffer = CFontFileBase::ReadFile(wsFileName, &nLen);
+		if ( !sBuffer )
+			return nullptr;
 
 		return new CFontFileType1(sBuffer, nLen, true);
 	}
@@ -164,8 +165,8 @@ namespace NSFontConverter
 	CFontFileType1::CFontFileType1(char *sBuffer, int nLen, bool bFreeData):
 		CFontFileBase(sBuffer, nLen, bFreeData)
 	{
-		m_sName = NULL;
-		m_arrEncoding = NULL;
+		m_sName = nullptr;
+		m_arrEncoding = nullptr;
 
 		Parse();
 		m_bParsed = false;
@@ -182,7 +183,7 @@ namespace NSFontConverter
 			{
 				MemUtilsFree( m_arrEncoding[nIndex] );
 			}
-			MemUtilsFree(m_arrEncoding);
+			MemUtilsFree((void *)m_arrEncoding);
 		}
 	}
 
@@ -208,7 +209,7 @@ namespace NSFontConverter
 		char *sLine, *sLine2, *sCurChar;
 
 		// copy everything up to the /Encoding entry
-		for ( sLine = (char *)m_sFile; sLine && strncmp( sLine, "/Encoding", 9); sLine = GetNextLine(sLine) );
+		for ( sLine = (char *)m_sFile; sLine && 0 != strncmp( sLine, "/Encoding", 9); sLine = GetNextLine(sLine) );
 		if ( !sLine )
 		{
 			// encoding not found, so copy the entire font file
@@ -237,7 +238,7 @@ namespace NSFontConverter
 		else
 		{
 			sCurChar = sLine + 10;
-			sLine = NULL;
+			sLine = nullptr;
 			for (; sCurChar < (char *)m_sFile + m_nLen; ++sCurChar)
 			{
 				if ((*sCurChar == ' ' || *sCurChar == '\t' || *sCurChar == '\x0a' || *sCurChar == '\x0d' || *sCurChar == '\x0c' || *sCurChar == '\0') && sCurChar + 4 <= (char *)m_sFile + m_nLen && !strncmp(sCurChar + 1, "def", 3) )
@@ -252,7 +253,7 @@ namespace NSFontConverter
 		if ( sLine )
 		{
 			int nIndex;
-			for ( sLine2 = sLine, nIndex = 0; nIndex < 20 && sLine2 && strncmp(sLine2, "/Encoding", 9); sLine2 = GetNextLine(sLine2), ++nIndex) ;
+			for ( sLine2 = sLine, nIndex = 0; nIndex < 20 && sLine2 && 0 != strncmp(sLine2, "/Encoding", 9); sLine2 = GetNextLine(sLine2), ++nIndex) ;
 			if ( nIndex < 20 && sLine2 )
 			{
 				(*pOutputFunc)( pOutputStream, sLine, sLine2 - sLine);
@@ -263,7 +264,7 @@ namespace NSFontConverter
 				else
 				{
 					sCurChar = sLine2 + 10;
-					sLine = NULL;
+					sLine = nullptr;
 					for (; sCurChar < (char *)m_sFile + m_nLen; ++sCurChar)
 					{
 						if ((*sCurChar == ' ' || *sCurChar == '\t' || *sCurChar == '\x0a' || *sCurChar == '\x0d' || *sCurChar == '\x0c' || *sCurChar == '\0') && sCurChar + 4 <= (char *)m_sFile + m_nLen && !strncmp(sCurChar + 1, "def", 3) )
@@ -295,7 +296,7 @@ namespace NSFontConverter
 			++sLine;
 
 		if ( sLine >= (char *)m_sFile + m_nLen )
-			return NULL;
+			return nullptr;
 
 		return sLine;
 	}
@@ -322,7 +323,7 @@ namespace NSFontConverter
 		char sBuffer[256];
 		int nCount, nCode;
 		int nIndex = 0;
-		unsigned char *sEexec = NULL;
+		unsigned char *sEexec = nullptr;
 
 		m_oTopDict.arrdFontBBox[0] = 0; m_oTopDict.arrdFontBBox[1] = 0;
 		m_oTopDict.arrdFontBBox[2] = 0; m_oTopDict.arrdFontBBox[3] = 0;
@@ -337,7 +338,10 @@ namespace NSFontConverter
 			{
 				strncpy( sBuffer, sLine, 255);
 				sBuffer[255] = '\0';
-				if ( ( pCur = strchr( sBuffer + 9, '/' ) ) && ( pCur = strtok( pCur + 1, " \t\n\r" ) ) )
+				pCur = strchr( sBuffer + 9, '/' );
+				if ( pCur )
+					pCur = strtok( pCur + 1, " \t\n\r" );
+				if ( pCur )
 				{
 					m_sName = CopyString( pCur );
 				}
@@ -370,11 +374,12 @@ namespace NSFontConverter
 				int nJ = 0;
 				for (nJ = 0; nJ < 256; ++nJ )
 				{
-					m_arrEncoding[nJ] = NULL;
+					m_arrEncoding[nJ] = nullptr;
 				}
 				for (nJ = 0, sLine = GetNextLine(sLine); nJ < 300 && sLine && ( sLine1 = GetNextLine( sLine )); ++nJ, sLine = sLine1)
 				{
-					if ( ( nCount = sLine1 - sLine ) > 255 )
+					nCount = sLine1 - sLine;
+					if ( nCount > 255 )
 					{
 						nCount = 255;
 					}
@@ -415,7 +420,10 @@ namespace NSFontConverter
 					}
 					else
 					{
-						if ( strtok( sBuffer, " \t") && ( pCur = strtok(NULL, " \t\n\r")) && !strcmp( pCur, "def"))
+						pCur = nullptr;
+						if ( strtok( sBuffer, " \t") )
+							pCur = strtok(nullptr, " \t\n\r");
+						if ( pCur && !strcmp( pCur, "def"))
 						{
 							break;
 						}
@@ -431,7 +439,7 @@ namespace NSFontConverter
 			}
 		}
 
-		if ( NULL != sEexec )
+		if ( nullptr != sEexec )
 		{
 			unsigned char* sTemp = sEexec;
 			while ( sTemp != (unsigned char*)strstr( (char*)sTemp, "cleartomark" ) && sTemp < m_sFile + m_nLen )
@@ -516,7 +524,7 @@ namespace NSFontConverter
 					sToken.push_back( (wchar_t)nChar );
 					if ( !bGlyphsSection && '/' == sToken[0] )
 					{
-						int nTempChar = sToken[1];
+						int nTempChar = static_cast<int>(static_cast<unsigned long>(sToken[1]));
 						switch (nTempChar)
 						{
 						case 'B':
@@ -599,6 +607,10 @@ namespace NSFontConverter
 								}
 							}
 						}
+							default:
+							{
+								break;
+							}
 						}
 					}
 					else if ( '/' == nChar  )
@@ -606,8 +618,14 @@ namespace NSFontConverter
 						sToken.clear();
 						sGlyph.clear();
 
-						while ( nIndex < nEexecLen && ( nChar = sEexec[++nIndex] ) != ' ' )
+						while ( nIndex < nEexecLen )
+						{
+							nChar = sEexec[++nIndex];
+							if ( ' ' == nChar )
+								break;
+
 							sGlyph.push_back( (wchar_t)nChar );
+						}
 					}
 				}
 			}
@@ -624,8 +642,8 @@ namespace NSFontConverter
 	{
 		// According to the Type1 specification, the first byte mustn't be an ASCII space
 		// (space, tab, carriage return or line feed).
-		unsigned char *sCur = (unsigned char*)(*ppEexecBuffer);
-		while( sCur < (unsigned char*)(*ppEexecBuffer) + nLen && ( ' ' == *sCur || '\t' == *sCur || '\r' == *sCur || '\n' == *sCur ) )
+		unsigned char *sCur = (*ppEexecBuffer);
+		while( sCur < (*ppEexecBuffer) + nLen && ( ' ' == *sCur || '\t' == *sCur || '\r' == *sCur || '\n' == *sCur ) )
 		{
 			++sCur;
 			--nLen;
@@ -652,7 +670,7 @@ namespace NSFontConverter
 		int nBlockLen  = 0;
 		int nChar = 0;
 
-		unsigned char *sBuffer = NULL;
+		unsigned char *sBuffer = nullptr;
 		unsigned int nBufLen = 0;
 
 		while ( nBlockType != PFB_DONE )
@@ -661,18 +679,27 @@ namespace NSFontConverter
 			{
 				nChar = ReadU8( &bSuccess );
 				if ( !bSuccess )
+				{
+					MemUtilsFree( sBuffer );
 					return false;
+				}
 
 				nBlockType = ReadU8( &bSuccess );
 				if ( !bSuccess || PFB_MARKER != nChar || ( PFB_ASCII != nBlockType && PFB_BINARY != nBlockType && PFB_DONE != nBlockType ) )
+				{
+					MemUtilsFree( sBuffer );
 					return false;
+				}
 
 				if ( PFB_DONE == nBlockType )
 					break;
 
 				nBlockLen = ReadU32LE( &bSuccess );
 				if ( !bSuccess )
+				{
+					MemUtilsFree( sBuffer );
 					return false;
+				}
 			}
 
 			// Reading the data block itself
@@ -697,7 +724,7 @@ namespace NSFontConverter
 			MemUtilsFree( m_sFile );
 
 		m_bFreeFileData = true;
-		m_sFile         = (unsigned char*)sBuffer;
+		m_sFile         = sBuffer;
 		m_sFileData     = m_sFile;
 		m_nLen          = nBufLen;
 		m_nPos          = 0;
@@ -731,7 +758,7 @@ namespace NSFontConverter
 						int nInd = sCharString[sCharString.size() - 1].nValue;
 						sCharString.pop_back() ;
 
-						while ( sCharString.size() > 0 && false == sCharString[sCharString.size() - 1].bCommand )
+						while ( sCharString.size() > 0 && !sCharString[sCharString.size() - 1].bCommand )
 							sCharString.pop_back( );
 
 						// If the flex mechanishm is not used in a font program, Adobe
@@ -816,7 +843,7 @@ namespace NSFontConverter
 
 		return Type1Charstring( sCharString, nWidth, nLSB );
 	}
-	Type1Charstring CFontFileType1::FlattenCharstring(Type1Charstring& oCharstring, int nBias)
+	Type1Charstring CFontFileType1::FlattenCharstring(Type1Charstring& oCharstring, int  /*nBias*/)
 	{
 		Type1Charstring oNew;
 		oNew.nLSB   = oCharstring.nLSB;
@@ -844,43 +871,7 @@ namespace NSFontConverter
 					oNew.arrCharstring.push_back( Type1CharstringItem( 12, true ) );
 					oNew.arrCharstring.push_back( Type1CharstringItem( 18, true ) );
 				}
-				else if ( nValue == c_nType1callsubr  )
-				{
-					//int nTempLen = oNew.arrCharstring.GetSize();
-					//int nT1 = oNew.arrCharstring[nTempLen - 2].nValue;
-					//int nT2 = oNew.arrCharstring[nTempLen - 1].nValue;
-					//int nInd = nT1 << 8 | nT2;
-
-					//if ( 107 == nBias )
-					//{
-					//	if ( nInd <= 215 )
-					//	{
-					//		oNew.arrCharstring.RemoveAt( nTempLen - 1 );
-					//		oNew.arrCharstring.RemoveAt( nTempLen - 2 );
-
-					//		oNew.arrCharstring[nTempLen - 3].nValue = nInd - nBias + 139;
-					//		oNew.arrCharstring.Add( Type1CharstringItem( oItem.nValue, true ) );
-					//	}
-					//	else
-					//	{
-					//		oNew.arrCharstring.RemoveAt( nTempLen - 1 );
-
-					//		oNew.arrCharstring[nTempLen - 3].nValue = ((nInd - nBias) - 108) / 256 + 247;
-					//		oNew.arrCharstring[nTempLen - 2].nValue = ((nInd - nBias) - 108) - (oNew.arrCharstring[nTempLen - 3].nValue - 247) * 256;
-					//		oNew.arrCharstring.Add( Type1CharstringItem( oItem.nValue, true ) );
-					//	}
-					//}
-					//else
-					//{
-
-					//	nInd -= nBias;
-					//	oNew.arrCharstring[nTempLen - 2].nValue = nInd >> 8;
-					//	oNew.arrCharstring[nTempLen - 1].nValue = nInd & 0xFF;
-					//	oNew.arrCharstring.Add( Type1CharstringItem( oItem.nValue, true ) );
-					//}
-					oNew.arrCharstring.push_back( Type1CharstringItem( oItem.nValue, true ) );
-				}
-				else
+				else // Type 1 callsubr (and any other command) is passed through unchanged
 					oNew.arrCharstring.push_back( Type1CharstringItem( oItem.nValue, true ) );
 			}
 			else
@@ -998,7 +989,7 @@ namespace NSFontConverter
 		bool bFirstNibble = true;
 		for ( size_t nIndex = 0; nIndex < sValue.length(); nIndex++ )
 		{
-			int nCurChar = sValue.c_str()[ nIndex ];
+			int nCurChar = static_cast<int>(static_cast<unsigned long>(sValue.c_str()[ nIndex ]));
 			if ( '0' <= nCurChar && nCurChar <= '9' )
 				nCurChar -= (int)('0');
 			else if ( '.' == nCurChar )
@@ -1226,7 +1217,9 @@ namespace NSFontConverter
 
 		// Top Dict
 		TCharBuffer oTopDict;
-		oTopDict.Write( "\x00\x01\x04\x00\x00\x00\x01\x00\x00\0x00\x00", 11 );
+		// NOTE: the original escape sequence "\0x00" produced a literal 'x' byte here;
+		// the same 11 bytes are spelled out below without the typo
+		oTopDict.Write( "\x00\x01\x04\x00\x00\x00\x01\x00\x00\x00" "x", 11 );
 		oTopDict.Write( "\xf8\x1b\x00", 3 ); // Version
 		oTopDict.Write( "\xf8\x1c\x01", 3 ); // Notice
 		oTopDict.Write( "\xf8\x1d\x02", 3 ); // FullName

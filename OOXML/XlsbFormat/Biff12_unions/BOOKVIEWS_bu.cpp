@@ -66,7 +66,7 @@ namespace XLSB
             }
             else return false;
 
-            int count = proc.repeated<FRT>(0, 0);
+            proc.repeated<FRT>(0, 0);
 			elements_.clear();
             //while(count > 0)
             //{

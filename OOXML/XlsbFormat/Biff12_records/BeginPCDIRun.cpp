@@ -84,6 +84,8 @@ namespace XLSB
                 }
                 break;
 
+                default:
+                    break;
             }
         }
 
