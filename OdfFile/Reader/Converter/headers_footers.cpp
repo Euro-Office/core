@@ -76,6 +76,15 @@ std::wstring get_rel_type(headers_footers::Type _Type)
         return std::wstring(L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer");
 }
     
+// A header or footer that shows nothing and takes next to no room: one paragraph, as low as a paragraph can be.
+std::wstring empty_content(bool header)
+{
+	const std::wstring tag = header ? L"w:hdr" : L"w:ftr";
+	return L"<" + tag + L" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><w:p><w:pPr>"
+		L"<w:spacing w:before=\"0\" w:after=\"0\" w:line=\"1\" w:lineRule=\"exact\"/>"
+		L"<w:rPr><w:sz w:val=\"2\"/><w:szCs w:val=\"2\"/></w:rPr></w:pPr></w:p></" + tag + L">";
+}
+
 }
 
 void headers_footers::dump_rels(rels & Rels) const//external rels
@@ -99,12 +108,17 @@ bool headers_footers::write_sectPr(const std::wstring & StyleName, bool next_pag
 
 	bool first	=	false, left	=	false;
 	bool res	=	false;
+	bool own[none], hidden[none];	// by Type: the style's own header/footer, an empty one in its place
+	for (int i = 0; i < none; i++) own[i] = hidden[i] = false;
 
 	instances_array & pFind = instances_.at(StyleName);
    
 	for (size_t i = 0; i < pFind.size(); i++)
     {
 		instance_ptr & inst = pFind[i];
+
+		if (inst->type_ != none)
+			(inst->empty_ ? hidden : own)[inst->type_] = true;
 
         std::wstring type = L"default";
 		
@@ -130,6 +144,38 @@ bool headers_footers::write_sectPr(const std::wstring & StyleName, bool next_pag
 			_Wostream << L"<" << name << L" r:id=\"" << inst->id_ << L"\" w:type=\"" << type << "\" />";
 		}
 		res=true;
+	}
+
+	if (no_inherit_.count(StyleName))
+	{
+		// The style has no header (footer) at all, an earlier section has one: the section would show that one.
+		for (int footers = 0; footers < 2; footers++)
+		{
+			const Type			kinds[3] = { footers ? footer : header, footers ? footerLeft : headerLeft,
+											 footers ? footerFirst : headerFirst };
+			const wchar_t *		types[3] = { L"default", L"even", L"first" };
+
+			if (own[kinds[0]] || own[kinds[1]] || own[kinds[2]]) continue;
+
+			for (int i = 0; i < 3; i++)
+			{
+				if (!shown_[kinds[i]] || hidden[kinds[i]]) continue;
+				if (kinds[i] == (footers ? footerFirst : headerFirst) && !first) continue; // not shown without w:titlePg
+
+				rels no_rels;
+				const std::wstring id = add(StyleName, empty_content(!footers), kinds[i], no_rels);
+				instances_.at(StyleName).back()->empty_ = true;
+				hidden[kinds[i]] = true;
+
+				_Wostream << (footers ? L"<w:footerReference" : L"<w:headerReference") << L" r:id=\"" << id
+					<< L"\" w:type=\"" << types[i] << L"\" />";
+			}
+		}
+	}
+	for (int i = 0; i < none; i++)
+	{
+		if (own[i])			shown_[i] = true;
+		else if (hidden[i])	shown_[i] = false;
 	}
 	
 	if (first)

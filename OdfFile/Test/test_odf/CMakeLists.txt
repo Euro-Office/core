@@ -71,6 +71,7 @@ add_core_gtest(
             odt2docx_header_footer_spacing.cpp
             odt2docx_links.cpp
             odp2pptx_line_height.cpp
+            odt2docx_header_footer_not_inherited.cpp
             odp2pptx_transition_without_subtype.cpp
             odt2docx_default_tab_stop.cpp
             odt2docx_add_para_table_spacing.cpp
