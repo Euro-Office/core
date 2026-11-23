@@ -33,6 +33,7 @@ set(_ooxml_test_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/conversion.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/csv_import.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/editorbin_pivots.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/parameter_type.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/editorbin_source_file_type.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xls_export.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/workbook_facts.cpp

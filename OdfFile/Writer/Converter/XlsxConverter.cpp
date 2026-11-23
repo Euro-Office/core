@@ -1705,10 +1705,17 @@ void XlsxConverter::convert(OOX::Spreadsheet::CCol *oox_column)
 {
 	if (oox_column == NULL)return;
 
-	int start_column = oox_column->m_oMin.IsInit() ? oox_column->m_oMin->GetValue() : 0 ;
-	
-	int repeated =	(oox_column->m_oMax.IsInit() ? oox_column->m_oMax->GetValue() : 0) - 
-					(oox_column->m_oMin.IsInit() ? oox_column->m_oMin->GetValue() : 0) + 1;
+	//a sheet has the columns 1 to XFD (16384): a malformed <col> past it is cut there, and one that starts outside it
+	//or ends before it starts is dropped (min and max are compared before they are narrowed to int)
+	const long long min_column = oox_column->m_oMin.IsInit() ? (long long)oox_column->m_oMin->GetValue() : 0;
+	long long max_column = oox_column->m_oMax.IsInit() ? (long long)oox_column->m_oMax->GetValue() : 0;
+	if (min_column < 1 || min_column > 16384 || max_column < min_column)
+		return;
+	if (max_column > 16384)
+		max_column = 16384;
+
+	int start_column = (int)min_column;
+	int repeated = (int)(max_column - min_column + 1);
 
 	int level = 0;
 	if (oox_column->m_oOutlineLevel.IsInit())

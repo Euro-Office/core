@@ -27,16 +27,16 @@
 #include "../../common/File.h"
 #include "../../common/StringExt.h"
 #include "../../fontengine/ApplicationFonts.h"
-#include "./pro_base.cpp"
+#include "./pro_base.cpp" // NOLINT(bugprone-suspicious-include): unity build
 
-NSFonts::IFontsMemoryStorage* g_global_fonts_memory_storage = NULL;
+NSFonts::IFontsMemoryStorage* g_global_fonts_memory_storage = nullptr;
 
 namespace NSFonts
 {
 	CLibrary::CLibrary()
 	{
 		m_internal = new CLibrary_private();
-		m_internal->m_library = NULL;
+		m_internal->m_library = nullptr;
 	}
 	CLibrary::~CLibrary()
 	{
@@ -93,7 +93,7 @@ namespace NSFonts
 			}
 			virtual ~CDefaultGlobalFontsMemoryStorage()
 			{
-				Clear();
+				CDefaultGlobalFontsMemoryStorage::Clear();
 			}
 
 			virtual bool Add(const std::wstring& id, BYTE* data, LONG size, bool bClear = false)
@@ -133,7 +133,7 @@ namespace NSFonts
 				std::wstring sFile = id;
 				NSStringExt::Replace(sFile, L"\\", L"/");
 				std::map<std::wstring, IFontStream*>::iterator it = m_mapStreams.find(sFile);
-				return it != m_mapStreams.end() ? it->second : NULL;
+				return it != m_mapStreams.end() ? it->second : nullptr;
 			}
 
 			virtual std::wstring GenerateId()

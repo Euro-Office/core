@@ -48,7 +48,7 @@ namespace NSSystemPath
 		if(sRes.length() > 0)
 			sRes.erase(sRes.length()-1);
 #elif __linux__ || MAC
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(strFileName.c_str(), strFileName.length(), pUtf8, lLen, false);
 		char* pDirName = dirname((char*)pUtf8);
@@ -68,7 +68,7 @@ namespace NSSystemPath
 		sRes.append(tExt);
 		return sRes;
 #elif __linux__ || MAC
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(strFileName.c_str(), strFileName.length(), pUtf8, lLen, false);
 		char* pBaseName = basename((char*)pUtf8);

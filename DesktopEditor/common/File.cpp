@@ -175,7 +175,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 1) < lCount)
 				{
-					val = (int)(((byteMain & 0x1F) << 6) |
+					val = (((byteMain & 0x1F) << 6) |
 								(pBuffer[lIndex + 1] & 0x3F));
 				}
 
@@ -188,7 +188,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 2) < lCount)
 				{
-					val = (int)(((byteMain & 0x0F) << 12) |
+					val = (((byteMain & 0x0F) << 12) |
 								((pBuffer[lIndex + 1] & 0x3F) << 6) |
 							(pBuffer[lIndex + 2] & 0x3F));
 				}
@@ -202,7 +202,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 3) < lCount)
 				{
-					val = (int)(((byteMain & 0x07) << 18) |
+					val = (((byteMain & 0x07) << 18) |
 								((pBuffer[lIndex + 1] & 0x3F) << 12) |
 							((pBuffer[lIndex + 2] & 0x3F) << 6) |
 							(pBuffer[lIndex + 3] & 0x3F));
@@ -217,7 +217,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 3) < lCount)
 				{
-					val = (int)(((byteMain & 0x07) << 18) |
+					val = (((byteMain & 0x07) << 18) |
 								((pBuffer[lIndex + 1] & 0x3F) << 12) |
 							((pBuffer[lIndex + 2] & 0x3F) << 6) |
 							(pBuffer[lIndex + 3] & 0x3F));
@@ -232,7 +232,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 4) < lCount)
 				{
-					val = (int)(((byteMain & 0x03) << 24) |
+					val = (((byteMain & 0x03) << 24) |
 								((pBuffer[lIndex + 1] & 0x3F) << 18) |
 							((pBuffer[lIndex + 2] & 0x3F) << 12) |
 							((pBuffer[lIndex + 3] & 0x3F) << 6) |
@@ -248,7 +248,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 5) < lCount)
 				{
-					val = (int)(((byteMain & 0x01) << 30) |
+					val = (((byteMain & 0x01) << 30) |
 								((pBuffer[lIndex + 1] & 0x3F) << 24) |
 							((pBuffer[lIndex + 2] & 0x3F) << 18) |
 							((pBuffer[lIndex + 3] & 0x3F) << 12) |
@@ -288,7 +288,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 1) < lCount)
 				{
-					val = (int)(((byteMain & 0x1F) << 6) |
+					val = (((byteMain & 0x1F) << 6) |
 								(pBuffer[lIndex + 1] & 0x3F));
 				}
 
@@ -301,7 +301,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 2) < lCount)
 				{
-					val = (int)(((byteMain & 0x0F) << 12) |
+					val = (((byteMain & 0x0F) << 12) |
 								((pBuffer[lIndex + 1] & 0x3F) << 6) |
 							(pBuffer[lIndex + 2] & 0x3F));
 				}
@@ -315,7 +315,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 3) < lCount)
 				{
-					val = (int)(((byteMain & 0x07) << 18) |
+					val = (((byteMain & 0x07) << 18) |
 								((pBuffer[lIndex + 1] & 0x3F) << 12) |
 							((pBuffer[lIndex + 2] & 0x3F) << 6) |
 							(pBuffer[lIndex + 3] & 0x3F));
@@ -330,7 +330,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 3) < lCount)
 				{
-					val = (int)(((byteMain & 0x07) << 18) |
+					val = (((byteMain & 0x07) << 18) |
 								((pBuffer[lIndex + 1] & 0x3F) << 12) |
 							((pBuffer[lIndex + 2] & 0x3F) << 6) |
 							(pBuffer[lIndex + 3] & 0x3F));
@@ -345,7 +345,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 4) < lCount)
 				{
-					val = (int)(((byteMain & 0x03) << 24) |
+					val = (((byteMain & 0x03) << 24) |
 								((pBuffer[lIndex + 1] & 0x3F) << 18) |
 							((pBuffer[lIndex + 2] & 0x3F) << 12) |
 							((pBuffer[lIndex + 3] & 0x3F) << 6) |
@@ -361,7 +361,7 @@ namespace NSFile
 				int val = 0;
 				if ((lIndex + 5) < lCount)
 				{
-					val = (int)(((byteMain & 0x01) << 30) |
+					val = (((byteMain & 0x01) << 30) |
 								((pBuffer[lIndex + 1] & 0x3F) << 24) |
 							((pBuffer[lIndex + 2] & 0x3F) << 18) |
 							((pBuffer[lIndex + 3] & 0x3F) << 12) |
@@ -390,23 +390,23 @@ namespace NSFile
 
 #define CHECK_HHHH(pBuffer) \
 	wchar_t code = 0; \
-	if('_' == pBuffer[0] && 'x' == pBuffer[1] && 0 != pBuffer[2] && 0 != pBuffer[3] && 0 != pBuffer[4] && 0 != pBuffer[5]  && '_' == pBuffer[6]) \
+	if('_' == (pBuffer)[0] && 'x' == (pBuffer)[1] && 0 != (pBuffer)[2] && 0 != (pBuffer)[3] && 0 != (pBuffer)[4] && 0 != (pBuffer)[5]  && '_' == (pBuffer)[6]) \
 	{ \
 	int i = 2; \
 	for(; i < 6; ++i) \
 	{ \
 	code *= 16; \
-	if('0' <= pBuffer[i] && pBuffer[i] <= '9') \
+	if('0' <= (pBuffer)[i] && (pBuffer)[i] <= '9') \
 	{ \
-	code += pBuffer[i] - '0'; \
+	code += (pBuffer)[i] - '0'; \
 } \
-	else if('A' <= pBuffer[i] && pBuffer[i] <= 'F') \
+	else if('A' <= (pBuffer)[i] && (pBuffer)[i] <= 'F') \
 	{ \
-	code += pBuffer[i] - 'A' + 10; \
+	code += (pBuffer)[i] - 'A' + 10; \
 } \
-	else if('a' <= pBuffer[i] && pBuffer[i] <= 'f') \
+	else if('a' <= (pBuffer)[i] && (pBuffer)[i] <= 'f') \
 	{ \
-	code += pBuffer[i] - 'a' + 10; \
+	code += (pBuffer)[i] - 'a' + 10; \
 } \
 	else \
 	{ \
@@ -435,7 +435,7 @@ namespace NSFile
 
 	void CUtf8Converter::GetUnicodeStringFromUTF8WithHHHH_4bytes( const BYTE* pBuffer, LONG lCount, wchar_t*& pUnicodes, LONG& lOutputCount )
 	{
-		if (NULL == pUnicodes)
+		if (nullptr == pUnicodes)
 		{
 			pUnicodes = new wchar_t[GetUnicodeStringFromUTF8BufferSize(lCount)];
 		}
@@ -464,7 +464,7 @@ namespace NSFile
 			else if (0x00 == (byteMain & 0x20))
 			{
 				// 2 byte
-				int val = (int)(((byteMain & 0x1F) << 6) |
+				int val = (((byteMain & 0x1F) << 6) |
 								(pBuffer[lIndex + 1] & 0x3F));
 				pUnicodeString[lIndexUnicode++] = (WCHAR)(val);
 				lIndex += 2;
@@ -472,7 +472,7 @@ namespace NSFile
 			else if (0x00 == (byteMain & 0x10))
 			{
 				// 3 byte
-				int val = (int)(((byteMain & 0x0F) << 12) |
+				int val = (((byteMain & 0x0F) << 12) |
 								((pBuffer[lIndex + 1] & 0x3F) << 6) |
 						(pBuffer[lIndex + 2] & 0x3F));
 				pUnicodeString[lIndexUnicode++] = (WCHAR)(val);
@@ -481,7 +481,7 @@ namespace NSFile
 			else if (0x00 == (byteMain & 0x0F))
 			{
 				// 4 byte
-				int val = (int)(((byteMain & 0x07) << 18) |
+				int val = (((byteMain & 0x07) << 18) |
 								((pBuffer[lIndex + 1] & 0x3F) << 12) |
 						((pBuffer[lIndex + 2] & 0x3F) << 6) |
 						(pBuffer[lIndex + 3] & 0x3F));
@@ -491,7 +491,7 @@ namespace NSFile
 			else if (0x00 == (byteMain & 0x08))
 			{
 				// 4 byte
-				int val = (int)(((byteMain & 0x07) << 18) |
+				int val = (((byteMain & 0x07) << 18) |
 								((pBuffer[lIndex + 1] & 0x3F) << 12) |
 						((pBuffer[lIndex + 2] & 0x3F) << 6) |
 						(pBuffer[lIndex + 3] & 0x3F));
@@ -501,7 +501,7 @@ namespace NSFile
 			else if (0x00 == (byteMain & 0x04))
 			{
 				// 5 byte
-				int val = (int)(((byteMain & 0x03) << 24) |
+				int val = (((byteMain & 0x03) << 24) |
 								((pBuffer[lIndex + 1] & 0x3F) << 18) |
 						((pBuffer[lIndex + 2] & 0x3F) << 12) |
 						((pBuffer[lIndex + 3] & 0x3F) << 6) |
@@ -512,7 +512,7 @@ namespace NSFile
 			else
 			{
 				// 6 byte
-				int val = (int)(((byteMain & 0x01) << 30) |
+				int val = (((byteMain & 0x01) << 30) |
 								((pBuffer[lIndex + 1] & 0x3F) << 24) |
 						((pBuffer[lIndex + 2] & 0x3F) << 18) |
 						((pBuffer[lIndex + 3] & 0x3F) << 12) |
@@ -528,7 +528,7 @@ namespace NSFile
 	}
 	void CUtf8Converter::GetUnicodeStringFromUTF8WithHHHH_2bytes( const BYTE* pBuffer, LONG lCount, wchar_t*& pUnicodes, LONG& lOutputCount )
 	{
-		if (NULL == pUnicodes)
+		if (nullptr == pUnicodes)
 		{
 			pUnicodes = new wchar_t[GetUnicodeStringFromUTF8BufferSize(lCount)];
 		}
@@ -557,7 +557,7 @@ namespace NSFile
 			else if (0x00 == (byteMain & 0x20))
 			{
 				// 2 byte
-				int val = (int)(((byteMain & 0x1F) << 6) |
+				int val = (((byteMain & 0x1F) << 6) |
 								(pBuffer[lIndex + 1] & 0x3F));
 				*pUnicodeString++ = (WCHAR)(val);
 				lIndex += 2;
@@ -565,7 +565,7 @@ namespace NSFile
 			else if (0x00 == (byteMain & 0x10))
 			{
 				// 3 byte
-				int val = (int)(((byteMain & 0x0F) << 12) |
+				int val = (((byteMain & 0x0F) << 12) |
 								((pBuffer[lIndex + 1] & 0x3F) << 6) |
 						(pBuffer[lIndex + 2] & 0x3F));
 
@@ -575,7 +575,7 @@ namespace NSFile
 			else if (0x00 == (byteMain & 0x0F))
 			{
 				// 4 byte
-				int val = (int)(((byteMain & 0x07) << 18) |
+				int val = (((byteMain & 0x07) << 18) |
 								((pBuffer[lIndex + 1] & 0x3F) << 12) |
 						((pBuffer[lIndex + 2] & 0x3F) << 6) |
 						(pBuffer[lIndex + 3] & 0x3F));
@@ -586,7 +586,7 @@ namespace NSFile
 			else if (0x00 == (byteMain & 0x08))
 			{
 				// 4 byte
-				int val = (int)(((byteMain & 0x07) << 18) |
+				int val = (((byteMain & 0x07) << 18) |
 								((pBuffer[lIndex + 1] & 0x3F) << 12) |
 						((pBuffer[lIndex + 2] & 0x3F) << 6) |
 						(pBuffer[lIndex + 3] & 0x3F));
@@ -597,7 +597,7 @@ namespace NSFile
 			else if (0x00 == (byteMain & 0x04))
 			{
 				// 5 byte
-				int val = (int)(((byteMain & 0x03) << 24) |
+				int val = (((byteMain & 0x03) << 24) |
 								((pBuffer[lIndex + 1] & 0x3F) << 18) |
 						((pBuffer[lIndex + 2] & 0x3F) << 12) |
 						((pBuffer[lIndex + 3] & 0x3F) << 6) |
@@ -609,7 +609,7 @@ namespace NSFile
 			else
 			{
 				// 6 byte
-				int val = (int)(((byteMain & 0x01) << 30) |
+				int val = (((byteMain & 0x01) << 30) |
 								((pBuffer[lIndex + 1] & 0x3F) << 24) |
 						((pBuffer[lIndex + 2] & 0x3F) << 18) |
 						((pBuffer[lIndex + 3] & 0x3F) << 12) |
@@ -633,7 +633,7 @@ namespace NSFile
 
 	void CUtf8Converter::GetUtf8StringFromUnicode_4bytes(const wchar_t* pUnicodes, LONG lCount, BYTE*& pData, LONG& lOutputCount, bool bIsBOM)
 	{
-		if (NULL == pData)
+		if (nullptr == pData)
 		{
 			pData = new BYTE[6 * lCount + 3 + 1 ];
 		}
@@ -652,7 +652,7 @@ namespace NSFile
 
 		while (pCur < pEnd)
 		{
-			unsigned int code = (unsigned int)*pCur++;
+			unsigned int code = static_cast<unsigned int>(static_cast<unsigned long>(*pCur++));
 
 			if (code < 0x80)
 			{
@@ -701,7 +701,7 @@ namespace NSFile
 
 	void CUtf8Converter::GetUtf8StringFromUnicode_2bytes(const wchar_t* pUnicodes, LONG lCount, BYTE*& pData, LONG& lOutputCount, bool bIsBOM)
 	{
-		if (NULL == pData)
+		if (nullptr == pData)
 		{
 			pData = new BYTE[6 * lCount + 3 + 1];
 		}
@@ -720,7 +720,7 @@ namespace NSFile
 
 		while (pCur < pEnd)
 		{
-			unsigned int code = (unsigned int)*pCur++;
+			unsigned int code = static_cast<unsigned int>(static_cast<unsigned long>(*pCur++));
 			if (code >= 0xD800 && code <= 0xDFFF && pCur < pEnd)
 			{
 				code = 0x10000 + (((code & 0x3FF) << 10) | (0x03FF & *pCur++));
@@ -773,9 +773,9 @@ namespace NSFile
 
 	void CUtf8Converter::GetUtf8StringFromUnicode(const wchar_t* pUnicodes, LONG lCount, BYTE*& pData, LONG& lOutputCount, bool bIsBOM)
 	{
-		if (NULL == pUnicodes || 0 == lCount)
+		if (nullptr == pUnicodes || 0 == lCount)
 		{
-			pData = NULL;
+			pData = nullptr;
 			lOutputCount = 0;
 			return;
 		}
@@ -787,10 +787,10 @@ namespace NSFile
 
 	std::string CUtf8Converter::GetUtf8StringFromUnicode2(const wchar_t* pUnicodes, LONG lCount, bool bIsBOM)
 	{
-		if (NULL == pUnicodes || 0 == lCount)
+		if (nullptr == pUnicodes || 0 == lCount)
 			return "";
 
-		BYTE* pData = NULL;
+		BYTE* pData = nullptr;
 		LONG lLen = 0;
 
 		GetUtf8StringFromUnicode(pUnicodes, lCount, pData, lLen, bIsBOM);
@@ -809,7 +809,7 @@ namespace NSFile
 	// utf16
 	void CUtf8Converter::GetUtf16StringFromUnicode_4bytes(const wchar_t* pUnicodes, LONG lCount, BYTE*& pData, int& lOutputCount, bool bIsBOM)
 	{
-		if (NULL == pData)
+		if (nullptr == pData)
 		{
 			pData = new BYTE[4 * lCount + 3 + 2];
 		}
@@ -828,7 +828,7 @@ namespace NSFile
 
 		while (pCur < pEnd)
 		{
-			unsigned int code = (unsigned int)*pCur++;
+			unsigned int code = static_cast<unsigned int>(static_cast<unsigned long>(*pCur++));
 
 			if (code <= 0xFFFF)
 			{
@@ -875,7 +875,7 @@ namespace NSFile
 
 		while (pCur < pEnd)
 		{
-			unsigned int code = (unsigned int)*pCur++;
+			unsigned int code = static_cast<unsigned int>(static_cast<unsigned long>(*pCur++));
 			if (code <= 0xFFFF)
 			{
 				sizeUtf16 += 2;
@@ -947,7 +947,7 @@ namespace NSFile
 		oString.Data   = (BYTE*)pUtf16;
 		oString.Length = lCount * 2;
 		std::wstring wsResult = GetWStringFromUTF16(oString);
-		oString.Data = NULL;
+		oString.Data = nullptr;
 		return wsResult;
 	}
 }
@@ -956,13 +956,13 @@ namespace NSFile
 {
 	CFileBinary::CFileBinary()
 	{
-		m_pFile = NULL;
+		m_pFile = nullptr;
 		m_lFilePosition = 0;
 		m_lFileSize = 0;
 	}
 	CFileBinary::~CFileBinary()
 	{
-		CloseFile();
+		CFileBinary::CloseFile();
 	}
 
 	void CFileBinary::CloseFile()
@@ -970,10 +970,10 @@ namespace NSFile
 		m_lFilePosition = 0;
 		m_lFileSize = 0;
 
-		if (m_pFile != NULL)
+		if (m_pFile != nullptr)
 		{
 			fclose(m_pFile);
-			m_pFile = NULL;
+			m_pFile = nullptr;
 		}
 	}
 
@@ -1010,7 +1010,7 @@ namespace NSFile
 		std::string sFilePath = NSIOS::GetFileSystemRepresentation(sFileName);
 		m_pFile = fopen((char*)sFilePath.c_str(), bRewrite ? "rb+" : "rb");
 #else
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		CUtf8Converter::GetUtf8StringFromUnicode(sFileName.c_str(), sFileName.length(), pUtf8, lLen, false);
 
@@ -1023,7 +1023,7 @@ namespace NSFile
 #endif
 #endif
 
-		if (NULL == m_pFile)
+		if (nullptr == m_pFile)
 			return false;
 
 		fseek(m_pFile, 0, SEEK_END);
@@ -1059,14 +1059,14 @@ namespace NSFile
 		std::string sFilePath = NSIOS::GetFileSystemRepresentation(sFileName);
 		m_pFile = fopen((char*)sFilePath.c_str(), "wb");
 #else
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		CUtf8Converter::GetUtf8StringFromUnicode(sFileName.c_str(), sFileName.length(), pUtf8, lLen, false);
-		m_pFile = fopen((char*)pUtf8, "wb");
+		m_pFile = (nullptr == pUtf8) ? nullptr : fopen((char*)pUtf8, "wb");
 		delete [] pUtf8;
 #endif
 #endif
-		if (NULL == m_pFile)
+		if (nullptr == m_pFile)
 			return false;
 
 		m_lFilePosition = 0;
@@ -1085,7 +1085,7 @@ namespace NSFile
 			return false;
 #else
 		m_pFile = tmpfile();
-		if (NULL == m_pFile)
+		if (nullptr == m_pFile)
 			return false;
 #endif
 		m_lFilePosition = 0;
@@ -1110,7 +1110,7 @@ namespace NSFile
 
 		DWORD dwSizeRead = (DWORD)fread((void*)pData, 1, nBytesToRead, m_pFile);
 		
-		return (dwSizeRead == nBytesToRead) ? true : false;
+		return dwSizeRead == nBytesToRead;
 	}
 	bool CFileBinary::ReadFile(BYTE* pData, DWORD nBytesToRead, DWORD& dwSizeRead)
 	{
@@ -1126,7 +1126,7 @@ namespace NSFile
 		if (!m_pFile)
 			return false;
 
-		size_t nCountWrite = fwrite(pData, 1, nBytesCount, m_pFile);
+		fwrite(pData, 1, nBytesCount, m_pFile);
 		return true;
 	}
 	bool CFileBinary::WriteFile(const BYTE* pData, DWORD nBytesCount)
@@ -1173,7 +1173,7 @@ namespace NSFile
 	}
 	void CFileBinary::WriteStringUTF8(const std::wstring& strXml, bool bIsBOM)
 	{
-		BYTE* pData = NULL;
+		BYTE* pData = nullptr;
 		LONG lLen = 0;
 
 		CUtf8Converter::GetUtf8StringFromUnicode(strXml.c_str(), (LONG)strXml.length(), pData, lLen, bIsBOM);
@@ -1237,7 +1237,7 @@ namespace NSFile
 
 	bool CFileBinary::ReadAllBytes(const std::wstring&  strFileName, BYTE** ppData, DWORD& nBytesCount)
 	{
-		*ppData = NULL;
+		*ppData = nullptr;
 		nBytesCount = 0;
 		bool bRes = false;
 		CFileBinary oFileBinary;
@@ -1261,7 +1261,7 @@ namespace NSFile
 	bool CFileBinary::ReadAllTextUtf8(const std::wstring&  strFileName, std::wstring& sData)
 	{
 		bool bRes = false;
-		BYTE* pData = NULL;
+		BYTE* pData = nullptr;
 		DWORD nDataSize;
 		if (CFileBinary::ReadAllBytes(strFileName, &pData, nDataSize))
 		{
@@ -1282,7 +1282,7 @@ namespace NSFile
 	bool CFileBinary::ReadAllTextUtf8A(const std::wstring&  strFileName, std::string& sData)
 	{
 		bool bRes = false;
-		BYTE* pData = NULL;
+		BYTE* pData = nullptr;
 		DWORD nDataSize;
 		if (CFileBinary::ReadAllBytes(strFileName, &pData, nDataSize))
 		{
@@ -1315,13 +1315,13 @@ namespace NSFile
 		if ( NULL == (pFile = _wfsopen( strFileName.c_str(), L"rb", _SH_DENYNO)))
 			return false;
 #else
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		CUtf8Converter::GetUtf8StringFromUnicode(strFileName.c_str(), strFileName.length(), pUtf8, lLen, false);
-		FILE* pFile = fopen((char*)pUtf8, "rb");
+		FILE* pFile = (nullptr == pUtf8) ? nullptr : fopen((char*)pUtf8, "rb");
 		delete [] pUtf8;
 #endif
-		if (NULL != pFile)
+		if (nullptr != pFile)
 		{
 			fclose(pFile);
 			return true;
@@ -1436,8 +1436,8 @@ namespace NSFile
 #endif
 		}
 
-		char* pBuffer_in = NULL;
-		char* pBuffer_out = NULL;
+		char* pBuffer_in = nullptr;
+		char* pBuffer_out = nullptr;
 
 		if (nLenBuffer > 0)
 		{
@@ -1479,7 +1479,7 @@ namespace NSFile
 #if defined(_WIN32) || defined(_WIN32_WCE) || defined(_WIN64)
 		int nRes = _wremove(strFileName.c_str());
 #else
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		CUtf8Converter::GetUtf8StringFromUnicode(strFileName.c_str(), strFileName.length(), pUtf8, lLen, false);
 		int nRes = std::remove((char*)pUtf8);
@@ -1530,7 +1530,7 @@ namespace NSFile
 
 	bool CFileBinary::IsGlobalTempPathUse()
 	{
-		return g_overrideTmpPath.empty() ? false : true;
+		return !g_overrideTmpPath.empty();
 	}
 
 	std::wstring CFileBinary::GetTempPath()
@@ -1597,13 +1597,12 @@ namespace NSFile
 		return NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)sRes.c_str(), sRes.length());
 #endif
 	}
-
-	bool CFileBinary::OpenTempFile(std::wstring *pwsName, FILE **ppFile, wchar_t *wsMode, wchar_t *wsExt, wchar_t *wsFolder, wchar_t* wsName)
+	bool CFileBinary::OpenTempFile(std::wstring *pwsName, FILE **ppFile, wchar_t *wsMode, wchar_t *wsExt, wchar_t *wsFolder, wchar_t*  /*wsName*/)
 	{
 		// TODO: Implement when wsName != NULL
 
 		std::wstring wsTemp, wsFileName;
-		FILE *pTempFile = NULL;
+		FILE *pTempFile = nullptr;
 #if defined(_WIN32) || defined (_WIN64)
 		wchar_t *wsTempDir = NULL;
 		size_t sz = 0;
@@ -1612,14 +1611,15 @@ namespace NSFile
 			wsTemp = std::wstring(wsTempDir, sz-1);
 #else
 		char *wsTempDirA;
-		if ((wsTempDirA = getenv("TEMP")) && (wsFolder == NULL))
+		wsTempDirA = getenv("TEMP");
+		if ((wsTempDirA != nullptr) && (wsFolder == nullptr))
 		{
 			std::wstring wsTempDir = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)wsTempDirA, strlen(wsTempDirA));
 			wsTemp = wsTempDir.c_str();
 #endif
 			wsTemp += L"/";
 		}
-		else if (wsFolder != NULL)
+		else if (wsFolder != nullptr)
 		{
 			wsTemp = std::wstring(wsFolder);
 			wsTemp += L"/";
@@ -1633,7 +1633,7 @@ namespace NSFile
 			free(wsTempDir);
 #endif
 		wsTemp += L"x";
-		int nTime = (int)time(NULL);
+		int nTime = (int)time(nullptr);
 		for (int nIndex = 0; nIndex < 1000; ++nIndex)
 		{
 			wsFileName = wsTemp;
@@ -1649,11 +1649,13 @@ namespace NSFile
 				if (0 != _wfopen_s(&pTempFile, wsFileName.c_str(), wsMode))
 #else
 			std::string sFileName = U_TO_UTF8(wsFileName);
-			if (!(pTempFile = fopen(sFileName.c_str(), "r")))
+			pTempFile = fopen(sFileName.c_str(), "r");
+			if (!pTempFile)
 			{
 				std::wstring strMode(wsMode);
 				std::string sMode = U_TO_UTF8(strMode);
-				if (!(pTempFile = fopen(sFileName.c_str(), sMode.c_str())))
+				pTempFile = fopen(sFileName.c_str(), sMode.c_str());
+				if (!pTempFile)
 #endif
 				{
 					return FALSE;
@@ -1677,20 +1679,27 @@ namespace NSFile
 
 		return pFile;
 #else
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		CUtf8Converter::GetUtf8StringFromUnicode(sFileName.c_str(), sFileName.length(), pUtf8, lLen, false);
 
-		BYTE* pMode = NULL;
+		BYTE* pMode = nullptr;
 		LONG lLenMode;
 		CUtf8Converter::GetUtf8StringFromUnicode(sMode.c_str(), sMode.length(), pMode, lLenMode, false);
+
+		if (nullptr == pUtf8 || nullptr == pMode)
+		{
+			delete [] pUtf8;
+			delete [] pMode;
+			return nullptr;
+		}
 
 		struct stat st;
 		if ((0 == stat((char*)pUtf8, &st)) && S_ISDIR(st.st_mode))
 		{
 			delete [] pUtf8;
 			delete [] pMode;
-			return NULL;
+			return nullptr;
 		}
 
 		FILE* pFile = fopen((char*)pUtf8, (char*)pMode);
@@ -1946,9 +1955,7 @@ namespace NSFile
 
 		if (pos2 != std::wstring::npos)
 		{
-			if (pos == std::wstring::npos)
-				pos = pos2;
-			else if (pos2 > pos)
+			if (pos == std::wstring::npos || pos2 > pos)
 				pos = pos2;
 		}
 
