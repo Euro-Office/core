@@ -38,7 +38,10 @@
 #define VER_DPI		96
 #define HOR_DPI		96
 
+#include <algorithm>
 #include <vector>
+
+#include "DjVuInfo.h"
 
 #include "../DesktopEditor/graphics/pro/js/wasm/src/serialize.h"
 
@@ -70,15 +73,14 @@ namespace NSDjvu
 		}
 		catch (...)
 		{
-		}
-
-		try
-		{
-			return static_cast<int>(std::stol(wsString));
-		}
-		catch (...)
-		{
-			return 0;
+			try
+			{
+				return static_cast<int>(std::stol(wsString));
+			}
+			catch (...)
+			{
+				return 0;
+			}
 		}
 	}
 	static int ComputeRed(int w, int h, int rw, int rh)
@@ -92,11 +94,11 @@ namespace NSDjvu
 	{
 		unsigned int unPixmapH = pImage->rows();
 		unsigned int unPixmapW = pImage->columns();
-		BYTE* pBufferDst = new BYTE[4 * unPixmapH * unPixmapW];
+		BYTE* pBufferDst = new BYTE[4 * static_cast<size_t>(unPixmapH) * unPixmapW];
 		if (!pBufferDst)
 			return;
 
-		pImageRes->Create(pBufferDst, unPixmapW, unPixmapH, 4 * unPixmapW);
+		pImageRes->Create(pBufferDst, unPixmapW, unPixmapH, 4 * static_cast<long>(unPixmapW));
 
 		BYTE* pBuffer = pBufferDst;
 		for (int j = unPixmapH - 1; j >= 0; --j)
@@ -114,9 +116,80 @@ namespace NSDjvu
 	}
 }
 
+namespace
+{
+	// Reads the size of a page from its INFO (or IW44) chunk without decoding
+	// the page and without waiting for DjVuFile locks (moved here from the
+	// WinDjView version of DjVuDocument)
+	void ReadPageInfo(const GP<DjVuDocument>& pDoc, int nPage, int& width, int& height, int& nDpi)
+	{
+		width  = 1;
+		height = 1;
+		nDpi   = 96;
+
+		try
+		{
+			GURL url = pDoc->page_to_url(nPage);
+			GP<DataPool> pool = pDoc->request_data(NULL, url);
+			if (!pool)
+				return;
+			GP<ByteStream> stream = pool->get_stream();
+			GP<IFFByteStream> iff(IFFByteStream::create(stream));
+
+			GUTF8String chkid;
+			if (!iff->get_chunk(chkid) ||
+				(chkid != "FORM:DJVI" && chkid != "FORM:DJVU" &&
+				 chkid != "FORM:PM44" && chkid != "FORM:BM44"))
+			{
+				return;
+			}
+
+			bool bHasIW44 = false;
+			while (iff->get_chunk(chkid) != 0)
+			{
+				GP<ByteStream> chunk_stream = iff->get_bytestream();
+
+				if (chkid == "INFO")
+				{
+					GP<DjVuInfo> pInfo = DjVuInfo::create();
+					pInfo->decode(*chunk_stream);
+
+					width  = std::max(pInfo->width, 0);
+					height = std::max(pInfo->height, 0);
+					nDpi   = std::max(pInfo->dpi, 0);
+
+					if ((pInfo->orientation & 1) != 0)
+						std::swap(width, height);
+				}
+				else if (!bHasIW44 && (chkid == "PM44" || chkid == "BM44"))
+				{
+					bHasIW44 = true;
+
+					// serial, slices, major, minor, then the size
+					for (int i = 0; i < 4; ++i)
+						chunk_stream->read8();
+					unsigned int xhi = chunk_stream->read8();
+					unsigned int xlo = chunk_stream->read8();
+					unsigned int yhi = chunk_stream->read8();
+					unsigned int ylo = chunk_stream->read8();
+
+					width  = (xhi << 8) | xlo;
+					height = (yhi << 8) | ylo;
+					nDpi   = 100;
+				}
+
+				iff->seek_close_chunk();
+			}
+		}
+		catch (...)
+		{
+		}
+	}
+}
+
 CDjVuFileImplementation::CDjVuFileImplementation(NSFonts::IApplicationFonts* pFonts)
 {
-	m_pDoc = NULL;
+	m_pDoc = nullptr;
 	m_wsTempDirectory = L"";
 	SetTempDirectory(L"");
 	m_pApplicationFonts = pFonts;
@@ -132,15 +205,21 @@ NSFonts::IApplicationFonts* CDjVuFileImplementation::GetFonts()
 	return m_pApplicationFonts;
 }
 
-bool CDjVuFileImplementation::LoadFromFile(const std::wstring& wsSrcFileName, const std::wstring& wsXMLOptions)
+bool CDjVuFileImplementation::LoadFromFile(const std::wstring& wsSrcFileName, const std::wstring& /*wsXMLOptions*/)
 {
-	m_pDoc = NULL;
+	m_pDoc = nullptr;
 	try
 	{
 		GUTF8String utf8;
 		GURL url = GURL::Filename::UTF8(NSDjvu::MakeUTF8String(wsSrcFileName));
 		m_pDoc = DjVuDocument::create(url);
-		m_pDoc->wait_get_pages_num();
+		// libdjvu initializes the document (directory, bookmarks) in a thread
+		m_pDoc->wait_for_complete_init();
+		if (!m_pDoc->is_init_ok())
+		{
+			m_pDoc = NULL;
+			return false;
+		}
 	}
 	catch (...)
 	{
@@ -149,14 +228,20 @@ bool CDjVuFileImplementation::LoadFromFile(const std::wstring& wsSrcFileName, co
 
 	return true;
 }
-bool CDjVuFileImplementation::LoadFromMemory(BYTE* data, DWORD length, const std::wstring& wsXmlOptions)
+bool CDjVuFileImplementation::LoadFromMemory(BYTE* data, DWORD length, const std::wstring& /*wsXmlOptions*/)
 {
-	m_pDoc = NULL;
+	m_pDoc = nullptr;
 	try
 	{
 		GP<ByteStream> stream = ByteStream::create(data, (size_t)length);
 		m_pDoc = DjVuDocument::create(stream);
-		m_pDoc->wait_get_pages_num();
+		// libdjvu initializes the document (directory, bookmarks) in a thread
+		m_pDoc->wait_for_complete_init();
+		if (!m_pDoc->is_init_ok())
+		{
+			m_pDoc = NULL;
+			return false;
+		}
 	}
 	catch (...)
 	{
@@ -220,13 +305,13 @@ void CDjVuFileImplementation::GetPageInfo(int nPageIndex, double* pdWidth, doubl
 	int nW = 0;
 	int nH = 0;
 	int nDpi = 0;
-	m_pDoc->ReadPageInfo(nPageIndex, nW, nH, nDpi);
+	ReadPageInfo(m_pDoc, nPageIndex, nW, nH, nDpi);
 	*pdWidth = nW;
 	*pdHeight = nH;
 	*pdDpiX = nDpi;
 	*pdDpiY = nDpi;
 }
-void  CDjVuFileImplementation::DrawPageOnRenderer(IRenderer* pRenderer, int nPageIndex, bool* pBreak)
+void  CDjVuFileImplementation::DrawPageOnRenderer(IRenderer* pRenderer, int nPageIndex, bool* /*pBreak*/)
 {
 	if (!m_pDoc)
 		return;
@@ -248,7 +333,8 @@ void  CDjVuFileImplementation::DrawPageOnRenderer(IRenderer* pRenderer, int nPag
 	}
 	catch (...)
 	{
-		// white page
+		// Render nothing instead of a broken page.
+		return;
 	}
 }
 void CDjVuFileImplementation::ConvertToPdf(const std::wstring& wsDstPath)
@@ -323,12 +409,12 @@ BYTE* CDjVuFileImplementation::GetStructure()
 {
 	GP<DjVmNav> nav = m_pDoc->get_djvm_nav();
 	if (!nav)
-		return NULL;
+		return nullptr;
 
 	int pos = 0;
 	int count = nav->getBookMarkCount();
 	if (count <= 0)
-		return NULL;
+		return nullptr;
 
 	NSWasm::CData oRes;
 	oRes.SkipLen();
@@ -340,14 +426,14 @@ BYTE* CDjVuFileImplementation::GetStructure()
 }
 BYTE* CDjVuFileImplementation::GetPageGlyphs(int nPageIndex)
 {
-	return NULL;
+	return nullptr;
 	try
 	{
 		GP<DjVuImage> pPage = m_pDoc->get_page(nPageIndex);
 		const GP<DjVuText> text(DjVuText::create());
 		const GP<ByteStream> text_str(pPage->get_text());
 		if (!text_str)
-			return NULL;
+			return nullptr;
 		text->decode(text_str);
 
 		GUTF8String pageText = text->get_xmlText(pPage->get_height());
@@ -377,7 +463,7 @@ BYTE* CDjVuFileImplementation::GetPageGlyphs(int nPageIndex)
 
                     std::wstring csWord   = oWordNode.GetText();
                     std::wstring csCoords = oWordNode.GetAttribute(L"coords");
-                    double arrCoords[4];
+                    double arrCoords[4] = {0, 0, 0, 0};
                     ParseCoords(csCoords, arrCoords, 1);
 
 					std::string sText = U_TO_UTF8(csWord);
@@ -395,8 +481,10 @@ BYTE* CDjVuFileImplementation::GetPageGlyphs(int nPageIndex)
 		oRes.ClearWithoutAttack();
 		return res;
 	}
-	catch (...) {}
-	return NULL;
+	catch (...)
+	{
+		return nullptr;
+	}
 }
 BYTE* CDjVuFileImplementation::GetPageLinks(int nPageIndex)
 {
@@ -410,7 +498,7 @@ BYTE* CDjVuFileImplementation::GetPageLinks(int nPageIndex)
 		pPage->wait_for_complete_decode();
 		GP<DjVuAnno> pAnno = pPage->get_decoded_anno();
 		if (!pAnno)
-			return NULL;
+			return nullptr;
 		GPList<GMapArea> map_areas = pAnno->ant->map_areas;
 
 		NSWasm::CData oRes;
@@ -434,8 +522,10 @@ BYTE* CDjVuFileImplementation::GetPageLinks(int nPageIndex)
 		oRes.ClearWithoutAttack();
 		return res;
 	}
-	catch (...) {}
-	return NULL;
+	catch (...)
+	{
+		return nullptr;
+	}
 }
 
 void CDjVuFileImplementation::CreateFrame(IRenderer* pRenderer, GP<DjVuImage>& pPage, int nPage, XmlUtils::CXmlNode& text)
@@ -555,10 +645,10 @@ void CDjVuFileImplementation::CreatePdfFrame(IRenderer* pRenderer, GP<DjVuImage>
 	else if (pPage->is_legal_compound())
 	{
 		GP<IW44Image> pIW44Image = pPage->get_bg44();
-		if (NULL != pIW44Image)
+		if (nullptr != pIW44Image)
 		{
 			GP<GPixmap> pBgImage = pIW44Image->get_pixmap();
-			if (NULL != pBgImage)
+			if (nullptr != pBgImage)
 			{
 				Aggplus::CImage oImage;
 				NSDjvu::DrawPixmap(pBgImage, &oImage);
@@ -568,7 +658,7 @@ void CDjVuFileImplementation::CreatePdfFrame(IRenderer* pRenderer, GP<DjVuImage>
 		else
 		{
 			GP<GPixmap> pBgImage = pPage->get_bgpm();
-			if (NULL != pBgImage)
+			if (nullptr != pBgImage)
 			{
 				Aggplus::CImage oImage;
 				NSDjvu::DrawPixmap(pBgImage, &oImage);
@@ -578,10 +668,10 @@ void CDjVuFileImplementation::CreatePdfFrame(IRenderer* pRenderer, GP<DjVuImage>
 		
 		GRect oRectAll(0, 0, lImageWidth, lImageHeight);
 		GP<GPixmap> pImage = pPage->get_fgpm();
-		if (NULL == pImage)
+		if (nullptr == pImage)
 			pImage = pPage->get_fg_pixmap(oRectAll, oRectAll);
 
-		if (NULL != pImage)
+		if (nullptr != pImage)
 		{
 			Aggplus::CImage oImage;
 			NSDjvu::DrawPixmap(pImage, &oImage);
@@ -633,7 +723,7 @@ void CDjVuFileImplementation::CreatePdfFrame(IRenderer* pRenderer, GP<DjVuImage>
 		GRect oRectAll(0, 0, lImageWidth, lImageHeight);
 		GP<GPixmap> pImage = pPage->get_pixmap(oRectAll, oRectAll);
 
-		if (NULL != pImage)
+		if (nullptr != pImage)
 		{
 			Aggplus::CImage oImage;
 			NSDjvu::DrawPixmap(pImage, &oImage);
@@ -642,7 +732,7 @@ void CDjVuFileImplementation::CreatePdfFrame(IRenderer* pRenderer, GP<DjVuImage>
 		else
 		{
 			GP<GBitmap> pBitmap = pPage->get_bitmap(oRectAll, oRectAll, 4);
-			if (NULL != pBitmap)
+			if (nullptr != pBitmap)
 			{
 				int nPaletteEntries = pBitmap->get_grays();
 				if (nPaletteEntries <= 2)
@@ -723,17 +813,17 @@ unsigned char* CDjVuFileImplementation::ConvertToPixels(int nPageIndex, int nRas
 	}
 	catch (...)
 	{
+		return nullptr;
 	}
-	return NULL;
 }
 
 unsigned char* CDjVuFileImplementation::ConvertToPixels(GP<DjVuImage>& pPage, int nImageW, int nImageH, bool bFlip, bool bIsSwapRGB)
 {
-	BYTE* pBufferDst = NULL;
+	BYTE* pBufferDst = nullptr;
 
 	auto processPixmap = [&](GP<GPixmap> pImage, bool bFlip = false, bool bIsSwapRGB = false)
 	{
-		pBufferDst = new BYTE[4 * nImageW * nImageH];
+		pBufferDst = new BYTE[4 * static_cast<size_t>(nImageW) * nImageH];
 
 		unsigned int* pBuffer = (unsigned int*)pBufferDst;
 		for (int j = 0; j < nImageH; ++j)
@@ -753,7 +843,7 @@ unsigned char* CDjVuFileImplementation::ConvertToPixels(GP<DjVuImage>& pPage, in
 
 	auto processBitmap = [&](GP<GBitmap> pBitmap, bool bFlip = false)
 	{
-		pBufferDst = new BYTE[4 * nImageW * nImageH];
+		pBufferDst = new BYTE[4 * static_cast<size_t>(nImageW) * nImageH];
 
 		int nPaletteEntries = pBitmap->get_grays();
 		unsigned int* palette = new unsigned int[nPaletteEntries];
@@ -837,7 +927,7 @@ XmlUtils::CXmlNode CDjVuFileImplementation::ParseText(GP<DjVuImage> pPage)
 	}
 	return paragraph;
 }
-void CDjVuFileImplementation::TextToRenderer(IRenderer* pRenderer, XmlUtils::CXmlNode oTextNode, double dKoef, bool isView)
+void CDjVuFileImplementation::TextToRenderer(IRenderer* pRenderer, XmlUtils::CXmlNode oTextNode, double dKoef, bool /*isView*/)
 {
 	// Set the brush to null (to stretch it across the entire rect)
 	pRenderer->put_FontName(L"DjvuEmptyFont");
@@ -855,7 +945,7 @@ void CDjVuFileImplementation::TextToRenderer(IRenderer* pRenderer, XmlUtils::CXm
 			std::wstring csWord   = oWordNode.GetText();
 			std::wstring csCoords = oWordNode.GetAttribute(L"coords");
 
-			double arrCoords[4];
+			double arrCoords[4] = {0, 0, 0, 0};
 			ParseCoords(csCoords, arrCoords, dKoef);
 			DrawPageText(pRenderer, arrCoords, csWord);
 		}

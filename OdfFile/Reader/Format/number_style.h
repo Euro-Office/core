@@ -287,6 +287,32 @@ private:
 
 CP_REGISTER_OFFICE_ELEMENT2(number_embedded_text);
 
+//  number:fill-character
+class number_fill_character : public number_element
+{
+public:
+    static const wchar_t * ns;
+    static const wchar_t * name;
+
+	static const xml::NodeType xml_type = xml::typeElement;
+    static const ElementType type = typeNumberFillCharacter;
+
+	CPDOCCORE_DEFINE_VISITABLE();
+    CPDOCCORE_OFFICE_DOCUMENT_IMPL_NAME_FUNCS_;
+
+	virtual void oox_convert(oox::num_format_context & Context);
+
+private:
+    virtual void add_attributes		( const xml::attributes_wc_ptr & Attributes );
+    virtual void add_child_element	( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
+    virtual void add_text			(const std::wstring & Text);
+	virtual void add_space			(const std::wstring & Text);
+
+    std::wstring text_;
+};
+
+CP_REGISTER_OFFICE_ELEMENT2(number_fill_character);
+
 //  number:scientific-number
 class number_scientific_number : public number_element
 {

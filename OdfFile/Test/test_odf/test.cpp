@@ -31,10 +31,10 @@
 #include <iterator>
 #include <string>
 
-//#include "entrance.h"
-//#include "motion.h"
-//#include "audio.h"
-//#include "interactions.h"
+#include "entrance.h"
+#include "motion.h"
+#include "audio.h"
+#include "interactions.h"
 
 class TestEnv : public ODT2DOCX_ConversionEnvironment
 {
@@ -95,19 +95,19 @@ int main(int argc, char* argv[])
 
 	::testing::AddGlobalTestEnvironment(new TestEnv);
 
-	//::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationEntranceEnvironment);
-	//::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationMotionEnvironment);
-	//::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationAudioEnvironment);
-	//::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationPlayAudioEnvironment);	
-	//::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationOpenDocumentEnvironment);
-	//::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationRunProgramEnvironment);
-	//
-	//::testing::AddGlobalTestEnvironment(new OOX2ODP_EntranceAnimationEnvironment);
-	//::testing::AddGlobalTestEnvironment(new OOX2ODP_AudioAnimationEnvironment);
-	//::testing::AddGlobalTestEnvironment(new OOX2ODP_InteractionAnimationEnvironment);
-	//::testing::AddGlobalTestEnvironment(new OOX2ODP_PlayAudioAnimationEnvironment);
-	//::testing::AddGlobalTestEnvironment(new OOX2ODP_OpenDocumentAnimationEnvironment);
-	//::testing::AddGlobalTestEnvironment(new OOX2ODP_RunProgramAnimationEnvironment);
+	::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationEntranceEnvironment);
+	::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationMotionEnvironment);
+	::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationAudioEnvironment);
+	::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationPlayAudioEnvironment);
+	::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationOpenDocumentEnvironment);
+	::testing::AddGlobalTestEnvironment(new ODP2OOX_AnimationRunProgramEnvironment);
+
+	::testing::AddGlobalTestEnvironment(new OOX2ODP_EntranceAnimationEnvironment);
+	::testing::AddGlobalTestEnvironment(new OOX2ODP_AudioAnimationEnvironment);
+	::testing::AddGlobalTestEnvironment(new OOX2ODP_InteractionAnimationEnvironment);
+	::testing::AddGlobalTestEnvironment(new OOX2ODP_PlayAudioAnimationEnvironment);
+	::testing::AddGlobalTestEnvironment(new OOX2ODP_OpenDocumentAnimationEnvironment);
+	::testing::AddGlobalTestEnvironment(new OOX2ODP_RunProgramAnimationEnvironment);
 	
 	return RUN_ALL_TESTS();
 }

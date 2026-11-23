@@ -139,9 +139,9 @@ namespace PdfWriter
 		TRect& GetRect();
 		virtual CResourcesDict* GetResourcesDict();
 		void SetDefaultAppearance(CFontDict* pFont, const double& dFontSize, const TRgb& oColor);
-		void SetTextAppearance(const std::wstring& wsValue, unsigned short* pCodes, unsigned int unCount, CFontDict* pFont, const TRgb& oColor, const double& dAlpha, double dFontSize = 10.0, double dX = 0.0, double dY = 0.0, CFontCidTrueType** ppFonts = NULL, double* pShifts = NULL);
+		void SetTextAppearance(const std::wstring& wsValue, unsigned short* pCodes, unsigned int unCount, CFontDict* pFont, const TRgb& oColor, const double& dAlpha, double dFontSize = 10.0, double dX = 0.0, double dY = 0.0, CFontCidTrueType** ppFonts = nullptr, double* pShifts = nullptr);
 		void StartTextAppearance(CFontDict* pFont, const double& dFontSize, const TRgb& oColor, const double& dAlpha);
-		void AddLineToTextAppearance(const double& dX, const double& dY, unsigned short* pCodes, const unsigned int& unCodesCount, CFontCidTrueType** ppFonts = NULL, const double* pShifts = NULL);
+		void AddLineToTextAppearance(const double& dX, const double& dY, unsigned short* pCodes, const unsigned int& unCodesCount, CFontCidTrueType** ppFonts = nullptr, const double* pShifts = nullptr);
 		void EndTextAppearance();
 		void SetTextValue(const std::wstring& wsValue);
 		void SetFieldBorder(const EBorderSubtype& eSubtype, const TRgb& oColor, const double& fWidth, const unsigned short& nDashOn, const unsigned short& nDashOff, const unsigned short& nDashPhase);
@@ -172,7 +172,7 @@ namespace PdfWriter
 		virtual void SetPlaceHolderText(const std::vector<std::wstring>& vPlaceHolders, const std::vector<TRgb>& vNormalColors, const std::vector<TRgb>& vPlaceHolderColors);
 		void SetFlag(bool isFlag, int nBitPosition);
 		CDictObject* GetAA();
-		void AddScriptToAA(const std::string& sKey, const std::string& sScript, CDictObject* pAA = NULL);
+		void AddScriptToAA(const std::string& sKey, const std::string& sScript, CDictObject* pAA = nullptr);
 
 	protected:
 
@@ -245,7 +245,7 @@ namespace PdfWriter
 	class CCheckBoxField : public CFieldBase
 	{
 	public:
-		CCheckBoxField(CXref* pXref, CDocument* pDocument, CRadioGroupField* pGroup = NULL, const char* sYesName = NULL);
+		CCheckBoxField(CXref* pXref, CDocument* pDocument, CRadioGroupField* pGroup = nullptr, const char* sYesName = nullptr);
 
 		void SetAppearance(const std::wstring& wsYesValue, unsigned short* pYesCodes, unsigned int unYesCount, CFontDict* pYesFont,
 						   const std::wstring& wsOffValue, unsigned short* pOffCodes, unsigned int unOffCount, CFontDict* pOffFont,
@@ -268,7 +268,7 @@ namespace PdfWriter
 	public:
 		CRadioGroupField(CXref* pXref, CDocument* pDocument);
 
-		CCheckBoxField* CreateKid(const wchar_t* wsChoiceName = NULL);
+		CCheckBoxField* CreateKid(const wchar_t* wsChoiceName = nullptr);
 		virtual void SetFieldName(const std::wstring& wsName, bool isSkipCheck = false) override;
 		const std::wstring& GetFieldName() const;
 
@@ -294,7 +294,7 @@ namespace PdfWriter
 		CPictureField(CXref* pXref, CDocument* pDocument);
 		virtual void SetFieldName(const std::string& sName, bool isSkipCheck = false);
 		virtual void SetFieldName(const std::wstring& wsName, bool isSkipCheck = false);
-		void SetAppearance(CImageDict* pImage = NULL);
+		void SetAppearance(CImageDict* pImage = nullptr);
 		void SetScaleType(const EScaleType& eType);
 		void SetConstantProportions(const bool& bConstant);
 		void SetRespectBorders(const bool& bRespectBorders);
@@ -323,7 +323,7 @@ namespace PdfWriter
 		void SetReason(const std::wstring& wsValue);
 		void SetPicture(const std::wstring& wsPath);
 		void SetDate();
-		void SetAppearance(CImageDict* pImage = NULL);
+		void SetAppearance(CImageDict* pImage = nullptr);
 		virtual CResourcesDict* GetResourcesDict();
 
 	private:
@@ -345,9 +345,9 @@ namespace PdfWriter
 		CAnnotAppearance(CXref* pXRef, CFieldBase*  pField);
 		CAnnotAppearance(CXref* pXRef, CAnnotation* pAnnot);
 
-		CAnnotAppearanceObject* GetNormal(CResourcesDict* pResources = NULL);
-		CAnnotAppearanceObject* GetRollover(CResourcesDict* pResources = NULL);
-		CAnnotAppearanceObject* GetDown(CResourcesDict* pResources = NULL);
+		CAnnotAppearanceObject* GetNormal(CResourcesDict* pResources = nullptr);
+		CAnnotAppearanceObject* GetRollover(CResourcesDict* pResources = nullptr);
+		CAnnotAppearanceObject* GetDown(CResourcesDict* pResources = nullptr);
 
 	private:
 
@@ -362,8 +362,8 @@ namespace PdfWriter
 	class CCheckBoxAnnotAppearance : public CDictObject
 	{
 	public:
-		CCheckBoxAnnotAppearance(CXref* pXref, CFieldBase* pField, const char* sYesName = NULL);
-		CCheckBoxAnnotAppearance(CXref* pXref, CAnnotation* pAnnot, const char* sYesName = NULL);
+		CCheckBoxAnnotAppearance(CXref* pXref, CFieldBase* pField, const char* sYesName = nullptr);
+		CCheckBoxAnnotAppearance(CXref* pXref, CAnnotation* pAnnot, const char* sYesName = nullptr);
 		
 		CAnnotAppearanceObject* GetYesN();
 		CAnnotAppearanceObject* GetOffN();
@@ -383,9 +383,9 @@ namespace PdfWriter
 	{
 	public:
 		CAnnotAppearanceObject(CXref* pXRef, CFieldBase*  pField);
-		CAnnotAppearanceObject(CXref* pXRef, CAnnotation* pAnnot, CResourcesDict* pResources = NULL);
-		void DrawSimpleText(const std::wstring& wsText, unsigned short* pCodes, unsigned int unCount, CFontDict* pFont, double dFontSize = 10.0, double dX = 0.0, double dY = 0.0, double dR = 0.0, double dG = 0.0, double dB = 0.0, const char* sExtGrStateName = NULL, double dW = 1.0, double dH = 1.0, CFontCidTrueType** ppFonts = NULL, double* pShifts = NULL);
-		void DrawPicture(const char* sImageName = NULL, const double& dX = 0.0, const double& dY = 0.0, const double& dW = 0.0, const double& dH = 0.0, const bool& bRespectBorder = false);
+		CAnnotAppearanceObject(CXref* pXRef, CAnnotation* pAnnot, CResourcesDict* pResources = nullptr);
+		void DrawSimpleText(const std::wstring& wsText, unsigned short* pCodes, unsigned int unCount, CFontDict* pFont, double dFontSize = 10.0, double dX = 0.0, double dY = 0.0, double dR = 0.0, double dG = 0.0, double dB = 0.0, const char* sExtGrStateName = nullptr, double dW = 1.0, double dH = 1.0, CFontCidTrueType** ppFonts = nullptr, double* pShifts = nullptr);
+		void DrawPicture(const char* sImageName = nullptr, const double& dX = 0.0, const double& dY = 0.0, const double& dW = 0.0, const double& dH = 0.0, const bool& bRespectBorder = false);
 		void StartDrawText(CFontDict* pFont, const double& dFontSize, const double& dR, const double& dG, const double& dB, const char* sExtGStateName, const double& dWidth, const double& dHeight);
 		void DrawTextLine(const double& dX, const double& dY, const unsigned short* pCodes, const unsigned int& unCount, CFontCidTrueType** ppFonts, const double* pShifts);
 		void DrawTextLine(const double &dX, const double &dY, const std::wstring& wsText);

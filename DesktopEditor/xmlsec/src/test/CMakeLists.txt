@@ -31,37 +31,38 @@ target_link_libraries(xmlsec_test PRIVATE
     ${LIBICUDATA}
 )
 
-copy_artifacts_to_folder("xmlsec_test" "${EO_CORE_OUTPUT_DIR}")
-
 # main.cpp reads/writes test fixtures by bare relative name (cwd-relative,
-# not tied to the executable's own location), so they need to sit next to it
-# in EO_CORE_OUTPUT_DIR too. legacy-signed.docx is signed by upstream
+# not tied to the executable's own location), so they sit next to the test
+# binary, which runs there. Not in EO_CORE_OUTPUT_DIR: that is what ships.
+# legacy-signed.docx is signed by upstream
 # ONLYOFFICE Desktop Editors 9.4.0, confirmed (via build_tools' openssl.py)
 # to still be pinned to OpenSSL_1_1_1f - committed as a permanent regression
 # fixture proving documents signed under OpenSSL 1.1.1 still verify under
 # this fork's 4.0.1 (USE_VERIFY_LEGACY in main.cpp).
 add_custom_command(TARGET xmlsec_test POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_LIST_DIR}/file.docx" "${EO_CORE_OUTPUT_DIR}/"
+        "${CMAKE_CURRENT_LIST_DIR}/file.docx" "$<TARGET_FILE_DIR:xmlsec_test>/"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_LIST_DIR}/legacy-signed.docx" "${EO_CORE_OUTPUT_DIR}/"
-    COMMENT "Copying test fixtures to ${EO_CORE_OUTPUT_DIR}"
+        "${CMAKE_CURRENT_LIST_DIR}/legacy-signed.docx" "$<TARGET_FILE_DIR:xmlsec_test>/"
+    COMMENT "Copying test fixtures next to xmlsec_test"
 )
 
 # Register with CTest (see TESTING.md). Unlike the other suites there, this
-# one is a plain main()/exit-code test, not GoogleTest - and it must run the
-# copy of the binary in EO_CORE_OUTPUT_DIR (not the raw build-tree one from
-# $<TARGET_FILE:xmlsec_test>), since that's the only place its fixtures and
-# RPATH-resolved deps (kernel, ooxmlsignature.framework) are colocated.
+# one is a plain main()/exit-code test, not GoogleTest. Like them, it loads
+# the core libraries (kernel, ooxmlsignature) from EO_CORE_OUTPUT_DIR.
 # enable_testing() is technically redundant when reached via the top-level
 # CMakeLists.txt (which already calls it), but kept here - harmless to call
 # twice - so this suite alone can still be configured and ctest-run standalone.
 enable_testing()
 add_test(NAME xmlsec_test
-    COMMAND "${EO_CORE_OUTPUT_DIR}/$<TARGET_FILE_NAME:xmlsec_test>"
-    WORKING_DIRECTORY "${EO_CORE_OUTPUT_DIR}")
-set_tests_properties(xmlsec_test PROPERTIES
-    ENVIRONMENT "LD_LIBRARY_PATH=${EO_CORE_OUTPUT_DIR}:$ENV{LD_LIBRARY_PATH}")
+    COMMAND xmlsec_test
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:xmlsec_test>")
+if(APPLE)
+    set_tests_properties(xmlsec_test PROPERTIES
+        ENVIRONMENT "DYLD_LIBRARY_PATH=${EO_CORE_OUTPUT_DIR}:$ENV{DYLD_LIBRARY_PATH};DYLD_FRAMEWORK_PATH=${EO_CORE_OUTPUT_DIR}:$ENV{DYLD_FRAMEWORK_PATH}")
+else()
+    set_tests_properties(xmlsec_test PROPERTIES
+        ENVIRONMENT "LD_LIBRARY_PATH=${EO_CORE_OUTPUT_DIR}:$ENV{LD_LIBRARY_PATH}")
+endif()
 
 declare_victory( xmlsec_test )

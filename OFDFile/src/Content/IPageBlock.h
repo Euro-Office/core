@@ -12,7 +12,7 @@ enum class EPageType
 {
 	Page,
 	TemplatePage,
-	Anotation
+	Annotation
 };
 
 class IPageBlock : public IOFDElement

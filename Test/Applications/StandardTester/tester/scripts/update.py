@@ -41,7 +41,6 @@ if os.path.isfile(work_dir + "/allthemesgen" + exe_addon):
 
 config = "<Settings>\n"
 config += "<file>./sdkjs/common/Native/native.js</file>\n"
-config += "<file>./sdkjs/common/Native/jquery_native.js</file>\n"
 config += "<file>./sdkjs/vendor/xregexp/xregexp-all-min.js</file>\n"
 config += "<file>./fonts/AllFonts.js</file>\n"
 config += "<htmlfile>./sdkjs/vendor/jquery/jquery.min.js</htmlfile>\n"

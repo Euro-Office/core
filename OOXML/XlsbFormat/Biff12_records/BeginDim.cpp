@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginDim::readFields(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
 
         record >> flags >> stName >> stUnique >> stDisplay;
 

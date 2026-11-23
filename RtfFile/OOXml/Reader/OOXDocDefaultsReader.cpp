@@ -34,7 +34,7 @@ OOXDocDefaultsReader::OOXDocDefaultsReader(OOX::CDocDefaults* ooxDefaults)
 }
 bool OOXDocDefaultsReader::Parse( ReaderParameter oParam )
 {
-	if (m_ooxDefaults == NULL) return false;
+	if (m_ooxDefaults == nullptr) return false;
 
 	if (m_ooxDefaults->m_oRunPr.IsInit())
 	{
@@ -44,7 +44,7 @@ bool OOXDocDefaultsReader::Parse( ReaderParameter oParam )
 		OOXrPrReader orPrReader(m_ooxDefaults->m_oRunPr.GetPointer());
 		orPrReader.m_bDefStyle = false;
 
-		if( true == orPrReader.Parse( oParam, oNewProperty ) )
+		if( orPrReader.Parse( oParam, oNewProperty ) )
 			oParam.oRtf->m_oDefaultCharProp = oNewProperty;
 	}
 	if (m_ooxDefaults->m_oParPr.IsInit())
@@ -58,7 +58,7 @@ bool OOXDocDefaultsReader::Parse( ReaderParameter oParam )
 
 		CcnfStyle style;
 
-		if( true == opPrReader.Parse( oParam, oNewProperty, style) )
+		if( opPrReader.Parse( oParam, oNewProperty, style) )
 			oParam.oRtf->m_oDefaultParagraphProp = oNewProperty;
 	}
 	return true;

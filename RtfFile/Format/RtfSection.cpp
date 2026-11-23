@@ -27,7 +27,7 @@
 
 RtfDocumentProperty::RtfDocumentProperty()
 {
-	SetDefault();
+	RtfDocumentProperty::SetDefault();
 }
 int RtfDocumentProperty::GetType()
 {
@@ -117,10 +117,10 @@ std::wstring RtfDocumentProperty::GetRtfFormat( int nFormat, bool bFootnote )
 {
 	if( PROP_DEF == nFormat )
 	{
-		if( true == bFootnote )	return L"ftnnar";
+		if( bFootnote )	return L"ftnnar";
 		else					return L"aftnnar";
 	}
-	if( true == bFootnote )
+	if( bFootnote )
 	{
 		 switch( nFormat )
 		 {
@@ -129,7 +129,7 @@ std::wstring RtfDocumentProperty::GetRtfFormat( int nFormat, bool bFootnote )
 		 case 3:	return L"ftnnauc";
 		 case 2:	return L"ftnnrlc";
 		 case 1:	return L"ftnnruc";
-		 case 70:	return L"ftnnchi";
+		 case 70:
 		 case 25:	return L"ftnnchi";
 		 case 18:	return L"ftnncnum";
 		 case 10:	return L"ftnndbnum";
@@ -145,6 +145,7 @@ std::wstring RtfDocumentProperty::GetRtfFormat( int nFormat, bool bFootnote )
 		 case 30:	return L"ftnnzodiac";
 		 case 31:	return L"ftnnzodiacd";
 		 case 32:	return L"ftnnzodiacl";
+		 default:	break;
 		 }
 	}
 	else
@@ -156,7 +157,7 @@ std::wstring RtfDocumentProperty::GetRtfFormat( int nFormat, bool bFootnote )
 			case 3:		return L"aftnnauc";
 			case 2:		return L"aftnnrlc";
 			case 1:		return L"aftnnruc";
-			case 70:	 return L"aftnnchi";
+			case 70:
 			case 25:	return L"aftnnchi";
 			case 18:	return L"aftnncnum";
 			case 10:	return L"aftnndbnum";
@@ -172,12 +173,13 @@ std::wstring RtfDocumentProperty::GetRtfFormat( int nFormat, bool bFootnote )
 			case 30:	return L"aftnnzodiac";
 			case 31:	return L"aftnnzodiacd";
 			case 32:	return L"aftnnzodiacl";
+			default:	break;
 		}
 	}
-	if( true == bFootnote )	return L"ftnnar";
+	if( bFootnote )	return L"ftnnar";
 	else					return L"aftnnar";
 }
-std::wstring RtfDocumentProperty::RenderToRtf(RenderParameter oRenderParameter)
+std::wstring RtfDocumentProperty::RenderToRtf(RenderParameter /*oRenderParameter*/)
 {
     std::wstring sResult;
 	switch( m_eCodePage )
@@ -287,7 +289,7 @@ std::wstring RtfDocumentProperty::RenderToRtf(RenderParameter oRenderParameter)
 
 	return sResult;
 }
-std::wstring RtfDocumentProperty::RenderToOOX(RenderParameter oRenderParameter)
+std::wstring RtfDocumentProperty::RenderToOOX(RenderParameter /*oRenderParameter*/)
 {
     std::wstring sResult;
 	if( PROP_DEF != m_bHypCaps )
@@ -595,23 +597,23 @@ std::wstring RtfSectionProperty::RenderToRtf(RenderParameter oRenderParameter)
 	RENDER_RTF_INT( m_nTextFollow, sResult, L"stextflow" )
 
 	//Page Borders
-	if( true == m_oBorderLeft.IsValid() )
+	if( m_oBorderLeft.IsValid() )
 	{
 		sResult += L"\\pgbrdrl";
 		sResult += m_oBorderLeft.RenderToRtf( oRenderParameter );
 	}
-	if( true == m_oBorderTop.IsValid() )
+	if( m_oBorderTop.IsValid() )
 	{
 		sResult += L"\\pgbrdrt";
 		sResult += m_oBorderTop.RenderToRtf( oRenderParameter );
 	}
 		
-	if( true == m_oBorderRight.IsValid() )
+	if( m_oBorderRight.IsValid() )
 	{
 		sResult += L"\\pgbrdrr";
 		sResult += m_oBorderRight.RenderToRtf( oRenderParameter );
 	}
-	if( true == m_oBorderBottom.IsValid() )
+	if( m_oBorderBottom.IsValid() )
 	{
 		sResult += L"\\pgbrdrb";
 		sResult += m_oBorderBottom.RenderToRtf( oRenderParameter );
@@ -621,42 +623,42 @@ std::wstring RtfSectionProperty::RenderToRtf(RenderParameter oRenderParameter)
 	RENDER_RTF_INT( m_nBorderAlign,		sResult, L"pgbrdrsnap" )
 
 	//footer - header
-	if( 0 != m_oHeaderRight )
+	if( nullptr != m_oHeaderRight )
 	{
 		sResult += L"{\\headerr";
 		sResult += m_oHeaderRight->RenderToRtf( oRenderParameter );
 		sResult += L"\\par";
 		sResult += L"}";
 	}
-	if( 0 != m_oHeaderLeft )
+	if( nullptr != m_oHeaderLeft )
 	{
 		sResult += L"{\\headerl";
 		sResult += m_oHeaderLeft->RenderToRtf( oRenderParameter );
 		sResult += L"\\par";
 		sResult += L"}";
 	}
-	if( 0 != m_oHeaderFirst )
+	if( nullptr != m_oHeaderFirst )
 	{
 		sResult += L"{\\headerf";
 		sResult += m_oHeaderFirst->RenderToRtf( oRenderParameter );
 		sResult += L"\\par";
 		sResult += L"}";
 	}
-	if( 0 != m_oFooterRight )
+	if( nullptr != m_oFooterRight )
 	{
 		sResult += L"{\\footerr";
 		sResult += m_oFooterRight->RenderToRtf( oRenderParameter );
 		sResult += L"\\par";
 		sResult += L"}";
 	}
-	if( 0 != m_oFooterLeft )
+	if( nullptr != m_oFooterLeft )
 	{
 		sResult += L"{\\footerl";
 		sResult += m_oFooterLeft->RenderToRtf( oRenderParameter );
 		sResult += L"\\par";
 		sResult += L"}";
 	}
-	if( 0 != m_oFooterFirst )
+	if( nullptr != m_oFooterFirst )
 	{
 		sResult += L"{\\footerf";
 		sResult += m_oFooterFirst->RenderToRtf( oRenderParameter );
@@ -736,7 +738,7 @@ std::wstring RtfSectionProperty::RenderToOOX(RenderParameter oRenderParameter)
 			if (PROP_DEF != m_bColumnLineBetween)
 				sCollumnFormating += std::wstring(L" w:sep=\"") + (m_bColumnLineBetween ? L"1" : L"0") + L"\"";
 			
-			if( true == bEqualWidth )
+			if( bEqualWidth )
 				sCollumnFormating += L" w:equalWidth=\"true\"/>";
 			else
 			{
@@ -758,7 +760,7 @@ std::wstring RtfSectionProperty::RenderToOOX(RenderParameter oRenderParameter)
 		{
 			sCollumnFormating += L"/>";
 		}
-        if( false == sCollumnFormating.empty() )
+        if( !sCollumnFormating.empty() )
 			sResult += sCollumnFormating;
 	}
 
@@ -778,27 +780,29 @@ std::wstring RtfSectionProperty::RenderToOOX(RenderParameter oRenderParameter)
 	}
 	switch( m_eFootnotesFormat )
 	{
-		case ff_sftnnar:		sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnnalc:		sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnnauc:		sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnnrlc:		sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnnruc:		sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnnchi:		sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnnchosung:	sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnncnum:		sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnndbnum:		sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnndbnumd:	sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnndbnumt:	sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnndbnumk:	sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnndbar:		sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnnganada:	sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnngbnum:		sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnngbnumd:	sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnngbnuml:	sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnngbnumk:	sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnnzodiac:	sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnnzodiacd:	sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ff_sftnnzodiacl:	sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
+		case ff_sftnnar:
+		case ff_sftnnalc:
+		case ff_sftnnauc:
+		case ff_sftnnrlc:
+		case ff_sftnnruc:
+		case ff_sftnnchi:
+		case ff_sftnnchosung:
+		case ff_sftnncnum:
+		case ff_sftnndbnum:
+		case ff_sftnndbnumd:
+		case ff_sftnndbnumt:
+		case ff_sftnndbnumk:
+		case ff_sftnndbar:
+		case ff_sftnnganada:
+		case ff_sftnngbnum:
+		case ff_sftnngbnumd:
+		case ff_sftnngbnuml:
+		case ff_sftnngbnumk:
+		case ff_sftnnzodiac:
+		case ff_sftnnzodiacd:
+		case ff_sftnnzodiacl:
+			sFootnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";
+			break;
 	}
     if(!sFootnotesProp.empty() )
         sResult +=  L"<w:footnotePr>" + sFootnotesProp + L"</w:footnotePr>";
@@ -813,27 +817,29 @@ std::wstring RtfSectionProperty::RenderToOOX(RenderParameter oRenderParameter)
 	}
 	switch( m_eEndnotesFormat )
 	{
-		case ef_saftnnar:		sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnnalc:		sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnnauc:		sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnnrlc:		sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnnruc:		sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnnchi:		sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnnchosung:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnncnum:		sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnndbnum:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnndbnumd:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnndbnumt:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnndbnumk:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnndbar:		sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnnganada:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnngbnum:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnngbnumd:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnngbnuml:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnngbnumk:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnnzodiac:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnnzodiacd:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
-		case ef_saftnnzodiacl:	sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";	break;
+		case ef_saftnnar:
+		case ef_saftnnalc:
+		case ef_saftnnauc:
+		case ef_saftnnrlc:
+		case ef_saftnnruc:
+		case ef_saftnnchi:
+		case ef_saftnnchosung:
+		case ef_saftnncnum:
+		case ef_saftnndbnum:
+		case ef_saftnndbnumd:
+		case ef_saftnndbnumt:
+		case ef_saftnndbnumk:
+		case ef_saftnndbar:
+		case ef_saftnnganada:
+		case ef_saftnngbnum:
+		case ef_saftnngbnumd:
+		case ef_saftnngbnuml:
+		case ef_saftnngbnumk:
+		case ef_saftnnzodiac:
+		case ef_saftnnzodiacd:
+		case ef_saftnnzodiacl:
+			sEndnotesProp += L"<w:numFmt w:val=\"upperLetter\" />";
+			break;
 	}
     if(!sEndnotesProp.empty() )
         sResult += L"<w:endnotePr>" + sEndnotesProp + L"</w:endnotePr>";
@@ -852,7 +858,7 @@ std::wstring RtfSectionProperty::RenderToOOX(RenderParameter oRenderParameter)
 		case lnr_lineppage:		sLineNumbering += L" w:restart=\"newPage\"";	break; 
 		case lnr_linecont:		sLineNumbering += L" w:restart=\"continuous\"";	break; 
 	}
-    if( false == sLineNumbering.empty() )
+    if( !sLineNumbering.empty() )
         sResult += L"<w:lnNumType " + sLineNumbering+ L"/>";
 
 	//Page Information
@@ -863,7 +869,7 @@ std::wstring RtfSectionProperty::RenderToOOX(RenderParameter oRenderParameter)
         sPageSize += L" w:h=\"" + std::to_wstring(m_nPageHeight) + L"\"";
 	if( 1 == m_bLandscapeFormat )
         sPageSize += L" w:orient=\"landscape\"";
-    if( false == sPageSize.empty() )
+    if( !sPageSize.empty() )
         sResult += L"<w:pgSz " + sPageSize + L"/>";
 
     std::wstring sMargin;
@@ -881,7 +887,7 @@ std::wstring RtfSectionProperty::RenderToOOX(RenderParameter oRenderParameter)
         sMargin += L" w:header=\"" + std::to_wstring(m_nHeaderTop) + L"\"";
 	if( PROP_DEF != m_nFooterBottom )
         sMargin += L" w:footer=\"" + std::to_wstring(m_nFooterBottom) + L"\"";
-    if( false == sMargin.empty() )
+    if( !sMargin.empty() )
         sResult += L"<w:pgMar " + sMargin + L"/>";
 	if( 1 == m_bTitlePage )
 		sResult += L"<w:titlePg/>";
@@ -890,7 +896,7 @@ std::wstring RtfSectionProperty::RenderToOOX(RenderParameter oRenderParameter)
     std::wstring sPageNumber;
 	if( PROP_DEF != m_nPageNumberStart )
         sPageNumber += L" w:start=\"" + std::to_wstring(m_nPageNumberStart) + L"\"";
-    if( false == sPageNumber.empty() )
+    if( !sPageNumber.empty() )
         sResult += L"<w:pgNumType " + sPageNumber + L"/>";
 	//Vertical Alignment
 	switch( m_eVerticalAlignment )
@@ -909,32 +915,33 @@ std::wstring RtfSectionProperty::RenderToOOX(RenderParameter oRenderParameter)
 		case 3: sResult += L"<w:textDirection w:val=\"rlTb\" />";	break;
 		case 4: sResult += L"<w:textDirection w:val=\"lrTbV\" />";	break;
 		case 5: sResult += L"<w:textDirection w:val=\"tbLrV\" />";	break;
+		default: break;
 	}
 	//Page Borders
     std::wstring sBorders;
 	RenderParameter oNewParam = oRenderParameter;
 	oNewParam.nType = RENDER_TO_OOX_PARAM_BORDER_TAG;
-	if( true == m_oBorderLeft.IsValid() )
+	if( m_oBorderLeft.IsValid() )
 	{
 		oNewParam.sValue = L"w:left";
 		sBorders += m_oBorderLeft.RenderToOOX( oNewParam );
 	}
-	if( true == m_oBorderTop.IsValid() )
+	if( m_oBorderTop.IsValid() )
 	{
 		oNewParam.sValue = L"w:top";
 		sBorders += m_oBorderTop.RenderToOOX( oNewParam ) ;
 	}
-	if( true == m_oBorderRight.IsValid() )
+	if( m_oBorderRight.IsValid() )
 	{
 		oNewParam.sValue = L"w:right";
 		sBorders += m_oBorderRight.RenderToOOX( oNewParam );
 	}
-	if( true == m_oBorderBottom.IsValid() )
+	if( m_oBorderBottom.IsValid() )
 	{
 		oNewParam.sValue = L"w:bottom";
 		sBorders += m_oBorderBottom.RenderToOOX( oNewParam );
 	}
-    if( false == sBorders.empty() )
+    if( !sBorders.empty() )
 	{
 		sResult += L"<w:pgBorders";
 		if( PROP_DEF != m_nBorderMeasure )
@@ -944,6 +951,7 @@ std::wstring RtfSectionProperty::RenderToOOX(RenderParameter oRenderParameter)
 				case 0: sResult += L" w:display=\"allPages\"";		break;
 				case 1: sResult += L" w:display=\"firstPage\"";		break;
 				case 2: sResult += L" w:display=\"notFirstPage\"";	break;
+				default: break;
 			}
 			if( 0 != (m_nBorderMeasure & 8) )
 				sResult += L" w:zOrder=\"back\"";
@@ -958,32 +966,32 @@ std::wstring RtfSectionProperty::RenderToOOX(RenderParameter oRenderParameter)
 		sResult += sBorders;
 		sResult += L"</w:pgBorders>";
 	}
-	if( 0 != m_oHeaderLeft )
+	if( nullptr != m_oHeaderLeft )
 	{
         std::wstring sId = SaveFile(m_oHeaderLeft,oRenderParameter, true);
         sResult += L"<w:headerReference w:type=\"even\" r:id=\"" + sId + L"\"/>";
 	}
-	if( 0 != m_oHeaderFirst )
+	if( nullptr != m_oHeaderFirst )
 	{
         std::wstring sId = SaveFile(m_oHeaderFirst,oRenderParameter, true);
         sResult += L"<w:headerReference w:type=\"first\" r:id=\"" + sId + L"\"/>";
 	}
-	if( 0 != m_oHeaderRight )
+	if( nullptr != m_oHeaderRight )
 	{
         std::wstring sId = SaveFile(m_oHeaderRight,oRenderParameter, true);
         sResult += L"<w:headerReference w:type=\"default\" r:id=\"" + sId + L"\"/>";
 	}
-	if( 0 != m_oFooterLeft )
+	if( nullptr != m_oFooterLeft )
 	{
         std::wstring sId = SaveFile(m_oFooterLeft,oRenderParameter, false);
         sResult += L"<w:footerReference w:type=\"even\" r:id=\"" + sId + L"\"/>";
 	}
-	if( 0 != m_oFooterFirst )
+	if( nullptr != m_oFooterFirst )
 	{
         std::wstring sId = SaveFile(m_oFooterFirst,oRenderParameter, false);
         sResult += L"<w:footerReference w:type=\"first\" r:id=\"" + sId + L"\"/>";
 	}
-	if( 0 != m_oFooterRight )
+	if( nullptr != m_oFooterRight )
 	{
         std::wstring sId = SaveFile(m_oFooterRight,oRenderParameter, false);
         sResult += L"<w:footerReference w:type=\"default\" r:id=\"" + sId + L"\"/>";
@@ -1009,14 +1017,14 @@ std::wstring RtfSectionProperty::SaveFile( TextItemContainerPtr oTarget, RenderP
 	RtfDocument* poRtfDocument	= static_cast<RtfDocument*> ( oRenderParameter.poDocument );
 
     std::wstring sFilename;
-	if ( true == bHeader )
+	if ( bHeader )
         sFilename += L"header" + std::to_wstring(poRtfDocument->m_oIdGenerator.Generate_HeaderNumber()) + L".xml";
 	else
         sFilename += L"footer" + std::to_wstring(poRtfDocument->m_oIdGenerator.Generate_FooterNumber()) + L".xml";
 
     std::wstring sContent;
     std::wstring sRootName;
-	if( true == bHeader )
+	if( bHeader )
 		sRootName = L"w:hdr";
 	else
 		sRootName = L"w:ftr";
@@ -1061,7 +1069,7 @@ mc:Ignorable=\"w14 w15 w16se wp14\">";
 	
 	NSFile::CFileBinary file;
 	
-    if (file.CreateFile(sFilePath) == true)
+    if (file.CreateFile(sFilePath))
 	{            
         file.WriteFile((void*)sXmlUTF.c_str(), (DWORD)sXmlUTF.length());
 		file.CloseFile();
@@ -1069,7 +1077,7 @@ mc:Ignorable=\"w14 w15 w16se wp14\">";
 
     std::wstring sContentTarget = L"/word/"  +  sFilename;
     std::wstring srID;
-	if( true == bHeader )
+	if( bHeader )
 	{
 		poOOXWriter->m_oContentTypes.AddContent( L"application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml", sContentTarget);
 		srID = poOOXWriter->m_oDocRels.AddRelationship( L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/header", sFilename );
@@ -1084,7 +1092,7 @@ mc:Ignorable=\"w14 w15 w16se wp14\">";
 
 RtfSectionProperty::RtfSectionProperty()
 {
-	SetDefault();
+	RtfSectionProperty::SetDefault();
 
 	//footer - header
 	m_oHeaderLeft	= TextItemContainerPtr();

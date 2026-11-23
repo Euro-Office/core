@@ -53,6 +53,7 @@ namespace odf_writer
 		fieldTime,
 		fieldRef,
 		fieldUserDefined,
+		fieldStyleRef,
 
 		fieldBibliography = 0xff + 1,
 		fieldIndex,

@@ -56,7 +56,7 @@ CPageBorderFill::CPageBorderFill(CXMLReader& oReader, EHanType eType)
 	END_WHILE
 }
 
-CPageBorderFill* CPageBorderFill::Parse(int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CPageBorderFill* CPageBorderFill::Parse(int /*nLevel*/, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	CPageBorderFill* pBorderFill = new CPageBorderFill();
 

@@ -51,7 +51,7 @@ std::wstring RtfBookmarkStart::RenderToRtf(RenderParameter oRenderParameter)
         sResult += L"\\bkmkcoll" + std::to_wstring( nLastColumn);
 	
 	sResult += L" ";
-    RtfCharProperty* pCharProperty = NULL;
+    RtfCharProperty* pCharProperty = nullptr;
     sResult += RtfChar::renderRtfText( m_sName, oRenderParameter.poDocument, pCharProperty );
 	sResult += L"}";
 	return sResult;
@@ -99,7 +99,7 @@ std::wstring RtfBookmarkEnd::RenderToRtf(RenderParameter oRenderParameter)
 	sResult += L"{\\*\\bkmkend";
 	sResult += L" ";
 
-    RtfCharProperty* pCharProperty = NULL;
+    RtfCharProperty* pCharProperty = nullptr;
     sResult += RtfChar::renderRtfText( m_sName, oRenderParameter.poDocument, pCharProperty );
 
     sResult += L"}";
@@ -136,7 +136,7 @@ int RtfAnnotElem::GetType()
 {
 	return TYPE_RTF_ANNOTVALUE;
 }
-std::wstring RtfAnnotElem::RenderToRtf(RenderParameter oRenderParameter)
+std::wstring RtfAnnotElem::RenderToRtf(RenderParameter  /*oRenderParameter*/)
 {
     std::wstring sResult;
 	
@@ -284,7 +284,7 @@ std::wstring RtfFootnote::RenderToRtf(RenderParameter oRenderParameter)
 	sResult += L"\\chftn";
 	sResult += L"{\\footnote";
 	
-	if( true == m_bEndNote )
+	if( m_bEndNote )
 		sResult += L"\\ftnalt";
 	
 	for( int i = 0; i < m_oContent->GetCount(); i++ )
@@ -300,7 +300,7 @@ std::wstring RtfFootnote::RenderToOOX(RenderParameter oRenderParameter)
     std::wstring sResult;
 	OOXWriter* poOOXWriter = static_cast<OOXWriter*>(oRenderParameter.poWriter);
 	RtfDocument* poDocument = static_cast<RtfDocument*>(oRenderParameter.poDocument);
-	if( true == m_bEndNote )
+	if( m_bEndNote )
 	{
 		int nID = poDocument->m_oIdGenerator.Generate_EndnoteNumber();
 		OOXEndnoteWriter* poEndnoteWriter = static_cast<OOXEndnoteWriter*>( poOOXWriter->m_poEndnoteWriter );
@@ -314,7 +314,7 @@ std::wstring RtfFootnote::RenderToOOX(RenderParameter oRenderParameter)
 		sResult += L"<w:r>";
         std::wstring srPr = m_oCharProp.RenderToOOX( oRenderParameter );
 
-        if( false == srPr.empty() )
+        if( !srPr.empty() )
 		{
 			sResult += L"<w:rPr>";
             sResult += srPr;
@@ -337,7 +337,7 @@ std::wstring RtfFootnote::RenderToOOX(RenderParameter oRenderParameter)
 		sResult += L"<w:r>";
         std::wstring srPr = m_oCharProp.RenderToOOX( oRenderParameter );
 
-        if( false == srPr.empty() )
+        if( !srPr.empty() )
 		{
 			sResult += L"<w:rPr>";
             sResult += srPr;

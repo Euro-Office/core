@@ -86,7 +86,7 @@ enum class ENode
 	NbSpace,
 	FwSpace,
 	Size,
-	Posistion,
+	Position,
 	OutSideMargin,
 	InSideMargin,
 	Caption,
@@ -496,7 +496,7 @@ enum class EAttribute
 	Leader,
 	Start,
 	Level,
-	Aligment,
+	Alignment,
 	UseInstWidth,   //60
 	AutoIndent,
 	WidthAdjust,

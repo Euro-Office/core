@@ -3,15 +3,15 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
   schedule:
     - cron: '00 19 * * 5'
 
+# Pull requests are not scanned: the analysis takes ~20 min and is not a
+# required check. A running scan of main finishes instead of being cancelled
+# by the next push; GitHub keeps only the newest pending one.
 concurrency:
-  group: codeql-${{ github.event.pull_request.number || github.ref_name }}
-  cancel-in-progress: true
+  group: codeql-${{ github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
   analyze:
@@ -36,15 +36,12 @@ jobs:
         config: |
           paths-ignore:
             - Common/3dParty
-            - UnicodeConverter/icubuilds-mac
             - DesktopEditor/agg-2.4
             - DesktopEditor/cximage
-            - DesktopEditor/freetype_names
             - DesktopEditor/xml/libxml2
             - DesktopEditor/raster/Jp2/openjpeg
             - DesktopEditor/raster/JBig2/source
             - PdfFile/lib
-            - DjVuFile/libdjvu
 
 
     - name: Perform CodeQL Analysis

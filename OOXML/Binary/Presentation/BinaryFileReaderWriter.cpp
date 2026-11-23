@@ -73,18 +73,18 @@
 namespace NSBinPptxRW
 {
 	template <typename T,unsigned S>
-	inline unsigned arraysize(const T (&v)[S]) { return S; }
+	inline unsigned arraysize(const T (& /*v*/)[S]) { return S; }
 
 	CCommonWriter::CCommonWriter()
 	{
-		m_pNativePicker = NULL;
-		m_pFontPicker = NULL;
+		m_pNativePicker = nullptr;
+		m_pFontPicker = nullptr;
 		m_bDeleteFontPicker = true;
 		m_pMediaManager = new NSShapeImageGen::CMediaManager();
 	}
 	CCommonWriter::~CCommonWriter()
 	{
-		m_pNativePicker = NULL;
+		m_pNativePicker = nullptr;
 		if (m_bDeleteFontPicker)
 			RELEASEOBJECT(m_pFontPicker);
 		RELEASEOBJECT(m_pMediaManager);
@@ -93,8 +93,8 @@ namespace NSBinPptxRW
 	{
 		if (m_bDeleteFontPicker)
 			RELEASEOBJECT(m_pFontPicker);
-		m_pNativePicker = NULL;
-		if (pPicker != NULL)
+		m_pNativePicker = nullptr;
+		if (pPicker != nullptr)
 		{
 			m_pFontPicker = pPicker;
 			m_bDeleteFontPicker = false;
@@ -109,8 +109,8 @@ namespace NSBinPptxRW
 	}
 	void CCommonWriter::CheckFontPicker()
 	{
-		if (NULL == m_pFontPicker)
-			CreateFontPicker(NULL);
+		if (nullptr == m_pFontPicker)
+			CreateFontPicker(nullptr);
 	}
 
 	CImageManager2::CImageManager2() : m_mapImages(), m_lIndexNextImage(0), m_lIndexCounter(0)
@@ -293,7 +293,7 @@ namespace NSBinPptxRW
 					smart_ptr<OOX::OleObject> oleFile = additionalFile.smart_dynamic_cast<OOX::OleObject>();
 					if (oleFile.IsInit())
 					{
-						if (OOX::CSystemUtility::IsFileExist(oleFile->filename()) == false)
+						if (!OOX::CSystemUtility::IsFileExist(oleFile->filename()))
 						{
 							typeAdditional = 1;
 
@@ -317,7 +317,7 @@ namespace NSBinPptxRW
 					smart_ptr<OOX::Media> mediaFile = additionalFile.smart_dynamic_cast<OOX::Media>();
 					if (mediaFile.IsInit())
 					{
-						if (OOX::CSystemUtility::IsFileExist(mediaFile->filename()) == false)
+						if (!OOX::CSystemUtility::IsFileExist(mediaFile->filename()))
 						{
 							typeAdditional = 2;
 
@@ -344,7 +344,7 @@ namespace NSBinPptxRW
 					}
 				}
 			}
-			if (oleData.empty() == false)
+			if (!oleData.empty())
 			{
 				//plugins data - generate ole
 				typeAdditional = 1;
@@ -357,14 +357,14 @@ namespace NSBinPptxRW
 			return pPair->second;
 		}
 
-		if (false == strExts.empty())
+		if (!strExts.empty())
 		{
 			m_pContentTypes->AddDefault(strExts.substr(1));
 		}
 		if (strExts == L".svg")
 		{
 			additionalFiles.emplace_back();
-			additionalFiles.back() = new OOX::SvgBlip(NULL);
+			additionalFiles.back() = new OOX::SvgBlip(nullptr);
 
 			smart_ptr<OOX::Media> mediaFile = additionalFiles.back().smart_dynamic_cast<OOX::Media>();
 			if (mediaFile.IsInit())
@@ -383,9 +383,9 @@ namespace NSBinPptxRW
 			if (!oImageManagerInfo.sFilepathAdditionals[i].empty())
 			{
 				smart_ptr<OOX::Media> mediaFile = additionalFiles[i].smart_dynamic_cast<OOX::Media>();
-				if (false == mediaFile.IsInit()) //???
+				if (!mediaFile.IsInit()) //???
 				{
-					mediaFile = new OOX::Media(NULL);
+					mediaFile = new OOX::Media(nullptr);
 					additionalFiles[i] = mediaFile.smart_dynamic_cast<OOX::File>();
 				}
 				if (mediaFile.IsInit())
@@ -513,6 +513,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 			}break;
 			default:
@@ -607,9 +609,7 @@ namespace NSBinPptxRW
 
         //if nI is compared with something other than 0, there will be problems
         //because in the installation we put the files in /var/www...
-        if (0 == n1 || 0 == n2 || 0 == n3 || 0 == n4)
-			return true;
-		return false;
+        return 0 == n1 || 0 == n2 || 0 == n3 || 0 == n4;
 	}
 	_imageManager2Info CImageManager2::DownloadImage(const std::wstring& strUrl)
 	{
@@ -630,7 +630,6 @@ namespace NSBinPptxRW
 		if (0 != nDisplayType)
 		{
 			std::wstring strInputMetafile = strUrl.substr(0, strUrl.length() - strExts.length());
-			std::wstring sDownloadRes;
 
 			if (0 != (nDisplayType & 1))
 			{
@@ -740,8 +739,8 @@ namespace NSBinPptxRW
 		m_lSize		= 0;
 		m_lPosition = 0;
 
-		m_pStreamData	= NULL;
-		m_pStreamCur	= NULL;
+		m_pStreamData	= nullptr;
+		m_pStreamCur	= nullptr;
 
 		m_lStackPosition = 0;
 		memset(m_arStack, 0, MAX_STACK_SIZE * sizeof(_UINT32));
@@ -761,7 +760,7 @@ namespace NSBinPptxRW
 
 	void CBinaryFileWriter::CheckBufferSize(_UINT32 lPlus)
 	{
-		if (NULL != m_pStreamData)
+		if (nullptr != m_pStreamData)
 		{
 			size_t nNewSize = m_lPosition + lPlus;
 
@@ -820,7 +819,7 @@ namespace NSBinPptxRW
 	}
 	void CBinaryFileWriter::WriteBOOL(const bool& bValue)
 	{			
-		WriteBYTE((bValue == true) ? 1 : 0);
+		WriteBYTE((bValue) ? 1 : 0);
 	}
 	void CBinaryFileWriter::WriteUSHORT(const _UINT16& lValue)
 	{
@@ -960,7 +959,7 @@ namespace NSBinPptxRW
 	}
 	void CBinaryFileWriter::WriteStringUtf8(const std::wstring& sBuffer)
 	{
-		BYTE* pData = NULL;
+		BYTE* pData = nullptr;
 		LONG lLen = 0;
 
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sBuffer.c_str(), (LONG)sBuffer.length(), pData, lLen, false);
@@ -971,8 +970,8 @@ namespace NSBinPptxRW
 	}
 	CBinaryFileWriter::CBinaryFileWriter()
 	{
-		m_pDocxSerializer = NULL;
-		m_pCurrentContainer = NULL;
+		m_pDocxSerializer = nullptr;
+		m_pCurrentContainer = nullptr;
 		m_pCommon			= new CCommonWriter();
 
 		m_pTheme			= new NSCommon::smart_ptr<PPTX::Theme>();
@@ -982,7 +981,7 @@ namespace NSBinPptxRW
 	}
 	CBinaryFileWriter::~CBinaryFileWriter()
 	{
-		m_pCurrentContainer = NULL;
+		m_pCurrentContainer = nullptr;
 		RELEASEARRAYOBJECTS	(m_pStreamData);
 		RELEASEOBJECT		(m_pCommon);
 		//RELEASEOBJECT		(m_pCommonRels);
@@ -1122,7 +1121,7 @@ namespace NSBinPptxRW
 	{
 		BYTE bType = (BYTE)type;
 		WriteBYTE(bType);
-		WriteBYTE((val == true) ? 1 : 0);
+		WriteBYTE((val) ? 1 : 0);
 	}
 	void CBinaryFileWriter::WriteBool2(int type, const NSCommon::nullable_bool& val)
 	{
@@ -1208,7 +1207,7 @@ namespace NSBinPptxRW
 		NSFile::CFileBinary oFile;
 		bool res = oFile.OpenFile(sFile);
 
-		if (false == res)
+		if (!res)
 		{
 			strDst64 = "";
 			return;
@@ -1221,10 +1220,18 @@ namespace NSBinPptxRW
 		oFile.ReadFile(pBuffer, dwLen);
 
 		int nBase64BufferLen = Base64::Base64EncodeGetRequiredLength((int)dwLen, Base64::B64_BASE64_FLAG_NOCRLF);
+		if (nBase64BufferLen < 0)
+		{
+			// the file is too large for a Base64 buffer; nothing to write
+			RELEASEARRAYOBJECTS(pBuffer);
+			oFile.CloseFile();
+			strDst64 = "";
+			return;
+		}
         BYTE *pbBase64Buffer = new BYTE[nBase64BufferLen + 1 + 64];
         pbBase64Buffer[nBase64BufferLen] = '\0';
         //if (true == Base64::Base64Encode(pBuffer, (int)dwLen, pbBase64Buffer, &nBase64BufferLen, Base64::B64_BASE64_FLAG_NOCRLF))
-        if (true == Base64_1::Base64Encode(pBuffer, (int)dwLen, pbBase64Buffer, &nBase64BufferLen))
+        if (Base64_1::Base64Encode(pBuffer, (int)dwLen, pbBase64Buffer, &nBase64BufferLen))
 		{
             //strDst64.SetString(pbBase64Buffer, nBase64BufferLen);
             strDst64 = (char*)pbBase64Buffer;
@@ -1255,7 +1262,7 @@ namespace NSBinPptxRW
 	// embedded fonts
 	void CBinaryFileWriter::WriteEmbeddedFonts()
 	{
-		if (NULL == m_pCommon->m_pNativePicker)
+		if (nullptr == m_pCommon->m_pNativePicker)
 			return;
 
 		if (!m_pCommon->m_pNativePicker->m_bIsEmbeddedFonts)
@@ -1276,7 +1283,7 @@ namespace NSBinPptxRW
 
     bool CBinaryFileWriter::GetSafearray(BYTE **ppArray, size_t& szCount)
     {
-        if (NULL == ppArray)
+        if (nullptr == ppArray)
             return false;
 
         _UINT32 lBinarySize = this->GetPosition();
@@ -1594,7 +1601,7 @@ namespace NSBinPptxRW
                 std::to_wstring(nIndexTheme + 1) + L".xml\"/>";
 		m_pWriter->WriteString(str);
 	}
-	void CRelsGenerator::StartSlide(int nIndexSlide, int nIndexLayout, int nIndexNotes)
+	void CRelsGenerator::StartSlide(int  /*nIndexSlide*/, int nIndexLayout, int nIndexNotes)
 	{
 		m_pWriter->WriteString(L"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
 		m_pWriter->WriteString(L"<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">");
@@ -1923,18 +1930,18 @@ namespace NSBinPptxRW
 
 	CBinaryFileReader::CBinaryFileReader()
 	{
-		m_pDocxSerializer = NULL;
+		m_pDocxSerializer = nullptr;
 		m_lNextId			= 0;
 		m_nDocumentType		= XMLWRITER_DOC_TYPE_PPTX;
 
 		m_pRels				= new CRelsGenerator();
 		m_nCurrentRelsStack = -1;
-		m_pCurrentContainer = NULL;
+		m_pCurrentContainer = nullptr;
 	}
 	CBinaryFileReader::~CBinaryFileReader()
 	{
 		RELEASEOBJECT(m_pRels);
-		m_pCurrentContainer = NULL;
+		m_pCurrentContainer = nullptr;
 
 		size_t nCountStackRels = m_stackRels.size();
 		for (size_t i = 0; i < nCountStackRels; ++i)
@@ -1973,7 +1980,6 @@ namespace NSBinPptxRW
 		}
 		if (_pos < 0 )
 		{
-			_pos = 0;
 			throw;
 		}
 		m_lPos = _pos;
@@ -2045,7 +2051,7 @@ namespace NSBinPptxRW
 
 	bool CBinaryFileReader::GetBool()
 	{
-		return (GetUChar() != 0) ? true : false;
+		return GetUChar() != 0;
 	}
 
 	// 2 byte
@@ -2326,14 +2332,14 @@ namespace NSBinPptxRW
 	}
 	BYTE* CBinaryFileReader::GetPointer(int nSize = 0)
 	{
-        if (nSize < 0) return 0;
+        if (nSize < 0) return nullptr;
 
 		if (m_lPos + nSize > m_lSize)
 		{
 			throw;
 		}
 
-		BYTE* res = (BYTE*)m_pDataCur;
+		BYTE* res = m_pDataCur;
 		m_lPos += nSize;
 		m_pDataCur += nSize;
 		return res;

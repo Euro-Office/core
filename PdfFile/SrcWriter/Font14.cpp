@@ -43,7 +43,7 @@ namespace PdfWriter
 		"Times-BoldOblique",
 		"Symbol",
 		"ZapfDingbats",
-		NULL
+		nullptr
 	};
 	CFont14::CFont14(CXref* pXref, CDocument* pDocument, EStandard14Fonts eType) : CFontDict(pXref, pDocument)
 	{

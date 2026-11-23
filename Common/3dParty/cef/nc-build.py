@@ -32,7 +32,7 @@ cef_index_url = "https://cef-builds.spotifycdn.com/index.json"
 cef_download_base = "https://cef-builds.spotifycdn.com/"
 cef_channel = "stable"
 cef_distrib_type = "minimal"
-cef_version = "109.1.18+gf1c41e4+chromium-109.0.5414.120"
+cef_version = "156.0.15+gcf671c0+chromium-156.0.8078.80"
 cef_chromium_major = None
 
 max_download_retries = 5
@@ -48,7 +48,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "1"
+    version = "2"
 )
 
 download_dir = nc.work_dir / "download"

@@ -29,7 +29,7 @@ namespace NSMemoryUtils
 {
     CByteBuilder::CByteBuilder()
     {
-        m_pData = NULL;
+        m_pData = nullptr;
         m_lSize = 0;
 
         m_pDataCur = m_pData;
@@ -37,13 +37,13 @@ namespace NSMemoryUtils
     }
     CByteBuilder::~CByteBuilder()
     {
-        if (NULL != m_pData)
+        if (nullptr != m_pData)
             free(m_pData);
-        m_pData = NULL;
+        m_pData = nullptr;
     }
     void CByteBuilder::AddSize(size_t nSize)
     {
-        if (NULL == m_pData)
+        if (nullptr == m_pData)
         {
             m_lSize = (std::max)((int)nSize, 1000);
             m_pData = (BYTE*)malloc(m_lSize * sizeof(BYTE));
@@ -61,7 +61,7 @@ namespace NSMemoryUtils
             }
 
             BYTE* pRealloc = (BYTE*)realloc(m_pData, m_lSize * sizeof(BYTE));
-            if (NULL != pRealloc)
+            if (nullptr != pRealloc)
             {
                 // realloc worked
                 m_pData = pRealloc;
@@ -134,11 +134,11 @@ namespace NSMemoryUtils
 
     void CByteBuilder::Clear()
     {
-        if (NULL != m_pData)
+        if (nullptr != m_pData)
             free(m_pData);
-        m_pData = NULL;
+        m_pData = nullptr;
 
-        m_pData = NULL;
+        m_pData = nullptr;
         m_lSize = 0;
 
         m_pDataCur = m_pData;

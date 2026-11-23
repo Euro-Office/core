@@ -5,7 +5,7 @@
 
 namespace HWP
 {
-CTblCell::CTblCell(int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CTblCell::CTblCell(int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 	: m_nSize(nSize)
 {
 	oBuffer.SavePosition();

@@ -1014,17 +1014,17 @@ namespace OOX
 			{
 				m_bSpreadsheets = true;
 
-				m_pData = NULL;
+				m_pData = nullptr;
 				m_nDataLength = 0;
 			}
 			CPivotTableFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 			{
 				m_bSpreadsheets = true;
 
-				m_pData = NULL;
+				m_pData = nullptr;
 				m_nDataLength = 0;
 
-				read( oRootPath, oPath );
+				CPivotTableFile::read( oRootPath, oPath );
 			}
 			virtual ~CPivotTableFile()
 			{
@@ -1045,6 +1045,12 @@ namespace OOX
 			}
             void readBin(const CPath& oPath);
 			XLS::BaseObjectPtr WriteBin() const;
+			// Builds m_oPivotTableDefinition from m_pData on first use, for parts read from XML.
+			// For XLSX output a part that was never parsed is written as is; for XLSB output (WriteBin) the
+			// definition is always parsed and encoded again.
+			void EnsureDefinition() const;
+			// Reads only the root attribute cacheId, without building the object model. Returns false if the part has no definition
+			bool GetCacheId(nullable<SimpleTypes::CUnsignedDecimalNumber>& oCacheId) const;
 			virtual void read(const CPath& oRootPath, const CPath& oPath);
 			virtual void write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const;
 			virtual const OOX::FileType type() const;
@@ -1061,13 +1067,14 @@ namespace OOX
 				return m_oReadPath;
 			}
 
-			BYTE *m_pData = NULL;
+			BYTE *m_pData = nullptr;
 			DWORD m_nDataLength = 0;
 
-			nullable<CPivotTableDefinition> m_oPivotTableDefinition;
+			mutable nullable<CPivotTableDefinition> m_oPivotTableDefinition;
 		private:
 
 			CPath m_oReadPath;
+			mutable bool m_bDefinitionPending = false;
 			void ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
 			}

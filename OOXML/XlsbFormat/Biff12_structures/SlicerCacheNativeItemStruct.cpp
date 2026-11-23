@@ -36,7 +36,7 @@ namespace XLSB
 
     SlicerCacheNativeItemStruct::SlicerCacheNativeItemStruct(XLS::CFRecord& record)
     {
-        load(record);
+        SlicerCacheNativeItemStruct::load(record);
     }
 
     SlicerCacheNativeItemStruct::~SlicerCacheNativeItemStruct()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void SlicerCacheNativeItemStruct::load(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
         record >> iCache >> flags;
 
         fSelected = GETBIT(flags, 0);

@@ -43,6 +43,7 @@
 #include <iostream>
 
 #define SUCCEEDED_X2T(nRes) (0 == (nRes) || AVS_FILEUTILS_ERROR_CONVERT_ROWLIMITS == (nRes) || AVS_FILEUTILS_ERROR_CONVERT_CELLLIMITS == (nRes))
+#define FAILED_X2T(nRes) (0 != (nRes) && AVS_FILEUTILS_ERROR_CONVERT_ROWLIMITS != (nRes) && AVS_FILEUTILS_ERROR_CONVERT_CELLLIMITS != (nRes))
 
 namespace NExtractTools
 {
@@ -1451,6 +1452,8 @@ namespace NExtractTools
 		void changeFormatFromPost(int formatFrom, bool bMacroEnabled)
 		{
 			*m_nFormatFrom = formatFrom;
+			if (NULL == m_nFormatTo)
+				return;
 			int toFormat = *m_nFormatTo;
 
 			if (AVS_OFFICESTUDIO_FILE_OTHER_OOXML == toFormat)

@@ -129,8 +129,6 @@ namespace OOX
 					ptr->tseType = 17;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeThirdSubtotalRow)
 					ptr->tseType = 18;
-				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeBlankRow)
-					ptr->tseType = 19;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeFirstColumnSubheading)
 					ptr->tseType = 20;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeSecondColumnSubheading)
@@ -204,8 +202,6 @@ namespace OOX
 					ptr->tseType = 17;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeThirdSubtotalRow)
 					ptr->tseType = 18;
-				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeBlankRow)
-					ptr->tseType = 19;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeFirstColumnSubheading)
 					ptr->tseType = 20;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeSecondColumnSubheading)

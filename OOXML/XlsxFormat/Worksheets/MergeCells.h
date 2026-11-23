@@ -43,7 +43,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CMergeCell)
-			CMergeCell(OOX::Document *pMain = NULL);
+			CMergeCell(OOX::Document *pMain = nullptr);
 			virtual ~CMergeCell();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -71,7 +71,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CMergeCells)
             WritingElement_XlsbVectorConstructors(CMergeCells)
-			CMergeCells(OOX::Document *pMain = NULL);
+			CMergeCells(OOX::Document *pMain = nullptr);
 			virtual ~CMergeCells();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

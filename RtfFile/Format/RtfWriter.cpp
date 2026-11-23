@@ -31,8 +31,8 @@ RtfWriter::RtfWriter( RtfDocument& oDocument , std::wstring sFilename, std::wstr
 	m_sFilename = sFilename;
 	m_sTempFolder = sFolder;
 	m_bFirst = true;
-	m_oCurTempFileWriter = NULL;
-	m_oCurTempFileSectWriter = NULL;
+	m_oCurTempFileWriter = nullptr;
+	m_oCurTempFileSectWriter = nullptr;
 }
 RtfWriter::~RtfWriter()
 {
@@ -80,7 +80,7 @@ bool RtfWriter::SaveByItemStart()
 }
 bool RtfWriter::SaveByItem()
 {
-	if( NULL == m_oCurTempFileWriter )
+	if( nullptr == m_oCurTempFileWriter )
 	{
 		try
 		{
@@ -126,11 +126,11 @@ bool RtfWriter::SaveByItem()
 		{
 			return false;
 		}
-		if( NULL != m_oCurTempFileSectWriter )
+		if( nullptr != m_oCurTempFileSectWriter )
 		{
 			//write section properties
             std::wstring sRtf;
-			if( true == m_bFirst )
+			if( m_bFirst )
 			{
 				//write the first section properties as document properties
 				m_bFirst = false;
@@ -160,8 +160,8 @@ bool RtfWriter::SaveByItem()
 		sRtf = m_oDocument[0].props->operator[](0)->RenderToRtf(oNewParam);
 		
 		if( TYPE_RTF_PARAGRAPH ==		m_oDocument[0].props->operator[](0)->GetType() 
-								&&	!( m_oDocument[0].props->GetCount() == 0 
-									&& m_oDocument.GetCount() > 1) )//for the last paragraph of the section we don't write \par
+								&&	( m_oDocument[0].props->GetCount() != 0
+									|| m_oDocument.GetCount() <= 1) )//for the last paragraph of the section we don't write \par
 		{
 			sRtf += L"\\par";
 			//oNewParam.nValue = RENDER_TO_RTF_PARAM_NO_PAR;
@@ -188,10 +188,10 @@ bool RtfWriter::SaveByItemEnd()
 		oNewParam.poWriter = this;
 		oNewParam.nType = RENDER_TO_OOX_PARAM_UNKNOWN;
 
-		if( NULL != m_oCurTempFileSectWriter )
+		if( nullptr != m_oCurTempFileSectWriter )
 		{
 			//writing the last section
-			if( true == m_bFirst )
+			if( m_bFirst )
 			{
 				//write the first section properties as document properties
 				m_bFirst = false;
@@ -226,7 +226,7 @@ bool RtfWriter::SaveByItemEnd()
 			//section properties
 
 			NSFile::CFileBinary file;
-			if (true == file.OpenFile(m_aTempFilesSectPr[i]))
+			if (file.OpenFile(m_aTempFilesSectPr[i]))
 			{
 				DWORD dwBytesRead = 1;
 				BYTE byteBuffer[ 4096 ];
@@ -242,7 +242,7 @@ bool RtfWriter::SaveByItemEnd()
 				file.CloseFile();
 			}
 			//paragraphs
-			if (true == file.OpenFile(m_aTempFiles[i]))
+			if (file.OpenFile(m_aTempFiles[i]))
 			{
 				DWORD dwBytesRead = 1;
 				BYTE byteBuffer[ 4096 ];
@@ -307,11 +307,11 @@ std::wstring RtfWriter::CreateRtfStart()
 	
     std::wstring sDefCharProp = m_oDocument.m_oDefaultCharProp.RenderToRtf( oRenderParameter );
     
-	if( false == sDefCharProp.empty() )
+	if( !sDefCharProp.empty() )
 		sResult += L"{\\*\\defchp " + sDefCharProp + L"}";
     std::wstring sDefParProp = m_oDocument.m_oDefaultParagraphProp.RenderToRtf( oRenderParameter );
     
-	if( false == sDefParProp.empty() )
+	if( !sDefParProp.empty() )
 		sResult += L"{\\*\\defpap " + sDefParProp+ L"}";
 	sResult += m_oDocument.m_oStyleTable.RenderToRtf( oRenderParameter );
  	
@@ -328,25 +328,25 @@ std::wstring RtfWriter::CreateRtfStart()
 	sResult += L"\\fet2";//0	Footnotes only or nothing at all (the default). 1 Endnotes only. 2	Both footnotes and endnotes
 	
     std::wstring sFootnote;
-	if( NULL != m_oDocument.m_oFootnoteSep )
+	if( nullptr != m_oDocument.m_oFootnoteSep )
 	{
 		sFootnote = m_oDocument.m_oFootnoteSep->RenderToRtf( oRenderParameter );
         if( !sFootnote.empty() )
             sResult += L"{\\*\\ftnsep " + sFootnote + L"}";
 	}
-	if( NULL != m_oDocument.m_oFootnoteCon )
+	if( nullptr != m_oDocument.m_oFootnoteCon )
 	{
 		sFootnote = m_oDocument.m_oFootnoteCon->RenderToRtf( oRenderParameter );
         if( !sFootnote.empty() )
             sResult += L"{\\*\\ftnsepc " + sFootnote + L"}";
 	}
-	if( NULL != m_oDocument.m_oEndnoteSep )
+	if( nullptr != m_oDocument.m_oEndnoteSep )
 	{
 		sFootnote = m_oDocument.m_oEndnoteSep->RenderToRtf( oRenderParameter );
         if( !sFootnote.empty() )
             sResult += L"{\\*\\aftnsep " + sFootnote + L"}";
 	}
-	if( NULL != m_oDocument.m_oEndnoteCon )
+	if( nullptr != m_oDocument.m_oEndnoteCon )
 	{
 		sFootnote = m_oDocument.m_oEndnoteCon->RenderToRtf( oRenderParameter );
         if( !sFootnote.empty() )

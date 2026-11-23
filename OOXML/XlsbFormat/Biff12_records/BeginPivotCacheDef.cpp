@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginPivotCacheDef::readFields(XLS::CFRecord& record)
     {
-        BYTE flags1, flags2;
+        BYTE flags1 = 0, flags2 = 0;
 
         record >> bVerCacheLastRefresh >> bVerCacheRefreshableMin >> bVerCacheCreated >> flags1;
 

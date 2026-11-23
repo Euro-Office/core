@@ -100,11 +100,7 @@ namespace DocFileFormat
 		m_pXmlWriter->WriteNodeBegin( L"w:body", FALSE );
 
 // Convert the document
-		_lastValidPapx = NULL;
-		if (m_document->AllPapxFkps->empty() == false)
-		{
-			_lastValidPapx = (*(m_document->AllPapxFkps->begin()))->grppapx[0];
-		}
+		_lastValidPapx = FormattedDiskPagePAPX::GetFirstPapx(m_document->AllPapxFkps);
 
 		int cp = 0;
 		int fc = 0;

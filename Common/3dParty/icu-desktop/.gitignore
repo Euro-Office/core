@@ -1,6 +1,0 @@
-*
-# Except this file
-!.gitignore
-!fetch_mobile.sh
-!icu.pri
-!icu_ios.sh

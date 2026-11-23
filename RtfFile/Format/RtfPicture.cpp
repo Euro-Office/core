@@ -76,7 +76,7 @@ void RtfPicture::SetDefault()
 	m_sPicFilename = L"";
 }
 
-std::wstring RtfPicture::GenerateWMF(RenderParameter oRenderParameter) //copy of the raster in vector
+std::wstring RtfPicture::GenerateWMF(RenderParameter /*oRenderParameter*/) //copy of the raster in vector
 {
     std::wstring sResult;
 	sResult += L"{\\pict";
@@ -99,8 +99,8 @@ std::wstring RtfPicture::GenerateWMF(RenderParameter oRenderParameter) //copy of
 	sResult += L" ";
 
 	//save to the temp directory and load the file as text
-	RtfWriter * poWriter = static_cast<RtfWriter*>( oRenderParameter.poWriter );
-    //IUnknown* piTempPict = NULL;
+
+	//IUnknown* piTempPict = NULL;
 	
 	//TODO??? rewrite
 	//if( true == LoadPicture( &piTempPict, m_sPicFilename ) )
@@ -138,22 +138,22 @@ std::wstring RtfPicture::RenderToRtf(RenderParameter oRenderParameter)
 	RENDER_RTF_INT( m_nWidthGoal,	sResult, L"picwgoal" )
 	RENDER_RTF_INT( m_nHeightGoal,	sResult, L"pichgoal" )
 
-	if (true == m_oBorderTop.IsValid())
+	if (m_oBorderTop.IsValid())
 	{
 		sResult += L"\\brdrt";
 		sResult += m_oBorderTop.RenderToRtf(oRenderParameter);
 	}
-	if (true == m_oBorderLeft.IsValid())
+	if (m_oBorderLeft.IsValid())
 	{
 		sResult += L"\\brdrl";
 		sResult += m_oBorderLeft.RenderToRtf(oRenderParameter);
 	}
-	if (true == m_oBorderBottom.IsValid())
+	if (m_oBorderBottom.IsValid())
 	{
 		sResult += L"\\brdrb";
 		sResult += m_oBorderBottom.RenderToRtf(oRenderParameter);
 	}
-	if (true == m_oBorderRight.IsValid())
+	if (m_oBorderRight.IsValid())
 	{
 		sResult += L"\\brdrr";
 		sResult += m_oBorderRight.RenderToRtf(oRenderParameter);
@@ -176,7 +176,7 @@ std::wstring RtfPicture::RenderToRtf(RenderParameter oRenderParameter)
 }
 std::wstring RtfPicture::RenderToOOX(RenderParameter oRenderParameter)
 {
-	if( false == IsValid() )	return L"";
+	if( !IsValid() )	return L"";
 	
 	OOXWriter		* poOOXWriter	= static_cast<OOXWriter*>		(oRenderParameter.poWriter);
 	OOXRelsWriter	* poRelsWriter	= static_cast<OOXRelsWriter*>	(oRenderParameter.poRels);
@@ -221,7 +221,7 @@ std::wstring RtfPicture::RenderToOOX(RenderParameter oRenderParameter)
 	else
 		m_bIsCopy = false;
 
-    if( true == m_bIsCopy && !m_sPicFilename.empty() )
+    if( m_bIsCopy && !m_sPicFilename.empty() )
 	{
 		Utils::RemoveDirOrFile( m_sPicFilename );
 	}
@@ -238,7 +238,7 @@ RtfPicture::DataType RtfPicture::GetPictureType( std::wstring sFilename )
 	DWORD	dwBytesRead = 0;
 
 	NSFile::CFileBinary file;
-	if (file.OpenFile(sFilename) == false) return dt_none;
+	if (!file.OpenFile(sFilename)) return dt_none;
 
 	file.ReadFile(pBuffer, 100);
 	dwBytesRead = (DWORD)file.GetPosition();

@@ -62,7 +62,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("w:r") == sName )
 							AssignPtrXmlContent(pItem, CRun, oItem)
@@ -86,7 +86,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("m:oMath") == sName )
 					AssignPtrXmlContent(pItem, COMath, oReader)

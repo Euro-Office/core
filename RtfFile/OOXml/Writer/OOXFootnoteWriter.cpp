@@ -34,7 +34,7 @@ void OOXFootnoteWriter::AddFootnoteBegin( std::wstring sType, int nID, std::wstr
 {
 	std::wstring sFootnote;
 	sFootnote += _T("<w:footnote");
-	if( false == sType.empty() )
+	if( !sType.empty() )
 	{
 		sFootnote += _T(" w:type=\"");
 		sFootnote += sType;
@@ -69,7 +69,7 @@ bool OOXFootnoteWriter::Save( std::wstring sFolder )
 	if(  m_sFootnotes.empty() ) return false;
 
 	NSFile::CFileBinary file;
-	if (false == file.CreateFile(sFolder + FILE_SEPARATOR_STR + _T("footnotes.xml"))) return false;
+	if (!file.CreateFile(sFolder + FILE_SEPARATOR_STR + _T("footnotes.xml"))) return false;
 
 	m_oWriter.m_oDocRels.AddRelationship( _T("http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes"), _T("footnotes.xml") );
 	m_oWriter.m_oContentTypes.AddContent( _T("application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"), _T("/word/footnotes.xml") );
@@ -103,7 +103,7 @@ void OOXEndnoteWriter::AddEndnoteBegin( std::wstring sType, int nID, std::wstrin
 {
 	std::wstring sEndnote;
 	sEndnote += _T("<w:endnote");
-	if( false == sType.empty() )
+	if( !sType.empty() )
 	{
 		sEndnote += _T(" w:type=\"");
 		sEndnote += sType;
@@ -120,7 +120,7 @@ void OOXEndnoteWriter::AddEndnoteBegin( std::wstring sType, int nID, std::wstrin
 void OOXEndnoteWriter::AddEndnote( std::wstring sType, int nID, std::wstring sText )
 {
 	m_sEndnotes += _T("<w:endnote");
-	if( false == sType.empty() )
+	if( !sType.empty() )
 	{
 		m_sEndnotes += _T(" w:type=\"");
 		m_sEndnotes += sType;
@@ -138,7 +138,7 @@ bool OOXEndnoteWriter::Save( std::wstring sFolder )
 	if( m_sEndnotes.empty() ) return false;
 
 	NSFile::CFileBinary file;
-	if (false == file.CreateFile(sFolder + FILE_SEPARATOR_STR + _T("endnotes.xml"))) return false;
+	if (!file.CreateFile(sFolder + FILE_SEPARATOR_STR + _T("endnotes.xml"))) return false;
 
 	m_oWriter.m_oDocRels.AddRelationship( _T("http://schemas.openxmlformats.org/officeDocument/2006/relationships/endnotes"), _T("endnotes.xml") );
 	m_oWriter.m_oContentTypes.AddContent( _T("application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml"), _T("/word/endnotes.xml") );

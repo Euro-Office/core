@@ -226,14 +226,14 @@ public:
 
 	CMemoryFontStream()
 	{
-		m_pData = NULL;
+		m_pData = nullptr;
 		m_nSize = 0;
 		m_nPos = 0;
 		m_bIsAttach = false;
 	}
 	~CMemoryFontStream()
 	{
-		if (NULL != m_pData && !m_bIsAttach)
+		if (nullptr != m_pData && !m_bIsAttach)
 			RELEASEARRAYOBJECTS(m_pData);
 	}
 
@@ -329,7 +329,7 @@ namespace PdfReader
 	{
 		CTemporaryCS* pCS = new CTemporaryCS(&m_oCS);
 
-		bool bResult = (NULL != (pEntry = Lookup(oRef)));
+		bool bResult = (nullptr != (pEntry = Lookup(oRef)));
 
 		if (bResult)
 		{
@@ -346,7 +346,7 @@ namespace PdfReader
 	{
 		CTemporaryCS* pCS = new CTemporaryCS(&m_oCS);
 
-		bool bResult = (NULL != ((*ppEntry) = Lookup(oRef)));
+		bool bResult = (nullptr != ((*ppEntry) = Lookup(oRef)));
 
 		if (bResult)
 		{
@@ -357,7 +357,7 @@ namespace PdfReader
 
 		if (!bResult)
 		{
-			(*ppEntry) = Add(oRef, std::wstring(), NULL, NULL, 0, 0);
+			(*ppEntry) = Add(oRef, std::wstring(), nullptr, nullptr, 0, 0);
 			(*ppEntry)->bAvailable = false;
 		}
 
@@ -389,7 +389,7 @@ namespace PdfReader
 		if (m_oFontMap.end() != oPos)
 		{
 			TFontEntry* pEntry = oPos->second;
-			if (NULL != pEntry)
+			if (nullptr != pEntry)
 			{
 				MemUtilsFree(pEntry->pCodeToGID);
 				MemUtilsFree(pEntry->pCodeToUnicode);
@@ -403,7 +403,7 @@ namespace PdfReader
 		for (auto const &oIt : m_oFontMap)
 		{
 			TFontEntry* pEntry = oIt.second;
-			if (NULL != pEntry)
+			if (nullptr != pEntry)
 			{
 				MemUtilsFree(pEntry->pCodeToGID);
 				MemUtilsFree(pEntry->pCodeToUnicode);
@@ -415,7 +415,7 @@ namespace PdfReader
 	bool CPdfFontList::GetFont(Ref* pRef, TFontEntry* pEntry)
 	{
 		TFontEntry* pFindEntry = Lookup(*pRef);
-		if (NULL == pFindEntry)
+		if (nullptr == pFindEntry)
 			return false;
 
 		*pEntry = *pFindEntry;
@@ -424,7 +424,7 @@ namespace PdfReader
 	TFontEntry* CPdfFontList::Lookup(Ref& oRef)
 	{
 		std::map<Ref, TFontEntry*>::const_iterator oPos = m_oFontMap.find(oRef);
-		return m_oFontMap.end() == oPos ? NULL : oPos->second;
+		return m_oFontMap.end() == oPos ? nullptr : oPos->second;
 	}
 	void CPdfFontList::Add(Ref& oRef, TFontEntry* pFontEntry)
 	{
@@ -448,7 +448,7 @@ namespace PdfReader
 		m_lRendererType = c_nUnknownRenderer;
 		m_pRenderer     = pRenderer;
 
-		if (NULL != m_pRenderer)
+		if (nullptr != m_pRenderer)
 		{
 			m_pRenderer->put_PenColor(0);
 			m_pRenderer->put_PenAlpha(255);
@@ -461,15 +461,15 @@ namespace PdfReader
 			m_pRenderer->get_Type(&m_lRendererType);
 		}
 
-		m_pXref = NULL;
-		m_pbBreak = NULL;
-		m_pSoftMask = NULL;
+		m_pXref = nullptr;
+		m_pbBreak = nullptr;
+		m_pSoftMask = nullptr;
 
 		m_bDrawOnlyText = false;
 	}
 	RendererOutputDev::~RendererOutputDev()
 	{
-		m_pRenderer = NULL;
+		m_pRenderer = nullptr;
 		RELEASEINTERFACE(m_pSoftMask);
 	}
 	void RendererOutputDev::startPage(int nPageIndex, GfxState* pGState)
@@ -543,7 +543,7 @@ namespace PdfReader
 	}
 	void RendererOutputDev::updateLineDash(GfxState* pGState)
 	{
-		double* pDash  = NULL;
+		double* pDash  = nullptr;
 		int     nSize  = 0;
 		double  dStart = 0;
 		pGState->getLineDash(&pDash, &nSize, &dStart);
@@ -733,7 +733,7 @@ namespace PdfReader
 	}
 	NSFonts::CFontInfo* RendererOutputDev::GetFontByParams(XRef* pXref, NSFonts::IFontManager* pFontManager, GfxFont* pFont, std::wstring& wsFontBaseName)
 	{
-		NSFonts::CFontInfo* pFontInfo = NULL;
+		NSFonts::CFontInfo* pFontInfo = nullptr;
 		if (!pFontManager)
 			return pFontInfo;
 
@@ -858,7 +858,7 @@ namespace PdfReader
 	{
 		wsFileName = L"";
 		wsFontName = L"";
-		TFontEntry* pEntry = NULL;
+		TFontEntry* pEntry = nullptr;
 		// MEMERR string dealocation pEntry
 		if (!pFontList->Find2((*pFont->getID()), &pEntry))
 		{
@@ -875,7 +875,7 @@ namespace PdfReader
 			std::wstring wsFontBaseName = NSStrings::GetStringFromUTF32(pFont->getName());
 			if (wsFontBaseName.empty())
 				wsFontBaseName = L"Helvetica";
-			const BYTE* pData14 = NULL;
+			const BYTE* pData14 = nullptr;
 			unsigned int nSize14 = 0;
 #ifdef FONTS_USE_ONLY_MEMORY_STREAMS
 			CMemoryFontStream oMemoryFontStream;
@@ -907,9 +907,9 @@ namespace PdfReader
 					wsTempFileName = NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage()->GenerateId();
 				}
 #else
-				FILE* pTempFile = NULL;
+				FILE* pTempFile = nullptr;
 				if (!NSFile::CFileBinary::OpenTempFile(&wsTempFileName, &pTempFile, L"wb", (wchar_t*)wsExt.c_str(),
-													   (wchar_t*)((GlobalParamsAdaptor*)globalParams)->GetTempFolder().c_str(), NULL))
+													   (wchar_t*)((GlobalParamsAdaptor*)globalParams)->GetTempFolder().c_str(), nullptr))
 				{
 					if (L"" != wsTempFileName)
 						NSFile::CFileBinary::Remove(wsTempFileName);
@@ -1146,9 +1146,9 @@ namespace PdfReader
 #ifndef FONTS_USE_ONLY_MEMORY_STREAMS
 			else if (PdfReader::GetBaseFont(wsFontBaseName, pData14, nSize14))
 			{
-				FILE* pFile = NULL;
+				FILE* pFile = nullptr;
 				if (!NSFile::CFileBinary::OpenTempFile(&wsTempFileName, &pFile, L"wb", L".base",
-													   (wchar_t*)((GlobalParamsAdaptor*)globalParams)->GetTempFolder().c_str(), NULL))
+													   (wchar_t*)((GlobalParamsAdaptor*)globalParams)->GetTempFolder().c_str(), nullptr))
 				{
 					if (!wsTempFileName.empty())
 						NSFile::CFileBinary::Remove(wsTempFileName);
@@ -1169,7 +1169,7 @@ namespace PdfReader
 #else
 			else if ([&oMemoryFontStream, wsFontBaseName]()
 			{
-				const BYTE* pData14 = NULL;
+				const BYTE* pData14 = nullptr;
 				unsigned int nSize14 = 0;
 				if (PdfReader::GetBaseFont(wsFontBaseName, pData14, nSize14))
 				{
@@ -1219,10 +1219,10 @@ namespace PdfReader
 				}
 			}
 			// Here we load encodings
-			int* pCodeToGID = NULL, *pCodeToUnicode = NULL;
+			int* pCodeToGID = nullptr, *pCodeToUnicode = nullptr;
 			int nLen = 0;
-			FoFiTrueType* pTTFontFile  = NULL;
-			FoFiType1C*   pT1CFontFile = NULL;
+			FoFiTrueType* pTTFontFile  = nullptr;
+			FoFiType1C*   pT1CFontFile = nullptr;
 #ifdef FONTS_USE_ONLY_MEMORY_STREAMS
 			FoFiIdentifierType fofiType = FoFiIdentifier::identifyStream(&readFromMemoryStream, &oMemoryFontStream);
 			oMemoryFontStream.toStart();
@@ -1236,7 +1236,7 @@ namespace PdfReader
 			case fontType1C:
 			case fontType1COT:
 			{
-				Gfx8BitFont* pFont8bit = NULL;
+				Gfx8BitFont* pFont8bit = nullptr;
 				if (fofiType == fofiIdTrueType)
 				{
 #ifdef FONTS_USE_ONLY_MEMORY_STREAMS
@@ -1251,11 +1251,11 @@ namespace PdfReader
 						nLen = 256;
 
 						delete pTTFontFile;
-						pTTFontFile = NULL;
+						pTTFontFile = nullptr;
 					}
 					else
 					{
-						pCodeToGID = NULL;
+						pCodeToGID = nullptr;
 						nLen = 0;
 					}
 				}
@@ -1277,7 +1277,7 @@ namespace PdfReader
 					for (int nIndex = 0; nIndex < 256; ++nIndex)
 					{
 						pCodeToGID[nIndex] = 0;
-						char* sName = NULL;
+						char* sName = nullptr;
 						if ((sName = ppEncoding[nIndex]))
 						{
 							unsigned short ushGID = pFontManager->GetNameIndex(AStringToWString(sName));
@@ -1311,7 +1311,7 @@ namespace PdfReader
 						for (int nIndex = 0; nIndex < 256; ++nIndex)
 						{
 							pCodeToGID[nIndex] = 0;
-							char* sName = NULL;
+							char* sName = nullptr;
 							if ((sName = ppEncoding[nIndex]))
 							{
 								unsigned short ushGID = pFontManager->GetNameIndex(AStringToWString(sName));
@@ -1333,16 +1333,16 @@ namespace PdfReader
 					nLen = 256;
 
 					delete pTTFontFile;
-					pTTFontFile = NULL;
+					pTTFontFile = nullptr;
 				}
 				else
 				{
-					pCodeToGID = NULL;
+					pCodeToGID = nullptr;
 					nLen       = 0;
 
 					if (pFontManager->LoadFontFromFile(wsFileName, 0, 10, 72, 72))
 					{
-						INT* pCodes = NULL;
+						INT* pCodes = nullptr;
 						nLen = 256;
 						pCodeToGID = (int*)MemUtilsMallocArray(nLen, sizeof(int));
 						for (int nCode = 0; nCode < nLen; ++nCode)
@@ -1390,7 +1390,7 @@ namespace PdfReader
 					nLen = 0;
 				}
 				*/
-				pCodeToGID = NULL;
+				pCodeToGID = nullptr;
 				nLen = 0;
 				break;
 			}
@@ -1425,15 +1425,15 @@ namespace PdfReader
 					}
 					else
 					{
-						pCodeToGID = NULL;
+						pCodeToGID = nullptr;
 						nLen = 0;
 					}
 					delete pTTFontFile;
-					pTTFontFile = NULL;
+					pTTFontFile = nullptr;
 				}
 				else
 				{
-					pCodeToGID = NULL;
+					pCodeToGID = nullptr;
 					nLen = 0;
 				}
 				break;
@@ -1444,11 +1444,11 @@ namespace PdfReader
 				// Creating a CID-to-GID map
 				// If our font wasn't embedded and was selected and there is a ToUnicode map, then use it to read GIDs for Unicode values from the file.
 				// For built-in fonts we use the CIDtoGID map
-				pCodeToGID = NULL;
+				pCodeToGID = nullptr;
 				nLen = 0;
 				if (L"" != wsFileName && bFontSubstitution)
 				{
-					CharCodeToUnicode* pCodeToUnicode = NULL;
+					CharCodeToUnicode* pCodeToUnicode = nullptr;
 					if ((pCodeToUnicode = ((GfxCIDFont*)pFont)->getToUnicode()))
 					{
 #ifdef FONTS_USE_ONLY_MEMORY_STREAMS
@@ -1493,7 +1493,7 @@ namespace PdfReader
 								}
 							}
 							delete pTTFontFile;
-							pTTFontFile = NULL;
+							pTTFontFile = nullptr;
 						}
 						pCodeToUnicode->decRefCnt();
 					}
@@ -1526,7 +1526,7 @@ namespace PdfReader
 			{
 				GfxCIDFont* pCIDFont = (GfxCIDFont*)pFont;
 				CharCodeToUnicode* pToUnicode = pCIDFont->getToUnicode();
-				if (NULL != pToUnicode)
+				if (nullptr != pToUnicode)
 				{
 					nToUnicodeLen = pToUnicode->getLength();
 					pCodeToUnicode = (int*)MemUtilsMallocArray(nToUnicodeLen, sizeof(int));
@@ -1551,7 +1551,7 @@ namespace PdfReader
 				// memory troubles here
 
 				CharCodeToUnicode* pToUnicode = ((Gfx8BitFont*)pFont)->getToUnicode();
-				if (NULL != pToUnicode)
+				if (nullptr != pToUnicode)
 				{
 					nToUnicodeLen = pToUnicode->getLength();
 					pCodeToUnicode = (int*)MemUtilsMallocArray(nToUnicodeLen, sizeof(int));//literally here
@@ -1589,7 +1589,7 @@ namespace PdfReader
 			pEntry->bFontSubstitution = bFontSubstitution;
 			pEntry->bIsIdentity = pFont->isCIDFont() == gTrue ? ((GfxCIDFont*)pFont)->usesIdentityEncoding() || ((GfxCIDFont*)pFont)->usesIdentityCIDToGID() || ((GfxCIDFont*)pFont)->ctuUsesCharCodeToUnicode() || pFont->getType() == fontCIDType0C : false;
 		}
-		else if (NULL != pEntry)
+		else if (nullptr != pEntry)
 		{
 			wsFileName = pEntry->wsFilePath;
 			wsFontName = pEntry->wsFontName;
@@ -1729,7 +1729,7 @@ namespace PdfReader
 		RendererOutputDev* m_pRendererOut = new RendererOutputDev(pRenderer, m_pFontManager, m_pFontList);
 		m_pRendererOut->NewPDF(gfx->getDoc()->getXRef());
 
-		Gfx* m_gfx = new Gfx(gfx->getDoc(), m_pRendererOut, -1, pResourcesDict, dDpiX, dDpiY, &box, NULL, 0);
+		Gfx* m_gfx = new Gfx(gfx->getDoc(), m_pRendererOut, -1, pResourcesDict, dDpiX, dDpiY, &box, nullptr, 0);
 		m_gfx->display(pStream);
 
 		pFrame->ClearNoAttack();
@@ -1773,7 +1773,7 @@ namespace PdfReader
 		m_pRenderer->PathCommandEnd();
 		m_pRenderer->EndCommand(c_nImageType);
 		m_pRenderer->put_BrushType(brush);
-		m_pRenderer->put_BrushTextureImage(NULL);
+		m_pRenderer->put_BrushTextureImage(nullptr);
 
 		pGState->clearPath();
 		RELEASEINTERFACE(oImage);
@@ -1883,7 +1883,7 @@ namespace PdfReader
 
 			NSGraphics::IGraphicsRenderer* GRenderer = dynamic_cast<NSGraphics::IGraphicsRenderer*>(m_pRenderer);
 			if (GRenderer)
-				GRenderer->SetSoftMask(NULL);
+				GRenderer->SetSoftMask(nullptr);
 
 			m_pRenderer->BeginCommand(c_nLayerType);
 
@@ -2361,7 +2361,7 @@ namespace PdfReader
 	void RendererOutputDev::drawString(GfxState* pGState, GString* seString)
 	{
 		// Checking the presence of a list of fonts
-		if (NULL == m_pFontList)
+		if (nullptr == m_pFontList)
 			return;
 
 		// Checking the presence of the current font
@@ -2384,13 +2384,13 @@ namespace PdfReader
 		{
 			int nChar = seString->getChar(nIndex);
 
-			if (NULL != oEntry.pCodeToUnicode)
+			if (nullptr != oEntry.pCodeToUnicode)
 			{
 				unsigned short unUnicode = oEntry.pCodeToUnicode[nChar];
 				wsUnicodeText += (wchar_t(unUnicode));
 			}
 
-			if (NULL != oEntry.pCodeToGID)
+			if (nullptr != oEntry.pCodeToGID)
 				pGids[nIndex] = oEntry.pCodeToGID[nChar];
 			else
 				pGids[nIndex] = (0 == nChar ? 65534 : nChar);
@@ -2403,7 +2403,7 @@ namespace PdfReader
 	void RendererOutputDev::drawChar(GfxState* pGState, double dX, double dY, double dDx, double dDy, double dOriginX, double dOriginY, CharCode nCode, int nBytesCount, Unicode* pUnicode, int nUnicodeLen)
 	{
 		// Checking the presence of a list of fonts
-		if (NULL == m_pFontList)
+		if (nullptr == m_pFontList)
 			return;
 
 		// Checking the presence of the current font
@@ -2492,7 +2492,7 @@ namespace PdfReader
 		std::wstring wsUnicodeText;
 
 		bool isCIDFont = pFont->isCIDFont() == gTrue;
-		if (NULL != oEntry.pCodeToUnicode && nCode < oEntry.unLenUnicode && oEntry.pCodeToUnicode[nCode])
+		if (nullptr != oEntry.pCodeToUnicode && nCode < oEntry.unLenUnicode && oEntry.pCodeToUnicode[nCode])
 		{
 			int unUnicode = oEntry.pCodeToUnicode[nCode];
 			wsUnicodeText = NSStringExt::CConverter::GetUnicodeFromUTF32((const unsigned int*)(&unUnicode), 1);
@@ -2516,7 +2516,7 @@ namespace PdfReader
 
 		unsigned int unGidsCount = 0;
 		unsigned int unGid       = 0;
-		if (NULL != oEntry.pCodeToGID && nCode < oEntry.unLenGID && oEntry.pCodeToGID[nCode])
+		if (nullptr != oEntry.pCodeToGID && nCode < oEntry.unLenGID && oEntry.pCodeToGID[nCode])
 		{
 			unGid = oEntry.pCodeToGID[nCode];
 			unGidsCount = 1;
@@ -2902,7 +2902,7 @@ namespace PdfReader
 		DoTransform(arrMatrix, &dShiftX, &dShiftY, true);
 		m_pRenderer->DrawImage(&oImage, dShiftX, dShiftY, PDFCoordsToMM(1), PDFCoordsToMM(1));
 
-		setSoftMask(pGState, bbox, 0, NULL, NULL);
+		setSoftMask(pGState, bbox, 0, nullptr, nullptr);
 	}
 
 	OO_INLINE bool CheckMask(const int& nComponentsCount, const int* pMaskColors, const BYTE* pLine)
@@ -2922,11 +2922,11 @@ namespace PdfReader
 	{
 		int nBufferSize = 4 * nWidth * nHeight;
 		if (nBufferSize < 1)
-			return NULL;
+			return nullptr;
 
 		BYTE* pBufferPtr = new(std::nothrow) BYTE[nBufferSize];
 		if (!pBufferPtr)
-			return NULL;
+			return nullptr;
 
 		int nComponentsCount = pColorMap->getNumPixelComps();
 		BYTE unAlpha = std::min(255, std::max(0, int(pGState->getFillOpacity() * 255)));
@@ -3079,7 +3079,7 @@ namespace PdfReader
 			return;
 
 		if (nMaskWidth <= 0 || nMaskHeight <= 0)
-			drawImage(pGState, gfx, pRef, pStream, nWidth, nHeight, pColorMap, NULL, false, interpolate);
+			drawImage(pGState, gfx, pRef, pStream, nWidth, nHeight, pColorMap, nullptr, false, interpolate);
 
 		if (nMaskWidth > nWidth || nMaskHeight > nHeight)
 		{
@@ -3097,7 +3097,7 @@ namespace PdfReader
 			maskColorMap = new GfxImageColorMap(1, &maskDecode, new GfxDeviceGrayColorSpace());
 			maskDecode.free();
 			drawSoftMaskedImage(pGState, gfx, pRef, pStream, nWidth, nHeight,
-								pColorMap, pStreamRef, pMaskStream, nMaskWidth, nMaskHeight, maskColorMap, NULL, interpolate);
+								pColorMap, pStreamRef, pMaskStream, nMaskWidth, nMaskHeight, maskColorMap, nullptr, interpolate);
 			delete maskColorMap;
 			return;
 		}
@@ -3232,7 +3232,7 @@ namespace PdfReader
 
 		if (nComponentsCount != 3 || pStream->getKind() != strDCT || !ReadImage(&oImage, pRef, pStream))
 		{
-			BYTE* pBufferPtr = BufferFromImageStream(pGState, pStream, nWidth, nHeight, pColorMap, NULL);
+			BYTE* pBufferPtr = BufferFromImageStream(pGState, pStream, nWidth, nHeight, pColorMap, nullptr);
 			if (!pBufferPtr)
 				return;
 			oImage.Create(pBufferPtr, nWidth, nHeight, -4 * nWidth);
@@ -3530,7 +3530,7 @@ namespace PdfReader
 		if (c_nGrRenderer != m_lRendererType)
 			return;
 		if (NSGraphics::IGraphicsRenderer* GRenderer = dynamic_cast<NSGraphics::IGraphicsRenderer*>(m_pRenderer))
-			GRenderer->SetSoftMask(NULL);
+			GRenderer->SetSoftMask(nullptr);
 		RELEASEINTERFACE(m_pSoftMask);
 	}
 	void RendererOutputDev::NewPDF(XRef* pXref)

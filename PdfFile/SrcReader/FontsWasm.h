@@ -75,7 +75,7 @@ namespace NSWasm
 		if (!NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage()->Get(sFontPath))
 		{
 			DWORD dwSize = 0;
-			BYTE* pData = NULL;
+			BYTE* pData = nullptr;
 			if (NSFile::CFileBinary::ReadAllBytes(sFontPath, &pData, dwSize))
 				NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage()->Add(sFontPath, pData, (LONG)dwSize, true);
 			else

@@ -25,6 +25,7 @@
 
 #include "paragraph_elements.h"
 
+#include <algorithm>
 #include <ostream>
 #include <string>
 
@@ -1168,6 +1169,8 @@ std::wostream & chapter::text_to_stream(std::wostream & _Wostream, bool bXmlEnco
 void chapter::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     CP_APPLY_ATTR(L"text:fixed", text_fixed_);
+    CP_APPLY_ATTR(L"text:display", text_display_);
+    CP_APPLY_ATTR(L"text:outline-level", text_outline_level_);
 }
 void chapter::add_text(const std::wstring & Text)
 {
@@ -1175,7 +1178,19 @@ void chapter::add_text(const std::wstring & Text)
 }
 void chapter::docx_convert(oox::docx_conversion_context & Context)
 {
- 	docx_serialize_field(L"BIBLIOGRAPHY", text_, Context);
+	// WordprocessingML has no chapter field: STYLEREF to the heading style of the outline
+	// level shows its name, with \n its number (LibreOffice's DOCX export writes STYLEREF
+	// "Heading N" too). Number and name together need two fields; the name is kept, the
+	// cached result keeps both. Both attributes are required; without them, number-and-name
+	// of level 1 is assumed.
+	const int level = (std::max)(1, text_outline_level_.get_value_or(1));
+	const std::wstring display = text_display_.get_value_or(L"number-and-name");
+
+	std::wstring instr = L" STYLEREF \"Heading " + std::to_wstring(level) + L"\"";
+	if (display == L"number" || display == L"plain-number")
+		instr += L" \\n";
+
+	docx_serialize_field(instr + L" ", text_, Context);
 }
 
 void chapter::xlsx_convert(oox::xlsx_conversion_context & Context)
@@ -1880,6 +1895,33 @@ void sender_company::add_text(const std::wstring & Text)
 void sender_company::docx_convert(oox::docx_conversion_context & Context)
 {
 	docx_serialize_sdt_placeholder(L"Sender company", text_, Context);
+}
+//------------------------------------------------------------------------------------------------------------
+const wchar_t * database_display::ns = L"text";
+const wchar_t * database_display::name = L"database-display";
+
+std::wostream & database_display::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
+{
+    if (text_display_ && *text_display_ == L"none") return _Wostream;
+
+    CP_SERIALIZE_TEXT(text_, bXmlEncode);
+    return _Wostream;
+}
+void database_display::add_attributes( const xml::attributes_wc_ptr & Attributes )
+{
+	CP_APPLY_ATTR(L"text:display", text_display_);
+}
+void database_display::add_text(const std::wstring & Text)
+{
+    text_ = text::create(Text) ;
+}
+void database_display::docx_convert(oox::docx_conversion_context & Context)
+{
+	// text:display="none" is a hidden field: LibreOffice does not show its value.
+	if (text_display_ && *text_display_ == L"none") return;
+
+	// The current value of the database column, e.g. "<Last Name>" in a mail merge template.
+	docx_serialize_run(text_, Context);
 }
 //------------------------------------------------------------------------------------------------------------
 const wchar_t * sender_postal_code::ns = L"text";

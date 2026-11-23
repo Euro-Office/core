@@ -103,7 +103,6 @@ namespace NSDoctRenderer
 				AppendScript(builder, config->m_strSdkPath + L"/cell/sdk-all-min.js");
 				AppendScript(builder, sFontsPath);
 				AppendScript(builder, config->m_strSdkPath + L"/cell/sdk-all.js");
-				builder->WriteString("\n$.ready();", 11);
 				sCachePath = config->m_strSdkPath + L"/cell/sdk-all";
 				break;
 			}
@@ -139,7 +138,6 @@ namespace NSDoctRenderer
 
 		std::wstring GetSnapshotPath(const DoctRendererEditorType& type, CDoctRendererConfig* config)
 		{
-			std::wstring sCachePath = L"";
 
 			switch (type)
 			{
@@ -201,7 +199,7 @@ String.prototype.replaceAll = function(str, newStr)\
 			return RunEditorFooter(context, try_catch, config);
 
 		NSStringUtils::CStringBuilderA builder;
-		builder.AddSize(10 * 1024 * 1024);
+		builder.AddSize(static_cast<size_t>(10) * 1024 * 1024);
 		std::wstring sCachePath = GetAllScript(&builder, type, config);
 
 		if (!sCachePath.empty())
@@ -216,7 +214,7 @@ String.prototype.replaceAll = function(str, newStr)\
 	bool GenerateEditorSnapshot(const DoctRendererEditorType& type, CDoctRendererConfig* config)
 	{
 		NSStringUtils::CStringBuilderA builder;
-		builder.AddSize(10 * 1024 * 1024);
+		builder.AddSize(static_cast<size_t>(10) * 1024 * 1024);
 		std::wstring sCachePath = GetAllScript(&builder, type, config, true);
 
 		builder.WriteString("delete String.prototype.replaceAll;");
@@ -237,10 +235,10 @@ String.prototype.replaceAll = function(str, newStr)\
 
 			std::wstring sCachePath = GetSnapshotPath(type, config);
 			if (!NSFile::CFileBinary::Exists(sCachePath))
-				return NULL;
+				return nullptr;
 
 			if (sCachePath.empty())
-				return NULL;
+				return nullptr;
 
 			JSSmart<NSJSBase::CJSContext> context = new NSJSBase::CJSContext(false);
 			context->Initialize(sCachePath);

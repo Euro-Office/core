@@ -319,13 +319,13 @@ namespace PdfWriter
 
 		m_bShd = false;
 
-		m_pMK         = NULL;
-		m_pParent     = NULL;
-		m_pKids       = NULL;
-		m_pAppearance = NULL;
-		m_pFocus      = NULL;
-		m_pBlur       = NULL;
-		m_pFont       = NULL;
+		m_pMK         = nullptr;
+		m_pParent     = nullptr;
+		m_pKids       = nullptr;
+		m_pAppearance = nullptr;
+		m_pFocus      = nullptr;
+		m_pBlur       = nullptr;
+		m_pFont       = nullptr;
 	}
 	void CFieldBase::SetReadOnlyFlag(bool isReadOnly)
 	{
@@ -362,7 +362,7 @@ namespace PdfWriter
 
 		pAA = new CDictObject();
 		if (!pAA)
-			return NULL;
+			return nullptr;
 
 		Add("AA", pAA);
 		return pAA;
@@ -510,7 +510,7 @@ namespace PdfWriter
 
 		CResourcesDict* pFieldsResources = m_pDocument->GetFieldsResources();
 		
-		const char* sExtGrStateName = NULL;
+		const char* sExtGrStateName = nullptr;
 		if (fabs(dAlpha - 1.0) > 0.001)
 		{
 			CExtGrState* pExtGrState = m_pDocument->GetFillAlpha(dAlpha);
@@ -531,7 +531,7 @@ namespace PdfWriter
 		CAnnotAppearanceObject* pNormal  = m_pAppearance->GetNormal();
 		CResourcesDict* pFieldsResources = GetResourcesDict();
 
-		const char* sExtGrStateName = NULL;
+		const char* sExtGrStateName = nullptr;
 		if (fabs(dAlpha - 1.0) > 0.001)
 		{
 			CExtGrState* pExtGrState = m_pDocument->GetFillAlpha(dAlpha);
@@ -1020,7 +1020,7 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
 	CChoiceField::CChoiceField(CXref* pXref, CDocument* pDocument) : CFieldBase(pXref, pDocument)
 	{
-		m_pOpt = NULL;
+		m_pOpt = nullptr;
 
 		Add("FT", "Ch");
 	}
@@ -1255,7 +1255,7 @@ namespace PdfWriter
 		sDA.append(" Tf");
 		Add("DA", new CStringObject(sDA.c_str()));
 
-		const char* sExtGrStateName = NULL;
+		const char* sExtGrStateName = nullptr;
 		if (fabs(dAlpha - 1.0) > 0.001)
 		{
 			CExtGrState* pExtGrState = m_pDocument->GetFillAlpha(dAlpha);
@@ -1311,7 +1311,7 @@ namespace PdfWriter
 		sDA.append(" Tf");
 		Add("DA", new CStringObject(sDA.c_str()));
 
-		const char* sExtGrStateName = NULL;
+		const char* sExtGrStateName = nullptr;
 		if (fabs(dAlpha - 1.0) > 0.001)
 		{
 			CExtGrState* pExtGrState = m_pDocument->GetFillAlpha(dAlpha);
@@ -1332,15 +1332,15 @@ namespace PdfWriter
 		{
 			m_pMK->Add("CA", new CStringObject("4"));
 
-			pAppearance->GetYesN()->DrawSimpleText(L"4", NULL, 0, pFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, dW, dH);
-			pAppearance->GetOffN()->DrawSimpleText(L"", NULL, 0, pFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, dW, dH);
+			pAppearance->GetYesN()->DrawSimpleText(L"4", nullptr, 0, pFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, dW, dH);
+			pAppearance->GetOffN()->DrawSimpleText(L"", nullptr, 0, pFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, dW, dH);
 		}
 		else if (2 == nType)
 		{
 			m_pMK->Add("CA", new CStringObject("1"));
 
-			pAppearance->GetYesN()->DrawSimpleText(L"1", NULL, 0, pFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, dW, dH);
-			pAppearance->GetOffN()->DrawSimpleText(L"", NULL, 0, pFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, dW, dH);
+			pAppearance->GetYesN()->DrawSimpleText(L"1", nullptr, 0, pFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, dW, dH);
+			pAppearance->GetOffN()->DrawSimpleText(L"", nullptr, 0, pFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, dW, dH);
 		}
 
 	}
@@ -1367,7 +1367,7 @@ namespace PdfWriter
 	CCheckBoxField* CRadioGroupField::CreateKid(const wchar_t* wsChoiceName)
 	{
 		if (!m_pKids)
-			return NULL;
+			return nullptr;
 
 		std::string sName = wsChoiceName ? NSFile::CUtf8Converter::GetUtf8StringFromUnicode(wsChoiceName) : "Choice" + std::to_string(m_pKids->GetCount() + 1);
 		CCheckBoxField* pKid = new CCheckBoxField(m_pXref, m_pDocument, this, sName.c_str());
@@ -1388,8 +1388,8 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
 	CPictureField::CPictureField(CXref* pXref, CDocument* pDocument) : CFieldBase(pXref, pDocument)
 	{
-		m_pMK = NULL;
-		m_pIF = NULL;
+		m_pMK = nullptr;
+		m_pIF = nullptr;
 
 		Add("FT", "Btn");
 		SetFlag(true, 1 << 16);
@@ -1428,7 +1428,7 @@ namespace PdfWriter
 		SetConstantProportions(true);
 		SetShift(0.5, 0.5);
 
-		m_pResources = NULL;
+		m_pResources = nullptr;
 	}
 	void CPictureField::SetFieldName(const std::string& sName, bool isSkipCheck)
 	{
@@ -1619,7 +1619,7 @@ namespace PdfWriter
 			return;
 		Add("V", m_pSig);
 		Add("FT", "Sig");
-		m_pResources = NULL;
+		m_pResources = nullptr;
 	}
 	void CSignatureField::SetLocation(const std::wstring& wsValue)
 	{
@@ -1792,11 +1792,11 @@ namespace PdfWriter
 	{
 		m_pXref  = pXref;
 		m_pField = pField;
-		m_pAnnot = NULL;
+		m_pAnnot = nullptr;
 
 		m_pNormal   = new CAnnotAppearanceObject(pXref, pField);
-		m_pRollover = NULL;
-		m_pDown     = NULL;
+		m_pRollover = nullptr;
+		m_pDown     = nullptr;
 
 		Add("N", m_pNormal);
 	}
@@ -1804,11 +1804,11 @@ namespace PdfWriter
 	{
 		m_pXref  = pXref;
 		m_pAnnot = pAnnot;
-		m_pField = NULL;
+		m_pField = nullptr;
 
-		m_pNormal   = NULL;
-		m_pRollover = NULL;
-		m_pDown     = NULL;
+		m_pNormal   = nullptr;
+		m_pRollover = nullptr;
+		m_pDown     = nullptr;
 	}
 	CAnnotAppearanceObject* CAnnotAppearance::GetNormal(CResourcesDict* pResources)
 	{
@@ -1912,8 +1912,8 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
 	void CAnnotAppearanceObject::Init(CXref* pXref, CResourcesDict* pResources)
 	{
-		m_pXref     = pXref ? pXref : NULL;
-		m_pFont     = NULL;
+		m_pXref     = pXref ? pXref : nullptr;
+		m_pFont     = nullptr;
 		m_dFontSize = 10.0;
 		m_bStart    = true;
 
@@ -1934,7 +1934,7 @@ namespace PdfWriter
 	{
 		Init(pXref, pField->GetResourcesDict());
 		m_pField = pField;
-		m_pAnnot = NULL;
+		m_pAnnot = nullptr;
 
 		CArrayObject* pArray = new CArrayObject();
 		if (!pArray)
@@ -1950,7 +1950,7 @@ namespace PdfWriter
 	{
 		Init(pXRef, pResources ? pResources : pAnnot->GetDocument()->GetFieldsResources());
 		m_pAnnot = pAnnot;
-		m_pField = NULL;
+		m_pField = nullptr;
 
 		if (pAnnot->GetAnnotationType() == EAnnotType::AnnotWidget)
 		{
@@ -1984,7 +1984,7 @@ namespace PdfWriter
 		if (!m_pStream)
 			return;
 
-		CWidgetAnnotation* pAnnot = NULL;
+		CWidgetAnnotation* pAnnot = nullptr;
 		if (m_pAnnot)
 			pAnnot = (CWidgetAnnotation*)m_pAnnot;
 
@@ -2219,7 +2219,7 @@ namespace PdfWriter
 		if (!m_pStream || !pResources)
 			return;
 
-		CWidgetAnnotation* pAnnot = NULL;
+		CWidgetAnnotation* pAnnot = nullptr;
 		if (m_pAnnot)
 			pAnnot = (CWidgetAnnotation*)m_pAnnot;
 
@@ -2818,7 +2818,7 @@ namespace PdfWriter
 				unsigned char unByte[2] = {static_cast<unsigned char>((pCodes[unIndex] >> 8) & 0xFF), static_cast<unsigned char>(pCodes[unIndex] & 0xFF)};
 				m_pStream->WriteChar('[');
 				m_pStream->WriteChar('<');
-				m_pStream->WriteBinary(unByte, 2, NULL);
+				m_pStream->WriteBinary(unByte, 2, nullptr);
 				m_pStream->WriteChar('>');
 				m_pStream->WriteStr("]TJ\012");
 
@@ -2871,7 +2871,7 @@ namespace PdfWriter
 
 				unsigned char unByte[2] = {static_cast<unsigned char>((pCodes[unIndex] >> 8) & 0xFF), static_cast<unsigned char>(pCodes[unIndex] & 0xFF)};
 				m_pStream->WriteChar('<');
-				m_pStream->WriteBinary(unByte, 2, NULL);
+				m_pStream->WriteBinary(unByte, 2, nullptr);
 				m_pStream->WriteChar('>');
 				m_pStream->WriteStr(" Tj\012");
 			}

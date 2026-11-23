@@ -31,7 +31,7 @@ OOXDrawingInlineReader::OOXDrawingInlineReader(OOX::Drawing::CInline *ooxInline)
 }
 int OOXDrawingInlineReader::Parse( ReaderParameter oParam, RtfShapePtr & pOutput)
 {
-	if (m_ooxInline == NULL) return 0;
+	if (m_ooxInline == nullptr) return 0;
 
 	pOutput->m_eAnchorTypeShape		= RtfShape::st_inline;
 
@@ -39,11 +39,6 @@ int OOXDrawingInlineReader::Parse( ReaderParameter oParam, RtfShapePtr & pOutput
 	pOutput->m_nTop					= 0;
 	pOutput->m_nPositionHRelative	= 3;
 	pOutput->m_nPositionVRelative	= 3;
-
-	int nDistLeft	= m_ooxInline->m_oDistL.IsInit() ? (int)m_ooxInline->m_oDistL->ToTwips() : PROP_DEF;
-	int nDistTop	= m_ooxInline->m_oDistT.IsInit() ? (int)m_ooxInline->m_oDistT->ToTwips() : PROP_DEF;
-	int nDistRight	= m_ooxInline->m_oDistR.IsInit() ? (int)m_ooxInline->m_oDistR->ToTwips() : PROP_DEF;
-	int nDistBottom = m_ooxInline->m_oDistB.IsInit() ? (int)m_ooxInline->m_oDistB->ToTwips() : PROP_DEF;
 
 	int nWidth	= PROP_DEF;
 	int nHeight = PROP_DEF;

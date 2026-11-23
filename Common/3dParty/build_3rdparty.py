@@ -48,9 +48,14 @@ subfolders = [
     'leptonica',
     'leptonica-wasm',
     'jbig2enc',
+    'djvulibre',
+    # The HEIF decoders, then libheif on top of them
+    'libde265',
+    'libaom',
+    'libheif',
 ]
 
-known_targets = [ 'android-arm64', 'android-x64' ]
+known_targets = [ 'android-arm64', 'android-x64', 'wasm' ]
 
 force_redo_subfolders = []
 only_subfolders = []
@@ -73,7 +78,9 @@ Usage: { script_path.name } [options] work_dir_abs install_dir_abs
         --except=     : Build everything except the specified comma-separated subfolders.
                         Note: --only= and --except= are mutually exclusive.
         --target=     : Cross-compile for another platform: { ', '.join( known_targets ) }.
-                        Android needs ANDROID_NDK_ROOT. Default: build for the host.
+                        Android needs ANDROID_NDK_ROOT. wasm only names the remote-cache
+                        folder (the *-wasm deps always build with Emscripten).
+                        Default: build for the host.
         --help | -h   : Prints this help.
 
     Examples:

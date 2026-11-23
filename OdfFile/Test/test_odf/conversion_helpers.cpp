@@ -12,6 +12,10 @@
 #include "common.h"
 
 #include <string>
+#include <vector>
+
+#include "DesktopEditor/common/Directory.h"
+#include "DesktopEditor/common/File.h"
 
 TEST(OdfToOoxml, PlainOdtParagraph)
 {
@@ -52,4 +56,23 @@ TEST(IsWellFormed, RejectsBrokenMarkupAfterValidContent)
     EXPECT_FALSE(is_well_formed(L"<a><b>text</a>"));
     EXPECT_FALSE(is_well_formed(L"<a>"));
     EXPECT_FALSE(is_well_formed(L""));
+}
+
+// The helpers fail a test over any malformed XML part of the converted
+// package, so malformed_xml_parts() must find exactly those.
+TEST(MalformedXmlParts, FindsOnlyBrokenXmlAndRelsParts)
+{
+    const std::wstring dir = NSDirectory::CreateDirectoryWithUniqueName(L"ExampleFiles");
+    ASSERT_FALSE(dir.empty());
+    ASSERT_TRUE(NSDirectory::CreateDirectory(dir + FILE_SEPARATOR_STR + L"sub"));
+
+    ASSERT_TRUE(NSFile::CFileBinary::SaveToFile(dir + FILE_SEPARATOR_STR + L"a.xml", L"<a>x &amp; y</a>"));
+    ASSERT_TRUE(NSFile::CFileBinary::SaveToFile(dir + FILE_SEPARATOR_STR + L"sub" + FILE_SEPARATOR_STR + L"b.rels", L"<a>x & y</a>"));
+    ASSERT_TRUE(NSFile::CFileBinary::SaveToFile(dir + FILE_SEPARATOR_STR + L"c.bin", L"<not xml"));
+
+    const std::vector<std::wstring> malformed = malformed_xml_parts(dir);
+    NSDirectory::DeleteDirectory(dir);
+
+    ASSERT_EQ(malformed.size(), 1u);
+    EXPECT_NE(malformed[0].find(L"b.rels"), std::wstring::npos) << malformed[0];
 }

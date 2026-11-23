@@ -7,8 +7,8 @@ namespace HTML
 {
 #define MAX_STRING_BLOCK_SIZE (size_t)10485760
 
-#define RELEASE_VECTOR_PTR(vector_object, object_type) \
-	for (object_type* pElement : vector_object) \
+#define RELEASE_VECTOR_PTR(vector_object) \
+	for (auto* pElement : (vector_object)) \
 		RELEASEOBJECT(pElement)
 
 #define FIRST_ELEMENT 0x00000001
@@ -32,7 +32,7 @@ TTableRowStyle::TTableRowStyle()
 
 bool TTableRowStyle::Empty() const
 {
-	return 0 == m_unMaxHeight && false == m_bIsHeader;
+	return 0 == m_unMaxHeight && !m_bIsHeader;
 }
 
 TTableCellStyle::TTableCellStyle()
@@ -45,7 +45,7 @@ bool TTableCellStyle::Empty()
 
 void TTableCellStyle::Copy(const TTableCellStyle* pTableCellStyle)
 {
-	if (NULL == pTableCellStyle)
+	if (nullptr == pTableCellStyle)
 		return;
 
 	m_oWidth      = pTableCellStyle->m_oWidth;
@@ -60,7 +60,7 @@ void TTableCellStyle::Copy(const TTableCellStyle* pTableCellStyle)
 
 TTableCellStyle& TTableCellStyle::operator+=(const TTableCellStyle* pCellStyle)
 {
-	if (NULL == pCellStyle)
+	if (nullptr == pCellStyle)
 		return *this;
 
 	m_oWidth += pCellStyle->m_oWidth;
@@ -246,7 +246,7 @@ void CStorageTableRow::AddCell(CStorageTableCell* pCell)
 
 void CStorageTableRow::InsertCell(CStorageTableCell* pCell, int nPosition)
 {
-	if (NULL == pCell)
+	if (nullptr == pCell)
 		return;
 
 	if (nPosition < 0)
@@ -334,7 +334,7 @@ UINT CStorageTableRow::GetCount() const
 CStorageTableCell* CStorageTableRow::operator[](UINT unIndex)
 {
 	if (unIndex >= m_arCells.size())
-		return NULL;
+		return nullptr;
 
 	return m_arCells[unIndex];
 }
@@ -387,7 +387,7 @@ CTableColgroup::CTableColgroup(NSCSS::CNode& oTableColgroupNode)
 
 CTableColgroup::~CTableColgroup()
 {
-	RELEASE_VECTOR_PTR(m_arCols, CTableCol)
+	RELEASE_VECTOR_PTR(m_arCols)
 }
 
 bool CTableColgroup::Empty() const
@@ -397,7 +397,7 @@ bool CTableColgroup::Empty() const
 
 void CTableColgroup::AddCol(CTableCol* pCol)
 {
-	if (NULL != pCol)
+	if (nullptr != pCol)
 		m_arCols.push_back(pCol);
 }
 
@@ -422,11 +422,11 @@ CStorageTable::CStorageTable()
 CStorageTable::~CStorageTable()
 {
 	for (std::vector<CStorageTableRow*>& arHeaders : m_arHeaders)
-		RELEASE_VECTOR_PTR(arHeaders, CStorageTableRow)
+		RELEASE_VECTOR_PTR(arHeaders)
 
-	RELEASE_VECTOR_PTR(m_arFoother, CStorageTableRow)
-	RELEASE_VECTOR_PTR(m_arRows, CStorageTableRow)
-	RELEASE_VECTOR_PTR(m_arColgroups, CTableColgroup)
+	RELEASE_VECTOR_PTR(m_arFoother)
+	RELEASE_VECTOR_PTR(m_arRows)
+	RELEASE_VECTOR_PTR(m_arColgroups)
 }
 
 CStorageTableRow* CStorageTable::operator[](UINT unIndex)
@@ -434,7 +434,7 @@ CStorageTableRow* CStorageTable::operator[](UINT unIndex)
 	if (unIndex < m_arRows.size())
 		return m_arRows[unIndex];
 
-	return NULL;
+	return nullptr;
 }
 
 bool CStorageTable::Empty() const
@@ -470,7 +470,7 @@ const TTableStyles& CStorageTable::GetTableStyles() const
 const TTableCellStyle* CStorageTable::GetColStyle(UINT unColumnNumber) const
 {
 	if (m_arColgroups.empty())
-		return NULL;
+		return nullptr;
 
 	UINT unCurrentNumber = 0;
 
@@ -485,7 +485,7 @@ const TTableCellStyle* CStorageTable::GetColStyle(UINT unColumnNumber) const
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void CStorageTable::AddRows(std::vector<CStorageTableRow*>& arRows, ERowParseMode eParseMode)
@@ -505,7 +505,7 @@ void CStorageTable::AddRows(std::vector<CStorageTableRow*>& arRows, ERowParseMod
 
 void CStorageTable::AddRow(CStorageTableRow* pRow, ERowParseMode eParseMode)
 {
-	if (NULL == pRow)
+	if (nullptr == pRow)
 		return;
 
 	for (UINT unIndex = 0; unIndex < pRow->GetCount(); ++unIndex)
@@ -599,7 +599,7 @@ void CStorageTable::SetRules(const std::wstring& wsValue)
 
 void CStorageTable::AddColgroup(CTableColgroup* pElement)
 {
-	if (NULL != pElement)
+	if (nullptr != pElement)
 		m_arColgroups.push_back(pElement);
 }
 
@@ -619,7 +619,7 @@ void CStorageTable::RecalculateMaxColumns()
 void CStorageTable::Shorten()
 {
 	UINT unIndex      = 0;
-	CStorageTableCell* pCell = NULL;
+	CStorageTableCell* pCell = nullptr;
 
 	UINT unMaxIndex = 0; //Maximum index excluding rows where there is only 1 cell
 
@@ -637,7 +637,7 @@ void CStorageTable::Shorten()
 			{
 				pCell = (*pRow)[unIndex];
 
-				if (NULL == pCell)
+				if (nullptr == pCell)
 					continue;
 
 				pCell->SetColspan(unMaxIndex, MAXCOLUMNSINTABLE);
@@ -649,7 +649,7 @@ void CStorageTable::Shorten()
 
 			pCell = (*pRow)[unIndex];
 
-			if (NULL == pCell)
+			if (nullptr == pCell)
 				continue;
 
 			if (1 < pCell->GetColspan() && pCell->GetColspan() > m_arMinColspan[unIndex])
@@ -677,7 +677,7 @@ void CStorageTable::CompleteTable()
 
 	for (CStorageTableRow* pRow : m_arRows)
 	{
-		if (NULL == pRow || 0 == pRow->GetCount())
+		if (nullptr == pRow || 0 == pRow->GetCount())
 			continue;
 
 		for (UINT unIndex = pRow->GetIndex(); unIndex < unMaxIndex; ++unIndex)

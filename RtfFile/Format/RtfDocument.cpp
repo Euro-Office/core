@@ -32,7 +32,7 @@
 #include "../OOXml/Writer/OOXSettingsWriter.h"
 #include "../OOXml/Writer/OOXFootnoteWriter.h"
 
-RtfDocument::RtfDocument() : m_pAppFonts(NULL)
+RtfDocument::RtfDocument() : m_pAppFonts(nullptr)
 {
 	m_bStartRead = false;
 	m_nUserLCID = -1;
@@ -52,7 +52,7 @@ RtfDocument::~RtfDocument()
 	if (m_pAppFonts)
 	{
 		delete m_pAppFonts;
-		m_pAppFonts = NULL;
+		m_pAppFonts = nullptr;
 	}
 }
 
@@ -61,11 +61,11 @@ int RtfDocument::GetType()
 	return TYPE_RTF_DOCUMENT;
 }
 
-std::wstring RtfDocument::RenderToRtf(RenderParameter oRenderParameter)
+std::wstring RtfDocument::RenderToRtf(RenderParameter  /*oRenderParameter*/)
 {
 	return L"";
 }
-std::wstring RtfDocument::RenderToOOX(RenderParameter oRenderParameter)
+std::wstring RtfDocument::RenderToOOX(RenderParameter  /*oRenderParameter*/)
 {
 	return L"";
 }
@@ -107,7 +107,7 @@ int RtfDocument::GetShapeId(  int& nShapeId  )
 				break;
 			}
 		}
-		if( true == bUnique )
+		if( bUnique )
 		{
 			nShapeId = nNewShapeId;
 			m_aShapeId.push_back( nNewShapeId );

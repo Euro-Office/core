@@ -17,14 +17,14 @@ namespace NSDocxRenderer
 		return *this;
 	}
 
-	CContText::CContText(const CContText& rCont)
+	CContText::CContText(const CContText& rCont) : CBaseItem(rCont)
 	{
 		*this = rCont;
 	}
 
 	CContText::~CContText()
 	{
-		Clear();
+		CContText::Clear();
 	}
 
 	void CContText::Clear()
@@ -74,7 +74,7 @@ namespace NSDocxRenderer
 		m_bWriteStyleRaw = rCont.m_bWriteStyleRaw;
 
 		m_nOriginFontFaceIndex = rCont.m_nOriginFontFaceIndex;
-		m_wsOriginFontName = rCont.m_nOriginFontFaceIndex;
+		m_wsOriginFontName = rCont.m_wsOriginFontName;
 
 		m_arSymWidths.clear();
 		m_arSymWidths.resize(rCont.m_arSymWidths.size());
@@ -1170,8 +1170,8 @@ namespace NSDocxRenderer
 		if (m_pCurrCont != nullptr &&
 		        fabs(m_pCurrCont->m_dBot - dBot) < c_dTHE_SAME_STRING_Y_PRECISION_MM &&
 		        m_oPrevFont.IsEqual2(&oFont) &&
-		        m_oPrevBrush.IsEqual(&oBrush) && !(
-		            oText.length() == 1 && CContText::IsUnicodeDiacriticalMark(oText.at(0))) &&
+		        m_oPrevBrush.IsEqual(&oBrush) &&
+		        (oText.length() != 1 || !CContText::IsUnicodeDiacriticalMark(oText.at(0))) &&
 		        bFontSubstitution == m_pCurrCont->m_bFontSubstitution)
 		{
 			double avg_space_width = m_pCurrCont->m_pFontStyle->GetAvgSpaceWidth();

@@ -80,7 +80,7 @@ HWP_STRING CCtrlEqEdit::GetEqn() const
 	return m_sEqn;
 }
 
-int CCtrlEqEdit::ParseElement(CCtrlEqEdit& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlEqEdit::ParseElement(CCtrlEqEdit& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 
@@ -111,7 +111,7 @@ int CCtrlEqEdit::ParseCtrl(CCtrlEqEdit& oObj, int nSize, CHWPStream& oBuffer, in
 	return CCtrlCommon::ParseCtrl(oObj, nSize, oBuffer, nOff, nVersion);
 }
 
-int CCtrlEqEdit::ParseListHeaderAppend(CCtrlEqEdit& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlEqEdit::ParseListHeaderAppend(CCtrlEqEdit& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	if (24 != nSize)
 	{

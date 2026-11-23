@@ -34,10 +34,10 @@ int RtfTable::GetType( )
 RtfTable::RtfTable()
 {
 }
-RtfTable::RtfTable(const RtfTable& oTabl)
+RtfTable::RtfTable(const RtfTable& oTabl) : ITextItem(oTabl), ItemContainer<RtfTableRowPtr>(oTabl)
 {
 }
-RtfTable& RtfTable::operator=(const RtfTable& oTabl)
+RtfTable& RtfTable::operator=(const RtfTable& /*oTabl*/)
 {
 	return *this;
 }
@@ -225,7 +225,6 @@ void RtfTable::CalculateGridProp()
 				if (aCellx[k] == nLastCellx + nWidthAfter)
 				{
 					m_aArray[i]->m_oProperty.m_nGridAfter = k - nLastIndex + 1;
-					nLastIndex = k + 1;
 					break;
 				}
 			}
@@ -293,7 +292,6 @@ void RtfTable::CalculateCellx(RtfDocument& oDocument)//todo take into account ma
 				nLeft -= m_oProperty.m_nDefCellMarLeft;
 			if (PROP_DEF != m_oProperty.m_nDefCellSpLeft && 3 == m_oProperty.m_eDefCellSpLeftUnit)
 				nLeft += 2 * m_oProperty.m_nDefCellSpLeft;
-			int nDelta = nLeft;//left takes GridBefore into account
 
 							   //if( PROP_DEF != oCurRow->m_oProperty.m_nGridBefore )
 							   //{
@@ -370,7 +368,7 @@ void RtfTable::AddToArray(std::vector<int>& aArray, int nValue)//todo can be app
 			break;
 		}
 	}
-	if (true == bNeedAdd)
+	if (bNeedAdd)
 	{
 		aArray.push_back(nValue);
 	}

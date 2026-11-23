@@ -118,7 +118,7 @@ unsigned int xlsx_num_fmts::Impl::add_or_find(std::wstring format_code, char for
 		}
 		else if (format_code_type == odf_types::office_value_type::Scientific)
 		{
-			if (std::wstring::npos != format_code.find(L"0.00E+00"))
+			if (format_code == L"0.00E+00")
 			{
 				format_code.clear();
 				id = 11;

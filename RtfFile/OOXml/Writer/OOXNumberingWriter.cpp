@@ -37,11 +37,11 @@ void OOXNumberingWriter::AddNumbering( std::wstring sText )
 }
 bool OOXNumberingWriter::Save( std::wstring sFolder )
 {
-	if( false == m_sFileXml.empty() )
+	if( !m_sFileXml.empty() )
 	{
 		NSFile::CFileBinary file;
 
-		if (false == file.CreateFile(sFolder + FILE_SEPARATOR_STR + _T("word") + FILE_SEPARATOR_STR + _T("numbering.xml"))) return false;
+		if (!file.CreateFile(sFolder + FILE_SEPARATOR_STR + _T("word") + FILE_SEPARATOR_STR + _T("numbering.xml"))) return false;
 
 		m_oWriter.m_oDocRels.AddRelationship( _T("http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering"), _T("numbering.xml") );
 		m_oWriter.m_oContentTypes.AddContent( _T("application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"), _T("/word/numbering.xml") );

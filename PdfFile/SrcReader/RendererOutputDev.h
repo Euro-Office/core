@@ -87,7 +87,7 @@ namespace PdfReader
 	class RendererOutputDev : public OutputDev
 	{
 	public:
-		RendererOutputDev(IRenderer* pRenderer, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList = NULL);
+		RendererOutputDev(IRenderer* pRenderer, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList = nullptr);
 		virtual ~RendererOutputDev();
 
 		virtual GBool upsideDown() override
@@ -140,7 +140,7 @@ namespace PdfReader
 		}
 		virtual GBool useSimpleTilingPatternFill()
 		{
-			if (NULL == m_pRenderer)
+			if (nullptr == m_pRenderer)
 				return false;
 
 			// TODO: m_pRenderer->GetAdditionalParam(L"TilingHtmlPattern");
@@ -149,7 +149,7 @@ namespace PdfReader
 		}
 		virtual GBool isStopped()
 		{
-			if (NULL != m_pbBreak)
+			if (nullptr != m_pbBreak)
 				return *m_pbBreak;
 			else
 				return false;
@@ -248,7 +248,7 @@ namespace PdfReader
 			GfxClip* pClip;
 			GfxTextClip* pTextClip;
 
-			GfxOutputState() : pGState(NULL), pSoftMask(NULL), pClip(NULL), pTextClip(NULL) {}
+			GfxOutputState() : pGState(nullptr), pSoftMask(nullptr), pClip(nullptr), pTextClip(nullptr) {}
 			~GfxOutputState()
 			{
 				RELEASEOBJECT(pClip);
@@ -260,13 +260,13 @@ namespace PdfReader
 			bool bKnockout;
 			GfxColorSpace* pBlendingCS;
 
-			GfxOutputCS() : bKnockout(false), pBlendingCS(NULL) {}
+			GfxOutputCS() : bKnockout(false), pBlendingCS(nullptr) {}
 		};
 
-		void DoPath(GfxState *pGState, GfxPath *pPath, double dPageHeight, double *pCTM, GfxClipMatrix* pCTM2 = NULL);
+		void DoPath(GfxState *pGState, GfxPath *pPath, double dPageHeight, double *pCTM, GfxClipMatrix* pCTM2 = nullptr);
 		void ClipToText(const std::wstring& wsFontName, const std::wstring& wsFontPath, double dFontSize, int nFontStyle, double* pMatrix, const std::wstring& wsText, double dX, double dY, double dWidth = 0, double dHeight = 0, double dBaseLineOffset = 0);
 		void AddClip(GfxState* pGState, GfxOutputState* pState, int nIndex);
-		void AddTextClip(GfxState* pGState, GfxOutputState* pState = NULL);
+		void AddTextClip(GfxState* pGState, GfxOutputState* pState = nullptr);
 		void UpdateAllClip(GfxState *pGState);
 		void DoTransform(double *pMatrix, double *pdShiftX, double *pdShiftY, bool bText = false);
 	private:

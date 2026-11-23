@@ -498,7 +498,7 @@ int main(int argc, char** argv)
 		bool result = file.WriteAdditional(file_path, L"DocumentID", docinfo);
 		if (!result)
 		{
-			std::cout << "error: docinfo not writed" << std::endl;
+			std::cout << "error: docinfo not written" << std::endl;
 			return 1;
 		}
 	}

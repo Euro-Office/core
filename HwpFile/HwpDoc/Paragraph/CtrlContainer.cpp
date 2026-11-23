@@ -94,7 +94,7 @@ CCtrlGeneralShape* CCtrlContainer::GetLastShape()
 	return (!m_arShapes.empty()) ? m_arShapes.back() : nullptr;
 }
 
-int CCtrlContainer::ParseElement(CCtrlContainer& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlContainer::ParseElement(CCtrlContainer& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 {
 	oBuffer.SavePosition();
 
@@ -114,8 +114,9 @@ int CCtrlContainer::ParseElement(CCtrlContainer& oObj, int nSize, CHWPStream& oB
 
 	#define CREATE_OBJECT(class_name) \
 	{ \
-	pChldObj = new class_name(sCtrlId, nSize - oBuffer.GetDistanceToLastPos(), oBuffer, 0, nVersion); \
-	class_name::ParseCtrl((class_name&)pChldObj, nSize, oBuffer, 0, nVersion); \
+	typedef class_name ctrl_type; \
+	pChldObj = new ctrl_type(sCtrlId, nSize - oBuffer.GetDistanceToLastPos(), oBuffer, 0, nVersion); \
+	ctrl_type::ParseCtrl((ctrl_type&)pChldObj, nSize, oBuffer, 0, nVersion); \
 	pChldObj->SetID(sCtrlId); \
 	}
 

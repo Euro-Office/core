@@ -72,14 +72,29 @@ Done:
       chain; adds only the dylib entry point `X2tConverter/src/dylib/x2t.cpp` to the test
       (x2tlib already compiles `cextracttools.cpp`, `ASCConverters.cpp`,
       `OfficeFileFormatChecker2.cpp`, so they are not duplicated). Compiled with
-      `BUILD_X2T_AS_LIBRARY_DYLIB`. Conversion fixtures under `test/ExampleFiles/`
-      (`xlsb2xlsx/`, `xlsx2xlsb/`) are staged under a run root and the `WORKING_DIRECTORY`
-      is nested four levels deep so the suite's `absolute("../../../../") + OOXML/test/ExampleFiles`
-      lookup resolves to the staged copy. **Build-only / quarantined:** the target compiles and
-      links, but the 41 conversion cases fail at runtime in headless CI — `X2T_Convert` produces no
-      output file, so the post-conversion comparisons fail. The CTest run is disabled
-      (`set_tests_properties(ooxml_test PROPERTIES DISABLED TRUE)`) pending diagnosis of the headless
-      conversion by someone able to run X2T locally.
+      `BUILD_X2T_AS_LIBRARY_DYLIB`. Converts the fixtures under `test/ExampleFiles/`
+      (`xlsb2xlsx/`, `xlsx2xlsb/`, staged in the working directory) and compares the
+      result with the same workbook saved by Microsoft Excel. The comparison is semantic
+      (`workbook_facts.cpp`): sheets, defined names, cell values and formulas, cell
+      formatting, merges, comments, tables, pivots, slicers and chart sheets. Byte
+      comparison cannot work: x2t and Excel write the same content differently. For
+      XLSX → XLSB both XLSB files are converted back to XLSX first. A category the
+      workbook doesn't have is skipped. `Pivots` and `Slicers` of `xlsx2xlsb_simple2` are
+      filtered out until #266 (flags never set in the XLSB writer) is fixed. `checkbox.cpp`
+      round-trips `ExampleFiles/xlsx2bin/checkbox.xlsx` (Excel cell checkboxes) through
+      Editor.bin and checks the regenerated `featurePropertyBag` part, its relationship and
+      content type, and the `xfComplement` extLst on the checkbox xf only.
+- [x] `X2tConverter/test/TestOOOXml2Odf` (`ooxml2odf_math_test`) — 45 cases for
+      `StarMath::COOXml2Odf`, which converts OOXML math (`m:oMath`) to StarMath/MathML when
+      OdfFormatLib writes ODF. It has a `.pro` but was missed by the first migration. Links
+      the static format libraries in a group, like `test_odf`. `GTEST_MAIN` (`main.cpp` has
+      no `main()`). No fixtures: the OOXML math is parsed from strings.
+- [x] `OdfFile/Test/Test` (`odf_regression_test`) — 54 regression cases named after bug
+      numbers (44363, 57197, 61364: ODT → DOCX; 59708: DOCX → ODT; 69238: PPTX → ODP),
+      inspecting the converted document through the converters' models. Only a Visual
+      Studio project existed and the suite had never built as committed (a duplicate global
+      in `Test57197.cpp`). Links the static format libraries in a group, like `test_odf`;
+      own `main()`. Fixtures under `ExampleFiles/` are staged in the working directory.
 - [x] `OfficeUtils/tests` — deps: kernel, UnicodeConverter. The committed `tests/zip/`
       fixtures are staged next to the binary: the suite resolves fixtures relative to the
       process directory (`<binary dir>/../zip`), and writes its `unzip`/`temp` output dirs
@@ -123,9 +138,17 @@ Done:
       that libtiff 3.9.4 never returned from. And the WebP decoder (`raster/WebP`) on
       libwebp: lossy and lossless in both channel orders, alpha (lossless and next to
       lossy color), the first frame of an animation, `OpenFile`, and truncated input.
+      And the HEIF decoder (`raster/heif`) on libheif: HEIC and AVIF detection (also by
+      file name, as before inserting a file), HEIC in both channel orders, AVIF with
+      alpha and at 10 bits, rotation from `irot`, `OpenFile`, and truncated input.
+      And ICO and PSD: detection of bitmap, PNG and cursor icons and of PSD (not PSB),
+      icons of both kinds in both channel orders, PSD raw and RLE at 8 and 16 bits, with
+      transparency, with a layer section that is skipped, and truncated or corrupt RLE
+      data.
       Deps: kernel, graphics, UnicodeConverter, jpeg, png, tiff, webp and webpmux (to
-      build and read the test images). `GTEST_MAIN`. No fixtures — images are built in
-      memory.
+      build and read the test images). `GTEST_MAIN`. Images are built in memory, except
+      the HEIF ones: core cannot encode HEIF, so `heif/` holds small fixtures from
+      `heif/generate.py`, read in place.
 - [x] `DesktopEditor/fontengine/test` — new suite (`fontengine_test`), not a `.pro`
       migration. Covers the FreeType based font engine in libgraphics: `CApplicationFonts`
       (font list, localized family names read from FreeType's internal sfnt name table) and
@@ -150,6 +173,13 @@ Done:
       again by xpdf's JBIG2 decoder through `ConvertToPixels` at 1:1 and compared with the
       source pixels. Deps: UnicodeConverter, kernel, graphics, PdfFile. `GTEST_MAIN`. No
       fixtures — pages are built in memory.
+- [x] `DjVuFile/test` — new suite (`djvu_test`), not a `.pro` migration. Covers `CDjVuFile` on
+      DjVuLibre's libdjvu (`Common/3dParty/djvulibre`): page count, sizes and resolution of a
+      bundled document, an exact 1:1 rendering of a JB2 page, an IW44 color page (with a
+      tolerance), bookmarks (`GetStructure`), links (`GetLinks`), the text layer as written to
+      a PDF page, and truncated or overwritten input (must not crash). Deps: UnicodeConverter,
+      kernel, graphics, PdfFile, DjVuFile. `GTEST_MAIN`. Fixtures are read in place: `data/`
+      holds three tiny documents generated by `data/generate.py` with DjVuLibre's tools.
 - [x] `RtfFile/Format/test` — new suite (`rtf_lex_test`), not a `.pro` migration. First
       coverage for the RTF tokenizer that fronts every RTF import (`RtfLex`, rtf2docx).
       Deps: links the existing `x2tlib` target; `RtfLex.cpp`, `RtfToken.cpp` and
@@ -176,8 +206,12 @@ Done:
 - [x] `OdfFile/Test/test_odf` — deps: OdfFormatLib (for `ConvertODF2OOXml`), kernel,
       graphics, UnicodeConverter; `OfficeFileFormatChecker2.cpp`, `pole.cpp` and
       `unicode_util.cpp` are compiled into the target (as `x2tTester` does). Owns its
-      `main()` (so no `GTEST_MAIN`). Builds only `test.cpp` + `common.cpp` — the
-      entrance/motion/audio/interactions modules are commented out in the `.pro`. The
+      `main()` (so no `GTEST_MAIN`). The `.pro` built only `test.cpp` + `common.cpp`;
+      the CMake target also builds the entrance/motion/audio/interactions modules (144
+      cases), which convert their `.odp`/`.pptx` fixtures in both directions and inspect
+      the converters' animation trees. Their environments in `common.cpp` read the
+      fixtures working-dir-relative. `columns.cpp` stays out: `columns.pptx` was never
+      committed. The
       global `TestEnv` exercises an `.odp -> .pptx` conversion in its `SetUp()`, and
       `ODP2PPTX.EmptyCustomShapeFormula` converts `empty_custom_shape_formula.odp`, a
       regression fixture for a custom-shape equation with an empty `draw:formula`. Fixtures under `ExampleFiles/` are
@@ -224,37 +258,27 @@ Done:
   `icudtl.dat`), so no external V8 runtime data files need to be staged next to the test
   binaries. The `doctrenderer` shared library these suites link is already built in CI
   (the `docbuilder` app links it), so the suites run headless without extra provisioning.
-- [x] `PdfFile/test` — deps: UnicodeConverter, kernel, graphics, PdfFile, DjVuFile,
-      ooxmlsignature (all six are existing CMake targets — no dep porting needed). Builds,
-      links and runs in CI **with one case excluded via `GTEST_FILTER`**. The runtime
-      fixtures are still not committed (see below), so this is a build-only/non-failing
-      registration: every test case self-`GTEST_SKIP()`s except
-      `CPdfFileTest.EditPdfFromBase64` (its skip is commented out), which would hard-fail
-      without `test.pdf`/`base64.txt`; that single case is filtered out to keep CI green.
-      To **fully** enable: commit the missing fixtures (see below), stage them next to the
-      binary (`WORKING_DIRECTORY` / `POST_BUILD copy_directory`, since the suite reads from
-      `NSFile::GetProcessDirectory()`), remove the `GTEST_FILTER`, and un-`GTEST_SKIP()` the
-      cases you want to exercise.
-
-      Fixture catalogue (none present anywhere in the repo):
-      - `test.pdf` — **input**, source PDF loaded by `LoadFromFile()`; used by the majority
-        of cases and by the only non-skipped one.
-      - `base64.txt` — **input**, base64-encoded document binary
-        (`EditPdfFromBase64`, `PdfFromBase64`, `Base64ConvertToRaster`, `SplitPdf`).
-      - `pdf.bin` — **input**, raw document binary
-        (`PdfBinToPng`, `PdfFromBin`, `SetMetaData`, `BinConvertToRaster`).
-      - `pfx.pfx` — **input**, PKCS#12 cert (password `123456`) for `VerifySign` /
-        `EditPdfSign`.
-      - `test.djvu` — **input** for `DjVuToPdf`.
-      - `changes.bin` — **input** for `EditPdfFromBin`.
-      - `test.jpeg` — **input** image stamped by `EditPdfSign` (also missing; not in the
-        original blocker list).
-      - `ONLYOFFICEFORM.docxf` — **intermediate**: produced by `GetMetaData`, consumed by
-        `SetMetaData`.
-      - `resI/` (input images) — required by `ImgDiff` for pixel comparison; not committed.
-      - `test2.pdf` (`wsDstFile`), `test3.pdf`, `test_split.pdf`, `pdftemp/`, `resO/`,
-        `resD/`, `fonts_cache/`, `resPdfBinToPng.png` — **outputs** generated at runtime,
-        not required inputs.
+- [x] `PdfFile/test` (`pdffile_test`) — deps: UnicodeConverter, kernel, graphics, PdfFile,
+      DjVuFile, ooxmlsignature. Covers `CPdfFile`: writing and reading (page sizes, colours
+      read back by rendering), loading from memory, document info, metadata
+      (`ONLYOFFICEFORM`), passwords and `ChangePassword`, editing (rotate, delete, move,
+      add, draw), `SplitPages`, `MergePages`, copying pages through the renderer, and
+      signing and verifying with a generated RSA certificate. `GTEST_MAIN`. No fixtures:
+      every test writes the PDFs it needs with `CPdfFile` itself, in its own directory.
+      `DrawTextInsideRedaction` drives the redaction early-return in `CPdfWriter::DrawText`
+      (#224); it checks the path succeeds, not the heap, so it would not catch the leak alone.
+      It replaces ONLYOFFICE's scratchpad, whose cases mostly asserted nothing, depended on
+      each other's output files and needed fixtures that were never published, among them
+      editor binaries (`pdf.bin`, `changes.bin`, `base64.txt`) only sdkjs produces. Not
+      covered yet: DjVu to PDF, the editor binary formats, applying redactions and printing.
+- [x] `MsBinaryFile/DocFile/test` (`doc_fkp_test`) — new suite, not a `.pro` migration.
+      Regression tests for the bounds checks in the `.doc` Formatted Disk Page parsers
+      (`FormattedDiskPageCHPX`/`PAPX`). Each case writes a hand-built 512 byte FKP into a
+      temporary compound file through POLE and runs the real constructors on it. Deps:
+      DocFormatLib + XlsFormatLib (for `Log::warning`) in a linker group, kernel,
+      UnicodeConverter; `pole.cpp`/`unicode_util.cpp` are compiled into the target as
+      `x2tTester` does. No fixtures. Building it with `-fsanitize=address` also turns any
+      remaining out-of-bounds read into a failure.
 - [x] `MsBinaryFile/PptFile/test` (`pptfile_test`) — new suite, not a `.pro` migration.
       Regression cases for `CRecordExObjStg`, the reader of embedded OLE objects and
       `vbaProject.bin` in `.ppt` files: a compressed record too short to hold its size field,

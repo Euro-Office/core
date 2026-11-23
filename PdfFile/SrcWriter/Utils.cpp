@@ -53,7 +53,7 @@ namespace PdfWriter
 	}
 	BYTE* StrCpy(char* sDst, const char* sSrc, char* pEnd)
 	{
-		if (NULL != sSrc)
+		if (nullptr != sSrc)
 		{
 			while (pEnd > sDst && *sSrc != 0)
 				*sDst++ = *sSrc++;
@@ -239,7 +239,7 @@ namespace PdfWriter
 	std::string DateNow()
 	{
 		char sTemp[DATE_TIME_STR_LEN + 1];
-		char* pTemp = NULL;
+		char* pTemp = nullptr;
 
 		MemSet(sTemp, 0, DATE_TIME_STR_LEN + 1);
 		time_t oTime = time(0);

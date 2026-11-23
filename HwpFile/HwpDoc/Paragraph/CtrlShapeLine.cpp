@@ -109,7 +109,7 @@ int HWP::CCtrlShapeLine::GetEndY() const
 	return m_nEndY;
 }
 
-void CCtrlShapeLine::ParseElement(CCtrlShapeLine& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+void CCtrlShapeLine::ParseElement(CCtrlShapeLine& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

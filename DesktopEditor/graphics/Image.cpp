@@ -32,13 +32,13 @@ namespace Aggplus
 	////////////////////////////////////////////////////////////////////////////////////////
 
 	CImage::CImage() : m_dwWidth(0), m_dwHeight(0), 
-		m_nStride(0), m_pImgData(NULL), 
+		m_nStride(0), m_pImgData(nullptr), 
 		m_bExternalBuffer(false), m_Status(WrongState)
 	{
 	}
 
 	CImage::CImage(const std::wstring& filename) : m_dwWidth(0), m_dwHeight(0), 
-			m_nStride(0), m_pImgData(NULL), 
+			m_nStride(0), m_pImgData(nullptr), 
 			m_bExternalBuffer(false)
 	{
 		Create(filename);		
@@ -107,12 +107,12 @@ namespace Aggplus
 		oBgraFrame.put_Data(m_pImgData);
 		bool bRes = oBgraFrame.SaveFile(strFileName, nFileType);
 		//so that it isn't deleted on destructor
-		oBgraFrame.put_Data(NULL);
+		oBgraFrame.put_Data(nullptr);
 		return bRes;
 	}
 	void CImage::Destroy()
 	{
-		if (NULL != m_pImgData)
+		if (nullptr != m_pImgData)
 		{
 			if (!m_bExternalBuffer)
 			{
@@ -121,7 +121,7 @@ namespace Aggplus
 		}
 
 		m_Status	= WrongState;
-		m_pImgData	= NULL;
+		m_pImgData	= nullptr;
 		m_dwWidth	= 0;
 		m_dwHeight	= 0;
 		m_nStride	= 0;
@@ -137,7 +137,7 @@ namespace Aggplus
 	Status CImage::GetLastStatus() const { return(m_Status); }
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	CBitmap::CBitmap(LONG width, LONG height, PixelFormat format) : CImage()
+	CBitmap::CBitmap(LONG width, LONG height, PixelFormat  /*format*/) : CImage()
 	{
 		if(width <= 0 || height <= 0) 
 		{ 
@@ -158,7 +158,7 @@ namespace Aggplus
 		}
 	}
 	
-	CBitmap::CBitmap(LONG width, LONG height, LONG stride, PixelFormat format, BYTE* scan0) : CImage()
+	CBitmap::CBitmap(LONG width, LONG height, LONG stride, PixelFormat  /*format*/, BYTE* scan0) : CImage()
 	{
 		//Warning! This is not Gdiplus behavior; it returns Ok!
 		if(width <= 0 || height <= 0 || stride == 0) 
@@ -192,7 +192,7 @@ namespace Aggplus
 	{
 	}
 
-	void CBitmap::LockBits(const RectF* rect, PixelFormat format, CBitmapData* lockedBitmapData)
+	void CBitmap::LockBits(const RectF*  /*rect*/, PixelFormat  /*format*/, CBitmapData*  /*lockedBitmapData*/)
 	{
 		// TODO:
 		return;

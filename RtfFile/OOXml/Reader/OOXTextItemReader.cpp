@@ -55,7 +55,7 @@ bool OOXTextItemReader::Parse(OOX::WritingElement* ooxElement, ReaderParameter o
 			oNewParagraph->m_oProperty.m_oCharProperty = oParam.oRtf->m_oDefaultCharProp;
 			oNewParagraph->m_oProperty.m_nItap = 0;
 
-			if (true == oParagraphReader.Parse(oParam, (*oNewParagraph), CcnfStyle()))
+			if (oParagraphReader.Parse(oParam, (*oNewParagraph), CcnfStyle()))
 			{
 				m_oTextItems->AddItem(oNewParagraph);
 			}
@@ -72,7 +72,7 @@ bool OOXTextItemReader::Parse(OOX::WritingElement* ooxElement, ReaderParameter o
 			
 			if (oParam.oReader->m_bInTable)
 			{
-				if (NULL != oParam.poTableStyle)
+				if (nullptr != oParam.poTableStyle)
 					oNewParagraph->m_oProperty.m_nTableStyle = oParam.poTableStyle->m_nID;
 				oNewParagraph->m_oProperty.m_bInTable = 1;
 				oNewParagraph->m_oProperty.m_nItap = oParam.oReader->m_nCurItap;
@@ -82,7 +82,7 @@ bool OOXTextItemReader::Parse(OOX::WritingElement* ooxElement, ReaderParameter o
 				oNewParagraph->m_oProperty.m_nItap = 0;
 			}
 
-			if (true == oParagraphReader.Parse(oParam, (*oNewParagraph), CcnfStyle()))
+			if (oParagraphReader.Parse(oParam, (*oNewParagraph), CcnfStyle()))
 			{
 				m_oTextItems->AddItem(oNewParagraph);
 			}
@@ -96,7 +96,7 @@ bool OOXTextItemReader::Parse(OOX::WritingElement* ooxElement, ReaderParameter o
 
 			OOXTableReader oTableReader(pTbl);
 			oParam.oReader->m_nCurItap = 1;
-			if (true == oTableReader.Parse(oParam, (*oNewTable)))
+			if (oTableReader.Parse(oParam, (*oNewTable)))
 			{
 				m_oTextItems->AddItem(oNewTable);
 			}
@@ -146,13 +146,13 @@ bool OOXTextItemReader::Parse(OOX::WritingElement* ooxElement, ReaderParameter o
 			oNewParagraph->m_oProperty.m_oCharProperty = oParam.oRtf->m_oDefaultCharProp;
 			oNewParagraph->m_oProperty.m_nItap = 0;
 
-			if (true == oParagraphReader.Parse(oParam, (*oNewParagraph), CcnfStyle()))
+			if (oParagraphReader.Parse(oParam, (*oNewParagraph), CcnfStyle()))
 			{
 				m_oTextItems->AddItem(oNewParagraph);
 			}
 
 			oParagraph.m_arrItems.clear();
-			delete oParagraph.m_oParagraphProperty; oParagraph.m_oParagraphProperty = NULL;
+			delete oParagraph.m_oParagraphProperty; oParagraph.m_oParagraphProperty = nullptr;
 		}break;
 		default:
 		{

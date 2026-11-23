@@ -29,7 +29,7 @@
 std::wstring RtfOldList::RenderToRtf(RenderParameter oRenderParameter)
 {
     std::wstring sResult;
-	if( NULL != m_oText )
+	if( nullptr != m_oText )
 		sResult += m_oText->RenderToRtf( oRenderParameter );
 	return sResult;
 }
@@ -40,7 +40,7 @@ static inline bool IsControlSymbol(unsigned short c)
 std::wstring RtfOldList::RenderToOOX(RenderParameter oRenderParameter)
 {
     std::wstring sResult;
-	if( true == CanConvertToNumbering() )
+	if( CanConvertToNumbering() )
 	{//save as list
 		if( RENDER_TO_OOX_PARAM_OLDLIST_ABS == oRenderParameter.nType )
 		{
@@ -130,15 +130,13 @@ void RtfOldList::SetDefault()
 }
 bool RtfOldList::operator==( const RtfOldList& oOldList )
 {
-	if( false == (m_eLevelType == oOldList.m_eLevelType && m_nLevelType == oOldList.m_nLevelType ) )
+	if( m_eLevelType != oOldList.m_eLevelType || m_nLevelType != oOldList.m_nLevelType )
 		return false;
-	if( false == (m_oLevelText->m_oProperty.m_oCharProperty == oOldList.m_oLevelText->m_oProperty.m_oCharProperty ) )
+	if( !(m_oLevelText->m_oProperty.m_oCharProperty == oOldList.m_oLevelText->m_oProperty.m_oCharProperty) )
 		return false;
 	RenderParameter oParam;
 	oParam.nType = RENDER_TO_OOX_PARAM_PLAIN;
     std::wstring sText1 = m_oLevelText->RenderToOOX( oParam );
     std::wstring sText2 = oOldList.m_oLevelText->RenderToOOX( oParam );
-	if( sText1 != sText2 )
-		return false;
-	return  true;
+	return sText1 == sText2;
 }

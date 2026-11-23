@@ -34,7 +34,7 @@ bool RtfAbsPosTab::IsValid()
 {
 	return a_none != m_eAlignment && r_none != m_eRelative;
 }
-std::wstring RtfAbsPosTab::RenderToRtf(RenderParameter oRenderParameter)
+std::wstring RtfAbsPosTab::RenderToRtf(RenderParameter /*oRenderParameter*/)
 {
 	std::wstring sResult;
 	switch( m_eLeader )
@@ -56,11 +56,11 @@ std::wstring RtfAbsPosTab::RenderToRtf(RenderParameter oRenderParameter)
 		case a_center:	sResult += L"c";	break;
 		case a_right:	sResult += L"r";	break;
 	}
-	if( false == sResult.empty() )
+	if( !sResult.empty() )
 		sResult = L"{" + sResult + L"}";
 	return sResult;
 }
-std::wstring RtfAbsPosTab::RenderToOOX(RenderParameter oRenderParameter)
+std::wstring RtfAbsPosTab::RenderToOOX(RenderParameter /*oRenderParameter*/)
 {
 	std::wstring sResult;
 	switch( m_eLeader )
@@ -196,7 +196,7 @@ std::wstring RtfChar::renderTextToXML( std::wstring sParam, bool bDelete )
     std::wstring sResult;
 	if( L"Text" == sParam )
     {
-		if (bDelete == false)
+		if (!bDelete)
 		{
 			sResult += L"<w:t xml:space= \"preserve\">";
                 sResult += XmlUtils::EncodeXmlString( m_sChars, true );
@@ -227,14 +227,11 @@ std::wstring RtfChar::renderRtfText( std::wstring& sText, void* poDocument, RtfC
 {
     RtfDocument* pDocument = static_cast<RtfDocument*>(poDocument);
 	
-	int iFont = 0;
-	if (oCharProperty) iFont = oCharProperty->m_nFont;
-
-    int nCodePage = -1;
+	int nCodePage = -1;
     //apply the codepage parameters from the current font todo associated fonts.
     //TODO understand fonts and their selection
     RtfFont oFont;
-    if( NULL != oCharProperty && true == pDocument->m_oFontTable.GetFont( oCharProperty->m_nFont, oFont ) )
+    if( nullptr != oCharProperty && pDocument->m_oFontTable.GetFont( oCharProperty->m_nFont, oFont ) )
     {
         if( PROP_DEF != oFont.m_nCharset )
             nCodePage = RtfUtility::CharsetToCodepage( oFont.m_nCharset );
@@ -249,7 +246,7 @@ std::wstring RtfChar::renderRtfText(const std::wstring& sText)
 	std::wstring sResult;
 	for (size_t i = 0; i < sText.length(); i++)
 	{
-		int nUnicode = (int)sText[i];
+		int nUnicode = static_cast<int>(static_cast<unsigned int>(sText[i]));
 
 		if (0 < nUnicode && nUnicode <= 0x8000)
 		{
@@ -301,6 +298,7 @@ std::wstring RtfChar::renderRtfText( std::wstring& sText, void* poDocument, int 
 	{
 		nCodePage = pDocument->m_lcidConverter.get_codepage(pDocument->m_nUserLCID);
 	} 
+	(void)nCodePage; //the codepage is not needed by the encoder below
 
 	if (bMarker)
 		sResult += L"{\\uc1";
@@ -317,7 +315,7 @@ std::wstring RtfChar::RenderToRtf(RenderParameter oRenderParameter)
 
     if( RENDER_TO_RTF_PARAM_CHAR ==  oRenderParameter.nType )
     {
-        if( true == m_bRtfEncode )
+        if( m_bRtfEncode )
             result += renderRtfText( m_sChars, oRenderParameter.poDocument, &m_oProperty );
         else
             result += m_sChars;
@@ -325,7 +323,7 @@ std::wstring RtfChar::RenderToRtf(RenderParameter oRenderParameter)
     else
     {
         std::wstring sText;
-        if( true == m_bRtfEncode )
+        if( m_bRtfEncode )
             sText = renderRtfText( m_sChars, oRenderParameter.poDocument, &m_oProperty );
         else
             sText = m_sChars;
@@ -354,14 +352,14 @@ RtfCharSpecial::RtfCharSpecial()
 	m_nTextWrapBreak	= PROP_DEF;
 	m_nSoftHeight		= PROP_DEF;
 }
-std::wstring RtfCharSpecial::_RenderToOOX(RenderParameter oRenderParameter)
+std::wstring RtfCharSpecial::_RenderToOOX(RenderParameter /*oRenderParameter*/)
 {
     std::wstring sResult;
 	switch( m_eType )
 	{
-		case rsc_chdate:		sResult += L"";										break;
-		case rsc_chdpl:			sResult += L"";										break;
-		case rsc_chdpa:			sResult += L"";										break;
+		case rsc_chdate:
+		case rsc_chdpl:
+		case rsc_chdpa:
 		case rsc_chtime:		sResult += L"";										break;
 		case rsc_chpgn:			sResult += L"<w:pgNum />";							break;
 		case rsc_sectnum:		sResult += L"";										break;
@@ -373,18 +371,18 @@ std::wstring RtfCharSpecial::_RenderToOOX(RenderParameter oRenderParameter)
 		case rsc_page:			sResult += L"<w:br w:type=\"page\"/>";				break;
 		case rsc_column:		sResult += L"<w:br w:type=\"column\"/>";			break;
 		case rsc_line:			sResult += L"<w:br w:type=\"textWrapping\" w:clear=\"none\"/>";break;
-		case rsc_softpage:		sResult += L"";										break;
-		case rsc_softcol:		sResult += L"";										break;
+		case rsc_softpage:
+		case rsc_softcol:
 		case rsc_softline:		sResult += L"";										break;
 		case rsc_tab:			sResult += L"<w:tab/>";								break;
-		case rsc_emspace:		sResult += L"";										break;
-		case rsc_qmspace:		sResult += L"";										break;
-		case rsc_Formula:		sResult += L"";										break;
-		case rsc_zwbo:			sResult += L"";										break;
-		case rsc_zwnbo:			sResult += L"";										break;
-		case rsc_zwj:			sResult += L"";										break;
+		case rsc_emspace:
+		case rsc_qmspace:
+		case rsc_Formula:
+		case rsc_zwbo:
+		case rsc_zwnbo:
+		case rsc_zwj:
 		case rsc_zwnj:			sResult += L"";										break;
-		case rsc_OptHyphen:		sResult += L"<w:t xml:space=\"preserve\">-</w:t>";	break;//<w:softHyphen/>
+		case rsc_OptHyphen:		//<w:softHyphen/>
 		case rsc_NonBrHyphen:	sResult += L"<w:t xml:space=\"preserve\">-</w:t>";	break;//<w:nonBreakHyphen/>
 		case rsc_NonBrSpace:	sResult += L"<w:t xml:space=\"preserve\"> </w:t>";	break;
 	}
@@ -394,6 +392,7 @@ std::wstring RtfCharSpecial::_RenderToOOX(RenderParameter oRenderParameter)
 		case 1: sResult += L"<w:br w:type=\"textWrapping\" w:clear=\"left\"/>";		break;
 		case 2: sResult += L"<w:br w:type=\"textWrapping\" w:clear=\"right\"/>";	break;
 		case 3: sResult += L"<w:br w:type=\"textWrapping\" w:clear=\"all\"/>";		break;
+		default: break;
 	}
 	return sResult;
 }
@@ -460,7 +459,7 @@ std::wstring RtfCharSpecial::RenderToRtf(RenderParameter oRenderParameter)
 		case rsc_chtime:		sResult += L"\\chtime";		break;
 		case rsc_chpgn:			sResult += L"\\chpgn";		break;
 		case rsc_sectnum:		sResult += L"\\sectnum";		break;
-		case rsc_chftn:			sResult += L"\\chftn";		break;
+		case rsc_chftn:
 		case rsc_chftnEnd:		sResult += L"\\chftn";		break;
 		case rsc_chatn:			sResult += L"\\chatn";		break;
 		case rsc_chftnsep:		sResult += L"\\chftnsep";	break;

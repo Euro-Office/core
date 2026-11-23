@@ -41,7 +41,7 @@ namespace XLSB
 
     PCDIDateTime::PCDIDateTime(XLS::CFRecord& record)
     {
-        load(record);
+        PCDIDateTime::load(record);
     }
 
     PCDIDateTime::~PCDIDateTime()
@@ -88,7 +88,10 @@ namespace XLSB
             timeValid = true;
         }
         catch(std::exception)
-         {}
+         {
+            // invalid datetime string - try the next format
+            timeValid = false;
+         }
         if(!timeValid)
         {
             try
@@ -97,7 +100,10 @@ namespace XLSB
                 timeValid = true;
             }
             catch(std::exception)
-             {}
+             {
+                // invalid datetime string - try the next format
+                timeValid = false;
+             }
         }
         if(!timeValid)
         {
@@ -107,7 +113,10 @@ namespace XLSB
                 timeValid = true;
             }
             catch(std::exception)
-             {}
+             {
+                // invalid datetime string - no more formats to try
+                timeValid = false;
+             }
         }
         if(timeValid)
         {

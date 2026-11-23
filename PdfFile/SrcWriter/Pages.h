@@ -77,7 +77,7 @@ namespace PdfWriter
 			return dict_type_PAGES;
 		}
 	private:
-		CObjectBase* GetFromPageTree(int nPageIndex, int& nI, bool bRemove = false, bool bInsert = false, CObjectBase* pPage = NULL);
+		CObjectBase* GetFromPageTree(int nPageIndex, int& nI, bool bRemove = false, bool bInsert = false, CObjectBase* pPage = nullptr);
 
 		CNumberObject* m_pCount;
 		CArrayObject*  m_pPages;
@@ -187,7 +187,7 @@ namespace PdfWriter
 		void      ClearContent(CXref* pXref);
 		void      ClearContentFull(CXref* pXref);
 		CResourcesDict* GetResourcesItem();
-		void      AddResource(CXref* pXref = NULL);
+		void      AddResource(CXref* pXref = nullptr);
 		TBox      GetBox(const std::string& sBox);
 
 	private:
@@ -229,7 +229,7 @@ namespace PdfWriter
 	{
 	public:
 		CFakePage(int nOriginIndex);
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const
 		{
 			return pOut ? pOut : new CFakePage(m_nOriginIndex);
 		}

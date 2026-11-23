@@ -32,12 +32,12 @@ OOXNumberingReader::OOXNumberingReader( OOX::CNumbering* ooxNumbering)
 }
 bool OOXNumberingReader::Parse( ReaderParameter oParam )
 {
-	if (m_ooxNumbering == NULL) return false;
+	if (m_ooxNumbering == nullptr) return false;
 
 	for (size_t i=0; i < m_ooxNumbering->m_arrNumPicBullet.size(); i++)
 	{
-		if (m_ooxNumbering->m_arrNumPicBullet[i] == NULL) continue;
-		if (false == m_ooxNumbering->m_arrNumPicBullet[i]->m_oNumPicBulletId.IsInit()) continue;
+		if (m_ooxNumbering->m_arrNumPicBullet[i] == nullptr) continue;
+		if (!m_ooxNumbering->m_arrNumPicBullet[i]->m_oNumPicBulletId.IsInit()) continue;
 
 		int nID = *m_ooxNumbering->m_arrNumPicBullet[i]->m_oNumPicBulletId;
 
@@ -46,7 +46,7 @@ bool OOXNumberingReader::Parse( ReaderParameter oParam )
 			OOXShapeReader oShapeReader(m_ooxNumbering->m_arrNumPicBullet[i]->m_oVmlDrawing.GetPointer());
 
 			RtfShapePtr oNewShape ( new RtfShape() );
-			if( true == oShapeReader.Parse( oParam, oNewShape ) )
+			if( oShapeReader.Parse( oParam, oNewShape ) )
 			{
 				oNewShape->m_eAnchorTypeShape	= RtfShape::st_inline;
 				oNewShape->m_nPositionHRelative = 3;

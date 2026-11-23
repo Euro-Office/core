@@ -94,7 +94,7 @@ namespace XPS
 	{		
 		m_pFontManager = pFontManager;
 		m_mPages.clear();
-		m_wsPath = NULL;
+		m_wsPath = nullptr;
 	}
 	CDocument::~CDocument()
 	{		
@@ -362,7 +362,7 @@ namespace XPS
 		std::map<int, XPS::Page*>::const_iterator oIter = m_mPages.find(nPageIndex);
 		if (oIter != m_mPages.end())
             return oIter->second->m_oLinks.Serialize();
-		return NULL;
+		return nullptr;
 	}
 	void CDocument::DrawPage(int nPageIndex, IRenderer* pRenderer, bool* pbBreak)
 	{
@@ -458,9 +458,9 @@ namespace XPS
 		int nH = 0;
 		GetPageSize(0, nW, nH);
         sRes += L"\"PageWidth\":";
-        sRes += std::to_wstring((int)(nW * 100));
+        sRes += std::to_wstring(nW * 100);
         sRes += L",\"PageHeight\":";
-        sRes += std::to_wstring((int)(nH * 100));
+        sRes += std::to_wstring(nH * 100);
         sRes += L",\"NumberOfPages\":";
         sRes += std::to_wstring(GetPageCount());
         sRes += L"}";

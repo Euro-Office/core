@@ -72,9 +72,9 @@ bool COFDFile_Private::LoadFromFile(const std::wstring& wsFilePath)
 
 	Close();
 
-	COfficeUtils oUtils(NULL);
+	COfficeUtils oUtils(nullptr);
 
-	if (S_OK != oUtils.ExtractToDirectory(wsFilePath, m_pTempFolder->getFullFilePath(L""), NULL, 0))
+	if (S_OK != oUtils.ExtractToDirectory(wsFilePath, m_pTempFolder->getFullFilePath(L""), nullptr, 0))
 		return false;
 
 	return Read(m_pTempFolder);

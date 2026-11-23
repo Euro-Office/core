@@ -41,7 +41,7 @@ namespace OOX
 		class CFldSimple : public WritingElementWithChilds<>
 		{
 		public:
-			CFldSimple(OOX::Document *pMain = NULL);			
+			CFldSimple(OOX::Document *pMain = nullptr);			
 			virtual ~CFldSimple();
 
 			const CFldSimple &operator =(const XmlUtils::CXmlNode& oNode);

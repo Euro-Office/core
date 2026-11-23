@@ -59,7 +59,7 @@ double ArrGetNum(Object* pArr, int nI)
 }
 TextString* getFullFieldName(Object* oField)
 {
-	TextString* sResName = NULL;
+	TextString* sResName = nullptr;
 
 	if (!oField || !oField->isDict())
 		return sResName;
@@ -100,12 +100,12 @@ TextString* getFullFieldName(Object* oField)
 CActionGoTo* getGoTo(PDFDoc* pdfDoc, LinkAction* oAct)
 {
 	if (!oAct || oAct->getKind() != actionGoTo)
-		return NULL;
+		return nullptr;
 
 	GString* str = ((LinkGoTo*)oAct)->getNamedDest();
 	LinkDest* pLinkDest = str ? pdfDoc->findDest(str) : ((LinkGoTo*)oAct)->getDest();
 	if (!pLinkDest)
-		return NULL;
+		return nullptr;
 	CActionGoTo* ppRes = new CActionGoTo();
 	if (pLinkDest->isPageRef())
 	{
@@ -172,7 +172,7 @@ CAction* getDest(PDFDoc* pdfDoc, Object* oDest)
 {
 	LinkAction* oAct = LinkAction::parseDest(oDest);
 	if (!oAct)
-		return NULL;
+		return nullptr;
 
 	CAction* pRes = getGoTo(pdfDoc, oAct);
 
@@ -189,9 +189,9 @@ CAction* getAction(PDFDoc* pdfDoc, Object* oAction)
 
 	LinkAction* oAct = LinkAction::parseAction(oAction);
 	if (!oAct)
-		return NULL;
+		return nullptr;
 
-	CAction* pRes = NULL;
+	CAction* pRes = nullptr;
 	LinkActionKind kind = oAct->getKind();
 	switch (kind)
 	{
@@ -265,7 +265,7 @@ CAction* getAction(PDFDoc* pdfDoc, Object* oAction)
 		oHideObj->copy(&oHide);
 		do
 		{
-			TextString* s = NULL;
+			TextString* s = nullptr;
 			if (oHideObj->isArray())
 			{
 				oHide.free();
@@ -306,7 +306,7 @@ CAction* getAction(PDFDoc* pdfDoc, Object* oAction)
 				{
 					Object oField;
 					oObj.arrayGet(j, &oField);
-					TextString* s = NULL;
+					TextString* s = nullptr;
 					if (oField.isString())
 						s = new TextString(oField.getString());
 					else if (oField.isDict())
@@ -329,7 +329,7 @@ CAction* getAction(PDFDoc* pdfDoc, Object* oAction)
 	}
 
 	if (pRes)
-		pRes->pNext = NULL;
+		pRes->pNext = nullptr;
 
 	Object oNextAction;
 	if (pRes && oAction->dictLookup("Next", &oNextAction)->isDict())
@@ -346,7 +346,7 @@ std::string getValue(Object* oV, bool bArray = true)
 		sRes = oV->getName();
 	else if (oV->isString() || oV->isDict() || oV->isArray())
 	{
-		TextString* s = NULL;
+		TextString* s = nullptr;
 		if (oV->isString())
 			s = new TextString(oV->getString());
 		else if (oV->isDict())
@@ -1169,8 +1169,8 @@ CAnnotPopup::CAnnotPopup(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex, int 
 CAnnotLink::CAnnotLink(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex, int nStartRefID) : CAnnot(pdfDoc, oAnnotRef, nPageIndex, nStartRefID)
 {
 	m_unFlags = 0;
-	m_pAction = NULL;
-	m_pPA = NULL;
+	m_pAction = nullptr;
+	m_pPA = nullptr;
 
 	Object oAnnot, oObj, oObj2;
 	XRef* pXref = pdfDoc->getXRef();
@@ -1791,7 +1791,7 @@ CAnnotCaret::CAnnotCaret(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex, int 
 
 CAnnotFileAttachment::CAnnotFileAttachment(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex, int nStartRefID) : CAnnotMarkup(pdfDoc, oAnnotRef, nPageIndex, nStartRefID)
 {
-	m_pEF = NULL;
+	m_pEF = nullptr;
 
 	Object oAnnot, oObj, oObj2;
 	XRef* pXref = pdfDoc->getXRef();
@@ -2245,7 +2245,7 @@ CAnnots::CAnnots(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontLi
 		oParentRefObj.free();
 		oField.free(); oFieldRef.free();
 
-		CAnnotWidget* pAnnot = NULL;
+		CAnnotWidget* pAnnot = nullptr;
 		AcroFormFieldType oType = pField->getAcroFormFieldType();
 		switch (oType)
 		{
@@ -2838,7 +2838,7 @@ void CAnnotMarkup::SetFont(PDFDoc* pdfDoc, Object* oAnnotRef, NSFonts::IFontMana
 
 CAnnot::CAnnot(PDFDoc* pdfDoc, AcroFormField* pField, int nStartRefID)
 {
-	m_pBorder = NULL;
+	m_pBorder = nullptr;
 	m_unAnnotFlag = 0;
 	m_unAFlags = 0;
 	m_unFlags = 0;
@@ -2924,7 +2924,7 @@ CAnnot::CAnnot(PDFDoc* pdfDoc, AcroFormField* pField, int nStartRefID)
 	oObj.free();
 
 	// 4 - Borders and Dash Pattern - Border/BS
-	m_pBorder = NULL;
+	m_pBorder = nullptr;
 	if (pField->fieldLookup("BS", &oObj)->isDict())
 		m_pBorder = getBorder(&oObj, true);
 	else
@@ -2974,7 +2974,7 @@ CAnnot::CAnnot(PDFDoc* pdfDoc, AcroFormField* pField, int nStartRefID)
 }
 CAnnot::CAnnot(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex, int nStartRefID)
 {
-	m_pBorder = NULL;
+	m_pBorder = nullptr;
 	m_unAnnotFlag = 0;
 	m_unAFlags = 0;
 	m_unFlags = 0;
@@ -3065,7 +3065,7 @@ CAnnot::CAnnot(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex, int nStartRefI
 	oObj.free();
 
 	// 4 - Borders and Dash Pattern - Border/BS
-	m_pBorder = NULL;
+	m_pBorder = nullptr;
 	if (oAnnot.dictLookup("BS", &oObj)->isDict())
 		m_pBorder = getBorder(&oObj, true);
 	else
@@ -3140,10 +3140,10 @@ std::string CAnnot::DictLookupString(Object* pObj, const char* sName, int nByte)
 
 CAnnotAP::CAnnotAP(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList*  pFontList, int nRasterW, int nRasterH, int nBackgroundColor, int nPageIndex, const char* sView, const char* sButtonView, AcroFormField* pField, int nStartRefID)
 {
-	m_gfx = NULL;
-	m_pFrame = NULL;
-	m_pRendererOut = NULL;
-	m_pRenderer = NULL;
+	m_gfx = nullptr;
+	m_pFrame = nullptr;
+	m_pRendererOut = nullptr;
+	m_pRenderer = nullptr;
 	m_dRWScale = 1;
 	m_dRHScale = 1;
 	m_bIsStamp = false;
@@ -3171,10 +3171,10 @@ CAnnotAP::CAnnotAP(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFont
 }
 CAnnotAP::CAnnotAP(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList*  pFontList, int nRasterW, int nRasterH, int nBackgroundColor, int nPageIndex, const char* sView, Object* oAnnotRef, int nStartRefID)
 {
-	m_gfx = NULL;
-	m_pFrame = NULL;
-	m_pRendererOut = NULL;
-	m_pRenderer = NULL;
+	m_gfx = nullptr;
+	m_pFrame = nullptr;
+	m_pRendererOut = nullptr;
+	m_pRenderer = nullptr;
 	m_dRWScale = 1;
 	m_dRHScale = 1;
 
@@ -3269,7 +3269,7 @@ void CAnnotAP::Init(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFon
 	pPage->makeBox(72.0, 72.0, 0, gFalse, m_pRendererOut->upsideDown(), -1, -1, -1, -1, &box, &crop);
 	PDFRectangle* cropBox = pPage->getCropBox();
 
-	m_gfx = new Gfx(pdfDoc, m_pRendererOut, nPageIndex, pPage->getAttrs()->getResourceDict(), 72.0, 72.0, &box, crop ? cropBox : (PDFRectangle *)NULL, 0, NULL, NULL);
+	m_gfx = new Gfx(pdfDoc, m_pRendererOut, nPageIndex, pPage->getAttrs()->getResourceDict(), 72.0, 72.0, &box, crop ? cropBox : (PDFRectangle *)nullptr, 0, nullptr, nullptr);
 
 	// Appearance coordinates
 	m_dRx1 = ((m_bIsStamp ? m_dx1S: m_dx1) - m_dCropX) * m_dWScale - 1;
@@ -3428,7 +3428,7 @@ void CAnnotAP::Draw(PDFDoc* pdfDoc, Object* oAP, int nRasterH, int nBackgroundCo
 			CAnnotAPView* pView = new CAnnotAPView();
 			pView->sAPName = arrAPName[j];
 			m_pRenderer->SetCoordTransformOffset(dOffsetX, dOffsetY);
-			DrawAppearance(pdfDoc, nPageIndex, pField, m_gfx, arrAPName[j], NULL);
+			DrawAppearance(pdfDoc, nPageIndex, pField, m_gfx, arrAPName[j], nullptr);
 			WriteAppearance(nBackgroundColor, pView);
 			pView->nBlendMode = GetBlendMode();
 			m_arrAP.push_back(pView);

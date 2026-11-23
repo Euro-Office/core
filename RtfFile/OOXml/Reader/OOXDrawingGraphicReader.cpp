@@ -32,7 +32,7 @@
 
 int OOXGraphicReader::Parse( ReaderParameter oParam , RtfShapePtr & pOutput)
 {
-	if (m_ooxGraphic == NULL) return 0;
+	if (m_ooxGraphic == nullptr) return 0;
 	
 	if (m_ooxGraphic->element.is_init())
 	{

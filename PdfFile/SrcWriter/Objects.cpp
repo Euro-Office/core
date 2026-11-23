@@ -143,13 +143,13 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
     CStringObject::CStringObject(const char* sValue, bool isUTF16, bool isDictValue)
 	{
-		m_pValue = NULL;
+		m_pValue = nullptr;
 		m_unLen  = 0;
 		Set(sValue, isUTF16, isDictValue);
 	}
 	CStringObject::CStringObject()
 	{
-		m_pValue = NULL;
+		m_pValue = nullptr;
 		m_unLen  = 0;
 	}
 	CStringObject::~CStringObject()
@@ -193,7 +193,7 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
 	CBinaryObject::CBinaryObject(BYTE* pValue, unsigned int unLen, bool bCopy)
 	{
-		m_pValue = NULL;
+		m_pValue = nullptr;
 		m_unLen  = 0;
 		Set(pValue, unLen, bCopy);
 	}
@@ -208,7 +208,7 @@ namespace PdfWriter
 		if (m_pValue)
 		{
 			delete[] m_pValue;
-			m_pValue = NULL;
+			m_pValue = nullptr;
 			m_unLen  = 0;
 		}
 
@@ -263,7 +263,7 @@ namespace PdfWriter
 	}
 	CProxyObject::~CProxyObject()
 	{
-		TXrefEntry* pXrefEntry = m_pObject ? m_pObject->GetXrefEntry() : NULL;
+		TXrefEntry* pXrefEntry = m_pObject ? m_pObject->GetXrefEntry() : nullptr;
 		if (pXrefEntry)
 		{
 			std::vector<CProxyObject*>::iterator it = std::find(pXrefEntry->pRefObj.begin(), pXrefEntry->pRefObj.end(), this);
@@ -280,7 +280,7 @@ namespace PdfWriter
 			RELEASE_OBJECT(m_pObject);
 		}
 		else
-			m_pObject = NULL;
+			m_pObject = nullptr;
 	}
 	//----------------------------------------------------------------------------------------
 	// CArrayObject
@@ -408,7 +408,7 @@ namespace PdfWriter
 	CObjectBase*  CArrayObject::Get(unsigned int unIndex, bool bCheckProxy) const
 	{
 		if (unIndex >= m_arrList.size())
-			return NULL;
+			return nullptr;
 
 		CObjectBase* pObject = m_arrList.at(unIndex);
 		if (bCheckProxy && object_type_PROXY == pObject->GetType())
@@ -419,7 +419,7 @@ namespace PdfWriter
 	CObjectBase* CArrayObject::Remove(unsigned int unIndex)
 	{
 		if (unIndex >= m_arrList.size())
-			return NULL;
+			return nullptr;
 
 		CObjectBase* pObject = Get(unIndex);
 		if (pObject)
@@ -440,7 +440,7 @@ namespace PdfWriter
 	{
 		CArrayObject* pArray = new CArrayObject();
 		if (!pArray)
-			return NULL;
+			return nullptr;
 
 		pArray->Add(oBox.fLeft);
 		pArray->Add(oBox.fBottom);
@@ -453,7 +453,7 @@ namespace PdfWriter
 	{
 		CArrayObject* pArray = new CArrayObject();
 		if (!pArray)
-			return NULL;
+			return nullptr;
 
 		pArray->Add(dL);
 		pArray->Add(dB);
@@ -466,7 +466,7 @@ namespace PdfWriter
 	{
 		CArrayObject* pArray = new CArrayObject();
 		if (!pArray)
-			return NULL;
+			return nullptr;
 
 		pArray->Add(m[0]);
 		pArray->Add(m[1]);
@@ -481,7 +481,7 @@ namespace PdfWriter
 	{
 		CArrayObject* pArray = pOut && pOut->GetType() == object_type_ARRAY ? (CArrayObject*)pOut : new CArrayObject();
 		if (!pArray)
-			return NULL;
+			return nullptr;
 
 		for (unsigned int unIndex = 0, unCount = GetCount(); unIndex < unCount; ++unIndex)
 		{
@@ -598,13 +598,13 @@ namespace PdfWriter
 	{
 		m_unFilter    = STREAM_FILTER_NONE;
 		m_unPredictor = STREAM_PREDICTOR_NONE;
-		m_pStream     = NULL;
+		m_pStream     = nullptr;
 	}
 	CDictObject::CDictObject(CXref* pXref)
 	{
 		m_unFilter    = STREAM_FILTER_NONE;
 		m_unPredictor = STREAM_PREDICTOR_NONE;
-		m_pStream     = NULL;
+		m_pStream     = nullptr;
 
 		CNumberObject* pLength = new CNumberObject(0);
 
@@ -639,7 +639,7 @@ namespace PdfWriter
 			return pObject;
 		}
 
-		return NULL;
+		return nullptr;
 	}
     void CDictObject::Add(const std::string& sKey, CObjectBase* pObject)
 	{
@@ -713,7 +713,7 @@ namespace PdfWriter
 				return oIter.first.c_str();
 		}
 
-		return NULL;
+		return nullptr;
 	}
     void CDictObject::WriteToStream(CStream* pStream, CEncrypt* pEncrypt)
 	{
@@ -763,7 +763,7 @@ namespace PdfWriter
 	{
 		CDictObject* pDict = pOut && pOut->GetType() == object_type_DICT ? (CDictObject*)pOut : new CDictObject();
 		if (!pDict)
-			return NULL;
+			return nullptr;
 
 		for (auto const &oIter : m_mList)
 		{
@@ -811,8 +811,8 @@ namespace PdfWriter
 		m_pDocument     = pDocument;
 		m_unStartOffset = unOffset;
 		m_unAddr        = 0;
-		m_pPrev         = NULL;
-		m_pTrailer      = NULL;
+		m_pPrev         = nullptr;
+		m_pTrailer      = nullptr;
 
 		if (0 == m_unStartOffset)
 		{
@@ -822,7 +822,7 @@ namespace PdfWriter
 			pEntry->nEntryType  =  FREE_ENTRY;
 			pEntry->unByteOffset = 0;
 			pEntry->unGenNo      = MAX_GENERATION_NUM;
-			pEntry->pObject      = NULL;
+			pEntry->pObject      = nullptr;
 			m_arrEntries.push_back(pEntry);
 		}
 
@@ -833,8 +833,8 @@ namespace PdfWriter
 		m_pDocument     = pDocument;
 		m_unStartOffset = unRemoveId;
 		m_unAddr        = 0;
-		m_pPrev         = NULL;
-		m_pTrailer      = NULL;
+		m_pPrev         = nullptr;
+		m_pTrailer      = nullptr;
 
 		// Add the element to be removed to the xref table
 		// it should look like 0000000000 gen+1 f
@@ -842,7 +842,7 @@ namespace PdfWriter
 		pEntry->nEntryType  =  FREE_ENTRY;
 		pEntry->unByteOffset = 0;
 		pEntry->unGenNo      = unRemoveGen + 1 > MAX_GENERATION_NUM ? MAX_GENERATION_NUM : unRemoveGen + 1;
-		pEntry->pObject      = NULL;
+		pEntry->pObject      = nullptr;
 		m_arrEntries.push_back(pEntry);
 
 		m_pTrailer = new CDictObject();
@@ -898,7 +898,7 @@ namespace PdfWriter
 			pXref = (const CXref*)pXref->m_pPrev;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 	CXref* CXref::GetXrefByObjectId(unsigned int unObjectId)
 	{
@@ -911,7 +911,7 @@ namespace PdfWriter
 			pXref = pXref->m_pPrev;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 	void CXref::Add(CObjectBase* pObject)
 	{
@@ -927,13 +927,7 @@ namespace PdfWriter
 			return;
 		}
 
-		// In case of an error, the object needs to be disposed
 		TXrefEntry* pEntry = new TXrefEntry;
-		if (NULL == pEntry)
-		{
-			RELEASE_OBJECT(pObject);
-			return;
-		}
 
 		m_arrEntries.push_back(pEntry);
 
@@ -958,13 +952,7 @@ namespace PdfWriter
 			return;
 		}
 
-		// In case of an error, the object needs to be disposed
 		TXrefEntry* pEntry = new TXrefEntry;
-		if (NULL == pEntry)
-		{
-			RELEASE_OBJECT(pObject);
-			return;
-		}
 
 		m_arrEntries.push_back(pEntry);
 
@@ -1011,7 +999,7 @@ namespace PdfWriter
 			m_pTrailer->Add("Prev", pPrev->m_unAddr);
 
 		pStream->WriteStr("trailer\012");
-		pStream->Write(m_pTrailer, NULL);
+		pStream->Write(m_pTrailer, nullptr);
 		pStream->WriteStr("\012startxref\012");
 		pStream->WriteUInt(m_unAddr);
 		pStream->WriteStr("\012%%EOF\012");
@@ -1035,7 +1023,7 @@ namespace PdfWriter
 		}
 
 		pXref = this;
-		TXrefEntry* pNextFreeObj = NULL;
+		TXrefEntry* pNextFreeObj = nullptr;
 		while (pXref)
 		{
 			for (unsigned int unIndex = 0, unCount = pXref->m_arrEntries.size(); unIndex < unCount; unIndex++)
@@ -1109,12 +1097,12 @@ namespace PdfWriter
 
 			// Sort pXref, Index should be in ascending order
 			pXref = this;
-			CXref* q, *p, *pr, *out = NULL;
+			CXref* q, *p, *pr, *out = nullptr;
 			while (pXref)
 			{
 				q = pXref;
 				pXref = pXref->m_pPrev;
-				for ( p = out, pr = NULL; p && (q->m_unStartOffset > p->m_unStartOffset); pr = p, p = p->m_pPrev);
+				for ( p = out, pr = nullptr; p && (q->m_unStartOffset > p->m_unStartOffset); pr = p, p = p->m_pPrev);
 				if (pr)
 				{
 					q->m_pPrev = p;
@@ -1175,7 +1163,7 @@ namespace PdfWriter
 
 			// Filter the stream, pEncrypt = NULL the cross-reference stream isn't encrypted
 			CStream* pFlateStream = new CMemoryStream();
-			pFlateStream->WriteStream(pTrailerStream, pTrailer->GetFilter(), NULL);
+			pFlateStream->WriteStream(pTrailerStream, pTrailer->GetFilter(), nullptr);
 			pLength->Set(pFlateStream->Size());
 
 			pBuf = sBuf;
@@ -1186,9 +1174,9 @@ namespace PdfWriter
 
 			// Write cross-reference table
 			pStream->WriteStr(sBuf);
-			pTrailer->WriteValue(pStream, NULL);
+			pTrailer->WriteValue(pStream, nullptr);
 			pStream->WriteStr("\012stream\015\012");
-			pStream->WriteStream(pFlateStream, 0, NULL);
+			pStream->WriteStream(pFlateStream, 0, nullptr);
 			pStream->WriteStr("\012endstream\012endobj\012startxref\012");
 			pStream->WriteUInt(nStreamOffset);
 			pStream->WriteStr("\012%%EOF\012");

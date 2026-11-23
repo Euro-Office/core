@@ -518,7 +518,7 @@ std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontM
 					sRC = GetRCFromDS(sDS, &oObj, {});
 					if (sRC.find("font-family:Helvetica") != std::string::npos)
 					{
-						const unsigned char* pData14 = NULL;
+						const unsigned char* pData14 = nullptr;
 						unsigned int nSize14 = 0;
 						std::wstring wsFontName = L"Helvetica";
 						NSFonts::IFontsMemoryStorage* pMemoryStorage = NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage();
@@ -856,7 +856,7 @@ std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IF
 
 			if (pMemoryStorage && !pMemoryStorage->Get(wsFontName))
 			{
-				const unsigned char* pData14 = NULL;
+				const unsigned char* pData14 = nullptr;
 				unsigned int nSize14 = 0;
 				if (GetBaseFont(wsFontName, pData14, nSize14))
 					pMemoryStorage->Add(wsFontName, (BYTE*)pData14, nSize14, false);

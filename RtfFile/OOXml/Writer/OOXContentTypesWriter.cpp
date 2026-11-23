@@ -50,7 +50,7 @@ bool OOXContentTypesWriter::Save(std::wstring sFolder)
 {
 	NSFile::CFileBinary file;
 
-	if (false == file.CreateFile(sFolder + FILE_SEPARATOR_STR + _T("[Content_Types].xml"))) return false;
+	if (!file.CreateFile(sFolder + FILE_SEPARATOR_STR + _T("[Content_Types].xml"))) return false;
 
 	std::wstring sXml = CreateXml();
 

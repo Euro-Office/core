@@ -126,6 +126,7 @@ add_library(graphics SHARED
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/Pnm/PnmFile.cpp
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/Ras/RasFile.cpp
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/WebP/WebPFile.cpp
+	${DESKTOP_EDITOR_ROOT_DIR}/raster/heif/heif.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/raster/ImageFileFormatChecker.cpp
 
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/tif_xfile.cpp
@@ -139,7 +140,6 @@ add_library(graphics SHARED
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximaico.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximainfo.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximaint.cpp
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximajbg.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximajpg.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximalpha.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximalyr.cpp
@@ -158,8 +158,6 @@ add_library(graphics SHARED
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/xmemfile.cpp
 
     # !disable_cximage_all {
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jbig/jbig_tab.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jbig/jbig.c
         ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/JBig2File.cpp
         ${JBIG2ENC_SOURCES}
         ${DESKTOP_EDITOR_ROOT_DIR}/raster/Jp2/J2kFile.cpp
@@ -380,6 +378,7 @@ add_library(graphics SHARED
     ${FONT_ENGINE_SOURCES_DIR}/ApplicationFonts.cpp
     ${FONT_ENGINE_SOURCES_DIR}/ApplicationFontsWorker.cpp
     ${FONT_ENGINE_SOURCES_DIR}/fontconverter/StringExt.cpp
+    ${FONT_ENGINE_SOURCES_DIR}/ColrV1Renderer.cpp
     ${FONT_ENGINE_SOURCES_DIR}/FontFile.cpp
     ${FONT_ENGINE_SOURCES_DIR}/FontManager.cpp
     ${FONT_ENGINE_SOURCES_DIR}/FontPath.cpp
@@ -749,6 +748,9 @@ target_compile_definitions(graphics PRIVATE
 
     # brotli.pri
     FT_CONFIG_OPTION_USE_BROTLI
+
+    # HEIC and AVIF through libheif (CXIMAGE_SUPPORT_HEIF)
+    SUPPORT_LIB_HEIF_SOURCES
 )
 
 if(LINUX)
@@ -835,7 +837,7 @@ target_link_libraries(graphics PUBLIC
 )
 
 target_link_libraries(graphics PUBLIC z)
-target_link_libraries(graphics PRIVATE jpeg png tiff webp webpdemux leptonica)
+target_link_libraries(graphics PRIVATE jpeg png tiff webp webpdemux heif leptonica)
 
 if(WIN32)
     target_link_libraries(graphics PUBLIC

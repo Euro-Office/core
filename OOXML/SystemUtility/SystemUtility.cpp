@@ -291,10 +291,7 @@ namespace OOX
 
 	void CPath::CheckIsRoot()
 	{
-		if(m_strFilename.length() > 0 && ( '/' == m_strFilename[0] ))
-			m_bIsRoot = true;
-		else
-			m_bIsRoot = false;
+		m_bIsRoot = m_strFilename.length() > 0 && ( '/' == m_strFilename[0] );
 	}
 
 	void CPath::SetName(std::wstring sName, bool bNormalize)
@@ -344,7 +341,7 @@ namespace OOX
 		return NSDirectory::CreateDirectory(oPath.GetPath());
 	}
 
-	void CSystemUtility::ReplaceExtention(std::wstring& strName, std::wstring& str1, std::wstring& str2)
+	void CSystemUtility::ReplaceExtention(std::wstring&  /*strName*/, std::wstring&  /*str1*/, std::wstring&  /*str2*/)
 	{
 		return;
 	}

@@ -760,8 +760,17 @@ void odt_conversion_context::set_field_instr()
 
 	current_fields.back().status = 1; //prepare
 
+	// STYLEREF (a chapter field from ODT, or Word's) has no ODF counterpart here: its result is
+	// kept as text. Typed first, so that the searches below don't take its style name for
+	// HYPERLINK, REF, PAGE, TOC, ...
+	const bool bStyleRef = boost::algorithm::starts_with(boost::algorithm::trim_left_copy(instr), L"STYLEREF");
+	if (bStyleRef)
+	{
+		current_fields.back().type = fieldStyleRef;
+	}
+
 	size_t res1 = instr.find(L"HYPERLINK");
-	if (std::wstring::npos != res1)	
+	if (std::wstring::npos != res1 && !bStyleRef)
 	{
 		current_fields.back().type = fieldHyperlink;
 		current_fields.back().in_span = false;

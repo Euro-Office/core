@@ -18,6 +18,7 @@
 #include <iomanip>
 #include <sstream>
 #include <random>
+#include <cstdint>
 
 #ifndef VALUE2STR
 #define VALUE_TO_STRING(x) #x
@@ -131,7 +132,7 @@ void replace_all(std::wstring& s, const std::wstring& s1, const std::wstring& s2
 	size_t l = s2.length();
 	while (pos != std::string::npos)
 	{
-		if (!(s1 == L"&" && s2 == L"&amp;" && s.length() > pos + 4 && s[pos] == L'&' && s[pos + 1] == L'a' && s[pos + 2] == L'm' && s[pos + 3] == L'p' && s[pos + 4] == L';'))
+		if (!(s1 == L"&" && s2 == L"&amp;") || s.length() <= pos + 4 || s[pos] != L'&' || s[pos + 1] != L'a' || s[pos + 2] != L'm' || s[pos + 3] != L'p' || s[pos + 4] != L';')
 			s.replace(pos, s1.length(), s2);
 		pos = s.find(s1, pos + l);
 	}
@@ -153,7 +154,7 @@ std::wstring EncodeXmlString(const std::wstring& s)
 	return sRes;
 }
 
-enum class EParagraphPropertie
+enum class EParagraphPropertie : std::uint8_t
 {
 	Sup,
 	Sub,
@@ -1498,7 +1499,7 @@ public:
 
 	std::wstring GenerateUUID()
 	{
-		std::mt19937 oRand(time(0));
+		std::mt19937 oRand(time(nullptr));
 		std::wstringstream sstream;
 		sstream << std::setfill(L'0') << std::hex << std::setw(8) << (oRand() & 0xffffffff);
 		sstream << L'-';
@@ -2157,7 +2158,7 @@ HRESULT CFb2File::FromHtml(const std::wstring& sHtmlFile, const std::wstring& sD
 	bool bNeedConvert = true;
 	if (nLength > 4)
 	{
-		if (pData[0] == 0xFF && pData[1] == 0xFE && !(pData[2] == 0x00 && pData[3] == 0x00))
+		if (pData[0] == 0xFF && pData[1] == 0xFE && (pData[2] != 0x00 || pData[3] != 0x00))
 			bNeedConvert = false;
 		if (pData[0] == 0xFE && pData[1] == 0xFF)
 			bNeedConvert = false;

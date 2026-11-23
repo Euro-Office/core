@@ -40,7 +40,7 @@ JPXStream2::JPXStream2(Stream *pStream) :
 {
     m_lCurPos       = 0;
     m_lBufferSize   = 0;
-    m_pSourceBuffer = NULL;
+    m_pSourceBuffer = nullptr;
 }
 
 JPXStream2::~JPXStream2()
@@ -125,7 +125,7 @@ int JPXStream2::lookChar()
 }
 GString* JPXStream2::getPSFilter(int psLevel, const char *indent, GBool okToReadStream)
 {
-    return NULL;
+    return nullptr;
 }
 GBool JPXStream2::isBinary(GBool bLast)
 {

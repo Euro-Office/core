@@ -130,8 +130,8 @@ namespace PdfWriter
 		pXref->Add(this);
 
 		m_bRgb          = true;
-		m_pColors       = NULL;
-		m_pColorsPoints = NULL;
+		m_pColors       = nullptr;
+		m_pColorsPoints = nullptr;
 		m_nColorsCount  = 0;
 		m_bBeginExtend  = false;
 		m_bEndExtend    = false;

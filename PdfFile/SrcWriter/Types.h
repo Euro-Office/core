@@ -197,7 +197,7 @@ namespace PdfWriter
 
 		CDashMode()
 		{
-			m_pPattern  = NULL;
+			m_pPattern  = nullptr;
 			m_unCount   = 0;
 			m_dPhase    = 0;
 		}
@@ -208,12 +208,12 @@ namespace PdfWriter
 		}
         CDashMode(const CDashMode& oSrc)
         {
-            m_pPattern  = NULL;
+            m_pPattern  = nullptr;
             Set(oSrc.m_pPattern, oSrc.m_unCount, oSrc.m_dPhase);
         }
         CDashMode& operator=(const CDashMode& oSrc)
         {
-            m_pPattern  = NULL;
+            m_pPattern  = nullptr;
             Set(oSrc.m_pPattern, oSrc.m_unCount, oSrc.m_dPhase);
             return *this;
         }

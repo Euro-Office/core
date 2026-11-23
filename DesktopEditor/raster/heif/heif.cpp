@@ -1,154 +1,110 @@
 #include "heif.h"
 #include "../../common/File.h"
 
-#include <functional>
+#include <libheif/heif.h>
 
-#define CONCAT_IMPL(x, y) x##y
-#define CONCAT(x, y) CONCAT_IMPL(x, y)
-#define defer(code) Defer CONCAT(_defer_, __COUNTER__)([&](){code;})
-
-class Defer {
-	std::function<void()> func;
-public:
-	explicit Defer(std::function<void()> func) : func(func) {}
-	~Defer() { func(); }
-};
+#include <memory>
 
 namespace NSHeif {
-	NSUnicodeConverter::CUnicodeConverter CHeifFile::m_oConverter{};
+	namespace
+	{
+		// libheif needs at least this many bytes to recognize a file
+		const DWORD c_nHeaderSize = 12;
+		// Same limit as CxImage (CXIMAGE_MAX_MEMORY) for the decoded BGRA buffer
+		const unsigned long long c_nMaxFrameBytes = 1073741824;
+
+		struct CContextDeleter { void operator()(heif_context* p) const { heif_context_free(p); } };
+		struct CHandleDeleter { void operator()(heif_image_handle* p) const { heif_image_handle_release(p); } };
+		struct CImageDeleter { void operator()(heif_image* p) const { heif_image_release(p); } };
+
+		bool Decode(BYTE* buffer, DWORD size, CBgraFrame* frame, bool isRGBA)
+		{
+			std::unique_ptr<heif_context, CContextDeleter> ctx(heif_context_alloc());
+			if (!ctx || heif_context_read_from_memory_without_copy(ctx.get(), buffer, size, nullptr).code != heif_error_Ok)
+				return false;
+
+			heif_image_handle* handle_raw = nullptr;
+			if (heif_context_get_primary_image_handle(ctx.get(), &handle_raw).code != heif_error_Ok)
+				return false;
+			std::unique_ptr<heif_image_handle, CHandleDeleter> handle(handle_raw);
+
+			const int handle_width = heif_image_handle_get_width(handle.get());
+			const int handle_height = heif_image_handle_get_height(handle.get());
+			if (handle_width <= 0 || handle_height <= 0 || 4ULL * handle_width * handle_height > c_nMaxFrameBytes)
+				return false;
+
+			// 8 bits per channel whatever the bit depth of the image; libheif
+			// also applies the rotation and mirroring stored in the file
+			heif_image* img_raw = nullptr;
+			if (heif_decode_image(handle.get(), &img_raw, heif_colorspace_RGB, heif_chroma_interleaved_RGBA, nullptr).code != heif_error_Ok)
+				return false;
+			std::unique_ptr<heif_image, CImageDeleter> img(img_raw);
+
+			const int width = heif_image_get_width(img.get(), heif_channel_interleaved);
+			const int height = heif_image_get_height(img.get(), heif_channel_interleaved);
+			int stride = 0;
+			const BYTE* source = heif_image_get_plane_readonly(img.get(), heif_channel_interleaved, &stride);
+			if (!source || width <= 0 || height <= 0 || stride < 4 * width)
+				return false;
+
+			BYTE* data = new (std::nothrow) BYTE[(size_t)4 * width * height];
+			if (!data)
+				return false;
+
+			for (int y = 0; y < height; ++y)
+			{
+				const BYTE* src = source + (size_t)y * stride;
+				BYTE* dst = data + (size_t)4 * width * y;
+				for (int x = 0; x < width; ++x, src += 4, dst += 4)
+				{
+					dst[0] = isRGBA ? src[0] : src[2];
+					dst[1] = src[1];
+					dst[2] = isRGBA ? src[2] : src[0];
+					dst[3] = src[3];
+				}
+			}
+
+			frame->put_Width(width);
+			frame->put_Height(height);
+			frame->put_Stride(4 * width);
+			frame->put_Data(data);
+			return true;
+		}
+	}
 
 	bool CHeifFile::isHeif(const std::wstring& fileName)
 	{
-		heif_context* ctx = heif_context_alloc();
-		defer(heif_context_free(ctx););
-		return !IsError(heif_context_read_from_file(ctx, m_oConverter.fromUnicode(fileName, "UTF-8").c_str(), nullptr));
+		NSFile::CFileBinary file;
+		if (!file.OpenFile(fileName))
+			return false;
+		BYTE header[c_nHeaderSize];
+		DWORD read = 0;
+		file.ReadFile(header, c_nHeaderSize, read);
+		return isHeif(header, read);
 	}
 
 	bool CHeifFile::isHeif(BYTE* buffer, DWORD size)
 	{
-		heif_context* ctx = heif_context_alloc();
-		defer(heif_context_free(ctx););
-		return !IsError(heif_context_read_from_memory_without_copy(ctx, buffer, size, nullptr));
+		if (!buffer || size < c_nHeaderSize)
+			return false;
+		return heif_check_filetype(buffer, (int)c_nHeaderSize) == heif_filetype_yes_supported;
 	}
 
-	bool CHeifFile::Open(CBgraFrame *frame, const std::wstring& fileName, bool isRGBA)
+	bool CHeifFile::Open(CBgraFrame* frame, const std::wstring& fileName, bool isRGBA)
 	{
-		heif_context* ctx = heif_context_alloc();
-		defer(heif_context_free(ctx););
-		if (IsError(heif_context_read_from_file(ctx, m_oConverter.fromUnicode(fileName, "UTF-8").c_str(), nullptr)))
+		BYTE* data = nullptr;
+		DWORD size = 0;
+		if (!NSFile::CFileBinary::ReadAllBytes(fileName, &data, size))
 			return false;
-		return Decode(ctx, frame, isRGBA);
+		const bool result = Decode(data, size, frame, isRGBA);
+		RELEASEARRAYOBJECTS(data);
+		return result;
 	}
 
-	bool CHeifFile::Open(CBgraFrame *frame, BYTE* buffer, DWORD size, bool isRGBA)
+	bool CHeifFile::Open(CBgraFrame* frame, BYTE* buffer, DWORD size, bool isRGBA)
 	{
-		heif_context* ctx = heif_context_alloc();
-		defer(heif_context_free(ctx););
-		if (IsError(heif_context_read_from_memory_without_copy(ctx, buffer, size, nullptr)))
+		if (!buffer || size < c_nHeaderSize)
 			return false;
-		return Decode(ctx, frame, isRGBA);
-	}
-
-	bool CHeifFile::Save(const BYTE* source, int width, int height, int sourceStride, const std::wstring& dstPath, bool isRGBA)
-	{
-		if (!source)
-			return false;
-
-		heif_image* img;
-		defer(heif_image_release(img););
-
-		if (IsError(heif_image_create(width, height, heif_colorspace_RGB, heif_chroma_interleaved_RGB, &img)))
-			return false;
-
-		if (IsError(heif_image_add_plane(img, heif_channel_interleaved, width, height, 24)))
-			return false;
-
-		int stride;
-		BYTE* data = heif_image_get_plane(img, heif_channel_interleaved, &stride);
-
-		if (!data || stride == 0)
-			return false;
-
-		for (size_t i = 0; i < height; ++i)
-		{
-			const BYTE* row = source + (height - i - 1) * (sourceStride < 0 ? -sourceStride : sourceStride);
-			for (size_t j = 0; j < width; ++j)
-			{
-				data[(i * width + j) * 3 + (isRGBA ? 0 : 2)] = row[(width - j - 1) * 4 + 0];
-				data[(i * width + j) * 3 + 1] = row[(width - j - 1) * 4 + 1];
-				data[(i * width + j) * 3 + (isRGBA ? 2 : 0)] = row[(width - j - 1) * 4 + 2];
-			}
-		}
-
-		heif_context* ctx = heif_context_alloc();
-		defer(heif_context_free(ctx););
-
-		heif_encoder* encoder;
-		defer(heif_encoder_release(encoder););
-
-		if (IsError(heif_context_get_encoder_for_format(ctx, heif_compression_HEVC, &encoder)))
-			return false;
-
-		if (IsError(heif_context_encode_image(ctx, img, encoder, nullptr, nullptr)))
-			return false;
-
-		if (IsError(heif_context_write_to_file(ctx, m_oConverter.fromUnicode(dstPath, "UTF-8").c_str())))
-			return false;
-
-		return true;
-	}
-
-	inline bool CHeifFile::IsError(heif_error err)
-	{
-		return err.code != heif_error_Ok;
-	}
-
-	inline bool CHeifFile::Decode(heif_context* ctx, CBgraFrame* frame, bool isRGBA)
-	{
-		heif_image_handle* handle = nullptr;
-		defer(heif_image_handle_release(handle););
-
-		if (IsError(heif_context_get_primary_image_handle(ctx, &handle)))
-			return false;
-
-		heif_image* img = nullptr;
-		defer(heif_image_release(img););
-
-		if (IsError(heif_decode_image(handle, &img, heif_colorspace_RGB, heif_chroma_444, nullptr)))
-			return false;
-
-		int width = heif_image_get_primary_width(img);
-		int height = heif_image_get_primary_height(img);
-
-		int stride_R, stride_G, stride_B;
-		const BYTE* source_R = heif_image_get_plane_readonly(img, heif_channel_R, &stride_R);
-		const BYTE* source_G = heif_image_get_plane_readonly(img, heif_channel_G, &stride_G);
-		const BYTE* source_B = heif_image_get_plane_readonly(img, heif_channel_B, &stride_B);
-
-		if (stride_R == 0 || !source_R)
-			return false;
-
-		BYTE* data = new BYTE[4 * width * height];
-
-		frame->put_Width(width);
-		frame->put_Height(height);
-		frame->put_Stride(4 * width);
-		frame->put_Data(data);
-
-		for (size_t i = 0; i < height; ++i)
-		{
-			const BYTE* row_R = source_R + i * stride_R;
-			const BYTE* row_G = source_G + i * stride_G;
-			const BYTE* row_B = source_B + i * stride_B;
-			for (size_t j = 0; j < width; ++j)
-			{
-				data[(i * width + j) * 4 + (isRGBA ? 0 : 2)] = row_R[j];
-				data[(i * width + j) * 4 + 1] = row_G[j];
-				data[(i * width + j) * 4 + (isRGBA ? 2 : 0)] = row_B[j];
-				data[(i * width + j) * 4 + 3] = 255;
-			}
-		}
-
-		return true;
+		return Decode(buffer, size, frame, isRGBA);
 	}
 }

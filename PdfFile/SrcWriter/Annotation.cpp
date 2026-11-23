@@ -175,8 +175,8 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
 	CAnnotation::CAnnotation(CXref* pXref, EAnnotType eType)
 	{
-		m_pAppearance = NULL;
-		m_pDocument = NULL;
+		m_pAppearance = nullptr;
+		m_pDocument = nullptr;
 		m_pXref = pXref;
 		m_oBorder.bHave = false;
 
@@ -335,7 +335,7 @@ namespace PdfWriter
 	{
 		m_pAppearance = new CAnnotAppearance(m_pXref, this);
 		if (!m_pAppearance)
-			return NULL;
+			return nullptr;
 		Add("AP", m_pAppearance);
 		CResourcesDict* pResources = new CResourcesDict(m_pXref, false, false);
 		CAnnotAppearanceObject* pNormal = m_pAppearance->GetNormal(pResources);
@@ -1207,7 +1207,7 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
 	// CStampAnnotation
 	//----------------------------------------------------------------------------------------
-	CStampAnnotation::CStampAnnotation(CXref* pXref) : CMarkupAnnotation(pXref, AnnotStamp), m_pAPStream(NULL)
+	CStampAnnotation::CStampAnnotation(CXref* pXref) : CMarkupAnnotation(pXref, AnnotStamp), m_pAPStream(nullptr)
 	{
 	}
 	void CStampAnnotation::SetRotate(double nRotate)
@@ -1243,7 +1243,7 @@ namespace PdfWriter
 			CDictObject* pStreamNew = (CDictObject*)pStream->Copy();
 			CStream* pStr = new CMemoryStream();
 			pStreamNew->SetStream(m_pXref, pStr, true);
-			pStr->WriteStream(pStream->GetStream(), 0, NULL);
+			pStr->WriteStream(pStream->GetStream(), 0, nullptr);
 			pStreamNew->SetFilter(STREAM_FILTER_FLATE_DECODE);
 			pStream = pStreamNew;
 
@@ -1265,7 +1265,7 @@ namespace PdfWriter
 	}
 	void CRedactAnnotation::SetDA(CFontDict* pFont, const double& dFontSize, const std::vector<double>& arrC)
 	{
-		const char* sFontName =  NULL;
+		const char* sFontName =  nullptr;
 		if (pFont)
 		{
 			CResourcesDict* pFieldsResources = m_pDocument->GetFieldsResources();
@@ -1325,11 +1325,11 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
 	CWidgetAnnotation::CWidgetAnnotation(CXref* pXref, EAnnotType eType) : CAnnotation(pXref, eType)
 	{
-		m_pMK         = NULL;
-		m_pParent     = NULL;
-		m_pAppearance = NULL;
-		m_pResources  = NULL;
-		m_pFont       = NULL;
+		m_pMK         = nullptr;
+		m_pParent     = nullptr;
+		m_pAppearance = nullptr;
+		m_pResources  = nullptr;
+		m_pFont       = nullptr;
 		m_dFontSizeAP = 0;
 		m_nParentID   = 0;
 		m_nQ          = 0;
@@ -1389,9 +1389,9 @@ namespace PdfWriter
 			if (pParent2 && pParent2->GetType() == object_type_DICT)
 				pParent = (CDictObject*)pParent2;
 			else
-				return NULL;
+				return nullptr;
 		}
-		return NULL;
+		return nullptr;
 	}
 	CObjectBase* CWidgetAnnotation::GetObjValue(const std::string& sV)
 	{
@@ -1408,9 +1408,9 @@ namespace PdfWriter
 			if (pParent2 && pParent2->GetType() == object_type_DICT)
 				pParent = (CDictObject*)pParent2;
 			else
-				return NULL;
+				return nullptr;
 		}
-		return NULL;
+		return nullptr;
 	}
 	void CWidgetAnnotation::CheckMK()
 	{
@@ -1622,7 +1622,7 @@ namespace PdfWriter
 			m_pAppearance = new CAnnotAppearance(m_pXref, this);
 		Add("AP", m_pAppearance);
 		CAnnotAppearanceObject* pNormal = m_pAppearance->GetNormal();
-		pNormal->DrawSimpleText(wsValue, pCodes, unCount, m_pFont, m_dFontSize, dX, dY, 0, 0, 0, NULL, fabs(m_oRect.fRight - m_oRect.fLeft), fabs(m_oRect.fBottom - m_oRect.fTop), ppFonts, pShifts);
+		pNormal->DrawSimpleText(wsValue, pCodes, unCount, m_pFont, m_dFontSize, dX, dY, 0, 0, 0, nullptr, fabs(m_oRect.fRight - m_oRect.fLeft), fabs(m_oRect.fBottom - m_oRect.fTop), ppFonts, pShifts);
 	}
 	CAnnotAppearanceObject* CWidgetAnnotation::StartAP(int nRotate)
 	{
@@ -1631,9 +1631,9 @@ namespace PdfWriter
 		double dW = fabs(m_oRect.fRight - m_oRect.fLeft);
 		double dH = fabs(m_oRect.fBottom - m_oRect.fTop);
 		if (nRotate == 0 || nRotate == 180)
-			pNormal->StartDrawText(m_pFont, m_dFontSize, 0, 0, 0, NULL, dW, dH);
+			pNormal->StartDrawText(m_pFont, m_dFontSize, 0, 0, 0, nullptr, dW, dH);
 		else
-			pNormal->StartDrawText(m_pFont, m_dFontSize, 0, 0, 0, NULL, dH, dW);
+			pNormal->StartDrawText(m_pFont, m_dFontSize, 0, 0, 0, nullptr, dH, dW);
 		pNormal->EndText();
 
 		if (nRotate == 0)
@@ -1678,7 +1678,7 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
 	CPushButtonWidget::CPushButtonWidget(CXref* pXref) : CWidgetAnnotation(pXref, AnnotWidget)
 	{
-		m_pIF = NULL;
+		m_pIF = nullptr;
 		m_nI  = -1;
 		m_nRI = -1;
 		m_nIX = -1;
@@ -1889,8 +1889,8 @@ namespace PdfWriter
 			return;
 		}
 
-		CAnnotAppearanceObject* pAppearance = NULL;
-		m_pResources = new CResourcesDict(NULL, true, false);
+		CAnnotAppearanceObject* pAppearance = nullptr;
+		m_pResources = new CResourcesDict(nullptr, true, false);
 		if (nAP == 0)
 			pAppearance = m_pAppearance->GetNormal(m_pResources);
 		else if (nAP == 1)
@@ -2012,7 +2012,7 @@ namespace PdfWriter
 		if (pCodes)
 		{
 			pAppearance->StartText(m_pFont, m_dFontSize);
-			pAppearance->DrawTextLine(dX, dY, pCodes, unCount, ppFonts, NULL);
+			pAppearance->DrawTextLine(dX, dY, pCodes, unCount, ppFonts, nullptr);
 			pAppearance->EndText();
 		}
 
@@ -2025,7 +2025,7 @@ namespace PdfWriter
 	{
 		m_nSubtype = nSubtype;
 		m_nStyle = ECheckBoxStyle::Circle;
-		m_pAP = NULL;
+		m_pAP = nullptr;
 	}
 	void CCheckBoxWidget::SetV(const std::wstring& wsV)
 	{
@@ -2085,7 +2085,7 @@ namespace PdfWriter
 		}
 		else
 		{
-			CObjectBase* pAPN = NULL;
+			CObjectBase* pAPN = nullptr;
 			CObjectBase* pAP = Get("AP");
 			if (pAP->GetType() == object_type_DICT)
 				pAPN = ((CDictObject*)pAP)->Get("N");
@@ -2104,7 +2104,7 @@ namespace PdfWriter
 					}
 				}
 			}
-			pAPN = NULL;
+			pAPN = nullptr;
 			if (pAP->GetType() == object_type_DICT)
 				pAPN = ((CDictObject*)pAP)->Get("D");
 			if (pAPN && pAPN->GetType() == object_type_DICT)
@@ -2132,7 +2132,7 @@ namespace PdfWriter
 	{
 		if (!m_pAP)
 		{
-			m_pAP = new CCheckBoxAnnotAppearance(m_pXref, this, m_sAP_N_Yes.empty() ? NULL : m_sAP_N_Yes.c_str());
+			m_pAP = new CCheckBoxAnnotAppearance(m_pXref, this, m_sAP_N_Yes.empty() ? nullptr : m_sAP_N_Yes.c_str());
 			Add("AP", m_pAP);
 		}
 

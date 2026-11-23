@@ -53,7 +53,7 @@
 	  || 'e' == (X)\
 	  || 'E' == (X))
 
-#define GetChar(STRING, POS) STRING[POS++]
+#define GetChar(STRING, POS) ((STRING)[(POS)++])
 #define LookChar(STRING, POS) STRING[POS]
 
 #ifndef SQR
@@ -148,7 +148,6 @@ namespace XPSEllipse
 
 		// Next, draw by quadrants
 
-		double fCurX = fStartX, fCurY = fStartY;
 		double dStartAngle = dAngle1;
 		double dEndAngle = 0;
 
@@ -349,7 +348,7 @@ namespace XPSEllipse
 namespace XPS
 {
 
-	static inline double GetEllipseAngle(const double& dCx, const double& dCy, const double& dRadX, const double dRadY, const double& dX, const double& dY)
+	static inline double GetEllipseAngle(const double& dCx, const double& dCy, const double& /*dRadX*/, const double /*dRadY*/, const double& dX, const double& dY)
 	{
 		// Define a quadrant
 		int nQuarter = -1;
@@ -377,6 +376,7 @@ namespace XPS
 			case 1: dAngle = 180 - dAngle; break;
 			case 2: dAngle = 180 + dAngle; break;
 			case 3: dAngle = 360 - dAngle; break;
+			default: break;
 		}
 
 		return dAngle;
@@ -489,7 +489,7 @@ namespace XPS
 				dScale *= 0.1;
 			}
 
-			return (bNegative ? (double)(-dFloat) : (double)dFloat);
+			return (bNegative ? -dFloat : dFloat);
 
 		doExponent:
 
@@ -519,7 +519,7 @@ namespace XPS
 				nExp = nExp * 10 + (wChar - '0');
 			}
 
-			dFloat = (bNegative ? (double)(-dFloat) : (double)dFloat);
+			dFloat = (bNegative ? -dFloat : dFloat);
 			nExp = std::max(20, std::min(0, nExp));
 
 			while (nExp)
@@ -598,10 +598,7 @@ namespace XPS
 		}
 
 		CWString wsBool(pBuffer, false, nBufPos);
-		if ((wsBool == L"true") || (wsBool == L"t") || (wsBool == L"1") || (wsBool == L"on"))
-			return true;
-
-		return false;
+		return ((wsBool == L"true") || (wsBool == L"t") || (wsBool == L"1") || (wsBool == L"on"));
 	}
 	static inline void   AppendArcTo(const wchar_t* wsString, int& nPos, const int& nLen, double& dCurX, double& dCurY, IRenderer* pRenderer,bool bRelative)
 	{
@@ -732,10 +729,7 @@ namespace XPS
 	{
 		std::wstring wsStr = wsString;
 		NSStringExt::ToLower(wsStr);
-		if ((wsStr == L"true") || (wsStr == L"t") || (wsStr == L"1") || (wsStr == L"on"))
-			return true;
-
-		return false;
+		return ((wsStr == L"true") || (wsStr == L"t") || (wsStr == L"1") || (wsStr == L"on"));
 	}
 	void   GetBgra(const std::wstring& wsString, int& nBgr, int& nAlpha)
 	{
@@ -1014,6 +1008,7 @@ namespace XPS
 									dCurY += GetDouble(wsString, nPos, nLen);
 									break;
 								}
+								default: break;
 							}
 
 							pRenderer->PathCommandLineTo(xpsUnitToMM(dCurX), xpsUnitToMM(dCurY));
@@ -1034,7 +1029,7 @@ namespace XPS
 							break;
 
 						if (IsNumber(LookChar(wsString, nPos)))
-							AppendArcTo(wsString, nPos, nLen, dCurX, dCurY, pRenderer, 'a' == wChar ? true : false);
+							AppendArcTo(wsString, nPos, nLen, dCurX, dCurY, pRenderer, 'a' == wChar);
 						else
 							break;
 					}
@@ -1178,6 +1173,7 @@ namespace XPS
 					bPrevCommandIsCurve = false;
 					break;
 				}
+				default: break;
 			}
 		}
 
@@ -1255,7 +1251,7 @@ namespace XPS
 			// Need to read how many real Unicode values are in
 			// span [pUnicode + nUnicodePos, pUnicode + nUnicodePos + nCodeUnitCount]
 			int nUnicodesCount = 0;
-			unsigned int* pUnicodes = NULL;
+			unsigned int* pUnicodes = nullptr;
 			nCodeUnitCount = std::min(nUtf16Len - nUtf16Pos, nCodeUnitCount);
 			if (nCodeUnitCount)
 			{
@@ -1470,7 +1466,7 @@ namespace XPS
 				else if (wsAttrName == L"FillRule")
 				{
 					CWString wsFillingRule = oReader.GetText();
-					bEvenOdd = wsFillingRule == L"EvenOdd" ? true : false;
+					bEvenOdd = wsFillingRule == L"EvenOdd";
 				}
 
 				if (!oReader.MoveToNextAttribute())
@@ -1519,7 +1515,7 @@ namespace XPS
 		while (oReader.ReadNextSiblingNode(nCurDepth))
 		{
 			wsNodeName = oReader.GetNameNoNS();
-			wsText.empty();
+			wsText.clear();
 			if (L"PolyLineSegment" == wsNodeName)
 			{
 				ReadAttribute(oReader, L"Points", wsText);
@@ -1537,7 +1533,7 @@ namespace XPS
 			}
 			else if (L"ArcSegment" == wsNodeName)
 			{
-				std::wstring wsSize, wsRotationAngle, wsIsLargeArc, wsSweepDirection, wsPoint, wsIsStroked;
+				std::wstring wsSize, wsRotationAngle, wsIsLargeArc, wsSweepDirection, wsPoint;
 				if (oReader.MoveToFirstAttribute())
 				{
 					std::wstring wsAttrName = oReader.GetName();

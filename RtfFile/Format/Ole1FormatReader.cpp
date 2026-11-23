@@ -25,7 +25,7 @@
 
 #include "Ole1FormatReader.h"
 
-CDataStream::CDataStream() : pBuffer(NULL)
+CDataStream::CDataStream() : pBuffer(nullptr)
 {
 }
 CDataStream::CDataStream(BYTE* pBuf, unsigned int unSize)
@@ -113,7 +113,7 @@ double CDataStream::ReadDouble()
 
 	return output;
 
-	int lIntValue  = (int)((pCur[0] << 16) | ((pCur[1]) << 8) | ((pCur[2]) << 0));
+	int lIntValue  = ((pCur[0] << 16) | ((pCur[1]) << 8) | ((pCur[2]) << 0));
 	int lFracValue = (int)(pCur[3]);
 	pCur += 4;
 	return (double)(lIntValue + (lFracValue / 16.0));
@@ -285,17 +285,11 @@ CDataStream& CDataStream::operator<<(_INT32 nValue)
 
 bool CDataStream::IsValid() const
 {
-	if (NULL == pBuffer)
-		return false;
-
-	return true;
+	return nullptr != pBuffer;
 }
 bool CDataStream::IsEof() const
 {
-	if (pCur >= pEnd)
-		return true;
-
-	return false;
+	return pCur >= pEnd;
 }
 unsigned int CDataStream::Tell()
 {
@@ -336,10 +330,10 @@ static CDataStream & operator << (CDataStream & strm, LengthPrefixedAnsiString s
 	return strm;
 }
 
-Ole1FormatReaderWriter::Ole1FormatReaderWriter() : NativeData(NULL), NativeDataSize(0), OtherData(NULL), OtherDataSize(0)
+Ole1FormatReaderWriter::Ole1FormatReaderWriter() : NativeData(nullptr), NativeDataSize(0), OtherData(nullptr), OtherDataSize(0)
 {
 }
-Ole1FormatReaderWriter::Ole1FormatReaderWriter(BYTE *pData, int Size) : NativeData(NULL), NativeDataSize(0), OtherData(NULL), OtherDataSize(0)
+Ole1FormatReaderWriter::Ole1FormatReaderWriter(BYTE *pData, int Size) : NativeData(nullptr), NativeDataSize(0), OtherData(nullptr), OtherDataSize(0)
 {
 	Read(pData, Size);
 }
@@ -347,7 +341,7 @@ Ole1FormatReaderWriter::~Ole1FormatReaderWriter()
 {
 	if (OtherData)
 		delete []OtherData;
-	OtherData = NULL;
+	OtherData = nullptr;
 }
 void Ole1FormatReaderWriter::Read(BYTE *pData, int Size)
 {

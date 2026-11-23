@@ -5,7 +5,7 @@
 
 namespace NSDocxRenderer
 {
-	CTable::CCell::CCell(const CCell& other)
+	CTable::CCell::CCell(const CCell& other) : CBaseItem(other)
 	{
 		*this = other;
 	}

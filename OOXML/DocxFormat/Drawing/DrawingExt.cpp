@@ -248,7 +248,7 @@ namespace OOX
 					{
 						m_oAltTextTable = oReader;
 					}
-					else if ((sName == L"conditionalFormattings") && (false == oReader.IsEmptyNode()))
+					else if ((sName == L"conditionalFormattings") && (!oReader.IsEmptyNode()))
 					{
 						int nCurDepth1 = oReader.GetDepth();
 						while (oReader.ReadNextSiblingNode(nCurDepth1))
@@ -308,7 +308,7 @@ namespace OOX
 					{
 						m_oSlicerStyles = oReader;
 					}
-					else if ((sName == L"slicerCachePivotTables") && false == oReader.IsEmptyNode())
+					else if ((sName == L"slicerCachePivotTables") && !oReader.IsEmptyNode())
 					{
 						int nCurDepth1 = oReader.GetDepth();
 						while (oReader.ReadNextSiblingNode(nCurDepth1))
@@ -356,7 +356,7 @@ namespace OOX
 							WritingElement_ReadAttributes_ReadSingle(oReader, L"autoRefresh", m_oExternalLinksAutoRefresh)
 						WritingElement_ReadAttributes_End_No_NS(oReader)
 					}
-					else if ((sName == L"dataDisplayOptions16") && (false == oReader.IsEmptyNode()))
+					else if ((sName == L"dataDisplayOptions16") && (!oReader.IsEmptyNode()))
 					{
 						m_sAdditionalNamespace = L"xmlns:c16r3=\"http://schemas.microsoft.com/office/drawing/2017/03/chart\"";
 						int nCurDepth1 = oReader.GetDepth();
@@ -471,7 +471,7 @@ namespace OOX
 			{
 				sResult += m_oDataModelExt->toXML();
 			}
-			if (false == m_arrConditionalFormatting.empty())
+			if (!m_arrConditionalFormatting.empty())
 			{
 				sResult += L"<x14:conditionalFormattings>";
 				NSStringUtils::CStringBuilder writer;
@@ -643,7 +643,7 @@ namespace OOX
 			for ( size_t nIndex = 0; nIndex < m_arrExt.size(); nIndex++ )
 			{
 				if ( m_arrExt[nIndex] ) delete m_arrExt[nIndex];
-				m_arrExt[nIndex] = NULL;
+				m_arrExt[nIndex] = nullptr;
 			}
 			m_arrExt.clear();
 		}
@@ -897,7 +897,7 @@ namespace OOX
 			{
 				if(i->m_sUri == L"{78C0D931-6437-407d-A8EE-F0AAD7539E65}")
 				{
-                    XLSB::CONDITIONALFORMATTINGS *formatPtr = NULL;
+                    XLSB::CONDITIONALFORMATTINGS *formatPtr = nullptr;
                     if(!ptr->m_CONDITIONALFORMATTINGS)
                     {
                         formatPtr = new XLSB::CONDITIONALFORMATTINGS;
@@ -954,6 +954,9 @@ namespace OOX
 					objectPtr = XLS::BaseObjectPtr(ptr);
 					auto ptr1(new XLSB::RICHDATAMETADATA);
 					ptr1->m_BeginRichValueBlock = i->m_oRichValueBlock->toBin();
+					// TODO: FMD expects this node in m_RICHDATAMETADATA, but nothing attaches it
+					// today; the output stays as it is until that is fixed.
+					delete ptr1;
 				}
 			}
 			return objectPtr;

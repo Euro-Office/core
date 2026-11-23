@@ -26,6 +26,8 @@
 #include "ZipUtilsCP.h"
 #include "../../DesktopEditor/common/File.h"
 #include "../../DesktopEditor/common/Directory.h"
+
+#include <limits>
 #include <sstream>
 
 COfficeUtils::COfficeUtils(OnProgressCallback* fCallback)
@@ -230,7 +232,7 @@ HRESULT COfficeUtils::ExtractFilesToMemory(const std::wstring& _zipFile, const E
 	std::wstring zipFile = _zipFile;
 #endif
 
-	*result = ZLibZipUtils::ExtractFiles(zipFile.c_str(), data_receiver, pParam) ? true : false;
+	*result = ZLibZipUtils::ExtractFiles(zipFile.c_str(), data_receiver, pParam);
 	return S_OK;
 }
 
@@ -242,7 +244,7 @@ HRESULT COfficeUtils::CompressFilesFromMemory(const std::wstring& _zipFile, cons
 	std::wstring zipFile = _zipFile;
 #endif
 
-	*result = ZLibZipUtils::CompressFiles(zipFile.c_str(), data_source, pParam, compression_level) ? true : false;
+	*result = ZLibZipUtils::CompressFiles(zipFile.c_str(), data_source, pParam, compression_level);
 	return S_OK;
 }
 
@@ -291,7 +293,7 @@ void CDeflate::SetIn(BYTE* next_in, UINT avail_in, ULONG total_in)
 	m_internal->m_stream.next_in = next_in;
 	m_internal->m_stream.avail_in = avail_in;
 
-	if (-1 != total_in)
+	if (std::numeric_limits<ULONG>::max() != total_in)
 		m_internal->m_stream.total_in = total_in;
 }
 
@@ -300,7 +302,7 @@ void CDeflate::SetOut(BYTE* next_out, UINT avail_out, ULONG total_out)
 	m_internal->m_stream.next_out = next_out;
 	m_internal->m_stream.avail_out = avail_out;
 
-	if (-1 != total_out)
+	if (std::numeric_limits<ULONG>::max() != total_out)
 		m_internal->m_stream.total_out = total_out;
 }
 
@@ -356,7 +358,7 @@ void CInflate::SetIn(BYTE* next_in, UINT avail_in, ULONG total_in)
 	m_internal->m_stream.next_in = next_in;
 	m_internal->m_stream.avail_in = avail_in;
 
-	if (-1 != total_in)
+	if (std::numeric_limits<ULONG>::max() != total_in)
 		m_internal->m_stream.total_in = total_in;
 }
 
@@ -365,7 +367,7 @@ void CInflate::SetOut(BYTE* next_out, UINT avail_out, ULONG total_out)
 	m_internal->m_stream.next_out = next_out;
 	m_internal->m_stream.avail_out = avail_out;
 
-	if (-1 != total_out)
+	if (std::numeric_limits<ULONG>::max() != total_out)
 		m_internal->m_stream.total_out = total_out;
 }
 
@@ -417,6 +419,7 @@ namespace  NSZip
 		}
 		catch(...)
 		{
+			return false;
 		}
 		return false;
 	}

@@ -44,7 +44,7 @@ namespace PdfWriter
 	static int GetSymbolicCmapIndex(FT_Face pFace)
 	{
 		TT_OS2 *pOs2 = (TT_OS2 *)FT_Get_Sfnt_Table(pFace, ft_sfnt_os2);
-		if (NULL == pOs2 || 0xFFFF == pOs2->version)
+		if (nullptr == pOs2 || 0xFFFF == pOs2->version)
 			return -1;
 
 		// Checking whether bit 31 is set
@@ -94,8 +94,8 @@ namespace PdfWriter
 		else
 			CreateCIDFont2(pFont);
 
-		m_pFace         = NULL;
-		m_pFaceMemory   = NULL;
+		m_pFace         = nullptr;
+		m_pFaceMemory   = nullptr;
 		m_nGlyphsCount  = 0;
 		m_nSymbolicCmap = -1;
 		m_ushCodesCount = 0;
@@ -284,7 +284,7 @@ namespace PdfWriter
 				return;
 
 			CStream* pStream = m_pFontFileDict->GetStream();
-			m_pFontFile->WriteTTF(pStream, NULL, pCodeToGid, m_ushCodesCount, pGlyphs, unGlyphsCount);
+			m_pFontFile->WriteTTF(pStream, nullptr, pCodeToGid, m_ushCodesCount, pGlyphs, unGlyphsCount);
 			m_pFontFileDict->SetFilter(STREAM_FILTER_FLATE_DECODE);
 
 			CArrayObject* pWArray = new CArrayObject();
@@ -324,9 +324,9 @@ namespace PdfWriter
 	}
 	bool CFontCidTrueType::GetWidthsAndGids(unsigned short** ppCodeToGid, unsigned int** ppWidths, unsigned char** ppGlyphs, unsigned int& unGlyphsCount)
 	{
-		*ppCodeToGid  = NULL;
-		*ppWidths     = NULL;
-		*ppGlyphs     = NULL;
+		*ppCodeToGid  = nullptr;
+		*ppWidths     = nullptr;
+		*ppGlyphs     = nullptr;
 		unGlyphsCount = 0;
 		
 		if (!m_nGlyphsCount)
@@ -363,7 +363,9 @@ namespace PdfWriter
 		{
 			for (auto oIt : m_mGlyphs)
 			{
-				pGlyphs[oIt.first] = 1;
+				// A text command can name a glyph the font doesn't have: it is not in the subset.
+				if (oIt.first < m_nGlyphsCount)
+					pGlyphs[oIt.first] = 1;
 			}
 		}
 
@@ -423,7 +425,7 @@ namespace PdfWriter
 		if (m_pFace)
 		{
 			FT_Done_Face(m_pFace);
-			m_pFace = NULL;
+			m_pFace = nullptr;
 		}
 
 		RELEASEARRAYOBJECTS(m_pFaceMemory);
@@ -444,7 +446,7 @@ namespace PdfWriter
 			return false;
 
 		DWORD dwFileSize;
-		m_pFaceMemory = NULL;
+		m_pFaceMemory = nullptr;
 		NSFile::CFileBinary::ReadAllBytes(m_wsFontPath, &m_pFaceMemory, dwFileSize);
 		if (!m_pFaceMemory)
 			return false;
@@ -518,6 +520,10 @@ namespace PdfWriter
 		if (!OpenFontFace())
 			return 0;
 
+		// A glyph the font doesn't have takes no code: the caller draws it through the renderer.
+		if (unGID >= (unsigned int)m_nGlyphsCount)
+			return 0;
+
 		unsigned short ushCode = m_ushCodesCount++;
 
 		std::vector<unsigned int> vUnicodes;
@@ -556,7 +562,7 @@ namespace PdfWriter
 
 				m_mGlyphs.insert(std::pair<unsigned short, bool>(nSubGID, false));
 
-				EncodeGID(nSubGID, NULL, 0);
+				EncodeGID(nSubGID, nullptr, 0);
 				FT_Load_Glyph(m_pFace, unGID, FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE);
 			}
 		}

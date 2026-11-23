@@ -23,6 +23,8 @@
  *
  */
 #include "FontManager.h"
+#include "ColrV1Renderer.h"
+#include <new>
 #include "internal/ftobjs.h"
 #include "../common/Types.h"
 #include "../common/File.h"
@@ -45,7 +47,7 @@ TFontCacheSizes* CCacheGlyphs::Get(const int& code)
 	std::map<int, TFontCacheSizes>::iterator iter = map->find(code);
 	if (iter != map->end())
 		return &iter->second;
-	return NULL;
+	return nullptr;
 }
 
 void CCacheGlyphs::Add(const TFontCacheSizes& item)
@@ -118,9 +120,9 @@ FT_Error FT_Load_Glyph_Wrapper( FT_Face   face,
 
 CFontFile::CFontFile()
 {
-	m_pStream = NULL;
-	m_pFontManager = NULL;
-	m_pDefaultFont = NULL;
+	m_pStream = nullptr;
+	m_pFontManager = nullptr;
+	m_pDefaultFont = nullptr;
 	ClearCache();
 
 	memset(m_arrdFontMatrix, 0, 6 * sizeof(double));
@@ -145,7 +147,7 @@ CFontFile::CFontFile()
 
 	m_lFaceIndex = 0;
 	
-	m_pFace = NULL;
+	m_pFace = nullptr;
 	
 	m_dUnitsKoef = 0;
 	m_nDefaultChar = -1;
@@ -189,7 +191,7 @@ void CFontFile::LoadDefaultCharAndSymbolicCmapIndex()
 	m_nSymbolic = -1;
 
 	TT_OS2* pTable = (TT_OS2*)FT_Get_Sfnt_Table( m_pFace, ft_sfnt_os2 );
-	if (NULL == pTable)
+	if (nullptr == pTable)
 		return;
 
 	m_nDefaultChar = pTable->usDefaultChar;
@@ -200,7 +202,7 @@ void CFontFile::LoadDefaultCharAndSymbolicCmapIndex()
 
 	FT_ULong ulCodePageRange1 = pTable->ulCodePageRange1;
 	FT_ULong ulCodePageRange2 = pTable->ulCodePageRange2;
-	if (!(ulCodePageRange1 & 0x80000000) && !(ulCodePageRange1 == 0 && ulCodePageRange2 == 0))
+	if (!(ulCodePageRange1 & 0x80000000) && (ulCodePageRange1 != 0 || ulCodePageRange2 != 0))
 		return;
 
 	for (int nIndex = 0; nIndex < m_pFace->num_charmaps; ++nIndex)
@@ -269,8 +271,6 @@ void CFontFile::CheckTextMatrix()
 
 void CFontFile::UpdateMatrix0()
 {
-	double m1 = m_arrdTextMatrix[2];
-	double m2 = m_arrdTextMatrix[3];
 	m_dTextScale = sqrt(m_arrdTextMatrix[2]*m_arrdTextMatrix[2] + m_arrdTextMatrix[3]*m_arrdTextMatrix[3]);
 	
 	FT_BBox* bbox = &m_pFace->bbox;
@@ -353,7 +353,7 @@ void CFontFile::UpdateMatrix0()
 	m_oTextMatrix.xy = (FT_Fixed)((m_arrdTextMatrix[2] / m_dTextScale) * 65536);
 	m_oTextMatrix.yy = (FT_Fixed)((m_arrdTextMatrix[3] / m_dTextScale) * 65536);
 
-	FT_Set_Transform( m_pFace, &m_oFontMatrix, NULL );
+	FT_Set_Transform( m_pFace, &m_oFontMatrix, nullptr );
 }
 
 void CFontFile::UpdateMatrix1()
@@ -363,7 +363,7 @@ void CFontFile::UpdateMatrix1()
 	m_oFontMatrix.xy = (FT_Fixed)(m_arrdFontMatrix[2] * 65536);
 	m_oFontMatrix.yy = (FT_Fixed)(m_arrdFontMatrix[3] * 65536);
 
-	FT_Set_Transform( m_pFace, &m_oFontMatrix, NULL );
+	FT_Set_Transform( m_pFace, &m_oFontMatrix, nullptr );
 }
 
 void CFontFile::UpdateMatrix2()
@@ -373,7 +373,7 @@ void CFontFile::UpdateMatrix2()
 	m_oFontMatrix.xy = (FT_Fixed)(( m_arrdFontMatrix[2] * m_arrdTextMatrix[0] + m_arrdFontMatrix[3] * m_arrdTextMatrix[2] ) * 65536);
 	m_oFontMatrix.yy = (FT_Fixed)(( m_arrdFontMatrix[2] * m_arrdTextMatrix[1] + m_arrdFontMatrix[3] * m_arrdTextMatrix[3] ) * 65536);
 
-	FT_Set_Transform( m_pFace, &m_oFontMatrix, NULL );
+	FT_Set_Transform( m_pFace, &m_oFontMatrix, nullptr );
 }
 
 void CFontFile::SetSizeAndDpi(double dSize, double unHorDpi, double unVerDpi)
@@ -518,7 +518,7 @@ void CFontFile::GetPanose(BYTE* pData)
 		return;
 
 	TT_OS2 *pTable = (TT_OS2 *)FT_Get_Sfnt_Table( m_pFace, ft_sfnt_os2 );
-	if ( NULL == pTable )
+	if ( nullptr == pTable )
 		return;
 
 	memcpy( pData, pTable->panose, 10 );
@@ -537,7 +537,7 @@ int CFontFile::IsUnicodeRangeAvailable(unsigned long ulBit, unsigned int un4Byte
 		return -1;
 
 	TT_OS2 *pOs2 = (TT_OS2 *)FT_Get_Sfnt_Table( m_pFace, ft_sfnt_os2 );
-	if ( NULL == pOs2 || 0xFFFF == pOs2->version )
+	if ( nullptr == pOs2 || 0xFFFF == pOs2->version )
 		return -1;
 
 	int nResult = 0;
@@ -554,6 +554,10 @@ int CFontFile::IsUnicodeRangeAvailable(unsigned long ulBit, unsigned int un4Byte
 	case 3: if ( pOs2->ulUnicodeRange4  & ulMult ) nResult = 1; break;
 	case 4: if ( pOs2->ulCodePageRange1 & ulMult ) nResult = 1; break;
 	case 5: if ( pOs2->ulCodePageRange2 & ulMult ) nResult = 1; break;
+		default:
+		{
+			break;
+		}
 	}
 
 	// Special branch for cases when charset can be specified not through values
@@ -632,18 +636,11 @@ void CFontFile::UpdateStyles(const INT& bBold, const INT& bItalic)
 	{
 		m_bNeedDoBold = false;
 	}
-	else if (bBold) // Make the font bold
+	else // Make the font bold
 	{
-		if (bSrcBold)
-		{
-			// The original font is already bold, so there is no need to do anything additional.
-			m_bNeedDoBold = false;
-		}
-		else
-		{
-			// The original font isn't bold, so synthesize bold
-			m_bNeedDoBold = true;
-		}
+		// If the original font is already bold, there is no need to do anything additional,
+		// otherwise synthesize bold
+		m_bNeedDoBold = !bSrcBold;
 	}
 
 	if (!bItalic) // Need a non-italic font
@@ -714,8 +711,6 @@ void CFontFile::CheckHintsSupport()
 		return;
 	}
 
-	std::wstring sFamilyName = GetCorrectSfntName(m_pFace->family_name);
-
 	if (m_sName == L"MS Mincho" || m_sName == L"Castellar")
 		m_bHintsSupport = FALSE;
 }
@@ -743,7 +738,8 @@ int CFontFile::SetCMapForCharCode(long lUnicode, int *pnCMapIndex)
 
 		if ( FT_ENCODING_UNICODE == pEncoding )
 		{
-			if ( nCharIndex = FT_Get_Char_Index( m_pFace, lUnicode ) )
+			nCharIndex = FT_Get_Char_Index( m_pFace, lUnicode );
+			if ( nCharIndex )
 			{
 				*pnCMapIndex = nIndex;
 				return nCharIndex;
@@ -768,7 +764,8 @@ int CFontFile::SetCMapForCharCode(long lUnicode, int *pnCMapIndex)
 			}
 #endif
 
-			if ( nCharIndex = FT_Get_Char_Index( m_pFace, lUnicode ) )
+			nCharIndex = FT_Get_Char_Index( m_pFace, lUnicode );
+			if ( nCharIndex )
 			{
 				*pnCMapIndex = nIndex;
 			}
@@ -785,7 +782,7 @@ int CFontFile::SetCMapForCharCode2(long lUnicode)
 
 	int nCMapIndex = 0;
 	TFontCacheSizes* pCachedGlyph = m_oCache.Get(lUnicode);
-	if (NULL == pCachedGlyph)
+	if (nullptr == pCachedGlyph)
 		return SetCMapForCharCode( lUnicode, &nCMapIndex );
 
 	FT_Int unGID = pCachedGlyph->GID;
@@ -860,17 +857,17 @@ TFontCacheSizes CFontFile::CacheGlyph(const int& code, const bool& isRaster, CVe
 	if (m_bIsNeedUpdateMatrix12)
 		UpdateMatrix2();
 
-	FT_Int32 _LOAD_MODE = m_bHintsSupport ? m_pFontManager->m_nLOAD_MODE : 40970;
-	if (0 != FT_Load_Glyph_Wrapper(m_pFace, unGID, _LOAD_MODE, m_bHintsSupport))
+	FT_Int32 lLoadMode = m_bHintsSupport ? m_pFontManager->m_nLOAD_MODE : 40970;
+	if (0 != FT_Load_Glyph_Wrapper(m_pFace, unGID, lLoadMode, m_bHintsSupport))
 		return oSizes;
 
-	FT_Glyph pGlyph = NULL;
+	FT_Glyph pGlyph = nullptr;
 	if ( FT_Get_Glyph( m_pFace->glyph, &pGlyph ) )
 		return oSizes;
 
 	TT_OS2* pOS2 = (TT_OS2*)FT_Get_Sfnt_Table(m_pFace, ft_sfnt_os2);
 
-	bool bIsNeedBold = (m_bNeedDoBold == TRUE) ? true : false;
+	bool bIsNeedBold = m_bNeedDoBold == TRUE;
 	if (bIsNeedBold && pOS2 && pOS2->version != 0xFFFF && pOS2->usWeightClass >= 800)
 		bIsNeedBold = false;
 
@@ -878,7 +875,14 @@ TFontCacheSizes CFontFile::CacheGlyph(const int& code, const bool& isRaster, CVe
 	{
 		if (bIsNeedBold)
 			FT_Outline_EmboldenXY(&((FT_OutlineGlyph)pGlyph)->outline, (m_unHorDpi * 64 / 25.4) / 3, 0);
-		FT_Outline_Decompose( &((FT_OutlineGlyph)pGlyph)->outline, pWorker->func_interface, pWorker->user );
+		// color glyphs have no outline of their own: draw the layers' silhouette
+		FT_Outline* pOutline = &((FT_OutlineGlyph)pGlyph)->outline;
+		FT_Outline oSilhouette = {};
+		bool bSilhouette = 0 == pOutline->n_points && ColrV1_GetSilhouette(m_pFace, unGID, &oSilhouette);
+		FT_Outline_Decompose(bSilhouette ? &oSilhouette : pOutline, pWorker->func_interface, pWorker->user);
+		if (bSilhouette)
+			FT_Outline_Done(m_pFace->glyph->library, &oSilhouette);
+		FT_Done_Glyph(pGlyph);
 		return oSizes;
 	}
 
@@ -941,10 +945,10 @@ TFontCacheSizes CFontFile::CacheGlyph(const int& code, const bool& isRaster, CVe
 		nRowSize = (pBitmap->nWidth + 7) >> 3;
 	}
 
-	if (0 != (nRowSize * pBitmap->nHeight))
-		pBitmap->pData = (unsigned char *)malloc( nRowSize * pBitmap->nHeight );
+	if (0 != (static_cast<size_t>(nRowSize) * pBitmap->nHeight))
+		pBitmap->pData = (unsigned char *)malloc( static_cast<size_t>(nRowSize) * pBitmap->nHeight );
 	else
-		pBitmap->pData = NULL;
+		pBitmap->pData = nullptr;
 
 	// Everything in the cache is deleted (during flush or replacement)
 	pBitmap->bFreeData = FALSE;
@@ -952,7 +956,7 @@ TFontCacheSizes CFontFile::CacheGlyph(const int& code, const bool& isRaster, CVe
 	int nIndex2;
 	unsigned char *pDstBuffer, *pSrcBuffer;
 
-	if (NULL != pBitmap->pData)
+	if (nullptr != pBitmap->pData)
 	{
 		if ( !bIsNeedBold || !m_bAntiAliasing )
 		{
@@ -998,7 +1002,7 @@ TFontCacheSizes CFontFile::CacheGlyph(const int& code, const bool& isRaster, CVe
 TFontCacheSizes CFontFile::GetChar(LONG lUnicode)
 {
 	TFontCacheSizes* pCachedGlyph = m_oCache.Get(lUnicode);
-	if (NULL != pCachedGlyph)
+	if (nullptr != pCachedGlyph)
 		return *pCachedGlyph;
 
 	TFontCacheSizes oSizes = CacheGlyph(lUnicode, false);
@@ -1014,7 +1018,7 @@ double CFontFile::GetCharWidth(int gid)
 	if (0 != FT_Load_Glyph(m_pFace, gid, 40970))
 		return 0;
 
-	FT_Glyph pGlyph = NULL;
+	FT_Glyph pGlyph = nullptr;
 	if (0 != FT_Get_Glyph(m_pFace->glyph, &pGlyph))
 		return 0;
 
@@ -1085,7 +1089,6 @@ INT CFontFile::GetString(CGlyphString& oString)
 			pCacheGlyph = m_oCache.Get(ushUnicode);
 		}
 
-		if (true)
 		{
 			unGID = pCacheGlyph->GID;
 
@@ -1167,10 +1170,8 @@ INT CFontFile::GetString2(CGlyphString& oString)
 			pCacheGlyph = m_oCache.Get(nUnicode);
 		}
 
-		if (nUnicode < 0) nUnicode = 0;
 		int unGID = 0;
 
-		if (true)
 		{
 			unGID = pCacheGlyph->GID;
 
@@ -1242,7 +1243,6 @@ INT CFontFile::GetString2C(CGlyphString& oString)
 		pCacheGlyph = m_oCache.Get(nUnicode);
 	}
 
-	if (true)
 	{
 		if (glyphstateMiss == pCacheGlyph->eState)
 		{
@@ -1263,7 +1263,6 @@ INT CFontFile::GetString2C(CGlyphString& oString)
 		pCurGlyph->oBitmap = pCacheGlyph->oBitmap;
 	}
 
-	if (true)
 	{
 		float fX = oString.m_fX + fPenX;
 		float fY = oString.m_fY + fPenY;
@@ -1373,10 +1372,10 @@ static int GlyphPathConicTo(const FT_Vector *pControlPoint, const FT_Vector *pEn
 	//     p1 = (1/3) * (p0 + 2pC)
 	//     p2 = (1/3) * (2pC + p3)
 
-	double dX1 = (double)(1.0 / 3.0) * (dX0 + (double)2 * dXc);
-	double dY1 = (double)(1.0 / 3.0) * (dY0 + (double)2 * dYc);
-	double dX2 = (double)(1.0 / 3.0) * ((double)2 * dXc + dX3);
-	double dY2 = (double)(1.0 / 3.0) * ((double)2 * dYc + dY3);
+	double dX1 = (1.0 / 3.0) * (dX0 + (double)2 * dXc);
+	double dY1 = (1.0 / 3.0) * (dY0 + (double)2 * dYc);
+	double dX2 = (1.0 / 3.0) * ((double)2 * dXc + dX3);
+	double dY2 = (1.0 / 3.0) * ((double)2 * dYc + dY3);
 
 	pGlyphPath->pPath->CurveTo( dX1, dY1, dX2, dY2, dX3, dY3 );
 	pGlyphPath->bNeedClose = TRUE;
@@ -1427,7 +1426,7 @@ bool CFontFile::IsItalic()
 	if (!m_pFace)
 		return false;
 
-	return ((m_pFace->style_flags & FT_STYLE_FLAG_ITALIC) != 0) ? true : false;
+	return (m_pFace->style_flags & FT_STYLE_FLAG_ITALIC) != 0;
 }
 
 bool CFontFile::IsBold()
@@ -1439,7 +1438,7 @@ bool CFontFile::IsBold()
 	if (pOS2 && pOS2->version != 0xFFFF && pOS2->usWeightClass >= 800)
 		return true;
 
-	return ((m_pFace->style_flags & FT_STYLE_FLAG_BOLD) != 0) ? true : false;
+	return (m_pFace->style_flags & FT_STYLE_FLAG_BOLD) != 0;
 }
 
 bool CFontFile::IsSymbolic(bool bIsOS2Check)
@@ -1447,13 +1446,13 @@ bool CFontFile::IsSymbolic(bool bIsOS2Check)
 	if (!m_pFace)
 		return false;
 
-	bool bIsSymbol = (-1 != m_nSymbolic) ? true : false;
+	bool bIsSymbol = -1 != m_nSymbolic;
 
 	if (!bIsSymbol && bIsOS2Check)
 	{
 		TT_OS2* pOS2 = (TT_OS2*)FT_Get_Sfnt_Table(m_pFace, ft_sfnt_os2);
 
-		if (NULL != pOS2)
+		if (nullptr != pOS2)
 		{
 			if (0 == (pOS2->ulCodePageRange1 & 0xF0000000))
 				bIsSymbol = true;
@@ -1470,7 +1469,7 @@ int CFontFile::GetEmbeddingLicenceType()
 
 	int nType = 0;
 	TT_OS2* pOS2 = (TT_OS2*)FT_Get_Sfnt_Table(m_pFace, ft_sfnt_os2);
-	if (NULL != pOS2)
+	if (nullptr != pOS2)
 		return (int)pOS2->fsType;
 	return 0;
 }
@@ -1479,86 +1478,129 @@ void CFontFile::FillFontSelectFormat(NSFonts::CFontSelectFormat& oFormat)
 	if (!m_pFace)
 		return;
 
-	if (NULL == oFormat.wsName)
+	if (nullptr == oFormat.wsName)
 		oFormat.wsName = new std::wstring(m_sName);
 
-	if (NULL == oFormat.wsFamilyClass)
+	if (nullptr == oFormat.wsFamilyClass)
 		oFormat.wsFamilyClass = new std::wstring(GetCorrectSfntName(m_pFace->style_name));
 
-	if (NULL == oFormat.bItalic)
+	if (nullptr == oFormat.bItalic)
 		oFormat.bItalic = new INT(IsItalic() ? 1 : 0);
 
-	if (NULL == oFormat.bBold)
+	if (nullptr == oFormat.bBold)
 		oFormat.bBold = new INT(IsBold() ? 1 : 0);
 
-	if (NULL == oFormat.bFixedWidth)
+	if (nullptr == oFormat.bFixedWidth)
 		oFormat.bFixedWidth = new INT(IsFixedWidth() ? 1 : 0);
 
 	TT_OS2* pOS2 = (TT_OS2*)FT_Get_Sfnt_Table(m_pFace, ft_sfnt_os2);
-	if (NULL != pOS2)
+	if (nullptr != pOS2)
 	{
-		if (NULL == oFormat.pPanose)
+		if (nullptr == oFormat.pPanose)
 		{
 			oFormat.pPanose = new BYTE[10];
 			memcpy((void*)oFormat.pPanose, pOS2->panose, 10);
 		}
 
-		if (NULL == oFormat.ulRange1)
+		if (nullptr == oFormat.ulRange1)
 			oFormat.ulRange1 = new UINT(pOS2->ulUnicodeRange1);
-		if (NULL == oFormat.ulRange2)
+		if (nullptr == oFormat.ulRange2)
 			oFormat.ulRange2 = new UINT(pOS2->ulUnicodeRange2);
-		if (NULL == oFormat.ulRange3)
+		if (nullptr == oFormat.ulRange3)
 			oFormat.ulRange3 = new UINT(pOS2->ulUnicodeRange3);
-		if (NULL == oFormat.ulRange4)
+		if (nullptr == oFormat.ulRange4)
 			oFormat.ulRange4 = new UINT(pOS2->ulUnicodeRange4);
 
-		if (NULL == oFormat.ulCodeRange1)
+		if (nullptr == oFormat.ulCodeRange1)
 			oFormat.ulCodeRange1 = new UINT(pOS2->ulCodePageRange1);
-		if (NULL == oFormat.ulCodeRange2)
+		if (nullptr == oFormat.ulCodeRange2)
 			oFormat.ulCodeRange2 = new UINT(pOS2->ulCodePageRange2);
 
-		if (NULL == oFormat.usWeight)
+		if (nullptr == oFormat.usWeight)
 			oFormat.usWeight = new USHORT(pOS2->usWeightClass);
-		if (NULL == oFormat.usWidth)
+		if (nullptr == oFormat.usWidth)
 			oFormat.usWidth = new USHORT(pOS2->usWidthClass);
 
 		if (0 != m_pFace->units_per_EM)
 		{
 			double dKoef = ( 1000 / (double)m_pFace->units_per_EM );
 
-			if (NULL == oFormat.shAvgCharWidth)
+			if (nullptr == oFormat.shAvgCharWidth)
 				oFormat.shAvgCharWidth = new SHORT((SHORT)pOS2->xAvgCharWidth * dKoef);
-			if (NULL == oFormat.shAscent)
+			if (nullptr == oFormat.shAscent)
 				oFormat.shAscent = new SHORT((SHORT)pOS2->sTypoAscender * dKoef);
-			if (NULL == oFormat.shDescent)
+			if (nullptr == oFormat.shDescent)
 				oFormat.shDescent = new SHORT((SHORT)pOS2->sTypoDescender * dKoef);
-			if (NULL == oFormat.shLineGap)
+			if (nullptr == oFormat.shLineGap)
 				oFormat.shLineGap = new SHORT((SHORT)pOS2->sTypoLineGap * dKoef);
-			if (NULL == oFormat.shXHeight)
+			if (nullptr == oFormat.shXHeight)
 				oFormat.shXHeight = new SHORT((SHORT)pOS2->sxHeight * dKoef);
-			if (NULL == oFormat.shCapHeight)
+			if (nullptr == oFormat.shCapHeight)
 				oFormat.shCapHeight = new SHORT((SHORT)pOS2->sCapHeight * dKoef);
 		}
 		else
 		{
-			if (NULL == oFormat.shAvgCharWidth)
+			if (nullptr == oFormat.shAvgCharWidth)
 				oFormat.shAvgCharWidth = new SHORT(pOS2->xAvgCharWidth);
-			if (NULL == oFormat.shAscent)
+			if (nullptr == oFormat.shAscent)
 				oFormat.shAscent = new SHORT(pOS2->sTypoAscender);
-			if (NULL == oFormat.shDescent)
+			if (nullptr == oFormat.shDescent)
 				oFormat.shDescent = new SHORT(pOS2->sTypoDescender);
-			if (NULL == oFormat.shLineGap)
+			if (nullptr == oFormat.shLineGap)
 				oFormat.shLineGap = new SHORT(pOS2->sTypoLineGap);
-			if (NULL == oFormat.shXHeight)
+			if (nullptr == oFormat.shXHeight)
 				oFormat.shXHeight = new SHORT(pOS2->sxHeight);
-			if (NULL == oFormat.shCapHeight)
+			if (nullptr == oFormat.shCapHeight)
 				oFormat.shCapHeight = new SHORT(pOS2->sCapHeight);
 		}
 
-		if (NULL == oFormat.nFontFormat)
+		if (nullptr == oFormat.nFontFormat)
 			oFormat.nFontFormat = new int((int)GetFontFormatType(m_pFace));
 
-		if (NULL == oFormat.usType)
+		if (nullptr == oFormat.usType)
 			oFormat.usType = new USHORT(pOS2->fsType);
 	}
+}
+
+bool CFontFile::HasColorGlyphs()
+{
+	FT_ULong ulLength = 0;
+	return m_pFace && !FT_Load_Sfnt_Table(m_pFace, FT_MAKE_TAG('C', 'O', 'L', 'R'), 0, NULL, &ulLength) && ulLength > 0;
+}
+
+BYTE* CFontFile::GetColorGlyphRGBA(unsigned int unGID, double dPixelsPerEm, unsigned int unForegroundRGBA, int& nLeft, int& nTop, int& nWidth, int& nHeight)
+{
+	if (!m_pFace || dPixelsPerEm <= 0 || !ColrV1_HasGlyph(m_pFace, unGID))
+		return NULL;
+
+	// Own size object and identity transform, so the state the font manager set up stays untouched
+	FT_Size pOldSize = m_pFace->size;
+	FT_Size pSize = NULL;
+	if (FT_New_Size(m_pFace, &pSize))
+		return NULL;
+	FT_Activate_Size(pSize);
+	FT_Matrix oOldMatrix;
+	FT_Vector oOldDelta;
+	FT_Get_Transform(m_pFace, &oOldMatrix, &oOldDelta);
+	FT_Set_Transform(m_pFace, NULL, NULL);
+
+	CColrV1Bitmap oBitmap;
+	bool bRes = !FT_Set_Char_Size(m_pFace, 0, (FT_F26Dot6)(dPixelsPerEm * 64), 72, 72) &&
+				ColrV1_RenderGlyph(m_pFace, unGID, unForegroundRGBA, oBitmap);
+
+	FT_Set_Transform(m_pFace, &oOldMatrix, &oOldDelta);
+	FT_Activate_Size(pOldSize);
+	FT_Done_Size(pSize);
+
+	if (!bRes)
+		return NULL;
+
+	nLeft = oBitmap.Left;
+	nTop = oBitmap.Top;
+	nWidth = oBitmap.Width;
+	nHeight = oBitmap.Height;
+	BYTE* pData = new (std::nothrow) BYTE[oBitmap.Rgba.size()];
+	if (pData)
+		memcpy(pData, oBitmap.Rgba.data(), oBitmap.Rgba.size());
+	return pData;
 }

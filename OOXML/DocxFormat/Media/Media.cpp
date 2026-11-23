@@ -37,10 +37,10 @@ namespace OOX
 	Media::Media(OOX::Document *pMain, const CPath& filename, bool bExternal) : File(pMain)
 	{
 		m_bExist = false;
-		m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
+		m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
 		m_bExternal = bExternal;
 
-		read(filename);
+		Media::read(filename);
 	}
 	Media::~Media()
 	{
@@ -78,7 +78,7 @@ namespace OOX
 		if (m_bExist)
 			m_sOutputFilename = filename.GetFilename();
 	}
-	void Media::write(const CPath& filename, const CPath& directory, CContentTypes& content) const
+	void Media::write(const CPath& filename, const CPath& /*directory*/, CContentTypes& content) const
 	{
 		if (m_bExternal) return;
 
@@ -88,7 +88,7 @@ namespace OOX
 
 		if (!CSystemUtility::IsFileExist(newFilePath / newFilename))
 		{
-			if (false == m_Data.empty())
+			if (!m_Data.empty())
 			{
 				NSFile::CFileBinary file;
 				if (file.CreateFileW((newFilePath / newFilename).GetPath()))
@@ -103,7 +103,7 @@ namespace OOX
 			}
 		}
 		std::wstring ext = filename.GetExtention();
-		if (false == ext.empty()) content.AddDefault(ext.substr(1));
+		if (!ext.empty()) content.AddDefault(ext.substr(1));
 	}
 	void Media::set_filename(const std::wstring & file_path, bool bExternal)
 	{

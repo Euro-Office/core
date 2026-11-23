@@ -11,7 +11,7 @@ public:
 	CPptxTxtConverter(CPptxTxtConverter&& other) = delete;
 	virtual ~CPptxTxtConverter();
 
-	// returns S_OK if convertation was successful
+	// returns S_OK if conversion was successful
 	int Convert(const std::wstring& wsSrcPptxDir, const std::wstring& wsDstTxtFile = L"./output.txt");
 
 private:

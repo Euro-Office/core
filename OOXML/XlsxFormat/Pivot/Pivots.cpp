@@ -22,6 +22,7 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
+#include <limits>
 #include "PivotTable.h"
 #include "PivotCacheDefinition.h"
 #include "PivotCacheRecords.h"
@@ -166,6 +167,88 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SXAddl.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/QsiSXTag.h"
 
+namespace
+{
+	// Index just past the '>' that closes the root start tag, or 0 if it is not within the data. Skips the XML
+	// declaration, comments and processing instructions; quote-aware, since '>' is legal inside an attribute value.
+	size_t RootStartTagEnd(const BYTE* data, size_t length)
+	{
+		size_t at = 0;
+		while (at < length)
+		{
+			if (data[at] != '<') { ++at; continue; }
+			if (at + 1 < length && (data[at + 1] == '?' || data[at + 1] == '!'))
+			{
+				// <?...?> ends at "?>" and <!--...--> at "-->"; both may hold '>' and '<' before that.
+				// <!DOCTYPE ...> ends at '>' (OPC parts may not have a DTD, so it has no internal subset).
+				bool comment = at + 3 < length && data[at + 1] == '!' && data[at + 2] == '-' && data[at + 3] == '-';
+				size_t i = at + 2;
+				if (comment)
+				{
+					for (i = at + 4; i + 2 < length && !(data[i] == '-' && data[i + 1] == '-' && data[i + 2] == '>'); ++i) {}
+					if (i + 2 >= length) return 0;
+					at = i + 3;
+				}
+				else if (data[at + 1] == '?')
+				{
+					for (; i + 1 < length && !(data[i] == '?' && data[i + 1] == '>'); ++i) {}
+					if (i + 1 >= length) return 0;
+					at = i + 2;
+				}
+				else
+				{
+					while (i < length && data[i] != '>') ++i;
+					if (i >= length) return 0;
+					at = i + 1;
+				}
+				continue;
+			}
+			char quote = 0;
+			for (size_t i = at + 1; i < length; ++i)
+			{
+				if (quote) { if (data[i] == quote) quote = 0; }
+				else if (data[i] == '"' || data[i] == '\'') quote = data[i];
+				else if (data[i] == '>') return i + 1;
+			}
+			return 0;
+		}
+		return 0;
+	}
+
+	// OPC stores XML parts as UTF-8 or UTF-16, and RootStartTagEnd reads bytes as ASCII, which only fits UTF-8.
+	// A UTF-16 part starts with a byte order mark or has a 0x00 byte in its first four bytes (its first character,
+	// '<' or white space, is below U+0100); a UTF-8 XML part never holds 0x00.
+	bool IsUtf16(const BYTE* data, size_t length)
+	{
+		if (length >= 2 && ((data[0] == 0xFF && data[1] == 0xFE) || (data[0] == 0xFE && data[1] == 0xFF)))
+			return true;
+		for (size_t i = 0; i < length && i < 4; ++i)
+			if (data[i] == 0)
+				return true;
+		return false;
+	}
+
+	// Opens `reader` on a stored XML part and moves to its root element. CXmlLiteReader::FromStringA copies the
+	// whole buffer, so with rootOnly (the caller wants only the root's attributes) only the bytes up to the end
+	// of the root start tag are handed over; if the tag does not end inside the part the part is malformed and
+	// there is nothing to read. A UTF-16 part is handed over whole, for libxml2 to decode. Returns false if there
+	// is no root element.
+	bool OpenPartRoot(XmlUtils::CXmlLiteReader& reader, const BYTE* data, DWORD length, bool rootOnly)
+	{
+		if (!data || !length || length > static_cast<DWORD>(std::numeric_limits<int>::max()))
+			return false;
+		size_t size = length;
+		if (rootOnly && !IsUtf16(data, length))
+		{
+			size = RootStartTagEnd(data, length);
+			if (!size)
+				return false;
+		}
+		reader.FromStringA(reinterpret_cast<const char*>(data), static_cast<int>(size));
+		return reader.ReadNextNode();
+	}
+}
+
 namespace OOX
 {
 namespace Spreadsheet
@@ -228,6 +311,7 @@ namespace Spreadsheet
     }
 	XLS::BaseObjectPtr CPivotTableFile::WriteBin() const
 	{
+		EnsureDefinition();
         if(m_oPivotTableDefinition.IsInit())
             return m_oPivotTableDefinition->toBin();
         else if(m_nDataLength && m_pData)
@@ -235,10 +319,8 @@ namespace Spreadsheet
             CPivotTableDefinition tableDef;
             {
                 XmlUtils::CXmlLiteReader reader;
-				reader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength);
-  
-				reader.ReadNextNode();
-                tableDef.fromXML(reader);
+				if (OpenPartRoot(reader, m_pData, m_nDataLength, false))
+					tableDef.fromXML(reader);
             }
             return tableDef.toBin();
 
@@ -263,21 +345,49 @@ namespace Spreadsheet
         }
 		else
 		{
-			NSFile::CFileBinary::ReadAllBytes(oPath.GetPath(), &m_pData, m_nDataLength);
-
-			XmlUtils::CXmlLiteReader oReader;
-
-			if (!oReader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength))
-				return;
-
-			if (!oReader.ReadNextNode())
-				return;
-
-			m_oPivotTableDefinition = oReader;
+			// The object model is built on demand (EnsureDefinition); Editor.bin only needs the raw bytes
+			m_bDefinitionPending = NSFile::CFileBinary::ReadAllBytes(oPath.GetPath(), &m_pData, m_nDataLength);
 		}
+	}
+	void CPivotTableFile::EnsureDefinition() const
+	{
+		if (!m_bDefinitionPending)
+			return;
+		m_bDefinitionPending = false;
+
+		if (!m_pData || !m_nDataLength)
+			return;
+
+		XmlUtils::CXmlLiteReader oReader;
+
+		if (!OpenPartRoot(oReader, m_pData, m_nDataLength, false))
+			return;
+
+		m_oPivotTableDefinition = oReader;
+	}
+	bool CPivotTableFile::GetCacheId(nullable<SimpleTypes::CUnsignedDecimalNumber>& oCacheId) const
+	{
+		if (m_oPivotTableDefinition.IsInit())
+		{
+			oCacheId = m_oPivotTableDefinition->m_oCacheId;
+			return true;
+		}
+		if (!m_bDefinitionPending || !m_pData || !m_nDataLength)
+			return false;
+
+		XmlUtils::CXmlLiteReader oReader;
+
+		if (!OpenPartRoot(oReader, m_pData, m_nDataLength, true))
+			return false;
+
+		CPivotTableDefinition oDefinition;
+		oDefinition.ReadAttributes(oReader);
+		oCacheId = oDefinition.m_oCacheId;
+		return true;
 	}
 	void CPivotTableFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
+		EnsureDefinition();
 		CXlsb* xlsb = dynamic_cast<CXlsb*>(File::m_pMainDocument);
         if ((xlsb) && (xlsb->m_bWriteToXlsb))
 		{
@@ -319,7 +429,7 @@ namespace Spreadsheet
 //------------------------------------
 	void CPivotTableDefinition::toXML(NSStringUtils::CStringBuilder& writer) const
 	{
-		if(false == m_oName.IsInit()) return;
+		if(!m_oName.IsInit()) return;
 
 		writer.WriteString(L"<pivotTableDefinition \
 xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" \
@@ -1616,6 +1726,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case XLSB::PivotItemType::PITBLANK:
                     m_oT = SimpleTypes::Spreadsheet::EPivotItemType::typeBlank;
                     break;
+                default: break;
             }
         }
     }
@@ -1935,6 +2046,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case XLSB::ShowDataAs::PERCENTOFRUNTOTAL:
                     m_oShowDataAs = SimpleTypes::Spreadsheet::EShowDataAs::dataAsRunTotal;
                     break;
+                default: break;
             }
 
             switch(ptr->iiftab.value().get())
@@ -1972,6 +2084,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case XLSB::DataConsolidationFunction::STDVARP:
                     m_oSubtotal = SimpleTypes::Spreadsheet::EDataConsolidateFunction::functionVarP;
                     break;
+                default: break;
             }
         }
     }
@@ -2466,6 +2579,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case XLSB::PivotItemType::PITBLANK:
                     m_oItemType = SimpleTypes::Spreadsheet::EPivotItemType::typeBlank;
                     break;
+                default: break;
             }
         }
     }
@@ -2866,10 +2980,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
             ptr->fAutoSort = false;
 		if(m_oSortType.IsInit())
 		{
-            if(m_oSortType->GetValue() == SimpleTypes::Spreadsheet::EFieldSortType::sortAscending)
-                ptr->fAscendSort = true;
-            else
-                ptr->fAscendSort = false;
+            ptr->fAscendSort = m_oSortType->GetValue() == SimpleTypes::Spreadsheet::EFieldSortType::sortAscending;
 		}
         else
              ptr->fAscendSort = false;
@@ -3898,6 +4009,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case 0x06:
                     m_oType = SimpleTypes::Spreadsheet::EPivotAreaType::areaTopEnd;
                     break;
+                default: break;
             }
         }
     }
@@ -4056,7 +4168,6 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			WritingElement_ReadAttributes_Read_if		( oReader, L"name", m_oName )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"showColHeaders", m_oShowColHeaders )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"showLastColumn", m_oShowLastColumn )
-			WritingElement_ReadAttributes_Read_else_if	( oReader, L"showLastColumn", m_oShowLastColumn )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"showRowHeaders", m_oShowRowHeaders )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"showRowStripes", m_oShowRowStripes )
 		WritingElement_ReadAttributes_End( oReader )
@@ -4066,7 +4177,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 	{
 		m_bSpreadsheets = true;
 
-		m_pData = NULL;
+		m_pData = nullptr;
 		m_nDataLength = 0;
 
 		bIsWritten = false;
@@ -4075,7 +4186,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 	{
 		m_bSpreadsheets = true;
 
-		m_pData = NULL;
+		m_pData = nullptr;
 		m_nDataLength = 0;
 
 		bIsWritten = false;
@@ -4114,6 +4225,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
     }
 	XLS::BaseObjectPtr CPivotCacheDefinitionFile::WriteBin() const
 	{
+		EnsureDefinition();
         if(m_oPivotCashDefinition.IsInit())
         {
             auto pivotCacheDefStream = m_oPivotCashDefinition->toBin();
@@ -4124,10 +4236,8 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
             CPivotCacheDefinition cacheDef;
             {
                 XmlUtils::CXmlLiteReader reader;
-				reader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength);
-
-                reader.ReadNextNode();
-                cacheDef.fromXML(reader);
+				if (OpenPartRoot(reader, m_pData, m_nDataLength, false))
+					cacheDef.fromXML(reader);
             }
             return cacheDef.toBin();
         }
@@ -4149,23 +4259,41 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
         }
 		else
 		{
-			NSFile::CFileBinary::ReadAllBytes(oPath.GetPath(), &m_pData, m_nDataLength);
+			// The object model is built on demand (EnsureDefinition); Editor.bin only needs the raw bytes
+			if (!NSFile::CFileBinary::ReadAllBytes(oPath.GetPath(), &m_pData, m_nDataLength))
+				return;
 
+			// Same early exit as before the lazy parse: a part without a root element does not load its records.
+			// Only the root start tag is read, so this does not copy the whole part.
 			XmlUtils::CXmlLiteReader oReader;
 
-			if (!oReader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength))
+			if (!OpenPartRoot(oReader, m_pData, m_nDataLength, true))
 				return;
 
-			if (!oReader.ReadNextNode())
-				return;
-
-			m_oPivotCashDefinition = oReader;
+			m_bDefinitionPending = true;
 		}
 
         IFileContainer::Read( oRootPath, oPath ); //in this case the reading order is important for xlsb
 	}
+	void CPivotCacheDefinitionFile::EnsureDefinition() const
+	{
+		if (!m_bDefinitionPending)
+			return;
+		m_bDefinitionPending = false;
+
+		if (!m_pData || !m_nDataLength)
+			return;
+
+		XmlUtils::CXmlLiteReader oReader;
+
+		if (!OpenPartRoot(oReader, m_pData, m_nDataLength, false))
+			return;
+
+		m_oPivotCashDefinition = oReader;
+	}
 	void CPivotCacheDefinitionFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
+		EnsureDefinition();
 		if (bIsWritten) return;
 
 		bIsWritten = true;
@@ -4207,7 +4335,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 		}
 		return OOX::Spreadsheet::FileTypes::PivotCacheDefinition;
 	}
-	void CPivotCacheDefinitionFile::setData(BYTE* pData, long length, const std::wstring& srIdRecords)
+	void CPivotCacheDefinitionFile::setData(BYTE* pData, long length, const std::wstring&  /*srIdRecords*/)
 	{
 		//if (srIdRecords.length() > 0)
 		//{
@@ -4555,9 +4683,9 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 	{
 		WritingElement_ReadAttributes_Start_No_NS( oReader )
 			WritingElement_ReadAttributes_Read_if		( oReader, L"backgroundQuery",	m_oBackgroundQuery )
-			WritingElement_ReadAttributes_Read_else_if	( oReader, L"enableRefresh",	m_oEnableRefresh )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"id",				m_oRid )
-			WritingElement_ReadAttributes_Read_else_if	( oReader, L"invalid",			m_oEnableRefresh )
+			else if ( L"enableRefresh" == wsName || L"invalid" == wsName ) // pre-existing: invalid is stored in m_oEnableRefresh
+				m_oEnableRefresh = oReader.GetText();
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"createdVersion",	m_oCreatedVersion )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"refreshableVersion",m_oMinRefreshableVersion )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"missingItemsLimit",m_oMissingItemsLimit )
@@ -5284,6 +5412,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                                                         case 0x24: err->m_oValue = L"#NUM!"; break;
                                                         case 0x2A: err->m_oValue = L"#N/A"; break;
                                                         case 0x2B: err->m_oValue = L"#GETTING_DATA"; break;
+                                                        default: break;
                                                     }
 
                                                     m_arrItems.push_back(err);
@@ -5298,6 +5427,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                                                 }
                                                 break;
 
+                                                default: break;
                                             }
                                         }
                                     }
@@ -5650,6 +5780,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                                                     case 0x24: err->m_oValue = L"#NUM!"; break;
                                                     case 0x2A: err->m_oValue = L"#N/A"; break;
                                                     case 0x2B: err->m_oValue = L"#GETTING_DATA"; break;
+                                                    default: break;
                                                 }
 
                                                 m_arrItems.push_back(err);
@@ -5664,6 +5795,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                                             }
                                             break;
 
+                                            default: break;
                                         }
                                     }
                                 }
@@ -5801,6 +5933,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case 0x07:
                     m_oGroupBy = SimpleTypes::Spreadsheet::EValuesGroupBy::groupByYears;
                     break;
+                default: break;
             }
         }
     }
@@ -6159,6 +6292,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                     case 0x24: m_oValue = L"#NUM!"; break;
                     case 0x2A: m_oValue = L"#N/A"; break;
                     case 0x2B: m_oValue = L"#GETTING_DATA"; break;
+                    default: break;
                 }
 				if (ptr->sxvcellextra)
 				{
@@ -6195,6 +6329,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                     case 0x24: m_oValue = L"#NUM!"; break;
                     case 0x2A: m_oValue = L"#N/A"; break;
                     case 0x2B: m_oValue = L"#GETTING_DATA"; break;
+                    default: break;
                 }
 
                 if(!ptr->info.stCaption.value().empty())
@@ -6911,6 +7046,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                 case 0x00000003:
                     m_oType = SimpleTypes::Spreadsheet::ESourceCacheType::typeSourceScenario;
                     break;
+                default: break;
             }
 
             m_oConnectionId = ptr->dwConnID;
@@ -7533,7 +7669,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
         CXlsb* xlsb = dynamic_cast<CXlsb*>(File::m_pMainDocument);
         if (xlsb)
         {
-            BYTE* fileStream = 0;
+            BYTE* fileStream = nullptr;
             auto fileReader = xlsb->GetFileReader(oPath, fileStream);
             ///todo read records from the stream
             m_oPivotCacheRecords.Init();
@@ -7654,7 +7790,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			{
 				std::wstring sPath = oPath.GetPath();
 
-				if (false == m_oPivotCacheRecords->m_strOutputXml.empty())
+				if (!m_oPivotCacheRecords->m_strOutputXml.empty())
 				{
 					NSFile::CFileBinary::SaveToFile(sPath, m_oPivotCacheRecords->m_strOutputXml);
 				}
@@ -7751,7 +7887,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			//m_oCount = (_UINT32)ptr->m_arPIVOTCACHERECORD.size();
 
             //for(auto &item : ptr->m_arPIVOTCACHERECORD)
-			while(false == ptr->m_arPIVOTCACHERECORD.empty())
+			while(!ptr->m_arPIVOTCACHERECORD.empty())
             {
                 //m_arrItems.push_back(new CPivotCacheRecord(item));
 
@@ -8298,6 +8434,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
                              case 0x24: ErrValue->m_oValue = L"#NUM!"; break;
                              case 0x2A: ErrValue->m_oValue = L"#N/A"; break;
                              case 0x2B: ErrValue->m_oValue = L"#GETTING_DATA"; break;
+                             default: break;
                          }
                          m_arrItems.push_back(ErrValue);
                          break;

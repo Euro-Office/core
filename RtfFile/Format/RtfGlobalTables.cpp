@@ -140,7 +140,7 @@ bool RtfColorTable::GetColor( std::wstring sTheme, RtfColor& oColor)
 {
 	RtfColor::_ThemeColor oTheme = RtfColor::TC_NONE;
 
-	if( true == RtfColor::GetThemeByString(sTheme,oTheme  ) )
+	if( RtfColor::GetThemeByString(sTheme,oTheme  ) )
 	{
 		for (size_t i = 0; i < m_aArray.size(); i++ )
 		{
@@ -183,7 +183,7 @@ std::wstring RtfColorTable::RenderToRtf(RenderParameter oRenderParameter)
 	}
 	return sResult;
 }
-std::wstring RtfColorTable::RenderToOOX(RenderParameter oRenderParameter)
+std::wstring RtfColorTable::RenderToOOX(RenderParameter /*oRenderParameter*/)
 {
 	return _T("");
 }
@@ -215,26 +215,20 @@ bool RtfStyleTable::GetStyle( std::wstring sName, RtfStylePtr& oStyle )
 RtfStylePtr RtfStyleTable::GetStyleResulting( RtfStylePtr oInputStyle )
 {
 	RtfStylePtr				oResultStyle;
-	RtfStyle::_StyleType	eStyleType	= RtfStyle::st_none;
 
 	int nStyleId = oInputStyle->m_nID;
-	int nLinked = PROP_DEF;
 	int nBaseOn = oInputStyle->m_nBasedOn;
 
 	if( RtfStyle::stCharacter == oInputStyle->m_eType )
 	{
-		eStyleType		= RtfStyle::stCharacter;
 		oResultStyle	= RtfCharStylePtr( new RtfCharStyle() );
 	}
 	else if( RtfStyle::stParagraph == oInputStyle->m_eType )
 	{
-		eStyleType		= RtfStyle::stParagraph;
 		oResultStyle	= RtfParagraphStylePtr( new RtfParagraphStyle() );
-		nLinked			= oInputStyle->m_nLink;//linked we will look only at paragraph styles to avoid recursion
 	}
 	else if( RtfStyle::stTable == oInputStyle->m_eType )
 	{
-		eStyleType		= RtfStyle::stTable;
 		oResultStyle	= RtfTableStylePtr( new RtfTableStyle() );
 	}
 	else
@@ -251,16 +245,16 @@ RtfStylePtr RtfStyleTable::GetStyleResulting( RtfStylePtr oInputStyle )
 	if( PROP_DEF != nBaseOn && nStyleId != nBaseOn)
 	{
 		RtfStylePtr oTemStyle;
-		if( true == GetStyle( nBaseOn, oTemStyle) )
+		if( GetStyle( nBaseOn, oTemStyle) )
 			oBaseStyle = GetStyleResulting( oTemStyle );
 	}
 
 	//Established empirically - Base has lower priority than Link
-	if( NULL != oLinkedStyle )
+	if( nullptr != oLinkedStyle )
 	{
 		oResultStyle->Merge( oLinkedStyle );
 	}
-	if( NULL != oBaseStyle )
+	if( nullptr != oBaseStyle )
 	{
 		oResultStyle->Merge( oBaseStyle );
 	}
@@ -454,7 +448,7 @@ std::wstring RtfRevisionTable::RenderToRtf(RenderParameter oRenderParameter)
 
 	return sResult;
 }
-std::wstring RtfRevisionTable::RenderToOOX(RenderParameter oRenderParameter)
+std::wstring RtfRevisionTable::RenderToOOX(RenderParameter /*oRenderParameter*/)
 {
 	return L"";
 }

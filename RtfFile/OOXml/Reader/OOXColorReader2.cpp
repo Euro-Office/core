@@ -28,7 +28,7 @@
 OOXColorReader2::OOXColorReader2( )
 {
 }
-bool OOXColorReader2::Parse( ReaderParameter oParam, RtfColor& oOutputColor,std::wstring sColor, std::wstring sTheme,std::wstring sThemeShade, std::wstring sThemeTint )
+bool OOXColorReader2::Parse( ReaderParameter  /*oParam*/, RtfColor&  /*oOutputColor*/,std::wstring  /*sColor*/, std::wstring  /*sTheme*/,std::wstring  /*sThemeShade*/, std::wstring  /*sThemeTint*/ )
 {
 	//XmlUtils::CXmlLiteReader oXmlReader;
 	//if( TRUE == oXmlReader.OpenFromXmlNode( oParam.oNode ) )

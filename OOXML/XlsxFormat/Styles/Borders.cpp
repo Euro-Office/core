@@ -126,6 +126,7 @@ namespace OOX
 						m_oStyle = SimpleTypes::Spreadsheet::EBorderStyle::borderstyleMediumDashDotDot; break;
 					case 0x0D:
 						m_oStyle = SimpleTypes::Spreadsheet::EBorderStyle::borderstyleSlantDashDot; break;
+					default: break;
 				}
 
 			}
@@ -147,9 +148,7 @@ namespace OOX
 				return;
             }
 
-			if (m_oStyle == SimpleTypes::Spreadsheet::EBorderStyle::borderstyleNone)
-				ptr->dg = 0x00;
-			else if (m_oStyle == SimpleTypes::Spreadsheet::EBorderStyle::borderstyleThin)
+			if (m_oStyle == SimpleTypes::Spreadsheet::EBorderStyle::borderstyleThin)
 				ptr->dg = 0x01;
 			else if (m_oStyle == SimpleTypes::Spreadsheet::EBorderStyle::borderstyleMedium)
 				ptr->dg = 0x02;
@@ -230,18 +229,18 @@ namespace OOX
 				{
 					case 1:	 //Thin
 					{
-						if (false == m_oStyle.IsInit())
+						if (!m_oStyle.IsInit())
 							m_oStyle.reset(new SimpleTypes::Spreadsheet::CBorderStyle(SimpleTypes::Spreadsheet::borderstyleThin));
 					}break;
 					case 3: //Thick
 					{
-						if (false == m_oStyle.IsInit())
+						if (!m_oStyle.IsInit())
 							m_oStyle.reset(new SimpleTypes::Spreadsheet::CBorderStyle(SimpleTypes::Spreadsheet::borderstyleThick));
 					}break;
 					case 2:
 					default: //Medium
 					{
-						if (false == m_oStyle.IsInit())
+						if (!m_oStyle.IsInit())
 							m_oStyle.reset(new SimpleTypes::Spreadsheet::CBorderStyle(SimpleTypes::Spreadsheet::borderstyleMedium));
 						else
 						{
@@ -287,29 +286,29 @@ namespace OOX
 				WritingStringAttrString(L"diagonalUp", m_oDiagonalUp->ToString3(SimpleTypes::onofftostring1));
 			}
 			writer.EndAttributes();
-			if(m_oStart.IsInit() && false == m_oStart->IsEmpty())
+			if(m_oStart.IsInit() && !m_oStart->IsEmpty())
 				m_oStart->toXMLWithNS(writer, child_ns, _T("left"), child_ns);
 			else
 				writer.WriteString(_T("<left/>"));
-			if(m_oEnd.IsInit() && false == m_oEnd->IsEmpty())
+			if(m_oEnd.IsInit() && !m_oEnd->IsEmpty())
 				m_oEnd->toXMLWithNS(writer, child_ns, _T("right"), child_ns);
 			else
 				writer.WriteString(_T("<right/>"));
-			if(m_oTop.IsInit() && false == m_oTop->IsEmpty())
+			if(m_oTop.IsInit() && !m_oTop->IsEmpty())
 				m_oTop->toXMLWithNS(writer, child_ns, _T("top"), child_ns);
 			else
 				writer.WriteString(_T("<top/>"));
-			if(m_oBottom.IsInit() && false == m_oBottom->IsEmpty())
+			if(m_oBottom.IsInit() && !m_oBottom->IsEmpty())
 				m_oBottom->toXMLWithNS(writer, child_ns, _T("bottom"), child_ns);
 			else
 				writer.WriteString(_T("<bottom/>"));
-			if(m_oDiagonal.IsInit() && false == m_oDiagonal->IsEmpty())
+			if(m_oDiagonal.IsInit() && !m_oDiagonal->IsEmpty())
 				m_oDiagonal->toXMLWithNS(writer, child_ns, _T("diagonal"), child_ns);
 			else
 				writer.WriteString(_T("<diagonal/>"));
-			if(m_oVertical.IsInit() && false == m_oVertical->IsEmpty())
+			if(m_oVertical.IsInit() && !m_oVertical->IsEmpty())
 				m_oVertical->toXMLWithNS(writer, child_ns, _T("vertical"), child_ns);
-			if(m_oHorizontal.IsInit() && false == m_oHorizontal->IsEmpty())
+			if(m_oHorizontal.IsInit() && !m_oHorizontal->IsEmpty())
 				m_oHorizontal->toXMLWithNS(writer, child_ns, _T("horizontal"), child_ns);
 			writer.EndNodeWithNS(node_ns, node_name);
 		}
@@ -352,7 +351,7 @@ namespace OOX
 						else if (*border->m_oType == L"Right")	m_oEnd = border;
 						else if (*border->m_oType == L"DiagonalLeft")
 						{
-							if (false == m_oDiagonal.IsInit())
+							if (!m_oDiagonal.IsInit())
 							{
 								m_oDiagonal = border;
 							}
@@ -360,7 +359,7 @@ namespace OOX
 						}
 						else if (*border->m_oType == L"DiagonalRight")
 						{
-							if (false == m_oDiagonal.IsInit())
+							if (!m_oDiagonal.IsInit())
 							{
 								m_oDiagonal = border;
 							}

@@ -79,7 +79,7 @@ HWP_STRING CCtrlShapeOle::GetBinDataID() const
 	return m_sBinDataID;
 }
 
-int CCtrlShapeOle::ParseElement(CCtrlShapeOle& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlShapeOle::ParseElement(CCtrlShapeOle& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

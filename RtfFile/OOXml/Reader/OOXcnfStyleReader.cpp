@@ -47,59 +47,57 @@ void CcnfStyle::SetDefault()
 CcnfStyle CcnfStyle::Normalize()
 {
 	CcnfStyle oResult;
-	if( true == bFirstRowFirstCol )
+	if( bFirstRowFirstCol )
 		oResult.bFirstRowFirstCol = true;
-	else if( true == bFirstRowLastCol )
+	else if( bFirstRowLastCol )
 		oResult.bFirstRowLastCol = true;
-	else if( true == bLastRowFirstCol )
+	else if( bLastRowFirstCol )
 		oResult.bLastRowFirstCol = true;
-	else if( true == bLastRowLastCol )
+	else if( bLastRowLastCol )
 		oResult.bLastRowLastCol = true;
-	else if( true == bLastRowLastCol )
-		oResult.bLastRowLastCol = true;
-	else if( true == bFirstCol )
+	else if( bFirstCol )
 		oResult.bFirstCol = true;
-	else if( true == bLastCol )
+	else if( bLastCol )
 		oResult.bLastCol = true;
-	else if( true == bFirstRow )
+	else if( bFirstRow )
 		oResult.bFirstRow = true;
-	else if( true == bLastRow )
+	else if( bLastRow )
 		oResult.bLastRow = true;
-	else if( true == bOddHBand )
+	else if( bOddHBand )
 		oResult.bOddHBand = true;
-	else if( true == bEvenHBand )
+	else if( bEvenHBand )
 		oResult.bEvenHBand = true;
-	else if( true == bOddVBand )
+	else if( bOddVBand )
 		oResult.bOddVBand = true;
-	else if( true == bEvenVBand )
+	else if( bEvenVBand )
 		oResult.bEvenVBand = true;
 	return oResult;
 }
 void CcnfStyle::Merge( CcnfStyle& ocnfStyle )
 {
-	if( true == ocnfStyle.bFirstRowFirstCol )
+	if( ocnfStyle.bFirstRowFirstCol )
 		bFirstRowFirstCol = true;
-	if( true == ocnfStyle.bFirstRowLastCol )
+	if( ocnfStyle.bFirstRowLastCol )
 		bFirstRowLastCol = true;
-	if( true == ocnfStyle.bLastRowFirstCol )
+	if( ocnfStyle.bLastRowFirstCol )
 		bLastRowFirstCol = true;
-	if( true == ocnfStyle.bLastRowLastCol )
+	if( ocnfStyle.bLastRowLastCol )
 		bLastRowLastCol = true;
-	if( true == ocnfStyle.bFirstCol )
+	if( ocnfStyle.bFirstCol )
 		bFirstCol = true;
-	if( true == ocnfStyle.bLastCol )
+	if( ocnfStyle.bLastCol )
 		bLastCol = true;
-	if( true == ocnfStyle.bFirstRow )
+	if( ocnfStyle.bFirstRow )
 		bFirstRow = true;
-	if( true == ocnfStyle.bLastRow )
+	if( ocnfStyle.bLastRow )
 		bLastRow = true;
-	if( true == ocnfStyle.bOddHBand )
+	if( ocnfStyle.bOddHBand )
 		bOddHBand = true;
-	if( true == ocnfStyle.bEvenHBand )
+	if( ocnfStyle.bEvenHBand )
 		bEvenHBand = true;
-	if( true == ocnfStyle.bOddVBand )
+	if( ocnfStyle.bOddVBand )
 		bOddVBand = true;
-	if( true == ocnfStyle.bEvenVBand )
+	if( ocnfStyle.bEvenVBand )
 		bEvenVBand = true;
 }
 bool CcnfStyle::operator <( CcnfStyle& ocnfStyle )
@@ -109,56 +107,56 @@ bool CcnfStyle::operator <( CcnfStyle& ocnfStyle )
 int CcnfStyle::ToInt()
 {
 	int nResult = 0;
-	if( true == bFirstRowFirstCol || true == bFirstRowLastCol || true == bLastRowFirstCol || true == bLastRowLastCol )
+	if( bFirstRowFirstCol || bFirstRowLastCol || bLastRowFirstCol || bLastRowLastCol )
 		nResult |= 1<<4;
-	if( true == bFirstRow || true == bLastRow )
+	if( bFirstRow || bLastRow )
 		nResult |= 1<<3;
-	if( true == bFirstCol || true == bLastCol )
+	if( bFirstCol || bLastCol )
 		nResult |= 1<<2;
-	if( true == bOddHBand || true == bEvenHBand )
+	if( bOddHBand || bEvenHBand )
 		nResult |= 1<<1;
-	if( true == bOddVBand || true == bEvenVBand )
+	if( bOddVBand || bEvenVBand )
 		nResult |= 1;
 	return nResult;
 }
 RtfTableStylePtr CcnfStyle::ApplyTableStyle( RtfTableStylePtr oInputStyle )
 {
-	if( NULL == oInputStyle )
+	if( nullptr == oInputStyle )
 		return oInputStyle;
 
 	RtfTableStylePtr oOutputStyle ( new RtfTableStyle() );
 
 	oOutputStyle->Merge( oInputStyle );
-	if( true == bOddVBand && NULL != oInputStyle->m_oBandVerOdd )
+	if( bOddVBand && nullptr != oInputStyle->m_oBandVerOdd )
 		oOutputStyle->Merge( oInputStyle->m_oBandVerOdd );
-	if( true == bEvenVBand && NULL != oInputStyle->m_oBandVerEven )
+	if( bEvenVBand && nullptr != oInputStyle->m_oBandVerEven )
 		oOutputStyle->Merge( oInputStyle->m_oBandVerEven );
-	if( true == bOddHBand && NULL != oInputStyle->m_oBandHorOdd )
+	if( bOddHBand && nullptr != oInputStyle->m_oBandHorOdd )
 		oOutputStyle->Merge( oInputStyle->m_oBandHorOdd );
-	if( true == bEvenHBand && NULL != oInputStyle->m_oBandHorEven )
+	if( bEvenHBand && nullptr != oInputStyle->m_oBandHorEven )
 		oOutputStyle->Merge( oInputStyle->m_oBandHorEven );
-	if( true == bLastCol && NULL != oInputStyle->m_oLastCol )
+	if( bLastCol && nullptr != oInputStyle->m_oLastCol )
 		oOutputStyle->Merge( oInputStyle->m_oLastCol );
-	if( true == bFirstCol && NULL != oInputStyle->m_oFirstCol )
+	if( bFirstCol && nullptr != oInputStyle->m_oFirstCol )
 		oOutputStyle->Merge( oInputStyle->m_oFirstCol );
-	if( true == bLastRow && NULL != oInputStyle->m_oLastRow )
+	if( bLastRow && nullptr != oInputStyle->m_oLastRow )
 		oOutputStyle->Merge( oInputStyle->m_oLastRow );
-	if( true == bFirstRow && NULL != oInputStyle->m_oFirstRow )
+	if( bFirstRow && nullptr != oInputStyle->m_oFirstRow )
 		oOutputStyle->Merge( oInputStyle->m_oFirstRow );
-	if( true == bFirstRowFirstCol && NULL != oInputStyle->m_oNWCell )
+	if( bFirstRowFirstCol && nullptr != oInputStyle->m_oNWCell )
 		oOutputStyle->Merge( oInputStyle->m_oNWCell );
-	if( true == bFirstRowLastCol && NULL != oInputStyle->m_oNECell )
+	if( bFirstRowLastCol && nullptr != oInputStyle->m_oNECell )
 		oOutputStyle->Merge( oInputStyle->m_oNECell );
-	if( true == bLastRowFirstCol && NULL != oInputStyle->m_oSWCell )
+	if( bLastRowFirstCol && nullptr != oInputStyle->m_oSWCell )
 		oOutputStyle->Merge( oInputStyle->m_oSWCell );
-	if( true == bLastRowLastCol && NULL != oInputStyle->m_oSECell )
+	if( bLastRowLastCol && nullptr != oInputStyle->m_oSECell )
 		oOutputStyle->Merge( oInputStyle->m_oSECell );
 
 	return oOutputStyle;
 }
 void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCellProperty& oOutputProperty, int nCurX, int nCurY, int nWidth, int nHeight )
 {
-	if( NULL == oInputStyle )
+	if( nullptr == oInputStyle )
 		return;
 	int nRowsInBand = 1;
 	int nColsInBand = 1;
@@ -193,9 +191,9 @@ void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCe
 			int nDelta = nCurX - nBoundLeft;//get the number of columns between
 			int nPlace = nDelta % nColsInBand;//get the number inside the band
 			//Assume that the flags are placed correctly
-			if( true == bOddVBand && NULL != oInputStyle->m_oBandVerOdd )
+			if( bOddVBand && nullptr != oInputStyle->m_oBandVerOdd )
 				ApplyOneStyleToCellBorder( oInputStyle->m_oBandVerOdd, oOutputProperty, nCurX, nCurY, nCurX - nPlace, nCurX - nPlace + nColsInBand - 1, 0, nHeight - 1 );
-			if( true == bEvenVBand && NULL != oInputStyle->m_oBandVerEven )
+			if( bEvenVBand && nullptr != oInputStyle->m_oBandVerEven )
 				ApplyOneStyleToCellBorder( oInputStyle->m_oBandVerEven, oOutputProperty, nCurX, nCurY, nCurX - nPlace, nCurX - nPlace + nColsInBand - 1, 0, nHeight - 1 );
 		}
 	}
@@ -213,34 +211,34 @@ void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCe
 			int nDelta = nCurY - nBoundTop;//get the number of columns between
 			int nPlace = nDelta % nRowsInBand;//get the number inside the band
 			//Assume that the flags are placed correctly
-			if( true == bOddHBand && NULL != oInputStyle->m_oBandHorOdd )
+			if( bOddHBand && nullptr != oInputStyle->m_oBandHorOdd )
 				ApplyOneStyleToCellBorder( oInputStyle->m_oBandHorOdd, oOutputProperty, nCurX, nCurY, 0, nWidth - 1, nCurY - nPlace, nCurY - nPlace + nRowsInBand - 1 );
-			if( true == bEvenHBand && NULL != oInputStyle->m_oBandHorEven )
+			if( bEvenHBand && nullptr != oInputStyle->m_oBandHorEven )
 				ApplyOneStyleToCellBorder( oInputStyle->m_oBandHorEven, oOutputProperty, nCurX, nCurY, 0, nWidth - 1, nCurY - nPlace, nCurY - nPlace + nRowsInBand - 1 );
 		}
 	}
-	if( true == bLastCol )
+	if( bLastCol )
 		ApplyOneStyleToCellBorder( oInputStyle->m_oLastCol, oOutputProperty, nCurX, nCurY, nWidth - 1, nWidth - 1, 0, nHeight - 1 );
-	if( true == bFirstCol )
+	if( bFirstCol )
 		ApplyOneStyleToCellBorder( oInputStyle->m_oFirstCol, oOutputProperty, nCurX, nCurY, 0, 0, 0, nHeight - 1 );
-	if( true == bLastRow )
+	if( bLastRow )
 		ApplyOneStyleToCellBorder( oInputStyle->m_oLastRow, oOutputProperty, nCurX, nCurY, 0, nWidth - 1, nHeight - 1, nHeight - 1 );
-	if( true == bFirstRow )
+	if( bFirstRow )
 		ApplyOneStyleToCellBorder( oInputStyle->m_oFirstRow, oOutputProperty, nCurX, nCurY, 0, nWidth - 1, 0, 0 );
-	if( true == bFirstRowFirstCol )
+	if( bFirstRowFirstCol )
 		ApplyOneStyleToCellBorder( oInputStyle->m_oNWCell, oOutputProperty, nCurX, nCurY, 0, 0, 0, 0 );
-	if( true == bFirstRowLastCol )
+	if( bFirstRowLastCol )
 		ApplyOneStyleToCellBorder( oInputStyle->m_oNECell, oOutputProperty, nCurX, nCurY, nWidth - 1, nWidth - 1, 0, 0 );
-	if( true == bLastRowFirstCol )
+	if( bLastRowFirstCol )
 		ApplyOneStyleToCellBorder( oInputStyle->m_oSWCell, oOutputProperty, nCurX, nCurY, 0, 0, nHeight - 1, nHeight - 1 );
-	if( true == bLastRowLastCol )
+	if( bLastRowLastCol )
 		ApplyOneStyleToCellBorder( oInputStyle->m_oSECell, oOutputProperty, nCurX, nCurY, nWidth - 1, nWidth - 1, nHeight - 1, nHeight - 1 );
 }
 void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCellProperty& oOutputProperty, int nCurX, int nCurY, int nBoundLeft, int nBoundRight, int nBoundTop, int nBoundBottom )
 {
-	if( NULL == oInputStyle )
+	if( nullptr == oInputStyle )
 		return;
-	if( !(nBoundLeft <= nCurX && nCurX <= nBoundRight && nBoundTop <= nCurY && nCurY <= nBoundBottom) )
+	if( nBoundLeft > nCurX || nCurX > nBoundRight || nBoundTop > nCurY || nCurY > nBoundBottom )
 		return;
 
 	if( nBoundLeft == nCurX )
@@ -291,9 +289,9 @@ void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCe
 }
 void CcnfStyle::ApplyOneStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCellProperty& oOutputProperty, int nCurX, int nCurY, int nBoundLeft, int nBoundRight, int nBoundTop, int nBoundBottom )
 {
-	if( NULL == oInputStyle )
+	if( nullptr == oInputStyle )
 		return;
-	if( !(nBoundLeft <= nCurX && nCurX <= nBoundRight && nBoundTop <= nCurY && nCurY <= nBoundBottom) )
+	if( nBoundLeft > nCurX || nCurX > nBoundRight || nBoundTop > nCurY || nCurY > nBoundBottom )
 		return;
 	//nothing affects them
 	oOutputProperty.m_oBorderDiagonalLR.Merge( oInputStyle->m_oCellProp.m_oBorderDiagonalLR );
@@ -342,9 +340,9 @@ OOXcnfStyleReader::OOXcnfStyleReader(ComplexTypes::Word::CCnf *ooxCnfStyle)
 {
 	m_ooxCnfStyle = ooxCnfStyle;
 }
-bool OOXcnfStyleReader::Parse( ReaderParameter oParam, CcnfStyle& oOutput)
+bool OOXcnfStyleReader::Parse( ReaderParameter  /*oParam*/, CcnfStyle& oOutput)
 {
-	if (m_ooxCnfStyle == NULL) return false;
+	if (m_ooxCnfStyle == nullptr) return false;
 
 	if (m_ooxCnfStyle->m_oVal.IsInit())
 	{

@@ -24,7 +24,7 @@
  */
 
 #include "./x2t.h"
-#include "./../main.cpp"
+#include "./../main.cpp" // NOLINT(bugprone-suspicious-include): the dylib intentionally reuses the CLI entry point
 
 int X2T_Convert(int argc, x2tchar *argv[])
 {
