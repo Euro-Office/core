@@ -45,7 +45,7 @@ namespace OOX
 		OOX::Spreadsheet::CXlsx* xlsx = dynamic_cast<OOX::Spreadsheet::CXlsx*>(File::m_pMainDocument);
 		if (xlsx) xlsx->m_pCore = this;
 
-		read( oPath );
+		CCore::read( oPath );
 	}
 
 	CCore::~CCore()
@@ -348,6 +348,7 @@ xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
 					case 12: m_sLastPrinted = pReader->GetString2(); break;
 					case 13: m_sSubject = pReader->GetString2(); break;
 					case 14: m_sVersion = pReader->GetString2(); break;
+					default: break;
 					}
 				}
 
@@ -388,17 +389,17 @@ xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
 		pWriter->WriteNodeValue2(_T("cp:lastModifiedBy"), m_sLastModifiedBy);
 		pWriter->WriteNodeValue2(_T("cp:revision"), m_sRevision);
 
-		if ((m_sLastPrinted.IsInit()) && (false == m_sLastPrinted->empty()))
+		if ((m_sLastPrinted.IsInit()) && (!m_sLastPrinted->empty()))
 		{
 			pWriter->WriteNodeValue2(_T("cp:lastPrinted"), m_sLastPrinted);
 		}
-		if ((m_sCreated.IsInit()) && (false == m_sCreated->empty()))
+		if ((m_sCreated.IsInit()) && (!m_sCreated->empty()))
 		{
 			pWriter->WriteNodeBegin(_T("dcterms:created xsi:type=\"dcterms:W3CDTF\""));
 			pWriter->WriteStringXML(*m_sCreated);
 			pWriter->WriteNodeEnd(_T("dcterms:created"));
 		}
-		if ((m_sModified.IsInit()) && (false == m_sModified->empty()))
+		if ((m_sModified.IsInit()) && (!m_sModified->empty()))
 		{
 			pWriter->WriteNodeBegin(_T("dcterms:modified xsi:type=\"dcterms:W3CDTF\""));
 			pWriter->WriteStringXML(*m_sModified);

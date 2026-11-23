@@ -24,6 +24,8 @@
  */
 #pragma once
 
+#include <memory>
+
 #include "../CommonInclude.h"
 
 #include "ChartStyle.h"
@@ -294,7 +296,8 @@ namespace OOX
 			{
 				if (oReader.IsValid())
 				{
-					T* pType = new T();
+					// unique_ptr so the pointer is released if the attribute macros return early
+					std::unique_ptr<T> pType(new T());
 
 					WritingElement_ReadAttributes_Start_No_NS(oReader)
 						WritingElement_ReadAttributes_ReadSingle(oReader, L"val", *pType)
@@ -303,7 +306,7 @@ namespace OOX
 					if (!oReader.IsEmptyNode())
 						oReader.ReadTillEnd();
 
-					this->m_pPointer = pType;
+					this->m_pPointer = pType.release();
 				}
 				else
 					this->m_pPointer = NULL;
@@ -342,7 +345,7 @@ namespace OOX
 						oReader.ReadTillEnd();
 				}
 				else
-					this->m_pPointer = NULL;
+					this->m_pPointer = nullptr;
 			}
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const
 			{
@@ -378,7 +381,7 @@ namespace OOX
 							oReader.ReadTillEnd();
 				}
 				else
-					this->m_pPointer = NULL;
+					this->m_pPointer = nullptr;
 			}
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const
 			{
@@ -414,7 +417,7 @@ namespace OOX
 						oReader.ReadTillEnd();
 				}
 				else
-					this->m_pPointer = NULL;
+					this->m_pPointer = nullptr;
 			}
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const
 			{
@@ -450,7 +453,7 @@ namespace OOX
 						oReader.ReadTillEnd();
 				}
 				else
-					this->m_pPointer = NULL;
+					this->m_pPointer = nullptr;
 			}
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const
 			{
@@ -474,7 +477,8 @@ namespace OOX
 			{
 				if (oReader.IsValid())
 				{
-					std::wstring* pType = new std::wstring();
+					// unique_ptr so the pointer is released if the attribute macros return early
+					std::unique_ptr<std::wstring> pType(new std::wstring());
 
 					WritingElement_ReadAttributes_Start_No_NS(oReader)
 						WritingElement_ReadAttributes_ReadSingle(oReader, L"val", *pType)
@@ -483,10 +487,10 @@ namespace OOX
 					if (!oReader.IsEmptyNode())
 						oReader.ReadTillEnd();
 
-					this->m_pPointer = pType;
+					this->m_pPointer = pType.release();
 				}
 				else
-					this->m_pPointer = NULL;
+					this->m_pPointer = nullptr;
 			}
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const
 			{

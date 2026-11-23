@@ -45,7 +45,7 @@ namespace XLSB
 
     void OleObject::readFields(XLS::CFRecord& record)
     { 
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> dwAspect >> dwOleUpdate >> shapeId >> flags;
 
         fLinked       = GETBIT(flags, 0);
@@ -53,7 +53,7 @@ namespace XLSB
 
         record >> strProgID;
 
-        if(fLinked != false)
+        if(fLinked)
             record >> link;
         else
             record >> strRelID;
@@ -70,7 +70,7 @@ namespace XLSB
 
 		record << strProgID;
 
-		if (fLinked != false)
+		if (fLinked)
 			record << link;
 		else
 			record << strRelID;

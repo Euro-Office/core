@@ -77,13 +77,13 @@ void style_region_impl::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conv
 				}
 				else
 				{
-					CP_SERIALIZE_TEXT(p->content_[j], true);
+					text::xlsx_serialize_header_footer_text(_Wostream, p->content_[j]);
 				}
 			}
 		}
 		else
 		{
-			CP_SERIALIZE_TEXT(content_[i], true);
+			text::xlsx_serialize_header_footer_text(_Wostream, content_[i]);
 		}
 		if (i < content_.size() - 1)
 			_Wostream << L"&#xA;";

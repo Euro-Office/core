@@ -39,7 +39,7 @@ namespace NSGraphics
 		agg::rgba8 c1 = agg::rgba8(r1, g1, b1, a1);
 		agg::rgba8 c2 = agg::rgba8(r2, g2, b2, a2);
 
-		BYTE* pPattern = new BYTE[HATCH_TX_SIZE * HATCH_TX_SIZE * 4];
+		BYTE* pPattern = new BYTE[static_cast<size_t>(HATCH_TX_SIZE) * HATCH_TX_SIZE * 4];
 		agg::GetHatchPattern(name, (agg::rgba8*)pPattern, c1, c2);
 
 		CBgraFrame oFrame;
@@ -48,11 +48,11 @@ namespace NSGraphics
 		oFrame.put_Height(HATCH_TX_SIZE);
 		oFrame.put_Stride(4 * HATCH_TX_SIZE);
 
-		BYTE* pPngBuffer = NULL;
+		BYTE* pPngBuffer = nullptr;
 		int nPngSize = 0;
 		oFrame.Encode(pPngBuffer, nPngSize, 4);
 
-		char* cData64 = NULL;
+		char* cData64 = nullptr;
 		int nData64Dst = 0;
 		NSFile::CBase64Converter::Encode(pPngBuffer, nPngSize, cData64, nData64Dst, NSBase64::B64_BASE64_FLAG_NOCRLF);
 

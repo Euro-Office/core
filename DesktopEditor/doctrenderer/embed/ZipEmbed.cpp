@@ -140,7 +140,7 @@ JSSmart<CJSValue> CZipEmbed::decodeImage(JSSmart<CJSValue> typedArray, JSSmart<C
 
 	JSSmart<CJSObject> oDecoded = CJSContext::createObject();
 
-	size_t nFileSize = 4 * oFrame.get_Width() * oFrame.get_Height();
+	size_t nFileSize = static_cast<size_t>(4) * oFrame.get_Width() * oFrame.get_Height();
 	BYTE* pData = NSAllocator::Alloc(nFileSize);
 	memcpy(pData, oFrame.get_Data(), nFileSize);
 	oDecoded->set("data", CJSContext::createUint8Array(pData, (int)nFileSize, false));
@@ -170,7 +170,7 @@ JSSmart<CJSValue> CZipEmbed::encodeImageData(JSSmart<CJSValue> typedArray, JSSma
 	else
 		oFrame.put_Stride(4 * oFrame.get_Stride());
 
-	BYTE* pBuffer = NULL;
+	BYTE* pBuffer = nullptr;
 	int nEncodedSize = 0;
 
 	if (oFrame.Encode(pBuffer, nEncodedSize, format->toInt32()))
@@ -178,12 +178,12 @@ JSSmart<CJSValue> CZipEmbed::encodeImageData(JSSmart<CJSValue> typedArray, JSSma
 		BYTE* pData = NSAllocator::Alloc((size_t)nEncodedSize);
 		memcpy(pData, pBuffer, (size_t)nEncodedSize);
 		oFrame.FreeEncodedMemory(pBuffer);
-		oFrame.put_Data(NULL);
+		oFrame.put_Data(nullptr);
 
 		return CJSContext::createUint8Array(pData, nEncodedSize, false);
 	}
 
-	oFrame.put_Data(NULL);
+	oFrame.put_Data(nullptr);
 	return CJSContext::createUndefined();
 }
 JSSmart<CJSValue> CZipEmbed::encodeImage(JSSmart<CJSValue> typedArray, JSSmart<CJSValue> format)
@@ -203,7 +203,7 @@ JSSmart<CJSValue> CZipEmbed::encodeImage(JSSmart<CJSValue> typedArray, JSSmart<C
 			if (_CXIMAGE_FORMAT_SVG == format->toInt32())
 			{
 		#ifndef GRAPHICS_DISABLE_METAFILE
-				MetaFile::IMetaFile* pMetaFile = MetaFile::Create(NULL);
+				MetaFile::IMetaFile* pMetaFile = MetaFile::Create(nullptr);
 				pMetaFile->LoadFromBuffer(oBuffer.Data, (unsigned int)oBuffer.Len);
 				std::wstring wsSvg = pMetaFile->ConvertToSvg();
 				std::string sSvg = U_TO_UTF8(wsSvg);
@@ -224,7 +224,7 @@ JSSmart<CJSValue> CZipEmbed::encodeImage(JSSmart<CJSValue> typedArray, JSSmart<C
 			CBgraFrame oFrame;
 			oFrame.Decode(oBuffer.Data, (int)oBuffer.Len);
 
-			BYTE* pBuffer = NULL;
+			BYTE* pBuffer = nullptr;
 			int nEncodedSize = 0;
 
 			if (oFrame.Encode(pBuffer, nEncodedSize, format->toInt32()))
@@ -232,7 +232,7 @@ JSSmart<CJSValue> CZipEmbed::encodeImage(JSSmart<CJSValue> typedArray, JSSmart<C
 				BYTE* pData = NSAllocator::Alloc((size_t)nEncodedSize);
 				memcpy(pData, pBuffer, (size_t)nEncodedSize);
 				oFrame.FreeEncodedMemory(pBuffer);
-				oFrame.put_Data(NULL);
+				oFrame.put_Data(nullptr);
 
 				if (oBuffer.IsExternalize)
 					oBuffer.Free();
@@ -272,7 +272,7 @@ JSSmart<CJSValue> CZipEmbed::getImageBuffer(JSSmart<CJSValue> filePath)
 	size_t nBufferSize = (size_t)pBuffer->Size;
 
 	CImageFileFormatChecker oChecker;
-	bool bIsImageFile = oChecker.isImageFile(pBuffer->Buffer, (DWORD)pBuffer->Size);
+	bool bIsImageFile = oChecker.isImageFile(pBuffer->Buffer, pBuffer->Size);
 
 	if (!bIsImageFile)
 	{
@@ -301,7 +301,7 @@ JSSmart<CJSValue> CZipEmbed::getImageBuffer(JSSmart<CJSValue> filePath)
 	}
 
 #ifndef GRAPHICS_DISABLE_METAFILE
-	MetaFile::IMetaFile* pMetaFile = MetaFile::Create(NULL);
+	MetaFile::IMetaFile* pMetaFile = MetaFile::Create(nullptr);
 	pMetaFile->LoadFromBuffer(pBuffer->Buffer, (unsigned int)pBuffer->Size);
 	std::wstring wsSvg = pMetaFile->ConvertToSvg();
 	std::string sSvg = U_TO_UTF8(wsSvg);

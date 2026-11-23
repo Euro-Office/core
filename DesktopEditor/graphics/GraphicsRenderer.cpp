@@ -48,8 +48,8 @@ static void LOGGING(char* buffer, ...)
 
 Aggplus::CBrush* CGraphicsRenderer::CreateBrush(NSStructures::CBrush* pBrush)
 {
-	if (NULL == pBrush)
-		return NULL;
+	if (nullptr == pBrush)
+		return nullptr;
 
     bool bIsSwappedRGB = false;
     if (m_pRenderer && m_pRenderer->m_bSwapRGB)
@@ -129,7 +129,7 @@ Aggplus::CBrush* CGraphicsRenderer::CreateBrush(NSStructures::CBrush* pBrush)
 			pNew->SetBounds(pBrush->Bounds);
 		}
         if(!pNew)
-            return NULL;
+            return nullptr;
         
         switch (Type)
         {
@@ -185,7 +185,7 @@ Aggplus::CBrush* CGraphicsRenderer::CreateBrush(NSStructures::CBrush* pBrush)
 	{
 		Aggplus::CBrushTexture* pNew;
 
-		if (NULL != pBrush->Image)
+		if (nullptr != pBrush->Image)
 			pNew = new Aggplus::CBrushTexture(pBrush->Image, Aggplus::WrapModeClamp);
 		else
 			pNew = new Aggplus::CBrushTexture(pBrush->TexturePath, Aggplus::WrapModeClamp);
@@ -198,8 +198,8 @@ Aggplus::CBrush* CGraphicsRenderer::CreateBrush(NSStructures::CBrush* pBrush)
 
 CGraphicsRenderer::CGraphicsRenderer() : NSGraphics::IGraphicsRenderer()
 {
-	m_pRenderer = NULL;
-	m_pPath		= NULL;
+	m_pRenderer = nullptr;
+	m_pPath		= nullptr;
 
 	m_dWidth	= 210;
 	m_dHeight	= 190;
@@ -212,14 +212,14 @@ CGraphicsRenderer::CGraphicsRenderer() : NSGraphics::IGraphicsRenderer()
 	m_lCurrentClipMode	= 0;
 	m_bIsSetupClip		= FALSE;
 
-	m_pFontManager			= NULL;
+	m_pFontManager			= nullptr;
 
 	m_oInstalledFont.Name	= L"";
 
-	m_pPixels	= NULL;
-	m_pDIB		= NULL;
+	m_pPixels	= nullptr;
+	m_pDIB		= nullptr;
 
-	m_pCache	= NULL;
+	m_pCache	= nullptr;
 
 	m_dGlobalAlpha			= 1.0;
     m_bGlobalAlphaEnabled	= false;
@@ -245,7 +245,7 @@ void CGraphicsRenderer::SetImageCache(NSImages::IImageFilesCache* pCache)
 void CGraphicsRenderer::SetFontManager(NSFonts::IFontManager* pManager)
 {
 	RELEASEINTERFACE(m_pFontManager);		
-	if (NULL == pManager)
+	if (nullptr == pManager)
 	{
 		m_pFontManager = new CFontManager();
 		m_pFontManager->Initialize();
@@ -258,8 +258,8 @@ void CGraphicsRenderer::SetFontManager(NSFonts::IFontManager* pManager)
 }
 void CGraphicsRenderer::CheckFontManager()
 {
-	if (NULL == m_pFontManager)
-		SetFontManager(NULL);
+	if (nullptr == m_pFontManager)
+		SetFontManager(nullptr);
 }
 
 NSFonts::IFontManager* CGraphicsRenderer::GetFontManager()
@@ -285,11 +285,11 @@ void CGraphicsRenderer::SetClipRect(double x, double y, double w, double h)
 
 INT CGraphicsRenderer::CheckValidate(INT bOnlyGraphics)
 {
-	if (NULL == m_pRenderer)
+	if (nullptr == m_pRenderer)
 		return FALSE;
 
 	if (!bOnlyGraphics)
-		return (NULL != m_pPath);
+		return (nullptr != m_pPath);
 
 	return TRUE;
 }
@@ -301,7 +301,7 @@ void CGraphicsRenderer::Clear()
 
 void CGraphicsRenderer::UpdateSize()
 {
-	if (NULL == m_pRenderer)
+	if (nullptr == m_pRenderer)
 		return;
 
 	m_pRenderer->SetPageWidth(m_dWidth, Aggplus::UnitMillimeter);
@@ -313,7 +313,7 @@ void CGraphicsRenderer::UpdateSize()
 // renderer type------------------------------------------------------------------------------
 HRESULT CGraphicsRenderer::get_Type(LONG* lType)
 {
-	if (NULL == lType)
+	if (nullptr == lType)
 		return S_FALSE;
 
 	*lType = c_nGrRenderer;
@@ -328,7 +328,7 @@ HRESULT CGraphicsRenderer::NewPage()
 HRESULT CGraphicsRenderer::put_Height(const double& dHeight)
 {
 	m_dHeight = dHeight;
-	if (NULL != m_pRenderer)
+	if (nullptr != m_pRenderer)
 	{
 		m_pRenderer->SetPageHeight(m_dHeight, Aggplus::UnitMillimeter);
 		m_pRenderer->SetPageUnit(Aggplus::UnitMillimeter);
@@ -337,7 +337,7 @@ HRESULT CGraphicsRenderer::put_Height(const double& dHeight)
 }
 HRESULT CGraphicsRenderer::get_Height(double* dHeight)
 {
-	if (NULL == dHeight)
+	if (nullptr == dHeight)
 		return S_FALSE;
 
 	*dHeight = m_dHeight;
@@ -346,7 +346,7 @@ HRESULT CGraphicsRenderer::get_Height(double* dHeight)
 HRESULT CGraphicsRenderer::put_Width(const double& dWidth)
 {
 	m_dWidth = dWidth;
-	if (NULL != m_pRenderer)
+	if (nullptr != m_pRenderer)
 	{
 		m_pRenderer->SetPageWidth(m_dWidth, Aggplus::UnitMillimeter);
 		m_pRenderer->SetPageUnit(Aggplus::UnitMillimeter);
@@ -355,7 +355,7 @@ HRESULT CGraphicsRenderer::put_Width(const double& dWidth)
 }
 HRESULT CGraphicsRenderer::get_Width(double* dWidth)
 {
-	if (NULL == dWidth)
+	if (nullptr == dWidth)
 		return S_FALSE;
 
 	*dWidth = m_dWidth;
@@ -363,7 +363,7 @@ HRESULT CGraphicsRenderer::get_Width(double* dWidth)
 }
 HRESULT CGraphicsRenderer::get_DpiX(double* dDpiX)
 {
-	if (NULL == dDpiX)
+	if (nullptr == dDpiX)
 		return S_FALSE;
 
 	*dDpiX = 25.4 * m_dPixelsWidth / m_dWidth;
@@ -371,7 +371,7 @@ HRESULT CGraphicsRenderer::get_DpiX(double* dDpiX)
 }
 HRESULT CGraphicsRenderer::get_DpiY(double* dDpiY)
 {
-	if (NULL == dDpiY)
+	if (nullptr == dDpiY)
 		return S_FALSE;
 
 	*dDpiY = 25.4 * m_dPixelsHeight / m_dHeight;
@@ -558,7 +558,7 @@ HRESULT CGraphicsRenderer::put_BrushTextureImage(Aggplus::CImage *pImage)
 {
 	RELEASEINTERFACE(m_oBrush.Image);
 
-	if (NULL == pImage)
+	if (nullptr == pImage)
 		return S_OK;
 
 	m_oBrush.Image = pImage;
@@ -735,7 +735,7 @@ HRESULT CGraphicsRenderer::put_FontFaceIndex(const int& lFaceIndex)
 }
 
 //-------- Functions for text output --------------------------------------------------------
-HRESULT CGraphicsRenderer::CommandDrawTextCHAR(const LONG& c, const double& x, const double& y, const double& w, const double& h)
+HRESULT CGraphicsRenderer::CommandDrawTextCHAR(const LONG& c, const double& x, const double& y, const double&  /*w*/, const double&  /*h*/)
 {
 	if (c_nHyperlinkType == m_lCurrentCommandType)
 		return S_OK;
@@ -750,7 +750,7 @@ HRESULT CGraphicsRenderer::CommandDrawTextCHAR(const LONG& c, const double& x, c
 
 	return S_OK;
 }
-HRESULT CGraphicsRenderer::CommandDrawText(const std::wstring& bsText, const double& x, const double& y, const double& w, const double& h)
+HRESULT CGraphicsRenderer::CommandDrawText(const std::wstring& bsText, const double& x, const double& y, const double&  /*w*/, const double&  /*h*/)
 {
 	if (c_nHyperlinkType == m_lCurrentCommandType)
 		return S_OK;
@@ -781,7 +781,7 @@ HRESULT CGraphicsRenderer::CommandDrawTextExCHAR(const LONG& c, const LONG& gid,
 
 HRESULT CGraphicsRenderer::CommandDrawTextEx(const std::wstring& bsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& x, const double& y, const double& w, const double& h)
 {
-    if (NULL != pGids && 0 != nGidsCount && !(1 == nGidsCount && 0 == *pGids))
+    if (nullptr != pGids && 0 != nGidsCount && (1 != nGidsCount || 0 != *pGids))
 	{
         m_oFont.StringGID = TRUE;
         if (c_nHyperlinkType == m_lCurrentCommandType)
@@ -838,11 +838,11 @@ HRESULT CGraphicsRenderer::EndCommand(const DWORD& lType)
 		{
 			INT bIsIn = (c_nClipRegionTypeWinding == (0x0001 & m_lCurrentClipMode));
 
-			m_pPath->SetRuler(bIsIn ? false : true);
+			m_pPath->SetRuler(bIsIn == 0);
 
 			INT bIsIntersect = (c_nClipRegionIntersect == (0x0100 & m_lCurrentClipMode));
 			INT bIsStrokePath = (c_nClipToStrokePath == (0x0010 & m_lCurrentClipMode));
-			m_pRenderer->CombineClip(m_pPath, bIsIntersect ? agg::sbool_and : agg::sbool_or, bIsStrokePath ? &m_oPen : NULL);
+			m_pRenderer->CombineClip(m_pPath, bIsIntersect ? agg::sbool_and : agg::sbool_or, bIsStrokePath ? &m_oPen : nullptr);
 
 			//m_pRenderer->SetClip(m_pPath);
 			break;
@@ -954,10 +954,10 @@ HRESULT CGraphicsRenderer::DrawPath(const LONG& nType)
 	case c_nWindingFillMode:
     case c_nEvenOddFillMode:
 		{
-            m_pPath->SetRuler((lFillType == c_nWindingFillMode) ? false : true);
+            m_pPath->SetRuler(lFillType != c_nWindingFillMode);
 
-			CCacheImage* pCacheImage	= NULL;
-			Aggplus::CBrush* pBrush		= NULL;
+			CCacheImage* pCacheImage	= nullptr;
+			Aggplus::CBrush* pBrush		= nullptr;
 			
 			if (m_oBrush.Type == c_BrushTypeTexture)
 			{
@@ -981,9 +981,9 @@ HRESULT CGraphicsRenderer::DrawPath(const LONG& nType)
 					break;
 				}
 
-				Aggplus::CBrushTexture* pTextureBrush = NULL;
+				Aggplus::CBrushTexture* pTextureBrush = nullptr;
 
-				if (NULL != m_oBrush.Image)
+				if (nullptr != m_oBrush.Image)
 				{
 					pTextureBrush = new Aggplus::CBrushTexture(m_oBrush.Image, oMode);
 				}
@@ -1029,7 +1029,7 @@ HRESULT CGraphicsRenderer::DrawPath(const LONG& nType)
 				}
 				else
 				{
-					if (NULL != m_pCache)
+					if (nullptr != m_pCache)
 					{
 						pCacheImage = (CCacheImage*)m_pCache->Lock(m_oBrush.TexturePath);
 						pTextureBrush = new Aggplus::CBrushTexture(pCacheImage->GetImage(), oMode);
@@ -1104,28 +1104,24 @@ HRESULT CGraphicsRenderer::PathCommandGetCurrentPoint(double* x, double* y)
 }
 
 // textpath
-HRESULT CGraphicsRenderer::PathCommandTextCHAR(const LONG& c, const double& x, const double& y, const double& w, const double& h)
+HRESULT CGraphicsRenderer::PathCommandTextCHAR(const LONG& c, const double& x, const double& y, const double&  /*w*/, const double&  /*h*/)
 {
 	if (!CheckValidate())
 		return S_FALSE;
 
 	_SetFont();
 
-	// since the path is drawn in millimeters, convert the points to millimeters
-	float fSize = (float)(0.3528 * m_oFont.Size);
     m_pPath->AddStringC(c, m_pFontManager, x, y);
 
 	return S_OK;
 }
-HRESULT CGraphicsRenderer::PathCommandText(const std::wstring& bsText, const double& x, const double& y, const double& w, const double& h)
+HRESULT CGraphicsRenderer::PathCommandText(const std::wstring& bsText, const double& x, const double& y, const double&  /*w*/, const double&  /*h*/)
 {
 	if (!CheckValidate())
 		return S_FALSE;
 
 	_SetFont();
 
-	// since the path is drawn in millimeters, convert the points to millimeters
-	float fSize = (float)(0.3528 * m_oFont.Size);
     m_pPath->AddString(bsText, m_pFontManager, x, y);
 
 	return S_OK;
@@ -1144,7 +1140,7 @@ HRESULT CGraphicsRenderer::PathCommandTextExCHAR(const LONG& c, const LONG& gid,
 }
 HRESULT CGraphicsRenderer::PathCommandTextEx(const std::wstring& bsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& x, const double& y, const double& w, const double& h)
 {
-    if (NULL != pGids)
+    if (nullptr != pGids)
 	{
 		m_oFont.StringGID = TRUE;
         if (!CheckValidate())
@@ -1152,8 +1148,6 @@ HRESULT CGraphicsRenderer::PathCommandTextEx(const std::wstring& bsUnicodeText, 
 
         _SetFont();
 
-        // since the path is drawn in millimeters, convert the points to millimeters
-        float fSize = (float)(0.3528 * m_oFont.Size);
         m_pPath->AddString(pGids, nGidsCount, m_pFontManager, x, y);
 
         return S_OK;
@@ -1166,13 +1160,13 @@ HRESULT CGraphicsRenderer::PathCommandTextEx(const std::wstring& bsUnicodeText, 
 //-------- Functions for displaying images ------------------------------------------------------------------
 HRESULT CGraphicsRenderer::DrawImage(IGrObject* pImage, const double& x, const double& y, const double& w, const double& h)
 {
-	if (!CheckValidate(TRUE) || NULL == pImage)
+	if (!CheckValidate(TRUE) || nullptr == pImage)
 		return S_FALSE;
 
 	m_pRenderer->DrawImage((Aggplus::CImage*)pImage, x, y, w, h);
 	return S_OK;	
 }
-HRESULT CGraphicsRenderer::DrawImageFromFile(const std::wstring& bstrVal, const double& x, const double& y, const double& w, const double& h, const BYTE& lAlpha)
+HRESULT CGraphicsRenderer::DrawImageFromFile(const std::wstring& bstrVal, const double& x, const double& y, const double& w, const double& h, const BYTE&  /*lAlpha*/)
 {
 #if 0
     MetaFile::CMetaFile oMetafile(m_pFontManager ? m_pFontManager->m_pApplication : NULL);
@@ -1185,17 +1179,17 @@ HRESULT CGraphicsRenderer::DrawImageFromFile(const std::wstring& bstrVal, const 
     }
 #endif
 
-	CCacheImage* pCacheImage = NULL;
-    if (NULL != m_pCache)
+	CCacheImage* pCacheImage = nullptr;
+    if (nullptr != m_pCache)
 	{
         pCacheImage = (CCacheImage*)m_pCache->Lock(bstrVal);
 	}
     else
     {
-        pCacheImage = new CCacheImage(NULL, bstrVal);
+        pCacheImage = new CCacheImage(nullptr, bstrVal);
     }
 
-	if (NULL != pCacheImage)
+	if (nullptr != pCacheImage)
 	{
 		Aggplus::CImage* pImage = pCacheImage->GetImage();
 		m_pRenderer->DrawImage(pImage, x, y, w, h);
@@ -1223,12 +1217,12 @@ HRESULT CGraphicsRenderer::GetTransform(double *pdA, double *pdB, double *pdC, d
 	Aggplus::CMatrix oMatrix;
 	m_pRenderer->GetTransform()->GetElements(buffer);
 
-	*pdA = (double)buffer[0];
-	*pdB = (double)buffer[1];
-	*pdC = (double)buffer[2];
-	*pdD = (double)buffer[3];
-	*pdE = (double)buffer[4];
-	*pdF = (double)buffer[5];
+	*pdA = buffer[0];
+	*pdB = buffer[1];
+	*pdC = buffer[2];
+	*pdD = buffer[3];
+	*pdE = buffer[4];
+	*pdF = buffer[5];
 
 	return S_OK;
 }
@@ -1259,17 +1253,17 @@ HRESULT CGraphicsRenderer::CommandLong(const LONG& lType, const LONG& lCommand)
     if (c_nDarkMode == lType && m_pRenderer)
         m_pRenderer->m_bIsDarkMode = (1 == lCommand);
 	if (c_nUseDictionaryFonts == lType && m_pFontManager)
-		m_pFontManager->SetUseCorrentFontByName((1 == lCommand) ? true : false);
+		m_pFontManager->SetUseCorrentFontByName(1 == lCommand);
 	if (c_nPenWidth0As1px == lType && m_pRenderer)
-		m_pRenderer->m_bIs0PenWidthAs1px = (1 == lCommand) ? true : false;
+		m_pRenderer->m_bIs0PenWidthAs1px = 1 == lCommand;
 
 	return S_OK;
 }
-HRESULT CGraphicsRenderer::CommandDouble(const LONG& lType, const double& dCommand)
+HRESULT CGraphicsRenderer::CommandDouble(const LONG&  /*lType*/, const double&  /*dCommand*/)
 {
 	return S_OK;
 }
-HRESULT CGraphicsRenderer::CommandString(const LONG& lType, const std::wstring& sCommand)
+HRESULT CGraphicsRenderer::CommandString(const LONG&  /*lType*/, const std::wstring&  /*sCommand*/)
 {
 	return S_OK;
 }
@@ -1283,7 +1277,7 @@ HRESULT CGraphicsRenderer::StartConvertCoordsToIdentity()
 HRESULT CGraphicsRenderer::EndConvertCoordsToIdentity()
 {
 	m_bUseTransformCoordsToIdentity = false;
-	m_pPath->m_internal->m_pTransform = NULL;
+	m_pPath->m_internal->m_pTransform = nullptr;
 	return S_OK;
 }
 
@@ -1413,8 +1407,6 @@ void CGraphicsRenderer::CreateFlip(BYTE* pPixels, const Aggplus::CDoubleRect& oR
 
 	m_dPixelsWidth	= lWidth;
 	m_dPixelsHeight = lHeight;
-
-	LONG lStride	= 4 * lWidthControl;
 
 	RELEASEOBJECT(m_pRenderer);
 	RELEASEOBJECT(m_pPath);
@@ -1574,7 +1566,7 @@ void CGraphicsRenderer::Restore()
 }
 void CGraphicsRenderer::put_BlendMode(const unsigned int& nBlendMode)
 {
-    if (NULL != m_pRenderer)
+    if (nullptr != m_pRenderer)
     {
         m_pRenderer->m_nBlendMode = nBlendMode;
     }

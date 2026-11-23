@@ -25,6 +25,7 @@
 #include "ApplicationFonts.h"
 #include "../common/File.h"
 #include <stdio.h>
+#include <cmath>
 #include "ftsnames.h"
 #include FT_LCD_FILTER_H
 #include "internal/tttypes.h"
@@ -32,7 +33,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 CFontStream::CFontStream() : NSFonts::IFontStream()
 {
-	m_pData	= NULL;
+	m_pData	= nullptr;
 	m_lSize = 0;
 	m_bIsAttach = false;
 }
@@ -50,7 +51,7 @@ int CFontStream::CreateFromFile(const std::wstring& strFileName, BYTE* pDataUse)
 
 	m_lSize = oFile.GetFileSize();
 
-	if (NULL == pDataUse)
+	if (nullptr == pDataUse)
 		m_pData = new BYTE[m_lSize];
 	else
 	{
@@ -108,14 +109,14 @@ CApplicationFontStreams::CApplicationFontStreams() : NSFonts::IApplicationFontSt
 }
 CApplicationFontStreams::~CApplicationFontStreams()
 {
-	Clear();
+	CApplicationFontStreams::Clear();
 }
 
 NSFonts::IFontStream* CApplicationFontStreams::GetStream(const std::wstring &strFile)
 {
 	CFontStream* pStream = m_mapStreams[strFile];
 
-	if (NULL != pStream)
+	if (nullptr != pStream)
 		return pStream;
 
 	if (NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())
@@ -180,20 +181,20 @@ NSFonts::IFontFile* NSFonts::IFontManager::LoadFontFile(NSFonts::CLibrary& libra
 
 	FT_Parameter *pParams = (FT_Parameter *)::malloc( sizeof(FT_Parameter) * 4 );
 	pParams[0].tag  = FT_MAKE_TAG( 'i', 'g', 'p', 'f' );
-	pParams[0].data = NULL;
+	pParams[0].data = nullptr;
 	pParams[1].tag  = FT_MAKE_TAG( 'i', 'g', 'p', 's' );
-	pParams[1].data = NULL;
+	pParams[1].data = nullptr;
 	pParams[2].tag  = FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY;
-	pParams[2].data = NULL;
+	pParams[2].data = nullptr;
 	pParams[3].tag  = FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY;
-	pParams[3].data = NULL;
+	pParams[3].data = nullptr;
 
 	oOpenArgs.params = pParams;
 	oOpenArgs.num_params = 4;
 
 	FT_Face pFace;
 	if ( FT_Open_Face( library.m_internal->m_library, &oOpenArgs, lFaceIndex, &pFace ) )
-		return NULL;
+		return nullptr;
 
 	::free(pParams);
 
@@ -213,7 +214,7 @@ NSFonts::IFontFile* NSFonts::IFontManager::LoadFontFile(NSFonts::CLibrary& libra
 	if (FT_Set_Char_Size(pFace, 0, (FT_F26Dot6)(pFont->m_dSize * 64), 0, 0))
 	{
 		delete pFont;
-		return NULL;
+		return nullptr;
 	}
 
 	pFont->ResetTextMatrix();
@@ -224,26 +225,26 @@ NSFonts::IFontFile* NSFonts::IFontManager::LoadFontFile(NSFonts::CLibrary& libra
 
 NSFonts::IFontFile* CFontsCache::LockFont(NSFonts::CLibrary& library, const std::wstring& strFileName, const int& lFaceIndex, const double& dSize)
 {
-	if (NULL == m_pApplicationFontStreams)
-		return NULL;
+	if (nullptr == m_pApplicationFontStreams)
+		return nullptr;
 
 	std::string sLock = U_TO_UTF8(strFileName);
-	sLock += (std::to_string(lFaceIndex) + "_" + std::to_string((int)(100 * dSize + 0.5)));
+	sLock += (std::to_string(lFaceIndex) + "_" + std::to_string(static_cast<int>(std::lround(100 * dSize))));
 
 	CFontFile* pFile = m_mapFiles[sLock];
 
-	if (NULL != pFile)
+	if (nullptr != pFile)
 	{
 		pFile->AddRef();
 		return pFile;
 	}
 
 	CFontStream* pStream = (CFontStream*)m_pApplicationFontStreams->GetStream(strFileName);
-	if (NULL == pStream)
-		return NULL;
+	if (nullptr == pStream)
+		return nullptr;
 	pFile = (CFontFile*)CFontManager::LoadFontFile(library, pStream, lFaceIndex);
-	if (NULL == pFile)
-		return NULL;
+	if (nullptr == pFile)
+		return nullptr;
 
 	if (-1 != m_lCacheSize)
 	{
@@ -278,16 +279,16 @@ NSFonts::IFontFile* CFontsCache::LockFont(NSFonts::CLibrary& library, const std:
 
 CFontsCache::CFontsCache() : NSFonts::IFontsCache()
 {
-	m_pApplicationFontStreams = NULL;
+	m_pApplicationFontStreams = nullptr;
 	m_lCacheSize = -1;
 
-	m_pLibrary = NULL;
+	m_pLibrary = nullptr;
 	FT_Init_FreeType(&m_pLibrary);
 	FT_Library_SetLcdFilter(m_pLibrary, FT_LCD_FILTER_DEFAULT);
 }
 CFontsCache::~CFontsCache()
 {
-	Clear();
+	CFontsCache::Clear();
 
 	if (m_pLibrary)
 		FT_Done_FreeType(m_pLibrary);
@@ -319,9 +320,9 @@ FT_Library CFontsCache::GetLibrary()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 CFontManager::CFontManager() : NSFonts::IFontManager()
 {
-	m_pFont = NULL;
-	m_pApplication = NULL;
-	m_pOwnerCache = NULL;
+	m_pFont = nullptr;
+	m_pApplication = nullptr;
+	m_pOwnerCache = nullptr;
 
 	m_bStringGID = FALSE;
 	m_nLOAD_MODE = 40968;
@@ -355,7 +356,7 @@ NSFonts::IFontFile* CFontManager::GetFile() { return m_pFont; }
 
 void CFontManager::AfterLoad()
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 	{
 		m_lUnits_Per_Em = 0;
 		m_lAscender = 0;
@@ -391,7 +392,7 @@ double CFontManager::UpdateSize(const double &dOldSize, const double &dDpi, cons
 
 INT CFontManager::LoadString1(const std::wstring &wsBuffer, const float &fX, const float &fY)
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return FALSE;
 
 	m_oString.SetString(wsBuffer, fX, fY);
@@ -401,7 +402,7 @@ INT CFontManager::LoadString1(const std::wstring &wsBuffer, const float &fX, con
 
 INT CFontManager::LoadString2(const std::wstring &wsBuffer, const float &fX, const float &fY)
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return FALSE;
 
 	m_oString.SetString(wsBuffer, fX, fY);
@@ -411,7 +412,7 @@ INT CFontManager::LoadString2(const std::wstring &wsBuffer, const float &fX, con
 
 INT CFontManager::LoadString1(const unsigned int* pGids, const unsigned int& nGidsCount, const float &fX, const float &fY)
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return FALSE;
 
 	m_oString.SetString(pGids, nGidsCount, fX, fY);
@@ -421,7 +422,7 @@ INT CFontManager::LoadString1(const unsigned int* pGids, const unsigned int& nGi
 
 INT CFontManager::LoadString2(const unsigned int* pGids, const unsigned int& nGidsCount, const float &fX, const float &fY)
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return FALSE;
 
 	m_oString.SetString(pGids, nGidsCount, fX, fY);
@@ -431,7 +432,7 @@ INT CFontManager::LoadString2(const unsigned int* pGids, const unsigned int& nGi
 
 INT CFontManager::LoadString3(const int& gid, const float &fX, const float &fY)
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return FALSE;
 
 	SetStringGID(TRUE);
@@ -444,7 +445,7 @@ INT CFontManager::LoadString3(const int& gid, const float &fX, const float &fY)
 
 INT CFontManager::LoadString3C(const int& gid, const float &fX, const float &fY)
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return FALSE;
 
 	SetStringGID(TRUE);
@@ -457,7 +458,7 @@ INT CFontManager::LoadString3C(const int& gid, const float &fX, const float &fY)
 
 INT CFontManager::LoadString2C(const int& code, const float &fX, const float &fY)
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return FALSE;
 
 	m_oString.SetStringGID(code, fX, fY);
@@ -468,7 +469,7 @@ INT CFontManager::LoadString2C(const int& code, const float &fX, const float &fY
 
 TFontCacheSizes CFontManager::MeasureChar(const LONG &lUnicode)
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 	{
 		TFontCacheSizes oRet;
 		return oRet;
@@ -479,7 +480,7 @@ TFontCacheSizes CFontManager::MeasureChar(const LONG &lUnicode)
 TBBoxAdvance CFontManager::MeasureChar2(const LONG& lUnicode)
 {
 	TBBoxAdvance ret;
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return ret;
 
 	TFontCacheSizes sizes = m_pFont->GetChar(lUnicode);
@@ -491,7 +492,7 @@ TBBoxAdvance CFontManager::MeasureChar2(const LONG& lUnicode)
 
 int CFontManager::GetKerning(UINT unPrevGID, UINT unGID)
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return 0;
 
 	return m_pFont->GetKerning(unPrevGID, unGID);
@@ -592,7 +593,7 @@ INT CFontManager::GetNextChar2(TGlyph*& pGlyph, float& fX, float& fY)
 	if (!m_oString.GetNext(pGlyph))
 		return FALSE;
 
-	if (glyphstateNormal == pGlyph->eState || (glyphstateDefault == pGlyph->eState && NULL != m_pFont->m_pDefaultFont))
+	if (glyphstateNormal == pGlyph->eState || (glyphstateDefault == pGlyph->eState && nullptr != m_pFont->m_pDefaultFont))
 	{
 		fX = m_oString.m_fX + pGlyph->fX + pGlyph->oBitmap.nX;
 		fY = m_oString.m_fY + pGlyph->fY - pGlyph->oBitmap.nY;
@@ -607,7 +608,7 @@ INT CFontManager::GetNextChar2(TGlyph*& pGlyph, float& fX, float& fY)
 
 INT CFontManager::SetTextMatrix(const double &fA, const double &fB, const double &fC, const double &fD, const double &fE, const double &fF)
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return FALSE;
 
 	if (fabs(fB) > 0.1)
@@ -630,7 +631,7 @@ INT CFontManager::SetTextMatrix(const double &fA, const double &fB, const double
 
 INT CFontManager::SetTextMatrix2(const double &fA, const double &fB, const double &fC, const double &fD, const double &fE, const double &fF)
 {
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return FALSE;
 
 	m_pFont->SetTextMatrix(fA, fB, fC, fD, 0, 0);
@@ -644,7 +645,7 @@ void CFontManager::SetStringGID(const INT &bStringGID)
 {
 	m_bStringGID = bStringGID;
 
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return;
 
 	m_pFont->SetStringGID(m_bStringGID);
@@ -654,7 +655,7 @@ void CFontManager::SetCharSpacing(const double &dCharSpacing)
 {
 	m_fCharSpacing = dCharSpacing;
 
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return;
 
 	m_pFont->SetCharSpacing(m_fCharSpacing);
@@ -662,7 +663,7 @@ void CFontManager::SetCharSpacing(const double &dCharSpacing)
 
 INT CFontManager::GetStringPath(NSFonts::ISimpleGraphicsPath* pInterface)
 {
-	if (NULL == pInterface)
+	if (nullptr == pInterface)
 		return FALSE;
 
 	int nCount = m_oString.GetLength();
@@ -676,8 +677,8 @@ INT CFontManager::GetStringPath(NSFonts::ISimpleGraphicsPath* pInterface)
 	for (int nIndex = 0; nIndex < nCount; ++nIndex)
 	{
 		TGlyph* pCurGlyph = m_oString.GetAt(nIndex);
-		CFontPath* pPath = NULL;
-		if (glyphstateNormal == pCurGlyph->eState || (glyphstateDefault == pCurGlyph->eState && NULL != m_pFont->m_pDefaultFont))
+		CFontPath* pPath = nullptr;
+		if (glyphstateNormal == pCurGlyph->eState || (glyphstateDefault == pCurGlyph->eState && nullptr != m_pFont->m_pDefaultFont))
 		{
 			if (glyphstateNormal == pCurGlyph->eState)
 			{
@@ -710,8 +711,8 @@ INT CFontManager::GetStringPath(NSFonts::ISimpleGraphicsPath* pInterface)
 
 NSFonts::CFontInfo* CFontManager::GetFontInfoByParams(NSFonts::CFontSelectFormat& oFormat, bool bIsDictionaryUse)
 {
-	NSFonts::CFontInfo* pRes = NULL;
-	if (NULL != m_pApplication)
+	NSFonts::CFontInfo* pRes = nullptr;
+	if (nullptr != m_pApplication)
 	{
 		pRes = m_pApplication->GetList()->GetByParams(oFormat, bIsDictionaryUse);
 	}
@@ -720,13 +721,13 @@ NSFonts::CFontInfo* CFontManager::GetFontInfoByParams(NSFonts::CFontSelectFormat
 std::vector<NSFonts::CFontInfo*> CFontManager::GetAllStylesByFontName(const std::wstring& strName)
 {
 	std::vector<NSFonts::CFontInfo*> aRes;
-	if (NULL != m_pApplication)
+	if (nullptr != m_pApplication)
 		aRes = ((CFontList*)(m_pApplication->GetList()))->GetAllByName(strName);
 	return aRes;
 }
 INT CFontManager::LoadFontByName(const std::wstring& sName, const double& dSize, const int& lStyle, const double& dDpiX, const double& dDpiY)
 {
-	if (NULL == m_pApplication)
+	if (nullptr == m_pApplication)
 		return FALSE;
 
 	NSFonts::CFontSelectFormat oFormat;
@@ -741,7 +742,7 @@ INT CFontManager::LoadFontByName(const std::wstring& sName, const double& dSize,
 		*oFormat.bItalic = TRUE;
 
 	NSFonts::CFontInfo* pInfo = m_pApplication->GetList()->GetByParams(oFormat, m_bCorrectFontByName);
-	if (NULL == pInfo)
+	if (nullptr == pInfo)
 		return FALSE;
 
 	INT bLoad = LoadFontFromFile(pInfo->m_wsFontPath, pInfo->m_lIndex, dSize, dDpiX, dDpiY);
@@ -749,10 +750,10 @@ INT CFontManager::LoadFontByName(const std::wstring& sName, const double& dSize,
 	if (bLoad == TRUE)
 	{
 		bool bIsNeedBold = false;
-		if (NULL != oFormat.bBold && (*oFormat.bBold) == TRUE && pInfo->m_bBold == FALSE)
+		if (nullptr != oFormat.bBold && (*oFormat.bBold) == TRUE && pInfo->m_bBold == FALSE)
 			bIsNeedBold = true;
 		bool bIsNeedItalic = false;
-		if (NULL != oFormat.bItalic && (*oFormat.bItalic) == TRUE && pInfo->m_bItalic == FALSE)
+		if (nullptr != oFormat.bItalic && (*oFormat.bItalic) == TRUE && pInfo->m_bItalic == FALSE)
 			bIsNeedItalic = true;
 
 		m_pFont->SetNeedBold(bIsNeedBold);
@@ -763,16 +764,16 @@ INT CFontManager::LoadFontByName(const std::wstring& sName, const double& dSize,
 
 INT CFontManager::LoadFontFromFile(const std::wstring& sPath, const int& lFaceIndex, const double& dSize, const double& dDpiX, const double& dDpiY)
 {
-	if (NULL == m_pApplication)
+	if (nullptr == m_pApplication)
 		return FALSE;
 
-	CFontsCache* pCache		= (CFontsCache*)((m_pOwnerCache != NULL) ? m_pOwnerCache : m_pApplication->GetCache());
+	CFontsCache* pCache		= (CFontsCache*)((m_pOwnerCache != nullptr) ? m_pOwnerCache : m_pApplication->GetCache());
 	RELEASEINTERFACE(m_pFont);
 	
 	NSFonts::CLibrary library;
 	library.m_internal->m_library = pCache->GetLibrary();
 	m_pFont = (CFontFile*)pCache->LockFont(library, sPath, lFaceIndex, dSize);
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return FALSE;
 
 	m_pFont->m_pFontManager = this;
@@ -790,7 +791,7 @@ INT CFontManager::LoadFontFromFile(const std::wstring& sPath, const int& lFaceIn
 
 INT CFontManager::LoadFontFromFile2(NSFonts::IFontsCache* pCache, const std::wstring& sPath, const int& lFaceIndex, const double& dSize, const double& dDpiX, const double& dDpiY)
 {
-	if (NULL == pCache)
+	if (nullptr == pCache)
 		return FALSE;
 
 	RELEASEINTERFACE(m_pFont);
@@ -798,7 +799,7 @@ INT CFontManager::LoadFontFromFile2(NSFonts::IFontsCache* pCache, const std::wst
 	NSFonts::CLibrary library;
 	library.m_internal->m_library = ((CFontsCache*)pCache)->GetLibrary();
 	m_pFont = (CFontFile*)pCache->LockFont(library, sPath, lFaceIndex, dSize);
-	if (NULL == m_pFont)
+	if (nullptr == m_pFont)
 		return FALSE;
 
 	m_pFont->m_pFontManager = this;
@@ -870,18 +871,20 @@ void CFontManager::GetFace(double& d0, double& d1, double& d2)
 
 	if (m_pFont)
 	{
-		TT_OS2* os2 = NULL;
-		TT_Header* header = NULL;
+		TT_OS2* os2 = nullptr;
+		TT_Header* header = nullptr;
 		if (m_pFont->m_pFace)
 		{
-			if ((header = (TT_Header*)FT_Get_Sfnt_Table(m_pFont->m_pFace, ft_sfnt_head)) != NULL)
+			header = (TT_Header*)FT_Get_Sfnt_Table(m_pFont->m_pFace, ft_sfnt_head);
+			if (header != nullptr)
 			{
 				d1 = header->yMax;
 				d2 = header->yMin;
 				d0 = header->Units_Per_EM;
 			}
 
-			if ((os2 = (TT_OS2*)FT_Get_Sfnt_Table(m_pFont->m_pFace, ft_sfnt_os2)) != NULL && os2->version != 0xFFFFU)
+			os2 = (TT_OS2*)FT_Get_Sfnt_Table(m_pFont->m_pFace, ft_sfnt_os2);
+			if (os2 != nullptr && os2->version != 0xFFFFU)
 			{
 				d1 = os2->usWinAscent;
 				d2 = -os2->usWinDescent;
@@ -910,11 +913,11 @@ CFontFile* CFontManager::GetFontFileBySymbol(CFontFile* pFile, int code)
 {
 	std::wstring sName = m_pApplication->GetFontBySymbol(code);
 	if (sName.empty())
-		return NULL;
+		return nullptr;
 
 	// so as not to release with a limited cache
 	CFontFile* pFontOld = m_pFont;
-	m_pFont = NULL;
+	m_pFont = nullptr;
 	std::wstring sOldName = m_sName;
 
 	int nStyle = 0;
@@ -928,7 +931,7 @@ CFontFile* CFontManager::GetFontFileBySymbol(CFontFile* pFile, int code)
 	if (!m_pFont)
 	{
 		m_pFont = pFontOld;
-		return NULL;
+		return nullptr;
 	}
 
 	CFontFile* pFontNew = m_pFont;

@@ -11,7 +11,7 @@ namespace SVG
 
 	CSvgCalculator::~CSvgCalculator()
 	{
-		if (NULL != m_pInternal)
+		if (nullptr != m_pInternal)
 			delete m_pInternal;
 	}
 
@@ -27,7 +27,7 @@ namespace SVG
 
 	void CSvgCalculator::SetData(CObject *pSvgObject) const
 	{
-		if (NULL == pSvgObject)
+		if (nullptr == pSvgObject)
 			return;
 
 		const std::vector<NSCSS::CNode> arSelectors = pSvgObject->GetFullPath();

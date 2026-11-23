@@ -46,8 +46,8 @@ namespace XLSB
 
     void WsProp::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags1;
-        BYTE flags2;
+        _UINT16 flags1 = 0;
+        BYTE flags2 = 0;
         record >> flags1 >> flags2;
 
         fShowAutoBreaks          = GETBIT(flags1, 0);

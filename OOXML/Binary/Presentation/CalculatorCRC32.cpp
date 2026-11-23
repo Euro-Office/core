@@ -56,7 +56,7 @@ DWORD CCalculatorCRC32::Calc(const std::wstring &sStream)
 	dwRes = dwRes ^ 0xFFFFFFFF;
 	return dwRes;
 }
-DWORD CCalculatorCRC32::CalcPartFile(const std::wstring &sFilepath)
+DWORD CCalculatorCRC32::CalcPartFile(const std::wstring & /*sFilepath*/)
 {
 	DWORD dwRet = 0xFFFFFFFF;
 	//LPBYTE pBuffer = new BYTE[g_clFilePartSize];

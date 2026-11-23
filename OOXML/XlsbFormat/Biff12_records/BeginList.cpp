@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginList::readFields(XLS::CFRecord& record)
     {
-		_UINT32 flags;
+		_UINT32 flags = 0;
         record >> rfxList >> lt >> idList >> crwHeader >> crwTotals >> flags;
 
         fShownTotalRow          = GETBIT(flags, 0);

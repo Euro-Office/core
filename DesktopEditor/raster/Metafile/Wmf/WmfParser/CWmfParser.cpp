@@ -28,7 +28,7 @@ namespace MetaFile
 		unsigned int unSize;
 		unsigned short ushType;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->Begin();
 
 		Read_META_HEADER();
@@ -51,7 +51,7 @@ namespace MetaFile
 
 			m_oStream.SetCurrentBlockSize(m_unRecordSize);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				PRINT_WMF_RECORD(ushType);
 
 			switch (ushType)
@@ -116,7 +116,7 @@ namespace MetaFile
 				case META_OFFSETCLIPRGN: Read_META_OFFSETCLIPRGN(); break;
 				case META_OFFSETVIEWPORTORG: Read_META_OFFSETVIEWPORTORG(); break;
 				case META_OFFSETWINDOWORG: Read_META_OFFSETWINDOWORG(); break;
-				case META_REALIZEPALETTE: Read_META_UNKNOWN(); break;
+				case META_REALIZEPALETTE:
 				case META_RESIZEPALETTE: Read_META_UNKNOWN(); break;
 				case META_RESTOREDC: Read_META_RESTOREDC(); break;
 				case META_SAVEDC: Read_META_SAVEDC(); break;
@@ -126,7 +126,7 @@ namespace MetaFile
 				case META_SETBKMODE: Read_META_SETBKMODE(); break;
 				case META_SETLAYOUT: Read_META_SETLAYOUT(); break;
 				case META_SETMAPMODE: Read_META_SETMAPMODE(); break;
-				case META_SETMAPPERFLAGS: Read_META_UNKNOWN(); break;
+				case META_SETMAPPERFLAGS:
 				case META_SETPALENTRIES: Read_META_UNKNOWN(); break;
 				case META_SETPOLYFILLMODE: Read_META_SETPOLYFILLMODE(); break;
 				case META_SETRELABS: Read_META_UNKNOWN(); break;
@@ -169,7 +169,7 @@ namespace MetaFile
 		if (!CheckError())
 			m_oStream.SeekToStart();
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->End();
 
 		ClearFile();
@@ -178,7 +178,7 @@ namespace MetaFile
 	void CWmfParser::Scan()
 	{
 		CWmfInterpretatorBase *pInterpretator = m_pInterpretator;
-		m_pInterpretator = NULL;
+		m_pInterpretator = nullptr;
 		PlayFile();
 		UpdateDCRect();
 		m_pInterpretator = pInterpretator;
@@ -384,7 +384,7 @@ namespace MetaFile
 		pString[shStringLength] = 0x00;
 		m_oStream.ReadBytes(pString, shStringLength);
 
-		short* pDx = NULL;
+		short* pDx = nullptr;
 		if (shStringLength > 0 && ((GetRecordRemainingBytesCount() >= shStringLength * 2 && !(ushFwOptions & ETO_PDY)) || (GetRecordRemainingBytesCount() >= shStringLength * 4 && ushFwOptions & ETO_PDY)))
 		{
 			if (shStringLength & 1) // If the length is odd, skip 1 byte for 2-byte alignment
@@ -592,7 +592,7 @@ namespace MetaFile
 
 		HANDLE_META_TEXTOUT(shStringLength, pString, shY, shX);
 
-		if (NULL != pString)
+		if (nullptr != pString)
 			delete[] pString;
 	}
 

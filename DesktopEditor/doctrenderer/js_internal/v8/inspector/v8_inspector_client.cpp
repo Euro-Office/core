@@ -41,7 +41,7 @@ namespace NSJSBase
 		m_pSession->dispatchProtocolMessage(oMessage);
 	}
 
-	void CV8InspectorClientImpl::runMessageLoopOnPause(int nContextGroupId)
+	void CV8InspectorClientImpl::runMessageLoopOnPause(int  /*nContextGroupId*/)
 	{
 		if (m_bRunNestedLoop)
 		{
@@ -62,7 +62,7 @@ namespace NSJSBase
 		m_bTerminated = true;
 	}
 
-	v8::Local<v8::Context> CV8InspectorClientImpl::ensureDefaultContextInGroup(int nContextGroupId)
+	v8::Local<v8::Context> CV8InspectorClientImpl::ensureDefaultContextInGroup(int  /*nContextGroupId*/)
 	{
 		return m_pIsolate->GetCurrentContext();
 	}
