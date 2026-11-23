@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "PptxFormula.h"
 
@@ -240,6 +239,9 @@ namespace NSGuidesOOXML
 	}
 	CFormulaManager& CFormulaManager::operator =(const CFormulaManager& manager)
 	{
+		if (this == &manager)
+			return *this;
+
 		m_lShapeWidth = manager.m_lShapeWidth;
 		m_lShapeHeight = manager.m_lShapeWidth;
 

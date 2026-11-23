@@ -40,7 +40,7 @@ std::wstring PPT::CImageElement::DownloadImage(const std::wstring& strFile)
 		m_strImageFileName = oDownloader.GetFilePath();
 
 		CImageFileFormatChecker checker;
-		if (false == checker.isImageFile(m_strImageFileName))
+		if (!checker.isImageFile(m_strImageFileName))
 		{
 			m_strImageFileName.clear();
 		}
@@ -54,14 +54,14 @@ void PPT::CShapeElement::CalculateColor(CColor& oColor, CSlide* pSlide, CTheme* 
 	if (-1 == oColor.m_lSchemeIndex)
 		return;
 
-	std::vector<CColor>* pArray = NULL;
+	std::vector<CColor>* pArray = nullptr;
 
 	if (pTheme) pArray = &pTheme->m_arColorScheme;
 
-	if ((NULL != pLayout) && (!pLayout->m_bUseThemeColorScheme))
+	if ((nullptr != pLayout) && (!pLayout->m_bUseThemeColorScheme))
 		pArray = &pLayout->m_arColorScheme;
 
-	if (NULL != pSlide)
+	if (nullptr != pSlide)
 	{
 		if (!pSlide->m_bUseLayoutColorScheme)
 			pArray = &pSlide->m_arColorScheme;
@@ -81,7 +81,7 @@ void PPT::CShapeElement::SetupTextProperties(CSlide* pSlide, CTheme* pTheme, CLa
 {
 	PPT::CTextAttributesEx* pAttributes = &m_pShape->m_oText;
 	int nCountColors = 0;
-	if (NULL != pTheme)
+	if (nullptr != pTheme)
 		nCountColors = (int)pTheme->m_arColorScheme.size();
 
 	size_t nCount = pAttributes->m_arParagraphs.size();
@@ -111,7 +111,7 @@ void PPT::CShapeElement::SetupTextProperties(CSlide* pSlide, CTheme* pTheme, CLa
 					pRun->Color->m_lSchemeIndex = nColorIndex;
 				}
 			}
-			if (NULL != pTheme)
+			if (nullptr != pTheme)
 			{
 				if ((pRun->fontRef.is_init()) && (pRun->fontRef.get() < pTheme->m_arFonts.size()))
 				{
@@ -159,9 +159,9 @@ bool PPT::CShapeElement::SetUpTextPlaceholder(std::wstring newText)
 				pText->m_arParagraphs[p].m_arSpans[0].m_strText = newText;
 				pText->m_arParagraphs[p].m_arSpans[0].m_bField = true;
 
-				if (last.m_strText.empty() == false)
+				if (!last.m_strText.empty())
 					pText->m_arParagraphs[p].m_arSpans.insert(pText->m_arParagraphs[p].m_arSpans.begin() + 1, last);
-				if (first.m_strText.empty() == false)
+				if (!first.m_strText.empty())
 					pText->m_arParagraphs[p].m_arSpans.insert(pText->m_arParagraphs[p].m_arSpans.begin(), first);
 
 				result = true;
@@ -194,7 +194,6 @@ bool PPT::CShapeElement::SetUpTextPlaceholder(std::wstring newText)
 * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
 *
 */
-#pragma once
 
 #include "Theme.h"
 #include "Shapes/Shape.h"
@@ -262,7 +261,7 @@ namespace PPT
 
 		return ConvertPPTtoPPTX(/*pPPTShape,*/ pParamCoef, bIsNamespace);
 	}
-	std::wstring CImageElement::ConvertPPTtoPPTX(/*CPPTShape* pPPTShape, */const NSGuidesVML::CFormParam& pCoef, bool bIsNamespace)
+	std::wstring CImageElement::ConvertPPTtoPPTX(/*CPPTShape* pPPTShape, */const NSGuidesVML::CFormParam&  /*pCoef*/, bool bIsNamespace)
 	{
 		if (bIsNamespace)
 		{
@@ -356,7 +355,7 @@ namespace PPT
 	std::wstring CShapeElement::ConvertPPTShapeToPPTX(bool bIsNamespace)
 	{
 		CPPTShape* pPPTShape = dynamic_cast<CPPTShape*>(m_pShape->getBaseShape().get());
-		if (NULL == pPPTShape)
+		if (nullptr == pPPTShape)
 		{
 			// this can't happen
 			return L"";
@@ -581,7 +580,7 @@ namespace PPT
 
 		return pElement;
 	}
-	std::wstring CGroupElement::ConvertPPTShapeToPPTX(bool bIsNamespace)
+	std::wstring CGroupElement::ConvertPPTShapeToPPTX(bool  /*bIsNamespace*/)
 	{
 
 		return L"";
@@ -614,7 +613,7 @@ namespace PPT
 		double multip = m_bAnchorEnabled ? 1587.5 : 1;
 		return round(m_rcAnchor.GetHeight() * multip);
 	}
-	std::wstring CTableElement::ConvertPPTShapeToPPTX(bool bIsNamespace)
+	std::wstring CTableElement::ConvertPPTShapeToPPTX(bool  /*bIsNamespace*/)
 	{
 
 		return L"";

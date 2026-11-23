@@ -40,7 +40,7 @@ namespace oox {
 
 
 external_items::item::item(	std::wstring const & _uri, Type _type, bool _mediaInternal, int _id, std::wstring const & _rId  )
-                       : uri(_uri), type(_type), mediaInternal(_mediaInternal), id(_id), rId(_rId)
+                       : id(_id), uri(_uri), type(_type), mediaInternal(_mediaInternal), rId(_rId)
 {    
 }
 
@@ -125,7 +125,7 @@ std::wstring external_items::add_embedding(std::wstring & oox_target, const std:
 
 	std::wstring extension;
 	
-	if ( false == oox_target.empty())							extension = oox_target;
+	if ( !oox_target.empty())							extension = oox_target;
 	else if (std::wstring::npos != lowerInfo.find(L"excel"))	extension = L".xls";
 	else if (std::wstring::npos != lowerInfo.find(L"word"))		extension = L".doc";
 	else extension = L".bin";

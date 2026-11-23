@@ -31,7 +31,7 @@ namespace DocFileFormat
 	StyleSheetInformation::StyleSheetInformation (unsigned char* bytes, int size) : 
 		cstd(0), cbSTDBaseInFile(0), fStdStylenamesWritten(false), stiMaxWhenSaved(0), istdMaxFixedWhenSaved(0), nVerBuiltInNamesWhenSaved(0), cbLSD(0)
 	{
-		if ((0 != size) || (NULL != bytes))
+		if ((0 != size) || (nullptr != bytes))
 		{
 			cstd								=	FormatUtils::BytesToUInt16 ( bytes, 0, size );
 			cbSTDBaseInFile						=	FormatUtils::BytesToUInt16 ( bytes, 2, size );

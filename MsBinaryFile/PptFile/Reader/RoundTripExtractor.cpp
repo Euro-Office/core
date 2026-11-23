@@ -52,7 +52,7 @@ vector_string RoundTripExtractor::find(const std::wstring& strRegEx) const
             if (boost::regex_match(path, wSmath, regEx))
                 filtredPaths.push_back(path);
         }
-    } catch(...) {}
+    } catch(...) { (void)0; }
 
     return filtredPaths;
 }
@@ -79,9 +79,9 @@ bool RoundTripExtractor::extract()
     binFile.WriteFile(zipData, zipDataLen);
     binFile.CloseFile();
 
-    COfficeUtils officeUtils(NULL);
+    COfficeUtils officeUtils(nullptr);
     m_extractedFolderPath = NSDirectory::CreateDirectoryWithUniqueName(m_tempPath);
-    if(S_FALSE == officeUtils.ExtractToDirectory(tempZipPath, m_extractedFolderPath, NULL, 0))
+    if(S_FALSE == officeUtils.ExtractToDirectory(tempZipPath, m_extractedFolderPath, nullptr, 0))
         return false;
    
     NSFile::CFileBinary::Remove(tempZipPath);
@@ -95,8 +95,8 @@ bool RoundTripExtractor::hasError() const
 
 std::string RoundTripExtractor::removeXMLAnnouncement(const std::string &strXMLFile)
 {
+    (void)strXMLFile;
     std::string strClearXML;
-    auto iter = strXMLFile.find("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
 
 
     return strClearXML;

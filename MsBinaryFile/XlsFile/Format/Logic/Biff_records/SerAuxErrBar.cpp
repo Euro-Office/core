@@ -53,8 +53,8 @@ void SerAuxErrBar::readFields(CFRecord& record)
 void SerAuxErrBar::writeFields(CFRecord& record)
 {
 	record << sertm << ebsrc << fTeeTop;
-	unsigned char reserv = 1;
-	record << reserv;
+	unsigned char reserve = 1;
+	record << reserve;
 	record << numValue << cnum;
 }
 

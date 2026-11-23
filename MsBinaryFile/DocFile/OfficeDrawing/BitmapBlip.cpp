@@ -27,11 +27,11 @@
 
 namespace DocFileFormat
 {	
-	BitmapBlip::BitmapBlip() : Record(), m_rgbUid(NULL), m_rgbUidPrimary(NULL), m_bTag(0), m_pvBits(NULL)
+	BitmapBlip::BitmapBlip() : Record(), m_rgbUid(nullptr), m_rgbUidPrimary(nullptr), m_bTag(0), m_pvBits(nullptr)
 	{
 	}
 	BitmapBlip::BitmapBlip(IBinaryReader* _reader, unsigned int size, unsigned int typeCode, unsigned int version, unsigned int instance) :
-		Record(_reader, size, typeCode, version, instance ), m_rgbUid(NULL), m_rgbUidPrimary(NULL), m_bTag(0), m_pvBits(NULL), pvBitsSize(0)
+		Record(_reader, size, typeCode, version, instance ), m_rgbUid(nullptr), m_rgbUidPrimary(nullptr), m_bTag(0), m_pvBits(nullptr), pvBitsSize(0)
 	{
 		m_rgbUid = Reader->ReadBytes(16, true);
 

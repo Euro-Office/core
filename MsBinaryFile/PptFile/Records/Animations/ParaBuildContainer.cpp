@@ -38,7 +38,7 @@ CRecordParaBuildContainer::~CRecordParaBuildContainer()
 		if (rgParaBuildLevel[i])
 		{
 			delete rgParaBuildLevel[i];
-			rgParaBuildLevel[i] = NULL;
+			rgParaBuildLevel[i] = nullptr;
 		}
 	}
 }

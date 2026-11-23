@@ -108,7 +108,7 @@ public:
             {
                 CAudioElement* pAudioElem = dynamic_cast<CAudioElement*>(pElement.get());
 
-                if (NULL != pAudioElem)
+                if (nullptr != pAudioElem)
                 {
                     // and there can be no other
                     if (pAudioElem->m_bWithVideo)
@@ -148,7 +148,7 @@ public:
     {
         CShapeElement* pShape = dynamic_cast<CShapeElement*>(pElement.get());
 
-        if (NULL == pShape) return;
+        if (nullptr == pShape) return;
 
         if (pElement->m_lPlaceholderType == PT_MasterSlideNumber)	pShape->SetUpTextPlaceholder(L"<#>");
 
@@ -192,7 +192,7 @@ public:
                     ResetAutoText(pElement, pTheme->m_PlaceholdersReplaceString);
                 }
                 pElement->m_pTheme = pTheme;
-                pElement->m_pLayout = NULL;
+                pElement->m_pLayout = nullptr;
             }
 
             size_t nCountLayouts = pTheme->m_arLayouts.size();
@@ -211,10 +211,10 @@ public:
                     }
 
                     pElement->m_pTheme = pTheme;
-                    pElement->m_pLayout = NULL;
+                    pElement->m_pLayout = nullptr;
 
                     CShapeElement* pShape = dynamic_cast<CShapeElement*>(pElement.get());
-                    if (!pLayout->m_bUseThemeColorScheme && NULL != pShape)
+                    if (!pLayout->m_bUseThemeColorScheme && nullptr != pShape)
                     {
                         int lPhType = pElement->m_lPlaceholderType;
 
@@ -263,12 +263,12 @@ public:
         {
             CSlide* pSlide = m_arSlides[i];
 
-            CTheme* pTheme = NULL;
+            CTheme* pTheme = nullptr;
             if ((0 <= pSlide->m_lThemeID) && (pSlide->m_lThemeID < (LONG)nCountThemes))
                 pTheme = m_arThemes[pSlide->m_lThemeID].get();
 
-            CLayout* pLayout = NULL;
-            if (NULL != pTheme)
+            CLayout* pLayout = nullptr;
+            if (nullptr != pTheme)
             {
                 if ((0 <= pSlide->m_lLayoutID) && (pSlide->m_lLayoutID < (LONG)pTheme->m_arLayouts.size()))
                     pLayout = pTheme->m_arLayouts[pSlide->m_lLayoutID].get();
@@ -288,7 +288,7 @@ public:
 
             }
 
-            if (NULL != pLayout && bIsPlaceholderSetUp)
+            if (nullptr != pLayout && bIsPlaceholderSetUp)
                 pSlide->SetUpPlaceholderStyles(pLayout);
         }
     }

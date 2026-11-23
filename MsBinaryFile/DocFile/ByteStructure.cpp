@@ -34,6 +34,8 @@ namespace DocFileFormat
 	  EmptyStructure::~EmptyStructure() {}
 	  ByteStructure* EmptyStructure::ConstructObject( VirtualStreamReader* reader, int length )
       {
+      	(void)reader;
+      	(void)length;
         EmptyStructure *newObject = new EmptyStructure();
 
 	    return static_cast<ByteStructure*>( newObject );

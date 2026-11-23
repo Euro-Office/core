@@ -46,10 +46,10 @@
 using namespace PPT;
 
 CPPTFileReader::CPPTFileReader(POLE::Storage* pStorage, const std::wstring& strTempPath) :
-	m_pStorage(pStorage),
+	m_pDocumentStream(), m_pPictureStream(), m_pDocumentSummaryStream(), m_pEncryptedSummaryStream(),
 	m_bIsPPTFile(false),
 	m_nPresentationCodePage(1250),
-	m_pDocumentStream(), m_pPictureStream(), m_pDocumentSummaryStream(), m_pEncryptedSummaryStream()
+	m_pStorage(pStorage)
 {
 	m_oCommonInfo.tempPath = strTempPath;
 	if (m_oCommonInfo.tempPath.empty())
@@ -75,7 +75,7 @@ CPPTFileReader::CPPTFileReader(POLE::Storage* pStorage, const std::wstring& strT
 		std::wstring stream_name = std::wstring(PP97_DUALSTORAGE) + std::wstring(L"/") + std::wstring(CURRENT_USER_STREAM);
 		pStm = new POLE::Stream( m_pStorage, stream_name);
 		
-		if (pStm == NULL)
+		if (pStm == nullptr)
 			return;
 		
 		m_bDualStorage = true;
@@ -181,7 +181,7 @@ XLS::CFStreamPtr CPPTFileReader::GetStreamByName(const std::wstring & name)
 }
 XLS::CFStreamPtr CPPTFileReader::GetEncryptedSummaryStream()
 { 
-	if (m_pEncryptedSummaryStream == NULL) 
+	if (m_pEncryptedSummaryStream == nullptr) 
 	{ 
 		m_pEncryptedSummaryStream = GetStreamByName(ENCRYPTED_SUMMARY_STREAM);
 	} 
@@ -210,7 +210,7 @@ void CPPTFileReader::ReadEncryptedSummary()
 
 	SRecordHeader oHeader;
 
-    if (oHeader.ReadFromStream(pStream) == false )
+    if (!oHeader.ReadFromStream(pStream) )
 	{
 		return;
 	}
