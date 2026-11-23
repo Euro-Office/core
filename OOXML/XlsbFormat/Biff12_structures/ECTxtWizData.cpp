@@ -36,7 +36,7 @@ namespace XLSB
 
     ECTxtWizData::ECTxtWizData(XLS::CFRecord& record)
     {
-        load(record);
+        ECTxtWizData::load(record);
     }
 
     ECTxtWizData::~ECTxtWizData()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void ECTxtWizData::load(XLS::CFRecord& record)
     {
-        _UINT32 flags;
+        _UINT32 flags = 0;
         record >> flags;
 
         iCpid           = GETBITS(flags, 0, 1);

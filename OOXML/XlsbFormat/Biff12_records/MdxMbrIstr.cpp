@@ -44,7 +44,7 @@ namespace XLSB
 
     void MdxMbrIstr::readFields(XLS::CFRecord& record)
     {
-        unsigned char flags;
+        unsigned char flags = 0;
         record >> istr >> flags;
         fCubeSet = flags;
     }
@@ -52,7 +52,7 @@ namespace XLSB
 	void MdxMbrIstr::writeFields(XLS::CFRecord& record)
 	{
 		record << istr;
-        unsigned char flags;
+        unsigned char flags = 0;
         SETBIT(flags, 0, fCubeSet);
         record << flags;
 	}

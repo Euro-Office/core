@@ -50,7 +50,7 @@ namespace Writers
 		long size = ftell(pFile);
 		if(size > 0)
 		{
-			rewind(pFile);
+			fseek(pFile, 0, SEEK_SET);
 			BYTE* pData = new BYTE[size];
 			_UINT32 dwSizeRead = (_UINT32)fread((void*)pData, 1, size, pFile);
 			if(dwSizeRead > 0)

@@ -36,7 +36,7 @@ namespace XLSB
 
     SlicerCachePivotTable::SlicerCachePivotTable(XLS::CFRecord& record)
     {
-        load(record);
+        SlicerCachePivotTable::load(record);
     }
 
     SlicerCachePivotTable::~SlicerCachePivotTable()

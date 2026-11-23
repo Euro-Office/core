@@ -21,8 +21,16 @@ namespace NSJSBase
 
 	CWebSocketServer::~CWebSocketServer()
 	{
-		m_oWs->close(beast::websocket::close_code::normal);
-		m_oAcceptor.close();
+		try
+		{
+			m_oWs->close(beast::websocket::close_code::normal);
+			m_oAcceptor.close();
+		}
+		catch (...)
+		{
+			// ignore close errors in the destructor
+			(void)0;
+		}
 	}
 
 	void CWebSocketServer::init()
@@ -46,7 +54,7 @@ namespace NSJSBase
 				if (se.code() == boost::asio::error::access_denied)
 				{
 					boost::system::error_code ec;
-					m_oAcceptor.close(ec);
+					m_oAcceptor.close(ec); // NOLINT(bugprone-unused-return-value): error code is what matters here
 					if (ec)
 					{
 						std::cerr << "Error on trying to get new port: " << ec.message() << std::endl;

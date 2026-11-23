@@ -45,7 +45,7 @@ namespace XLSB
 
     void WbProp::readFields(XLS::CFRecord& record)
     {
-        _UINT32 flags;
+        _UINT32 flags = 0;
         record >> flags;
 
         f1904                    = GETBIT(flags, 0);

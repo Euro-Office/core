@@ -26,7 +26,7 @@ namespace SVG
 
 	bool CClipPath::Apply(IRenderer *pRenderer, const CSvgFile *pFile, const TBounds &oObjectBounds)
 	{
-		if (NULL == pRenderer || NULL == pFile)
+		if (nullptr == pRenderer || nullptr == pFile)
 			return false;
 
 		ApplyClip(pRenderer, &m_oTransformation.m_oClip, pFile, oObjectBounds);

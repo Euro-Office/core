@@ -49,7 +49,7 @@ namespace NSFontConverter
 		if ( !pT1CFF->Parse() )
 		{
 			delete pT1CFF;
-			return NULL;
+			return nullptr;
 		}
 		return pT1CFF;
 	}
@@ -59,15 +59,16 @@ namespace NSFontConverter
 		char *sBuffer;
 		int nLen = 0;
 
-		if ( !( sBuffer = CFontFileBase::ReadFile( wsFileName, &nLen ) ) )
-			return NULL;
+		sBuffer = CFontFileBase::ReadFile( wsFileName, &nLen );
+		if ( !sBuffer )
+			return nullptr;
 
 		CFontFileType1C *pT1CFF = new CFontFileType1C( sBuffer, nLen, true);
 
 		if ( !pT1CFF->Parse() )
 		{
 			delete pT1CFF;
-			return NULL;
+			return nullptr;
 		}
 		return pT1CFF;
 	}
@@ -75,11 +76,11 @@ namespace NSFontConverter
 	CFontFileType1C::CFontFileType1C(char *sBuffer, int nLen, bool bFreeData):
 		CFontFileBase( sBuffer, nLen, bFreeData)
 	{
-		m_seName        = NULL;
-		m_arrEncoding   = NULL;
-		m_pPrivateDicts = NULL;
-		m_pnFDSelect    = NULL;
-		m_pnCharset     = NULL;
+		m_seName        = nullptr;
+		m_arrEncoding   = nullptr;
+		m_pPrivateDicts = nullptr;
+		m_pnFDSelect    = nullptr;
+		m_pnCharset     = nullptr;
 	}
 
 	CFontFileType1C::~CFontFileType1C()
@@ -93,7 +94,7 @@ namespace NSFontConverter
 			{
 				MemUtilsFree( m_arrEncoding[ nIndex ] );
 			}
-			MemUtilsFree( m_arrEncoding );
+			MemUtilsFree( (void *)m_arrEncoding );
 		}
 
 		if ( m_pPrivateDicts )
@@ -113,7 +114,7 @@ namespace NSFontConverter
 
 	char *CFontFileType1C::GetName()
 	{
-		return m_seName ? m_seName->GetBuffer() : (char *)NULL;
+		return m_seName ? m_seName->GetBuffer() : (char *)nullptr;
 	}
 
 	char **CFontFileType1C::GetEncoding()
@@ -126,7 +127,7 @@ namespace NSFontConverter
 		if ( m_oTopDict.nFirstOperator != 0x0c1e )
 		{
 			*arrCIDs = 0;
-			return NULL;
+			return nullptr;
 		}
 
 		int nCount = 0;
@@ -722,7 +723,6 @@ namespace NSFontConverter
 		{
 			nFileChecksum += pTables[nIndex].unChecksum;
 		}
-		nFileChecksum = 0xb1b0afba - nFileChecksum;
 
 		// Writing tables
 		for ( int nIndex = 0; nIndex < nRequiredTablesCount; ++nIndex )
@@ -738,6 +738,10 @@ namespace NSFontConverter
 			case maxpTag: (*pOutputFunc)( pOutputStream, oMaxpTable.sBuffer, pTables[nIndex].nLen ); break;
 			case nameTag: (*pOutputFunc)( pOutputStream, oNameTable.sBuffer, pTables[nIndex].nLen ); break;
 			case postTag: (*pOutputFunc)( pOutputStream, oPostTable.sBuffer, pTables[nIndex].nLen ); break;
+				default:
+				{
+					break;
+				}
 			}
 
 			if ( pTables[nIndex].nLen & 3 )
@@ -783,7 +787,8 @@ namespace NSFontConverter
 		for ( i = 0; i < nCIDsCount; ++i )
 		{
 			charStringOffsets[i] = charStrings->GetLength();
-			if ( ( nGID = arrCIDdMap[i] ) >= 0 )
+			nGID = arrCIDdMap[i];
+			if ( nGID >= 0 )
 			{
 				Type1CIndexVal oIndexVal;
 				bSuccess = true;
@@ -1728,23 +1733,6 @@ namespace NSFontConverter
 					m_nOperatorsCount = 0;
 					break;
 				case 0x0013:		// hintmask
-					// This operation is ignored
-					if (m_bFirstOperator)
-					{
-						ConvertGlyphWidth(m_nOperatorsCount & 1, seCharBuffer, pDict);
-						m_bFirstOperator = false;
-					}
-					if (m_nOperatorsCount > 0)
-					{
-						if (m_nOperatorsCount & 1)
-						{
-							// TO DO: error "Wrong number of args (m_nOperatorsCount) to Type 2 hintmask/vstemhm"
-						}
-						m_nHints += m_nOperatorsCount / 2;
-					}
-					nPos += ( m_nHints + 7) >> 3;
-					m_nOperatorsCount = 0;
-					break;
 				case 0x0014:		// cntrmask
 					// This operation is ignored
 					if (m_bFirstOperator)
@@ -1756,7 +1744,7 @@ namespace NSFontConverter
 					{
 						if (m_nOperatorsCount & 1)
 						{
-							// TO DO: error "Wrong number of args (m_nOperatorsCount) to Type 2 cntrmask/vstemhm"
+							// TO DO: error "Wrong number of args (m_nOperatorsCount) to Type 2 hintmask/vstemhm"
 						}
 						m_nHints += m_nOperatorsCount / 2;
 					}
@@ -1859,7 +1847,7 @@ namespace NSFontConverter
 					m_bOpenPath = true;
 					break;
 				case 0x001a:		// vvcurveto
-					if (m_nOperatorsCount < 4 || !(m_nOperatorsCount % 4 == 0 || (m_nOperatorsCount-1) % 4 == 0))
+					if (m_nOperatorsCount < 4 || (m_nOperatorsCount % 4 != 0 && (m_nOperatorsCount-1) % 4 != 0))
 					{
 						// TO DO: error "Wrong number of args (m_nOperatorsCount) to Type 2 vvcurveto"
 					}
@@ -1892,7 +1880,7 @@ namespace NSFontConverter
 					m_bOpenPath = true;
 					break;
 				case 0x001b:		// hhcurveto
-					if (m_nOperatorsCount < 4 || !(m_nOperatorsCount % 4 == 0 || (m_nOperatorsCount-1) % 4 == 0))
+					if (m_nOperatorsCount < 4 || (m_nOperatorsCount % 4 != 0 && (m_nOperatorsCount-1) % 4 != 0))
 					{
 						// TO DO: error "Wrong number of args (m_nOperatorsCount) to Type 2 hhcurveto"
 					}
@@ -1943,7 +1931,7 @@ namespace NSFontConverter
 					// don't clear the stack
 					break;
 				case 0x001e:		// vhcurveto
-					if (m_nOperatorsCount < 4 || !(m_nOperatorsCount % 4 == 0 || (m_nOperatorsCount-1) % 4 == 0))
+					if (m_nOperatorsCount < 4 || (m_nOperatorsCount % 4 != 0 && (m_nOperatorsCount-1) % 4 != 0))
 					{
 						// TO DO: "Wrong number of args (m_nOperatorsCount) to Type 2 vhcurveto"
 					}
@@ -1992,7 +1980,7 @@ namespace NSFontConverter
 					m_bOpenPath = true;
 					break;
 				case 0x001f:		// hvcurveto
-					if (m_nOperatorsCount < 4 || !(m_nOperatorsCount % 4 == 0 || (m_nOperatorsCount-1) % 4 == 0))
+					if (m_nOperatorsCount < 4 || (m_nOperatorsCount % 4 != 0 && (m_nOperatorsCount-1) % 4 != 0))
 					{
 						// TO DO: "Wrong number of args (m_nOperatorsCount) to Type 2 hvcurveto"
 					}
@@ -2041,9 +2029,6 @@ namespace NSFontConverter
 					m_bOpenPath = true;
 					break;
 				case 0x0c00:		// dotsection (should be Type 1 only?)
-					// ignore
-					m_nOperatorsCount = 0;
-					break;
 				case 0x0c03:		// and
 				case 0x0c04:		// or
 				case 0x0c05:		// not
@@ -2436,7 +2421,7 @@ namespace NSFontConverter
 
 	void CFontFileType1C::ReadTopDict()
 	{
-		Type1CIndexVal oTopDictPointer;
+		Type1CIndexVal oTopDictPointer = {};
 
 		m_oTopDict.nFirstOperator  = -1;
 		m_oTopDict.nVersionSID    = 0;
@@ -2529,6 +2514,10 @@ namespace NSFontConverter
 					m_oTopDict.nSupplement         = (int)m_arrOperators[2].dNumber; break;
 				case 0x0c24: m_oTopDict.nFDArrayOffset      = (int)m_arrOperators[0].dNumber; break;
 				case 0x0c25: m_oTopDict.nFDSelectOffset     = (int)m_arrOperators[0].dNumber; break;
+					default:
+					{
+						break;
+					}
 				}
 				m_nOperatorsCount = 0;
 			}
@@ -2694,6 +2683,10 @@ namespace NSFontConverter
 					pDict->dNominalWidthX = m_arrOperators[0].dNumber;
 					pDict->bNominalWidthXFP = m_arrOperators[0].bIsFloat;
 					break;
+					default:
+					{
+						break;
+					}
 				}
 				m_nOperatorsCount = 0;
 			}
@@ -2787,7 +2780,7 @@ namespace NSFontConverter
 			m_arrEncoding = (char **)MemUtilsMallocArray(256, sizeof(char *));
 			for (int nIndex = 0; nIndex < 256; ++nIndex)
 			{
-				m_arrEncoding[nIndex] = NULL;
+				m_arrEncoding[nIndex] = nullptr;
 			}
 			int nPos = m_oTopDict.nEncodingOffset;
 			int nEncodingFormat = GetU8( nPos++, &m_bSuccessParsed);
@@ -2953,7 +2946,7 @@ namespace NSFontConverter
 			if (!m_bSuccessParsed)
 			{
 				MemUtilsFree(m_pnCharset);
-				m_pnCharset = NULL;
+				m_pnCharset = nullptr;
 				return false;
 			}
 		}
@@ -3089,7 +3082,8 @@ namespace NSFontConverter
 	{
 		int nCount = 0;
 
-		if ( ( nCount = m_nOperatorsCount ) > nMaxLen )
+		nCount = m_nOperatorsCount;
+		if ( nCount > nMaxLen )
 		{
 			nCount = nMaxLen;
 		}
@@ -3107,7 +3101,8 @@ namespace NSFontConverter
 	{
 		int nCount = 0;
 
-		if ( ( nCount = m_nOperatorsCount ) > nMaxLen )
+		nCount = m_nOperatorsCount;
+		if ( nCount > nMaxLen )
 		{
 			nCount = nMaxLen;
 		}
@@ -3175,7 +3170,8 @@ namespace NSFontConverter
 
 		if ( nSID < 391 )
 		{
-			strcpy( sBuffer, c_arrsFontFileType1CStandardStrings[ nSID ] );
+			strncpy( sBuffer, c_arrsFontFileType1CStandardStrings[ nSID ], 255 );
+			sBuffer[255] = '\0';
 		}
 		else
 		{
@@ -3183,7 +3179,8 @@ namespace NSFontConverter
 			GetIndexVal(&m_oStringIndex, nSID, &oIndexVal, pbSuccess);
 			if ( *pbSuccess )
 			{
-				if ( ( nCount = oIndexVal.nLen ) > 255 )
+				nCount = oIndexVal.nLen;
+				if ( nCount > 255 )
 				{
 					nCount = 255;
 				}

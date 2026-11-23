@@ -61,7 +61,7 @@ namespace XLSB
 		m_arPIVOTCACHERECORD.reserve(countPIVOTCACHERECORD);
 		std::move(std::begin(elements_), std::end(elements_), std::back_inserter(m_arPIVOTCACHERECORD));
 
-        int count = proc.repeated<FRT>(0, 0);
+        proc.repeated<FRT>(0, 0);
 		elements_.clear();
         //while(count > 0)
         //{
