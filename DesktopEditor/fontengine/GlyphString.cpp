@@ -43,20 +43,22 @@ TGlyphBitmap::TGlyphBitmap()
 	nWidth		= 0;
 	nHeight		= 0;
 	bAA			= FALSE;
-	pData		= NULL;
+	pData		= nullptr;
 	bFreeData	= TRUE;
 }
 
 TGlyphBitmap::~TGlyphBitmap()
 {
-	if (bFreeData && pData != NULL)
+	if (bFreeData && pData != nullptr)
 	{
 		free(pData);
-		pData = NULL;
+		pData = nullptr;
 	}
 }
 
 TGlyph::TGlyph()
+	: lUnicode(0), fX(0), fY(0), fLeft(0), fTop(0), fRight(0), fBottom(0),
+	  oMetrics(), eState(glyphstateNormal), bBitmap(false)
 {
 }
 
@@ -75,7 +77,7 @@ CGlyphString::CGlyphString()
 
 	m_nGlyphIndex   = -1;
 	m_nGlyphsCount  = 0;
-	m_pGlyphsBuffer = NULL;
+	m_pGlyphsBuffer = nullptr;
 
 	m_arrCTM[0] = 1;
 	m_arrCTM[1] = 0;
@@ -106,7 +108,7 @@ CGlyphString::CGlyphString(const std::wstring& wsString, float fX, float fY)
 			int nEmpty = 0;
 			for (int nIndex = 0, nGlyphIndex = 0; nIndex < m_nGlyphsCount; ++nIndex, ++nGlyphIndex)
 			{
-				unsigned int code = (unsigned int)pWchars[nIndex];
+				unsigned int code = static_cast<unsigned int>(static_cast<unsigned short>(pWchars[nIndex]));
 				if (code >= 0xD800 && code <= 0xDFFF && (nIndex + 1) < m_nGlyphsCount)
 				{
 					++nIndex;
@@ -123,14 +125,14 @@ CGlyphString::CGlyphString(const std::wstring& wsString, float fX, float fY)
 		{
 			for ( int nIndex = 0; nIndex < m_nGlyphsCount; ++nIndex )
 			{
-				m_pGlyphsBuffer[nIndex].lUnicode = (unsigned int)pWchars[nIndex];
+				m_pGlyphsBuffer[nIndex].lUnicode = static_cast<unsigned int>(static_cast<unsigned long>(pWchars[nIndex]));
 				m_pGlyphsBuffer[nIndex].bBitmap  = false;
 			}
 		}
 	}
 	else
 	{
-		m_pGlyphsBuffer = NULL;
+		m_pGlyphsBuffer = nullptr;
 	}
 
 	m_fX = fX;
@@ -176,7 +178,7 @@ void CGlyphString::SetString(const unsigned int* pGids, const unsigned int& nGid
 	}
 	else
 	{
-		m_pGlyphsBuffer = NULL;
+		m_pGlyphsBuffer = nullptr;
 	}
 }
 
@@ -202,7 +204,7 @@ void CGlyphString::SetString(const std::wstring& wsString, float fX, float fY)
 			int nEmpty = 0;
 			for (int nIndex = 0, nGlyphIndex = 0; nIndex < m_nGlyphsCount; ++nIndex, ++nGlyphIndex)
 			{
-				int code = (int)pWchars[nIndex];
+				int code = static_cast<int>(static_cast<unsigned short>(pWchars[nIndex]));
 				if (code >= 0xD800 && code <= 0xDFFF && (nIndex + 1) < m_nGlyphsCount)
 				{
 					++nIndex;
@@ -219,14 +221,14 @@ void CGlyphString::SetString(const std::wstring& wsString, float fX, float fY)
 		{
 			for ( int nIndex = 0; nIndex < m_nGlyphsCount; ++nIndex )
 			{
-				m_pGlyphsBuffer[nIndex].lUnicode = (unsigned int)pWchars[nIndex];
+				m_pGlyphsBuffer[nIndex].lUnicode = static_cast<unsigned int>(static_cast<unsigned long>(pWchars[nIndex]));
 				m_pGlyphsBuffer[nIndex].bBitmap  = false;
 			}
 		}
 	}
 	else
 	{
-		m_pGlyphsBuffer = NULL;
+		m_pGlyphsBuffer = nullptr;
 	}
 }
 
@@ -238,7 +240,7 @@ void CGlyphString::SetStringGID(const unsigned int& gid, float fX, float fY)
 	m_nGlyphsCount = 1;
 	m_nGlyphIndex  = 0;
 
-	if (NULL == m_pGlyphsBuffer)
+	if (nullptr == m_pGlyphsBuffer)
 		m_pGlyphsBuffer = new TGlyph[1];
 
 	// TODO:
@@ -261,7 +263,7 @@ void CGlyphString::Reset()
 
 	m_nGlyphIndex   = -1;
 	m_nGlyphsCount  = 0;
-	m_pGlyphsBuffer = NULL;
+	m_pGlyphsBuffer = nullptr;
 
 	m_arrCTM[0] = 1;
 	m_arrCTM[1] = 0;
@@ -351,7 +353,7 @@ void CGlyphString::GetBBox(float *pfLeft, float *pfTop, float *pfRight, float *p
 	float fTop    = -m_pGlyphsBuffer[nCurIndex].fTop;
 
 
-	if ( 0 == nType && !( 1 == m_arrCTM[0] && 0 == m_arrCTM[1] && 0 == m_arrCTM[2] && 1 == m_arrCTM[3] && 0 == m_arrCTM[4] && 0 == m_arrCTM[5] ) )
+	if ( 0 == nType && ( 1 != m_arrCTM[0] || 0 != m_arrCTM[1] || 0 != m_arrCTM[2] || 1 != m_arrCTM[3] || 0 != m_arrCTM[4] || 0 != m_arrCTM[5] ) )
 	{
 		// Apply the global transformation matrix and recalculate BBox
 		float arrfX[4] = { fLeft, fLeft,   fRight,  fRight };
@@ -409,7 +411,7 @@ void CGlyphString::GetBBox2(float *pfLeft, float *pfTop, float *pfRight, float *
 		fTop    = min( fTop, -m_pGlyphsBuffer[nIndex].fTop );
 	}
 
-	if ( !( 1 == m_arrCTM[0] && 0 == m_arrCTM[1] && 0 == m_arrCTM[2] && 1 == m_arrCTM[3] && 0 == m_arrCTM[4] && 0 == m_arrCTM[5] ) )
+	if ( 1 != m_arrCTM[0] || 0 != m_arrCTM[1] || 0 != m_arrCTM[2] || 1 != m_arrCTM[3] || 0 != m_arrCTM[4] || 0 != m_arrCTM[5] )
 	{
 		// Apply the global transformation matrix and recalculate BBox
 		float arrfX[4] = { fLeft, fLeft,   fRight,  fRight };
@@ -496,7 +498,7 @@ TGlyph* CGlyphString::GetAt(int nIndex)
 {
 	if ( m_nGlyphsCount <= 0 )
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	int nCurIndex = min( m_nGlyphsCount - 1, max( 0, nIndex ) );
@@ -508,7 +510,7 @@ INT CGlyphString::GetNext(TGlyph*& pGlyph)
 {
 	if ( m_nGlyphIndex >= m_nGlyphsCount || m_nGlyphIndex < 0 )
 	{
-		pGlyph = NULL;
+		pGlyph = nullptr;
 		return FALSE;
 	}
 

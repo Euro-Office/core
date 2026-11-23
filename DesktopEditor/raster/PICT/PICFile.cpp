@@ -121,7 +121,7 @@ bool CPictFile::DecodeHeader()
 
 	Read(4, header);
 
-	if (!((header[0] == 0x50) && (header[1] == 0x49) && (header[2] == 0x43) && (header[3] == 0x54 )))
+	if ((header[0] != 0x50) || (header[1] != 0x49) || (header[2] != 0x43) || (header[3] != 0x54 ))
 	{
 		rect.Y		= (short) ((header[2] << 8) | header[3]);
 		rect.X		= ReadShortValue();
@@ -748,6 +748,7 @@ bool CPictFile::DecodeData()
 						tile_image.m_nColors = 1UL * ReadShortValue() + 1;
 					}
 
+					delete[] tile_image.m_pColormap;
 					tile_image.m_pColormap = new PixelInfo[tile_image.m_nColors + 1];
 
 					for (size_t i = 0; i < tile_image.m_nColors; i++)
@@ -757,7 +758,10 @@ bool CPictFile::DecodeData()
 
 						double pixel;
 						if (tile_image.m_nColors - 1 > 1)
-							pixel = ((double) i * (255 / (tile_image.m_nColors - 1)));
+						{
+							const int nStep = 255 / static_cast<int>(tile_image.m_nColors - 1);
+							pixel = ((double) i * nStep);
+						}
 						else
 							pixel = ((double) i * 255);
 
@@ -775,7 +779,7 @@ bool CPictFile::DecodeData()
 						{
 							int k = ReadShortValue() % tile_image.m_nColors;
 							if ((flag & 0x8000) != 0)
-								k = (size_t) i;
+								k = i;
 
 							tile_image.m_pColormap[k].red	= static_cast<double>(ReadShortValue());
 							tile_image.m_pColormap[k].green	= static_cast<double>(ReadShortValue());
@@ -1181,18 +1185,21 @@ BYTE* CPictFile::DecodeImage(const Image& img, size_t bytesPerLine, size_t bitsP
 				break;
 			}
 
-			size_t number_pixels;
+			size_t number_pixels = bytesPerLine;
 			const unsigned char* p = UnpackScanline(scanline, bitsPerPixel, unpack_buffer, &number_pixels);
 			if (q + number_pixels > pixels + (*extent))
 			{
 				status = false;
 				break;
 			}
-			memcpy(q, p, (size_t) number_pixels);
+			memcpy(q, p, number_pixels);
 		}
 		delete[] scanline;
 		if (!status)
+		{
 			delete[] pixels;
+			pixels = nullptr;
+		}
 		return pixels;
 	}
 
@@ -1222,7 +1229,7 @@ BYTE* CPictFile::DecodeImage(const Image& img, size_t bytesPerLine, size_t bitsP
 		for (size_t j = 0; j <  scanline_length; )
 			if ((scanline[j] & 0x80) == 0)
 			{
-				size_t length = (size_t) ((scanline[j] & 0xff) + 1);
+				size_t length = static_cast<size_t>(scanline[j] & 0xff) + 1;
 				size_t number_pixels = length * bytes_per_pixel;
 				const unsigned char* p = UnpackScanline(scanline + j + 1, bitsPerPixel, unpack_buffer, &number_pixels);
 				if ((q - pixels + number_pixels) <= *extent)
@@ -1238,7 +1245,7 @@ BYTE* CPictFile::DecodeImage(const Image& img, size_t bytesPerLine, size_t bitsP
 				for (size_t i = 0; i < length; i++)
 				{
 					if ((q - pixels + number_pixels) <= *extent)
-						memcpy(q, p, (size_t) number_pixels);
+						memcpy(q, p, number_pixels);
 					q += number_pixels;
 				}
 				j += bytes_per_pixel + 1;
@@ -1557,7 +1564,9 @@ void CPictFile::DrawRoundRect(bool isFrame)
 	m_pRenderer->PathCommandStart();
 	m_pRenderer->BeginCommand(c_nPathType);
 	Aggplus::CGraphicsPath path;
-	path.AddRoundRectangle(X[0], Y[0], X[1] - X[0], Y[1] - Y[0], width == 0.0 ? 0.0 : ovalW / width, height == 0.0 ? 0.0 : ovalH / height);
+	const long lOvalWRatio = (width == 0) ? 0 : ovalW / width;
+	const long lOvalHRatio = (height == 0) ? 0 : ovalH / height;
+	path.AddRoundRectangle(X[0], Y[0], X[1] - X[0], Y[1] - Y[0], lOvalWRatio, lOvalHRatio);
 	size_t points_count = path.GetPointCount();
 
 	Aggplus::PointF* points = new Aggplus::PointF[points_count];
@@ -1786,7 +1795,7 @@ void CPictFile::CompositeImage(const Image& composite,const long long& xOffset, 
 	source_image.m_pChannelMap[AlphaPixelChannel].traits = CopyPixelTrait;
 
 	bool status = false;
-	if (!((xOffset < 0) || (yOffset < 0)) && !((xOffset + source_image.m_nWidth) > m_oImgData.m_nWidth) && !((yOffset + source_image.m_nHeight) > m_oImgData.m_nHeight))
+	if ((xOffset >= 0) && (yOffset >= 0) && !((xOffset + source_image.m_nWidth) > m_oImgData.m_nWidth) && !((yOffset + source_image.m_nHeight) > m_oImgData.m_nHeight))
 	{
 		if ((source_image.m_eAlphaTrait == UndefinedPixelTrait) &&
 			(m_oImgData.m_eAlphaTrait != UndefinedPixelTrait))
@@ -1909,9 +1918,6 @@ void CPictFile::CompositeImage(const Image& composite,const long long& xOffset, 
 				pixel_alpha = p[source_image.m_pChannelMap[AlphaPixelChannel].offset];
 			Sa = (1.0 / 255.0) *  pixel_alpha;
 			Sa = Sa == 0 ? 1 : Sa;
-			pixel_alpha = 0;
-			if (m_oImgData.m_pChannelMap[AlphaPixelChannel].traits != UndefinedPixelTrait)
-				pixel_alpha = q[m_oImgData.m_pChannelMap[AlphaPixelChannel].offset];
 
 			for (int i = 0; i < 4; i++)
 			{

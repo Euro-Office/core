@@ -45,7 +45,7 @@ namespace NSStringUtils
 
 	CStringBuilderA::CStringBuilderA()
 	{
-		m_pData = NULL;
+		m_pData = nullptr;
 		m_lSize = 0;
 
 		m_pDataCur = m_pData;
@@ -53,14 +53,14 @@ namespace NSStringUtils
 	}
 	CStringBuilderA::~CStringBuilderA()
 	{
-		if (NULL != m_pData)
+		if (nullptr != m_pData)
 			free(m_pData);
-		m_pData = NULL;
+		m_pData = nullptr;
 	}
 
 	void CStringBuilderA::AddSize(size_t nSize)
 	{
-		if (NULL == m_pData)
+		if (nullptr == m_pData)
 		{
 			m_lSize = (std::max)((int)nSize, 1000);
 			m_pData = (char*)malloc(m_lSize * sizeof(char));
@@ -85,7 +85,7 @@ namespace NSStringUtils
 			}
 
 			char* pRealloc = (char*)realloc(m_pData, m_lSize * sizeof(char));
-			if (NULL != pRealloc)
+			if (nullptr != pRealloc)
 			{
 				// realloc worked
 				m_pData = pRealloc;
@@ -154,11 +154,11 @@ namespace NSStringUtils
 
 	void CStringBuilderA::Clear()
 	{
-		if (NULL != m_pData)
+		if (nullptr != m_pData)
 			free(m_pData);
-		m_pData = NULL;
+		m_pData = nullptr;
 
-		m_pData = NULL;
+		m_pData = nullptr;
 		m_lSize = 0;
 
 		m_pDataCur = m_pData;
@@ -185,7 +185,7 @@ namespace NSStringUtils
 {
 	CStringBuilder::CStringBuilder()
 	{
-		m_pData = NULL;
+		m_pData = nullptr;
 		m_lSize = 0;
 
 		m_pDataCur = m_pData;
@@ -203,14 +203,14 @@ namespace NSStringUtils
 	}
 	CStringBuilder::~CStringBuilder()
 	{
-		if (NULL != m_pData)
+		if (nullptr != m_pData)
 			free(m_pData);
-		m_pData = NULL;
+		m_pData = nullptr;
 	}
 
 	void CStringBuilder::AddSize(size_t nSize)
 	{
-		if (NULL == m_pData)
+		if (nullptr == m_pData)
 		{
 			m_lSize = (std::max)((int)nSize, 1000);
 			m_pData = (wchar_t*)malloc(m_lSize * sizeof(wchar_t));
@@ -235,7 +235,7 @@ namespace NSStringUtils
 			}
 
 			wchar_t* pRealloc = (wchar_t*)realloc(m_pData, m_lSize * sizeof(wchar_t));
-			if (NULL != pRealloc)
+			if (nullptr != pRealloc)
 			{
 				// realloc worked
 				m_pData = pRealloc;
@@ -359,7 +359,7 @@ namespace NSStringUtils
 		unsigned int code;
 		while (*pData != 0)
 		{
-			code = (unsigned int)*pData;
+			code = static_cast<unsigned int>(static_cast<unsigned long>(*pData));
 			WriteEncodeXmlChar(*pData, CheckXmlCode(code));
 
 			++pData;
@@ -379,7 +379,7 @@ namespace NSStringUtils
 		BYTE type;
 		while (*pData != 0)
 		{
-			code = (unsigned int)*pData;
+			code = static_cast<unsigned int>(static_cast<unsigned long>(*pData));
 			if (code >= 0xD800 && code <= 0xDFFF && *(pData + 1) != 0)
 			{
 				code = 0x10000 + (((code & 0x3FF) << 10) | (0x03FF & *(pData + 1)));
@@ -412,7 +412,7 @@ namespace NSStringUtils
 		unsigned int code;
 		while (*pData != 0)
 		{
-			code = (unsigned int)*pData;
+			code = static_cast<unsigned int>(static_cast<unsigned long>(*pData));
 			WriteEncodeXmlChar(*pData, CheckXmlCodeHHHH(code, pData));
 
 			++pData;
@@ -432,7 +432,7 @@ namespace NSStringUtils
 		BYTE type;
 		while (*pData != 0)
 		{
-			code = (unsigned int)*pData;
+			code = static_cast<unsigned int>(static_cast<unsigned long>(*pData));
 			if (code >= 0xD800 && code <= 0xDFFF && *(pData + 1) != 0)
 			{
 				code = 0x10000 + (((code & 0x3FF) << 10) | (0x03FF & *(pData + 1)));
@@ -596,11 +596,11 @@ namespace NSStringUtils
 
 	void CStringBuilder::Clear()
 	{
-		if (NULL != m_pData)
+		if (nullptr != m_pData)
 			free(m_pData);
-		m_pData = NULL;
+		m_pData = nullptr;
 
-		m_pData = NULL;
+		m_pData = nullptr;
 		m_lSize = 0;
 
 		m_pDataCur = m_pData;
