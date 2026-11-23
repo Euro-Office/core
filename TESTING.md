@@ -31,6 +31,13 @@ ctest --test-dir build -R cfcpp_test --output-on-failure
 CI runs `ctest --test-dir build --output-on-failure` after the build step
 (`.github/workflows/build.yml`); a failing assertion fails the job.
 
+## Binary format (Editor.bin) guards
+
+The internal DOCY/XLSY/PPTY format that sdkjs reads is covered by the Python
+tools in [`Test/BinaryFormat/`](Test/BinaryFormat/README.md). One checks that
+the enum values in the `BinReaderWriterDefines.h` headers are only ever
+appended to. The other compares snapshots of what x2t writes. Both run in CI.
+
 ## How a migrated suite is wired
 
 CMake already builds every core library these tests link against. To migrate a suite:
