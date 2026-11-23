@@ -430,7 +430,7 @@ namespace OOX
 		{
 			toXMLWithNS(writer, L"", sName, L"");
 		}
-		void CColor::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring &child_ns) const
+		void CColor::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring & /*child_ns*/) const
 		{
 			writer.StartNodeWithNS(node_ns, node_name);
 			writer.StartAttributes();
@@ -1131,7 +1131,7 @@ namespace OOX
 		void CRPr::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
 		}
-		void CRPr::fromXLSB (NSBinPptxRW::CBinaryFileReader& oStream, _UINT16 nType)
+		void CRPr::fromXLSB (NSBinPptxRW::CBinaryFileReader& oStream, _UINT16  /*nType*/)
 		{
 			//LONG nEnd = oStream.XlsbReadRecordLength() + oStream.GetPos();
 
@@ -1140,7 +1140,7 @@ namespace OOX
 			{
 				m_oSz.Init();
 				m_oSz->m_oVal.Init();
-				m_oSz->m_oVal->SetValue(dyHeight / 20);
+				m_oSz->m_oVal->SetValue(dyHeight / 20); // NOLINT(bugprone-integer-division): TODO: this truncates 10.5 pt to 10; kept so the stored size does not change
 			}
 			_UINT16 grbit = oStream.GetUShort();
 			if(0 != (grbit & 0x2))
@@ -1192,6 +1192,7 @@ namespace OOX
 					case 0x0002:
 						m_oVertAlign->m_oVerticalAlign->SetValue(SimpleTypes::verticalalignrunSubscript);
 						break;
+					default: break;
 				}
 			}
 			_UINT16 uls = oStream.GetUChar();
@@ -1213,6 +1214,7 @@ namespace OOX
 					case 0x22:
 						m_oUnderline->m_oUnderline->SetValue(SimpleTypes::Spreadsheet::underlineDoubleAccounting);
 						break;
+					default: break;
 				}
 			}
 			_UINT16 bFamily = oStream.GetUChar();
@@ -1292,6 +1294,7 @@ namespace OOX
 					case 0x0B:
 						eColor = SimpleTypes::Spreadsheet::themecolorFollowedHyperlink;
 						break;
+					default: break;
 				}
 				m_oColor->m_oThemeColor->SetValue(eColor);
 			}
@@ -1319,6 +1322,7 @@ namespace OOX
 					case 0x02:
 						m_oScheme->m_oFontScheme->SetValue(SimpleTypes::Spreadsheet::fontschemeMinor);
 						break;
+					default: break;
 				}
 			}
 			m_oRFont.Init();

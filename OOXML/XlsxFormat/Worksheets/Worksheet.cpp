@@ -68,8 +68,8 @@ namespace OOX
 		{
 			m_bSpreadsheets = true;
 			m_bWriteDirectlyToFile = false;
-			m_pComments = NULL;
-			m_pThreadedComments = NULL;
+			m_pComments = nullptr;
+			m_pThreadedComments = nullptr;
             m_bIsChartSheet = false;
             bIsWritten = false;
 
@@ -88,8 +88,8 @@ namespace OOX
 		{
 			m_bSpreadsheets = true;
 			m_bWriteDirectlyToFile = false;
-			m_pComments = NULL;
-			m_pThreadedComments = NULL;
+			m_pComments = nullptr;
+			m_pThreadedComments = nullptr;
             m_bIsChartSheet = isChartSheet;
             bIsWritten = false;
 
@@ -104,7 +104,7 @@ namespace OOX
 			else
 				m_bPrepareForBinaryWriter = false;
 
-			read( oRootPath, oPath );
+			CWorksheet::read( oRootPath, oPath );
 		}
 		CWorksheet::~CWorksheet()
 		{
@@ -367,7 +367,7 @@ namespace OOX
 			}
 
 		}
-		XLS::BaseObjectPtr CWorksheet::toXLS()
+		XLS::BaseObjectPtr CWorksheet::toXLS(const std::set<unsigned int>& pivotCacheIds)
 		{
 			if(m_bIsChartSheet)
 			{
@@ -384,10 +384,11 @@ namespace OOX
 					chartSheetPtr->m_arWINDOW = m_oSheetViews->toXLS();
 				if(m_oDrawing.IsInit() && m_oDrawing->m_oId.IsInit())
 				{
-					RId drawingId = m_oDrawing->m_oId->GetValue();
-					auto castedDrawing = Get<OOX::File>(drawingId);
-					auto drawingPtr = static_cast<OOX::Spreadsheet::CDrawing*>(castedDrawing.GetPointer());
-					drawingPtr->toXLSChart(objPtr);
+					// null if the r:id has no relationship or points at a part that is not a drawing;
+					// the chart sheet is then written without a chart
+					auto drawing = Get<OOX::Spreadsheet::CDrawing>(RId(m_oDrawing->m_oId->GetValue()));
+					if(drawing.IsInit())
+						drawing->toXLSChart(objPtr);
 				}
 				return objPtr;
 
@@ -451,11 +452,12 @@ namespace OOX
 
 			if(m_oDrawing.IsInit() && m_oDrawing->m_oId.IsInit())
 			{
-
 				RId drawingId = m_oDrawing->m_oId->GetValue();
-				auto castedDrawing = Get<OOX::File>(drawingId);
-				auto drawingPtr = static_cast<OOX::Spreadsheet::CDrawing*>(castedDrawing.GetPointer());
-				if(drawingPtr->IsChart())
+				// null if the r:id has no relationship or points at a part that is not a drawing;
+				// the sheet is then written without its drawing
+				auto drawing = Get<OOX::Spreadsheet::CDrawing>(drawingId);
+				auto drawingPtr = drawing.GetPointer();
+				if(drawingPtr && drawingPtr->IsChart())
 				{
 					auto Objects = new XLS::OBJECTS(false);
 					auto objectsPtr =  XLS::BaseObjectPtr(Objects);
@@ -521,8 +523,10 @@ namespace OOX
 				{
 					auto tempPivot = static_cast<CPivotTableFile*>(file.GetPointer());
 					tempPivot->EnsureDefinition();
-					if(tempPivot->m_oPivotTableDefinition.IsInit())
-						worksheetPtr->m_arPIVOTVIEW.push_back(tempPivot->m_oPivotTableDefinition->toXLS());
+					// a view whose cache is not written would point at a cache stream that does not exist
+					const auto& definition = tempPivot->m_oPivotTableDefinition;
+					if(definition.IsInit() && definition->m_oCacheId.IsInit() && pivotCacheIds.count(definition->m_oCacheId->GetValue()))
+						worksheetPtr->m_arPIVOTVIEW.push_back(definition->toXLS());
 				}
 			}
 			return sheetPtr;
@@ -667,7 +671,7 @@ namespace OOX
 				std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
 				if (L"worksheet" == sName || L"chartsheet" == sName)
 				{
-					fromXML(oReader);
+					CWorksheet::fromXML(oReader);
 				}
 				_CP_LOG << L"\tend parsing sheet: " << oPath.GetFilename() << std::endl;
 			}
@@ -743,12 +747,12 @@ namespace OOX
 								{
 									names.m_arrItems[i]->m_oName = L"_xlnm.Print_Area";
 								}
-								if (false == xlsx_flat->m_pWorkbook->m_oDefinedNames.IsInit())
+								if (!xlsx_flat->m_pWorkbook->m_oDefinedNames.IsInit())
 									xlsx_flat->m_pWorkbook->m_oDefinedNames.Init();
 
 								names.m_arrItems[i]->m_oLocalSheetId = (unsigned int)(xlsx_flat->m_arWorksheets.size() - 1);
 								xlsx_flat->m_pWorkbook->m_oDefinedNames->m_arrItems.push_back(names.m_arrItems[i]);
-								names.m_arrItems[i] = NULL;
+								names.m_arrItems[i] = nullptr;
 							}
 						}
 						names.m_arrItems.clear();
@@ -802,7 +806,7 @@ namespace OOX
 					m_oCellWatches = oReader;
 				else if (L"DataValidation" == sName)
 				{
-					if (false == m_oDataValidations.IsInit())
+					if (!m_oDataValidations.IsInit())
 					{
 						m_oDataValidations.Init();
 					}
@@ -848,7 +852,7 @@ namespace OOX
 			CXlsxFlat* xlsx_flat = dynamic_cast<CXlsxFlat*>(WritingElement::m_pMainDocument);
 			if (xlsx_flat)
 			{
-				if (false == xlsx_flat->m_pWorkbook->m_oSheets.IsInit())
+				if (!xlsx_flat->m_pWorkbook->m_oSheets.IsInit())
 				{
 					xlsx_flat->m_pWorkbook->m_oSheets = new CSheets(WritingElement::m_pMainDocument);
 				}
@@ -866,17 +870,17 @@ namespace OOX
 		}
 		void CWorksheet::PrepareDataValidations()
 		{
-			if (m_oExtLst.IsInit() == false) return;
+			if (!m_oExtLst.IsInit()) return;
 
 			for (size_t i = 0; i < m_oExtLst->m_arrExt.size(); ++i)
 			{
-				if (false == m_oExtLst->m_arrExt[i]->m_oDataValidations.IsInit()) continue;
+				if (!m_oExtLst->m_arrExt[i]->m_oDataValidations.IsInit()) continue;
 
 				for (size_t j = 0; j < m_oExtLst->m_arrExt[i]->m_oDataValidations->m_arrItems.size(); ++j)
 				{
-					if (NULL == m_oExtLst->m_arrExt[i]->m_oDataValidations->m_arrItems[j]) continue;
+					if (nullptr == m_oExtLst->m_arrExt[i]->m_oDataValidations->m_arrItems[j]) continue;
 
-					if (false == m_oDataValidations.IsInit())
+					if (!m_oDataValidations.IsInit())
 					{
 						m_oDataValidations.Init();
 						m_oDataValidations->m_oDisablePrompts = m_oExtLst->m_arrExt[i]->m_oDataValidations->m_oDisablePrompts;
@@ -884,23 +888,23 @@ namespace OOX
 						m_oDataValidations->m_oYWindow = m_oExtLst->m_arrExt[i]->m_oDataValidations->m_oYWindow;
 					}
 					m_oDataValidations->m_arrItems.push_back(m_oExtLst->m_arrExt[i]->m_oDataValidations->m_arrItems[j]);
-					m_oExtLst->m_arrExt[i]->m_oDataValidations->m_arrItems[j] = NULL;
+					m_oExtLst->m_arrExt[i]->m_oDataValidations->m_arrItems[j] = nullptr;
 				}
 			}
 		}
 		void CWorksheet::PrepareConditionalFormatting()
 		{
-			if (m_oExtLst.IsInit() == false) return;
+			if (!m_oExtLst.IsInit()) return;
 
 			for (size_t i = 0; i < m_oExtLst->m_arrExt.size(); ++i)
 			{
 				for (size_t j = 0; j < m_oExtLst->m_arrExt[i]->m_arrConditionalFormatting.size(); ++j)
 				{
-					if (NULL == m_oExtLst->m_arrExt[i]->m_arrConditionalFormatting[j]) continue;
+					if (nullptr == m_oExtLst->m_arrExt[i]->m_arrConditionalFormatting[j]) continue;
 
 					for (size_t k = 0; k < m_oExtLst->m_arrExt[i]->m_arrConditionalFormatting[j]->m_arrItems.size(); ++k)
 					{
-						if (NULL == m_oExtLst->m_arrExt[i]->m_arrConditionalFormatting[j]->m_arrItems[k]) continue;
+						if (nullptr == m_oExtLst->m_arrExt[i]->m_arrConditionalFormatting[j]->m_arrItems[k]) continue;
 
 						if (m_oExtLst->m_arrExt[i]->m_arrConditionalFormatting[j]->m_arrItems[k]->m_oId.IsInit())
 						{
@@ -916,13 +920,13 @@ namespace OOX
 
         void CWorksheet::PrepareToWrite()
 		{
-			if(false == m_oSheetFormatPr.IsInit())
+			if(!m_oSheetFormatPr.IsInit())
 				m_oSheetFormatPr.Init();
-			if(false == m_oSheetFormatPr->m_oDefaultRowHeight.IsInit())
+			if(!m_oSheetFormatPr->m_oDefaultRowHeight.IsInit())
 			{
 				m_oSheetFormatPr->m_oDefaultRowHeight = 15.;
 			}
-			if(false == m_oSheetViews.IsInit())
+			if(!m_oSheetViews.IsInit())
 				m_oSheetViews.Init();
 
 			if(m_oSheetViews->m_arrItems.empty())
@@ -930,13 +934,13 @@ namespace OOX
 
 			CSheetView* pSheetView = m_oSheetViews->m_arrItems.front();
 
-			if(false == pSheetView->m_oWorkbookViewId.IsInit())
+			if(!pSheetView->m_oWorkbookViewId.IsInit())
 			{
 				pSheetView->m_oWorkbookViewId.Init();
 				pSheetView->m_oWorkbookViewId->SetValue(0);
 			}
 
-			if (false == m_oSheetData.IsInit())
+			if (!m_oSheetData.IsInit())
 			{
 				m_oSheetData.Init();
 			}
@@ -1037,7 +1041,7 @@ namespace OOX
 					LONG nCycles = lwcharLen / lcurrentLen;
 
 					LONG lLen = 0;
-					BYTE* pData = NULL;
+					BYTE* pData = nullptr;
 					NSFile::CFileBinary oFile;
 					oFile.CreateFileW(oPath.GetPath());
 
@@ -1135,7 +1139,7 @@ mc:Ignorable=\"x14ac\">");
 			smart_ptr<OOX::File>		oFile		= this->Find(m_oLegacyDrawing->m_oId->GetValue());
 			smart_ptr<OOX::CVmlDrawing> oVmlDrawing = oFile.smart_dynamic_cast<OOX::CVmlDrawing>();
 
-			OOX::WritingElement* pShapeElem	= NULL;
+			OOX::WritingElement* pShapeElem	= nullptr;
 			if (oVmlDrawing.IsInit())
 			{
 				oElement = oVmlDrawing->FindVmlObject(spid);

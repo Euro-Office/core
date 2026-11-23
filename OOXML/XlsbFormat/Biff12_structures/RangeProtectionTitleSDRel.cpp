@@ -36,7 +36,7 @@ namespace XLSB
 
     RangeProtectionTitleSDRel::RangeProtectionTitleSDRel(XLS::CFRecord& record)
     {
-        load(record);
+        RangeProtectionTitleSDRel::load(record);
     }
 
     RangeProtectionTitleSDRel::~RangeProtectionTitleSDRel()

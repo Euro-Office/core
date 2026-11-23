@@ -42,7 +42,7 @@ namespace OOX
 		}
 		VbaData(OOX::Document *pMain, const CPath& oRootPath, const CPath& filename) : File(pMain)
 		{
-			read(oRootPath, filename);
+			VbaData::read(oRootPath, filename);
 		}
 		virtual ~VbaData()
 		{

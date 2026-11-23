@@ -45,7 +45,7 @@ namespace OOX
 		OOX::Spreadsheet::CXlsx* xlsx = dynamic_cast<OOX::Spreadsheet::CXlsx*>(File::m_pMainDocument);
 		if (xlsx) xlsx->m_pApp = this;
 
-		read( oPath );
+		CApp::read( oPath );
 	}
 	CApp::~CApp()
 	{
@@ -179,7 +179,7 @@ namespace OOX
 	}
 	void CApp::SetRequiredDefaults()
 	{
-		m_sAppVersion.reset(NULL);
+		m_sAppVersion.reset(nullptr);
 		std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
 		if (sApplication.empty())
 			sApplication = NSSystemUtils::gc_EnvApplicationNameDefault;

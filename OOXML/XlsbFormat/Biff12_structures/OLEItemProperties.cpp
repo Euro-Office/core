@@ -36,7 +36,7 @@ namespace XLSB
 
     OLEItemProperties::OLEItemProperties(XLS::CFRecord& record)
     {
-        load(record);
+        OLEItemProperties::load(record);
     }
 
     OLEItemProperties::~OLEItemProperties()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void OLEItemProperties::load(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
 
         record >> flags;
 

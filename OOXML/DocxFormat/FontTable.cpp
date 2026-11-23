@@ -51,15 +51,15 @@ namespace OOX
 			if (docx->m_bGlossaryRead)	docx->m_oGlossary.fontTable = this;
 			else						docx->m_oMain.fontTable = this;
 		}
-		read( oFilePath );
+		CFontTable::read( oFilePath );
 	}
-	CFontTable::CFontTable(XmlUtils::CXmlNode& oNode) : File(NULL)
+	CFontTable::CFontTable(XmlUtils::CXmlNode& oNode) : File(nullptr)
 	{
-		fromXML( oNode );
+		CFontTable::fromXML( oNode );
 	}
-	CFontTable::CFontTable(XmlUtils::CXmlLiteReader& oReader) : File(NULL)
+	CFontTable::CFontTable(XmlUtils::CXmlLiteReader& oReader) : File(nullptr)
 	{
-		fromXML( oReader );
+		CFontTable::fromXML( oReader );
 	}
 	CFontTable::~CFontTable()
 	{
@@ -68,7 +68,7 @@ namespace OOX
 			if (m_arrFonts[nIndex] )
 				delete m_arrFonts[nIndex];
 
-			m_arrFonts[nIndex] = NULL;
+			m_arrFonts[nIndex] = nullptr;
 		}
 
 		m_arrFonts.clear();
@@ -83,13 +83,12 @@ namespace OOX
 		fromXML( (XmlUtils::CXmlLiteReader&)oReader );
 		return *this;
 	}
-	bool CFontTable::Find(std::wstring &sFontName, CFont *oFont)
+	bool CFontTable::Find(std::wstring &sFontName, CFont * /*oFont*/)
 	{
 		for (unsigned int nIndex = 0; nIndex < m_arrFonts.size(); nIndex++ )
 		{
 			if ((m_arrFonts[nIndex]) && ( sFontName == m_arrFonts[nIndex]->m_sName ))
 			{
-				oFont = m_arrFonts[nIndex];
 				return true;
 			}
 		}
