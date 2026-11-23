@@ -9,30 +9,30 @@ namespace NSTextMeasurerEmbed
 #define CURRENTWRAPPER CTextMeasurerEmbed
 
 #ifdef SUPPORT_HARFBUZZ_SHAPER
-	FUNCTION_WRAPPER_V8_1(_HB_LanguageFromString, HB_LanguageFromString)
-	FUNCTION_WRAPPER_V8_7(_HB_ShapeText, HB_ShapeText)
-	FUNCTION_WRAPPER_V8_0(_HB_FontMalloc, HB_FontMalloc)
-	FUNCTION_WRAPPER_V8_1(_HB_FontFree, HB_FontFree)
+	FUNCTION_WRAPPER_V8_1(HB_LanguageFromStringWrapper, HB_LanguageFromString)
+	FUNCTION_WRAPPER_V8_7(HB_ShapeTextWrapper, HB_ShapeText)
+	FUNCTION_WRAPPER_V8_0(HB_FontMallocWrapper, HB_FontMalloc)
+	FUNCTION_WRAPPER_V8_1(HB_FontFreeWrapper, HB_FontFree)
 #endif
-	FUNCTION_WRAPPER_V8_1(_FT_Malloc, FT_Malloc)
-	FUNCTION_WRAPPER_V8_1(_FT_Free, FT_Free)
-	FUNCTION_WRAPPER_V8_0(_FT_Init, FT_Init)
-	FUNCTION_WRAPPER_V8_2(_FT_Set_TrueType_HintProp, FT_Set_TrueType_HintProp)
-	FUNCTION_WRAPPER_V8_4(_FT_Open_Face, FT_Open_Face)
-	FUNCTION_WRAPPER_V8_3(_FT_Open_Face2, FT_Open_Face2)
-	FUNCTION_WRAPPER_V8_1(_FT_GetFaceInfo, FT_GetFaceInfo)
-	FUNCTION_WRAPPER_V8_3(_FT_Load_Glyph, FT_Load_Glyph)
-	FUNCTION_WRAPPER_V8_2(_FT_Get_Glyph_Measure_Params, FT_Get_Glyph_Measure_Params)
-	FUNCTION_WRAPPER_V8_2(_FT_Get_Glyph_Render_Params, FT_Get_Glyph_Render_Params)
-	FUNCTION_WRAPPER_V8_2(_FT_Get_Glyph_Render_Buffer, FT_Get_Glyph_Render_Buffer)
-	FUNCTION_WRAPPER_V8_5(_FT_Set_Transform, FT_Set_Transform)
-	FUNCTION_WRAPPER_V8_5(_FT_Set_Char_Size, FT_Set_Char_Size)
-	FUNCTION_WRAPPER_V8_2(_FT_SetCMapForCharCode, FT_SetCMapForCharCode)
-	FUNCTION_WRAPPER_V8_3(_FT_GetKerningX, FT_GetKerningX)
-	FUNCTION_WRAPPER_V8_1(_FT_GetFaceMaxAdvanceX, FT_GetFaceMaxAdvanceX)
-	FUNCTION_WRAPPER_V8_1(_Hyphen_SetCacheSize, Hyphen_SetCacheSize)
-	FUNCTION_WRAPPER_V8_2(_Hyphen_Word, Hyphen_Word)
-	FUNCTION_WRAPPER_V8_1(_Hyphen_IsDictionaryExist, Hyphen_IsDictionaryExist)
+	FUNCTION_WRAPPER_V8_1(FT_MallocWrapper, FT_Malloc)
+	FUNCTION_WRAPPER_V8_1(FT_FreeWrapper, FT_Free)
+	FUNCTION_WRAPPER_V8_0(FT_InitWrapper, FT_Init)
+	FUNCTION_WRAPPER_V8_2(FT_Set_TrueType_HintPropWrapper, FT_Set_TrueType_HintProp)
+	FUNCTION_WRAPPER_V8_4(FT_Open_FaceWrapper, FT_Open_Face)
+	FUNCTION_WRAPPER_V8_3(FT_Open_Face2Wrapper, FT_Open_Face2)
+	FUNCTION_WRAPPER_V8_1(FT_GetFaceInfoWrapper, FT_GetFaceInfo)
+	FUNCTION_WRAPPER_V8_3(FT_Load_GlyphWrapper, FT_Load_Glyph)
+	FUNCTION_WRAPPER_V8_2(FT_Get_Glyph_Measure_ParamsWrapper, FT_Get_Glyph_Measure_Params)
+	FUNCTION_WRAPPER_V8_2(FT_Get_Glyph_Render_ParamsWrapper, FT_Get_Glyph_Render_Params)
+	FUNCTION_WRAPPER_V8_2(FT_Get_Glyph_Render_BufferWrapper, FT_Get_Glyph_Render_Buffer)
+	FUNCTION_WRAPPER_V8_5(FT_Set_TransformWrapper, FT_Set_Transform)
+	FUNCTION_WRAPPER_V8_5(FT_Set_Char_SizeWrapper, FT_Set_Char_Size)
+	FUNCTION_WRAPPER_V8_2(FT_SetCMapForCharCodeWrapper, FT_SetCMapForCharCode)
+	FUNCTION_WRAPPER_V8_3(FT_GetKerningXWrapper, FT_GetKerningX)
+	FUNCTION_WRAPPER_V8_1(FT_GetFaceMaxAdvanceXWrapper, FT_GetFaceMaxAdvanceX)
+	FUNCTION_WRAPPER_V8_1(Hyphen_SetCacheSizeWrapper, Hyphen_SetCacheSize)
+	FUNCTION_WRAPPER_V8_2(Hyphen_WordWrapper, Hyphen_Word)
+	FUNCTION_WRAPPER_V8_1(Hyphen_IsDictionaryExistWrapper, Hyphen_IsDictionaryExist)
 
 	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
@@ -41,30 +41,30 @@ namespace NSTextMeasurerEmbed
 		result->SetInternalFieldCount(1);
 
 #ifdef SUPPORT_HARFBUZZ_SHAPER
-		NSV8Objects::Template_Set(result, "HB_LanguageFromString",	_HB_LanguageFromString);
-		NSV8Objects::Template_Set(result, "HB_ShapeText",	_HB_ShapeText);
-		NSV8Objects::Template_Set(result, "HB_FontMalloc",	_HB_FontMalloc);
-		NSV8Objects::Template_Set(result, "HB_FontFree",	_HB_FontFree);
+		NSV8Objects::Template_Set(result, "HB_LanguageFromString", HB_LanguageFromStringWrapper);
+		NSV8Objects::Template_Set(result, "HB_ShapeText", HB_ShapeTextWrapper);
+		NSV8Objects::Template_Set(result, "HB_FontMalloc", HB_FontMallocWrapper);
+		NSV8Objects::Template_Set(result, "HB_FontFree", HB_FontFreeWrapper);
 #endif
-		NSV8Objects::Template_Set(result, "FT_Malloc",	_FT_Malloc);
-		NSV8Objects::Template_Set(result, "FT_Free",	_FT_Free);
-		NSV8Objects::Template_Set(result, "FT_Init",	_FT_Init);
-		NSV8Objects::Template_Set(result, "FT_Set_TrueType_HintProp",	_FT_Set_TrueType_HintProp);
-		NSV8Objects::Template_Set(result, "FT_Open_Face",	_FT_Open_Face);
-		NSV8Objects::Template_Set(result, "FT_Open_Face2",	_FT_Open_Face2);
-		NSV8Objects::Template_Set(result, "FT_GetFaceInfo",	_FT_GetFaceInfo);
-		NSV8Objects::Template_Set(result, "FT_Load_Glyph",	_FT_Load_Glyph);
-		NSV8Objects::Template_Set(result, "FT_Get_Glyph_Measure_Params",	_FT_Get_Glyph_Measure_Params);
-		NSV8Objects::Template_Set(result, "FT_Get_Glyph_Render_Params",	_FT_Get_Glyph_Render_Params);
-		NSV8Objects::Template_Set(result, "FT_Get_Glyph_Render_Buffer",	_FT_Get_Glyph_Render_Buffer);
-		NSV8Objects::Template_Set(result, "FT_Set_Transform",	_FT_Set_Transform);
-		NSV8Objects::Template_Set(result, "FT_Set_Char_Size",	_FT_Set_Char_Size);
-		NSV8Objects::Template_Set(result, "FT_SetCMapForCharCode",	_FT_SetCMapForCharCode);
-		NSV8Objects::Template_Set(result, "FT_GetKerningX",	_FT_GetKerningX);
-		NSV8Objects::Template_Set(result, "FT_GetFaceMaxAdvanceX",	_FT_GetFaceMaxAdvanceX);
-		NSV8Objects::Template_Set(result, "Hyphen_SetCacheSize",	_Hyphen_SetCacheSize);
-		NSV8Objects::Template_Set(result, "Hyphen_Word",	_Hyphen_Word);
-		NSV8Objects::Template_Set(result, "Hyphen_IsDictionaryExist",	_Hyphen_IsDictionaryExist);
+		NSV8Objects::Template_Set(result, "FT_Malloc", FT_MallocWrapper);
+		NSV8Objects::Template_Set(result, "FT_Free", FT_FreeWrapper);
+		NSV8Objects::Template_Set(result, "FT_Init", FT_InitWrapper);
+		NSV8Objects::Template_Set(result, "FT_Set_TrueType_HintProp", FT_Set_TrueType_HintPropWrapper);
+		NSV8Objects::Template_Set(result, "FT_Open_Face", FT_Open_FaceWrapper);
+		NSV8Objects::Template_Set(result, "FT_Open_Face2", FT_Open_Face2Wrapper);
+		NSV8Objects::Template_Set(result, "FT_GetFaceInfo", FT_GetFaceInfoWrapper);
+		NSV8Objects::Template_Set(result, "FT_Load_Glyph", FT_Load_GlyphWrapper);
+		NSV8Objects::Template_Set(result, "FT_Get_Glyph_Measure_Params", FT_Get_Glyph_Measure_ParamsWrapper);
+		NSV8Objects::Template_Set(result, "FT_Get_Glyph_Render_Params", FT_Get_Glyph_Render_ParamsWrapper);
+		NSV8Objects::Template_Set(result, "FT_Get_Glyph_Render_Buffer", FT_Get_Glyph_Render_BufferWrapper);
+		NSV8Objects::Template_Set(result, "FT_Set_Transform", FT_Set_TransformWrapper);
+		NSV8Objects::Template_Set(result, "FT_Set_Char_Size", FT_Set_Char_SizeWrapper);
+		NSV8Objects::Template_Set(result, "FT_SetCMapForCharCode", FT_SetCMapForCharCodeWrapper);
+		NSV8Objects::Template_Set(result, "FT_GetKerningX", FT_GetKerningXWrapper);
+		NSV8Objects::Template_Set(result, "FT_GetFaceMaxAdvanceX", FT_GetFaceMaxAdvanceXWrapper);
+		NSV8Objects::Template_Set(result, "Hyphen_SetCacheSize", Hyphen_SetCacheSizeWrapper);
+		NSV8Objects::Template_Set(result, "Hyphen_Word", Hyphen_WordWrapper);
+		NSV8Objects::Template_Set(result, "Hyphen_IsDictionaryExist", Hyphen_IsDictionaryExistWrapper);
 
 		return handle_scope.Escape(result);
 	}

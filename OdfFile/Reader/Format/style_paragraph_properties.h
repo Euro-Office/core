@@ -265,6 +265,7 @@ public:
     _CP_OPT(odf_types::writing_mode)	style_writing_mode_;
     _CP_OPT(bool)						style_writing_mode_automatic_;
     _CP_OPT(bool)						style_snap_to_layout_grid_;
+    _CP_OPT(bool)						style_contextual_spacing_;
     _CP_OPT(unsigned int)				style_page_number_;
 
     _CP_OPT(odf_types::percent) style_background_transparency_;
