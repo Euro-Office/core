@@ -119,7 +119,7 @@ namespace NSSystemUtils
 #else
 		std::string strNameA = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(strName);
 		char* pValA = getenv(strNameA.c_str());
-		if (NULL != pValA)
+		if (nullptr != pValA)
 		{
 			return NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)pValA, strlen(pValA));
 		}
