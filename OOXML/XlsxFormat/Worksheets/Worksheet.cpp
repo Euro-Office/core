@@ -384,10 +384,11 @@ namespace OOX
 					chartSheetPtr->m_arWINDOW = m_oSheetViews->toXLS();
 				if(m_oDrawing.IsInit() && m_oDrawing->m_oId.IsInit())
 				{
-					RId drawingId = m_oDrawing->m_oId->GetValue();
-					auto castedDrawing = Get<OOX::File>(drawingId);
-					auto drawingPtr = static_cast<OOX::Spreadsheet::CDrawing*>(castedDrawing.GetPointer());
-					drawingPtr->toXLSChart(objPtr);
+					// null if the r:id has no relationship or points at a part that is not a drawing;
+					// the chart sheet is then written without a chart
+					auto drawing = Get<OOX::Spreadsheet::CDrawing>(RId(m_oDrawing->m_oId->GetValue()));
+					if(drawing.IsInit())
+						drawing->toXLSChart(objPtr);
 				}
 				return objPtr;
 
@@ -451,11 +452,12 @@ namespace OOX
 
 			if(m_oDrawing.IsInit() && m_oDrawing->m_oId.IsInit())
 			{
-
 				RId drawingId = m_oDrawing->m_oId->GetValue();
-				auto castedDrawing = Get<OOX::File>(drawingId);
-				auto drawingPtr = static_cast<OOX::Spreadsheet::CDrawing*>(castedDrawing.GetPointer());
-				if(drawingPtr->IsChart())
+				// null if the r:id has no relationship or points at a part that is not a drawing;
+				// the sheet is then written without its drawing
+				auto drawing = Get<OOX::Spreadsheet::CDrawing>(drawingId);
+				auto drawingPtr = drawing.GetPointer();
+				if(drawingPtr && drawingPtr->IsChart())
 				{
 					auto Objects = new XLS::OBJECTS(false);
 					auto objectsPtr =  XLS::BaseObjectPtr(Objects);
