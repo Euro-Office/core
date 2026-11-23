@@ -432,7 +432,7 @@ namespace OOX
 			nullable<SimpleTypes::CPageBorderOffset  > m_oOffsetFrom;
 			nullable<SimpleTypes::CPageBorderZOrder  > m_oZOrder;
 
-			// Childs
+			// Children
 			nullable<ComplexTypes::Word::CBottomPageBorder > m_oBottom;
 			nullable<ComplexTypes::Word::CPageBorder       > m_oLeft;
 			nullable<ComplexTypes::Word::CPageBorder       > m_oRight;
@@ -468,7 +468,7 @@ namespace OOX
 			nullable<SimpleTypes::CDecimalNumber   > m_oId;
 			nullable<std::wstring                  > m_sUserId;
 
-			// Childs
+			// Children
 			nullable<CSectionProperty>               m_pSecPr;
 		};
 
@@ -478,7 +478,7 @@ namespace OOX
 		class CSectionProperty : public WritingElement
 		{
 		public:
-			CSectionProperty(OOX::Document *pMain = NULL);			
+			CSectionProperty(OOX::Document *pMain = nullptr);			
 			virtual ~CSectionProperty();
 
 			virtual void ClearItems();

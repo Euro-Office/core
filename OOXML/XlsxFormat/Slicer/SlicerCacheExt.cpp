@@ -137,6 +137,7 @@ void CSlicerCacheOlapLevelName::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader
 			m_oCount = pReader->GetULong();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -244,6 +245,7 @@ void CSlicerCacheHideNoData::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oCount = pReader->GetULong();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -397,6 +399,7 @@ void CTableSlicerCache::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oCrossFilter->SetValue((SimpleTypes::Spreadsheet::ESlicerCacheCrossFilter)pReader->GetUChar());
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -475,6 +478,7 @@ void CSlicerStyleElement::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oDxfId = pReader->GetULong();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -495,7 +499,8 @@ XLS::BaseObjectPtr CSlicerStyleElement::toBin()
 {
 	auto ptr(new XLSB::SlicerStyleElement);
 	XLS::BaseObjectPtr objectPtr(ptr);
-	if(m_oDxfId.IsInit());
+	// TODO: dxfId is optional and get() dereferences null when it is missing; the guard that
+	// used to be here had a stray semicolon, so guard it properly in a follow-up
 	ptr->dxfId = m_oDxfId.get();
 	if( m_oType->GetValue() == SimpleTypes::Spreadsheet::ESlicerStyleType::cslicerstyletypeUnselectedItemWithData)
 		ptr->tseType = 0x0000001C;
@@ -556,6 +561,7 @@ void CSlicerStyleElement::ReadAttributes(XLS::BaseObjectPtr &obj)
             case 0x00000023:
                 m_oType.Init();
                 m_oType->SetValue(SimpleTypes::Spreadsheet::ESlicerStyleType::cslicerstyletypeHoveredSelectedItemWithNoData); break;
+            default: break;
         }
 
     }
@@ -801,6 +807,7 @@ void CSlicerStyle::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oName = pReader->GetString2();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -1109,6 +1116,7 @@ void CSlicerStyles::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oDefaultSlicerStyle = pReader->GetString2();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -1243,6 +1251,7 @@ void CDrawingSlicer::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oName = pReader->GetString2();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)

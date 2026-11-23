@@ -36,7 +36,7 @@ namespace XLSB
 
     FRTBlank::FRTBlank(XLS::CFRecord& record)
     {
-        load(record);
+        FRTBlank::load(record);
     }
 
     FRTBlank::~FRTBlank()

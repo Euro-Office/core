@@ -70,9 +70,7 @@ bool Segment::IsValid(const BooleanOpType& op) const noexcept
 		return true;
 	if (op == Subtraction)
 	{
-		if (Id == 1 && Winding == 0)
-			return true;
-		else if (Id == 2 && Winding == 1)
+		if ((Id == 1 && Winding == 0) || (Id == 2 && Winding == 1))
 			return true;
 	}
 	else if (Winding && op == Intersection || !Winding && op == Union)
@@ -479,10 +477,9 @@ std::vector<std::pair<double, double>> Curve::GetOverlaps(const Curve& curve) co
 		{
 			std::pair<double, double> pair = i1 == 1 ? std::pair<double, double>(t1, t2)
 													 : std::pair<double, double>(t2, t1);
-			if (pairs.empty())
-				pairs.push_back(pair);
-			else if (fabs(pair.first - pairs[0].first) > TIME_EPSILON &&
-					 fabs(pair.second - pairs[0].second) > TIME_EPSILON)
+			if (pairs.empty() ||
+				(fabs(pair.first - pairs[0].first) > TIME_EPSILON &&
+				 fabs(pair.second - pairs[0].second) > TIME_EPSILON))
 				pairs.push_back(pair);
 		}
 
@@ -594,8 +591,8 @@ int Curve::SolveCubic(const int& coord, const double& value, std::vector<double>
 	std::vector<double> v = coord == 0 ? GetXValues() : GetYValues();
 	double a, b, c, d;
 
-	if (!((v[0] < value && v[3] < value && v[1] < value && v[2] < value) ||
-		  (v[0] > value && v[3] > value && v[1] > value && v[2] > value)))
+	if ((v[0] >= value || v[3] >= value || v[1] >= value || v[2] >= value) &&
+		  (v[0] <= value || v[3] <= value || v[1] <= value || v[2] <= value))
 	{
 		c = 3 * (v[1] - v[0]);
 		b = 3 * (v[2] - v[1]) - c;
@@ -916,9 +913,8 @@ void CBooleanOperations::TraceOneInters()
 	{
 		if (Op == Union && s1.Winding == 1)
 			Result = std::move(Path2);
-		else if (Op == Union && s2.Winding == 1)
-			Result = std::move(Path1);
-		else if (s1.Winding == 0 && s2.Winding == 0 && Op == Subtraction)
+		else if ((Op == Union && s2.Winding == 1) ||
+				 (s1.Winding == 0 && s2.Winding == 0 && Op == Subtraction))
 			Result = std::move(Path1);
 		else
 		{
@@ -1431,10 +1427,20 @@ void CBooleanOperations::SetVisited(const Segment& segment)
 
 void CBooleanOperations::CreateNewPath(const std::vector<std::vector<int>>& adjMatr) noexcept
 {
-	int* loc_visited = new int[Locations.size()];
-	memset(loc_visited, false, Locations.size());
-	bool* seg_visited = new bool[Segments1.size()];
-	memset(seg_visited, false, Segments1.size());
+	int* loc_visited = nullptr;
+	bool* seg_visited = nullptr;
+	try
+	{
+		loc_visited = new int[Locations.size()];
+		memset(loc_visited, false, Locations.size());
+		seg_visited = new bool[Segments1.size()];
+		memset(seg_visited, false, Segments1.size());
+	}
+	catch (...)
+	{
+		// allocation failure is propagated (terminates in this noexcept function)
+		throw;
+	}
 
 	Result.StartFigure();
 	for (int i = 0; i < Locations.size(); i++)
@@ -2196,8 +2202,7 @@ void CBooleanOperations::DivideLocations()
 								  curve.Segment1.PolyClosed);
 			else
 			{
-				newCurve = curve.Segment1.Id == 1 ? curve.DivideAtTime(time)
-												  : curve.DivideAtTime(time);
+				newCurve = curve.DivideAtTime(time);
 				segment = newCurve.Segment1;
 				updateHandles = true;
 			}
@@ -2401,7 +2406,6 @@ CGraphicsPath CalcBooleanOperation(const CGraphicsPath& path1,
 
 			std::vector<CGraphicsPath> tmp_paths = p.GetSubPaths();
 			paths2[i] = tmp_paths[0];
-			skip_end2 = i + tmp_paths.size() - 1;
 			for (size_t k = 1; k < tmp_paths.size(); k++)
 				paths2.insert(paths2.begin() + i + k, tmp_paths[k]);
 		}

@@ -10,17 +10,17 @@ namespace SVG
 	{
 		for (const CRenderedObject* pObject : m_arObjects)
 		{
-			if (NULL != pObject && pObject->Draw(pRenderer, pFile, oMode, pStyles, pContexObject))
+			if (nullptr != pObject && pObject->Draw(pRenderer, pFile, oMode, pStyles, pContexObject))
 				return true;
 		}
 
 		return false;
 	}
 
-	TBounds CSwitch::GetBounds(SvgMatrix* pTransform) const
+	TBounds CSwitch::GetBounds(SvgMatrix*  /*pTransform*/) const
 	{
 		for (const CRenderedObject* pObject : m_arObjects)
-			if (NULL != pObject)
+			if (nullptr != pObject)
 				return pObject->GetBounds();
 
 		return TBounds{0., 0., 0., 0.};

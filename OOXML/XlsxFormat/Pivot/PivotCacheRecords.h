@@ -115,17 +115,17 @@ namespace OOX
 			{
 				m_bSpreadsheets = true;
 
-				m_pData = NULL;
+				m_pData = nullptr;
 				m_nDataLength = 0;
 			}
 			CPivotCacheRecordsFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 			{
 				m_bSpreadsheets = true;
 
-				m_pData = NULL;
+				m_pData = nullptr;
 				m_nDataLength = 0;
 
-				read( oRootPath, oPath );
+				CPivotCacheRecordsFile::read( oRootPath, oPath );
 			}
 			virtual ~CPivotCacheRecordsFile()
 			{
@@ -165,7 +165,7 @@ namespace OOX
 //---------------------------------------------------------------------
 			nullable<CPivotCacheRecords> m_oPivotCacheRecords;
 	//---------
-			BYTE *m_pData = NULL;
+			BYTE *m_pData = nullptr;
 			DWORD m_nDataLength = 0;
 		private:
 			CPath m_oReadPath;

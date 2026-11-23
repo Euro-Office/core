@@ -89,7 +89,7 @@ namespace OOX
 		CCellAnchor::~CCellAnchor()
 		{
 		}
-		void CCellAnchor::fromXML(XmlUtils::CXmlNode& node)
+		void CCellAnchor::fromXML(XmlUtils::CXmlNode&  /*node*/)
 		{
 			m_bShapeOle = false;
 			m_bShapeControl = false;
@@ -120,7 +120,7 @@ namespace OOX
 		}
 		void CCellAnchor::toXML(NSStringUtils::CStringBuilder& writer) const
 		{
-			if(isValid() == false)	return;
+			if(!isValid())	return;
 			if(m_bShapeOle)			return;
 
 			std::wstring sEnd;
@@ -249,12 +249,11 @@ namespace OOX
 		}
 		bool CCellAnchor::isValid() const
 		{
-			SimpleTypes::Spreadsheet::ECellAnchorType eAnchorType = m_oAnchorType.GetValue();
 			if(!((m_oFrom.IsInit() && m_oTo.IsInit()) || (m_oFrom.IsInit() && m_oExt.IsInit()) || (m_oPos.IsInit() && m_oExt.IsInit())))
 				return false;
-			if(false == m_oElement.is_init())
+			if(!m_oElement.is_init())
 				return false;
-			if(false == m_oElement->is_init())
+			if(!m_oElement->is_init())
 				return false;
 			return true;
 		}

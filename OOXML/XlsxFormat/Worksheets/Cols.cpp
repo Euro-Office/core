@@ -23,6 +23,8 @@
  *
  */
 
+#include <cmath>
+
 #include "Cols.h"
 #include "../XlsxFlat.h"
 
@@ -243,13 +245,13 @@ namespace OOX
 						double pixDpi = *ptWidth / 72.0 * 96.; if (pixDpi < 5) pixDpi = 7; // ~
 						double maxDigitSize = xlsx_flat->getMaxDigitSize().first;
 
-						m_oWidth->SetValue(((int)((pixDpi + 5) / maxDigitSize * 100. + 0.5)) / 100.);
+						m_oWidth->SetValue(std::lround((pixDpi + 5) / maxDigitSize * 100.) / 100.);
 
 						m_oCustomWidth.Init();
 						m_oCustomWidth->FromBool(true);
 					}
 
-				if (bAutoFit.IsInit() && (*bAutoFit == false))
+				if (bAutoFit.IsInit() && (!*bAutoFit))
 				{
 				}
 				else if (xlsx_flat)
@@ -257,7 +259,7 @@ namespace OOX
 					m_oBestFit.Init();
 					m_oBestFit->FromBool(true);
 
-					if (false == ptWidth.IsInit())
+					if (!ptWidth.IsInit())
 					{
 						m_oCustomWidth.Init();
 						m_oCustomWidth->FromBool(true);

@@ -148,13 +148,13 @@ namespace OOX
 			{
 				xlsx->m_pStyles = this;
 			}
-			read(oRootPath, oPath);
+			CStyles::read(oRootPath, oPath);
 		}
 		CStyles::~CStyles()
 		{
 			for (size_t i = 0; i < m_arrStyles2003.size(); i++)
 			{
-				if (m_arrStyles2003[i]) delete m_arrStyles2003[i]; m_arrStyles2003[i] = NULL;
+				if (m_arrStyles2003[i]) delete m_arrStyles2003[i]; m_arrStyles2003[i] = nullptr;
 			}
 			m_arrStyles2003.clear();
 			m_mapStyles2003.clear();
@@ -414,7 +414,7 @@ namespace OOX
 					{
 						i->m_oColor->m_oIndexed = GetClrIndex(m_oColors.get(), i->m_oColor->m_oRgb.get());
 					}
-					//finding registred theme clr
+					//finding registered theme clr
 					else if(i->m_oColor.IsInit() && i->m_oColor->m_oThemeColor.IsInit()
 					&& globalInfo->colors_palette.find(i->m_oColor->m_oThemeColor->GetValue()) != globalInfo->colors_palette.end())
 					{
@@ -748,7 +748,7 @@ namespace OOX
 			std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
 			if (_T("styleSheet") == sName)
 			{
-				fromXML(oReader);
+				CStyles::fromXML(oReader);
 			}
 		}
 		void CStyles::toXML(NSStringUtils::CStringBuilder& writer) const
@@ -916,7 +916,7 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 			//--------------------------------------------------------------------------------------------
 			for (size_t i = 0; i < m_arrStyles2003.size(); ++i)
 			{
-				if (m_arrStyles2003[i]->m_sId.IsInit() == false) continue;
+				if (!m_arrStyles2003[i]->m_sId.IsInit()) continue;
 
 				ConvertStyle2003(m_arrStyles2003[i]);
 			}
@@ -976,12 +976,12 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 					m_oFonts->m_arrItems.push_back(new CFont);
 				}
 
-				if (false == m_oFonts->m_arrItems.back()->m_oSz.IsInit())
+				if (!m_oFonts->m_arrItems.back()->m_oSz.IsInit())
 				{
 					m_oFonts->m_arrItems.back()->m_oSz.Init(); m_oFonts->m_arrItems.back()->m_oSz->m_oVal.Init();
 					m_oFonts->m_arrItems.back()->m_oSz->m_oVal->SetValue(10);
 				}
-				if (false == m_oFonts->m_arrItems.back()->m_oRFont.IsInit())
+				if (!m_oFonts->m_arrItems.back()->m_oRFont.IsInit())
 				{
 					m_oFonts->m_arrItems.back()->m_oRFont.Init();
 					m_oFonts->m_arrItems.back()->m_oRFont->m_sVal = L"Arial";
@@ -998,15 +998,14 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 				if (style2003->m_oNumFmt->m_oFormatCode.IsInit())
 				{
 					if (*style2003->m_oNumFmt->m_oFormatCode == L"General" ||
-						*style2003->m_oNumFmt->m_oFormatCode == L"@")
+						*style2003->m_oNumFmt->m_oFormatCode == L"@" ||
+						*style2003->m_oNumFmt->m_oFormatCode == L"General Number" ||
+						*style2003->m_oNumFmt->m_oFormatCode == L"0" ||
+						*style2003->m_oNumFmt->m_oFormatCode == L"0.0" ||
+						*style2003->m_oNumFmt->m_oFormatCode == L"Standard")
 						index = 0;
-					else if (*style2003->m_oNumFmt->m_oFormatCode == L"General Number")
-						index = 0;
-					else if (*style2003->m_oNumFmt->m_oFormatCode == L"0")
-						index = 0;
-					else if (*style2003->m_oNumFmt->m_oFormatCode == L"0.0")
-						index = 0;
-					else if (*style2003->m_oNumFmt->m_oFormatCode == L"0.00")
+					else if (*style2003->m_oNumFmt->m_oFormatCode == L"0.00" ||
+						*style2003->m_oNumFmt->m_oFormatCode == L"Fixed")
 						index = 2;
 					else if (*style2003->m_oNumFmt->m_oFormatCode == L"General Date")
 						index = 22;
@@ -1014,21 +1013,14 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 						index = 15;
 					else if (*style2003->m_oNumFmt->m_oFormatCode == L"Medium Date")
 						index = 14;
-					else if (*style2003->m_oNumFmt->m_oFormatCode == L"Short Date")
-						index = 16;
-					else if (std::wstring::npos !=
-						style2003->m_oNumFmt->m_oFormatCode->find(L"d/m/yy"))
+					else if (*style2003->m_oNumFmt->m_oFormatCode == L"Short Date" ||
+						std::wstring::npos != style2003->m_oNumFmt->m_oFormatCode->find(L"d/m/yy"))
 						index = 16;
 					else if (*style2003->m_oNumFmt->m_oFormatCode == L"Long Time")
 						index = 21;
-					else if (*style2003->m_oNumFmt->m_oFormatCode == L"Medium Time")
+					else if (*style2003->m_oNumFmt->m_oFormatCode == L"Medium Time" ||
+						*style2003->m_oNumFmt->m_oFormatCode == L"Short Time")
 						index = 20;
-					else if (*style2003->m_oNumFmt->m_oFormatCode == L"Short Time")
-						index = 20;
-					else if (*style2003->m_oNumFmt->m_oFormatCode == L"Fixed")
-						index = 2;
-					else if (*style2003->m_oNumFmt->m_oFormatCode == L"Standard")
-						index = 0;
 					else if (*style2003->m_oNumFmt->m_oFormatCode == L"Percent")
 						index = 10;
 					else if (*style2003->m_oNumFmt->m_oFormatCode == L"Scientific")
@@ -1095,23 +1087,23 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 		{
 			if (!style2003 || !parent) return;
 
-			if (false == style2003->m_oNumFmt.IsInit())
+			if (!style2003->m_oNumFmt.IsInit())
 			{
 				style2003->m_oNumFmt = parent->m_oNumFmt;
 			}
-			if (false == style2003->m_oBorder.IsInit())
+			if (!style2003->m_oBorder.IsInit())
 			{
 				style2003->m_oBorder = parent->m_oBorder;
 			}
-			if (false == style2003->m_oFill.IsInit())
+			if (!style2003->m_oFill.IsInit())
 			{
 				style2003->m_oFill = parent->m_oFill;
 			}
-			if (false == style2003->m_oFont.IsInit())
+			if (!style2003->m_oFont.IsInit())
 			{
 				style2003->m_oFont = parent->m_oFont;
 			}
-			if (false == style2003->m_oAligment.IsInit())
+			if (!style2003->m_oAligment.IsInit())
 			{
 				style2003->m_oAligment = parent->m_oAligment;
 			}
@@ -1128,7 +1120,7 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 		void CStyles::PrepareToWrite()
 		{
 			//fonts
-			if (false == m_oFonts.IsInit())
+			if (!m_oFonts.IsInit())
 			{
 				m_oFonts.Init();
 				OOX::Spreadsheet::CFont* pFont = new OOX::Spreadsheet::CFont();
@@ -1148,13 +1140,13 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 				pFont->m_oScheme->m_oFontScheme->SetValue(SimpleTypes::Spreadsheet::fontschemeMinor);
 				m_oFonts->m_arrItems.push_back(pFont);
 			}
-			if (false == m_oFonts->m_oCount.IsInit())
+			if (!m_oFonts->m_oCount.IsInit())
 			{
 				m_oFonts->m_oCount.Init();
 				m_oFonts->m_oCount->SetValue((unsigned int)m_oFonts->m_arrItems.size());
 			}
 			//fills
-			if (false == m_oFills.IsInit())
+			if (!m_oFills.IsInit())
 			{
 				m_oFills.Init();
 				OOX::Spreadsheet::CFill* pFill1 = new OOX::Spreadsheet::CFill();
@@ -1168,13 +1160,13 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 				m_oFills->m_arrItems.push_back(pFill1);
 				m_oFills->m_arrItems.push_back(pFill2);
 			}
-			if (false == m_oFills->m_oCount.IsInit())
+			if (!m_oFills->m_oCount.IsInit())
 			{
 				m_oFills->m_oCount.Init();
 				m_oFills->m_oCount->SetValue((unsigned int)m_oFills->m_arrItems.size());
 			}
 			//borders
-			if (false == m_oBorders.IsInit())
+			if (!m_oBorders.IsInit())
 			{
 				m_oBorders.Init();
 				OOX::Spreadsheet::CBorder* pBorder = new OOX::Spreadsheet::CBorder();
@@ -1185,7 +1177,7 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 				pBorder->m_oDiagonal.Init();
 				m_oBorders->m_arrItems.push_back(pBorder);
 			}
-			if (false == m_oBorders->m_oCount.IsInit())
+			if (!m_oBorders->m_oCount.IsInit())
 			{
 				m_oBorders->m_oCount.Init();
 				m_oBorders->m_oCount->SetValue((unsigned int)m_oBorders->m_arrItems.size());
@@ -1197,7 +1189,7 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 				{
 					CXfs* xfs = m_oCellXfs->m_arrItems[i];
 
-					if ((xfs) && (false == xfs->m_oXfId.IsInit()))
+					if ((xfs) && (!xfs->m_oXfId.IsInit()))
 					{
 						xfs->m_oXfId.Init();
 						xfs->m_oXfId->SetValue(0);
@@ -1206,7 +1198,7 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 				}
 			}
 			//cellStyles
-			if (false == m_oCellStyles.IsInit())
+			if (!m_oCellStyles.IsInit())
 				m_oCellStyles.Init();
 
 			if (m_oCellStyles->m_arrItems.empty())
@@ -1220,13 +1212,13 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 
 				m_oCellStyles->m_arrItems.push_back(pCellStyle);
 			}
-			if (false == m_oCellStyles->m_oCount.IsInit())
+			if (!m_oCellStyles->m_oCount.IsInit())
 			{
 				m_oCellStyles->m_oCount.Init();
 				m_oCellStyles->m_oCount->SetValue((unsigned int)m_oCellStyles->m_arrItems.size());
 			}
 			//cellStyleXfs
-			if (false == m_oCellStyleXfs.IsInit())
+			if (!m_oCellStyleXfs.IsInit())
 				m_oCellStyleXfs.Init();
 
 			if (0 == m_oCellStyleXfs->m_arrItems.size())
@@ -1242,29 +1234,29 @@ xmlns:x16r2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/02/main\">"
 				pXfs->m_oBorderId->SetValue(0);
 				m_oCellStyleXfs->m_arrItems.push_back(pXfs);
 			}
-			if (false == m_oCellStyleXfs->m_oCount.IsInit())
+			if (!m_oCellStyleXfs->m_oCount.IsInit())
 			{
 				m_oCellStyleXfs->m_oCount.Init();
 				m_oCellStyleXfs->m_oCount->SetValue((unsigned int)m_oCellStyleXfs->m_arrItems.size());
 			}
 			//dxfs
-			if (false == m_oDxfs.IsInit())
+			if (!m_oDxfs.IsInit())
 				m_oDxfs.Init();
-			if (false == m_oDxfs->m_oCount.IsInit())
+			if (!m_oDxfs->m_oCount.IsInit())
 			{
 				m_oDxfs->m_oCount.Init();
 				m_oDxfs->m_oCount->SetValue(0);
 			}
 			//tableStyles
-			if (false == m_oTableStyles.IsInit())
+			if (!m_oTableStyles.IsInit())
 			{
 				m_oTableStyles.Init();
 				m_oTableStyles->m_oCount.Init();
 				m_oTableStyles->m_oCount->SetValue(0);
 			}
-			if (false == m_oTableStyles->m_oDefaultPivotStyle.IsInit())
+			if (!m_oTableStyles->m_oDefaultPivotStyle.IsInit())
 				m_oTableStyles->m_oDefaultTableStyle = _T("TableStyleMedium2");
-			if (false == m_oTableStyles->m_oDefaultPivotStyle.IsInit())
+			if (!m_oTableStyles->m_oDefaultPivotStyle.IsInit())
 				m_oTableStyles->m_oDefaultPivotStyle = _T("PivotStyleLight16");
 		}
 		const OOX::FileType CStyles::type() const

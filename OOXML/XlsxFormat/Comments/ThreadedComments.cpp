@@ -103,7 +103,7 @@ namespace OOX
 			{
 				xlsx->m_pWorkbook->m_pPersonList = this;
 			}
-			read( oRootPath, oPath );
+			CPersonList::read( oRootPath, oPath );
 		}
 		CPersonList::~CPersonList()
 		{
@@ -115,7 +115,7 @@ namespace OOX
 			CPath oRootPath;
 			read(oRootPath, oPath);
 		}
-		void CPersonList::read(const CPath& oRootPath, const CPath& oPath)
+		void CPersonList::read(const CPath&  /*oRootPath*/, const CPath& oPath)
 		{
 			m_oReadPath = oPath;
 
@@ -130,7 +130,7 @@ namespace OOX
 			std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
 			if ( L"personList" == sName )
 			{
-				fromXML(oReader);
+				CPersonList::fromXML(oReader);
 			}
 		}
 		void CPersonList::fromXML(XmlUtils::CXmlNode& node)
@@ -443,7 +443,7 @@ namespace OOX
 			{
 				xlsx->m_arWorksheets.back()->m_pThreadedComments = this;
 			}
-			read( oRootPath, oPath );
+			CThreadedComments::read( oRootPath, oPath );
 		}
 		CThreadedComments::~CThreadedComments()
 		{
@@ -470,7 +470,7 @@ namespace OOX
 			std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
 			if ( L"ThreadedComments" == sName )
 			{
-				fromXML(oReader);
+				CThreadedComments::fromXML(oReader);
 			}
 		}
 		void CThreadedComments::fromXML(XmlUtils::CXmlNode& node)

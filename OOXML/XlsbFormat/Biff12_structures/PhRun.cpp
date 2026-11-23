@@ -39,7 +39,7 @@ BiffStructurePtr PhRun::clone()
 
 void PhRun::load(XLS::CFRecord& record)
 {
-    _UINT16 flags;
+    _UINT16 flags = 0;
     record >> ichFirst >> ichMom >> cchMom >> ifnt >> flags;
 
     phType  = GETBITS(flags, 0, 1);

@@ -36,7 +36,7 @@ namespace XLSB
 
     PRFilter::PRFilter(XLS::CFRecord& record)
     {
-        load(record);
+        PRFilter::load(record);
     }
 
     PRFilter::~PRFilter()
@@ -50,8 +50,8 @@ namespace XLSB
 
     void PRFilter::load(XLS::CFRecord& record)
     {
-        _UINT16 flags;
-        BYTE    flags1;
+        _UINT16 flags = 0;
+        BYTE    flags1 = 0;
         record >> isxvd >> cItems >> flags >> flags1;
 
         itmtypeData     = GETBIT(flags, 0);
