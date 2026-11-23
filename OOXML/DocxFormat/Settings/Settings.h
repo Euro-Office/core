@@ -796,7 +796,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CEdnDocProps)
-			CEdnDocProps(OOX::Document *pMain = NULL);
+			CEdnDocProps(OOX::Document *pMain = nullptr);
 			virtual ~CEdnDocProps();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -820,7 +820,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CFtnDocProps)
-			CFtnDocProps(OOX::Document *pMain = NULL);
+			CFtnDocProps(OOX::Document *pMain = nullptr);
 			virtual ~CFtnDocProps();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);

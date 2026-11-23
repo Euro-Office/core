@@ -51,7 +51,7 @@ namespace OOX
 		class CHyperlink : public WritingElementWithChilds<>
 		{
 		public:
-			CHyperlink(OOX::Document *pMain = NULL);			
+			CHyperlink(OOX::Document *pMain = nullptr);			
 			virtual ~CHyperlink();
 
 			const CHyperlink &operator =(const XmlUtils::CXmlNode& oNode);
@@ -85,7 +85,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CAltChunkPr)
 
-			CAltChunkPr(OOX::Document *pMain = NULL);
+			CAltChunkPr(OOX::Document *pMain = nullptr);
 			virtual ~CAltChunkPr();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);

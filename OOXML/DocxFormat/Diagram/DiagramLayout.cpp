@@ -123,21 +123,21 @@ namespace OOX
 	CDiagramLayout::CDiagramLayout(OOX::Document* pMain, bool bDocument) : OOX::IFileContainer(pMain), OOX::FileGlobalEnumerated(pMain)
 	{
 		m_bDocument = bDocument;
-		m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+		m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
 	}
 	CDiagramLayout::CDiagramLayout(OOX::Document* pMain, const CPath& uri) : OOX::IFileContainer(pMain), OOX::FileGlobalEnumerated(pMain)
 	{
-		m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-		m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+		m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+		m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
 
-		read(uri.GetDirectory(), uri);
+		CDiagramLayout::read(uri.GetDirectory(), uri);
 	}
 	CDiagramLayout::CDiagramLayout(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::IFileContainer(pMain), OOX::FileGlobalEnumerated(pMain)
 	{
-		m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-		m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+		m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+		m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
 
-		read(oRootPath, oPath);
+		CDiagramLayout::read(oRootPath, oPath);
 	}
 	CDiagramLayout::~CDiagramLayout()
 	{
@@ -614,37 +614,37 @@ namespace OOX
 	{
 		pWriter->StartNode(L"dgm:forEach");
 			pWriter->WriteAttribute(L"name", m_sName);
-			if (false == m_arAxis.empty())
+			if (!m_arAxis.empty())
 			{
 				std::wstring sAxis;
 				for (size_t i = 0; i < m_arAxis.size(); ++i) sAxis += L" " + m_arAxis[i].ToString();
 				pWriter->WriteAttribute(L"axis", sAxis.substr(1));
 			}
-			if (false == m_arPtType.empty())
+			if (!m_arPtType.empty())
 			{
 				std::wstring sPtType;
 				for (size_t i = 0; i < m_arPtType.size(); ++i) sPtType += L" " + m_arPtType[i].ToString();
 				pWriter->WriteAttribute(L"ptType", sPtType.substr(1));
 			}
-			if (false == m_arSt.empty())
+			if (!m_arSt.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arSt.size(); ++i) sRes += L" " + std::to_wstring(m_arSt[i]);
 				pWriter->WriteAttribute(L"st", sRes.substr(1));
 			}
-			if (false == m_arCnt.empty())
+			if (!m_arCnt.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arCnt.size(); ++i) sRes += L" " + std::to_wstring(m_arCnt[i]);
 				pWriter->WriteAttribute(L"cnt", sRes.substr(1));
 			}
-			if (false == m_arStep.empty())
+			if (!m_arStep.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arStep.size(); ++i) sRes += L" " + std::to_wstring(m_arStep[i]);
 				pWriter->WriteAttribute(L"step", sRes.substr(1));
 			}
-			if (false == m_arHideLastTrans.empty())
+			if (!m_arHideLastTrans.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arHideLastTrans.size(); ++i) sRes += (m_arHideLastTrans[i] ? L" 1" : L" 0");
@@ -815,25 +815,25 @@ namespace OOX
 	{
 		pWriter->StartNode(L"dgm:if");
 			pWriter->WriteAttribute(L"name", m_sName);
-			if (false == m_arAxis.empty())
+			if (!m_arAxis.empty())
 			{
 				std::wstring sAxis;
 				for (size_t i = 0; i < m_arAxis.size(); ++i) sAxis += L" " + m_arAxis[i].ToString();
 				pWriter->WriteAttribute(L"axis", sAxis.substr(1));
 			}
-			if (false == m_arPtType.empty())
+			if (!m_arPtType.empty())
 			{
 				std::wstring sPtType;
 				for (size_t i = 0; i < m_arPtType.size(); ++i) sPtType += L" " + m_arPtType[i].ToString();
 				pWriter->WriteAttribute(L"ptType", sPtType.substr(1));
 			}
-			if (false == m_arSt.empty())
+			if (!m_arSt.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arSt.size(); ++i) sRes += L" " + std::to_wstring(m_arSt[i]);
 				pWriter->WriteAttribute(L"st", sRes.substr(1));
 			}
-			if (false == m_arCnt.empty())
+			if (!m_arCnt.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arCnt.size(); ++i) sRes += L" " + std::to_wstring(m_arCnt[i]);
@@ -841,13 +841,13 @@ namespace OOX
 			}
 			if (m_oFunc.IsInit()) pWriter->WriteAttribute(L"func", m_oFunc->ToString());
 			pWriter->WriteAttribute(L"arg", m_sArg);
-			if (false == m_arStep.empty())
+			if (!m_arStep.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arStep.size(); ++i) sRes += L" " + std::to_wstring(m_arStep[i]);
 				pWriter->WriteAttribute(L"step", sRes.substr(1));
 			}
-			if (false == m_arHideLastTrans.empty())
+			if (!m_arHideLastTrans.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arHideLastTrans.size(); ++i) sRes += (m_arHideLastTrans[i] ? L" 1" : L" 0");
@@ -1853,37 +1853,37 @@ namespace OOX
 	void Diagram::CPresOf::toXmlWriter(NSBinPptxRW::CXmlWriter* pWriter) const
 	{
 		pWriter->StartNode(L"dgm:presOf");
-			if (false == m_arAxis.empty())
+			if (!m_arAxis.empty())
 			{
 				std::wstring sAxis;
 				for (size_t i = 0; i < m_arAxis.size(); ++i) sAxis += L" " + m_arAxis[i].ToString();
 				pWriter->WriteAttribute(L"axis", sAxis.substr(1));
 			}
-			if (false == m_arPtType.empty())
+			if (!m_arPtType.empty())
 			{
 				std::wstring sPtType;
 				for (size_t i = 0; i < m_arPtType.size(); ++i) sPtType += L" " + m_arPtType[i].ToString();
 				pWriter->WriteAttribute(L"ptType", sPtType.substr(1));
 			}
-			if (false == m_arSt.empty())
+			if (!m_arSt.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arSt.size(); ++i) sRes += L" " + std::to_wstring(m_arSt[i]);
 				pWriter->WriteAttribute(L"st", sRes.substr(1));
 			}
-			if (false == m_arHideLastTrans.empty())
+			if (!m_arHideLastTrans.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arHideLastTrans.size(); ++i) sRes += (m_arHideLastTrans[i] ? L" 1" : L" 0");
 				pWriter->WriteAttribute(L"hideLastTrans", sRes.substr(1));
 			}
-			if (false == m_arCnt.empty())
+			if (!m_arCnt.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arCnt.size(); ++i) sRes += L" " + std::to_wstring(m_arCnt[i]);
 				pWriter->WriteAttribute(L"cnt", sRes.substr(1));
 			}
-			if (false == m_arStep.empty())
+			if (!m_arStep.empty())
 			{
 				std::wstring sRes;
 				for (size_t i = 0; i < m_arStep.size(); ++i) sRes += L" " + std::to_wstring(m_arStep[i]);

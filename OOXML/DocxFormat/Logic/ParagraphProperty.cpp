@@ -244,14 +244,14 @@ namespace OOX
 			m_pParPr.Init();
 			m_pParPr->m_bPPrChange = true;
 
-			fromXML( oNode );
+			CPPrChange::fromXML( oNode );
 		}
 		CPPrChange::CPPrChange(XmlUtils::CXmlLiteReader& oReader)
 		{
 			m_pParPr.Init();
 			m_pParPr->m_bPPrChange = true;
 
-			fromXML( oReader );
+			CPPrChange::fromXML( oReader );
 		}
 		const CPPrChange& CPPrChange::operator =(const XmlUtils::CXmlNode &oNode)
 		{
@@ -362,11 +362,11 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrTabs.size(); nIndex++ )
 			{
 				if ( m_arrTabs[nIndex] ) delete m_arrTabs[nIndex];
-				m_arrTabs[nIndex] = NULL;
+				m_arrTabs[nIndex] = nullptr;
 			}
 			m_arrTabs.clear();
 		}
-		CTabs::CTabs(const CTabs& oSrc)
+		CTabs::CTabs(const CTabs& oSrc) // NOLINT(bugprone-copy-constructor-init): base init would copy m_pMainDocument, changing behaviour
 		{
 			*this = oSrc;
 		}
@@ -445,15 +445,15 @@ namespace OOX
 		{
 			m_bPPrChange = false;
 		}
-		CParagraphProperty::CParagraphProperty(XmlUtils::CXmlNode& oNode) : WritingElement(NULL)
+		CParagraphProperty::CParagraphProperty(XmlUtils::CXmlNode& oNode) : WritingElement(nullptr)
 		{
 			m_bPPrChange = false;
-			fromXML( oNode );
+			CParagraphProperty::fromXML( oNode );
 		}
-		CParagraphProperty::CParagraphProperty(XmlUtils::CXmlLiteReader& oReader) : WritingElement(NULL)
+		CParagraphProperty::CParagraphProperty(XmlUtils::CXmlLiteReader& oReader) : WritingElement(nullptr)
 		{
 			m_bPPrChange = false;
-			fromXML( oReader );
+			CParagraphProperty::fromXML( oReader );
 		}
 		CParagraphProperty::~CParagraphProperty() {}
 		const CParagraphProperty& CParagraphProperty::operator =(const XmlUtils::CXmlNode &oNode)
@@ -639,7 +639,7 @@ namespace OOX
 					if (pSectPr->m_bEmpty)
 					{
 						delete pSectPr;
-						pSectPr = NULL;
+						pSectPr = nullptr;
 					}
 					else
 					{

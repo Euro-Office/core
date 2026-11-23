@@ -34,7 +34,7 @@
 
 namespace NSShapeImageGen
 {
-    static bool _CopyFile(std::wstring strExists, std::wstring strNew, LPVOID lpFunc, LPVOID lpData)
+    static bool _CopyFile(std::wstring strExists, std::wstring strNew, LPVOID  /*lpFunc*/, LPVOID  /*lpData*/)
 	{
 		return NSFile::CFileBinary::Copy(strExists, strNew);
 	}
@@ -176,11 +176,11 @@ namespace NSShapeImageGen
 	protected:
 		inline void CopyFile(std::wstring& strFileSrc, std::wstring& strFileDst)
 		{
-			_CopyFile(strFileSrc, strFileDst, NULL, NULL);
+			_CopyFile(strFileSrc, strFileDst, nullptr, nullptr);
 		}
 
-		void SaveImage(const std::wstring& strFileSrc, CMediaInfo& oInfo, LONG __width, LONG __height);
-		void SaveImage(CBgraFrame& oBgraFrame, CMediaInfo& oInfo, LONG __width, LONG __height);
+		void SaveImage(const std::wstring& strFileSrc, CMediaInfo& oInfo, LONG nWidth, LONG nHeight);
+		void SaveImage(CBgraFrame& oBgraFrame, CMediaInfo& oInfo, LONG nWidth, LONG nHeight);
 		CMediaInfo GenerateImageID(CBgraFrame& punkData, double dWidth, double dHeight);
 		CMediaInfo GenerateImageID(std::wstring strFileName, const std::wstring & strUrl, double dWidth, double dHeight, const std::wstring& strAdditionalFile, int typeAdditionalFile);
 		CMediaInfo GenerateMediaID(const std::wstring& strFileName, const std::wstring & strUrl);

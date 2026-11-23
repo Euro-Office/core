@@ -3597,8 +3597,8 @@ std::wstring CDrawingConverter::GetDrawingMainProps(XmlUtils::CXmlNode& oNode, P
 	else
 	{
         pFind = oCssStyles.m_mapSettings.find(L"margin-right");
-		if (oCssStyles.m_mapSettings.end() != oCssStyles.m_mapSettings.end())
-			width = (LONG)(dKoefSize * parserPoint.FromString(pFind->second) + 0.5) - left;
+		if (oCssStyles.m_mapSettings.end() != pFind)
+			width = (std::max)(0L, (LONG)(dKoefSize * parserPoint.FromString(pFind->second) + 0.5) - left);
 	}
 
     pFind = oCssStyles.m_mapSettings.find(L"height");
@@ -3609,8 +3609,8 @@ std::wstring CDrawingConverter::GetDrawingMainProps(XmlUtils::CXmlNode& oNode, P
 	else
 	{
         pFind = oCssStyles.m_mapSettings.find(L"margin-bottom");
-		if (oCssStyles.m_mapSettings.end() != oCssStyles.m_mapSettings.end())
-			height = (LONG)(dKoefSize * parserPoint.FromString(pFind->second) + 0.5) - top;
+		if (oCssStyles.m_mapSettings.end() != pFind)
+			height = (std::max)(0L, (LONG)(dKoefSize * parserPoint.FromString(pFind->second) + 0.5) - top);
 	}
 
 	unsigned long margL = (unsigned long)(9 * dKoef + 0.5);

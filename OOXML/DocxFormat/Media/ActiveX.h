@@ -336,8 +336,8 @@ namespace OOX
 		}
 		ActiveX_xml(OOX::Document *pMain, const CPath& oRootPath, const CPath& filename) : File(pMain), OOX::IFileContainer(pMain)
 		{
-			m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-			read( oRootPath, filename );
+			m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+			ActiveX_xml::read( oRootPath, filename );
 		}
 		virtual ~ActiveX_xml();
 		virtual void ClearItems();
@@ -390,7 +390,7 @@ namespace OOX
 		}
 		ActiveX_bin(OOX::Document *pMain, const OOX::CPath& filename) : Media (pMain)
 		{
-			read(filename);
+			ActiveX_bin::read(filename);
 		}
 		virtual void read(const CPath& filename)
 		{

@@ -6,7 +6,7 @@
 namespace NSJSBase
 {
 	std::string g_logger_file = NSSystemUtils::GetEnvVariableA(L"js_speed");
-	bool g_logger_enabled = g_logger_file.empty() ? false : true;
+	bool g_logger_enabled = !g_logger_file.empty();
 	unsigned long g_logger_time = 0;
 
 	void LOGGER_START_FUNC()
@@ -27,8 +27,11 @@ namespace NSJSBase
 		else
 		{
 			FILE* f = fopen(g_logger_file.c_str(), "a+");
-			fprintf(f, "%s: %d\n", details, (int)(dwCur - g_logger_time));
-			fclose(f);
+			if (f != nullptr)
+			{
+				fprintf(f, "%s: %d\n", details, (int)(dwCur - g_logger_time));
+				fclose(f);
+			}
 		}
 		g_logger_time = dwCur;
 	}

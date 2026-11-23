@@ -44,7 +44,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CStrokeChild)
-			CStrokeChild(OOX::Document *pMain = NULL);
+			CStrokeChild(OOX::Document *pMain = nullptr);
 			virtual ~CStrokeChild();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -97,7 +97,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CCallout)
-			CCallout(OOX::Document *pMain = NULL);
+			CCallout(OOX::Document *pMain = nullptr);
 			virtual ~CCallout();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -133,7 +133,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CClipPath)
-			CClipPath(OOX::Document *pMain = NULL);
+			CClipPath(OOX::Document *pMain = nullptr);
 			virtual ~CClipPath();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -183,7 +183,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CColorMru)
-			CColorMru(OOX::Document *pMain = NULL);
+			CColorMru(OOX::Document *pMain = nullptr);
 			virtual ~CColorMru();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -207,7 +207,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CComplex)
-			CComplex(OOX::Document *pMain = NULL);
+			CComplex(OOX::Document *pMain = nullptr);
 			virtual ~CComplex();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -280,7 +280,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CDiagram)
-			CDiagram(OOX::Document *pMain = NULL);
+			CDiagram(OOX::Document *pMain = nullptr);
 			virtual ~CDiagram();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -338,7 +338,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CEquationXml)
-			CEquationXml(OOX::Document *pMain = NULL);
+			CEquationXml(OOX::Document *pMain = nullptr);
 			virtual ~CEquationXml();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -361,7 +361,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CExtrusion)
-			CExtrusion(OOX::Document *pMain = NULL);
+			CExtrusion(OOX::Document *pMain = nullptr);
 			virtual ~CExtrusion();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -436,7 +436,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CFill)
-			CFill(OOX::Document *pMain = NULL);
+			CFill(OOX::Document *pMain = nullptr);
 			virtual ~CFill();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -484,7 +484,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CInk)
-			CInk(OOX::Document *pMain = NULL);
+			CInk(OOX::Document *pMain = nullptr);
 			virtual ~CInk();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -529,7 +529,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CLock)
-			CLock(OOX::Document *pMain = NULL);
+			CLock(OOX::Document *pMain = nullptr);
 			virtual ~CLock();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -583,7 +583,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(COLEObject)
-			COLEObject(OOX::Document *pMain = NULL);
+			COLEObject(OOX::Document *pMain = nullptr);
 			virtual ~COLEObject();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -663,7 +663,7 @@ namespace OOX
 			nullable<std::wstring>			m_sIdRef;
 			nullable<SimpleTypes::CRType>	m_oType;
 			
-			// Childs
+			// Children
 			std::vector<OOX::VmlOffice::CProxy*>	m_arrProxy;
 		};
 
@@ -690,7 +690,7 @@ namespace OOX
 			// Attributes
 			nullable<SimpleTypes::CExt>				m_oExt;
 			
-			// Childs
+			// Children
 			std::vector<OOX::VmlOffice::CEntry*>	m_arrEntry;
 		};
 
@@ -717,7 +717,7 @@ namespace OOX
 			// Attributes
 			nullable<SimpleTypes::CExt>			m_oExt;
 			
-			// Childs
+			// Children
 			std::vector<OOX::VmlOffice::CR*>	m_arrR;
 		};
 
@@ -728,7 +728,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CShapeLayout)
-			CShapeLayout(OOX::Document *pMain = NULL);
+			CShapeLayout(OOX::Document *pMain = nullptr);
 			virtual ~CShapeLayout();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -744,7 +744,7 @@ namespace OOX
 			// Attributes
 			nullable<SimpleTypes::CExt>				m_oExt;
 			
-			// Childs
+			// Children
 			nullable<OOX::VmlOffice::CIdMap>		m_oIdMap;
 			nullable<OOX::VmlOffice::CRegroupTable>	m_oRegroupTable;
 			nullable<OOX::VmlOffice::CRules>		m_oRules;
@@ -757,7 +757,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSignatureLine)
-			CSignatureLine(OOX::Document *pMain = NULL);
+			CSignatureLine(OOX::Document *pMain = nullptr);
 			virtual ~CSignatureLine();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -797,7 +797,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSkew)
-			CSkew(OOX::Document *pMain = NULL);
+			CSkew(OOX::Document *pMain = nullptr);
 			virtual ~CSkew();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
