@@ -8,25 +8,25 @@ namespace NSNativeBuilderEmbed
 {
 #define CURRENTWRAPPER CBuilderEmbed
 
-	FUNCTION_WRAPPER_V8_2(_OpenFile, OpenFile)
-	FUNCTION_WRAPPER_V8_1(_CreateFile, CreateFile)
-	FUNCTION_WRAPPER_V8_1(_SetTmpFolder, SetTmpFolder)
-	FUNCTION_WRAPPER_V8_3(_SaveFile, SaveFile)
-	FUNCTION_WRAPPER_V8_0(_CloseFile, CloseFile)
-	FUNCTION_WRAPPER_V8_2(_OpenTmpFile, OpenTmpFile)
+	FUNCTION_WRAPPER_V8_2(OpenFileWrapper, OpenFile)
+	FUNCTION_WRAPPER_V8_1(CreateFileWrapper, CreateFile)
+	FUNCTION_WRAPPER_V8_1(SetTmpFolderWrapper, SetTmpFolder)
+	FUNCTION_WRAPPER_V8_3(SaveFileWrapper, SaveFile)
+	FUNCTION_WRAPPER_V8_0(CloseFileWrapper, CloseFile)
+	FUNCTION_WRAPPER_V8_2(OpenTmpFileWrapper, OpenTmpFile)
 
-	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
+	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);
 		result->SetInternalFieldCount(1);
 
-		NSV8Objects::Template_Set(result, "OpenFile",	_OpenFile);
-		NSV8Objects::Template_Set(result, "CreateFile",	_CreateFile);
-		NSV8Objects::Template_Set(result, "SetTmpFolder",	_SetTmpFolder);
-		NSV8Objects::Template_Set(result, "SaveFile",	_SaveFile);
-		NSV8Objects::Template_Set(result, "CloseFile",	_CloseFile);
-		NSV8Objects::Template_Set(result, "OpenTmpFile",	_OpenTmpFile);
+		NSV8Objects::Template_Set(result, "OpenFile", OpenFileWrapper);
+		NSV8Objects::Template_Set(result, "CreateFile", CreateFileWrapper);
+		NSV8Objects::Template_Set(result, "SetTmpFolder", SetTmpFolderWrapper);
+		NSV8Objects::Template_Set(result, "SaveFile", SaveFileWrapper);
+		NSV8Objects::Template_Set(result, "CloseFile", CloseFileWrapper);
+		NSV8Objects::Template_Set(result, "OpenTmpFile", OpenTmpFileWrapper);
 
 		return handle_scope.Escape(result);
 	}

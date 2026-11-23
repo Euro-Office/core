@@ -87,13 +87,13 @@ namespace PdfWriter
 		static CFontFileTrueType *LoadFromFile(const std::wstring& wsFileName, unsigned int unIndex);
 		~CFontFileTrueType();
 
-		// Записываем TrueTypeFont File, заполняя недостающие таблицы и корректируя 
-		// различные ошибки. Если задан парметр <sName>, в шрифте переписываем таблицу
-		// 'name'. Если задан парамтре <pCodeToGID>, тогда в шрифте переписываем
-		// таблицу 'cmap'.
-		void WriteTTF(CStream* pOutputStream, char *sName = NULL, unsigned short *pCodeToGID = NULL, unsigned int unCodesCount = 0, unsigned char *pUseGlyfs = NULL, long lGlyfsCount = 0);
-		void WriteOTF(CStream* pOutputStream, char *sName = NULL, unsigned short *pCodeToGID = NULL);
-		void WriteCIDFontType0C(CStream* pOutputStream, unsigned short* pCodeToGID = NULL, unsigned int unCodesCount = 0);
+		// Write a TrueTypeFont File, filling in the missing tables and correcting
+		// various errors. If the <sName> parameter is specified, we rewrite the table in the font
+		// 'name'. If the <pCodeToGID> parameter is specified, then we rewrite in the font
+		// table 'cmap'.
+		void WriteTTF(CStream* pOutputStream, char *sName = nullptr, unsigned short *pCodeToGID = nullptr, unsigned int unCodesCount = 0, unsigned char *pUseGlyfs = nullptr, long lGlyfsCount = 0);
+		void WriteOTF(CStream* pOutputStream, char *sName = nullptr, unsigned short *pCodeToGID = nullptr);
+		void WriteCIDFontType0C(CStream* pOutputStream, unsigned short* pCodeToGID = nullptr, unsigned int unCodesCount = 0);
 
 		int  GetAscent();
 		int  GetDescent();

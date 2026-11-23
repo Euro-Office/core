@@ -6,7 +6,7 @@ CCtrlSectionDef::CCtrlSectionDef(const HWP_STRING& sCtrlID)
 	: CCtrl(sCtrlID), m_pPage(nullptr)
 {}
 
-CCtrlSectionDef::CCtrlSectionDef(const HWP_STRING& sCtrlID, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CCtrlSectionDef::CCtrlSectionDef(const HWP_STRING& sCtrlID, int /*nSize*/, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 	: CCtrl(sCtrlID), m_pPage(nullptr)
 {
 	int nAttr;
@@ -195,7 +195,7 @@ CCtrlSectionDef::CCtrlSectionDef(const HWP_STRING& sCtrlID, CXMLReader& oReader,
 			m_arBorderFills.push_back(new CPageBorderFill(oReader, eType));
 		else if (GetNodeName(ENode::MasterPage, eType) == sNodeName)
 		{
-			//TODO:: добавить реализацию
+			//TODO::add implementation
 		}
 	}
 	END_WHILE

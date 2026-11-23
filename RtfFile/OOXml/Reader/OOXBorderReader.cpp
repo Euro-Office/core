@@ -28,16 +28,16 @@
 OOXBorderReader::OOXBorderReader(ComplexTypes::Word::CBorder * ooxBorder)
 {
 	m_ooxBorder		= ooxBorder;
-	m_ooxPageBorder = NULL;
+	m_ooxPageBorder = nullptr;
 }
 OOXBorderReader::OOXBorderReader(ComplexTypes::Word::CPageBorder * ooxBorder)
 {
 	m_ooxPageBorder = ooxBorder;
-	m_ooxBorder		= NULL;
+	m_ooxBorder		= nullptr;
 }
 bool OOXBorderReader::Parse( ReaderParameter oParam, RtfBorder& oOutputBorder )
 {
-	if (m_ooxBorder == NULL && m_ooxPageBorder == NULL) return false;
+	if (m_ooxBorder == nullptr && m_ooxPageBorder == nullptr) return false;
 
 	int type_border = -1;
 	if (m_ooxPageBorder)
@@ -66,7 +66,7 @@ bool OOXBorderReader::Parse( ReaderParameter oParam, RtfBorder& oOutputBorder )
 			type_border = m_ooxBorder->m_oVal->GetValue();
 		}
 		//if (m_ooxBorder->m_oVal->GetValue() == SimpleTypes::bordervalueNone ) return true;
-		//		// это отсутствие свойства а не бордера (Nil
+		//		// this is the absence of a property and not a border (Nil
 
 		if ((m_ooxBorder->m_oColor.IsInit()) && (m_ooxBorder->m_oColor->GetValue() == SimpleTypes::hexcolorRGB))
 		{
@@ -192,7 +192,7 @@ bool OOXBorderReader::Parse( ReaderParameter oParam, RtfBorder& oOutputBorder )
 		//case SimpleTypes::bordervalueMoons                 : return L"moons";
 		//case SimpleTypes::bordervalueMosaic                : return L"mosaic";
 		//case SimpleTypes::bordervalueMusicNotes            : return L"musicNotes";
-	case SimpleTypes::bordervalueNil                   : oOutputBorder.m_eType = RtfBorder::bt_brdrnone;		break;
+	case SimpleTypes::bordervalueNil                   :
 	case SimpleTypes::bordervalueNone                  : oOutputBorder.m_eType = RtfBorder::bt_brdrnone;		break;
 		//case SimpleTypes::bordervalueNorthwest             : return L"northwest";
 	case SimpleTypes::bordervalueOutset                : oOutputBorder.m_eType = RtfBorder::bt_brdroutset;		break;
@@ -281,6 +281,7 @@ bool OOXBorderReader::Parse( ReaderParameter oParam, RtfBorder& oOutputBorder )
 		//oOutputBorder.m_eType = RtfBorder::bt_brdrsh;
 		//oOutputBorder.m_eType = RtfBorder::bt_brdrhair;
 		//default												: oOutputBorder.m_eType = RtfBorder::bt_brdrs;			break;
+		default												: break;
 
 	}
 

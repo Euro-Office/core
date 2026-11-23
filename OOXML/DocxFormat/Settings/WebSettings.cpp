@@ -68,7 +68,7 @@ namespace ComplexTypes
 
 namespace OOX
 {
-	// TO DO: Доделать данный класс
+	// TO DO: Complete this class
 
 	//--------------------------------------------------------------------------------
 	// CWebSettings 17.11.15
@@ -79,7 +79,7 @@ namespace OOX
 	}
 	CWebSettings::CWebSettings(OOX::Document *pMain, const CPath& oPath) : OOX::File(pMain)
 	{
-		read( oPath );
+		CWebSettings::read( oPath );
 	}
 	CWebSettings::~CWebSettings()
 	{

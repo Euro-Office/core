@@ -29,7 +29,7 @@
 
 #include "../../Common/ComplexTypes.h"
 
-// 2. Класс CRuby   17.3.3.25
+// 2. CRuby class 17.3.3.25
 
 namespace PPTX
 {
@@ -56,7 +56,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CBr)
-			CBr(OOX::Document *pMain = NULL);
+			CBr(OOX::Document *pMain = nullptr);
 			virtual ~CBr();
 
 			virtual void fromXML(XmlUtils::CXmlNode &oNode);
@@ -80,7 +80,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CContentPart)
-			CContentPart(OOX::Document *pMain = NULL);
+			CContentPart(OOX::Document *pMain = nullptr);
 			virtual ~CContentPart();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -105,7 +105,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CCr)
-			CCr(OOX::Document *pMain = NULL);
+			CCr(OOX::Document *pMain = nullptr);
 			virtual ~CCr();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -122,7 +122,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CDayLong)
-			CDayLong(OOX::Document *pMain = NULL);
+			CDayLong(OOX::Document *pMain = nullptr);
 			virtual ~CDayLong();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -139,7 +139,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CDayShort)
-			CDayShort(OOX::Document *pMain = NULL);
+			CDayShort(OOX::Document *pMain = nullptr);
 			virtual ~CDayShort();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -156,7 +156,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CDelText)
-			CDelText(OOX::Document *pMain = NULL);
+			CDelText(OOX::Document *pMain = nullptr);
 			virtual ~CDelText();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -180,7 +180,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CLastRenderedPageBreak)
-			CLastRenderedPageBreak(OOX::Document *pMain = NULL);
+			CLastRenderedPageBreak(OOX::Document *pMain = nullptr);
 			virtual ~CLastRenderedPageBreak();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -197,7 +197,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CMonthLong)
-			CMonthLong(OOX::Document *pMain = NULL);
+			CMonthLong(OOX::Document *pMain = nullptr);
 			virtual ~CMonthLong();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -214,7 +214,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CMonthShort)
-			CMonthShort(OOX::Document *pMain = NULL);
+			CMonthShort(OOX::Document *pMain = nullptr);
 			virtual ~CMonthShort();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -231,7 +231,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CNoBreakHyphen)
-			CNoBreakHyphen(OOX::Document *pMain = NULL);
+			CNoBreakHyphen(OOX::Document *pMain = nullptr);
 			virtual ~CNoBreakHyphen();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -248,7 +248,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CPgNum)
-			CPgNum(OOX::Document *pMain = NULL);
+			CPgNum(OOX::Document *pMain = nullptr);
 			virtual ~CPgNum();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -265,7 +265,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CPTab)
-			CPTab(OOX::Document *pMain = NULL);
+			CPTab(OOX::Document *pMain = nullptr);
 			virtual ~CPTab();
 			
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -290,7 +290,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CRuby)
-			CRuby(OOX::Document *pMain = NULL);
+			CRuby(OOX::Document *pMain = nullptr);
 			virtual ~CRuby();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -307,7 +307,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSoftHyphen)
-			CSoftHyphen(OOX::Document *pMain = NULL);
+			CSoftHyphen(OOX::Document *pMain = nullptr);
 			virtual ~CSoftHyphen();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -324,7 +324,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSym)
-			CSym(OOX::Document *pMain = NULL);
+			CSym(OOX::Document *pMain = nullptr);
 			virtual ~CSym();
 			
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -347,7 +347,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CText)
-			CText(OOX::Document *pMain = NULL);
+			CText(OOX::Document *pMain = nullptr);
 			virtual ~CText();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -371,7 +371,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CTab)
-			CTab(OOX::Document *pMain = NULL);
+			CTab(OOX::Document *pMain = nullptr);
 			virtual ~CTab();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -388,7 +388,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CYearLong)
-			CYearLong(OOX::Document *pMain = NULL);
+			CYearLong(OOX::Document *pMain = nullptr);
 			virtual ~CYearLong();
 			
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -405,7 +405,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CYearShort)
-			CYearShort(OOX::Document *pMain = NULL);
+			CYearShort(OOX::Document *pMain = nullptr);
 			virtual ~CYearShort();
 			
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -422,7 +422,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CAnnotationRef)
-			CAnnotationRef(OOX::Document *pMain = NULL);
+			CAnnotationRef(OOX::Document *pMain = nullptr);
 			virtual ~CAnnotationRef();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -439,7 +439,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CCommentReference)
-			CCommentReference(OOX::Document *pMain = NULL);
+			CCommentReference(OOX::Document *pMain = nullptr);
 			virtual ~CCommentReference();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -461,7 +461,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CContinuationSeparator)
-			CContinuationSeparator(OOX::Document *pMain = NULL);
+			CContinuationSeparator(OOX::Document *pMain = nullptr);
 			virtual ~CContinuationSeparator();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -478,7 +478,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CDelInstrText)
-			CDelInstrText(OOX::Document *pMain = NULL);
+			CDelInstrText(OOX::Document *pMain = nullptr);
 			virtual ~CDelInstrText();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -504,7 +504,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CEndnoteRef)
-			CEndnoteRef(OOX::Document *pMain = NULL);
+			CEndnoteRef(OOX::Document *pMain = nullptr);
 			virtual ~CEndnoteRef();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -521,7 +521,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CEndnoteReference)
-			CEndnoteReference(OOX::Document *pMain = NULL);
+			CEndnoteReference(OOX::Document *pMain = nullptr);
 			virtual ~CEndnoteReference();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -544,7 +544,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CFootnoteRef)
-			CFootnoteRef(OOX::Document *pMain = NULL);
+			CFootnoteRef(OOX::Document *pMain = nullptr);
 			virtual ~CFootnoteRef();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -561,7 +561,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CFootnoteReference)
-			CFootnoteReference(OOX::Document *pMain = NULL);
+			CFootnoteReference(OOX::Document *pMain = nullptr);
 			virtual ~CFootnoteReference();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -585,7 +585,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CInstrText)
-			CInstrText(OOX::Document *pMain = NULL);
+			CInstrText(OOX::Document *pMain = nullptr);
 			virtual ~CInstrText();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -608,7 +608,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSeparator)
-			CSeparator(OOX::Document *pMain = NULL);
+			CSeparator(OOX::Document *pMain = nullptr);
 			virtual ~CSeparator();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);

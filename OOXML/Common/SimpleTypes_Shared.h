@@ -27,7 +27,7 @@
 #include "SimpleTypes_Base.h"
 #include "../../DesktopEditor/common/Types.h"
 
-// Здесь представлены все простые типы SharedML из спецификации Office Open Xml (22.8)
+// Here are all the simple SharedML types from the Office Open Xml specification (22.8)
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ namespace SimpleTypes
 	};
 } // SimpleTypes
 
-// Здесь представлены все простые типы SharedML из спецификации Office Open Xml (22.9)
+// Here are all the simple SharedML types from the Office Open Xml specification (22.9)
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------
@@ -156,7 +156,7 @@ namespace SimpleTypes
 	// Lang 22.9.2.6 (Part 1)
 	//--------------------------------------------------------------------------------
 
-	// TO DO: сделать парсер языка по спецификации RFC 4646/BCP 47
+	// TO DO: make a language parser according to the RFC 4646/BCP 47 specification
 	//class CLang
 	//{
 	//public:
@@ -198,7 +198,7 @@ namespace SimpleTypes
 	// OnOff 22.9.2.7 (Part 1)
 	//--------------------------------------------------------------------------------
 
-	// Согласно части 4 стр. 1459, значений "on" и "off" быть не должно
+	// According to part 4 p. 1459, there shouldn't be values "on" and "off"
 	enum EOnOff
 	{
 		onoffFalse = 0,
@@ -269,7 +269,7 @@ namespace SimpleTypes
 	// String 22.9.2.13 (Part 1)
 	//--------------------------------------------------------------------------------
 
-	// Ничего не делаем, используем ATL::std::wstring
+	// Do nothing, use ATL::std::wstring
 
 	//--------------------------------------------------------------------------------
 	// TwipsMeasure 22.9.2.14 (Part 1)
@@ -346,7 +346,7 @@ namespace SimpleTypes
 
 } // SimpleTypes
 
-// Здесь представлены все простые типы SharedML из спецификации Office Open Xml (15.1.2 - part 4)
+// Here are all the simple SharedML types from the Office Open Xml specification (15.1.2 - part 4)
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------

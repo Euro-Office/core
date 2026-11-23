@@ -4,7 +4,7 @@
 
 namespace HWP
 {
-CHWPRecordNumbering::CHWPRecordNumbering(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CHWPRecordNumbering::CHWPRecordNumbering(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
     : CHWPRecord(nTagNum, nLevel, nSize), m_pParent(&oDocInfo)
 {
 	oBuffer.SavePosition();
@@ -27,20 +27,20 @@ CHWPRecordNumbering::CHWPRecordNumbering(CHWPDocInfo& oDocInfo, int nTagNum, int
 
 	oBuffer.ReadShort(m_shStart);
 
-	if (nVersion > 5025 && (nSize > oBuffer.GetDistanceToLastPos())) //TODO:: добавить проверку offset-off < size
+	if (nVersion > 5025 && (nSize > oBuffer.GetDistanceToLastPos())) //TODO:: add offset-off < size check
 	{
 		for (int nIndex = 0; nIndex < 7; ++nIndex)
 			oBuffer.ReadInt(m_arNumbering[nIndex].m_nStartNumber);
 	}
 
-	if (nVersion > 5100 && (nSize > oBuffer.GetDistanceToLastPos())) //TODO:: добавить проверку offset-off < size
+	if (nVersion > 5100 && (nSize > oBuffer.GetDistanceToLastPos())) //TODO:: add offset-off < size check
 	{
 		for (int nIndex = 0; nIndex < 3; ++nIndex)
 		{
-			//Содержимое неизвестно, но оно содержит 8 байт.
+			//The content is unknown, but it contains 8 bytes.
 			oBuffer.Skip(8);
 
-			//Содержимое неизвестно, но оно содержит 4 байт.
+			//The content is unknown, but it contains 4 bytes.
 			oBuffer.Skip(4);
 
 			short shLen;
@@ -75,7 +75,7 @@ CHWPRecordNumbering::CHWPRecordNumbering(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 
 		START_READ_ATTRIBUTES(oReader)
 		{
-			if (GetAttributeName(EAttribute::Aligment, eType) == sAttributeName)
+			if (GetAttributeName(EAttribute::Alignment, eType) == sAttributeName)
 			{
 				const std::string sType{oReader.GetTextA()};
 
@@ -134,6 +134,7 @@ CHWPRecordNumbering::CHWPRecordNumbering(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 				case 8:  m_arNumbering[unIndex].m_sNumFormat = L"^아."; break;
 				case 9:  m_arNumbering[unIndex].m_sNumFormat = L"^자."; break;
 				case 10: m_arNumbering[unIndex].m_sNumFormat = L"^차."; break;
+				default: break;
 			}
 		}
 		else if (GetValueName(EValue::CircledDigit, eType))
@@ -150,6 +151,7 @@ CHWPRecordNumbering::CHWPRecordNumbering(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 				case 8:  m_arNumbering[unIndex].m_sNumFormat = L"^\u2467."; break;
 				case 9:  m_arNumbering[unIndex].m_sNumFormat = L"^\u2468."; break;
 				case 10: m_arNumbering[unIndex].m_sNumFormat = L"^\u2469."; break;
+				default: break;
 			}
 		}
 		else if (GetValueName(EValue::LatinSmall, eType))
@@ -166,6 +168,7 @@ CHWPRecordNumbering::CHWPRecordNumbering(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 				case 8:  m_arNumbering[unIndex].m_sNumFormat = L"^h."; break;
 				case 9:  m_arNumbering[unIndex].m_sNumFormat = L"^i."; break;
 				case 10: m_arNumbering[unIndex].m_sNumFormat = L"^j."; break;
+				default: break;
 			}
 		}
 		else if (GetValueName(EValue::CircledHangulSyllable, eType) ||
@@ -183,6 +186,7 @@ CHWPRecordNumbering::CHWPRecordNumbering(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 				case 8:  m_arNumbering[unIndex].m_sNumFormat = L"^\u3275."; break;
 				case 9:  m_arNumbering[unIndex].m_sNumFormat = L"^\u3276."; break;
 				case 10: m_arNumbering[unIndex].m_sNumFormat = L"^\u3277."; break;
+				default: break;
 			}
 		}
 		else if (GetValueName(EValue::RomanSmall, eType))
@@ -199,6 +203,7 @@ CHWPRecordNumbering::CHWPRecordNumbering(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 				case 8:  m_arNumbering[unIndex].m_sNumFormat = L"^\u2177."; break;
 				case 9:  m_arNumbering[unIndex].m_sNumFormat = L"^\u2178."; break;
 				case 10: m_arNumbering[unIndex].m_sNumFormat = L"^\u2179."; break;
+				default: break;
 			}
 		}
 

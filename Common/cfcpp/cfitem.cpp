@@ -53,7 +53,7 @@ _INT32 CFItem::GetHashCode() const
 std::wstring CFItem::Name() const
 {
     auto name = dirEntry.lock()->GetEntryName();
-    if (name.empty() == false)
+    if (!name.empty())
     {
         auto removeIter = name.find_last_of(L'\0');
         if (removeIter != std::wstring::npos)
@@ -125,7 +125,7 @@ std::wstring CFItem::ToString() const
 void CFItem::setDirEntry(const std::weak_ptr<IDirectoryEntry> &newDirEntry)
 {
     if (newDirEntry.expired() || newDirEntry.lock()->getSid() < 0)
-        throw CFException("Attempting to create a CFStorage using an unitialized directory");
+        throw CFException("Attempting to create a CFStorage using an uninitialized directory");
 
     dirEntry = newDirEntry;
 }

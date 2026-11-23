@@ -59,7 +59,7 @@ namespace OOX
 		{
 			toXMLWithNS(writer, L"", L"alignment", L"");
 		}
-		void CAligment::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring &child_ns) const
+		void CAligment::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring & /*child_ns*/) const
 		{
 			writer.StartNodeWithNS(node_ns, node_name);
 			writer.StartAttributes();
@@ -112,9 +112,7 @@ namespace OOX
 				ptr->fWrap = m_oWrapText->GetValue();
 			else
 				ptr->fWrap = false;
-			if (m_oHorizontal == SimpleTypes::Spreadsheet::EHorizontalAlignment::horizontalalignmentGeneral)
-				ptr->alc = 0;
-			else if (m_oHorizontal == SimpleTypes::Spreadsheet::EHorizontalAlignment::horizontalalignmentLeft)
+			if (m_oHorizontal == SimpleTypes::Spreadsheet::EHorizontalAlignment::horizontalalignmentLeft)
 				ptr->alc = 1;
 			else if (m_oHorizontal == SimpleTypes::Spreadsheet::EHorizontalAlignment::horizontalalignmentCenter)
 				ptr->alc = 2;
@@ -135,8 +133,6 @@ namespace OOX
 				ptr->alcV = 0;
 			else if (m_oVertical == SimpleTypes::Spreadsheet::EVerticalAlignment::verticalalignmentCenter)
 				ptr->alcV = 1;
-			else if (m_oVertical == SimpleTypes::Spreadsheet::EVerticalAlignment::verticalalignmentBottom)
-				ptr->alcV = 2;
 			else if (m_oVertical == SimpleTypes::Spreadsheet::EVerticalAlignment::verticalalignmentJustify)
 				ptr->alcV = 3;
 			else if (m_oVertical == SimpleTypes::Spreadsheet::EVerticalAlignment::verticalalignmentDistributed)
@@ -160,23 +156,23 @@ namespace OOX
 			nullable_double rotate;
 
 			WritingElement_ReadAttributes_Start( oReader )
-				WritingElement_ReadAttributes_Read_if( oReader, _T("horizontal"),			m_oHorizontal )
-				WritingElement_ReadAttributes_Read_else_if( oReader, _T("indent"),			m_oIndent )
+				if ( _T("horizontal") == wsName || _T("ss:Horizontal") == wsName )
+					m_oHorizontal = oReader.GetText();
+				else if ( _T("indent") == wsName || _T("ss:Indent") == wsName )
+					m_oIndent = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if( oReader, _T("justifyLastLine"),	m_oJustifyLastLine )
 				WritingElement_ReadAttributes_Read_else_if( oReader, _T("readingOrder"),	m_oReadingOrder )
 				WritingElement_ReadAttributes_Read_else_if( oReader, _T("relativeIndent"),	m_oRelativeIndent )
-				WritingElement_ReadAttributes_Read_else_if( oReader, _T("shrinkToFit"),		m_oShrinkToFit )
+				else if ( _T("shrinkToFit") == wsName || _T("ss:ShrinkToFit") == wsName )
+					m_oShrinkToFit = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if( oReader, _T("textRotation"),	m_oTextRotation )
-				WritingElement_ReadAttributes_Read_else_if( oReader, _T("vertical"),		m_oVertical )
-				WritingElement_ReadAttributes_Read_else_if( oReader, _T("wrapText"),		m_oWrapText )
+				else if ( _T("vertical") == wsName || _T("ss:Vertical") == wsName )
+					m_oVertical = oReader.GetText();
+				else if ( _T("wrapText") == wsName || _T("ss:WrapText") == wsName )
+					m_oWrapText = oReader.GetText();
 		// 2003
-				WritingElement_ReadAttributes_Read_else_if(oReader, _T("ss:Horizontal"),	m_oHorizontal)
-				WritingElement_ReadAttributes_Read_else_if(oReader, _T("ss:Vertical"),		m_oVertical)
-				WritingElement_ReadAttributes_Read_else_if(oReader, _T("ss:WrapText"),		m_oWrapText)
-				WritingElement_ReadAttributes_Read_else_if(oReader, _T("ss:Indent"),		m_oIndent)
 				WritingElement_ReadAttributes_Read_else_if(oReader, _T("ss:ReadingOrder"),	readingOrder)
 				WritingElement_ReadAttributes_Read_else_if(oReader, _T("ss:Rotate"),		rotate)
-				WritingElement_ReadAttributes_Read_else_if(oReader, _T("ss:ShrinkToFit"),	m_oShrinkToFit)
 			WritingElement_ReadAttributes_End( oReader )
 
 			if (readingOrder.IsInit())
@@ -227,6 +223,7 @@ namespace OOX
 								m_oHorizontal = SimpleTypes::Spreadsheet::EHorizontalAlignment::horizontalalignmentCenterContinuous; break;
 							case 7:
 								m_oHorizontal = SimpleTypes::Spreadsheet::EHorizontalAlignment::horizontalalignmentDistributed; break;
+							default: break;
 						}
 
 						switch(ptr->alcV)
@@ -241,6 +238,7 @@ namespace OOX
 								m_oVertical = SimpleTypes::Spreadsheet::EVerticalAlignment::verticalalignmentJustify; break;
 							case 4:
 								m_oVertical = SimpleTypes::Spreadsheet::EVerticalAlignment::verticalalignmentDistributed; break;
+							default: break;
 						}
 					}
 				}
@@ -263,7 +261,7 @@ namespace OOX
 		{
 			toXMLWithNS(writer, L"", L"protection", L"");
 		}
-		void CProtection::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring &child_ns) const
+		void CProtection::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring & /*child_ns*/) const
 		{
 			writer.WriteString(L"<" + node_ns + node_name);
 			WritingStringNullableAttrBool(L"hidden", m_oHidden);
@@ -351,12 +349,20 @@ namespace OOX
 			WritingStringNullableAttrBool(L"applyProtection", m_oApplyProtection);
 			WritingStringNullableAttrBool(L"quotePrefix", m_oQuotePrefix);
 			WritingStringNullableAttrBool(L"pivotButton", m_oPivotButton);
-			if (m_oAligment.IsInit() || m_oProtection.IsInit())
+			bool bCellControl = m_oCellControl.IsInit() && *m_oCellControl;
+			if (m_oAligment.IsInit() || m_oProtection.IsInit() || bCellControl)
 			{
 				writer.WriteString(_T(">"));
 
 				if (m_oAligment.IsInit())m_oAligment->toXML(writer);
 				if (m_oProtection.IsInit())m_oProtection->toXML(writer);
+				if (bCellControl)
+				{
+					// references the canonical checkbox chain in featurePropertyBag.xml
+					writer.WriteString(L"<extLst><ext uri=\"{C7286773-470A-42A8-94C5-96B5CB345126}\" \
+xmlns:xfpb=\"http://schemas.microsoft.com/office/spreadsheetml/2022/featurepropertybag\">\
+<xfpb:xfComplement i=\"0\"/></ext></extLst>");
+				}
 
 				writer.WriteString(_T("</xf>"));
 			}
@@ -378,6 +384,42 @@ namespace OOX
 					m_oAligment = oReader;
 				else if( _T("protection") == sName )
 					m_oProtection = oReader;
+				else if( _T("extLst") == sName )
+					ReadExtLst(oReader);
+			}
+		}
+		void CXfs::ReadExtLst(XmlUtils::CXmlLiteReader& oReader)
+		{
+			if (oReader.IsEmptyNode())
+				return;
+
+			int nExtLstDepth = oReader.GetDepth();
+			while (oReader.ReadNextSiblingNode(nExtLstDepth))
+			{
+				if (L"ext" != XmlUtils::GetNameNoNS(oReader.GetName()) || oReader.IsEmptyNode())
+					continue;
+
+				int nExtDepth = oReader.GetDepth();
+				while (oReader.ReadNextSiblingNode(nExtDepth))
+				{
+					if (L"xfComplement" == XmlUtils::GetNameNoNS(oReader.GetName()))
+					{
+						if (oReader.MoveToFirstAttribute())
+						{
+							std::wstring wsName = oReader.GetName();
+							while (!wsName.empty())
+							{
+								if (L"i" == wsName)
+									m_oXfComplementIndex = XmlUtils::GetInteger(oReader.GetText());
+
+								if (!oReader.MoveToNextAttribute())
+									break;
+								wsName = oReader.GetName();
+							}
+							oReader.MoveToElement();
+						}
+					}
+				}
 			}
 		}
 		EElementType CXfs::getType () const
@@ -629,7 +671,7 @@ namespace OOX
 		}
 		void CCellXfs::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 
 				WritingElement_ReadAttributes_Read_if     ( oReader, _T("count"),      m_oCount )

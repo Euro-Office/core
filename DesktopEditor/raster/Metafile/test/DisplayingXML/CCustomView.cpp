@@ -70,7 +70,7 @@ void CCustomView::Clear()
 
 void CCustomView::wheelEvent(QWheelEvent *event)
 {
-        double delta = event->delta();
+        double delta = event->angleDelta().y();
         double sf = 1.0 + delta / 1000;
         scale(sf, sf);
 }

@@ -687,7 +687,7 @@ public:
 	virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
 	virtual void docx_convert(oox::docx_conversion_context & Context);
 	
-	_CP_OPT(std::wstring)	style_name_; //не по снецификации ... но КАК сохранить то что было изменено в формате?????
+	_CP_OPT(std::wstring)	style_name_; //not according to the specification... but HOW to save what has been changed in the format?????
 };
 CP_REGISTER_OFFICE_ELEMENT2(format_change);
 

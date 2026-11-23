@@ -37,10 +37,10 @@ OOXtrPrReader::OOXtrPrReader(OOX::Logic::CTableRowProperties*	ooxTableRowProps)
 }
 bool OOXtrPrReader::Parse( ReaderParameter oParam , RtfRowProperty& oOutputProperty, CcnfStyle& oConditionalTableStyle)
 {
-	if (m_ooxTableRowProps == NULL) return false;
+	if (m_ooxTableRowProps == nullptr) return false;
 
-	//ищем cnfStyle  и применяем внешний стиль
-	if( NULL != oParam.poTableStyle )
+	//look for cnfStyle and apply the external style
+	if( nullptr != oParam.poTableStyle )
 	{
 		if( m_ooxTableRowProps->m_oCnfStyle.IsInit() )
 		{
@@ -52,13 +52,13 @@ bool OOXtrPrReader::Parse( ReaderParameter oParam , RtfRowProperty& oOutputPrope
 		}
 	}
 	RtfTableStylePtr oResultStyle = oConditionalTableStyle.ApplyTableStyle( oParam.poTableStyle );
-	if( NULL != oResultStyle )
+	if( nullptr != oResultStyle )
 		oOutputProperty.Merge( oResultStyle->m_oRowProp );
 
 	if (m_ooxTableRowProps->m_oTblHeader.IsInit() )
 		oOutputProperty.m_bIsHeader = m_ooxTableRowProps->m_oTblHeader->m_oVal.ToBool() ? 1 : 0;
 	
-//todooo непонятнка
+//TODO unclear
 //		if (m_ooxTableRowProps->m_oCantSplit.IsInit() )
 //             oOutputProperty.m_bIsHeader= m_ooxTableRowProps->m_oCantSplit->m_oVal.ToBool() ? 1 : 0;
 	
@@ -68,7 +68,7 @@ bool OOXtrPrReader::Parse( ReaderParameter oParam , RtfRowProperty& oOutputPrope
 		{
 			case SimpleTypes::jctableCenter : oOutputProperty.m_eJust = RtfRowProperty::rj_trqc; break;
 			case SimpleTypes::jctableEnd    : oOutputProperty.m_eJust = RtfRowProperty::rj_trqr; break;
-			case SimpleTypes::jctableStart  : oOutputProperty.m_eJust = RtfRowProperty::rj_trql; break;
+			case SimpleTypes::jctableStart  :
 			case SimpleTypes::jctableLeft   : oOutputProperty.m_eJust = RtfRowProperty::rj_trql; break;
 			case SimpleTypes::jctableRight  : oOutputProperty.m_eJust = RtfRowProperty::rj_trqr; break;
 		}
@@ -121,10 +121,10 @@ OOXTableReader::OOXTableReader(OOX::Logic::CTbl *ooxTable)
 }
 bool OOXTableReader::Parse( ReaderParameter oParam, RtfTable& oOutputTable )
 {
-	if (m_ooxTable == NULL) return false;
+	if (m_ooxTable == nullptr) return false;
 
 	bool bExistTablPr = false;
-	//сначала читаем свойства
+	//first read the properties
 	if(m_ooxTable->m_oTableProperties )
 	{
 		OOXtblPrReader otblPrReader(m_ooxTable->m_oTableProperties);
@@ -132,12 +132,12 @@ bool OOXTableReader::Parse( ReaderParameter oParam, RtfTable& oOutputTable )
 		bExistTablPr = true;
 	}
 
-	//формируем внешний стиль для вложенных элементов
+	//creating an external style for nested elements
 	RtfTableStylePtr poTableStyle;
 	if( PROP_DEF != oOutputTable.m_oProperty.m_nStyle )
 	{
 		RtfStylePtr oTempStyle;
-		if( true == oParam.oRtf->m_oStyleTable.GetStyle(oOutputTable.m_oProperty.m_nStyle, oTempStyle) )
+		if( oParam.oRtf->m_oStyleTable.GetStyle(oOutputTable.m_oProperty.m_nStyle, oTempStyle) )
 		{
 			RtfStylePtr oResultStyle = oParam.oRtf->m_oStyleTable.GetStyleResulting( oTempStyle );
 			if( RtfStyle::stTable == oResultStyle->m_eType )
@@ -145,16 +145,16 @@ bool OOXTableReader::Parse( ReaderParameter oParam, RtfTable& oOutputTable )
 				poTableStyle = boost::static_pointer_cast<RtfTableStyle, RtfStyle>( oResultStyle );
 				
 				poTableStyle->m_oTableProp = oOutputTable.m_oProperty; 
-				//TableProperty ставим как уже прочитали чтобы не терять порядок применения свойст
-				//например индент последовательно затирает друг друга в стилях, numbering, просто в свойствах
-				//затирает свойства и на First, Last .... todoooo
+				//Set TableProperty as we have already read so as not to lose the order in which the properties are applied
+				//for example, indent consistently overwrites each other in styles, numbering, just in properties
+				//overwrites properties on First, Last....TODO
 			}
 		}
 	}
-	else if( true == bExistTablPr )
+	else if( bExistTablPr )
 	{
 		RtfTableStylePtr poTableStyle ( new RtfTableStyle() );
-		poTableStyle->m_oTableProp.Merge( oOutputTable.m_oProperty ); // будут использованы ниже
+		poTableStyle->m_oTableProp.Merge( oOutputTable.m_oProperty ); // will be used below
 	}
 
 	if( m_ooxTable->m_oTblGrid.IsInit() )
@@ -172,15 +172,15 @@ bool OOXTableReader::Parse( ReaderParameter oParam, RtfTable& oOutputTable )
 
     for (size_t i =0; i < m_ooxTable->m_arrItems.size(); ++i)
 	{	
-		if ( m_ooxTable->m_arrItems[i] == NULL) continue;
+		if ( m_ooxTable->m_arrItems[i] == nullptr) continue;
 		if ( m_ooxTable->m_arrItems[i]->getType() != OOX::et_w_tr) continue;
 
 		ReaderParameter newParam	= oParam;
 		newParam.poTableStyle		= poTableStyle;
 
 		RtfTableRowPtr oNewRow ( new RtfTableRow() );
-		//применяем свойства таблицы к каждому row
-		//т.к. в RTF нет свойств таблиц и все свойства записываются в свойства row
+		//apply table properties to each row
+		//because in RTF there are no table properties and all properties are written to the row properties
 		(*((RtfTableProperty*)&oNewRow->m_oProperty)).Merge( oOutputTable.m_oProperty );
 		
 		OOX::Logic::CTr *ooxRow = dynamic_cast<OOX::Logic::CTr *>(m_ooxTable->m_arrItems[i]);
@@ -194,7 +194,7 @@ bool OOXTableReader::Parse( ReaderParameter oParam, RtfTable& oOutputTable )
 	ApplyParagraphProperty( oOutputTable );
 	return true;
 }
-//применяет свойства параграфа связанные с положением
+//applies position-related paragraph properties
 void OOXTableReader::ApplyParagraphProperty( RtfTable& oOutputTable )
 {
 	for (int i = 0; i < oOutputTable.GetCount(); i++ )
@@ -212,7 +212,7 @@ void OOXTableReader::ApplyParagraphProperty( RtfTable& oOutputTable )
 					for (int k = 0; k < oCurCell->GetCount(); k++ )
 					{
 						oCurCell->GetItem(pCurTextItem, k);
-						if( NULL != pCurTextItem && pCurTextItem->GetType() == TYPE_RTF_PARAGRAPH )
+						if( nullptr != pCurTextItem && pCurTextItem->GetType() == TYPE_RTF_PARAGRAPH )
 						{
 							boost::shared_ptr<RtfParagraph> oCurParagraph = boost::static_pointer_cast<RtfParagraph,ITextItem>( pCurTextItem );
 							oCurParagraph->m_oProperty.m_oFrame.ApplyParagraphProp( oOutputTable.m_oProperty );
@@ -230,7 +230,7 @@ OOXTableRowReader::OOXTableRowReader(OOX::Logic::CTr *ooxRowTable, OOX::Logic::C
 }
 bool OOXTableRowReader::Parse( ReaderParameter oParam, RtfTableRow& oOutputRow, int nCurRow, int nRowCount)
 {
-    if (m_ooxRowTable == NULL) return false;
+    if (m_ooxRowTable == nullptr) return false;
 
     CcnfStyle oConditionStyle;
 
@@ -240,23 +240,23 @@ bool OOXTableRowReader::Parse( ReaderParameter oParam, RtfTableRow& oOutputRow, 
     if (nCurRow == nRowCount - 1 && oOutputRow.m_oProperty.m_bAutoLastRow == 1)
         oConditionStyle.bLastRow = true;
 
-    //сначала применяем свойства
+    //first apply properties
     if( m_ooxRowTable->m_pTableRowProperties )
     {
         OOXtrPrReader otrPrReader(m_ooxRowTable->m_pTableRowProperties);
-        otrPrReader.Parse( oParam, oOutputRow.m_oProperty, oConditionStyle);// может поменяться на любой condition(first row)
+        otrPrReader.Parse( oParam, oOutputRow.m_oProperty, oConditionStyle);// can change to any condition(first row)
     }
 
     int nCellCount = m_ooxRowTable->m_nCountCell, nCurCell = 0;
 
     for (size_t i = 0; i < m_ooxRowTable->m_arrItems.size(); ++i)
     {
-        if ( m_ooxRowTable->m_arrItems[i] == NULL )		continue;
-        if ( m_ooxRowTable->m_arrItems[i]->getType() != OOX::et_w_tc) continue;//todooo bookmarks
+        if ( m_ooxRowTable->m_arrItems[i] == nullptr )		continue;
+        if ( m_ooxRowTable->m_arrItems[i]->getType() != OOX::et_w_tc) continue;//TODO bookmarks
 
         RtfTableCellPtr oNewCell( new RtfTableCell() );
 
-        OOX::Logic::CTc *ooxCell = NULL;
+        OOX::Logic::CTc *ooxCell = nullptr;
 
         if (nCurCell < (int)m_ooxRowTable->m_arrItems.size())
         {
@@ -265,9 +265,9 @@ bool OOXTableRowReader::Parse( ReaderParameter oParam, RtfTableRow& oOutputRow, 
 
         OOXTableCellReader oCellReader(ooxCell, m_ooxTableProps );
         oCellReader.Parse( oParam, *oNewCell, oConditionStyle, nCurCell++, nCurRow, nCellCount, nRowCount );
-        //добавляем cell
+        //add cell
         oOutputRow.AddItem(oNewCell);
-        //свойства cell в row
+        //cell to row properties
         oOutputRow.m_oProperty.AddItem( oNewCell->m_oProperty );
     }
     return true;
@@ -280,17 +280,17 @@ OOXTableCellReader::OOXTableCellReader(OOX::Logic::CTc *ooxTableCell, OOX::Logic
 }
 bool OOXTableCellReader::Parse( ReaderParameter oParam ,RtfTableCell& oOutputCell,  CcnfStyle oConditionalTableStyle, int nCurCell, int nCellCount, int nCurRow, int nRowCount )
 {
-    if (m_ooxTableCell == NULL) return false;
+    if (m_ooxTableCell == nullptr) return false;
 
     if( m_ooxTableCell->m_pTableCellProperties )
     {
         OOXtcPrReader oCellPropReader(m_ooxTableCell->m_pTableCellProperties, m_ooxTableProps);
-        oCellPropReader.Parse( oParam, oOutputCell.m_oProperty, oConditionalTableStyle, nCurCell, nCellCount, nCurRow, nRowCount );//может поменяться на любой condition (firstRow)
+        oCellPropReader.Parse( oParam, oOutputCell.m_oProperty, oConditionalTableStyle, nCurCell, nCellCount, nCurRow, nRowCount );//can change to any condition (firstRow)
     }
     else
     {
         RtfTableStylePtr oResultStyle = oConditionalTableStyle.ApplyTableStyle( oParam.poTableStyle );
-        if( NULL != oResultStyle )
+        if( nullptr != oResultStyle )
             oOutputCell.m_oProperty.Merge( oResultStyle->m_oCellProp );
         oConditionalTableStyle.ApplyTableStyleToCellBorder( oParam.poTableStyle, oOutputCell.m_oProperty, nCurCell, nCellCount, nCurRow, nRowCount );
     }

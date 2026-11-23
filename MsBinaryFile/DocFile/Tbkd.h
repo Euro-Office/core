@@ -90,7 +90,7 @@ namespace DocFileFormat
 		int					reusable01;
 		int					reusable02;
 
-		short				fReusable;		//	ставим в 0 потому что один TbRef привязан к одному элементу
+		short				fReusable;		//	set to 0 because one TbRef is bound to one element
 	
 		int					itxbxsDest;		//	This field MUST be ignored.
 		int					lid;			

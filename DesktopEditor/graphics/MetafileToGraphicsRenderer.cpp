@@ -41,7 +41,7 @@ namespace NSOnlineOfficeBinToPdf
 		// saveFlags = (save_type & 0xF0) >> 1
 		// saveType:
 		// 0 - stretch
-		// 1 - делаем максимально большую картинку с аспектом как у страницы и вписанную в [m_nRasterW x m_nRasterH]
+		// 1 - make the largest possible image with an aspect similar to the page and fit into [m_nRasterW x m_nRasterH]
 		// 2 - nRasterW = (int)((pageW * m_internal->m_dDpiX / 25.4) + 0.5);
 		//     nRasterH = (int)((pageH * m_internal->m_dDpiY / 25.4) + 0.5);
 		// 3 - special mode for clouds (see code)
@@ -59,7 +59,7 @@ namespace NSOnlineOfficeBinToPdf
 	public:
 		CMetafileToRenderterRaster_private()
 		{
-			appFonts = NULL;
+			appFonts = nullptr;
 
 			m_nRasterFormat = 4;
 			m_nSaveType = 2;
@@ -158,16 +158,16 @@ namespace NSOnlineOfficeBinToPdf
 				if (dKoef1 > dKoef2)
 					dKoef1 = dKoef2;
 
-				nRasterW = (int)(w * dKoef1 + 0.5);
-				nRasterH = (int)(h * dKoef1 + 0.5);
+				nRasterW = static_cast<int>(std::lround(w * dKoef1));
+				nRasterH = static_cast<int>(std::lround(h * dKoef1));
 			}
 			else if (2 == nSaveType)
 			{
 				double w = oInfo.arSizes[nPageIndex].width;
 				double h = oInfo.arSizes[nPageIndex].height;
 
-				nRasterW = (int)((w * m_internal->m_dDpiX / 25.4) + 0.5);
-				nRasterH = (int)((h * m_internal->m_dDpiY / 25.4) + 0.5);
+				nRasterW = static_cast<int>(std::lround((w * m_internal->m_dDpiX / 25.4)));
+				nRasterH = static_cast<int>(std::lround((h * m_internal->m_dDpiY / 25.4)));
 			}
 			else if (3 == nSaveType)
 			{
@@ -192,8 +192,8 @@ namespace NSOnlineOfficeBinToPdf
 			oFrame.put_Height(nRasterH);
 			oFrame.put_Stride(4 * nRasterW);
 
-			BYTE* pDataRaster = new BYTE[4 * nRasterW * nRasterH];
-			memset(pDataRaster, 0xFF, 4 * nRasterW * nRasterH);
+			BYTE* pDataRaster = new BYTE[static_cast<size_t>(4) * nRasterW * nRasterH];
+			memset(pDataRaster, 0xFF, static_cast<size_t>(4) * nRasterW * nRasterH);
 			oFrame.put_Data(pDataRaster);
 
 			CGraphicsRenderer oRenderer;
@@ -212,15 +212,15 @@ namespace NSOnlineOfficeBinToPdf
 			if (3 == nSaveType)
 			{
 				int nStride = 4 * nResultW;
-				BYTE* pDataResult = new BYTE[nStride * nResultH];
+				BYTE* pDataResult = new BYTE[static_cast<size_t>(nStride) * nResultH];
 
 				if (0 == nOffsetX)
 				{
-					memcpy(pDataResult, pDataRaster, nStride * nResultH);
+					memcpy(pDataResult, pDataRaster, static_cast<size_t>(nStride) * nResultH);
 				}
 				else
 				{
-					BYTE* pDataCopy = pDataRaster + 4 * nOffsetX;
+					BYTE* pDataCopy = pDataRaster + static_cast<ptrdiff_t>(4) * nOffsetX;
 					BYTE* pDataDst = pDataResult;
 					int nStrideSrc = 4 * nRasterW;
 					for (int i = 0; i < nResultH; ++i)

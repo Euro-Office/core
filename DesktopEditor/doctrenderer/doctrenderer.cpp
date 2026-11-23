@@ -232,7 +232,7 @@ namespace NSDoctRenderer
 		CDoctRenderer_Private(const std::wstring& sAllFontsPath = L"") : CDoctRendererConfig()
 		{
 			LoadConfig(NSFile::GetProcessDirectory(), sAllFontsPath);
-			m_pDrawingFile = NULL;
+			m_pDrawingFile = nullptr;
 		}
 		~CDoctRenderer_Private()
 		{
@@ -248,7 +248,7 @@ namespace NSDoctRenderer
 		}
 
 	public:
-		static void _LOGGING_ERROR_(const std::wstring& strType, const std::wstring& strError)
+		static void LoggingError(const std::wstring& strType, const std::wstring& strError)
 		{
 #if 0
 			if (m_sErrorsLogFile.empty())
@@ -288,8 +288,8 @@ namespace NSDoctRenderer
 			bool bIsBreak = false;
 			if (js_objectApi->isUndefined() || !js_objectApi->isObject())
 			{
-				_LOGGING_ERROR_(L"save_code_api", L"");
-				_LOGGING_ERROR_(L"save_api", L"");
+				LoggingError(L"save_code_api", L"");
+				LoggingError(L"save_api", L"");
 
 				strError = L"code=\"save_api\"";
 				bIsBreak = true;
@@ -314,13 +314,13 @@ namespace NSDoctRenderer
 					NSJSBase::CJSDataBuffer oBuffer = typedArray->getData();
 
 					NSFile::CFileBinary oFile;
-					if (true == oFile.CreateFileW(pParams->m_strDstFilePath))
+					if (oFile.CreateFileW(pParams->m_strDstFilePath))
 					{
 						if (pNative->m_sHeader.find(";v10;") == std::string::npos)
 						{
 							oFile.WriteFile((BYTE*)pNative->m_sHeader.c_str(), (DWORD)pNative->m_sHeader.length());
 
-							char* pDst64 = NULL;
+							char* pDst64 = nullptr;
 							int nDstLen = 0;
 							NSFile::CBase64Converter::Encode(oBuffer.Data, pNative->m_nSaveBinaryLen, pDst64, nDstLen, NSBase64::B64_BASE64_FLAG_NOCRLF);
 
@@ -369,7 +369,7 @@ namespace NSDoctRenderer
 					std::string sHTML_Utf8 = js_result2->toStringA();
 
 					NSFile::CFileBinary oFile;
-					if (true == oFile.CreateFileW(pParams->m_strDstFilePath))
+					if (oFile.CreateFileW(pParams->m_strDstFilePath))
 					{
 						oFile.WriteFile((BYTE*)sHTML_Utf8.c_str(), (DWORD)sHTML_Utf8.length());
 						oFile.CloseFile();
@@ -398,7 +398,6 @@ namespace NSDoctRenderer
 				}
 
 				// PAGESCOUNT
-				LONG lPagesCount = 0;
 				if (!bIsBreak)
 				{
 					JSSmart<CJSValue> js_result1 = js_objectApi->call_func("asc_nativePrintPagesCount", 1, args);
@@ -408,7 +407,7 @@ namespace NSDoctRenderer
 						bIsBreak = true;
 					}
 					else
-						lPagesCount = (LONG)js_result1->toInt32();
+						js_result1->toInt32();
 				}
 
 				// RENDER
@@ -449,7 +448,7 @@ namespace NSDoctRenderer
 						DWORD bufferSize = (pNative->m_nSaveBinaryLen == 0) ? (DWORD)oBuffer.Len : (DWORD)pNative->m_nSaveBinaryLen;
 
 						NSFile::CFileBinary oFile;
-						if (true == oFile.CreateFileW(pParams->m_strDstFilePath))
+						if (oFile.CreateFileW(pParams->m_strDstFilePath))
 						{
 							oFile.WriteFile(oBuffer.Data, bufferSize);
 							oFile.CloseFile();
@@ -500,7 +499,7 @@ namespace NSDoctRenderer
 								sThemeName = L"Default";
 
 							NSFile::CFileBinary oFile;
-							if (true == oFile.CreateFileW(pParams->m_strDstFilePath + L"/" + sThemeName + L".theme"))
+							if (oFile.CreateFileW(pParams->m_strDstFilePath + L"/" + sThemeName + L".theme"))
 							{
 								oFile.WriteFile(oBuffer.Data, (DWORD)nDataLen);
 								oFile.CloseFile();
@@ -536,7 +535,7 @@ namespace NSDoctRenderer
 							char* pInput = (char*)(sWatermark.c_str() + pos + 1);
 
 							int nOutputSize = 0;
-							BYTE* pOutput = NULL;
+							BYTE* pOutput = nullptr;
 
 							if (NSFile::CBase64Converter::Decode(pInput, nInputSize, pOutput, nOutputSize))
 							{
@@ -567,7 +566,6 @@ namespace NSDoctRenderer
 			bool bIsBreak = false;
 			JSSmart<CJSContext> context = NSDoctRenderer::CreateEditorContext(editorType, this);
 
-			if (true)
 			{
 				CJSContextScope scope(context);
 				CJSContext::Embed<CNativeControlEmbed>(false);
@@ -605,7 +603,7 @@ namespace NSDoctRenderer
 				args[0] = CJSContext::createInt(0);
 
 				// GET_NATIVE_ENGINE
-				if (pNative != NULL)
+				if (pNative != nullptr)
 				{
 					pNative->m_pChanges = &m_oParams.m_arChanges;
 					pNative->m_strFontsDirectory = m_oParams.m_strFontsDirectory;
@@ -622,7 +620,7 @@ namespace NSDoctRenderer
 				// Api object
 				JSSmart<CJSObject> js_objectApi;
 
-				bool bIsWatermark = (m_oParams.m_eDstFormat == NSDoctRenderer::DoctRendererFormat::WATERMARK) ? true : false;
+				bool bIsWatermark = m_oParams.m_eDstFormat == NSDoctRenderer::DoctRendererFormat::WATERMARK;
 				JSSmart<CJSValue> openOptions;
 
 				if (!bIsBreak)
@@ -683,9 +681,13 @@ namespace NSDoctRenderer
 						bIsBreak = true;
 					}
 
-					JSSmart<CJSObject> js_objectAsc = global_js->get("Asc")->toObject();
-					js_objectApi = js_objectAsc->get("editor")->toObject();
-					if (try_catch->Check())
+					// Without (working) sdkjs scripts Asc.editor is missing; converting
+					// undefined to an object would abort the process inside V8
+					JSSmart<CJSValue> js_valueAsc = global_js->get("Asc");
+					JSSmart<CJSValue> js_valueApi = js_valueAsc->isObject() ? js_valueAsc->toObject()->get("editor") : js_valueAsc;
+					if (js_valueApi->isObject())
+						js_objectApi = js_valueApi->toObject();
+					if (!js_valueApi->isObject() || try_catch->Check())
 					{
 						strError = L"code=\"open\"";
 						bIsBreak = true;
@@ -712,7 +714,7 @@ namespace NSDoctRenderer
 						while (!bIsBreak)
 						{
 							nCurrentIndex = oWorker.Open(m_oParams.m_arChanges, nCurrentIndex);
-							bool bIsFull = (nCurrentIndex == m_oParams.m_arChanges.size()) ? true : false;
+							bool bIsFull = nCurrentIndex == m_oParams.m_arChanges.size();
 
 							JSSmart<CJSValue> args_changes[2];
 							args_changes[0] = oWorker.GetData()->toValue();
@@ -732,7 +734,7 @@ namespace NSDoctRenderer
 						}
 
 						// images in changes
-						if (NULL != pNative)
+						if (nullptr != pNative)
 						{
 							for (std::map<std::wstring, bool>::const_iterator iter = pNative->m_mapImagesInChanges.begin(); iter != pNative->m_mapImagesInChanges.end(); iter++)
 							{
@@ -865,7 +867,7 @@ namespace NSDoctRenderer
 
 			context->Dispose();
 
-			return bIsBreak ? false : true;
+			return !bIsBreak;
 		}
 
 		std::string ReadScriptFile(const std::wstring& strFile)
@@ -1035,7 +1037,7 @@ namespace NSDoctRenderer
 			strError = L"<result>" + sReturnParams + L"</result>";
 		}
 
-		return bResult ? true : false;
+		return bResult;
 	}
 
 	std::vector<std::wstring> CDoctrenderer::GetImagesInChanges()
@@ -1043,7 +1045,7 @@ namespace NSDoctRenderer
 		return m_pInternal->m_arImagesInChanges;
 	}
 
-	void CDoctrenderer::CreateCache(const std::wstring& sAllFontsPath, const std::wstring& sCacheDir)
+	void CDoctrenderer::CreateCache(const std::wstring& sAllFontsPath, const std::wstring&  /*sCacheDir*/)
 	{
 #ifndef JS_ENGINE_JAVASCRIPTCORE
 		LoadConfig(NSFile::GetProcessDirectory(), sAllFontsPath);
@@ -1059,7 +1061,6 @@ namespace NSDoctRenderer
 		{
 			JSSmart<CJSContext> context = new CJSContext();
 
-			if (true)
 			{
 				CJSContextScope scope(context);
 				CJSContext::Embed<CNativeControlEmbed>();
@@ -1095,7 +1096,12 @@ namespace NSDoctRenderer
 
 		for (std::vector<NSDoctRenderer::DoctRendererEditorType>::const_iterator i = editors.begin(); i != editors.end(); i++)
 		{
-			NSDoctRenderer::GenerateEditorSnapshot(*i, m_pInternal);
+			// The return value used to be worth ignoring because a bundle the engine
+			// could not parse aborted the process outright. Now that it is reported
+			// and survived, a failure here means the editor silently runs without its
+			// snapshot -- slower, but easy to miss. Say so.
+			if (!NSDoctRenderer::GenerateEditorSnapshot(*i, m_pInternal))
+				std::cerr << "doctrenderer: snapshot generation failed for editor type " << (int)(*i) << std::endl;
 		}
 #endif
 	}

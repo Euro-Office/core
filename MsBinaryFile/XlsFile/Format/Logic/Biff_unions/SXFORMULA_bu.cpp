@@ -106,7 +106,7 @@ int SXFORMULA::serialize(std::wostream & strm)
 			{
 				SxRule* rule	= dynamic_cast<SxRule*>(pivot_rule->m_SxRule.get());
 
-				for (size_t j = 0; j < pivot_rule->m_arPRFILTER.size(); j++)//multi in pivotAreas !!! todooo ???
+				for (size_t j = 0; j < pivot_rule->m_arPRFILTER.size(); j++)//multi in pivotAreas !!! TODO ???
 				{
 					PRFILTER*	filter	= dynamic_cast<PRFILTER*>(pivot_rule->m_arPRFILTER[j].get());
 					

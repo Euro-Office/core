@@ -52,7 +52,7 @@ namespace DocFileFormat
 
 			if (OpCode == 0 && size == 4)
 			{
-				//так записывается rgb цвет (
+				//This is how rgb color is written (
 				OpCode = sprmCCv;
 				opSize = 3;
 			}

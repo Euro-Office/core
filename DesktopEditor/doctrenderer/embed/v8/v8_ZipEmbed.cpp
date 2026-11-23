@@ -8,39 +8,39 @@ namespace NSZipEmbed
 {
 #define CURRENTWRAPPER CZipEmbed
 
-	FUNCTION_WRAPPER_V8_1(_open, open)
-	FUNCTION_WRAPPER_V8_0(_create, create)
-	FUNCTION_WRAPPER_V8_0(_save, save)
-	FUNCTION_WRAPPER_V8_1(_getFile, getFile)
-	FUNCTION_WRAPPER_V8_2(_addFile, addFile)
-	FUNCTION_WRAPPER_V8_1(_removeFile, removeFile)
-	FUNCTION_WRAPPER_V8_0(_close, close)
-	FUNCTION_WRAPPER_V8_0(_getPaths, getPaths)
-	FUNCTION_WRAPPER_V8_2(_decodeImage, decodeImage)
-	FUNCTION_WRAPPER_V8_6(_encodeImageData, encodeImageData)
-	FUNCTION_WRAPPER_V8_2(_encodeImage, encodeImage)
-	FUNCTION_WRAPPER_V8_1(_getImageType, getImageType)
-	FUNCTION_WRAPPER_V8_1(_getImageBuffer, getImageBuffer)
+	FUNCTION_WRAPPER_V8_1(openWrapper, open)
+	FUNCTION_WRAPPER_V8_0(createWrapper, create)
+	FUNCTION_WRAPPER_V8_0(saveWrapper, save)
+	FUNCTION_WRAPPER_V8_1(getFileWrapper, getFile)
+	FUNCTION_WRAPPER_V8_2(addFileWrapper, addFile)
+	FUNCTION_WRAPPER_V8_1(removeFileWrapper, removeFile)
+	FUNCTION_WRAPPER_V8_0(closeWrapper, close)
+	FUNCTION_WRAPPER_V8_0(getPathsWrapper, getPaths)
+	FUNCTION_WRAPPER_V8_2(decodeImageWrapper, decodeImage)
+	FUNCTION_WRAPPER_V8_6(encodeImageDataWrapper, encodeImageData)
+	FUNCTION_WRAPPER_V8_2(encodeImageWrapper, encodeImage)
+	FUNCTION_WRAPPER_V8_1(getImageTypeWrapper, getImageType)
+	FUNCTION_WRAPPER_V8_1(getImageBufferWrapper, getImageBuffer)
 
-	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
+	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);
 		result->SetInternalFieldCount(1);
 
-		NSV8Objects::Template_Set(result, "open",	_open);
-		NSV8Objects::Template_Set(result, "create",	_create);
-		NSV8Objects::Template_Set(result, "save",	_save);
-		NSV8Objects::Template_Set(result, "getFile",	_getFile);
-		NSV8Objects::Template_Set(result, "addFile",	_addFile);
-		NSV8Objects::Template_Set(result, "removeFile",	_removeFile);
-		NSV8Objects::Template_Set(result, "close",	_close);
-		NSV8Objects::Template_Set(result, "getPaths",	_getPaths);
-		NSV8Objects::Template_Set(result, "decodeImage",	_decodeImage);
-		NSV8Objects::Template_Set(result, "encodeImageData",	_encodeImageData);
-		NSV8Objects::Template_Set(result, "encodeImage",	_encodeImage);
-		NSV8Objects::Template_Set(result, "getImageType",	_getImageType);
-		NSV8Objects::Template_Set(result, "getImageBuffer",	_getImageBuffer);
+		NSV8Objects::Template_Set(result, "open", openWrapper);
+		NSV8Objects::Template_Set(result, "create", createWrapper);
+		NSV8Objects::Template_Set(result, "save", saveWrapper);
+		NSV8Objects::Template_Set(result, "getFile", getFileWrapper);
+		NSV8Objects::Template_Set(result, "addFile", addFileWrapper);
+		NSV8Objects::Template_Set(result, "removeFile", removeFileWrapper);
+		NSV8Objects::Template_Set(result, "close", closeWrapper);
+		NSV8Objects::Template_Set(result, "getPaths", getPathsWrapper);
+		NSV8Objects::Template_Set(result, "decodeImage", decodeImageWrapper);
+		NSV8Objects::Template_Set(result, "encodeImageData", encodeImageDataWrapper);
+		NSV8Objects::Template_Set(result, "encodeImage", encodeImageWrapper);
+		NSV8Objects::Template_Set(result, "getImageType", getImageTypeWrapper);
+		NSV8Objects::Template_Set(result, "getImageBuffer", getImageBufferWrapper);
 
 		return handle_scope.Escape(result);
 	}

@@ -36,7 +36,7 @@ namespace MetaFile
 
 		if (!m_pDC)
 		{
-			if (NULL != m_pParser) m_pParser->SetError();
+			if (nullptr != m_pParser) m_pParser->SetError();
 			return;
 		}
 
@@ -81,7 +81,7 @@ namespace MetaFile
 		m_pDC = new CEmfDC(this);
 		if (!m_pDC)
 		{
-			if (NULL != m_pParser) m_pParser->SetError();
+			if (nullptr != m_pParser) m_pParser->SetError();
 			return;
 		}
 
@@ -95,14 +95,14 @@ namespace MetaFile
 	{
 		if (!m_pDC)
 		{
-			if (NULL != m_pParser) m_pParser->SetError();
+			if (nullptr != m_pParser) m_pParser->SetError();
 			return;
 		}
 
 		CEmfDC* pNewDC = m_pDC->Copy();
 		if (!pNewDC)
 		{
-			if (NULL != m_pParser) m_pParser->SetError();
+			if (nullptr != m_pParser) m_pParser->SetError();
 			return;
 		}
 
@@ -133,7 +133,7 @@ namespace MetaFile
 		{
 			if (m_mDCs.empty() || m_mDCs.begin()->first > nIndex)
 			{
-				if (NULL != m_pParser) m_pParser->SetError();
+				if (nullptr != m_pParser) m_pParser->SetError();
 				return;
 			}
 
@@ -154,7 +154,7 @@ namespace MetaFile
 				m_pDC = oFound->second;
 				m_mDCs.erase(oFound);
 			}
-			else if (NULL != m_pParser)
+			else if (nullptr != m_pParser)
 				m_pParser->SetError();
 		}
 	}
@@ -192,7 +192,7 @@ namespace MetaFile
 	{
 		// DEFAULT_PALETTE
 		if (ulIndex == 0x8000000F)
-			m_pDC->SetPalette(NULL);
+			m_pDC->SetPalette(nullptr);
 
 		CEmfObjectMap::const_iterator oPos = m_mObjects.find(ulIndex);
 		if (m_mObjects.end() != oPos)
@@ -204,7 +204,7 @@ namespace MetaFile
 	}
 	void CEmfPlayer::DeleteObject(unsigned int ulIndex)
 	{
-		// TODO: Сделать поиск по DC_BRUSH и DC_PEN
+		// TODO: Search for DC_BRUSH and DC_PEN
 
 		CEmfObjectMap::const_iterator oPos = m_mObjects.find(ulIndex);
 		if (m_mObjects.end() != oPos)
@@ -247,9 +247,9 @@ namespace MetaFile
 		InitStockPen(false, 0xff, 0xff, 0xff, 0x80000006);
 		InitStockPen(false, 0x00, 0x00, 0x00, 0x80000007);
 		InitStockPen(true, 0x00, 0x00, 0x00, 0x80000008);
-		// TODO: Сделать шрифты
+		// TODO: Make fonts
 
-		// DC_BRUSH и DC_PEN не надо выставлять
+		// DC_BRUSH and DC_PEN don't need to be set
 	}
 	void CEmfPlayer::InitStockBrush(bool bNull, unsigned char r, unsigned char g, unsigned char b, unsigned int ulIndex)
 	{
@@ -288,9 +288,9 @@ namespace MetaFile
 	{
 		m_pPlayer   = pPlayer;
 		m_ulMapMode = MM_TEXT;
-		m_pBrush    = NULL;
-		m_pPen      = NULL;
-		m_pFont     = NULL;
+		m_pBrush    = nullptr;
+		m_pPen      = nullptr;
+		m_pFont     = nullptr;
 		m_oTransform.Init();
 		m_oInverseTransform.Init();
 		m_oTextColor.Set(0, 0, 0);
@@ -330,7 +330,7 @@ namespace MetaFile
 		m_oDefaultFont.oLogFontEx.oLogFont.nWeight = 400;
 		m_oDefaultFont.oLogFontEx.oLogFont.nWidth = 0;
 
-		m_oDefaultFont.oDesignVector.pValues = NULL;
+		m_oDefaultFont.oDesignVector.pValues = nullptr;
 		m_oDefaultFont.oDesignVector.unNumAxes = 0;
 	}
 	CEmfDC::~CEmfDC()
@@ -340,7 +340,7 @@ namespace MetaFile
 	{
 		CEmfDC* pNewDC = new CEmfDC(m_pPlayer);
 		if (!pNewDC)
-			return NULL;
+			return nullptr;
 
 		pNewDC->m_oClip.Copy(m_oClip);
 		pNewDC->m_ulMapMode      = m_ulMapMode;
@@ -427,6 +427,10 @@ namespace MetaFile
 				UpdatePixelMetrics();
 				break;
 			}
+			default:
+			{
+				break;
+			}
 		}
 
 		UpdateFinalTransform();
@@ -460,7 +464,7 @@ namespace MetaFile
 	{
 		m_oTransform.Multiply(oForm, ulMode);
 
-		// Обновляем обратную матрицу
+		// Update the inverse matrix
 		TEmfXForm* pT = &m_oTransform;
 		const double dDet = pT->M11 * pT->M22 - pT->M12 * pT->M21;
 		if (Equals(0., dDet, 0.0001))
@@ -499,7 +503,7 @@ namespace MetaFile
 	void CEmfDC::RemoveBrush(IBrush* pBrush)
 	{
 		if (pBrush == m_pBrush)
-			m_pBrush = NULL;
+			m_pBrush = nullptr;
 	}
 	const IBrush* CEmfDC::GetBrush() const
 	{
@@ -512,11 +516,11 @@ namespace MetaFile
 	void CEmfDC::RemoveFont(IFont* pFont)
 	{
 		if (pFont == m_pFont)
-			m_pFont = NULL;
+			m_pFont = nullptr;
 	}
 	const IFont* CEmfDC::GetFont() const
 	{
-		return (NULL != m_pFont) ? m_pFont : &m_oDefaultFont;
+		return (nullptr != m_pFont) ? m_pFont : &m_oDefaultFont;
 	}
 	void CEmfDC::SetTextAlign(unsigned int ulAlign)
 	{
@@ -565,7 +569,7 @@ namespace MetaFile
 	void CEmfDC::RemovePen(IPen* pPen)
 	{
 		if (pPen == m_pPen)
-			m_pPen = NULL;
+			m_pPen = nullptr;
 	}
 	const IPen* CEmfDC::GetPen() const
 	{
@@ -759,7 +763,7 @@ namespace MetaFile
 	void CEmfDC::RemovePalette(CEmfLogPalette* pPalette)
 	{
 		if (m_pPalette == pPalette)
-			m_pPalette = NULL;
+			m_pPalette = nullptr;
 	}
 	const CEmfLogPalette* CEmfDC::GetPalette() const
 	{

@@ -58,7 +58,7 @@ namespace OOX
 		class CDxf;
 		class CColor;
 
-		//необработано:
+		//raw:
 		//<extLst>
 		class CFormulaCF : public WritingElement
 		{
@@ -358,7 +358,7 @@ namespace OOX
 			WritingElement_AdditionMethods(CConditionalFormatting)
             WritingElement_XlsbConstructors(CConditionalFormatting)
 
-			CConditionalFormatting(OOX::Document *pMain = NULL);
+			CConditionalFormatting(OOX::Document *pMain = nullptr);
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
 			virtual std::wstring toXML() const;
@@ -388,7 +388,7 @@ namespace OOX
 		public:
 
 			nullable<SimpleTypes::COnOff>	m_oPivot;
-			nullable<std::wstring >			m_oSqRef; // ToDo переделать на тип "sqref" (18.18.76) - последовательность "ref", разделенные пробелом
+			nullable<std::wstring >			m_oSqRef; // Convert ToDo to type "sqref" (18.18.76) - sequence of "refs" separated by a space
 		};
 
 	} //Spreadsheet

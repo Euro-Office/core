@@ -31,8 +31,8 @@ RtfWriter::RtfWriter( RtfDocument& oDocument , std::wstring sFilename, std::wstr
 	m_sFilename = sFilename;
 	m_sTempFolder = sFolder;
 	m_bFirst = true;
-	m_oCurTempFileWriter = NULL;
-	m_oCurTempFileSectWriter = NULL;
+	m_oCurTempFileWriter = nullptr;
+	m_oCurTempFileSectWriter = nullptr;
 }
 RtfWriter::~RtfWriter()
 {
@@ -62,7 +62,7 @@ bool RtfWriter::SaveByItemStart()
 	//	BSTR bstrFileName = m_sTempFileResult.AllocSysString();
 	//	m_oFileWriter = new NFileWriter::CBufferedFileWriter( bstrFileName );
 	//	SysFreeString( bstrFileName );
-	//	//создаем темповый файл куда пишем параграфы( потом копируем свойства секции и содержимое файла )
+	//	//create a temp file where write paragraphs (then copy the section properties and file contents)
 	//	m_sTempFile = Utils::CreateTempFile( m_sTempFolder );
 	//	BSTR bstrTempFileName = m_sTempFile.AllocSysString();
 	//	m_oTempFileWriter = new NFileWriter::CBufferedFileWriter( bstrTempFileName );
@@ -80,7 +80,7 @@ bool RtfWriter::SaveByItemStart()
 }
 bool RtfWriter::SaveByItem()
 {
-	if( NULL == m_oCurTempFileWriter )
+	if( nullptr == m_oCurTempFileWriter )
 	{
 		try
 		{
@@ -110,10 +110,10 @@ bool RtfWriter::SaveByItem()
 
 	if( m_oDocument.GetCount() > 1 && m_oDocument[0].props->GetCount() == 0 )
 	{
-		//пишем конец секции
+		//write the end of the section
         std::string sRtfExt = "\\sect";
         m_oCurTempFileWriter->Write( (BYTE*)sRtfExt.c_str(), sRtfExt.length() );
-		//окончательно дописываем темповый файл
+		//finally adding the temp file
 		RELEASEOBJECT( m_oCurTempFileWriter )
 		try
 		{
@@ -126,21 +126,21 @@ bool RtfWriter::SaveByItem()
 		{
 			return false;
 		}
-		if( NULL != m_oCurTempFileSectWriter )
+		if( nullptr != m_oCurTempFileSectWriter )
 		{
-			//пишем свойства секции
+			//write section properties
             std::wstring sRtf;
-			if( true == m_bFirst )
+			if( m_bFirst )
 			{
-				//первый свойства секции пишем как свойства документа
+				//write the first section properties as document properties
 				m_bFirst = false;
 				oNewParam.nType = RENDER_TO_OOX_PARAM_FIRST_SECTION;
 			}
 			sRtf = m_oDocument[0].props->m_oProperty.RenderToRtf(oNewParam);
             RtfUtility::RtfInternalEncoder::Decode( sRtf, *m_oCurTempFileSectWriter );
-			//дописываем в файл
+			//add to file
 			RELEASEOBJECT( m_oCurTempFileSectWriter );
-			//создаем новый
+			//create a new one
             std::wstring sNewTempFileSect = Utils::CreateTempFile( m_sTempFolder );
 			m_aTempFilesSectPr.push_back( sNewTempFileSect );
 
@@ -150,18 +150,18 @@ bool RtfWriter::SaveByItem()
 			//RtfInternalEncoder::Decode( sRtf, *m_oFileWriter );
             //m_oFileWriter->Write( (BYTE*)(LPCSTR)sRtf, sRtf.length() );
 		}
-		//удаляем секцию
+		//delete the section
 		m_oDocument.RemoveItem( 0 );
 	}
-	//пишем параграф
+	//writing a paragraph
 	if( m_oDocument.GetCount() > 0 && m_oDocument[0].props->GetCount() > 0 )
 	{
         std::wstring sRtf;
 		sRtf = m_oDocument[0].props->operator[](0)->RenderToRtf(oNewParam);
 		
 		if( TYPE_RTF_PARAGRAPH ==		m_oDocument[0].props->operator[](0)->GetType() 
-								&&	!( m_oDocument[0].props->GetCount() == 0 
-									&& m_oDocument.GetCount() > 1) )//для последнего параграфа секции не пишем \par
+								&&	( m_oDocument[0].props->GetCount() != 0
+									|| m_oDocument.GetCount() <= 1) )//for the last paragraph of the section we don't write \par
 		{
 			sRtf += L"\\par";
 			//oNewParam.nValue = RENDER_TO_RTF_PARAM_NO_PAR;
@@ -169,7 +169,7 @@ bool RtfWriter::SaveByItem()
         RtfUtility::RtfInternalEncoder::Decode( sRtf, *m_oCurTempFileWriter );
         //m_oTempFileWriter->Write( (BYTE*)(LPCSTR)sRtf, sRtf.length() );
 
-		//удаляем элемент который только что написали
+		//delete the element just written
 		m_oDocument[0].props->RemoveItem( 0 );
 	}
 	return true;
@@ -177,7 +177,7 @@ bool RtfWriter::SaveByItem()
 bool RtfWriter::SaveByItemEnd()
 {
 	bool result = true;
-	//окончательно дописываем темповый файл
+	//finally adding the temp file
 	RELEASEOBJECT( m_oCurTempFileWriter );
 
     std::wstring sRtf;
@@ -188,45 +188,45 @@ bool RtfWriter::SaveByItemEnd()
 		oNewParam.poWriter = this;
 		oNewParam.nType = RENDER_TO_OOX_PARAM_UNKNOWN;
 
-		if( NULL != m_oCurTempFileSectWriter )
+		if( nullptr != m_oCurTempFileSectWriter )
 		{
-			//пишем последнюю секцию
-			if( true == m_bFirst )
+			//writing the last section
+			if( m_bFirst )
 			{
-				//первый свойства секции пишем как свойства документа
+				//write the first section properties as document properties
 				m_bFirst = false;
 				oNewParam.nType = RENDER_TO_OOX_PARAM_FIRST_SECTION;
 			}
 			sRtf = m_oDocument[0].props->m_oProperty.RenderToRtf(oNewParam);
             RtfUtility::RtfInternalEncoder::Decode( sRtf, *m_oCurTempFileSectWriter );
-			//дописываем в файл
+			//add to file
 			RELEASEOBJECT( m_oCurTempFileSectWriter );
 		}
 		//RtfInternalEncoder::Decode( sRtf, *m_oCurTempFileWriter );
         //m_oFileWriter->Write( (BYTE*)(LPCSTR)sRtf, sRtf.length() );
 
-		//удаляем секцию
+		//delete the section
 		m_oDocument.RemoveItem( 0 );
 	}
 
-	//формируем выходной файл
+	//generate the output file
 	try
 	{
 		NFileWriter::CBufferedFileWriter oTargetFileWriter(m_sFilename );
 
-		//пишем заголовок потом все содежимое
+		//write the header then all the contents
 		sRtf = CreateRtfStart();
 		DWORD dwBytesWrite = 0;
         RtfUtility::RtfInternalEncoder::Decode( sRtf, oTargetFileWriter );
         //WriteFile ( hTargetFile, sRtf, ( DWORD ) sRtf.length(), &dwBytesWrite, NULL );
 
-		//копируем заголовки из массива и параграфы из темповых файлов
+		//copy headings from the array and paragraphs from temp files
 		for (size_t i = 0 ; i < m_aTempFiles.size() && i < m_aTempFilesSectPr.size(); i++ )
 		{
-			//свойства секции
+			//section properties
 
 			NSFile::CFileBinary file;
-			if (true == file.OpenFile(m_aTempFilesSectPr[i]))
+			if (file.OpenFile(m_aTempFilesSectPr[i]))
 			{
 				DWORD dwBytesRead = 1;
 				BYTE byteBuffer[ 4096 ];
@@ -241,8 +241,8 @@ bool RtfWriter::SaveByItemEnd()
 				}
 				file.CloseFile();
 			}
-			//параграфы
-			if (true == file.OpenFile(m_aTempFiles[i]))
+			//paragraphs
+			if (file.OpenFile(m_aTempFiles[i]))
 			{
 				DWORD dwBytesRead = 1;
 				BYTE byteBuffer[ 4096 ];
@@ -259,7 +259,7 @@ bool RtfWriter::SaveByItemEnd()
 			}
 		}
 
-		//завершаем документ
+		//completing the document
 		sRtf = CreateRtfEnd();
         RtfUtility::RtfInternalEncoder::Decode( sRtf, oTargetFileWriter );
         BYTE nEndFile = 0;
@@ -307,11 +307,11 @@ std::wstring RtfWriter::CreateRtfStart()
 	
     std::wstring sDefCharProp = m_oDocument.m_oDefaultCharProp.RenderToRtf( oRenderParameter );
     
-	if( false == sDefCharProp.empty() )
+	if( !sDefCharProp.empty() )
 		sResult += L"{\\*\\defchp " + sDefCharProp + L"}";
     std::wstring sDefParProp = m_oDocument.m_oDefaultParagraphProp.RenderToRtf( oRenderParameter );
     
-	if( false == sDefParProp.empty() )
+	if( !sDefParProp.empty() )
 		sResult += L"{\\*\\defpap " + sDefParProp+ L"}";
 	sResult += m_oDocument.m_oStyleTable.RenderToRtf( oRenderParameter );
  	
@@ -328,25 +328,25 @@ std::wstring RtfWriter::CreateRtfStart()
 	sResult += L"\\fet2";//0	Footnotes only or nothing at all (the default). 1 Endnotes only. 2	Both footnotes and endnotes
 	
     std::wstring sFootnote;
-	if( NULL != m_oDocument.m_oFootnoteSep )
+	if( nullptr != m_oDocument.m_oFootnoteSep )
 	{
 		sFootnote = m_oDocument.m_oFootnoteSep->RenderToRtf( oRenderParameter );
         if( !sFootnote.empty() )
             sResult += L"{\\*\\ftnsep " + sFootnote + L"}";
 	}
-	if( NULL != m_oDocument.m_oFootnoteCon )
+	if( nullptr != m_oDocument.m_oFootnoteCon )
 	{
 		sFootnote = m_oDocument.m_oFootnoteCon->RenderToRtf( oRenderParameter );
         if( !sFootnote.empty() )
             sResult += L"{\\*\\ftnsepc " + sFootnote + L"}";
 	}
-	if( NULL != m_oDocument.m_oEndnoteSep )
+	if( nullptr != m_oDocument.m_oEndnoteSep )
 	{
 		sFootnote = m_oDocument.m_oEndnoteSep->RenderToRtf( oRenderParameter );
         if( !sFootnote.empty() )
             sResult += L"{\\*\\aftnsep " + sFootnote + L"}";
 	}
-	if( NULL != m_oDocument.m_oEndnoteCon )
+	if( nullptr != m_oDocument.m_oEndnoteCon )
 	{
 		sFootnote = m_oDocument.m_oEndnoteCon->RenderToRtf( oRenderParameter );
         if( !sFootnote.empty() )

@@ -116,7 +116,7 @@ void CTextAttributesEx::RecalcParagraphsPPT()
                     (s_size > 1 || (s_size == 1 && m_arParagraphs[i].m_arSpans.size() > 1)))
             {
                 split_paragraph = true;
-                // разбиваем параграф
+                // break up the paragraph
                 CParagraph oNewPar = m_arParagraphs[i];
 
                     if (lCountCFs - (j + 1) > 0)
@@ -142,7 +142,7 @@ void CTextAttributesEx::RecalcParagraphsPPT()
                 size_t lFoundBreak = m_arParagraphs[i].m_arSpans[j].m_strText.find((wchar_t)11);
                 if( lFoundBreak != std::wstring::npos)
                 {
-                    // разбиваем span
+                    // break the span
                     CSpan next	= m_arParagraphs[i].m_arSpans[j];
 
                     next.m_strText								= next.m_strText.substr(lFoundBreak + 1);
@@ -280,7 +280,7 @@ void CTextAttributesEx::RecalcParagraphsPPT()
                 if (bulletChar.is_init() && !bulletFontRef.is_init())
                 {
                     //Demo-The-Winter-Olympics.ppt
-                    //стоит ли брать с предыдущего уровня?
+                    //Is it worth taking from the previous level?
                 }
 
                 if (!m_arParagraphs[nIndexP].m_oPFRun.hasBullet.is_init())
@@ -348,7 +348,7 @@ void CTextAttributesEx::RecalcParagraphsPPT()
     }
     void CTextAttributesEx::ApplyRuler(CTheme* pTheme)
     {
-        if (m_oRuler.tabsStops.size() > 0 || m_oRuler.DefaultTabSize.is_init())//presentacio1.ppt слайд 2
+        if (m_oRuler.tabsStops.size() > 0 || m_oRuler.DefaultTabSize.is_init())//presentacio1.ppt slide 2
         {
             for (long i = 0; i < 9 ;i++)
             {

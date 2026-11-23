@@ -37,6 +37,7 @@ namespace NSBinPptxRW
 
 namespace OOX
 {
+// NOLINTBEGIN(bugprone-macro-parentheses): the class argument is used in declarations
 #define AssignPtrXmlContentNoMain(Ptr, Class, Content) \
 {\
 	Ptr = new Class();\
@@ -49,6 +50,7 @@ namespace OOX
 	Class *pClass = dynamic_cast<Class*>(Ptr);\
 	*pClass = Content;\
 }
+// NOLINTEND(bugprone-macro-parentheses)
 
 #define WritingElement_AdditionMethods(Class) \
 	const Class& operator =(const XmlUtils::CXmlNode &oNode)\
@@ -95,144 +97,144 @@ namespace OOX
 }\
 
 #define WritingElement_ReadNode( oRootNode, oChildNode, sNodeName, oValue ) \
-	if ( oRootNode.GetNode( sNodeName, oChildNode ) )\
-	oValue = oChildNode;
+	if ( (oRootNode).GetNode( sNodeName, oChildNode ) )\
+	(oValue) = oChildNode;
 
 #define WritingElement_WriteNode_1( sStartNodeString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-	sResult += sStartNodeString;\
-	sResult += oValue->ToString();\
+	sResult += (sStartNodeString);\
+	sResult += (oValue)->ToString();\
 	sResult += _T("/>");\
 }
 
 #define WritingElement_WriteNode_2( oValue ) \
-	if ( oValue.IsInit() )\
-	sResult += oValue->toXML();
+	if ( (oValue).IsInit() )\
+	sResult += (oValue)->toXML();
 
 #define WritingElement_WriteNode_3( sStartNodeString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-	sResult += sStartNodeString;\
-	sResult += oValue->ToString(false);\
+	sResult += (sStartNodeString);\
+	sResult += (oValue)->ToString(false);\
 	sResult += _T("/>");\
 }
 //-----------------------------------------------------------------------------------------------
 #define WritingElement_ReadAttributes_ReadSingle2(Reader, AttrName, Value) \
-	if ( Reader.GetAttributesCount() > 0 ){\
-	if ( Reader.MoveToFirstAttribute() ){\
-	std::wstring wsName = Reader.GetName();\
+	if ( (Reader).GetAttributesCount() > 0 ){\
+	if ( (Reader).MoveToFirstAttribute() ){\
+	std::wstring wsName = (Reader).GetName();\
 	while( !wsName.empty() )\
 	{\
-	if ( AttrName == wsName )\
+	if ( (AttrName) == wsName )\
 	{\
-	Value = Reader.GetText();\
+	(Value) = (Reader).GetText();\
 	break;\
 }\
-	if ( !Reader.MoveToNextAttribute() ) \
+	if ( !(Reader).MoveToNextAttribute() ) \
 	break;\
-	wsName = Reader.GetName();\
+	wsName = (Reader).GetName();\
 }\
-	Reader.MoveToElement();}}
-	// Следующие 3 define используются для чтения аттрибутов через CXmlLiteReader
+	(Reader).MoveToElement();}}
+	// The following 3 defines are used to read attributes via CXmlLiteReader
 #define WritingElement_ReadAttributes_Start(Reader) \
-	if ( Reader.GetAttributesCount() <= 0 )\
+	if ( (Reader).GetAttributesCount() <= 0 )\
 	return;\
-	if ( !Reader.MoveToFirstAttribute() )\
+	if ( !(Reader).MoveToFirstAttribute() )\
 	return;\
-	std::wstring wsName = Reader.GetName();\
+	std::wstring wsName = (Reader).GetName();\
 	while( !wsName.empty() )\
 	{
 
 #define WritingElement_ReadAttributes_StartChar(Reader) \
-	if ( Reader.GetAttributesCount() <= 0 )\
+	if ( (Reader).GetAttributesCount() <= 0 )\
 	return;\
-	if ( !Reader.MoveToFirstAttribute() )\
+	if ( !(Reader).MoveToFirstAttribute() )\
 	return;\
-	const char* wsName = Reader.GetNameChar();\
+	const char* wsName = (Reader).GetNameChar();\
 	while( strlen(wsName) != 0 )\
 	{
 
 #define WritingElement_ReadAttributes_StartChar_No_NS(Reader) \
-	if ( Reader.GetAttributesCount() <= 0 )\
+	if ( (Reader).GetAttributesCount() <= 0 )\
 	return;\
-	if ( !Reader.MoveToFirstAttribute() )\
+	if ( !(Reader).MoveToFirstAttribute() )\
 	return;\
-	const char* wsName = XmlUtils::GetNameNoNS(Reader.GetNameChar());\
+	const char* wsName = XmlUtils::GetNameNoNS((Reader).GetNameChar());\
 	while( strlen(wsName) != 0 )\
 	{
 
 #define WritingElement_ReadAttributes_Start_No_NS(Reader) \
-	if ( Reader.GetAttributesCount() <= 0 )\
+	if ( (Reader).GetAttributesCount() <= 0 )\
 	return;\
-	if ( !Reader.MoveToFirstAttribute() )\
+	if ( !(Reader).MoveToFirstAttribute() )\
 	return;\
-	std::wstring wsName = XmlUtils::GetNameNoNS(Reader.GetName());\
+	std::wstring wsName = XmlUtils::GetNameNoNS((Reader).GetName());\
 	while( !wsName.empty() )\
 	{
 
 #define WritingElement_ReadAttributes_Read_if(Reader, AttrName, Value) \
-	if ( AttrName == wsName )\
+	if ( (AttrName) == wsName )\
 	{\
-	Value = Reader.GetText();\
+	(Value) = (Reader).GetText();\
 }
 
 #define WritingElement_ReadAttributes_Read_ifChar(Reader, AttrName, Value) \
 	if ( strcmp(AttrName, wsName) == 0 )\
 	{\
-	Value = Reader.GetText();\
+	(Value) = (Reader).GetText();\
 }
 #define WritingElement_ReadAttributesA_Read_ifChar(Reader, AttrName, Value) \
 	if ( strcmp(AttrName, wsName) == 0 )\
 	{\
-	Value = Reader.GetTextA();\
+	(Value) = (Reader).GetTextA();\
 }
 #define WritingElement_ReadAttributes_Read_else_if(Reader, AttrName, Value) \
-	else if ( AttrName == wsName )\
-	Value = Reader.GetText();
+	else if ( (AttrName) == wsName )\
+	(Value) = (Reader).GetText();
 
 #define WritingElement_ReadAttributes_Read_else_ifChar(Reader, AttrName, Value) \
 	else if ( strcmp(AttrName, wsName) == 0 )\
-	Value = Reader.GetText();
+	(Value) = (Reader).GetText();
 
 #define WritingElement_ReadAttributesA_Read_else_ifChar(Reader, AttrName, Value) \
 	else if ( strcmp(AttrName, wsName) == 0 )\
-	Value = Reader.GetTextA();
+	(Value) = (Reader).GetTextA();
 
 #define WritingElement_ReadAttributes_ReadSingle(Reader, AttrName, Value) \
-	if ( AttrName == wsName )\
+	if ( (AttrName) == wsName )\
 	{\
-	Value = Reader.GetText();\
+	(Value) = (Reader).GetText();\
 	break;\
 }
 
 #define WritingElement_ReadAttributes_End(Reader) \
-	if ( !Reader.MoveToNextAttribute() ) \
+	if ( !(Reader).MoveToNextAttribute() ) \
 	break;\
-	wsName = Reader.GetName();\
+	wsName = (Reader).GetName();\
 }\
-	Reader.MoveToElement();
+	(Reader).MoveToElement();
 
 #define WritingElement_ReadAttributes_EndChar(Reader) \
-	if ( !Reader.MoveToNextAttribute() ) \
+	if ( !(Reader).MoveToNextAttribute() ) \
 	break;\
-	wsName = Reader.GetNameChar();\
+	wsName = (Reader).GetNameChar();\
 }\
-	Reader.MoveToElement();
+	(Reader).MoveToElement();
 
 #define WritingElement_ReadAttributes_EndChar_No_NS(Reader) \
-	if ( !Reader.MoveToNextAttribute() ) \
+	if ( !(Reader).MoveToNextAttribute() ) \
 	break;\
-	wsName = XmlUtils::GetNameNoNS(Reader.GetNameChar());\
+	wsName = XmlUtils::GetNameNoNS((Reader).GetNameChar());\
 }\
-	Reader.MoveToElement();
+	(Reader).MoveToElement();
 
 #define WritingElement_ReadAttributes_End_No_NS(Reader) \
-	if ( !Reader.MoveToNextAttribute() ) \
+	if ( !(Reader).MoveToNextAttribute() ) \
 	break;\
-	wsName = XmlUtils::GetNameNoNS(Reader.GetName());\
+	wsName = XmlUtils::GetNameNoNS((Reader).GetName());\
 }\
-	Reader.MoveToElement();
+	(Reader).MoveToElement();
 
 	enum EElementType
 	{
@@ -759,7 +761,7 @@ namespace OOX
 		et_c_chart, // <c:chart>
 		et_c_spPr,
 
-		et_sl_schema, // <sl:shema>
+		et_sl_schema, // <sl:schema>
 		et_sl_schemaLibrary, // <sl:schemaLibrary>
 
 		et_v_arc, // <v:arc>
@@ -1659,7 +1661,7 @@ namespace OOX
 	class WritingElement
 	{
 	public:		
-		WritingElement(OOX::Document *pMain = NULL);
+		WritingElement(OOX::Document *pMain = nullptr);
 		virtual ~WritingElement();
 
 		virtual void			fromXML(XmlUtils::CXmlNode& node)	= 0;
@@ -1681,11 +1683,11 @@ namespace OOX
 	public:
 		std::vector<ElemType *>  m_arrItems;
 
-		WritingElementWithChilds(OOX::Document *pMain = NULL) :  WritingElement(pMain){}
+		WritingElementWithChilds(OOX::Document *pMain = nullptr) :  WritingElement(pMain){}
 		
 		virtual ~WritingElementWithChilds()
 		{
-			ClearItems();
+			WritingElementWithChilds::ClearItems();
 		}
 
 		virtual void ClearItems()

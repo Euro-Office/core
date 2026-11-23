@@ -49,7 +49,7 @@ namespace DocFileFormat
         m_pXmlWriter->WriteNodeEnd( L"", TRUE, FALSE );
 
 		//convert the header text
-		_lastValidPapx	=	(*(m_document->AllPapxFkps->begin()))->grppapx[0];
+		_lastValidPapx	=	FormattedDiskPagePAPX::GetFirstPapx(m_document->AllPapxFkps);
 		int cp			=	_hdr.GetCharacterPosition();
 		int cpMax		=	_hdr.GetCharacterPosition() + this->_hdr.GetCharacterCount();
 

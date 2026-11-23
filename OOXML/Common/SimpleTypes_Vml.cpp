@@ -59,6 +59,7 @@ namespace SimpleTypes
 		case 'v':
 			if      ( L"venn"     == sValue ) this->m_eValue = editasVenn;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -102,6 +103,7 @@ namespace SimpleTypes
 		case 'v':
 			if      ( L"view"				== sValue ) this->m_eValue = extView;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -113,7 +115,6 @@ namespace SimpleTypes
 		{
 		case extBackwardCompatible : return L"backwardCompatible";
 		case extEdit				: return L"edit";
-		case extView				: return L"view";
 		default						: return L"view";
 		}
 	}
@@ -128,7 +129,6 @@ namespace SimpleTypes
 		else if	(L"linear"	== sValue)	this->m_eValue = fillmethodLinear;
 		else if	(L"linear sigma"== sValue)	this->m_eValue = fillmethodLinearSigma;
 		else if (L"sigma"	== sValue)	this->m_eValue = fillmethodSigma;
-		else if (L"none"	== sValue)	this->m_eValue = fillmethodNone;
 		else				this->m_eValue = fillmethodNone;
 
 		return this->m_eValue;
@@ -142,7 +142,6 @@ namespace SimpleTypes
 		case fillmethodLinear	    : return L"linear";
 		case fillmethodLinearSigma	: return L"linearSigma";
 		case fillmethodSigma		: return L"sigma";
-		case fillmethodNone			: return L"none";
 		default						: return L"none";
 		}
 	}
@@ -166,7 +165,6 @@ namespace SimpleTypes
 		else if (L"gradient"		== sValue)	this->m_eValue = filltypeGradient;
 		else if (L"gradientRadial"	== sValue)	this->m_eValue = filltypeGradientRadial;
 		else if (L"pattern"			== sValue)	this->m_eValue = filltypePattern;
-		else if (L"solid"			== sValue)	this->m_eValue = filltypeSolid;
 		else if (L"tile"			== sValue)	this->m_eValue = filltypeTile;
 		else						this->m_eValue = filltypeSolid;
 
@@ -200,7 +198,6 @@ namespace SimpleTypes
 		else if (L"gradientRadial"	== sValue)	this->m_eValue = filltypeGradientRadial;
 		else if (L"gradientUnscaled" == sValue)	this->m_eValue = filltypeGradientUnscaled;
 		else if (L"pattern"			== sValue)	this->m_eValue = filltypePattern;
-		else if (L"solid"			== sValue)	this->m_eValue = filltypeSolid;
 		else if (L"tile"			== sValue)	this->m_eValue = filltypeTile;
 		else						this->m_eValue = filltypeSolid;
 
@@ -245,6 +242,7 @@ namespace SimpleTypes
 		case 'i':
 			if      ( L"ignore"  == sValue ) this->m_eValue = imageaspectIgnore;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -256,7 +254,6 @@ namespace SimpleTypes
 		{
 		case imageaspectAtLeast : return L"atLeast";
 		case imageaspectAtMost  : return L"atMost";
-		case imageaspectIgnore  : return L"ignore";
 		default					: return L"ignore";
 		}
 	}
@@ -270,7 +267,6 @@ namespace SimpleTypes
 		if      (L"double"		== sValue)	this->m_eValue = shadowtypeDouble;
 		else if (L"emboss"		== sValue)	this->m_eValue = shadowtypeEmboss;
 		else if (L"perspective"	== sValue)	this->m_eValue = shadowtypePerspective;
-		else if (L"single"		== sValue)	this->m_eValue = shadowtypeSingle;
 		else								this->m_eValue = shadowtypeSingle;
 
 		return this->m_eValue;
@@ -283,7 +279,6 @@ namespace SimpleTypes
 		case shadowtypeDouble	    : return L"double";
 		case shadowtypeEmboss	    : return L"emboss";
 		case shadowtypePerspective	: return L"perspective";
-		case shadowtypeSingle		: return L"single";
 		default						: return L"single";
 		}
 	}
@@ -311,6 +306,7 @@ namespace SimpleTypes
 		case 's':
 			if ( L"short"  == sValue ) this->m_eValue = strokearrowlengthShort;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -357,6 +353,7 @@ namespace SimpleTypes
 			if      ( L"open"    == sValue ) this->m_eValue = strokearrowtypeOpen;
 			else if ( L"oval"    == sValue ) this->m_eValue = strokearrowtypeOval;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -399,6 +396,7 @@ namespace SimpleTypes
 		case 'w':
 			if ( L"wide"   == sValue ) this->m_eValue = strokearrowwidthWide;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -438,6 +436,7 @@ namespace SimpleTypes
 		case 's':
 			if ( L"square" == sValue ) this->m_eValue = strokeendcapSqaure;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -460,9 +459,7 @@ namespace SimpleTypes
 
 	EStrokeJoinStyle CStrokeJoinStyle::FromString(const std::wstring &sValue)
 	{
-		if      (L"round"	== sValue)	this->m_eValue = strokejoinstyleRound;
-		else if (L"miter"	== sValue)	this->m_eValue = strokejoinstyleMiter;
-		else if (L"bevel"	== sValue)	this->m_eValue = strokejoinstyleMiter;
+		if ((L"miter" == sValue) || (L"bevel" == sValue))	this->m_eValue = strokejoinstyleMiter;
 		else							this->m_eValue = strokejoinstyleRound;
 
 		return this->m_eValue;
@@ -502,6 +499,7 @@ namespace SimpleTypes
 			else if ( L"thinThick"        == sValue ) this->m_eValue = strokelinestyleThinThick;
 			else if ( L"thinThin"         == sValue ) this->m_eValue = strokelinestyleThinThin;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -542,6 +540,7 @@ namespace SimpleTypes
 		case 'm':
 			if ( L"mathml"            == sValue ) this->m_eValue = alternatemathcontenttypeMathMl;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -588,6 +587,7 @@ namespace SimpleTypes
 			else if ( L"auto" == sValue ) this->m_eValue = vmlangleAuto;
 			break;
 
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -602,7 +602,6 @@ namespace SimpleTypes
 		case vmlangle60:   return L"60";
 		case vmlangle90:   return L"90";
 		case vmlangleAny:  return L"any";
-		case vmlangleAuto: return L"auto";
 		default :          return L"auto";
 		}
 	}
@@ -652,6 +651,7 @@ namespace SimpleTypes
 			if      ( L"white"             == sValue ) this->m_eValue = bwmodeWhite;
 			break;
 
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -726,6 +726,7 @@ namespace SimpleTypes
 		case 'c':
 			if ( L"custom" == sValue ) this->m_eValue = colormodeCustom;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -767,6 +768,7 @@ namespace SimpleTypes
 		case 's':
 			if ( L"straight" == sValue ) this->m_eValue = connectortypeStraight;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -810,6 +812,7 @@ namespace SimpleTypes
 		case 's':
 			if ( L"segments" == sValue ) this->m_eValue = connecttypeSegments;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -881,6 +884,7 @@ namespace SimpleTypes
 		case '3':
 			if ( L"3" == sValue ) this->m_eValue = diagramlayout3;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -930,6 +934,7 @@ namespace SimpleTypes
 		case 'z':
 			if ( L"zx" == sValue ) this->m_eValue = extrusionplaneZX;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -969,6 +974,7 @@ namespace SimpleTypes
 		case 'w':
 			if ( L"wireFrame"    == sValue ) this->m_eValue = extrusionrenderWireFrame;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -991,8 +997,7 @@ namespace SimpleTypes
 
 	EExtrusionType CExtrusionType::FromString(const std::wstring& sValue)
 	{
-		if		(L"parallel"    == sValue ) this->m_eValue = extrusiontypeParallel;
-		else if	(L"perspective" == sValue ) this->m_eValue = extrusiontypePerspective;
+		if	(L"perspective" == sValue ) this->m_eValue = extrusiontypePerspective;
 		else								this->m_eValue = extrusiontypeParallel;
 
 		return this->m_eValue;
@@ -1040,6 +1045,7 @@ namespace SimpleTypes
 		case 't':
 			if ( L"top"    == sValue ) this->m_eValue = howTop;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1054,7 +1060,6 @@ namespace SimpleTypes
 		case howLeft  : return L"left";
 		case howMiddle: return L"middle";
 		case howRight : return L"right";
-		case howTop   : return L"top";
 		default       : return L"top";
 		}
 	}
@@ -1082,6 +1087,7 @@ namespace SimpleTypes
 		case 'r':
 			if ( L"right"  == sValue ) this->m_eValue = hralignRight;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1118,6 +1124,7 @@ namespace SimpleTypes
 		case 'c':
 			if ( L"custom" == sValue ) this->m_eValue = insetmodeCustom;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1140,7 +1147,6 @@ namespace SimpleTypes
 	EOLEDrawAspect COLEDrawAspect::FromString(const std::wstring &sValue)
 	{
 		if      (L"Content"	== sValue)	this->m_eValue = oledrawaspectContent;
-		else if (L"Icon"	== sValue)	this->m_eValue = oledrawaspectIcon;
 		else							this->m_eValue = oledrawaspectIcon;
 
 		return this->m_eValue;
@@ -1182,6 +1188,7 @@ namespace SimpleTypes
 			if      ( L"Picture"          == sValue ) this->m_eValue = olelinktypePicture;
 			else if ( L"Png"			  == sValue ) this->m_eValue = olelinktypePng;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1206,8 +1213,7 @@ namespace SimpleTypes
 
 	EOLEType COLEType::FromString(const std::wstring &sValue)
 	{
-		if      (L"embed"	== sValue)	this->m_eValue = oletypeEmbed;
-		else if (L"link"	== sValue)	this->m_eValue = oletypeLink;
+		if (L"link"	== sValue)	this->m_eValue = oletypeLink;
 		else							this->m_eValue = oletypeEmbed;
 
 		return this->m_eValue;
@@ -1229,8 +1235,7 @@ namespace SimpleTypes
 
 	EOLEUpdateMode COLEUpdateMode::FromString(const std::wstring &sValue)
 	{
-		if      (L"Always"	== sValue)	this->m_eValue = oleupdatemodeAlways;
-		else if (L"OnCall"	== sValue)	this->m_eValue = oleupdatemodeOnCall;
+		if (L"OnCall"	== sValue)	this->m_eValue = oleupdatemodeOnCall;
 		else							this->m_eValue = oleupdatemodeAlways;
 
 		return this->m_eValue;
@@ -1268,6 +1273,7 @@ namespace SimpleTypes
 			if      ( L"callout"   == sValue ) this->m_eValue = rtypeCallout;
 			else if ( L"connector" == sValue ) this->m_eValue = rtypeConnector;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1315,6 +1321,7 @@ namespace SimpleTypes
 		case '8':
 			if      ( L"800,600"   == sValue ) this->m_eValue = screensize800x600;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1359,6 +1366,7 @@ namespace SimpleTypes
 		case 't':
 			if ( L"t" == sValue || L"true" == sValue  ) this->m_eValue = bordershadowTrue;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1369,7 +1377,6 @@ namespace SimpleTypes
 		switch(this->m_eValue)
 		{
 		case bordershadowTrue:  return L"t";
-		case bordershadowFalse: return L"f";
 		default :				return L"f";
 		}
 	}
@@ -1434,6 +1441,7 @@ namespace SimpleTypes
 		case 'w':
 			if      ( L"wave"					 == sValue ) this->m_eValue = bordertypeWave;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1502,6 +1510,7 @@ namespace SimpleTypes
 		case 't':
 			if ( L"text"   == sValue ) this->m_eValue = horizontalanchorText;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1547,6 +1556,7 @@ namespace SimpleTypes
 		case 't':
 			if ( L"text"   == sValue ) this->m_eValue = verticalanchorText;
 			break;
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1590,6 +1600,7 @@ namespace SimpleTypes
 			if      ( L"right"   == sValue ) this->m_eValue = wrapsideRight;
 			break;
 
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1634,6 +1645,7 @@ namespace SimpleTypes
 			else if ( L"topAndBottom" == sValue ) this->m_eValue = wraptypeTopAndBottom;
 			break;
 
+		default: break;
 		}
 
 		return this->m_eValue;
@@ -1654,7 +1666,7 @@ namespace SimpleTypes
 
 } // SimpleTypes
 
-// Дополнительные простые типы, не входящие в спецификацию
+// Additional simple types not included in the specification
 namespace SimpleTypes
 {
 	namespace Vml
@@ -1739,6 +1751,7 @@ namespace SimpleTypes
 			case 'c':
 				if      ( L"cloud"            == sValue ) this->m_eValue = vmlcallouttypeCloud;
 				break;
+			default: break;
 			}
 
 			return this->m_eValue;
@@ -1774,7 +1787,7 @@ namespace SimpleTypes
 
 		std::wstring CVmlPath::FromString(const std::wstring &sValue)
 		{
-			// TO DO: Сделать парсер пата Part4. 14.2.2.3
+			// TO DO: Make a parser for Part4. 14.2.2.3
 			m_sValue = sValue;
 
 			return m_sValue;
@@ -1826,10 +1839,9 @@ namespace SimpleTypes
 			{
 				this->m_eValue = vmldashstyleCustom;
 
-				std::wstring sTemp = sValue;
 				for ( size_t nIndex = 0; nIndex < sValue.length(); nIndex++ )
 				{
-					int nChar = sValue[nIndex ];
+					wchar_t nChar = sValue[nIndex ];
 					if ( ' ' == nChar )
 						continue;
 
@@ -1914,7 +1926,10 @@ namespace SimpleTypes
 		{
 			int nLen = (int)sValue.length();
 			if ( nLen <= 0 )
+			{
+				m_dValue = 0;
 				return 0;
+			}
 
 			bool bFraction = ( 'f' == sValue[ nLen - 1 ] );
 
@@ -2366,9 +2381,9 @@ namespace SimpleTypes
 					return;
 				}
 
-				// Чтобы избежать большого количества сравнения строк проверим для начала по первым двум символам
-				int nChar1 = sProperty[ 0 ];
-				int nChar2 = sProperty[ 1 ];
+				// To avoid a lot of string comparisons, check first by the first two characters
+				wchar_t nChar1 = sProperty[ 0 ];
+				wchar_t nChar2 = sProperty[ 1 ];
 
 				switch( nChar1 )
 				{
@@ -2541,19 +2556,19 @@ namespace SimpleTypes
 			case cssptUnknown						: ReadValue_Unknown( sValue ); break;
 
 			case cssptFlip							: ReadValue_Flip( sValue ); break;
-			case cssptHeight						: ReadValue_Units( sValue ); break;
-			case cssptLeft							: ReadValue_Units( sValue ); break;
-			case cssptMarginBottom 					: ReadValue_Units( sValue ); break;
-			case cssptMarginLeft					: ReadValue_Units( sValue ); break;
-			case cssptMarginRight					: ReadValue_Units( sValue ); break;
+			case cssptHeight:
+			case cssptLeft:
+			case cssptMarginBottom:
+			case cssptMarginLeft:
+			case cssptMarginRight:
 			case cssptMarginTop						: ReadValue_Units( sValue ); break;
 			case cssptMsoPositionHorizontal			: ReadValue_MsoPosHor( sValue ); break;
 			case cssptMsoPositionHorizontalRelative	: ReadValue_MsoPosHorRel( sValue ); break;
 			case cssptMsoPositionVertical			: ReadValue_MsoPosVer( sValue ); break;
 			case cssptMsoPositionVerticalRelative	: ReadValue_MsoPosVerRel( sValue ); break;
-			case cssptMsoWrapDistanceBottom			: ReadValue_Units( sValue ); break;
-			case cssptMsoWrapDistanceLeft			: ReadValue_Units( sValue ); break;
-			case cssptMsoWrapDistanceRight			: ReadValue_Units( sValue ); break;
+			case cssptMsoWrapDistanceBottom:
+			case cssptMsoWrapDistanceLeft:
+			case cssptMsoWrapDistanceRight:
 			case cssptMsoWrapDistanceTop			: ReadValue_Units( sValue ); break;
 			case cssptMsoWrapEdited					: ReadValue_Boolean( sValue ); break;
 			case cssptMsoWrapStyle					: ReadValue_MsoWrapStyle( sValue ); break;
@@ -2567,7 +2582,7 @@ namespace SimpleTypes
 			case cssptDirection						: ReadValue_Direction( sValue ); break;
 			case cssptLayoutFlow					: ReadValue_LayoutFlow( sValue ); break;
 			case cssptMsoDirectionAlt				: ReadValue_DirectionAlt( sValue ); break;
-			case cssptMsoFitShapeToText				: ReadValue_Boolean( sValue ); break;
+			case cssptMsoFitShapeToText:
 			case cssptMsoFitTextToShape				: ReadValue_Boolean( sValue ); break;
 			case cssptMsoLayoutFlowAlt				: ReadValue_LayoutFlowAlt( sValue ); break;
 			case cssptMsoNextTextbox				: ReadValue_String( sValue ); break;
@@ -2575,7 +2590,7 @@ namespace SimpleTypes
 			case cssptMsoTextScale					: ReadValue_Units( sValue ); break;
 			case cssptVTextAnchor					: ReadValue_VTextAnchor( sValue ); break;
 
-			case cssptFont							: ReadValue_String( sValue ); break;
+			case cssptFont:
 			case cssptFontFamily					: ReadValue_String( sValue ); break;
 			case cssptFontSize						: ReadValue_Units( sValue ); break;
 			case cssptFontStyle						: ReadValue_FontStyle( sValue ); break;
@@ -2583,24 +2598,24 @@ namespace SimpleTypes
 			case cssptFontWeight					: ReadValue_FontWeight( sValue ); break;
 			case cssptMsoTextShadow					: ReadValue_Boolean( sValue ); break;
 			case cssptTextDecoration				: ReadValue_TextDecoration( sValue ); break;
-			case cssptVRotateLetters				: ReadValue_Boolean( sValue ); break;
+			case cssptVRotateLetters:
 			case cssptVSameLetterHeights			: ReadValue_Boolean( sValue ); break;
 			case cssptVTextAlign					: ReadValue_VTextAlign( sValue ); break;
-			case cssptVTextKern						: ReadValue_Boolean( sValue ); break;
+			case cssptVTextKern:
 			case cssptVTextReverse					: ReadValue_Boolean( sValue ); break;
 			case cssptVTextSpacingMode				: ReadValue_VTextSpacingMode( sValue ); break;
-			case cssptVTextSpacing					: ReadValue_Units( sValue ); break;
-			case csspctMsoWidthPercent				: ReadValue_Units( sValue ); break;
-			case csspctMsoHeightPercent				: ReadValue_Units( sValue ); break;
-			case csspctMsoLeftPercent				: ReadValue_Units( sValue); break;
-			case csspctMsoTopPercent				: ReadValue_Units( sValue); break;
+			case cssptVTextSpacing:
+			case csspctMsoWidthPercent:
+			case csspctMsoHeightPercent:
+			case csspctMsoLeftPercent:
+			case csspctMsoTopPercent				: ReadValue_Units( sValue ); break;
 			case cssptHTextAlign					: ReadValue_VTextAlign( sValue ); break;
 			};
 		}
 
 		void CCssProperty::ReadValue_Unknown(std::wstring& sValue)
 		{
-			// Ничего не делаем
+			// Do nothing
 		}
 		void CCssProperty::ReadValue_Flip(std::wstring& sValue)
 		{
@@ -2613,76 +2628,65 @@ namespace SimpleTypes
 		}
 		void CCssProperty::ReadValue_Units(std::wstring& sValue)
 		{
-			int nPos = -1;
-			if ( -1 != ( nPos = (int)sValue.find(L"auto") ) )
+			if ( std::wstring::npos != sValue.find(L"auto") )
 			{
 				m_oValue.oValue.eType = cssunitstypeAuto;
 			}
-			else if ( -1 != ( nPos = (int)sValue.find( L"in" ) ) )
+			else if ( std::wstring::npos != sValue.find( L"in" ) )
 			{
 				m_oValue.oValue.eType = cssunitstypeUnits;
 
-				std::wstring strValue = sValue.substr( 0, nPos );
 				double dValue = XmlUtils::GetDouble(sValue);
 
 				m_oValue.oValue.dValue = Inch_To_Pt(dValue);
 			}
-			else if ( -1 != ( nPos = (int)sValue.find( L"cm" ) ) )
+			else if ( std::wstring::npos != sValue.find( L"cm" ) )
 			{
 				m_oValue.oValue.eType = cssunitstypeUnits;
 
-				std::wstring strValue = sValue.substr( 0, nPos );
 				double dValue = XmlUtils::GetDouble(sValue);
 
 				m_oValue.oValue.dValue = Cm_To_Pt(dValue);
 			}
-			else if ( -1 != ( nPos = (int)sValue.find( L"mm" ) ) )
+			else if ( std::wstring::npos != sValue.find( L"mm" ) )
 			{
 				m_oValue.oValue.eType = cssunitstypeUnits;
 
-				std::wstring strValue = sValue.substr( 0, nPos );
 				double dValue = XmlUtils::GetDouble(sValue);
 
 				m_oValue.oValue.dValue = Mm_To_Pt(dValue);
 			}
-			else if ( -1 != ( nPos = (int)sValue.find( L"em" ) ) )
+			else if ( std::wstring::npos != sValue.find( L"em" ) || std::wstring::npos != sValue.find( L"ex" ) )
 			{
-				// TO DO: Реализовать единицы 'em'
+				// TO DO: Implement 'em' and 'ex' units
 			}
-			else if ( -1 != ( nPos = (int)sValue.find( L"ex" ) ) )
-			{
-				// TO DO: Реализовать единицы 'ex'
-			}
-			else if ( -1 != ( nPos = (int)sValue.find( L"pt" ) ) )
+			else if ( std::wstring::npos != sValue.find( L"pt" ) )
 			{
 				m_oValue.oValue.eType = cssunitstypeUnits;
 
-				std::wstring strValue = sValue.substr( 0, nPos );
 				double dValue = XmlUtils::GetDouble(sValue);
 
 				m_oValue.oValue.dValue = dValue;
 			}
-			else if ( -1 != ( nPos = (int)sValue.find( L"pc" ) ) )
+			else if ( std::wstring::npos != sValue.find( L"pc" ) )
 			{
 				m_oValue.oValue.eType = cssunitstypeUnits;
 
-				std::wstring strValue = sValue.substr( 0, nPos );
 				double dValue = XmlUtils::GetDouble(sValue);
 
 				m_oValue.oValue.dValue = dValue * 12;
 			}
-			else if ( -1 != ( nPos = (int)sValue.find( L"%" ) ) )
+			else if ( std::wstring::npos != sValue.find( L"%" ) )
 			{
 				m_oValue.oValue.eType = cssunitstypePerc;
 
-				std::wstring strValue = sValue.substr( 0, nPos );
+				std::wstring strValue = sValue.substr( 0, sValue.find( L"%" ) );
 				m_oValue.oValue.dValue = XmlUtils::GetDouble(strValue);
 			}
-			else if ( -1 != ( nPos = (int)sValue.find( L"px" ) ) )
+			else if ( std::wstring::npos != sValue.find( L"px" ) )
 			{
 				m_oValue.oValue.eType = cssunitstypeUnits;
 
-				std::wstring strValue = sValue.substr( 0, nPos );
 				double dValue = XmlUtils::GetDouble(sValue);
 
 				m_oValue.oValue.dValue = Px_To_Pt(dValue);
@@ -2703,8 +2707,7 @@ namespace SimpleTypes
 
 		void CCssProperty::ReadValue_MsoPosHor(std::wstring& sValue)
 		{
-			if      ( L"absolute" == sValue ) m_oValue.eMsoPosHor = cssmsoposhorAbsolute;
-			else if ( L"left"     == sValue ) m_oValue.eMsoPosHor = cssmsoposhorLeft;
+			if ( L"left"     == sValue ) m_oValue.eMsoPosHor = cssmsoposhorLeft;
 			else if ( L"center"   == sValue ) m_oValue.eMsoPosHor = cssmsoposhorCenter;
 			else if ( L"right"    == sValue ) m_oValue.eMsoPosHor = cssmsoposhorRight;
 			else if ( L"inside"   == sValue ) m_oValue.eMsoPosHor = cssmsoposhorInside;
@@ -2718,15 +2721,13 @@ namespace SimpleTypes
 			else if ( L"right-margin-area"	== sValue )	m_oValue.eMsoPosHorRel = cssmsoposhorrelRightMargin;
 			else if ( L"margin"				== sValue ) m_oValue.eMsoPosHorRel = cssmsoposhorrelMargin;
 			else if ( L"page"				== sValue ) m_oValue.eMsoPosHorRel = cssmsoposhorrelPage;
-			else if ( L"text"				== sValue ) m_oValue.eMsoPosHorRel = cssmsoposhorrelText;
 			else if ( L"char"				== sValue ) m_oValue.eMsoPosHorRel = cssmsoposhorrelChar;
 			else
 				m_oValue.eMsoPosHorRel = cssmsoposhorrelText;
 		}
 		void CCssProperty::ReadValue_MsoPosVer(std::wstring& sValue)
 		{
-			if      ( L"absolute" == sValue ) m_oValue.eMsoPosVer = cssmsoposverAbsolute;
-			else if ( L"top"      == sValue ) m_oValue.eMsoPosVer = cssmsoposverTop;
+			if ( L"top"      == sValue ) m_oValue.eMsoPosVer = cssmsoposverTop;
 			else if ( L"center"   == sValue ) m_oValue.eMsoPosVer = cssmsoposverCenter;
 			else if ( L"bottom"   == sValue ) m_oValue.eMsoPosVer = cssmsoposverBottom;
 			else if ( L"inside"   == sValue ) m_oValue.eMsoPosVer = cssmsoposverInside;
@@ -2740,7 +2741,6 @@ namespace SimpleTypes
 			else if ( L"top-margin-area" == sValue )	m_oValue.eMsoPosVerRel = cssmsoposverrelTopMargin;
 			else if ( L"margin" == sValue )				m_oValue.eMsoPosVerRel = cssmsoposverrelMargin;
 			else if ( L"page"   == sValue )				m_oValue.eMsoPosVerRel = cssmsoposverrelPage;
-			else if ( L"text"   == sValue )				m_oValue.eMsoPosVerRel = cssmsoposverrelText;
 			else if ( L"line"   == sValue )				m_oValue.eMsoPosVerRel = cssmsoposverrelLine;
 			else
 				m_oValue.eMsoPosVerRel = cssmsoposverrelText;
@@ -2762,22 +2762,17 @@ namespace SimpleTypes
 		}
 		void CCssProperty::ReadValue_Boolean(std::wstring& sValue)
 		{
-			if ( L"true" == sValue || L"t" == sValue || L"1" == sValue )
-				m_oValue.bValue = true;
-			else
-				m_oValue.bValue = false;
+			m_oValue.bValue = L"true" == sValue || L"t" == sValue || L"1" == sValue;
 		}
 		void CCssProperty::ReadValue_MsoWrapStyle(std::wstring& sValue)
 		{
-			if      ( L"square" == sValue ) m_oValue.eMsoWrapStyle = cssmsowrapstyleSqaure;
-			else if ( L"none"   == sValue ) m_oValue.eMsoWrapStyle = cssmsowrapstyleNone;
+			if ( L"none"   == sValue ) m_oValue.eMsoWrapStyle = cssmsowrapstyleNone;
 			else
 				m_oValue.eMsoWrapStyle = cssmsowrapstyleSqaure;
 		}
 		void CCssProperty::ReadValue_Position(std::wstring& sValue)
 		{
 			if      ( L"static"   == sValue ) m_oValue.ePosition = csspositionStatic;
-			else if ( L"absolute" == sValue ) m_oValue.ePosition = csspositionAbsolute;
 			else if ( L"relative" == sValue ) m_oValue.ePosition = csspositionRelative;
 			else
 				m_oValue.ePosition = csspositionAbsolute;
@@ -2785,7 +2780,6 @@ namespace SimpleTypes
 		void CCssProperty::ReadValue_Visibility(std::wstring& sValue)
 		{
 			if      ( L"hidden"  == sValue ) m_oValue.eVisibility = cssvisibilityHidden;
-			else if ( L"inherit" == sValue ) m_oValue.eVisibility = cssvisibilityInherit;
 			else
 				m_oValue.eVisibility = cssvisibilityInherit;
 		}
@@ -2801,25 +2795,23 @@ namespace SimpleTypes
 		}
 		void CCssProperty::ReadValue_Direction(std::wstring& sValue)
 		{
-			if      ( L"ltr" == sValue ) m_oValue.eDirection = cssdirectionLTR;
-			else if ( L"rtl" == sValue ) m_oValue.eDirection = cssdirectionRTL;
+			if ( L"rtl" == sValue ) m_oValue.eDirection = cssdirectionRTL;
 			else
 				m_oValue.eDirection = cssdirectionLTR;
 		}
 		void CCssProperty::ReadValue_LayoutFlow(std::wstring& sValue)
 		{
-			if      ( L"horizontal"             == sValue ) m_oValue.eLayoutFlow = csslayoutflowHorizontal;
-			else if ( L"vertical"				== sValue ) m_oValue.eLayoutFlow = csslayoutflowVertical;
+			if ( L"vertical"				== sValue ) m_oValue.eLayoutFlow = csslayoutflowVertical;
 			else if ( L"vertical-ideographic"   == sValue ) m_oValue.eLayoutFlow = csslayoutflowVerticalIdeographic;
 			else if ( L"horizontal-ideographic" == sValue ) m_oValue.eLayoutFlow = csslayoutflowHorizontalIdeographic;
 			else
 				m_oValue.eLayoutFlow = csslayoutflowHorizontal;
 		}
-		void CCssProperty::ReadValue_DirectionAlt(std::wstring& sValue)
+		void CCssProperty::ReadValue_DirectionAlt(std::wstring&  /*sValue*/)
 		{
 			m_oValue.eDirectionAlt = cssdirectionaltContext;
 		}
-		void CCssProperty::ReadValue_LayoutFlowAlt(std::wstring& sValue)
+		void CCssProperty::ReadValue_LayoutFlowAlt(std::wstring&  /*sValue*/)
 		{
 			m_oValue.eLayoutFlowAlt = csslayoutflowaltBottomToTop;
 		}
@@ -2835,8 +2827,7 @@ namespace SimpleTypes
 
 		void CCssProperty::ReadValue_MsoRotate(std::wstring& sValue)
 		{
-			if      ( L"0"   == sValue ) m_oValue.eRotate = cssmsorotate0;
-			else if ( L"90"  == sValue ) m_oValue.eRotate = cssmsorotate90;
+			if ( L"90"  == sValue ) m_oValue.eRotate = cssmsorotate90;
 			else if ( L"180" == sValue ) m_oValue.eRotate = cssmsorotate180;
 			else if ( L"-90" == sValue ) m_oValue.eRotate = cssmsorotate270;
 			else
@@ -2844,8 +2835,7 @@ namespace SimpleTypes
 		}
 		void CCssProperty::ReadValue_VTextAnchor(std::wstring& sValue)
 		{
-			if      ( L"top"					== sValue ) m_oValue.eVTextAnchor = cssvtextanchorTop;
-			else if ( L"middle"					== sValue ) m_oValue.eVTextAnchor = cssvtextanchorMiddle;
+			if ( L"middle"					== sValue ) m_oValue.eVTextAnchor = cssvtextanchorMiddle;
 			else if ( L"bottom"					== sValue ) m_oValue.eVTextAnchor = cssvtextanchorBottom;
 			else if ( L"top-center"             == sValue ) m_oValue.eVTextAnchor = cssvtextanchorTopCenter;
 			else if ( L"middle-center"          == sValue ) m_oValue.eVTextAnchor = cssvtextanchorMiddleCenter;
@@ -2859,23 +2849,20 @@ namespace SimpleTypes
 		}
 		void CCssProperty::ReadValue_FontStyle(std::wstring& sValue)
 		{
-			if      ( L"normal"  == sValue ) m_oValue.eFontStyle = cssfontstyleNormal;
-			else if ( L"italic"  == sValue ) m_oValue.eFontStyle = cssfontstyleItalic;
+			if ( L"italic"  == sValue ) m_oValue.eFontStyle = cssfontstyleItalic;
 			else if ( L"oblique" == sValue ) m_oValue.eFontStyle = cssfontstyleOblique;
 			else
 				m_oValue.eFontStyle = cssfontstyleNormal;
 		}
 		void CCssProperty::ReadValue_FontVariant(std::wstring& sValue)
 		{
-			if      ( L"normal"     == sValue ) m_oValue.eFontVariant = cssfontvariantNormal;
-			else if ( L"small-caps" == sValue ) m_oValue.eFontVariant = cssfontvariantSmallCaps;
+			if ( L"small-caps" == sValue ) m_oValue.eFontVariant = cssfontvariantSmallCaps;
 			else
 				m_oValue.eFontVariant = cssfontvariantNormal;
 		}
 		void CCssProperty::ReadValue_FontWeight(std::wstring& sValue)
 		{
-			if      ( L"normal"  == sValue ) m_oValue.eFontWeight = cssfontweightNormal;
-			else if ( L"lighter" == sValue ) m_oValue.eFontWeight = cssfontweightLighter;
+			if ( L"lighter" == sValue ) m_oValue.eFontWeight = cssfontweightLighter;
 			else if ( L"100"     == sValue ) m_oValue.eFontWeight = cssfontweight100;
 			else if ( L"200"     == sValue ) m_oValue.eFontWeight = cssfontweight200;
 			else if ( L"300"     == sValue ) m_oValue.eFontWeight = cssfontweight300;
@@ -2892,8 +2879,7 @@ namespace SimpleTypes
 		}
 		void CCssProperty::ReadValue_TextDecoration(std::wstring& sValue)
 		{
-			if      ( L"none"         == sValue ) m_oValue.eTextDecoration = csstextdecorationNone;
-			else if ( L"underline"    == sValue ) m_oValue.eTextDecoration = csstextdecorationUnderline;
+			if ( L"underline"    == sValue ) m_oValue.eTextDecoration = csstextdecorationUnderline;
 			else if ( L"overline"     == sValue ) m_oValue.eTextDecoration = csstextdecorationOverline;
 			else if ( L"line-through" == sValue ) m_oValue.eTextDecoration = csstextdecorationLineThrough;
 			else if ( L"blink"        == sValue ) m_oValue.eTextDecoration = csstextdecorationBlink;
@@ -2902,8 +2888,7 @@ namespace SimpleTypes
 		}
 		void CCssProperty::ReadValue_VTextAlign(std::wstring& sValue)
 		{
-			if      ( L"left"            == sValue ) m_oValue.eVTextAlign = cssvtextalignLeft;
-			else if ( L"right"           == sValue ) m_oValue.eVTextAlign = cssvtextalignRight;
+			if ( L"right"           == sValue ) m_oValue.eVTextAlign = cssvtextalignRight;
 			else if ( L"center"          == sValue ) m_oValue.eVTextAlign = cssvtextalignCenter;
 			else if ( L"justify"         == sValue ) m_oValue.eVTextAlign = cssvtextalignJustify;
 			else if ( L"letter-justify"  == sValue ) m_oValue.eVTextAlign = cssvtextalignLetterJustify;
@@ -2913,8 +2898,7 @@ namespace SimpleTypes
 		}
 		void CCssProperty::ReadValue_VTextSpacingMode(std::wstring& sValue)
 		{
-			if      ( L"tightening" == sValue ) m_oValue.eVTextSpacingMode = cssvtextspacingmodeTightening;
-			else if ( L"tracking"   == sValue ) m_oValue.eVTextSpacingMode = cssvtextspacingmodeTracking;
+			if ( L"tracking"   == sValue ) m_oValue.eVTextSpacingMode = cssvtextspacingmodeTracking;
 			else
 				m_oValue.eVTextSpacingMode = cssvtextspacingmodeTightening;
 		}
@@ -2968,7 +2952,7 @@ namespace SimpleTypes
 		bool CCssStyle::ParseProperties()
 		{
 			std::wstring sTemp = m_sCss;
-			while ( false == sTemp.empty() )
+			while ( !sTemp.empty() )
 			{
 				size_t nPos = (int)sTemp.find( ';' );
 				if ( std::wstring::npos == nPos )
@@ -3215,10 +3199,9 @@ namespace SimpleTypes
 			int nLen = (int)sValue.length();
 
 			int nSpacePos = 0;
-			wchar_t wChar;
 			while ( nPos < nLen )
 			{
-				while ( ' ' == ( wChar = sValue[nPos] ) )
+				while ( ' ' == sValue[nPos] )
 				{
 					nPos++;
 					if ( nPos >= nLen )
@@ -3270,17 +3253,17 @@ namespace SimpleTypes
 
 		bool CVml_TableProperties::IsTable() const
 		{
-			return ( this->m_eValue & 1 ? true : false );
+			return ( (this->m_eValue & 1) != 0 );
 		}
 
 		bool CVml_TableProperties::IsPlaceholder() const
 		{
-			return ( this->m_eValue & 2 ? true : false );
+			return ( (this->m_eValue & 2) != 0 );
 		}
 
 		bool CVml_TableProperties::IsBiDirectionalText() const
 		{
-			return ( this->m_eValue & 4 ? true : false );
+			return ( (this->m_eValue & 4) != 0 );
 		}
 
 		//--------------------------------------------------------------------------------
@@ -3444,6 +3427,7 @@ namespace SimpleTypes
 					eValue = vmlvector2dposAdjValue;
 					sId    = sValue.substr( 1, nLen - 1 );
 					break;
+				default: break;
 				}
 
 			}
@@ -3473,12 +3457,12 @@ namespace SimpleTypes
 		CVml_Polygon2D_Units::CVml_Polygon2D_Units(const CVml_Polygon2D_Units &oOther)
 		{
 			m_wcDelimiter = 0x20;
-			FromString( oOther.ToString() );
+			CVml_Polygon2D_Units::FromString( oOther.ToString() );
 		}
 		CVml_Polygon2D_Units::CVml_Polygon2D_Units(const std::wstring &sValue)
 		{
 			m_wcDelimiter = 0x20;
-			FromString( sValue );
+			CVml_Polygon2D_Units::FromString( sValue );
 		}
 		CVml_Polygon2D_Units& CVml_Polygon2D_Units::operator =(const std::wstring &sValue)
 		{
@@ -3639,12 +3623,12 @@ namespace SimpleTypes
 		CVml_Matrix::CVml_Matrix(const CVml_Matrix &oOther)
 		{
 			ResetMatrix();
-			FromString( oOther.ToString() );
+			CVml_Matrix::FromString( oOther.ToString() );
 		}
 		CVml_Matrix::CVml_Matrix(const std::wstring &sValue)
 		{
 			ResetMatrix();
-			FromString( sValue );
+			CVml_Matrix::FromString( sValue );
 		}
 		CVml_Matrix& CVml_Matrix::operator =(const std::wstring &sValue)
 		{
@@ -3737,7 +3721,6 @@ namespace SimpleTypes
 				m_dPy = XmlUtils::GetDouble(strValue);
 			}
 
-			nStartPos = nEndPos + 1;
 			return 0;
 		}
 
@@ -3853,19 +3836,19 @@ namespace SimpleTypes
 			Set( 0, 0, 0, 0 );
 		}
 
-		double CVml_TextBoxInset::GetLeft(int nIndex) const
+		double CVml_TextBoxInset::GetLeft(int  /*nIndex*/) const
 		{
 			return m_dLeft;
 		}
-		double CVml_TextBoxInset::GetTop(int nIndex) const
+		double CVml_TextBoxInset::GetTop(int  /*nIndex*/) const
 		{
 			return m_dTop;
 		}
-		double CVml_TextBoxInset::GetRight(int nIndex) const
+		double CVml_TextBoxInset::GetRight(int  /*nIndex*/) const
 		{
 			return m_dRight;
 		}
-		double CVml_TextBoxInset::GetBottom(int nIndex) const
+		double CVml_TextBoxInset::GetBottom(int  /*nIndex*/) const
 		{
 			return m_dBottom;
 		}
@@ -3889,7 +3872,7 @@ namespace SimpleTypes
 
 			std::wstring sValue = sValueInput;
 
-			// Разделителями могут быть запятые и пробелы
+			// Separators can be commas and spaces
 			XmlUtils::replace_all(sValue, L"@", L"");
 			boost::algorithm::split(arSplit, sValue, boost::algorithm::is_any_of(L", "), boost::algorithm::token_compress_on);
 

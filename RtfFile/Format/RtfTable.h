@@ -29,7 +29,7 @@
 
 class RtfDocument;
 
-//TODO не работает если сделать вертикальный мерж и убрать разделение на пераграфы
+//TODO doesn't work if a vertical merge is made and the division into paragraphs is removed
 class RtfTable : public ITextItem, public ItemContainer< RtfTableRowPtr >
 {
 public: 

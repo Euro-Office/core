@@ -23,6 +23,8 @@
  *
  */
 
+#include <cmath>
+
 #include "../Workbook/Workbook.h"
 
 #include "../Common.h"
@@ -154,7 +156,6 @@ namespace OOX
 		{//from 1
 			col--;
 			static const size_t r = ('Z' - 'A' + 1);
-			std::string res;
 			size_t r0 = col / r;
 
 			if (r0 > 0)
@@ -176,7 +177,6 @@ namespace OOX
 		{//from 1
 			col--;
 			static const size_t r = ('Z' - 'A' + 1);
-			std::string res;
 			size_t r0 = col / r;
 
 			if (r0 > 0)
@@ -216,7 +216,7 @@ namespace OOX
 				{
 					Value = 0;
 
-					int Hours = 0, Minutes = 0, Sec = 0, FSec = 0;
+					int Hours = 0, Minutes = 0, Sec = 0;
 					int Year, Month, Day;
 
 					Year = boost::lexical_cast<int>(res[1].str());
@@ -233,7 +233,7 @@ namespace OOX
 						Sec = boost::lexical_cast<int>(res[6].str());
 
 					if (res[7].matched)
-						FSec = boost::lexical_cast<int>(res[7].str());
+						(void)boost::lexical_cast<int>(res[7].str()); // validation only, the fraction is not used
 
 					if (Year < 1400 || Year >10000)
 						return -1;
@@ -273,6 +273,8 @@ namespace OOX
 			}
 			catch (...)
 			{
+				// malformed date-time string
+				(void)0;
 			}
 			return false;
 		}
@@ -291,9 +293,6 @@ namespace OOX
 			{
 				const size_t sz = what.size();
 
-				std::wstring result = what[0].str();
-
-				std::wstring sCell = sz > 1 ? what[1].str() : L"";
 				std::wstring sRow = sz > 2 ? what[2].str() : L"";
 				std::wstring sCol = sz > 3 ? what[3].str() : L"";
 
@@ -306,13 +305,8 @@ namespace OOX
 			{
 				const size_t sz = what.size();
 
-				std::wstring result = what[0].str();
-
-				std::wstring s1 = sz > 1 ? what[1].str() : L"";
 				std::wstring s2 = sz > 2 ? what[2].str() : L"";
-				std::wstring s3 = sz > 3 ? what[3].str() : L"";
 				std::wstring s4 = sz > 4 ? what[4].str() : L"";
-				std::wstring s5 = sz > 5 ? what[5].str() : L"";
 
 				//size_t row = sRow.empty() ? 0 : boost::lexical_cast<size_t>(sRow);
 				//size_t col = sCol.empty() ? 0 : boost::lexical_cast<size_t>(sCol);
@@ -585,7 +579,7 @@ namespace OOX
 			m_oCellMetadata.reset();
 			m_oValue.Clean();
 			m_oFormula.Clean();
-			m_oRichText.reset(NULL);
+			m_oRichText.reset(nullptr);
 		}
 		void CCellXLSB::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -674,6 +668,7 @@ namespace OOX
                 case XLSB::rt_CellSt: nLen += 4 + m_oValue.m_oValue.getUTF16Size();break;
                 case XLSB::rt_CellError:
                 case XLSB::rt_CellBool: nLen += 1; break;
+                default: break;
 			}
 			if(m_oFormula.m_bIsInit)
 			{
@@ -682,7 +677,7 @@ namespace OOX
 				{
                     nType = XLSB::rt_FmlaNum;
 				}
-                else if(XLSB::rt_CellSt == nType)
+                else if(XLSB::rt_CellSt == nType || XLSB::rt_CellBlank == nType)
 				{
                     nType = XLSB::rt_FmlaString;
 				}
@@ -693,10 +688,6 @@ namespace OOX
                 else if(XLSB::rt_CellError == nType)
 				{
                     nType = XLSB::rt_FmlaError;
-				}
-				else if(XLSB::rt_CellBlank == nType)
-				{
-                    nType = XLSB::rt_FmlaString;
 				}
 			}
 			if(m_oRichText.IsInit())
@@ -745,6 +736,7 @@ namespace OOX
                 case XLSB::rt_FmlaBool:
 					oStream.WriteBYTE(m_oValue.m_nValue);
 				break;
+                default: break;
 			}
 
 			_UINT16 nFlags = 0;
@@ -1144,7 +1136,7 @@ namespace OOX
         }
         void CFormula::fromBin(XLS::StreamCacheReaderPtr& reader, XLS::CFRecordPtr& record)
         {
-            //читаем остатки данных в записи ячейки
+            //reading the rest of the data in the cell record
             {
                 XLSB::GrbitFmla flags;
                 *record >> flags;
@@ -1152,8 +1144,8 @@ namespace OOX
                     m_oAca = true;
             }
 
+            reader->getNextRecordType();
             auto recordType = reader->getNextRecordType();
-            recordType = reader->getNextRecordType();
             if(recordType == XLSB::rt_ShrFmla)
             {
                 _INT32 rowRef = 0;
@@ -1207,7 +1199,7 @@ namespace OOX
             {
                 XLS::CellParsedFormula BinFmla(false);
                 *record >> BinFmla;
-                //случай если в формуле есть ссылка на другую
+                //case if the formula contains a reference to another
                 if(!BinFmla.rgce.isEmpty() && BinFmla.rgce.sequence.begin()->get()->ptg_id.get() == 1 && !BinFmla.rgcb.isEmpty())
                 {
                     auto rowPart = static_cast<XLS::PtgExp*>(BinFmla.rgce.sequence.begin()->get());
@@ -1487,7 +1479,7 @@ namespace OOX
             {
                 case SimpleTypes::Spreadsheet::ECellFormulaType::cellformulatypeNormal:
                 {
-                    //пишем флаги для формулы
+                    //writing flags for the formula
                     {
                         XLSB::GrbitFmla flags;
                         if(m_oAca.IsInit() && m_oAca->GetValue())
@@ -1658,7 +1650,6 @@ namespace OOX
 		void CCell::toXML(NSStringUtils::CStringBuilder& writer) const
 		{
 			CXlsxFlat *pXlsxFlat = dynamic_cast<CXlsxFlat*>(this->m_pMainDocument);
-			CXlsb *pXlsb = dynamic_cast<CXlsb*>(this->m_pMainDocument);
 
 			int nBaseRow = (pXlsxFlat)? 0 : 1; // xml/xlsb->xlsx
 
@@ -1749,7 +1740,7 @@ namespace OOX
 				else if ( strcmp("is", sName) == 0 )
 					m_oRichText = oReader;
 				else if ( strcmp("NamedCell", sName) == 0 )
-				{//дублирование имен
+				{//duplicate names
 				}
 //o:SmartTags, x:PhoneticText
 			}
@@ -1803,7 +1794,7 @@ namespace OOX
 			std::map<int, std::map<int, unsigned int>>::iterator pFindRow = sheet->m_oSheetData->m_mapStyleMerges2003.find(xlsx_flat->m_nLastReadRow);
 			std::map<int, unsigned int>::iterator pFind;
 
-			if (false == iColIndex.IsInit())
+			if (!iColIndex.IsInit())
 			{
 				xlsx_flat->m_nLastReadCol = (xlsx_flat->m_nLastReadCol < 0 ? 1 : xlsx_flat->m_nLastReadCol + 1);
 			}
@@ -1835,7 +1826,7 @@ namespace OOX
 						}
 					}
 					sheet->m_oSheetData->m_arrItems.back()->m_arrItems.push_back(pCurrentCell);
-					pCurrentCell = NULL;
+					pCurrentCell = nullptr;
 				}
 				xlsx_flat->m_nLastReadCol = newCol;
 			}
@@ -1886,7 +1877,7 @@ namespace OOX
 			if (m_oType.IsInit() && (m_oType->GetValue() == SimpleTypes::Spreadsheet::celltypeDate || m_oType->GetValue() == SimpleTypes::Spreadsheet::celltypeDateTime))
 			{
 				bool bTime = (m_oType->GetValue() == SimpleTypes::Spreadsheet::celltypeDateTime);
-				if (false == m_oStyle.IsInit())
+				if (!m_oStyle.IsInit())
 				{
 					std::wstring tempCommonName = bTime ? L"UnsetDateTime" : L"UnsetDate";
 					std::map<std::wstring, size_t>::iterator pFind = xlsx_flat->m_pStyles->m_mapStyles2003.find(tempCommonName);
@@ -1916,7 +1907,7 @@ namespace OOX
 			}
 			if (sHyperlink.IsInit())
 			{
-				if (false == sheet->m_oHyperlinks.IsInit())
+				if (!sheet->m_oHyperlinks.IsInit())
 				{
 					sheet->m_oHyperlinks.Init();
 				}
@@ -1946,7 +1937,7 @@ namespace OOX
 				std::string Ref = m_oRef.get2() + ":" + getCellAddressA(xlsx_flat->m_nLastReadRow + iDown.get_value_or(0),
 					xlsx_flat->m_nLastReadCol + iAcross.get_value_or(0));
 
-				if (false == sheet->m_oMergeCells.IsInit())
+				if (!sheet->m_oMergeCells.IsInit())
 				{
 					sheet->m_oMergeCells.Init();
 				}
@@ -2011,17 +2002,17 @@ namespace OOX
 		}
 		void CCell::AfterRead()
 		{
-			CSharedStrings *pSharedStrings = NULL;
+			CSharedStrings *pSharedStrings = nullptr;
 
 			CXlsx* xlsx = dynamic_cast<CXlsx*>(m_pMainDocument);
 			CXlsxFlat* xlsx_flat = dynamic_cast<CXlsxFlat*>(m_pMainDocument);
 
 			if (xlsx)
 			{
-				if (false == xlsx->m_arWorksheets.back()->m_bPrepareForBinaryWriter) return;
+				if (!xlsx->m_arWorksheets.back()->m_bPrepareForBinaryWriter) return;
 
 				if (!xlsx->m_pSharedStrings)
-				{	// еще не прочитался rels
+				{	// haven't read rels yet
 					xlsx->m_arWorksheets.back()->m_bPrepareForBinaryWriter = false;
 					return;
 				}
@@ -2030,7 +2021,7 @@ namespace OOX
 			}
 			else if (xlsx_flat)
 			{
-				if (false == xlsx_flat->m_pSharedStrings.IsInit())
+				if (!xlsx_flat->m_pSharedStrings.IsInit())
 				{
 					xlsx_flat->m_pSharedStrings = new CSharedStrings(m_pMainDocument);
 				}
@@ -2044,13 +2035,13 @@ namespace OOX
 				if (m_oRichText.IsInit()/*SimpleTypes::Spreadsheet::celltypeInlineStr == m_oType->GetValue()*/)
 				{
 					OOX::Spreadsheet::CSi* pSi = m_oRichText.GetPointerEmptyNullable();
-					if (NULL != pSi)
+					if (nullptr != pSi)
 					{
 						int nIndex = pSharedStrings->AddSi(pSi);
-						//меняем значение ячейки
+						//change the cell value
 						m_oValue.Init();
 						m_oValue->m_sText = std::to_wstring(nIndex);
-						//меняем тип ячейки
+						//change cell type
 						m_oType.Init();
 						m_oType->SetValue(SimpleTypes::Spreadsheet::celltypeSharedString);
 					}
@@ -2064,7 +2055,7 @@ namespace OOX
 							xlsx->CreateSharedStrings();
 							pSharedStrings = xlsx->m_pSharedStrings;
 						}
-						//добавляем в SharedStrings
+						//add to SharedStrings
 						CSi* pSi = new CSi();
 						CText* pText = new CText();
 
@@ -2073,10 +2064,10 @@ namespace OOX
 
 						int nIndex = pSharedStrings->AddSi(pSi);
 
-						//меняем значение ячейки
+						//change the cell value
 						m_oValue.Init();
 						m_oValue->m_sText = std::to_wstring(nIndex);
-						//меняем тип ячейки
+						//change cell type
 						if (SimpleTypes::Spreadsheet::celltypeStr == m_oType->GetValue())
 						{
 							m_oType.Init();
@@ -2091,7 +2082,7 @@ namespace OOX
 				}
 				else if (SimpleTypes::Spreadsheet::celltypeBool == m_oType->GetValue())
 				{
-					//обычно пишется 1/0, но встречается, что пишут true/false
+					//Usually it is written 1/0, but sometimes it is written true/false
 					if (m_oValue.IsInit())
 					{
 						SimpleTypes::COnOff oOnOff;
@@ -2146,6 +2137,7 @@ namespace OOX
                     case 0x24: m_oValue->m_sText = L"#NUM!"; break;
                     case 0x2A: m_oValue->m_sText = L"#N/A"; break;
                     case 0x2B: m_oValue->m_sText = L"#GETTING_DATA"; break;
+                    default: break;
 				}
 			}
             else if (XLSB::rt_CellBool == nType || XLSB::rt_FmlaBool == nType)
@@ -2192,8 +2184,8 @@ namespace OOX
 				m_oFormula->fromXLSBExt(oStream, nFlags);
 				if(0 != (nFlags & 0x4000))
 				{
-					m_oType.reset(NULL);
-					m_oValue.reset(NULL);
+					m_oType.reset(nullptr);
+					m_oValue.reset(nullptr);
 				}
 			}
 			if(0 != (nFlags & 0x2000))
@@ -2574,14 +2566,14 @@ namespace OOX
 						if(m_oFormula.IsInit())
 						{
 							auto cellBool(new XLSB::FmlaBool);
-							cellBool->value = m_oValue->m_sText == L"1" ? true : false;
+							cellBool->value = m_oValue->m_sText == L"1";
 							oCell = &cellBool->cell;
 							pSource = cellBool;
 						}
 						else
 						{
 							auto cellBool(new XLSB::CellBool);
-							cellBool->value = m_oValue->m_sText == L"1" ? true : false;
+							cellBool->value = m_oValue->m_sText == L"1";
 							oCell = &cellBool->cell;
 							pSource = cellBool;
 						}
@@ -2912,7 +2904,7 @@ namespace OOX
 								BoolErrCell->cell.ixfe = m_oStyle.get();
 						BYTE cellval = 0;
 						if(m_oValue.IsInit())
-							cellval = m_oValue->m_sText == L"1" ? true : false;
+							cellval = m_oValue->m_sText == L"1";
 						BoolErrCell->bes.bBoolErr = cellval;
 						castedPtr->cellContent = XLS::BaseObjectPtr(BoolErrCell);
 						break;
@@ -3005,7 +2997,7 @@ namespace OOX
 					FmlaCell->val.data.Byte1 = 0x01;
 					BYTE cellval = 0;
 						if(m_oValue.IsInit())
-							cellval = m_oValue->m_sText == L"1" ? true : false;
+							cellval = m_oValue->m_sText == L"1";
 					FmlaCell->val.data.Byte3 = cellval;
 				}
 				else if(cellType == SimpleTypes::Spreadsheet::celltypeError)
@@ -3041,7 +3033,7 @@ namespace OOX
         void CCell::toBin(XLS::StreamCacheWriterPtr& writer)
         {
             XLS::CellRef CellReference;
-            XLS::CellRef* SharedFmlaRef = NULL;
+            XLS::CellRef* SharedFmlaRef = nullptr;
             if((!m_oRow.IsInit() || !m_oCol.IsInit()))
             {
                 if(m_oRef.IsInit())
@@ -3084,11 +3076,11 @@ namespace OOX
 					m_oType->SetValue(processCellType(m_oValue.get().m_sText, isReal, realCache));
             }
             auto cellType = m_oType->GetValue();
-            //основная запись ячейки
+            //cell master record
             CFRecordPtr CellRecord;
-            // дополнительная запись для shared, array и table формул
+            // additional entry for shared, array and table formulas
             CFRecordPtr ExtraRecord;
-            //обработка celltype datatable
+            //processing celltype datatable
             if(m_oFormula.IsInit() && m_oFormula->m_oT.IsInit() && m_oFormula->m_oT->GetValue() == SimpleTypes::Spreadsheet::ECellFormulaType::cellformulatypeDataTable)
             {
                 ExtraRecord = writer->getNextRecord(XLSB::rt_Table);
@@ -3097,7 +3089,7 @@ namespace OOX
                 m_oFormula.reset();
                 ExtraRecord.reset();
             }
-            //обработка метаданных ячейки
+            //cell metadata processing
             if(m_oCellMetadata.IsInit())
             {
                 auto metaRecord = writer->getNextRecord(XLSB::rt_CellMeta);
@@ -3149,7 +3141,7 @@ namespace OOX
                     WriteCellInfo(CellRecord);
                     BYTE cellval = 0;
                     if(m_oValue.IsInit())
-                        cellval = m_oValue->m_sText == L"1" ? true : false;
+                        cellval = m_oValue->m_sText == L"1";
                     *CellRecord << cellval;
                     break;
                 }
@@ -3263,7 +3255,7 @@ namespace OOX
                             SharedFmlaRef = &SharedFormulasRef::sharedRefsLocations->at(m_oFormula->m_oSi->GetValue());
                         XLS::CellParsedFormula BinFmla(false);
 
-                        //пишем флаги для формулы
+                        //writing flags for the formula
                         {
                             XLSB::GrbitFmla flags;
                             if(m_oFormula->m_oAca.IsInit() && m_oFormula->m_oAca->GetValue())
@@ -3294,7 +3286,7 @@ namespace OOX
                         SharedFmlaRef = &CellReference;
                     }
                     XLS::CellParsedFormula BinFmla(false);
-                    //пишем флаги для формулы
+                    //writing flags for the formula
                     {
                         XLSB::GrbitFmla flags;
                         if(m_oFormula->m_oAca.IsInit() && m_oFormula->m_oAca->GetValue())
@@ -3370,7 +3362,7 @@ namespace OOX
             if(recordType == XLSB::rt_FRTBegin)
             {
                 reader->SkipRecord(false);
-                recordType = reader->getNextRecordType();
+                reader->getNextRecordType();
                 reader->SkipRecord(false);
             }
             return true;
@@ -3404,7 +3396,7 @@ namespace OOX
 
 			WritingElement_ReadAttributes_EndChar( oReader )
 
-			if (false == sFormula.empty())
+			if (!sFormula.empty())
 			{
 				m_oFormula.Init();
 				m_oFormula->m_sText = sFormula;
@@ -3553,6 +3545,7 @@ namespace OOX
                                         case 0x24: m_oValue->m_sText = L"#NUM!"; break;
                                         case 0x2A: m_oValue->m_sText = L"#N/A"; break;
                                         case 0x2B: m_oValue->m_sText = L"#GETTING_DATA"; break;
+                                        default: break;
                                     }
                                 }
                                 break;
@@ -3602,6 +3595,7 @@ namespace OOX
                                     m_oValue->m_sText = pSt;
                                 }
                                break;
+                            default: break;
                         }
                     }
                 }
@@ -3752,6 +3746,7 @@ namespace OOX
                         case 0x24: m_oValue->m_sText = L"#NUM!"; break;
                         case 0x2A: m_oValue->m_sText = L"#N/A"; break;
                         case 0x2B: m_oValue->m_sText = L"#GETTING_DATA"; break;
+                        default: break;
                     }
                     break;
                 }
@@ -3923,7 +3918,7 @@ namespace OOX
 		{
 			if (text.empty()) return;
 
-			if (false == m_oRichText.IsInit())
+			if (!m_oRichText.IsInit())
 				m_oRichText.Init();
 
 			CText *pText = new CText();
@@ -4125,7 +4120,7 @@ namespace OOX
 					CCell *pCell = new CCell(m_pMainDocument);
 					if (pCell)
 					{
-						 //пытаемся сжать пустые клетки
+						 //trying to squeeze empty cells
 						pCell->fromXML(oReader);
 						if(!compressCell(pCell))
 							m_arrItems.push_back(pCell);
@@ -4186,9 +4181,9 @@ namespace OOX
             if(type == XLSB::rt_ACBegin)
             {
                 reader->SkipRecord(false);
-                type = reader->getNextRecordType();
+                reader->getNextRecordType();
                 reader->SkipRecord(false);
-                type = reader->getNextRecordType();
+                reader->getNextRecordType();
                 reader->SkipRecord(false);
                 type = reader->getNextRecordType();
             }
@@ -4204,7 +4199,7 @@ namespace OOX
 				pCell->m_oRow = m_oR->GetValue()-1;
                 if(pCell->fromBin(reader))
                 {
-                    //пытаемся сжать пустые клетки
+                    //trying to squeeze empty cells
                     if(!compressCell(pCell))
                         m_arrItems.push_back(pCell);
                     else
@@ -4406,7 +4401,7 @@ namespace OOX
             }
             writer->storeNextRecord(record);
         }
-		void CRow::fromXLSB (NSBinPptxRW::CBinaryFileReader& oStream, _UINT16 nType)
+		void CRow::fromXLSB (NSBinPptxRW::CBinaryFileReader& oStream, _UINT16  /*nType*/)
 		{
 			LONG nEnd = oStream.XlsbReadRecordLength() + oStream.GetPos();
 
@@ -4503,7 +4498,7 @@ namespace OOX
 				{
 					unsigned int newRow = m_oR->GetValue();
 
-					if (false == sheet->m_oSheetData->m_mapStyleMerges2003.empty())
+					if (!sheet->m_oSheetData->m_mapStyleMerges2003.empty())
 					{
 						CRow *pCurrentRow = sheet->m_oSheetData->m_arrItems.back(); // == this
 						sheet->m_oSheetData->m_arrItems.pop_back();
@@ -4526,7 +4521,7 @@ namespace OOX
 							}
 						}
 						sheet->m_oSheetData->m_arrItems.push_back(pCurrentRow);
-						pCurrentRow = NULL;
+						pCurrentRow = nullptr;
 					}
 					xlsx_flat->m_nLastReadRow = newRow;
 				}
@@ -4874,7 +4869,7 @@ namespace OOX
 
 							CWorksheet* pWorksheet = xlsx_flat->m_arWorksheets.back();
 
-							if (false == pWorksheet->m_oCols.IsInit())
+							if (!pWorksheet->m_oCols.IsInit())
 							{
 								pWorksheet->m_oCols.Init();
 							}
@@ -4886,6 +4881,10 @@ namespace OOX
 
 							pColumn->m_oMax.Init();
 							pColumn->m_oMax->SetValue(pWorksheet->m_oCols->m_arrItems.size());
+						}
+						else
+						{
+							delete pColumn;
 						}
 					}
 				}
@@ -4904,13 +4903,13 @@ namespace OOX
 				double pixDpi = *m_dDefaultColumnWidth / 72.0 * 96.; if (pixDpi < 5) pixDpi = 7; // ~
 				double maxDigitSize = xlsx_flat->getMaxDigitSize().first;
 
-				m_dDefaultColumnWidth = ((int)((pixDpi + 5) / maxDigitSize * 100. + 0.5)) / 100.;
+				m_dDefaultColumnWidth = std::lround((pixDpi + 5) / maxDigitSize * 100.) / 100.;
 			}
 
 			pWorksheet->m_oSheetFormatPr->m_oDefaultColWidth = m_dDefaultColumnWidth;
 			pWorksheet->m_oSheetFormatPr->m_oDefaultRowHeight = m_dDefaultRowHeight;
 
-			if (false == pWorksheet->m_oCols.IsInit() && m_dDefaultColumnWidth.IsInit())
+			if (!pWorksheet->m_oCols.IsInit() && m_dDefaultColumnWidth.IsInit())
 			{
 				pWorksheet->m_oCols.Init();
 
@@ -4947,7 +4946,7 @@ namespace OOX
 		{
             oStream.XlsbSkipRecord();//XLSB::rt_BeginSheetData
 
-			CRow* pRow = NULL;
+			CRow* pRow = nullptr;
 			LONG nOldPos = -1;
 			while (nOldPos != oStream.GetPos())
 			{
@@ -4956,7 +4955,7 @@ namespace OOX
                 if (XLSB::rt_CellBlank <= nType && nType <= XLSB::rt_FmlaError)
 				{
 					CCell oCell(m_pMainDocument);
-					oCell.fromXLSB(oStream, nType, pRow->m_oR->GetValue() - 1);
+					oCell.fromXLSB(oStream, nType, pRow->m_oR->GetValue() - 1); // NOLINT(clang-analyzer-core.CallAndMessage): pRow is set by the preceding rt_RowHdr record; a cell before any row header needs a malformed stream, and a guard would change the row index used for it
 					fromXLSBToXmlCell(oCell, pCSVWriter, oStreamWriter);
 				}
                 else if (XLSB::rt_RowHdr == nType)
@@ -4985,7 +4984,7 @@ namespace OOX
 		}
 		void CSheetData::fromXLSBToXmlCell (CCell& oCell, CSVWriter* pCSVWriter, NSFile::CStreamWriter& oStreamWriter)
 		{
-			if (NULL == pCSVWriter)
+			if (nullptr == pCSVWriter)
 			{
 				oCell.toXML(oStreamWriter);
 			}
@@ -4996,7 +4995,7 @@ namespace OOX
 		}
 		void CSheetData::fromXLSBToXmlRowStart (CRow* pRow, CSVWriter* pCSVWriter, NSFile::CStreamWriter& oStreamWriter)
 		{
-			if (NULL == pCSVWriter)
+			if (nullptr == pCSVWriter)
 			{
 				pRow->toXMLStart(oStreamWriter);
 			}
@@ -5009,7 +5008,7 @@ namespace OOX
 		{
 			if(pRow)
 			{
-				if (NULL == pCSVWriter)
+				if (nullptr == pCSVWriter)
 				{
 					pRow->toXMLEnd(oStreamWriter);
 				}
@@ -5073,7 +5072,7 @@ namespace OOX
             {
                 CRow *pRow = new CRow(m_pMainDocument);
                 pRow->fromBin(reader);
-                //проверяем можно ли сжать пустые строки
+                //checking whether empty lines can be compressed
                 if(!compressRow(pRow))
                     m_arrItems.push_back(pRow);
                 else
@@ -5223,13 +5222,13 @@ namespace OOX
                     prevRow->m_oRepeated = 1;
                 if(prevRow->m_oR->GetValue() + prevRow->m_oRepeated.get() == pRow->m_oR->GetValue() && prevRow->m_oHt == pRow->m_oHt)
                 {
-                    //случай с пустыми строками
+                    //case with empty lines
                     if(prevRow->m_arrItems.empty() && pRow->m_arrItems.empty())
                     {
                         prevRow->m_oRepeated = prevRow->m_oRepeated.get() + 1;
                         return true;
                     }
-                    //случай со строками заполненными однотипными сжатыми клетками
+                    //case with rows filled with the same type of compressed cells
                     if(prevRow->m_arrItems.size() == 1 && pRow->m_arrItems.size() == 1 && prevRow->m_arrItems.back()->m_oRepeated.IsInit()
                             && pRow->m_arrItems.back()->m_oRepeated.get() ==  prevRow->m_arrItems.back()->m_oRepeated.get())
                     {
@@ -5264,7 +5263,7 @@ namespace OOX
 
 			if (!xlsx_flat) return;
 
-			if (false == m_oSheetViews.IsInit())
+			if (!m_oSheetViews.IsInit())
 			{
 				m_oSheetViews.Init();
 				m_oSheetViews->m_arrItems.push_back(new CSheetView());
@@ -5289,7 +5288,7 @@ namespace OOX
 
 				if (L"PageSetup" == sName)
 				{
-					if (false == m_oPageSetup.IsInit()) m_oPageSetup.Init();
+					if (!m_oPageSetup.IsInit()) m_oPageSetup.Init();
 
 					int nDocumentDepth1 = oReader.GetDepth();
 					while (oReader.ReadNextSiblingNode(nDocumentDepth1))
@@ -5298,7 +5297,7 @@ namespace OOX
 
 						if (L"Header" == sName1)
 						{
-							if (false == m_oPageMargins.IsInit()) m_oPageMargins.Init();
+							if (!m_oPageMargins.IsInit()) m_oPageMargins.Init();
 
 							WritingElement_ReadAttributes_Start_No_NS(oReader)
 								WritingElement_ReadAttributes_Read_if(oReader, L"Margin", m_oPageMargins->m_oHeader)
@@ -5307,7 +5306,7 @@ namespace OOX
 						}
 						else if (L"Footer" == sName1)
 						{
-							if (false == m_oPageMargins.IsInit()) m_oPageMargins.Init();
+							if (!m_oPageMargins.IsInit()) m_oPageMargins.Init();
 
 							WritingElement_ReadAttributes_Start_No_NS(oReader)
 								WritingElement_ReadAttributes_Read_if(oReader, L"Margin", m_oPageMargins->m_oFooter)
@@ -5322,7 +5321,7 @@ namespace OOX
 						}
 						else if (L"PageMargins" == sName1)
 						{
-							if (false == m_oPageMargins.IsInit()) m_oPageMargins.Init();
+							if (!m_oPageMargins.IsInit()) m_oPageMargins.Init();
 
 							WritingElement_ReadAttributes_Start_No_NS(oReader)
 								WritingElement_ReadAttributes_Read_if(oReader, L"Top", m_oPageMargins->m_oTop)
@@ -5386,7 +5385,7 @@ namespace OOX
 
 								m_oSheetViews->m_arrItems.back()->m_arrItems.back()->m_oActiveCell = getCellAddress(row.IsInit() ? *row + 1 : 1, col.IsInit() ? *col + 1 : 1);
 
-								if (false == m_oSheetViews->m_arrItems.back()->m_arrItems.back()->m_oSqref.IsInit())
+								if (!m_oSheetViews->m_arrItems.back()->m_arrItems.back()->m_oSqref.IsInit())
 								{
 									m_oSheetViews->m_arrItems.back()->m_arrItems.back()->m_oSqref = m_oSheetViews->m_arrItems.back()->m_arrItems.back()->m_oActiveCell;
 								}
@@ -5443,8 +5442,8 @@ namespace OOX
 				}
 				else if (L"Print" == sName)
 				{
-					if (false == m_oPageSetup.IsInit()) m_oPageSetup.Init();
-					if (false == m_oPrintOptions.IsInit()) m_oPrintOptions.Init();
+					if (!m_oPageSetup.IsInit()) m_oPageSetup.Init();
+					if (!m_oPrintOptions.IsInit()) m_oPrintOptions.Init();
 
 					int nDocumentDepth1 = oReader.GetDepth();
 					while (oReader.ReadNextSiblingNode(nDocumentDepth1))
@@ -5489,17 +5488,12 @@ namespace OOX
 					m_oSheetPr->m_oPageSetUpPr->m_oFitToPage.Init();
 					m_oSheetPr->m_oPageSetUpPr->m_oFitToPage->FromBool(true);
 				}
-				else if (L"ProtectObjects" == sName)
+				else if ( L"ProtectObjects" == sName || L"ProtectScenarios" == sName || L"ProtectContents" == sName
+				         || L"DoNotDisplayColHeaders" == sName || L"ViewableRange" == sName || L"GridlineColor" == sName
+				         || L"Unsynced" == sName || L"DisplayPageBreak" == sName || L"DefaultRowHeight" == sName
+				         || L"DefaultColumnWidth" == sName || L"DisplayRightToLeft" == sName || L"ActiveRow" == sName
+				         || L"ActiveColumn" == sName ) // recognized but ignored nodes
 				{
-
-				}
-				else if (L"ProtectScenarios" == sName)
-				{
-
-				}
-				else if (L"ProtectContents" == sName)
-				{
-
 				}
 				else if (L"LeftColumnVisible" == sName)
 				{
@@ -5509,37 +5503,9 @@ namespace OOX
 				{
 					page_break_zoom = oReader.GetText2();
 				}
-				else if (L"DoNotDisplayColHeaders" == sName)
-				{
-
-				}
-				else if (L"ViewableRange" == sName)
-				{
-
-				}
-				else if (L"GridlineColor" == sName)
-				{
-
-				}
-				else if (L"Unsynced" == sName)
-				{
-
-				}
-				else if (L"DisplayPageBreak" == sName)
-				{
-
-				}
 				else if (L"ShowPageBreakZoom" == sName)
 				{
 					m_oSheetViews->m_arrItems.back()->m_oView = SimpleTypes::Spreadsheet::sheetviewPageBreakPreview;
-				}
-				else if (L"DefaultRowHeight" == sName)
-				{
-
-				}
-				else if (L"DefaultColumnWidth" == sName)
-				{
-
 				}
 				else if (L"Visible" == sName)
 				{
@@ -5550,25 +5516,13 @@ namespace OOX
 						pSheet->m_oState->SetValue(SimpleTypes::Spreadsheet::EVisibleType::visibleHidden);
 					}
 				}
-				else if (L"DisplayRightToLeft" == sName)
-				{
-
-				}
 				else if (L"DisplayFormulas" == sName)
 				{
 					m_oSheetViews->m_arrItems.back()->m_oShowFormulas = true;
 				}
-				else if (L"ActiveRow" == sName)
-				{
-
-				}
-				else if (L"ActiveColumn" == sName)
-				{
-
-				}
 				else if (L"TabColorIndex" == sName)
 				{
-					if (false == m_oSheetPr.IsInit()) m_oSheetPr.Init();
+					if (!m_oSheetPr.IsInit()) m_oSheetPr.Init();
 					m_oSheetPr->m_oTabColor.Init();  m_oSheetPr->m_oTabColor->m_oIndexed = oReader.GetText2();
 				}
 			}
@@ -5609,7 +5563,7 @@ namespace OOX
 					m_oSheetViews->m_arrItems.back()->m_oPane->m_oTopLeftCell = getCellAddress(	topRowBottom_pane.IsInit() ? *topRowBottom_pane + 1 : 1,
 																								leftColumnRight_pane.IsInit() ? *leftColumnRight_pane + 1 : 1);
 
-					if (false == m_oSheetViews->m_arrItems.back()->m_arrItems.empty())
+					if (!m_oSheetViews->m_arrItems.back()->m_arrItems.empty())
 					{
 						m_oSheetViews->m_arrItems.back()->m_arrItems.back()->m_oPane.Init();
 						m_oSheetViews->m_arrItems.back()->m_arrItems.back()->m_oPane->SetValue(SimpleTypes::Spreadsheet::activepaneBottomLeft);
@@ -5705,11 +5659,7 @@ namespace OOX
 						if (oReader.IsEmptyNode())
 							continue;
 
-						if (sName1 == L"mc:Choice")
-						{
-							CreateElements(oReader, oReader.GetDepth());
-						}
-						else if (sName1 == L"mc:Fallback")
+						if (sName1 == L"mc:Choice" || sName1 == L"mc:Fallback")
 						{
 							CreateElements(oReader, oReader.GetDepth());
 						}
@@ -5742,7 +5692,8 @@ namespace OOX
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"help",			m_oHelp )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"hidden",			m_oHidden )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"localSheetId",	m_oLocalSheetId )
-                WritingElement_ReadAttributes_Read_else_if( oReader, L"name",			m_oName )
+				else if ( L"name" == wsName || L"ss:Name" == wsName )
+					m_oName = oReader.GetText();
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"publishToServer",m_oPublishToServer )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"shortcutKey ",	m_oShortcutKey  )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"statusBar",		m_oStatusBar  )
@@ -5750,7 +5701,6 @@ namespace OOX
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"workbookParameter",	m_oWorkbookParameter  )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"xlm",			m_oXlm  )
 
-                WritingElement_ReadAttributes_Read_else_if( oReader, L"ss:Name",		m_oName )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"ss:RefersTo",	oRefersTo )
             WritingElement_ReadAttributes_End( oReader )
 
@@ -5766,8 +5716,8 @@ namespace OOX
         }
 		void CWorksheet::PrepareComments(OOX::Spreadsheet::CComments* pComments, OOX::Spreadsheet::CThreadedComments* pThreadedComments, OOX::Spreadsheet::CLegacyDrawingWorksheet* pLegacyDrawing)
 		{
-			OOX::CVmlDrawing* pVmlDrawing = NULL;
-			if (NULL != pLegacyDrawing && pLegacyDrawing->m_oId.IsInit())
+			OOX::CVmlDrawing* pVmlDrawing = nullptr;
+			if (nullptr != pLegacyDrawing && pLegacyDrawing->m_oId.IsInit())
 			{
 				OOX::RId oRId(pLegacyDrawing->m_oId->GetValue());
 
@@ -5796,7 +5746,7 @@ namespace OOX
 					if (!pComment) continue;
 
 					bool bThreadedCommentCopy = false;
-					OOX::Spreadsheet::CThreadedComment* pThreadedComment = NULL;
+					OOX::Spreadsheet::CThreadedComment* pThreadedComment = nullptr;
 					if (pThreadedComments)
 					{
 						std::unordered_map<std::wstring, CThreadedComment*>::iterator pFind = pThreadedComments->m_mapTopLevelThreadedComments.end();
@@ -5866,7 +5816,7 @@ namespace OOX
 								pCommentItem->m_sAuthor = arAuthors[nAuthorId];
 							}
 							OOX::Spreadsheet::CSi* pSi = pComment->m_oText.GetPointerEmptyNullable();
-							if (NULL != pSi)
+							if (nullptr != pSi)
 								pCommentItem->m_oText.reset(pSi);
 
 							pCommentItem->m_pThreadedComment = pThreadedComment;
@@ -5883,7 +5833,7 @@ namespace OOX
 			{
 				OOX::Vml::CShape* pShape = dynamic_cast<OOX::Vml::CShape*>(pVmlDrawing->m_arrItems[i]);
 
-				if (pShape == NULL) continue;
+				if (pShape == nullptr) continue;
 
 				if (pShape->m_sId.IsInit())
 				{//mark shape as used
@@ -5946,7 +5896,7 @@ namespace OOX
 
 								for (size_t k = 0; k < pShape->m_oStyle->m_arrProperties.size(); ++k)
 								{
-									if (pShape->m_oStyle->m_arrProperties[k] == NULL) continue;
+									if (pShape->m_oStyle->m_arrProperties[k] == nullptr) continue;
 
 									SimpleTypes::Vml::CCssProperty *oProperty = pShape->m_oStyle->m_arrProperties[k].get();
 									if (SimpleTypes::Vml::cssptMarginLeft == oProperty->get_Type())

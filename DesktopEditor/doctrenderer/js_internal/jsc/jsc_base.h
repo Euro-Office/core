@@ -465,6 +465,9 @@ namespace NSJSBase
 		CJSCTryCatch() : CJSTryCatch()
 		{
 			context = CJSContextPrivate::GetCurrentContext();
+			// Only the exceptions of what runs from here on, as V8's TryCatch: not one an earlier
+			// script left without a Check
+			context.exception = nil;
 		}
 		virtual ~CJSCTryCatch()
 		{

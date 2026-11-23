@@ -47,7 +47,7 @@ namespace XLSB
     {
         record >> FRTheader >> bLenMin >> bLenMax >> fShowValue >> bDirection >> bAxisPosType;
 
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> flags;
 
         fBorder                     = GETBIT(flags, 0);

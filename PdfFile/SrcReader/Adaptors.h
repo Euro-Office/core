@@ -59,7 +59,7 @@ private:
 public:
     GlobalParamsAdaptor(const char *filename) : GlobalParams(filename)
     {
-        m_bCMapData = NULL;
+        m_bCMapData = nullptr;
         m_nCMapDataLength = 0;
         m_bDrawFormField = false;
     }
@@ -142,12 +142,12 @@ namespace PdfReader
 {
     static void SpitPathExt(std::wstring& wsFullPath, std::wstring* pwsFilePath, std::wstring* pwsExt)
     {
-        // Ищем '.' начиная с конца пути, и разделяем путь на расширение и остальную часть
+        // Looking for '.' starting from the end of the path, and dividing the path into the extension and the rest
         size_t nPos = wsFullPath.find_last_of(L".");
         *pwsFilePath = wsFullPath.substr(0, nPos);
         *pwsExt      = wsFullPath.substr(nPos + 1);
     }
-    static bool OpenTempFile(std::wstring* pwsName, FILE **ppFile, wchar_t *wsMode, wchar_t *wsExt, wchar_t *wsFolder, wchar_t *wsName = NULL)
+    static bool OpenTempFile(std::wstring* pwsName, FILE **ppFile, wchar_t *wsMode, wchar_t *wsExt, wchar_t *wsFolder, wchar_t *wsName = nullptr)
     {
         return NSFile::CFileBinary::OpenTempFile(pwsName, ppFile, wsMode, wsExt, wsFolder, wsName);
     }
@@ -181,7 +181,7 @@ namespace PdfReader
         }
         sBuffer[nCurIndex] = '\0';
         if (0 == nCurIndex)
-            return NULL;
+            return nullptr;
         return sBuffer;
     }
 }

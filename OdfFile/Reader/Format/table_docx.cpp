@@ -189,7 +189,7 @@ void table_table::docx_convert(oox::docx_conversion_context & Context)
 	}
 
 	bool sub_table = attlist_.table_is_sub_table_.get_value_or(false);
-	//todooo придумать как сделать внешние границы sub-таблицы границами внешней ячейки (чтоб слияние произошло)
+	//TODO figure out how to make the outer boundaries of the sub-table the boundaries of the outer cell (so that the merge occurs)
 	
 	std::wstring tableStyleName = attlist_.table_style_name_.get_value_or(L"");
 
@@ -386,7 +386,7 @@ void table_table_cell::docx_convert(oox::docx_conversion_context & Context)
         }
         _Wostream << L"</w:tcPr>";
 
-        /// Обрабатываем стиль по умолчанию для данного столбца
+        /// Process the default style for this column
         {
             const std::wstring & defaultCellStyle =
                 Context.get_table_context().get_default_cell_style_col(Context.get_table_context().current_column());
@@ -405,7 +405,7 @@ void table_table_cell::docx_convert(oox::docx_conversion_context & Context)
             }
         }
 
-        /// Стиль по умолчанию для данной строки
+        /// Default style for this row
         {
             const std::wstring & defaultCellStyle = Context.get_table_context().get_default_cell_style_row();
 
@@ -423,7 +423,7 @@ void table_table_cell::docx_convert(oox::docx_conversion_context & Context)
             }
         }
 		
-        // если одержимое не содержит ниодного параграфа, то добавляем параграф, иначе word считает файл битым
+        // if the object doesn't contain a single paragraph, then add a paragraph, otherwise word considers the file broken
         if (!content_.docx_convert(Context))
         {
             _Wostream << emptyPar;

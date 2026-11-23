@@ -237,11 +237,19 @@ IPathElement* CStartElement::ReadFromArray(std::vector<std::string>::const_itera
 	if (nullptr == pElement)
 		return nullptr;
 
-	if (StringToDouble(*itBegin++, pElement->m_dX) && StringToDouble(*itBegin++, pElement->m_dY))
-		return pElement;
+	if (!StringToDouble(*itBegin++, pElement->m_dX))
+	{
+		delete pElement;
+		return nullptr;
+	}
 
-	delete pElement;
-	return nullptr;
+	if (!StringToDouble(*itBegin++, pElement->m_dY))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	return pElement;
 }
 
 void CStartElement::Draw(IRenderer* pRenderer) const
@@ -263,11 +271,19 @@ IPathElement* CMoveElement::ReadFromArray(std::vector<std::string>::const_iterat
 	if (nullptr == pElement)
 		return nullptr;
 
-	if (StringToDouble(*itBegin++, pElement->m_dX) && StringToDouble(*itBegin++, pElement->m_dY))
-		return pElement;
+	if (!StringToDouble(*itBegin++, pElement->m_dX))
+	{
+		delete pElement;
+		return nullptr;
+	}
 
-	delete pElement;
-	return nullptr;
+	if (!StringToDouble(*itBegin++, pElement->m_dY))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	return pElement;
 }
 
 void CMoveElement::Draw(IRenderer* pRenderer) const
@@ -289,11 +305,19 @@ IPathElement* CLineElement::ReadFromArray(std::vector<std::string>::const_iterat
 	if (nullptr == pElement)
 		return nullptr;
 
-	if (StringToDouble(*itBegin++, pElement->m_dX) && StringToDouble(*itBegin++, pElement->m_dY))
-		return pElement;
+	if (!StringToDouble(*itBegin++, pElement->m_dX))
+	{
+		delete pElement;
+		return nullptr;
+	}
 
-	delete pElement;
-	return nullptr;
+	if (!StringToDouble(*itBegin++, pElement->m_dY))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	return pElement;
 }
 
 void CLineElement::Draw(IRenderer* pRenderer) const
@@ -315,12 +339,31 @@ IPathElement* CBezierCurve2Element::ReadFromArray(std::vector<std::string>::cons
 	if (nullptr == pElement)
 		return nullptr;
 
-	if (StringToDouble(*itBegin++, pElement->m_dX1) && StringToDouble(*itBegin++, pElement->m_dY1) &&
-	    StringToDouble(*itBegin++, pElement->m_dX2) && StringToDouble(*itBegin++, pElement->m_dY2))
-		return pElement;
+	if (!StringToDouble(*itBegin++, pElement->m_dX1))
+	{
+		delete pElement;
+		return nullptr;
+	}
 
-	delete pElement;
-	return nullptr;
+	if (!StringToDouble(*itBegin++, pElement->m_dY1))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	if (!StringToDouble(*itBegin++, pElement->m_dX2))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	if (!StringToDouble(*itBegin++, pElement->m_dY2))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	return pElement;
 }
 
 void CBezierCurve2Element::Draw(IRenderer* pRenderer) const
@@ -346,13 +389,43 @@ IPathElement* CBezierCurveElement::ReadFromArray(std::vector<std::string>::const
 	if (nullptr == pElement)
 		return nullptr;
 
-	if (StringToDouble(*itBegin++, pElement->m_dX1) && StringToDouble(*itBegin++, pElement->m_dY1) &&
-	    StringToDouble(*itBegin++, pElement->m_dX2) && StringToDouble(*itBegin++, pElement->m_dY2) &&
-	    StringToDouble(*itBegin++, pElement->m_dX3) && StringToDouble(*itBegin++, pElement->m_dY3))
-		return pElement;
+	if (!StringToDouble(*itBegin++, pElement->m_dX1))
+	{
+		delete pElement;
+		return nullptr;
+	}
 
-	delete pElement;
-	return nullptr;
+	if (!StringToDouble(*itBegin++, pElement->m_dY1))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	if (!StringToDouble(*itBegin++, pElement->m_dX2))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	if (!StringToDouble(*itBegin++, pElement->m_dY2))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	if (!StringToDouble(*itBegin++, pElement->m_dX3))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	if (!StringToDouble(*itBegin++, pElement->m_dY3))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	return pElement;
 }
 
 void CBezierCurveElement::Draw(IRenderer* pRenderer) const
@@ -375,14 +448,49 @@ IPathElement* CArcElement::ReadFromArray(std::vector<std::string>::const_iterato
 	if (nullptr == pElement)
 		return nullptr;
 
-	if (StringToDouble (*itBegin++, pElement->m_dRadiusX) && StringToDouble (*itBegin++, pElement->m_dRadiusY) &&
-	    StringToDouble (*itBegin++, pElement->m_dAngle)   && StringToBoolean(*itBegin++, pElement->m_bLarge)   &&
-	    StringToBoolean(*itBegin++, pElement->m_bSweep)   && StringToDouble (*itBegin++, pElement->m_dX)       &&
-	    StringToDouble (*itBegin++, pElement->m_dY))
-		return pElement;
+	if (!StringToDouble(*itBegin++, pElement->m_dRadiusX))
+	{
+		delete pElement;
+		return nullptr;
+	}
 
-	delete pElement;
-	return nullptr;
+	if (!StringToDouble(*itBegin++, pElement->m_dRadiusY))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	if (!StringToDouble(*itBegin++, pElement->m_dAngle))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	if (!StringToBoolean(*itBegin++, pElement->m_bLarge))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	if (!StringToBoolean(*itBegin++, pElement->m_bSweep))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	if (!StringToDouble(*itBegin++, pElement->m_dX))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	if (!StringToDouble(*itBegin++, pElement->m_dY))
+	{
+		delete pElement;
+		return nullptr;
+	}
+
+	return pElement;
 }
 
 void CArcElement::Draw(IRenderer* pRenderer) const

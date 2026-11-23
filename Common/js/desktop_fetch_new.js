@@ -31,7 +31,16 @@ Module['instantiateWasm'] = function(imports, successCallback) {
     //console.log("RESULT OF LOCAL TEST:" + internal_isLocal())
     if (internal_isLocal()) {
 
-        var wasmAbsPath = _scriptSrc.replace(/\.js(\?.*)?$/, '.wasm').substr(7);
+        var wasmAbsPath = _scriptSrc.replace(/\.js(\?.*)?$/, '.wasm')
+                            .replace(/^file:\/\//, '');
+
+        // Windows: "/E:/path" -> "E:/path"
+        if (/^\/[A-Za-z]:[\/\\]/.test(wasmAbsPath)) {
+            wasmAbsPath = wasmAbsPath.substr(1);
+        }
+
+        // Handle %20 etc. in paths (e.g. "Program Files")
+        wasmAbsPath = decodeURIComponent(wasmAbsPath);
 
         //console.log("Loading WASM from:", wasmAbsPath);
 
@@ -55,7 +64,7 @@ Module['instantiateWasm'] = function(imports, successCallback) {
             xhr.onload = function() {
                 //console.log("XHR onload — status:", xhr.status, "byteLength:", xhr.response && xhr.response.byteLength);
                 
-                if (xhr.status === 200 || (xhr.status === 0 && xhr.response && xhr.response.byteLength > 0)) {
+                if ((xhr.status === 200 || xhr.status === 0) && xhr.response && xhr.response.byteLength > 0) {
                     //console.log("Calling WebAssembly.instantiate...");
                     WebAssembly.instantiate(xhr.response, imports)
                         .then(function(result) {
@@ -66,7 +75,9 @@ Module['instantiateWasm'] = function(imports, successCallback) {
                             console.error("WASM instantiation failed:", e);
                         });
                 } else {
-                    console.error("XHR status check failed — status:", xhr.status, "response:", xhr.response);
+                    console.error("Empty/failed WASM response — status:", xhr.status,
+                                "bytes:", xhr.response ? xhr.response.byteLength : 0,
+                                "path:", wasmPath);
                 }
             };
 

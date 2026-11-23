@@ -91,11 +91,13 @@ target_link_libraries(DocxRenderer PUBLIC
 
 if(WIN32)
     target_link_libraries(DocxRenderer PUBLIC
-        gdi32
-        advapi32
-        user32
-        shell32
+        Gdi32
+        Advapi32
+        User32
+        Shell32
     )
 endif()
 
 copy_artifacts_to_folder("DocxRenderer" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( DocxRenderer )

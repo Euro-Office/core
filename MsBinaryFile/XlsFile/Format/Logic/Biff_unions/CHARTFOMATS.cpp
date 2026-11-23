@@ -247,7 +247,7 @@ const bool CHARTFORMATS::loadContent(BinProcessor& proc)
 	while(!elements_.empty())
 	{
 		if ("DataLabExt" == elements_.front()->getClassName())
-		{//необязат
+		{//optional
 			if (cf.dataLabExt) 
 			{
 				m_arChartFormats.push_back(cf);
@@ -256,7 +256,7 @@ const bool CHARTFORMATS::loadContent(BinProcessor& proc)
 			cf.dataLabExt = elements_.front();
 		}
 		else if ("ATTACHEDLABEL" == elements_.front()->getClassName())
-		{//обязат
+		{//obligated
 			if (cf.attachedLABEL)
 			{
 				m_arChartFormats.push_back(cf);

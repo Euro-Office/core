@@ -132,7 +132,7 @@ namespace OOX
 			XmlMacroReadAttributeBase( oNode, L"w:name",    m_sName );
 			XmlMacroReadAttributeBase( oNode, L"w:shapeid", m_sShapeId );
 
-			if (false == m_rId.IsInit())
+			if (!m_rId.IsInit())
 			{
 				XmlMacroReadAttributeBase( oNode, L"relationships:id", m_rId );
 			}
@@ -163,8 +163,7 @@ namespace OOX
 		void CControl::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
 			WritingElement_ReadAttributes_Start( oReader )
-				WritingElement_ReadAttributes_Read_if     ( oReader, L"r:id",				m_rId )
-				WritingElement_ReadAttributes_Read_else_if( oReader, L"relationships:id",	m_rId )
+				if ( L"r:id" == wsName || L"relationships:id" == wsName ) m_rId = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"w:name",				m_sName )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"w:shapeid",			m_sShapeId )
 			WritingElement_ReadAttributes_End( oReader )
@@ -176,11 +175,11 @@ namespace OOX
 		}
 		void CPicture::fromXML(XmlUtils::CXmlNode &oNode)
 		{
-			if (oNode.IsValid() == false)
+			if (!oNode.IsValid())
 				return;
 
 			m_sXml.Init();
-			*m_sXml = oNode.GetXml();	//для pptx dll
+			*m_sXml = oNode.GetXml();	//for pptx dll
 
 			fromStringXML(m_sXml.get());
 		}
@@ -190,7 +189,7 @@ namespace OOX
 				return;
 
 			m_sXml.Init();
-			*m_sXml = oReader.GetOuterXml();	//для pptx dll
+			*m_sXml = oReader.GetOuterXml();	//for pptx dll
 
 			fromStringXML(m_sXml.get());
 		}
@@ -207,14 +206,12 @@ namespace OOX
 			oSubReader.ReadNextNode();//root
 			oSubReader.ReadNextNode();//pict
 
-			OOX::Vml::CImageData *pImageData = NULL;
-
 			int nCurDepth = oSubReader.GetDepth();
 			while (oSubReader.ReadNextSiblingNode(nCurDepth))
 			{
 				std::wstring sName = oSubReader.GetName();
 
-				WritingElement* pItem = NULL;
+				WritingElement* pItem = nullptr;
 
 				wchar_t wChar0 = sName[0];
 				switch (wChar0)
@@ -306,6 +303,7 @@ namespace OOX
 							pItem = new OOX::VmlOffice::CStrokeChild(m_pMainDocument);
 
 						break;
+					default: break;
 					}
 
 					break;
@@ -364,7 +362,7 @@ namespace OOX
 						}
 						else if (L"v:imagedata" == sName)
 						{
-							pItem = pImageData = new OOX::Vml::CImageData(m_pMainDocument);
+							pItem = new OOX::Vml::CImageData(m_pMainDocument);
 						}
 						break;
 
@@ -433,6 +431,7 @@ namespace OOX
 							pItem = new OOX::Vml::CTextPath(m_pMainDocument);
 
 						break;
+					default: break;
 					}
 					break;
 				}
@@ -460,7 +459,7 @@ namespace OOX
 
 								if (ext.empty())
 								{
-									COfficeUtils oCOfficeUtils(NULL);
+									COfficeUtils oCOfficeUtils(nullptr);
 									if (oCOfficeUtils.IsArchive(pImageFile->m_Data.data(), pImageFile->m_Data.size()))
 									{//gzip
 										ULONG nBytesUncompress = pImageFile->m_Data.size() * 10;
@@ -469,7 +468,7 @@ namespace OOX
 										{
 											ext = fileChecker.DetectFormatByData(pDataUncompress, nBytesUncompress);
 
-											if (false == ext.empty())
+											if (!ext.empty())
 											{
 												pImageFile->m_Data.resize(nBytesUncompress);
 												memcpy(pImageFile->m_Data.data(), pDataUncompress, nBytesUncompress);
@@ -478,7 +477,7 @@ namespace OOX
 										}
 									}
 								}
-								if (false == ext.empty())
+								if (!ext.empty())
 								{
 									OOX::CPath filename(L"image." + ext);
 									pImageFile->set_filename(filename, false, true);
@@ -495,6 +494,7 @@ namespace OOX
 						}
 					}
 					break;
+				default: break;
 				}
 
 				if (pItem)
@@ -551,10 +551,10 @@ namespace OOX
 				return;
 
 			m_sXml.Init();
-			*m_sXml = oReader.GetOuterXml();	//для pptx dll
+			*m_sXml = oReader.GetOuterXml();	//for pptx dll
 
-												//альтернатива pptx
-			std::wstring sXml; //??? + ole наверно что то (лень ...)
+												//pptx alternative
+			std::wstring sXml; //??? + ole probably something (TODO: investigate)
 			sXml += L"<root \
 xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" \
 xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" \
@@ -586,7 +586,7 @@ xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\">
 			{
 				std::wstring sName = oSubReader.GetName();
 
-				WritingElement* pItem = NULL;
+				WritingElement* pItem = nullptr;
 
 				wchar_t wChar0 = sName[0];
 				switch (wChar0)
@@ -647,7 +647,7 @@ xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\">
 
 						break;
 
-					case 'O':// собственно это и есть самый главный под-объект
+					case 'O':// in fact, this is the most important sub-object
 						if (L"o:OLEObject" == sName)
 							m_oOleObject = oSubReader;
 						break;
@@ -672,6 +672,7 @@ xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\">
 						if (L"o:top" == sName)
 							AssignPtrXmlContent(pItem, OOX::VmlOffice::CStrokeChild, oSubReader)
 						break;
+					default: break;
 					}
 
 					break;
@@ -730,6 +731,7 @@ xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\">
 						else if (L"v:textpath" == sName)
 							AssignPtrXmlContent(pItem, OOX::Vml::CTextPath, oSubReader)
 						break;
+					default: break;
 					}
 					break;
 				}
@@ -742,6 +744,7 @@ xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\">
 						m_oDrawing = oSubReader;
 
 					break;
+				default: break;
 				}
 
 				if (pItem)

@@ -40,6 +40,9 @@
 #if CXIMAGE_SUPPORT_HEIF
 #include "heif/heif.h"
 #endif
+#include "Pnm/PnmFile.h"
+#include "Ras/RasFile.h"
+#include "WebP/WebPFile.h"
 
 #include <cmath>
 #define BGRA_FRAME_CXIMAGE_MAX_MEMORY 67108864 // 256Mb (*4 channel)
@@ -52,7 +55,7 @@ void CxImageToMediaFrame( CxImage* img, CBgraFrame* bgra )
 	int nWidth  = img->GetWidth();
 	int nHeight = img->GetHeight();
 
-	BYTE* pData = new BYTE[4 * nWidth * nHeight];
+	BYTE* pData = new BYTE[static_cast<size_t>(nWidth) * nHeight * 4];
 
 	if (!pData)
 		return;
@@ -331,10 +334,10 @@ CBgraFrame::~CBgraFrame()
 
 void CBgraFrame::Destroy()
 {
-	if (NULL != m_pData)
+	if (nullptr != m_pData)
 		delete []m_pData;
 
-	if (NULL != m_pPalette)
+	if (nullptr != m_pPalette)
 		delete []m_pPalette;
 
 	Clear();
@@ -345,8 +348,8 @@ void CBgraFrame::Clear()
 	m_lWidth	= 0;
 	m_lHeight	= 0;
 	m_lStride	= 0;
-	m_pData		= NULL;
-	m_pPalette  = NULL;
+	m_pData		= nullptr;
+	m_pPalette  = nullptr;
 	m_lPaletteColors = 0;
 	m_bIsGrayScale  = false;
 	m_dJpegSaveQuality = -1;
@@ -417,9 +420,9 @@ void CBgraFrame::put_Palette(BYTE* pDataColors, const int& colors)
 		delete []m_pPalette;
 
 	m_lPaletteColors = colors;
-	m_pPalette = new BYTE[colors * 4];
+	m_pPalette = new BYTE[static_cast<size_t>(colors) * 4];
 
-	memcpy(m_pPalette, pDataColors, colors * 4);
+	memcpy(m_pPalette, pDataColors, static_cast<size_t>(colors) * 4);
 }
 
 bool CBgraFrame::OpenFile(const std::wstring& strFileName, unsigned int nFileType, const bool& bIsOrientationRemove)
@@ -455,6 +458,15 @@ bool CBgraFrame::OpenFile(const std::wstring& strFileName, unsigned int nFileTyp
 	}
 #endif
 
+	if (_CXIMAGE_FORMAT_PNM == m_nFileType)
+		return NSPnm::Open(this, strFileName, m_bIsRGBA, m_bIsGrayScale);
+
+	if (_CXIMAGE_FORMAT_RAS == m_nFileType)
+		return NSRas::Open(this, strFileName, m_bIsRGBA, m_bIsGrayScale);
+
+	if (_CXIMAGE_FORMAT_WEBP == m_nFileType)
+		return NSWebP::Open(this, strFileName, m_bIsRGBA);
+
 	NSFile::CFileBinary oFile;
 	if (!oFile.OpenFile(strFileName))
 		return false;
@@ -471,40 +483,7 @@ bool CBgraFrame::OpenFile(const std::wstring& strFileName, unsigned int nFileTyp
 #endif
 #endif
 
-	CxImage* imgResample = NULL;
-
-	if (false)
-	{
-		// slow!!!
-		int nWidth  = img->GetWidth();
-		int nHeight = img->GetHeight();
-
-		double dSizeWH = (double)nWidth * nHeight;
-		double dSizeLimit = (double)BGRA_FRAME_CXIMAGE_MAX_MEMORY;
-		if (dSizeWH > dSizeLimit)
-		{
-			double dKoef = sqrt(dSizeLimit / dSizeWH);
-			int nW = (int)(dKoef * nWidth);
-			int nH = (int)(dKoef * nHeight);
-
-			if (nW > 10 && nH > 10)
-			{
-				imgResample = new CxImage();
-				if (!img->Resample(nW, nH, 2/*bicubic spline interpolation*/, imgResample))
-				{
-					delete imgResample;
-					imgResample = NULL;
-				}
-			}
-		}
-	}
-
 	CxImage* imageFinal = img;
-	if (imgResample)
-	{
-		delete img;
-		imageFinal = imgResample;
-	}
 
 	CxImageToMediaFrame(imageFinal, this);
 	m_bIsGrayScale = imageFinal->IsGrayScale();
@@ -545,6 +524,15 @@ bool CBgraFrame::Decode(BYTE* pBuffer, int nSize, unsigned int nFileType)
 	}
 #endif
 
+	if (_CXIMAGE_FORMAT_PNM == m_nFileType)
+		return NSPnm::Open(this, pBuffer, nSize, m_bIsRGBA, m_bIsGrayScale);
+
+	if (_CXIMAGE_FORMAT_RAS == m_nFileType)
+		return NSRas::Open(this, pBuffer, nSize, m_bIsRGBA, m_bIsGrayScale);
+
+	if (_CXIMAGE_FORMAT_WEBP == m_nFileType)
+		return NSWebP::Open(this, pBuffer, nSize, m_bIsRGBA);
+
 	CxImage img;
 
 	if (!img.Decode(pBuffer, nSize, m_nFileType))
@@ -574,20 +562,13 @@ bool CBgraFrame::SaveFile(const std::wstring& strFileName, unsigned int nFileTyp
 		return res;
 	}
 #endif
-#if CXIMAGE_SUPPORT_HEIF
-	if (CXIMAGE_FORMAT_HEIF == nFileType)
-	{
-		return NSHeif::CHeifFile::Save(m_pData, m_lWidth, m_lHeight, m_lStride, strFileName, m_bIsRGBA);
-	}
-#endif
-
 	NSFile::CFileBinary oFile;
 	if (!oFile.CreateFileW(strFileName))
 		return false;
 		
 	CxImage img;
 
-	if (!img.CreateFromArray(m_pData, m_lWidth, m_lHeight, lBitsPerPixel * 8, lStride, (m_lStride >= 0) ? true : false, !m_bIsRGBA))
+	if (!img.CreateFromArray(m_pData, m_lWidth, m_lHeight, lBitsPerPixel * 8, lStride, m_lStride >= 0, !m_bIsRGBA))
 		return false;
 
 	if (m_pPalette)
@@ -604,7 +585,7 @@ bool CBgraFrame::SaveFile(const std::wstring& strFileName, unsigned int nFileTyp
 bool CBgraFrame::Encode(BYTE*& pBuffer, int& nSize, unsigned int nFileType)
 {
 	CxImage oCxImage;
-	if (!oCxImage.CreateFromArray(m_pData, m_lWidth, m_lHeight, 32, 4 * m_lWidth, (m_lStride >= 0) ? true : false, !m_bIsRGBA))
+	if (!oCxImage.CreateFromArray(m_pData, m_lWidth, m_lHeight, 32, 4 * m_lWidth, m_lStride >= 0, !m_bIsRGBA))
 		return false;
 
 	if (CXIMAGE_FORMAT_JPG == nFileType && -1 != m_dJpegSaveQuality)
@@ -620,7 +601,7 @@ void CBgraFrame::FreeEncodedMemory(void* pMemory)
 bool CBgraFrame::Resize(const long& nNewWidth, const long& nNewHeight, bool bDestroyData)
 {
 	CxImage img;
-	if (!img.CreateFromArray(m_pData, m_lWidth, m_lHeight, 32, 4 * m_lWidth, (m_lStride >= 0) ? true : false))
+	if (!img.CreateFromArray(m_pData, m_lWidth, m_lHeight, 32, 4 * m_lWidth, m_lStride >= 0))
 		return false;
 
 	CxImage imgDst;

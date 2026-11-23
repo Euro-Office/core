@@ -376,9 +376,39 @@ public:
     const _CP_OPT(odf_types::length) & header() const { return header_; }
     const _CP_OPT(odf_types::length) & footer() const { return footer_; }
 
+    // The distance between a header or footer and the page body (fo:margin-bottom of the header style,
+    // fo:margin-top of the footer style) has no counterpart in w:pgMar. It is written as paragraph spacing of the
+    // paragraph next to the body: after the last paragraph of a header, before the first paragraph of a footer.
+    struct edge_spacing
+    {
+        const odf_reader::text::paragraph_attrs	*paragraph = NULL;	// the paragraph next to the body
+        bool									header = true;
+        bool									add_own = false;	// the distance is added to the paragraph's own margin
+        double									pt = 0;				// distance to the body
+    };
+    void set_edge_spacing(const edge_spacing & Val)	{ edge_spacing_ = Val; edge_attr_.clear(); }
+    void reset_edge_spacing()						{ edge_spacing_ = edge_spacing(); edge_attr_.clear(); }
+    const edge_spacing & get_edge_spacing() const	{ return edge_spacing_; }
+
+    // w:spacing attribute (name="value") the paragraph being written still has to get, empty when there is none
+    void set_edge_attr(const std::wstring & Name, int Twips)
+    {
+        edge_attr_name_ = Name; edge_attr_twips_ = Twips;
+        edge_attr_ = Name + L"=\"" + std::to_wstring(Twips) + L"\"";
+    }
+    void reset_edge_attr()							{ edge_attr_.clear(); }
+    const std::wstring & edge_attr() const			{ return edge_attr_; }
+    const std::wstring & edge_attr_name() const		{ return edge_attr_name_; }
+    int edge_attr_twips() const						{ return edge_attr_twips_; }
+
 private:
     _CP_OPT(odf_types::length) header_;
     _CP_OPT(odf_types::length) footer_;
+
+    edge_spacing	edge_spacing_;
+    std::wstring	edge_attr_;
+    std::wstring	edge_attr_name_;
+    int				edge_attr_twips_ = 0;
 };
 
 class drop_cap_context : boost::noncopyable
@@ -506,7 +536,7 @@ public:
 	std::vector<int>			ref_;
 
 private:
-	rels internal_rels_;//это для гиперлинков или медиа в комментариях
+	rels internal_rels_;//this is for hyperlinks or media in comments
 	std::map<std::wstring, int> comments_map_;
 };
 
@@ -1110,12 +1140,12 @@ private:
 	std::wstring		current_alphabetic_index_;
 	int					current_margin_left_;
 	int					current_outline_level_;
-    int					new_list_style_number_;	// счетчик для нумерации имен созданных в процессе конвертации стилей
+    int					new_list_style_number_;	// counter for numbering the names of styles created during the conversion process
     
 	std::vector<odf_reader::office_element*>							delayed_elements_;
 
 	std::map<std::wstring, text_tracked_context::_state>				map_current_changes_;    
-    boost::unordered_map<std::wstring, std::wstring>					list_style_renames_;// цепочки переименований нумераций
+    boost::unordered_map<std::wstring, std::wstring>					list_style_renames_;// numbering renaming chains
 	
 	std::map<std::wstring, std::wstring>								map_user_fields;
 	std::map<std::wstring, int>											mapBookmarks;

@@ -33,7 +33,7 @@
 namespace cpdoccore {
 namespace xml {
 
-/// Вектор для обеспечения контроля доступа для всех прочитанных атрибутов
+///Vector to provide access control for all read attributes
 template <class T>
 class attribute_debug_vector
 {

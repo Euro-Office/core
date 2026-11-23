@@ -32,17 +32,21 @@
 #define CXIMAGE_SUPPORT_WBMP 1
 #define CXIMAGE_SUPPORT_WMF 0
 
+// JPEG 2000 is decoded by raster/Jp2, PNM and RAS by raster/Pnm and raster/Ras
+// (JasPer was removed), PGX is not supported
 #define CXIMAGE_SUPPORT_JP2 1
-#define CXIMAGE_SUPPORT_JPC 1
-#define CXIMAGE_SUPPORT_PGX 1
-#define CXIMAGE_SUPPORT_PNM 1
-#define CXIMAGE_SUPPORT_RAS 1
+#define CXIMAGE_SUPPORT_JPC 0
+#define CXIMAGE_SUPPORT_PGX 0
+#define CXIMAGE_SUPPORT_PNM 0
+#define CXIMAGE_SUPPORT_RAS 0
 #define CXIMAGE_SUPPORT_PIC 1
 
 #define CXIMAGE_SUPPORT_JBG 0		// GPL'd see ../jbig/copying.txt & ../jbig/patents.htm
 
-#define CXIMAGE_SUPPORT_MNG 1
-#define CXIMAGE_SUPPORT_SKA 1
+// MNG, SKA and camera RAW were removed
+#define CXIMAGE_SUPPORT_MNG 0
+#define CXIMAGE_SUPPORT_SKA 0
+#define CXIMAGE_SUPPORT_RAW 0
 #define CXIMAGE_SUPPORT_PSD 1
 
 #ifndef BUILDING_WASM_MODULE
@@ -51,10 +55,8 @@
 #else
 #define CXIMAGE_SUPPORT_HEIF 0
 #endif
-#define CXIMAGE_SUPPORT_RAW 1
 #else
 #define CXIMAGE_SUPPORT_HEIF 0
-#define CXIMAGE_SUPPORT_RAW 0
 #endif
 
 #ifdef CXIMAGE_DISABLE_SUPPORT_MNG

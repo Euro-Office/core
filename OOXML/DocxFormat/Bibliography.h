@@ -58,9 +58,9 @@ namespace OOX
 		nullable<std::wstring> m_sStyleName;
 		nullable<std::wstring> m_sURI;
 
-		// Childs
+		// Children
 
-		// TO DO: Реализовать полное чтение библиографии
+		// TO DO: Implement full bibliography reading
 	};
 } // namespace OOX
 

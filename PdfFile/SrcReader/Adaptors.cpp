@@ -74,7 +74,7 @@ void GlobalParamsAdaptor::AddNameToUnicode(const char* sFile)
 	while (getLine(buf, sizeof(buf), f))
 	{
 		tok1 = strtok(buf, " \t\r\n");
-		tok2 = strtok(NULL, " \t\r\n");
+		tok2 = strtok(nullptr, " \t\r\n");
 		if (tok1 && tok2)
 		{
 			sscanf(tok1, "%x", &u);
@@ -119,7 +119,7 @@ void GlobalParamsAdaptor::AddCMapFolder(const char* sCollection, GString* sFolde
 }
 void GlobalParamsAdaptor::SetCMapFile(const std::wstring &wsFile)
 {
-    AddAllCMap(NULL);
+    AddAllCMap(nullptr);
 
 #ifndef BUILDING_WASM_MODULE
 	NSFile::CFileBinary::ReadAllBytes(wsFile, &m_bCMapData, m_nCMapDataLength);
@@ -127,7 +127,7 @@ void GlobalParamsAdaptor::SetCMapFile(const std::wstring &wsFile)
 }
 void GlobalParamsAdaptor::SetCMapMemory(BYTE* pData, DWORD nSizeData)
 {
-    AddAllCMap(NULL);
+    AddAllCMap(nullptr);
 
     if (pData)
     {
@@ -203,7 +203,7 @@ bool GlobalParamsAdaptor::InRedact(double dX, double dY)
 			continue;
 		}
 
-		// Проверяем знаки векторных произведений для всех сторон
+		// Checking the signs of vector products for all sides
 		double cross1 = crossProduct(x1, y1, x2, y2, dX, dY);
 		double cross2 = crossProduct(x2, y2, x3, y3, dX, dY);
 		double cross3 = crossProduct(x3, y3, x4, y4, dX, dY);
@@ -212,7 +212,7 @@ bool GlobalParamsAdaptor::InRedact(double dX, double dY)
 		bool allPositive = (cross1 >= 0 && cross2 >= 0 && cross3 >= 0 && cross4 >= 0);
 		bool allNegative = (cross1 <= 0 && cross2 <= 0 && cross3 <= 0 && cross4 <= 0);
 
-		// Точка внутри, если все векторные произведения имеют одинаковый знак
+		// Dot inside if all cross products have the same sign
 		if ((allPositive || allNegative) && !(cross1 == 0 && cross2 == 0 && cross3 == 0 && cross4 == 0))
 			return true;
 	}
@@ -449,7 +449,7 @@ void XMLConverter::ParseDicts()
 
 			if (oTemp.isDict() || oTemp.isStream())
 			{
-				Dict* pDict = NULL;
+				Dict* pDict = nullptr;
 				if (oTemp.isDict())
 					pDict = oTemp.getDict();
 				else if (oTemp.isStream())
@@ -513,7 +513,7 @@ void XMLConverter::ObjectToXml(Object *pObject, bool isSkipCheck)
 		}
 		case objStream:
 			m_wsXml += L"<stream/>";
-			// TODO: Запись стрима
+			// TODO: Writing a stream
 			break;
 		case objRef:
 			m_wsXml += std::to_wstring(pObject->getRefNum());

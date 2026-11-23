@@ -44,7 +44,7 @@ namespace MetaFile
 	}
 
 	CEmfLogBrushEx::CEmfLogBrushEx() 
-		: unBrushStyle(BS_SOLID), oColor(255, 255, 255, 255), unBrushHatch(HS_HORIZONTAL), pDibBuffer(NULL), unDibWidth(0), unDibHeigth(0)
+		: unBrushStyle(BS_SOLID), oColor(255, 255, 255, 255), unBrushHatch(HS_HORIZONTAL), pDibBuffer(nullptr), unDibWidth(0), unDibHeigth(0)
 	{}
 
 	CEmfLogBrushEx::~CEmfLogBrushEx()
@@ -70,8 +70,8 @@ namespace MetaFile
 			return;
 
 	#ifdef METAFILE_DISABLE_FILESYSTEM
-		// без использования файловой системы пока реализовать не получится при конвертации в растр,
-		// так как на данный момент картинку кисти передать в рендер можно только  с помощью использования файловой системы
+		// without using the file system it won't yet be possible to implement it when converting to a raster,
+		// since at the moment the brush image can only be transferred to render using the file system
 		// (CMetaFileRenderer::UpdateBrush()) m_pRenderer->put_BrushTexturePath(pBrush->GetDibPatterPath());
 	#else
 		std::wstring wsTempFileName = GetTempFilename();
@@ -90,7 +90,7 @@ namespace MetaFile
 			wsDibPatternPath = wsTempFileName;
 		}
 
-		oBgraFrame.put_Data(NULL);
+		oBgraFrame.put_Data(nullptr);
 	#endif
 	}
 
@@ -156,7 +156,7 @@ namespace MetaFile
 	CEmfLogFont::CEmfLogFont(bool bFixedLength)
 	    : m_bFixedLength(bFixedLength)
 	{
-		oDesignVector.pValues = NULL;
+		oDesignVector.pValues = nullptr;
 
 		oLogFontEx.oLogFont.nHeight           = DEFAULT_FONT_SIZE;
 		oLogFontEx.oLogFont.nWidth            = 0;
@@ -243,7 +243,7 @@ namespace MetaFile
 	}
 
 	CEmfLogPen::CEmfLogPen()
-		: unPenStyle(PS_SOLID), unWidth(1), oColor(0, 0, 0), unNumStyleEntries(0), pStyleEntry(NULL)
+		: unPenStyle(PS_SOLID), unWidth(1), oColor(0, 0, 0), unNumStyleEntries(0), pStyleEntry(nullptr)
 	{}
 
 	CEmfLogPen::~CEmfLogPen()
@@ -288,21 +288,21 @@ namespace MetaFile
 
 	void CEmfLogPen::GetDashData(double *&arDatas, unsigned int &unSize) const
 	{
-		arDatas = NULL;
+		arDatas = nullptr;
 		unSize  = 0;
 	}
 
 	const ILineCap* CEmfLogPen::GetStartLineCap() const
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	const ILineCap* CEmfLogPen::GetEndLineCap() const
 	{
-		return NULL;
+		return nullptr;
 	}
 
-	CEmfLogPalette::CEmfLogPalette() : ushNumberOfEntries(0), pPaletteEntries(NULL)
+	CEmfLogPalette::CEmfLogPalette() : ushNumberOfEntries(0), pPaletteEntries(nullptr)
 	{}
 
 	CEmfLogPalette::~CEmfLogPalette()

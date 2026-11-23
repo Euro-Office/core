@@ -33,16 +33,16 @@
 namespace NSFontConverter
 {
 	//
-	// Терминология
+	// Terminology
 	// -----------
 	//
-	// character code = номер, используемый как элемент текстовой строки
+	// character code = number used as a text string element
 	//
-	// character name = glyph name = имя определенного символа фонта
+	// character name = glyph name = name of a specific font glyph
 	//
-	// glyph index = GID = позиция (в предела некоторой внутренней таблицы
-	//               в фонте), где приведены инструкции как рисовать
-	//               данный символ
+	// glyph index = GID = position (within some internal table
+	//               in the font), where instructions are given on how to draw
+	//               this symbol
 	//
 	// Type 1 fonts
 	// ------------
@@ -87,8 +87,8 @@ namespace NSFontConverter
 	//
 	//------------------------------------------------------------------------
 
-	// Названия символов в стандартном порядке, который использует Apple для
-	// своих TrueType фонтов.
+	// Character names in the standard order that Apple uses for
+	// their TrueType fonts.
 	static char *c_arrAppleGlyphNames[258] =
 	{
 		".notdef",        "null",           "CR",             "space",
@@ -168,7 +168,7 @@ namespace NSFontConverter
 		if ( !pTTF->m_bSuccess )
 		{
 			delete pTTF;
-			return NULL;
+			return nullptr;
 		}
 		return pTTF;
 	}
@@ -178,14 +178,15 @@ namespace NSFontConverter
 		char *sBuffer;
 		int nLen = 0;
 
-		if ( !( sBuffer = CFontFileBase::ReadFile( wsFileName, &nLen ) ) )
-			return NULL;
+		sBuffer = CFontFileBase::ReadFile( wsFileName, &nLen );
+		if ( !sBuffer )
+			return nullptr;
 
 		CFontFileTrueType *pTTF = new CFontFileTrueType( sBuffer, nLen, true );
 		if ( !pTTF->m_bSuccess )
 		{
 			delete pTTF;
-			return NULL;
+			return nullptr;
 		}
 		return pTTF;
 	}
@@ -193,11 +194,11 @@ namespace NSFontConverter
 	CFontFileTrueType::CFontFileTrueType(char *sBuffer, int nLen, bool bFreeFileData):
 		CFontFileBase( sBuffer, nLen, bFreeFileData )
 	{
-		m_pTables = NULL;
+		m_pTables = nullptr;
 		m_nTablesCount = 0;
-		m_pCMaps = NULL;
+		m_pCMaps = nullptr;
 		m_nCMapsCount = 0;
-		m_pNameToGID = NULL;
+		m_pNameToGID = nullptr;
 		m_bSuccess = false;
 
 		Parse();
@@ -323,15 +324,16 @@ namespace NSFontConverter
 
 		*pnCIDs = 0;
 		if ( !m_bOpenTypeCFF )
-			return NULL;
+			return nullptr;
 
 		int nIndex = SeekTable("CFF ");
 
 		if ( !CheckRegion( m_pTables[nIndex].nOffset, m_pTables[nIndex].nLen ) )
-			return NULL;
+			return nullptr;
 
-		if ( !( pC1FF = CFontFileType1C::LoadFromBuffer( (char *)m_sFile + m_pTables[nIndex].nOffset, m_pTables[nIndex].nLen ) ) )
-			return NULL;
+		pC1FF = CFontFileType1C::LoadFromBuffer( (char *)m_sFile + m_pTables[nIndex].nOffset, m_pTables[nIndex].nLen );
+		if ( !pC1FF )
+			return nullptr;
 
 		unsigned short *pMap = pC1FF->GetCIDToGIDMap( pnCIDs );
 		delete pC1FF;
@@ -342,7 +344,8 @@ namespace NSFontConverter
 	{
 		int nIndex = -1;
 
-		if ( ( nIndex = SeekTable("OS/2" ) ) < 0)
+		nIndex = SeekTable("OS/2" );
+		if ( nIndex < 0 )
 			return 4;
 
 		bool bSuccess = true;
@@ -369,7 +372,7 @@ namespace NSFontConverter
 		if ( m_bOpenTypeCFF )
 			return;
 
-		// пишем заголовок
+		// write the header
 		bool bSuccess = true;
 		seBuffer = StringExt::Format("%!PS-TrueTypeFont-{0:2g}\n", (double)GetS32BE( 0, &bSuccess ) / 65536.0 );
 		(*pOutputFunc)( pOutputStream, seBuffer->GetBuffer(), seBuffer->GetLength() );
@@ -386,12 +389,12 @@ namespace NSFontConverter
 		delete seBuffer;
 		(*pOutputFunc)( pOutputStream, "/PaintType 0 def\n", 17);
 
-		// записываем содержимое библиотеки шрифта
+		// writing the contents of the font collection
 		ConvertEncoding( ppEncoding, pOutputFunc, pOutputStream );
 		ConvertCharStrings( ppEncoding, pCodeToGID, pOutputFunc, pOutputStream);
-		ConvertSfnts( pOutputFunc, pOutputStream, NULL, false );
+		ConvertSfnts( pOutputFunc, pOutputStream, nullptr, false );
 
-		// закончили запись библиотеки
+		// finished writing the library
 		(*pOutputFunc)( pOutputStream, "FontName currentdict end definefont pop\n", 40);
 	}
 
@@ -406,7 +409,8 @@ namespace NSFontConverter
 		if ( !CheckRegion( m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen ) )
 			return;
 
-		if ( !( pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen ) ) )
+		pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen );
+		if ( !pT1CFF )
 			return;
 
 		pT1CFF->ToType1( sPSName, ppNewEncoding, bASKII, pOutputFunc, pOutputStream);
@@ -535,7 +539,7 @@ namespace NSFontConverter
 		(*pOutputFunc)( pOutputStream, "  end readonly def\n", 19);
 
 		// write the guts of the dictionary
-		ConvertSfnts( pOutputFunc, pOutputStream, NULL, bNeedVerticalMetrics);
+		ConvertSfnts( pOutputFunc, pOutputStream, nullptr, bNeedVerticalMetrics);
 
 		// end the dictionary and define the font
 		(*pOutputFunc)( pOutputStream, "CIDFontName currentdict end /CIDFont defineresource pop\n", 56);
@@ -552,7 +556,8 @@ namespace NSFontConverter
 		if ( !CheckRegion(m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen) )
 			return;
 
-		if ( !( pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen) ) )
+		pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen);
+		if ( !pT1CFF )
 			return;
 
 		pT1CFF->ToCIDType0( sPSName, pOutputFunc, pOutputStream);
@@ -651,7 +656,8 @@ namespace NSFontConverter
 		if ( !CheckRegion( m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen ) )
 			return;
 
-		if ( !( pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen)) )
+		pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen);
+		if ( !pT1CFF )
 			return;
 
 		pT1CFF->ToType0(psName, outputFunc, outputStream);
@@ -678,7 +684,7 @@ namespace NSFontConverter
 			0, 0,			        // reserved
 			0, 0,                   // startCount[0]
 			0, 0,                   // idDelta[0]
-			0, 0                    // pad to a mulitple of four bytes
+			0, 0                    // pad to a multiple of four bytes
 		};
 
 		static char arrNameTab[8] =
@@ -750,17 +756,20 @@ namespace NSFontConverter
 		unsigned int t;
 		int nPos = 0, i, j, k, n;
 
-		// Такого не должно быть
+		// This shouldn't happen
 		if ( m_bOpenTypeCFF )
 			return;
 
-		// Проверяем недостающие таблицы
+		if ( m_nGlyphs < 0 )
+			return;
+
+		// Checking missing tables
 		bool bMissingCmap = (nCmapIndex = SeekTable("cmap")) < 0;
 		bool bMissingName = SeekTable("name") < 0;
 		bool bMissingPost = SeekTable("post") < 0;
 		bool bMissingOS2  = SeekTable("OS/2") < 0;
 
-		TrueTypeLoca *pLocaTable = (TrueTypeLoca *)malloc( (m_nGlyphs + 1) * sizeof(TrueTypeLoca) );
+		TrueTypeLoca *pLocaTable = (TrueTypeLoca *)malloc( static_cast<size_t>(m_nGlyphs + 1) * sizeof(TrueTypeLoca) );
 		bool bUnsortedLoca = false;
 		i = SeekTable("loca");
 		nPos = m_pTables[i].nOffset;
@@ -780,8 +789,8 @@ namespace NSFontConverter
 			{
 				bUnsortedLoca = true;
 			}
-			// Описание глифа должны быть как минимум 12 байт (nContours,
-			// xMin, yMin, xMax, yMax, instructionLength - каждый по 2 байта);
+			// The glyph description must be at least 12 bytes (nContours,
+			// xMin, yMin, xMax, yMax, instructionLength - each 2 bytes);
 			if (i > 0 && pLocaTable[i].nOrigOffset - pLocaTable[i-1].nOrigOffset > 0 && pLocaTable[i].nOrigOffset - pLocaTable[i-1].nOrigOffset < 12)
 			{
 				pLocaTable[i-1].nOrigOffset = pLocaTable[i].nOrigOffset;
@@ -790,7 +799,7 @@ namespace NSFontConverter
 			pLocaTable[i].nIndex = i;
 		}
 
-		// Проверяем наличие нулевых таблиц
+		// Checking for null tables
 		nZeroLengthTables = 0;
 		for (i = 0; i < m_nTablesCount; ++i)
 		{
@@ -798,7 +807,7 @@ namespace NSFontConverter
 				++nZeroLengthTables;
 		}
 
-		// Проверяем длину таблицы Cmap
+		// Checking the length of the Cmap table
 		badCmapLen = false;
 		nCmapLen = 0;
 		if ( !bMissingCmap )
@@ -818,12 +827,12 @@ namespace NSFontConverter
 			}
 		}
 
-		// Проверяем, является ли таблица 'hmtx' сокращенной.
+		// Checking whether the table 'hmtx' is shortened.
 		i = SeekTable("hhea");
 		nHMetrics = GetU16BE(m_pTables[i].nOffset + 34, &bSuccess);
 		abbrevHMTX = nHMetrics < m_nGlyphs;
 
-		// Если все впорядке, и нам не надо переписывать таблицы 'cmap' и 'name', тогда пишем файл TTF как он есть
+		// If everything is in order, and we don't need to rewrite the 'cmap' and 'name' tables, then write the TTF file as it is
 		if (!bMissingCmap && !bMissingName && !bMissingPost && !bMissingOS2 && !bUnsortedLoca && !badCmapLen && !abbrevHMTX && nZeroLengthTables == 0 && !sName && !pCodeToGID && !pUseGlyfs )
 		{
 			(*pOutputFunc)( pOutputStream, (char *)m_sFile, m_nLen);
@@ -831,12 +840,12 @@ namespace NSFontConverter
 			return;
 		}
 
-		// Сортируем таблицу 'loca': некоторые шрифты содержат неупорядоченную
-		// таблицу 'loca'; а некоторые шрифты с нормальной таблицей 'loca'
-		// содержат пустые элементы в середине таблицы, cmpTrueTypeLocaOffset
-		// использует сдвиги как основной ключ для сортировки, а номера глифов
-		// как второй ключ (чтобы элементы в таблице, которые имели одинаковую позицию
-		// шли в том же порядке, как и в исходном шрифте)
+		// Sorting the 'loca' table: some fonts contain unordered
+		// table 'loca'; and some fonts with a normal 'loca' table
+		// contain empty elements in the middle of the table, cmpTrueTypeLocaOffset
+		// uses shifts as the main sorting key, and glyph numbers
+		// as a second key (so that elements in the table that have the same position
+		// were in the same order as in the original font)
 		nGlyphLen = 0;
 		if (bUnsortedLoca || pUseGlyfs)
 		{
@@ -851,7 +860,7 @@ namespace NSFontConverter
 
 			for (i = 0; i <= m_nGlyphs; ++i)
 			{
-				// TO DO: Протестировать тут запись только тех глифов, которые нам нужны
+				// TO DO: Test writing here only those glyphs that we need
 
 				if ( pUseGlyfs && lGlyfsCount == m_nGlyphs )
 				{
@@ -883,7 +892,7 @@ namespace NSFontConverter
 			nGlyphLen = nPos;
 		}
 
-		// Вычисляем чексуммы таблиц 'loca' и 'glyf'
+		// Calculate checksums of tables 'loca' and 'glyf'
 		nLocaChecksum = nGlyphChecksum = 0;
 		if (bUnsortedLoca || pUseGlyfs)
 		{
@@ -920,7 +929,7 @@ namespace NSFontConverter
 			}
 		}
 
-		// Строим новую таблицу 'name'
+		// Building a new table 'name'
 		if ( sName )
 		{
 			n = strlen(sName);
@@ -950,7 +959,7 @@ namespace NSFontConverter
 				arrNewNameTable[6 + i*12 + 11] = nNext & 0xff;
 				if (i+1 == 2)
 				{
-					memcpy( arrNewNameTable + 6 + 4*12 + nNext, "\0R\0e\0g\0u\0l\0a\0r", 14);
+					memcpy( arrNewNameTable + 6 + static_cast<ptrdiff_t>(4)*12 + nNext, "\0R\0e\0g\0u\0l\0a\0r", 14);
 					nNext += 14;
 				}
 				else
@@ -967,10 +976,10 @@ namespace NSFontConverter
 		else
 		{
 			nNewNameLen = 0;
-			arrNewNameTable = NULL;
+			arrNewNameTable = nullptr;
 		}
 
-		// Строим новую таблицу 'cmap'
+		// Building a new table 'cmap'
 		if (pCodeToGID)
 		{
 			//nNewCmapLen = 44 + 256 * 2;
@@ -979,9 +988,9 @@ namespace NSFontConverter
 			//arrNewCmapTable[1] = 0;           //
 			//arrNewCmapTable[2] = 0;           // number of encoding tables = 1
 			//arrNewCmapTable[3] = 1;           //
-			//arrNewCmapTable[4] = 0;           // platform ID = 1 (MacOS) // Эти два поля обязательно должны
-			//arrNewCmapTable[5] = 1;           //                         // иметь таки значения, иначе, Adobe
-			//arrNewCmapTable[6] = 0;           // encoding ID = 0         // Acrobat может открыть данный шрифт.
+			//arrNewCmapTable[4] = 0;           // platform ID = 1 (MacOS) // These two fields are required
+			//arrNewCmapTable[5] = 1;           // // have the same values, otherwise, Adobe
+			//arrNewCmapTable[6] = 0;           // encoding ID = 0 // Acrobat may not open this font.
 			//arrNewCmapTable[7] = 0;           //                         //
 			//arrNewCmapTable[8] = 0;           // offset of subtable
 			//arrNewCmapTable[9] = 0;           //
@@ -1031,9 +1040,9 @@ namespace NSFontConverter
 			arrNewCmapTable[1] = 0;           //
 			arrNewCmapTable[2] = 0;           // number of encoding tables = 1
 			arrNewCmapTable[3] = 1;           //
-			arrNewCmapTable[4] = 0;           // platform ID = 1 (MacOS) // Эти два поля обязательно должны
-			arrNewCmapTable[5] = 1;           //                         // иметь таки значения, иначе, Adobe
-			arrNewCmapTable[6] = 0;           // encoding ID = 0         // Acrobat может открыть данный шрифт.
+			arrNewCmapTable[4] = 0;           // platform ID = 1 (MacOS) // These two fields are required
+			arrNewCmapTable[5] = 1;           //                         // have the same values, otherwise, Adobe
+			arrNewCmapTable[6] = 0;           // encoding ID = 0 // Acrobat may not open this font.
 			arrNewCmapTable[7] = 0;           //                         //
 			arrNewCmapTable[8] = 0;           // offset of subtable
 			arrNewCmapTable[9] = 0;           //
@@ -1059,10 +1068,10 @@ namespace NSFontConverter
 		else
 		{
 			nNewCmapLen = 0;
-			arrNewCmapTable = NULL;
+			arrNewCmapTable = nullptr;
 		}
 
-		// Генерируем новую таблицу 'hmtx' и обновляем таблицу 'hhea'
+		// Generate a new table 'hmtx' and update the table 'hhea'
 		if ( abbrevHMTX )
 		{
 			i = SeekTable("hhea");
@@ -1085,34 +1094,34 @@ namespace NSFontConverter
 				nAdvWidth = GetU16BE( nPos, &bSuccess);
 				nLeftSideBearing = GetU16BE( nPos + 2, &bSuccess);
 				nPos += 4;
-				arrNewHMTXTable[4*i    ] = nAdvWidth >> 8;
-				arrNewHMTXTable[4*i + 1] = nAdvWidth & 0xff;
-				arrNewHMTXTable[4*i + 2] = nLeftSideBearing >> 8;
-				arrNewHMTXTable[4*i + 3] = nLeftSideBearing & 0xff;
+				arrNewHMTXTable[static_cast<size_t>(4)*i    ] = nAdvWidth >> 8;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 1] = nAdvWidth & 0xff;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 2] = nLeftSideBearing >> 8;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 3] = nLeftSideBearing & 0xff;
 			}
 			for (; i < m_nGlyphs; ++i)
 			{
 				nLeftSideBearing = GetU16BE( nPos, &bSuccess);
 				nPos += 2;
-				arrNewHMTXTable[4*i    ] = nAdvWidth >> 8;
-				arrNewHMTXTable[4*i + 1] = nAdvWidth & 0xff;
-				arrNewHMTXTable[4*i + 2] = nLeftSideBearing >> 8;
-				arrNewHMTXTable[4*i + 3] = nLeftSideBearing & 0xff;
+				arrNewHMTXTable[static_cast<size_t>(4)*i    ] = nAdvWidth >> 8;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 1] = nAdvWidth & 0xff;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 2] = nLeftSideBearing >> 8;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 3] = nLeftSideBearing & 0xff;
 			}
 		}
 		else
 		{
-			arrNewHHEATable = arrNewHMTXTable = NULL;
+			arrNewHHEATable = arrNewHMTXTable = nullptr;
 			nNewHHEALen = nNewHMTXLen = 0;
 		}
 
-		// Создаем список таблиц:
-		// - сохраняем исходные ненулевые таблицы
-		// - переписываем длину таблицы 'cmap', если необходимо
-		// - добавляем недостающие таблицы
-		// - сортируем таблицы по тэгам
-		// - вычисляем новые позиции таблиц, с учетом 4-байтового выравнивания
-		// - пересчитываем чексуммы таблиц
+		// Create a table directory:
+		// - save the original non-zero tables
+		// - rewrite the length of the 'cmap' table, if necessary
+		// - add missing tables
+		// - sort tables by tags
+		// - calculate new table positions, taking into account 4-byte alignment
+		// - recalculate table checksums
 		nNewTables = m_nTablesCount - nZeroLengthTables + (bMissingCmap ? 1 : 0) + (bMissingName ? 1 : 0) + (bMissingPost ? 1 : 0) + (bMissingOS2 ? 1 : 0);
 		pNewTables = (TrueTypeTable *)malloc( nNewTables * sizeof(TrueTypeTable) );
 		j = 0;
@@ -1256,7 +1265,7 @@ namespace NSFontConverter
 			}
 		}
 
-		// Записываем информацию о таблицах в файле
+		// Writing table information
 		arrTableDir = (char *)malloc(12 + nNewReqTables * 16);
 		arrTableDir[0] = 0x00; // sfnt version
 		arrTableDir[1] = 0x01; //
@@ -1299,7 +1308,7 @@ namespace NSFontConverter
 		}
 		(*pOutputFunc)( pOutputStream, arrTableDir, 12 + nNewReqTables * 16);
 
-		// Вычисляем чексумму файла
+		// Calculate the checksum of the file
 		nFileChecksum = ComputeTableChecksum((unsigned char *)arrTableDir, 12 + nNewReqTables * 16);
 		for (i = 0; i < nNewTables; ++i)
 		{
@@ -1310,7 +1319,7 @@ namespace NSFontConverter
 		}
 		nFileChecksum = 0xb1b0afba - nFileChecksum;
 
-		// Записываем сами таблицы
+		// Write the tables themselves
 		for (i = 0; i < nNewTables; ++i)
 		{
 			if ( 1 == pUseTable[i] )
@@ -1392,7 +1401,8 @@ namespace NSFontConverter
 									(*pOutputFunc)( pOutputStream, "\0", 1);
 								}
 							}
-							if ((k = pLocaTable[j].nLen & 3))
+							k = pLocaTable[j].nLen & 3;
+							if (k)
 							{
 								(*pOutputFunc)( pOutputStream, "\0\0\0\0", 4 - k);
 							}
@@ -1434,7 +1444,7 @@ namespace NSFontConverter
 
 	void CFontFileTrueType::ConvertEncoding   (char **ppEncoding, FontFileOutputFunc pOutputFunc, void *pOutputStream)
 	{
-		// конвертация кодировки в тип Type42
+		// converting encoding to Type42
 		char *sName;
 		StringExt *seBuffer;
 
@@ -1443,7 +1453,8 @@ namespace NSFontConverter
 		{
 			for (int nIndex = 0; nIndex < 256; ++nIndex )
 			{
-				if ( !( sName = ppEncoding[ nIndex ] ) )
+				sName = ppEncoding[ nIndex ];
+				if ( !sName )
 				{
 					sName = ".notdef";
 				}
@@ -1481,9 +1492,9 @@ namespace NSFontConverter
 			return;
 		}
 
-		// Ставим в соответствие названию символа glyph индекс:
-		// 1. Используем ppEncoding для отображения имени символа в его номер
-		// 2. Используем pnCodeToGID для отображения номера символа в glyph индекс
+		// Match the glyph symbol name to the index:
+		// 1. Use ppEncoding to map the symbol name to its number
+		// 2. Use pnCodeToGID to map the symbol number to the glyph index
 		int nGlyphIndex = 0;
 		for (int nIndex = 255; nIndex >= 0; --nIndex)
 		{
@@ -1496,7 +1507,7 @@ namespace NSFontConverter
 				sprintf( sBuf, "c%02x", nIndex);
 				sName = sBuf;
 			}
-			if ( sName && strcmp( sName, ".notdef") )
+			if ( sName && 0 != strcmp( sName, ".notdef") )
 			{
 				nGlyphIndex = pnCodeToGID[nIndex];
 
@@ -1555,6 +1566,9 @@ namespace NSFontConverter
 		memcpy( pHeadData, m_sFile + nPos, 54 );
 		pHeadData[8] = pHeadData[9] = pHeadData[10] = pHeadData[11] = (unsigned char)0;
 
+		if ( m_nGlyphs < 0 )
+			return;
+
 		pLocaTable = (TrueTypeLoca *)MemUtilsMallocArray( m_nGlyphs + 1, sizeof(TrueTypeLoca) );
 		nCurTable = SeekTable("loca");
 		nPos = m_pTables[ nCurTable ].nOffset;
@@ -1587,26 +1601,26 @@ namespace NSFontConverter
 			}
 		}
 
-		// Создаем новую таблицу 'loca'
+		// Create a new table 'loca'
 		pLocaData = (unsigned char *)MemUtilsMallocArray( m_nGlyphs + 1, (m_nLocaFormat ? 4 : 2) );
 		for (int nIndex = 0; nIndex <= m_nGlyphs; ++nIndex )
 		{
 			nPos = pLocaTable[nIndex].nNewOffset;
 			if ( m_nLocaFormat )
 			{
-				pLocaData[ 4 * nIndex     ] = (unsigned char)( nPos >> 24);
-				pLocaData[ 4 * nIndex + 1 ] = (unsigned char)( nPos >> 16);
-				pLocaData[ 4 * nIndex + 2 ] = (unsigned char)( nPos >>  8);
-				pLocaData[ 4 * nIndex + 3 ] = (unsigned char) nPos;
+				pLocaData[ static_cast<size_t>(4) * nIndex     ] = (unsigned char)( nPos >> 24);
+				pLocaData[ static_cast<size_t>(4) * nIndex + 1 ] = (unsigned char)( nPos >> 16);
+				pLocaData[ static_cast<size_t>(4) * nIndex + 2 ] = (unsigned char)( nPos >>  8);
+				pLocaData[ static_cast<size_t>(4) * nIndex + 3 ] = (unsigned char) nPos;
 			}
 			else
 			{
-				pLocaData[ 2 * nIndex     ] = (unsigned char)( nPos >> 9);
-				pLocaData[ 2 * nIndex + 1 ] = (unsigned char)( nPos >> 1);
+				pLocaData[ static_cast<size_t>(2) * nIndex     ] = (unsigned char)( nPos >> 9);
+				pLocaData[ static_cast<size_t>(2) * nIndex + 1 ] = (unsigned char)( nPos >> 1);
 			}
 		}
 
-		// считаем число таблиц
+		// count the number of tables
 		nNewTables = 0;
 		for (int nIndex = 0; nIndex < nT42Tables; ++nIndex )
 		{
@@ -1615,7 +1629,7 @@ namespace NSFontConverter
 				++nNewTables;
 			}
 		}
-		arrVmtxTable = NULL;
+		arrVmtxTable = nullptr;
 		int nAdvance = 0;
 		if ( bNeedVerticalMetrics )
 		{
@@ -1672,7 +1686,8 @@ namespace NSFontConverter
 			}
 			else
 			{
-				if ( ( nJ = SeekTable(t42Tables[nIndex].sTag ) ) >= 0 )
+				nJ = SeekTable(t42Tables[nIndex].sTag );
+				if ( nJ >= 0 )
 				{
 					nLength = m_pTables[nJ].nLen;
 					if ( CheckRegion( m_pTables[nJ].nOffset, nLength ) )
@@ -1757,19 +1772,19 @@ namespace NSFontConverter
 			nPos += 16;
 		}
 
-		// вычисляем checksum и сохраняем ее в заголовке таблицы
+		// calculate checksum and store it in the table header
 		nChecksum = ComputeTableChecksum( arrTableDir, 12 + nNewTables*16);
 		for (int nIndex = 0; nIndex < nNewTables; ++nIndex)
 		{
 			nChecksum += arrNewTables[ nIndex ].unChecksum;
 		}
-		nChecksum = 0xb1b0afba - nChecksum; // по спецификации TrueType
+		nChecksum = 0xb1b0afba - nChecksum; // according to TrueType specification
 		pHeadData[ 8] = (unsigned char)(nChecksum >> 24);
 		pHeadData[ 9] = (unsigned char)(nChecksum >> 16);
 		pHeadData[10] = (unsigned char)(nChecksum >>  8);
 		pHeadData[11] = (unsigned char) nChecksum;
 
-		// начинаем писать массив sfnts
+		// start writing the sfnts array
 		if ( seName )
 		{
 			(*pOutputFunc)( pOutputStream, "/", 1);
@@ -1783,7 +1798,7 @@ namespace NSFontConverter
 
 		DumpString( arrTableDir, 12 + nNewTables*16, pOutputFunc, pOutputStream);
 
-		// пишем таблицы
+		// writing tables
 		for (int nIndex = 0; nIndex < nNewTables; ++nIndex)
 		{
 			if ( t42HeadTable == nIndex )
@@ -1808,11 +1823,13 @@ namespace NSFontConverter
 			}
 			else
 			{
-				// nLength == 0 означает, что таблица не найдена, а ошибка уже была выдана
-				// во время конструирования таблицы
-				if ( ( nLength = arrNewTables[nIndex].nLen ) > 0 )
+				// nLength == 0 means the table wasn't found and the error was already thrown
+				// during table construction
+				nLength = arrNewTables[nIndex].nLen;
+				if ( nLength > 0 )
 				{
-					if ( ( nJ = SeekTable( t42Tables[nIndex].sTag ) ) >= 0 && CheckRegion( m_pTables[nJ].nOffset, m_pTables[nJ].nLen ) )
+					nJ = SeekTable( t42Tables[nIndex].sTag );
+					if ( nJ >= 0 && CheckRegion( m_pTables[nJ].nOffset, m_pTables[nJ].nLen ) )
 					{
 						DumpString(m_sFile + m_pTables[nJ].nOffset, m_pTables[nJ].nLen, pOutputFunc, pOutputStream);
 					}
@@ -1829,7 +1846,7 @@ namespace NSFontConverter
 			}
 		}
 
-		// закончили писать массив sfnts
+		// finished writing the sfnts array
 		(*pOutputFunc)( pOutputStream, "] def\n", 6);
 
 		MemUtilsFree( pLocaData );
@@ -1867,7 +1884,7 @@ namespace NSFontConverter
 				(*pOutputFunc)( pOutputStream, "00", 2);
 			}
 		}
-		// Добавляем дополнительный нулевой байт, по спецификации Adobe Type 42
+		// Adding an additional zero byte, according to the Adobe Type 42 specification
 		(*pOutputFunc)( pOutputStream, "00>\n", 4);
 	}
 
@@ -1894,6 +1911,10 @@ namespace NSFontConverter
 			case 1:
 				nWord |= (sData[nTemp]     & 0xff) << 24;
 				break;
+				default:
+				{
+					break;
+				}
 			}
 			nChecksum += nWord;
 		}
@@ -1906,7 +1927,7 @@ namespace NSFontConverter
 
 		m_bSuccess = true;
 
-		// Проверяем является ли данный файл (TTC)
+		// Checking whether this file is (TTC)
 		unsigned int usTopTag = GetU32BE(0, &m_bSuccess);
 		if ( !m_bSuccess )
 			return;
@@ -1920,12 +1941,12 @@ namespace NSFontConverter
 		else
 			nPos = 0;
 
-		// Проверяем sfnt версию
+		// Checking the sfnt version
 		int nSfntVersion = GetU32BE( nPos, &m_bSuccess);
 		if ( !m_bSuccess )
 			return;
 
-		// Проверяем на формат данных. CCF или нет?
+		// Check the data format. CFF or not?
 		m_bOpenTypeCFF = ( nSfntVersion == 0x4f54544f ); // 'OTTO'
 
 		m_nTablesCount = GetU16BE( nPos + 4, &m_bSuccess);
@@ -1950,15 +1971,16 @@ namespace NSFontConverter
 		if ( !m_bSuccess )
 			return;
 
-		// ищем таблицы необходимые как и для TrueType так и для Type 42
+		// Find tables necessary for both TrueType and Type 42
 		if ( SeekTable("head") < 0 || SeekTable("hhea") < 0 || SeekTable("maxp") < 0 || SeekTable("hmtx") < 0 || ( !m_bOpenTypeCFF && SeekTable("loca") < 0 ) || ( !m_bOpenTypeCFF && SeekTable("glyf" ) < 0) || ( m_bOpenTypeCFF && SeekTable("CFF " ) < 0 ) )
 		{
 			m_bSuccess = false;
 			return;
 		}
 
-		// читаем таблицы CMaps
-		if ( ( nIndex = SeekTable("cmap") ) >= 0 )
+		// read CMaps tables
+		nIndex = SeekTable("cmap");
+		if ( nIndex >= 0 )
 		{
 			nPos = m_pTables[nIndex].nOffset + 2;
 			m_nCMapsCount = GetU16BE( nPos, &m_bSuccess);
@@ -1979,7 +2001,6 @@ namespace NSFontConverter
 			{
 				m_pCMaps[nJ].nPlatform = GetU16BE( nPos, &m_bSuccess);
 				m_pCMaps[nJ].nEncoding = GetU16BE( nPos + 2, &m_bSuccess);
-				unsigned int nTemp = GetU32BE( nPos + 4, &m_bSuccess);
 				m_pCMaps[nJ].nOffset = m_pTables[nIndex].nOffset + GetU32BE( nPos + 4, &m_bSuccess);
 				nPos += 8;
 				m_pCMaps[nJ].nFormat = GetU16BE(m_pCMaps[nJ].nOffset, &m_bSuccess);
@@ -2005,7 +2026,7 @@ namespace NSFontConverter
 		if (!m_bSuccess)
 			return;
 
-		// Проверяем корректность таблицы loca
+		// Checking the correctness of the loca table
 		if ( !m_bOpenTypeCFF )
 		{
 			nIndex = SeekTable("loca");
@@ -2032,7 +2053,7 @@ namespace NSFontConverter
 				return;
 		}
 
-		// Читаем таблицу post
+		// Reading the post table
 		ReadPostTable();
 	}
 
@@ -2043,7 +2064,8 @@ namespace NSFontConverter
 		bool bSuccess = true;
 		int nTemp, nJ, nCount = 0, nTempLen = 0;
 
-		if ( ( nTemp = SeekTable("post" ) ) < 0 )
+		nTemp = SeekTable("post" );
+		if ( nTemp < 0 )
 			return;
 
 		int nTablePos = m_pTables[ nTemp ].nOffset;
@@ -2122,7 +2144,7 @@ error:
 		if (m_pNameToGID)
 		{
 			delete m_pNameToGID;
-			m_pNameToGID = NULL;
+			m_pNameToGID = nullptr;
 		}
 	}
 

@@ -116,7 +116,7 @@ bool SplitStringAsVector(const std::wstring& sData, const std::wstring& sDelimit
 }
 
 // Manager
-enum PluginStatus
+enum PluginStatus : unsigned char
 {
 	Removed = 0,
 	Installed,
@@ -260,8 +260,8 @@ public:
 	CPluginsManager()
 	{
 		m_sPluginsDir = L"";
-		m_sMarketplaceUrl = L"https://onlyoffice.github.io";
-		m_sMarketplaceRepo = L"https://github.com/ONLYOFFICE/onlyoffice.github.io";
+		m_sMarketplaceUrl = L"https://euro-office.github.io/plugins";
+		m_sMarketplaceRepo = L"https://github.com/Euro-Office/plugins";
 
 		m_sSettingsDir = NSSystemUtils::GetAppDataDir() + L"/pluginsmanager";
 
@@ -318,26 +318,13 @@ public:
 
 		if ( sUrl.length() )
 		{
-			if (0 == sUrl.find(L"https://onlyoffice.github.io"))
+			m_sMarketplaceUrl = sUrl;
+			m_sMarketplaceRepo = L"";
+			std::wstring::size_type posDelimeter = m_sMarketplaceUrl.find(';');
+			if (posDelimeter != std::wstring::npos)
 			{
-				m_sMarketplaceUrl = L"https://onlyoffice.github.io";
-				m_sMarketplaceRepo = L"https://github.com/ONLYOFFICE/onlyoffice.github.io";
-			}
-			else if (0 == sUrl.find(L"https://onlyoffice-plugins.github.io/onlyoffice.github.io"))
-			{
-				m_sMarketplaceUrl = L"https://onlyoffice-plugins.github.io/onlyoffice.github.io";
-				m_sMarketplaceRepo = L"https://github.com/ONLYOFFICE-PLUGINS/onlyoffice.github.io";
-			}
-			else
-			{
-				m_sMarketplaceUrl = sUrl;
-				m_sMarketplaceRepo = L"";
-				std::wstring::size_type posDelimeter = m_sMarketplaceUrl.find(';');
-				if (posDelimeter != std::wstring::npos)
-				{
-					m_sMarketplaceUrl = sUrl.substr(0, posDelimeter);
-					m_sMarketplaceRepo = sUrl.substr(posDelimeter + 1);
-				}
+				m_sMarketplaceUrl = sUrl.substr(0, posDelimeter);
+				m_sMarketplaceRepo = sUrl.substr(posDelimeter + 1);
 			}
 
 			bResult = true;
@@ -678,7 +665,7 @@ private:
 	// Single
 	CPluginInfo* FindLocalPlugin(const std::wstring& sPlugin, PluginStatus status = Installed)
 	{
-		CPluginInfo* pResult = NULL;
+		CPluginInfo* pResult = nullptr;
 
 		if ( sPlugin.length() )
 		{
@@ -727,7 +714,7 @@ private:
 
 	CPluginInfo* FindMarketPlugin(const std::wstring& sPlugin)
 	{
-		CPluginInfo* pResult = NULL;
+		CPluginInfo* pResult = nullptr;
 
 		if (m_arrMarketplace.size())
 		{
@@ -779,7 +766,7 @@ private:
 			}
 			else if (IsNeedDownload(sPlugin))
 			{
-				// Try downlaod as is and unzip
+				// Try download as is and unzip
 				sPackageUrl = sPlugin;
 			}
 			else if (NSFile::CFileBinary::Exists(sPlugin))
@@ -807,9 +794,9 @@ private:
 				NSDirectory::CreateDirectory(sTempDir);
 
 				// Archive
-				COfficeUtils oOfficeUtils(NULL);
+				COfficeUtils oOfficeUtils(nullptr);
 				if (S_OK == oOfficeUtils.IsArchive(sTmpFile) &&
-					S_OK == oOfficeUtils.ExtractToDirectory(sTmpFile, sTempDirExt, NULL, 0))
+					S_OK == oOfficeUtils.ExtractToDirectory(sTmpFile, sTempDirExt, nullptr, 0))
 				{
 					std::wstring sConfigFile = sTempDirExt + L"/config.json";
 
@@ -1328,7 +1315,7 @@ private:
 
 	CPluginInfo* FetchPluginInfo(const std::wstring& sPluginName)
 	{
-		CPluginInfo* pResult = NULL;
+		CPluginInfo* pResult = nullptr;
 
 		std::wstring sTmpFile = NSFile::CFileBinary::GetTempPath() + L"/temp_asc_plugin.json";
 		std::wstring sConfigUrl = m_sMarketplaceUrl + L"/sdkjs-plugins/content/" + sPluginName + L"/config.json";
@@ -1351,7 +1338,7 @@ private:
 
 	CPluginInfo* ReadPluginInfo(const std::wstring& sConfigFile)
 	{
-		CPluginInfo* pResult = NULL;
+		CPluginInfo* pResult = nullptr;
 		std::wstring sJson = L"";
 
 		if (NSFile::CFileBinary::ReadAllTextUtf8(sConfigFile, sJson))

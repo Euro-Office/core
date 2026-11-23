@@ -330,25 +330,25 @@ namespace PPTX
 		{
 			if(is_init())
 				return Color->GetRGBA(RGBA);
-			return 0; //return 0; - заменить на просмотр настроек по умолчанию
+			return 0; //return 0; - replace with viewing default settings
 		}
 		DWORD UniColor::GetARGB(DWORD ARGB)const
 		{
 			if(is_init())
 				return Color->GetARGB(ARGB);
-			return 0; //return 0; - заменить на просмотр настроек по умолчанию
+			return 0; //return 0; - replace with viewing default settings
 		}
 		DWORD UniColor::GetBGRA(DWORD BGRA)const
 		{
 			if(is_init())
 				return Color->GetBGRA(BGRA);
-			return 0; //return 0; - заменить на просмотр настроек по умолчанию
+			return 0; //return 0; - replace with viewing default settings
 		}
 		DWORD UniColor::GetABGR(DWORD ABGR)const
 		{
 			if(is_init())
 				return Color->GetABGR(ABGR);
-			return 0; //return 0; - заменить на просмотр настроек по умолчанию
+			return 0; //return 0; - replace with viewing default settings
 		}
 		void UniColor::SetRGBColor(const BYTE& R, const BYTE& G, const BYTE& B)
 		{

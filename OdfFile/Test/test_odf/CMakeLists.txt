@@ -1,0 +1,174 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+
+cmake_minimum_required(VERSION 3.10)
+
+project(test_odf)
+
+# OdfFile/Test/test_odf -> three levels under the repository root.
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+# test_odf.pro builds only test.cpp + common.cpp (the entrance/motion/audio/
+# interactions modules are commented out there) and converts an .odp fixture via
+# ConvertODF2OOXml() + COfficeFileFormatChecker. The CMake target also builds the
+# animation modules: they convert their fixtures in both directions and inspect
+# the converters' animation trees (pptx_animation_context, odf_writer anim_*),
+# which only the static format libraries linked below expose. columns.cpp is
+# left out: its fixture (columns.pptx) was never committed.
+#
+# ConvertODF2OOXml() lives in OdfFormatLib, whose ODF->OOXML writer references
+# the whole OOXML/MS format-library set (XmlUtils, SimpleTypes, OOX/PPTX/XLS/XLSB
+# classes, ...). Those static libraries reference each other and are only ever
+# linked together inside x2tlib. Add the x2tlib "library" subdirectory (which
+# guard-adds every one of those targets) so they exist, then link the static
+# archives below inside a --start-group, mirroring x2tlib's own link. In the
+# normal top-level build x2t is configured first, so this is a no-op there.
+if(NOT TARGET x2tlib)
+    add_subdirectory(${CORE_ROOT_DIR}/X2tConverter/build/cmake/library x2tlib)
+endif()
+
+# The test reads its fixture via the working-dir-relative path
+# "ExampleFiles/motion.odp" (TestEnv passes it straight to convert_single()).
+# Stage the committed ExampleFiles next to the binary and run from that dir.
+set(_test_odf_run_dir "${CMAKE_CURRENT_BINARY_DIR}/run")
+
+# test.cpp owns main() (InitGoogleTest + AddGlobalTestEnvironment + RUN_ALL_TESTS)
+# -> do NOT pass GTEST_MAIN. COfficeFileFormatChecker is compiled from
+# OfficeFileFormatChecker2.cpp directly into the target (no format library builds
+# it; x2tlib compiles it the same way). FILE_FORMAT_CHECKER_WITH_MACRO is left
+# undefined to avoid the heavy PPT dependency chain. unicode_util.cpp/pole.cpp are
+# NOT compiled here -- DocxFormatLib provides them, so doing so would duplicate.
+# number_styles.cpp needs no fixture and no conversion: it drives
+# odf_number_styles_context directly out of OdfFormatLib.
+add_core_gtest(
+    NAME    test_odf
+    SOURCES test.cpp
+            odt2docx_outline_num_format.cpp
+            common.cpp
+            number_styles.cpp
+            conversion_helpers.cpp
+            docx2odt_content_controls.cpp
+            docx2odt_header_drawing_anchor.cpp
+            xlsx2ods_date_cells.cpp
+            xlsx2ods_print_area.cpp
+            xlsx2ods_header_footer.cpp
+            odt2docx_fields.cpp
+            chart_series_name.cpp
+            xlsx2ods_sheet_background.cpp
+            xlsx2ods_header_footer_codes.cpp
+            docx2odt_page_background.cpp
+            docx2odt_section_footers.cpp
+            math_bar.cpp
+            chart_title.cpp
+            odt2docx_underline.cpp
+            odt2docx_keep_next.cpp
+            odt2docx_header_footer_spacing.cpp
+            odt2docx_links.cpp
+            odp2pptx_line_height.cpp
+            odp2pptx_transition_without_subtype.cpp
+            odt2docx_default_tab_stop.cpp
+            enhanced_path_quadratic_bezier.cpp
+            pptx2odp_bullet_size.cpp
+            xlsx2ods_page_margins.cpp
+            chart_vary_colors.cpp
+            odt2docx_first_body_element.cpp
+            odt2docx_meta_template.cpp
+            chart_subtitle.cpp
+            math_property_values.cpp
+            pptx2odp_table_styles.cpp
+            docx2odt_header_footer_margins.cpp
+            entrance.cpp
+            motion.cpp
+            audio.cpp
+            interactions.cpp
+            xlsx2ods_table_print_titles.cpp
+            ods2xlsx_trailing_cell_style.cpp
+            ods2xlsx_fit_to_page.cpp
+            ods2xlsx_page_margins.cpp
+            ods2xlsx_hidden_header_footer.cpp
+            ods2xlsx_font_size_column_width.cpp
+            ods2xlsx_database_range.cpp
+            odt2docx_section_columns.cpp
+            odt2docx_chapter_field.cpp
+            odt2docx_database_display.cpp
+            ods2xlsx_fill_character.cpp
+            ods_formula_function_names.cpp
+            odf_font_family.cpp
+            odt2docx_character_style_based_on.cpp
+            docx2odt_style_based_on.cpp
+            ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
+    WORKING_DIRECTORY "${_test_odf_run_dir}"
+)
+
+# The OOXML/MS format static libraries reference one another, so wrap them in a
+# linker group; the remaining converter libraries are shared and linked after.
+# This mirrors the static + dynamic lib lists of target_link_libraries(x2tlib).
+# Apple's ld has no groups; it resolves across static libraries anyway.
+if(APPLE)
+    set(_test_odf_group_begin "")
+    set(_test_odf_group_end "")
+else()
+    set(_test_odf_group_begin "-Wl,--start-group")
+    set(_test_odf_group_end "-Wl,--end-group")
+endif()
+target_link_libraries(test_odf PRIVATE
+    ${_test_odf_group_begin}
+    OdfFormatLib
+    DocFormatLib
+    PptFormatLib
+    RtfFormatLib
+    TxtXmlFormatLib
+    BinDocument
+    PPTXFormatLib
+    DocxFormatLib
+    XlsbFormatLib
+    XlsFormatLib
+    VbaFormatLib
+    CompoundFileLib
+    CryptoPPLib
+    ${_test_odf_group_end}
+    graphics
+    kernel
+    UnicodeConverter
+    kernel_network
+    Fb2File
+    PdfFile
+    HtmlFile2
+    EpubFile
+    XpsFile
+    OFDFile
+    DjVuFile
+    doctrenderer
+    DocxRenderer
+    IWorkFile
+    HWPFile
+    StarMathConverter
+    ooxmlsignature
+    Boost::system
+    Boost::filesystem
+    Boost::regex
+    Boost::date_time
+)
+
+# test_odf.pro adds the core root (for rewritten relative includes such as
+# "Common/OfficeFileFormatChecker.h") and X2tConverter/src on the include path.
+# OdfFormatLib keeps OdfFile/Common PRIVATE, but its writer headers include
+# <CPSharedPtr.h> from there, so a consumer has to add it itself.
+target_include_directories(test_odf PRIVATE
+    "${CORE_ROOT_DIR}"
+    "${CORE_ROOT_DIR}/X2tConverter/src"
+    "${CORE_ROOT_DIR}/OdfFile/Common"
+    # The animation modules include the converters' headers as
+    # "Reader/..." and "Writer/...".
+    "${CORE_ROOT_DIR}/OdfFile"
+)
+
+add_custom_command(TARGET test_odf POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${_test_odf_run_dir}"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_CURRENT_SOURCE_DIR}/ExampleFiles"
+            "${_test_odf_run_dir}/ExampleFiles"
+    COMMENT "Staging test_odf fixtures"
+)

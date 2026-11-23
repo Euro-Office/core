@@ -37,11 +37,11 @@ namespace Draw
 	}
 	OOX::Draw::CConnectionsFile::CConnectionsFile(OOX::Document* pMain, const CPath& uri) : OOX::File(pMain)
 	{
-		read(uri.GetDirectory(), uri);
+		CConnectionsFile::read(uri.GetDirectory(), uri);
 	}
 	OOX::Draw::CConnectionsFile::CConnectionsFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 	{
-		read(oRootPath, oPath);
+		CConnectionsFile::read(oRootPath, oPath);
 	}
 	OOX::Draw::CConnectionsFile::~CConnectionsFile()
 	{
@@ -51,7 +51,7 @@ namespace Draw
 		CPath oRootPath;
 		read(oRootPath, oFilePath);
 	}
-	void OOX::Draw::CConnectionsFile::read(const CPath& oRootPath, const CPath& oFilePath)
+	void OOX::Draw::CConnectionsFile::read(const CPath&  /*oRootPath*/, const CPath& oFilePath)
 	{
 		XmlUtils::CXmlLiteReader oReader;
 
@@ -127,11 +127,11 @@ namespace Draw
 	}
 	OOX::Draw::CRecordsetFile::CRecordsetFile(OOX::Document* pMain, const CPath& uri) : OOX::File(pMain)
 	{
-		read(uri.GetDirectory(), uri);
+		CRecordsetFile::read(uri.GetDirectory(), uri);
 	}
 	OOX::Draw::CRecordsetFile::CRecordsetFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 	{
-		read(oRootPath, oPath);
+		CRecordsetFile::read(oRootPath, oPath);
 	}
 	OOX::Draw::CRecordsetFile::~CRecordsetFile()
 	{
@@ -141,16 +141,16 @@ namespace Draw
 		CPath oRootPath;
 		read(oRootPath, oFilePath);
 	}
-	void OOX::Draw::CRecordsetFile::read(const CPath& oRootPath, const CPath& oFilePath)
+	void OOX::Draw::CRecordsetFile::read(const CPath&  /*oRootPath*/, const CPath& oFilePath)
 	{
 		NSFile::CFileBinary::ReadAllTextUtf8A(oFilePath.GetPath(), m_sXmlA);
 	}
 	void OOX::Draw::CRecordsetFile::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
 		NSFile::CFileBinary oFile;
-		if (true == oFile.CreateFileW(oFilePath.GetPath()))
+		if (oFile.CreateFileW(oFilePath.GetPath()))
 		{
-			if (false == m_sXmlA.empty())
+			if (!m_sXmlA.empty())
 				oFile.WriteFile((BYTE*)m_sXmlA.c_str(), m_sXmlA.length());
 			oFile.CloseFile();
 		}
@@ -205,13 +205,13 @@ namespace Draw
 	OOX::Draw::CRecordsetsFile::CRecordsetsFile(OOX::Document* pMain, const CPath& uri) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bVisioPages = true;
-		read(uri.GetDirectory(), uri);
+		CRecordsetsFile::read(uri.GetDirectory(), uri);
 	}
 	OOX::Draw::CRecordsetsFile::CRecordsetsFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bVisioPages = true;
 
-		read(oRootPath, oPath);
+		CRecordsetsFile::read(oRootPath, oPath);
 	}
 	OOX::Draw::CRecordsetsFile::~CRecordsetsFile()
 	{
@@ -378,6 +378,7 @@ namespace Draw
 			{
 				AlwaysUseConnectionFile = pReader->GetBool();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -445,6 +446,7 @@ namespace Draw
 			{
 				NextID = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < end)
@@ -524,7 +526,7 @@ namespace Draw
 		{
 			const char* sName = XmlUtils::GetNameNoNS(oReader.GetNameChar());
 			
-			WritingElement* pItem = NULL;
+			WritingElement* pItem = nullptr;
 			if (strcmp("DataColumns", sName) == 0) //1
 			{
 				DataColumns = oReader;
@@ -581,7 +583,7 @@ namespace Draw
 
 		for (size_t i = 0; i < m_arrItems.size(); ++i)
 		{
-			int type = 0xff;					 //todooo predefine type for ???
+			int type = 0xff;					 //TODO predefine type for ???
 			switch (m_arrItems[i]->getType())
 			{
 			case et_dr_PrimaryKey: type = 1; break;
@@ -667,6 +669,7 @@ namespace Draw
 			{
 				Checksum = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -701,7 +704,7 @@ namespace Draw
 			}break;
 			case 5:
 			{
-				CRecordsetFile* pRecordset = new CRecordsetFile(NULL);
+				CRecordsetFile* pRecordset = new CRecordsetFile(nullptr);
 				pRecordset->fromPPTY(pReader);
 				smart_ptr<OOX::File> oFile(pRecordset);
 
@@ -807,6 +810,7 @@ namespace Draw
 			{
 				DataWindowOrder = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < end)
@@ -972,6 +976,7 @@ namespace Draw
 			{
 				Hyperlink = pReader->GetBool();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1051,6 +1056,7 @@ namespace Draw
 			{
 				SortAsc = pReader->GetBool();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < end)
@@ -1139,6 +1145,7 @@ namespace Draw
 			{
 				Value = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1200,6 +1207,7 @@ namespace Draw
 			{
 				ColumnNameID = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < end)
@@ -1290,6 +1298,7 @@ namespace Draw
 			{
 				ShapeID = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1353,6 +1362,7 @@ namespace Draw
 			{
 				ShapeID = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1416,6 +1426,7 @@ namespace Draw
 			{
 				ContextTypeLabel = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);

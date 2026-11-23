@@ -32,9 +32,8 @@
     #include <libxml2/libxml/xmlreader.h>
     #include <libxml2/libxml/c14n.h>
 #else
-    #include "../libxml2/libxml.h"
-    #include "../libxml2/include/libxml/xmlreader.h"
-    #include "../libxml2/include/libxml/c14n.h"
+    #include <libxml/xmlreader.h>
+    #include <libxml/c14n.h>
 #endif
 
 #include "../include/xmlutils.h"
@@ -437,7 +436,7 @@ namespace XmlUtils
         inline std::wstring GetText()
         {
             if (!IsValid())
-                return NULL;
+                return L"";
 
             const xmlChar* pValue = xmlTextReaderConstValue(reader);
             if (NULL == pValue)
@@ -449,7 +448,7 @@ namespace XmlUtils
         inline std::string GetTextA()
         {
             if (!IsValid())
-                return NULL;
+                return "";
 
             const xmlChar* pValue = xmlTextReaderConstValue(reader);
             if (NULL == pValue)
@@ -570,7 +569,7 @@ namespace XmlUtils
                 {
                     nSize *= 2;
                 }
-                RELEASEOBJECT(sBuffer);
+                RELEASEARRAYOBJECTS(sBuffer);
                 sBuffer = new WCHAR[nSize];
             }
         }

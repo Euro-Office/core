@@ -57,7 +57,7 @@ void chart_format_properties::apply_from(const chart_format_properties & Other)
 }
 void chart_format_properties::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
-	_CP_OPT(bool) bVal;//потом можно и это разделение убрать - заменить вариант
+	_CP_OPT(bool) bVal;//then this division can be removed and the option replaced
 
 	CP_APPLY_ATTR(L"chart:scale-text",			bVal);		if (bVal) push_back(_property(L"scale-text",			bVal.get()));
     CP_APPLY_ATTR(L"chart:three-dimensional",	bVal);		if (bVal) push_back(_property(L"three-dimensional",		bVal.get()));

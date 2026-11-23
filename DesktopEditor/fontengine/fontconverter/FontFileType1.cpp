@@ -49,7 +49,7 @@ namespace NSFontConverter
 	(ch) == '\f'        || \
 	(ch) == '\0' )
 
-	// Таблица для быстрого конвертирования цифр (десятичных и не десятичных) в числа
+	// Table for quickly converting digits (decimal and non-decimal) to numbers
 	static const signed char c_arrCharTable[128] =
 	{
 		/* 0x00 */
@@ -63,7 +63,7 @@ namespace NSFontConverter
 		25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1, -1, -1, -1, -1,
 	};
 
-	// Ни один символ больше >= 0x80 не может представлять число
+	// No character greater than >= 0x80 can represent a number
 #define OP  >=
 
 #define WriteChar(Value) \
@@ -122,7 +122,7 @@ namespace NSFontConverter
 			if ( c OP 0x80 )
 				break;
 
-			c = c_arrCharTable[c & 0x7F];
+			c = (FT_UInt)(unsigned char)c_arrCharTable[c & 0x7F];
 			if ( (unsigned)c >= 16 )
 				break;
 
@@ -155,8 +155,9 @@ namespace NSFontConverter
 		char *sBuffer;
 		int nLen = 0;
 
-		if ( !( sBuffer = CFontFileBase::ReadFile(wsFileName, &nLen) ) )
-			return NULL;
+		sBuffer = CFontFileBase::ReadFile(wsFileName, &nLen);
+		if ( !sBuffer )
+			return nullptr;
 
 		return new CFontFileType1(sBuffer, nLen, true);
 	}
@@ -164,8 +165,8 @@ namespace NSFontConverter
 	CFontFileType1::CFontFileType1(char *sBuffer, int nLen, bool bFreeData):
 		CFontFileBase(sBuffer, nLen, bFreeData)
 	{
-		m_sName = NULL;
-		m_arrEncoding = NULL;
+		m_sName = nullptr;
+		m_arrEncoding = nullptr;
 
 		Parse();
 		m_bParsed = false;
@@ -182,7 +183,7 @@ namespace NSFontConverter
 			{
 				MemUtilsFree( m_arrEncoding[nIndex] );
 			}
-			MemUtilsFree(m_arrEncoding);
+			MemUtilsFree((void *)m_arrEncoding);
 		}
 	}
 
@@ -207,17 +208,17 @@ namespace NSFontConverter
 		char sBuffer[512];
 		char *sLine, *sLine2, *sCurChar;
 
-		// копируем все до строчки /Encoding
-		for ( sLine = (char *)m_sFile; sLine && strncmp( sLine, "/Encoding", 9); sLine = GetNextLine(sLine) );
+		// copy everything up to the /Encoding entry
+		for ( sLine = (char *)m_sFile; sLine && 0 != strncmp( sLine, "/Encoding", 9); sLine = GetNextLine(sLine) );
 		if ( !sLine )
 		{
-			// не нашли кодировку, тогда копируем целиком фонт файл
+			// encoding not found, so copy the entire font file
 			(*pOutputFunc)( pOutputStream, (char *)m_sFile, m_nLen);
 			return;
 		}
 		(*pOutputFunc)( pOutputStream, (char *)m_sFile, sLine - (char *)m_sFile);
 
-		// пишем новую кодировку
+		// write a new encoding
 		(*pOutputFunc)( pOutputStream, "/Encoding 256 array\n", 20);
 		(*pOutputFunc)( pOutputStream, "0 1 255 {1 index exch /.notdef put} for\n", 40);
 		for ( int nIndex = 0; nIndex < 256; ++nIndex )
@@ -237,7 +238,7 @@ namespace NSFontConverter
 		else
 		{
 			sCurChar = sLine + 10;
-			sLine = NULL;
+			sLine = nullptr;
 			for (; sCurChar < (char *)m_sFile + m_nLen; ++sCurChar)
 			{
 				if ((*sCurChar == ' ' || *sCurChar == '\t' || *sCurChar == '\x0a' || *sCurChar == '\x0d' || *sCurChar == '\x0c' || *sCurChar == '\0') && sCurChar + 4 <= (char *)m_sFile + m_nLen && !strncmp(sCurChar + 1, "def", 3) )
@@ -248,11 +249,11 @@ namespace NSFontConverter
 			}
 		}
 
-		// У некоторых фонтов две записи /Encoding, поэтому проверяем наличие второй записи
+		// Some fonts have two /Encoding entries, so check for the presence of a second entry
 		if ( sLine )
 		{
 			int nIndex;
-			for ( sLine2 = sLine, nIndex = 0; nIndex < 20 && sLine2 && strncmp(sLine2, "/Encoding", 9); sLine2 = GetNextLine(sLine2), ++nIndex) ;
+			for ( sLine2 = sLine, nIndex = 0; nIndex < 20 && sLine2 && 0 != strncmp(sLine2, "/Encoding", 9); sLine2 = GetNextLine(sLine2), ++nIndex) ;
 			if ( nIndex < 20 && sLine2 )
 			{
 				(*pOutputFunc)( pOutputStream, sLine, sLine2 - sLine);
@@ -263,7 +264,7 @@ namespace NSFontConverter
 				else
 				{
 					sCurChar = sLine2 + 10;
-					sLine = NULL;
+					sLine = nullptr;
 					for (; sCurChar < (char *)m_sFile + m_nLen; ++sCurChar)
 					{
 						if ((*sCurChar == ' ' || *sCurChar == '\t' || *sCurChar == '\x0a' || *sCurChar == '\x0d' || *sCurChar == '\x0c' || *sCurChar == '\0') && sCurChar + 4 <= (char *)m_sFile + m_nLen && !strncmp(sCurChar + 1, "def", 3) )
@@ -275,7 +276,7 @@ namespace NSFontConverter
 				}
 			}
 
-			// копируем все после кодировки
+			// copy everything after encoding
 			if ( sLine )
 			{
 				(*pOutputFunc)( pOutputStream, sLine, ((char *)m_sFile + m_nLen) - sLine );
@@ -295,14 +296,14 @@ namespace NSFontConverter
 			++sLine;
 
 		if ( sLine >= (char *)m_sFile + m_nLen )
-			return NULL;
+			return nullptr;
 
 		return sLine;
 	}
 
 	void CFontFileType1::Parse()
 	{
-		// Сначала проверим, если это pfb файл, тогда избавимся от всех его маркеров.
+		// First, check if it's a pfb file, then we'll get rid of all its markers.
 		Reset();
 
 		while( m_nPos < m_nLen && ( ' ' == m_sFile[m_nPos] || '\t' == m_sFile[m_nPos] || '\r' == m_sFile[m_nPos] || '\n' == m_sFile[m_nPos] ) )
@@ -322,7 +323,7 @@ namespace NSFontConverter
 		char sBuffer[256];
 		int nCount, nCode;
 		int nIndex = 0;
-		unsigned char *sEexec = NULL;
+		unsigned char *sEexec = nullptr;
 
 		m_oTopDict.arrdFontBBox[0] = 0; m_oTopDict.arrdFontBBox[1] = 0;
 		m_oTopDict.arrdFontBBox[2] = 0; m_oTopDict.arrdFontBBox[3] = 0;
@@ -337,7 +338,10 @@ namespace NSFontConverter
 			{
 				strncpy( sBuffer, sLine, 255);
 				sBuffer[255] = '\0';
-				if ( ( pCur = strchr( sBuffer + 9, '/' ) ) && ( pCur = strtok( pCur + 1, " \t\n\r" ) ) )
+				pCur = strchr( sBuffer + 9, '/' );
+				if ( pCur )
+					pCur = strtok( pCur + 1, " \t\n\r" );
+				if ( pCur )
 				{
 					m_sName = CopyString( pCur );
 				}
@@ -370,11 +374,12 @@ namespace NSFontConverter
 				int nJ = 0;
 				for (nJ = 0; nJ < 256; ++nJ )
 				{
-					m_arrEncoding[nJ] = NULL;
+					m_arrEncoding[nJ] = nullptr;
 				}
 				for (nJ = 0, sLine = GetNextLine(sLine); nJ < 300 && sLine && ( sLine1 = GetNextLine( sLine )); ++nJ, sLine = sLine1)
 				{
-					if ( ( nCount = sLine1 - sLine ) > 255 )
+					nCount = sLine1 - sLine;
+					if ( nCount > 255 )
 					{
 						nCount = 255;
 					}
@@ -415,7 +420,10 @@ namespace NSFontConverter
 					}
 					else
 					{
-						if ( strtok( sBuffer, " \t") && ( pCur = strtok(NULL, " \t\n\r")) && !strcmp( pCur, "def"))
+						pCur = nullptr;
+						if ( strtok( sBuffer, " \t") )
+							pCur = strtok(nullptr, " \t\n\r");
+						if ( pCur && !strcmp( pCur, "def"))
 						{
 							break;
 						}
@@ -431,7 +439,7 @@ namespace NSFontConverter
 			}
 		}
 
-		if ( NULL != sEexec )
+		if ( nullptr != sEexec )
 		{
 			unsigned char* sTemp = sEexec;
 			while ( sTemp != (unsigned char*)strstr( (char*)sTemp, "cleartomark" ) && sTemp < m_sFile + m_nLen )
@@ -445,16 +453,16 @@ namespace NSFontConverter
 			memcpy( sEexecBuffer, sEexec + 17, nBufferLen );
 			DecryptEexec( &sEexecBuffer, nBufferLen );
 
-			sEexec = sEexecBuffer + 4; // Первые четыре байта были случайными
+			sEexec = sEexecBuffer + 4; // The first four bytes are arbitrary
 			int nEexecLen = nBufferLen - 4;
 
-			// Теперь прочитаем содержимое Private Dict
+			// Now read the contents of Private Dict
 			bool bGlyphsSection = false, bSubrsSection = false;
 			//unsigned short ushChar = '';
 			std::wstring sToken, sGlyph;
 			int nLength = 0;
 
-			// Выставляем значения по умолчанию элементов Private Dict
+			// Setting default values for Private Dict elements
 			m_oPrivateDict.nBlueValues       = 0;
 			m_oPrivateDict.nOtherBlues       = 0;
 			m_oPrivateDict.nFamilyBlues      = 0;
@@ -516,7 +524,7 @@ namespace NSFontConverter
 					sToken.push_back( (wchar_t)nChar );
 					if ( !bGlyphsSection && '/' == sToken[0] )
 					{
-						int nTempChar = sToken[1];
+						int nTempChar = static_cast<int>(static_cast<unsigned long>(sToken[1]));
 						switch (nTempChar)
 						{
 						case 'B':
@@ -579,7 +587,7 @@ namespace NSFontConverter
 								m_oPrivateDict.nStemSnapV = ReadDoubleArray<type1MaxStemSnap>( sEexec + nIndex + 2, nEexecLen - nIndex - 2, m_oPrivateDict.arrdStemSnapV );
 							else if ( L"/StdHW" == sToken )
 							{
-								// Здесь содержится массив с одним значением
+								// This contains an array with one value
 								double dTemp[1];
 
 								if ( ReadDoubleArray<1>( sEexec + nIndex + 2, nEexecLen - nIndex - 2, dTemp ) > 0 )
@@ -590,7 +598,7 @@ namespace NSFontConverter
 							}
 							else if ( L"/StdVW" == sToken )
 							{
-								// Здесь содержится массив с одним значением
+								// This contains an array with one value
 								double dTemp[1];
 								if ( ReadDoubleArray<1>( sEexec + nIndex + 2, nEexecLen - nIndex - 2, dTemp ) > 0 )
 								{
@@ -599,6 +607,10 @@ namespace NSFontConverter
 								}
 							}
 						}
+							default:
+							{
+								break;
+							}
 						}
 					}
 					else if ( '/' == nChar  )
@@ -606,14 +618,20 @@ namespace NSFontConverter
 						sToken.clear();
 						sGlyph.clear();
 
-						while ( nIndex < nEexecLen && ( nChar = sEexec[++nIndex] ) != ' ' )
+						while ( nIndex < nEexecLen )
+						{
+							nChar = sEexec[++nIndex];
+							if ( ' ' == nChar )
+								break;
+
 							sGlyph.push_back( (wchar_t)nChar );
+						}
 					}
 				}
 			}
 			MemUtilsFree( sEexecBuffer );
 
-			// Проведем сортировку элементов m_arrCharstrings по юникодному значению
+			// Sort m_arrCharstrings elements by Unicode value
 			qsort( m_arrCharstrings.data(), m_arrCharstrings.size(), sizeof(Type1Glyph), CompareType1Glyph );
 		}
 
@@ -622,17 +640,17 @@ namespace NSFontConverter
 
 	void CFontFileType1::DecryptEexec(unsigned char** ppEexecBuffer, int nLen)
 	{
-		// Согласно спецификации Type1, первый байт не должен быть ASCII пробелом
-		// (пробел, таб, перенос каретки или перенос строки).
-		unsigned char *sCur = (unsigned char*)(*ppEexecBuffer);
-		while( sCur < (unsigned char*)(*ppEexecBuffer) + nLen && ( ' ' == *sCur || '\t' == *sCur || '\r' == *sCur || '\n' == *sCur ) )
+		// According to the Type1 specification, the first byte mustn't be an ASCII space
+		// (space, tab, carriage return or line feed).
+		unsigned char *sCur = (*ppEexecBuffer);
+		while( sCur < (*ppEexecBuffer) + nLen && ( ' ' == *sCur || '\t' == *sCur || '\r' == *sCur || '\n' == *sCur ) )
 		{
 			++sCur;
 			--nLen;
 		}
 
-		// Теперь нам надо определить в каком формате у нас данные: ASKII или бинарные данные.
-		// Если первые четыре байта являются шестнадцатиричными символами, значит, кодировка ASCII.
+		// Now determine the data format: ASCII or binary.
+		// If the first four bytes are hexadecimal characters, then the encoding is ASCII.
 		bool bASCII = false;
 
 		if ( nLen > 3 && isxdigit( sCur[0] ) && isxdigit( sCur[1] ) && isxdigit( sCur[2] ) && isxdigit( sCur[3] ) )
@@ -652,7 +670,7 @@ namespace NSFontConverter
 		int nBlockLen  = 0;
 		int nChar = 0;
 
-		unsigned char *sBuffer = NULL;
+		unsigned char *sBuffer = nullptr;
 		unsigned int nBufLen = 0;
 
 		while ( nBlockType != PFB_DONE )
@@ -661,21 +679,30 @@ namespace NSFontConverter
 			{
 				nChar = ReadU8( &bSuccess );
 				if ( !bSuccess )
+				{
+					MemUtilsFree( sBuffer );
 					return false;
+				}
 
 				nBlockType = ReadU8( &bSuccess );
 				if ( !bSuccess || PFB_MARKER != nChar || ( PFB_ASCII != nBlockType && PFB_BINARY != nBlockType && PFB_DONE != nBlockType ) )
+				{
+					MemUtilsFree( sBuffer );
 					return false;
+				}
 
 				if ( PFB_DONE == nBlockType )
 					break;
 
 				nBlockLen = ReadU32LE( &bSuccess );
 				if ( !bSuccess )
+				{
+					MemUtilsFree( sBuffer );
 					return false;
+				}
 			}
 
-			// Читаем сам блок данных
+			// Reading the data block itself
 			if ( nBlockLen > 0 )
 			{
 				if ( !sBuffer )
@@ -697,7 +724,7 @@ namespace NSFontConverter
 			MemUtilsFree( m_sFile );
 
 		m_bFreeFileData = true;
-		m_sFile         = (unsigned char*)sBuffer;
+		m_sFile         = sBuffer;
 		m_sFileData     = m_sFile;
 		m_nLen          = nBufLen;
 		m_nPos          = 0;
@@ -715,7 +742,7 @@ namespace NSFontConverter
 		{
 			int nValue = sString[nIndex];
 
-			if ( nValue < 32 ) // команда
+			if ( nValue < 32 ) // command
 			{
 				int nCommand = 0;
 
@@ -731,7 +758,7 @@ namespace NSFontConverter
 						int nInd = sCharString[sCharString.size() - 1].nValue;
 						sCharString.pop_back() ;
 
-						while ( sCharString.size() > 0 && false == sCharString[sCharString.size() - 1].bCommand )
+						while ( sCharString.size() > 0 && !sCharString[sCharString.size() - 1].bCommand )
 							sCharString.pop_back( );
 
 						// If the flex mechanishm is not used in a font program, Adobe
@@ -762,7 +789,7 @@ namespace NSFontConverter
 							nWidth = sCharString[1].nValue / sCharString[2].nValue;
 						else
 						{
-							// TO DO: обработать ошибку
+							// TO DO: handle error
 							nWidth = 0;
 						}
 
@@ -794,7 +821,7 @@ namespace NSFontConverter
 					break;
 				else if ( c_nType1seac == nCommand || c_nType1sbw == nCommand )
 				{
-					// TO DO: обработать ошибку
+					// TO DO: handle error
 				}
 
 				sCharString.push_back( Type1CharstringItem( nCommand, true ) );
@@ -816,7 +843,7 @@ namespace NSFontConverter
 
 		return Type1Charstring( sCharString, nWidth, nLSB );
 	}
-	Type1Charstring CFontFileType1::FlattenCharstring(Type1Charstring& oCharstring, int nBias)
+	Type1Charstring CFontFileType1::FlattenCharstring(Type1Charstring& oCharstring, int  /*nBias*/)
 	{
 		Type1Charstring oNew;
 		oNew.nLSB   = oCharstring.nLSB;
@@ -844,48 +871,12 @@ namespace NSFontConverter
 					oNew.arrCharstring.push_back( Type1CharstringItem( 12, true ) );
 					oNew.arrCharstring.push_back( Type1CharstringItem( 18, true ) );
 				}
-				else if ( nValue == c_nType1callsubr  )
-				{
-					//int nTempLen = oNew.arrCharstring.GetSize();
-					//int nT1 = oNew.arrCharstring[nTempLen - 2].nValue;
-					//int nT2 = oNew.arrCharstring[nTempLen - 1].nValue;
-					//int nInd = nT1 << 8 | nT2;
-
-					//if ( 107 == nBias )
-					//{
-					//	if ( nInd <= 215 )
-					//	{
-					//		oNew.arrCharstring.RemoveAt( nTempLen - 1 );
-					//		oNew.arrCharstring.RemoveAt( nTempLen - 2 );
-
-					//		oNew.arrCharstring[nTempLen - 3].nValue = nInd - nBias + 139;
-					//		oNew.arrCharstring.Add( Type1CharstringItem( oItem.nValue, true ) );
-					//	}
-					//	else
-					//	{
-					//		oNew.arrCharstring.RemoveAt( nTempLen - 1 );
-
-					//		oNew.arrCharstring[nTempLen - 3].nValue = ((nInd - nBias) - 108) / 256 + 247;
-					//		oNew.arrCharstring[nTempLen - 2].nValue = ((nInd - nBias) - 108) - (oNew.arrCharstring[nTempLen - 3].nValue - 247) * 256;
-					//		oNew.arrCharstring.Add( Type1CharstringItem( oItem.nValue, true ) );
-					//	}
-					//}
-					//else
-					//{
-
-					//	nInd -= nBias;
-					//	oNew.arrCharstring[nTempLen - 2].nValue = nInd >> 8;
-					//	oNew.arrCharstring[nTempLen - 1].nValue = nInd & 0xFF;
-					//	oNew.arrCharstring.Add( Type1CharstringItem( oItem.nValue, true ) );
-					//}
-					oNew.arrCharstring.push_back( Type1CharstringItem( oItem.nValue, true ) );
-				}
-				else
+				else // Type 1 callsubr (and any other command) is passed through unchanged
 					oNew.arrCharstring.push_back( Type1CharstringItem( oItem.nValue, true ) );
 			}
 			else
 			{
-				// Type1 charstrings используют деления для чисел больших 32000
+				// Type1 charstrings use a special encoding for numbers greater than 32000
 				if ( oItem.nValue > 32000 )
 				{
 					int nDivisor = oCharstring.arrCharstring[nIndex + 1].nValue;
@@ -910,10 +901,10 @@ namespace NSFontConverter
 			return;
 		}
 
-		// Первые два байта - количество элементов
+		// The first two bytes are the number of elements
 		WriteChar( nCount >> 8 );
 		WriteChar( nCount & 0xFF );
-		// Размер сдвигов, ставим по максимуму
+		// Shift size, set to maximum
 		WriteChar( 0x04 );
 
 		int nRelativeOffset = 1;
@@ -944,10 +935,10 @@ namespace NSFontConverter
 			return;
 		}
 
-		// Первые два байта - количество элементов
+		// The first two bytes are the number of elements
 		WriteChar( nCount >> 8 );
 		WriteChar( nCount & 0xFF );
-		// Размер сдвигов, ставим по максимуму
+		// Shift size, set to maximum
 		WriteChar( 0x04 );
 
 		int nRelativeOffset = 1;
@@ -992,13 +983,13 @@ namespace NSFontConverter
 	{
 		char nChar = 0;
 
-		WriteChar( 0x1e ); // начало десятичного числа
+		WriteChar( 0x1e ); // start of a decimal number
 
 		std::wstring sValue = std::to_wstring(dValue);
 		bool bFirstNibble = true;
 		for ( size_t nIndex = 0; nIndex < sValue.length(); nIndex++ )
 		{
-			int nCurChar = sValue.c_str()[ nIndex ];
+			int nCurChar = static_cast<int>(static_cast<unsigned long>(sValue.c_str()[ nIndex ]));
 			if ( '0' <= nCurChar && nCurChar <= '9' )
 				nCurChar -= (int)('0');
 			else if ( '.' == nCurChar )
@@ -1019,7 +1010,7 @@ namespace NSFontConverter
 			bFirstNibble = !bFirstNibble;
 		}
 
-		// Записываем окончаниедесятичного числа
+		// Write the end of the decimal number
 		if ( bFirstNibble )
 			nChar = (char)0xff;
 		else
@@ -1111,7 +1102,7 @@ namespace NSFontConverter
 
 		// GlobalSubrs
 		TCharBuffer oGlobalSubrs;
-		aString.clear(); // Записываем пустой массив
+		aString.clear(); // Write an empty array
 		CFFCreateIndexHeader( CharBufferWrite, &oGlobalSubrs, aString );
 
 		// Charset
@@ -1226,7 +1217,9 @@ namespace NSFontConverter
 
 		// Top Dict
 		TCharBuffer oTopDict;
-		oTopDict.Write( "\x00\x01\x04\x00\x00\x00\x01\x00\x00\0x00\x00", 11 );
+		// NOTE: the original escape sequence "\0x00" produced a literal 'x' byte here;
+		// the same 11 bytes are spelled out below without the typo
+		oTopDict.Write( "\x00\x01\x04\x00\x00\x00\x01\x00\x00\x00" "x", 11 );
 		oTopDict.Write( "\xf8\x1b\x00", 3 ); // Version
 		oTopDict.Write( "\xf8\x1c\x01", 3 ); // Notice
 		oTopDict.Write( "\xf8\x1d\x02", 3 ); // FullName
@@ -1241,8 +1234,8 @@ namespace NSFontConverter
 		CFFEncodeNumber( CharBufferWrite, &oTopDict, m_oTopDict.arrdFontBBox[3] );
 		oTopDict.Write( "\x05", 1 );
 
-		// Теперь оценим размер TopDict: Возьмем текущую длину, добавим к ней (4 * 5 + 3)
-		// ( 4 числа, которые пишем по 5 байт + 3 байта на 3 команды)
+		// Now estimate the size of the TopDict: Take the current length and add to it (4 * 5 + 3)
+		// (4 numbers, which write in 5 bytes + 3 bytes for 3 commands)
 		int nTopDictLen = oTopDict.nLen + ( 4 * 5 + 3);
 
 		int nOffset = oHeader.nLen + oName.nLen + nTopDictLen + oStrings.nLen + oGlobalSubrs.nLen;
@@ -1258,14 +1251,14 @@ namespace NSFontConverter
 		CFFEncodeNumber( CharBufferWrite, &oTopDict, nOffset, true );
 		oTopDict.Write( "\x12", 1 ); // Private
 
-		// Теперь запишем реальный размер TopDict
+		// Now write down the real size of TopDict
 		int nTopDictDataLen = nTopDictLen - 10;
 		oTopDict.sBuffer[7]  = ( nTopDictDataLen >> 24 ) & 0xFF;
 		oTopDict.sBuffer[8]  = ( nTopDictDataLen >> 16 ) & 0xFF;
 		oTopDict.sBuffer[9]  = ( nTopDictDataLen >> 8  ) & 0xFF;
 		oTopDict.sBuffer[10] = nTopDictDataLen & 0xFF;
 
-		// Записываем все в файл
+		// Write everything to a file
 		pOutputFunc( pOutputStream, oHeader.sBuffer,      oHeader.nLen      );
 		pOutputFunc( pOutputStream, oName.sBuffer,        oName.nLen        );
 		pOutputFunc( pOutputStream, oTopDict.sBuffer,     oTopDict.nLen     );

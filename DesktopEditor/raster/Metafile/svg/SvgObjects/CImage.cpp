@@ -25,7 +25,7 @@ namespace SVG
 		else if ("height" == sName)
 			m_oRect.m_oHeight.SetValue(oReader.GetText());
 		else if ("href" == sName || "xlink:href" == sName)
-			m_wsHref = oReader.GetText(); // TODO:: В дальнейшем возможно стоит реализовать отдельный класс CHref для всех типов ссылок
+			m_wsHref = oReader.GetText(); // TODO:: In the future, it might be worth implementing a separate CHref class for all types of links
 		else
 			CRenderedObject::SetAttribute(sName, oReader);
 	}
@@ -37,7 +37,7 @@ namespace SVG
 		if (m_wsHref.empty() || !StartPath(pRenderer, pFile, oOldTransform, oMode))
 			return false;
 
-		TBounds oBounds = (NULL != m_pParent) ? m_pParent->GetBounds() : TBounds{0., 0., 0., 0.};
+		TBounds oBounds = (nullptr != m_pParent) ? m_pParent->GetBounds() : TBounds{0., 0., 0., 0.};
 
 		double dParentWidth  = oBounds.m_dRight  - oBounds.m_dLeft;
 		double dParentHeight = oBounds.m_dBottom - oBounds.m_dTop;
@@ -47,7 +47,7 @@ namespace SVG
 		double dWidth  = m_oRect.m_oWidth .ToDouble(NSCSS::Pixel, dParentWidth);
 		double dHeight = m_oRect.m_oHeight.ToDouble(NSCSS::Pixel, dParentHeight);
 
-		BYTE* pBuffer = NULL;
+		BYTE* pBuffer = nullptr;
 		DWORD ulSize = 0;
 		size_t unStart = m_wsHref.find(L"data:image");
 
@@ -68,7 +68,7 @@ namespace SVG
 
 			pBuffer = new(std::nothrow) BYTE[ulSize];
 
-			if (NULL == pBuffer)
+			if (nullptr == pBuffer)
 				return false;
 
 			NSBase64::Base64Decode(wsImageData.c_str(), wsImageData.length(), pBuffer, &(int&)ulSize);
@@ -92,7 +92,7 @@ namespace SVG
 		}
 		#endif
 
-		if (NULL == pBuffer)
+		if (nullptr == pBuffer)
 			return false;
 
 		CBgraFrame oBgraFrame;

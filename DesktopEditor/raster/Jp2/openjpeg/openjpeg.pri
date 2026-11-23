@@ -1,6 +1,5 @@
-OPENJPEG_VERSION=2.4.0
-OPENJPEG_PATH = $$PWD/openjpeg-$$OPENJPEG_VERSION
-OPENJPEG_LIB_JP2 = $$OPENJPEG_PATH/src/lib/openjp2
+# Sources are fetched by Common/3dParty/openjpeg; OPENJPEG_SOURCES_DIR is set as in common.cmake
+OPENJPEG_LIB_JP2 = $$OPENJPEG_SOURCES_DIR/src/lib/openjp2
 
 INCLUDEPATH += \
     $$OPENJPEG_LIB_JP2 \

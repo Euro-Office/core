@@ -3,12 +3,12 @@
 #include "./../../fontengine/TextShaper.h"
 #include "./../../fontengine/TextHyphen.h"
 
-#define RAW_POINTER(value) ((CPointerEmbedObject*)value->toObject()->getNative())->Data
-#define POINTER_OBJECT(value) ((CPointerEmbedObject*)value->toObject()->getNative())
+#define RAW_POINTER(value) ((CPointerEmbedObject*)(value)->toObject()->getNative())->Data
+#define POINTER_OBJECT(value) ((CPointerEmbedObject*)(value)->toObject()->getNative())
 
-// в js не хотим следить, чтобы в каждом face была ссылка на library - т.е. чтобы
-// сначала удалились все face, а потом library - поэтому делаем свой счетчик ссылок
-// и следим за library сами. Т.е. используем FT_Library_Reference/FT_Library_UnReference
+// In JS we don't want each face to own a library reference and force all faces
+// to be deleted before the library, so we keep our own reference counter.
+// That is, use FT_Library_Reference/FT_Library_UnReference.
 
 
 class CExternalPointerJS : public NSShaper::CExternalPointer
@@ -38,19 +38,19 @@ CTextMeasurerEmbed::~CTextMeasurerEmbed()
 {
 	NSHyphen::CEngine* tmp = (NSHyphen::CEngine*)m_hyphen_engine;
 	delete tmp;
-	m_hyphen_engine = NULL;
+	m_hyphen_engine = nullptr;
 }
 
 JSSmart<CJSValue> CTextMeasurerEmbed::FT_Malloc(JSSmart<CJSValue> typed_array_or_len)
 {
-	void* pData = NULL;
+	void* pData = nullptr;
 	size_t len = 0;
 
 	if (typed_array_or_len->isNumber())
 	{
 		len = (size_t)typed_array_or_len->toInt32();
 		if (0 != len)
-			pData = malloc((size_t)len);
+			pData = malloc(len);
 	}
 	else
 	{
@@ -86,7 +86,7 @@ JSSmart<CJSValue> CTextMeasurerEmbed::FT_Open_Face(JSSmart<CJSValue> library, JS
 {
 	void* ftlibrary = RAW_POINTER(library);
 	void* face = NSShaper::FT_Open_Face(ftlibrary, (unsigned char*)RAW_POINTER(memory), size->toUInt32(), face_index->toInt32());
-	if (NULL != face)
+	if (nullptr != face)
 		NSShaper::FT_Library_Reference(ftlibrary);
 	CPointerEmbedObject* pointer = new CPointerEmbedObject(face, [](void* data) { NSShaper::FT_Done_Face_With_Library(data); });
 	return pointer->createObject();
@@ -97,7 +97,7 @@ JSSmart<CJSValue> CTextMeasurerEmbed::FT_Open_Face2(JSSmart<CJSValue> library, J
 	JSSmart<CJSTypedArray> typedArray = array->toTypedArray();
 	CJSDataBuffer buffer = typedArray->getData();
 	void* face = NSShaper::FT_Open_Face(ftlibrary, (unsigned char*)buffer.Data, (unsigned int)buffer.Len, face_index->toInt32());
-	if (NULL != face)
+	if (nullptr != face)
 		NSShaper::FT_Library_Reference(ftlibrary);
 	CPointerEmbedObject* pointer = new CPointerEmbedObject(face, [](void* data) { NSShaper::FT_Done_Face_With_Library(data); });
 	return pointer->createObject();
@@ -189,7 +189,7 @@ JSSmart<CJSValue> CTextMeasurerEmbed::HB_ShapeText(JSSmart<CJSValue> face, JSSma
 	if (buffer.IsExternalize)
 		buffer.Free();
 
-	if (NULL == result.Data)
+	if (nullptr == result.Data)
 		return CJSContext::createNull();
 
 	return CJSContext::createUint8Array(result.Data, result.Len, false);
@@ -197,7 +197,7 @@ JSSmart<CJSValue> CTextMeasurerEmbed::HB_ShapeText(JSSmart<CJSValue> face, JSSma
 
 JSSmart<CJSValue> CTextMeasurerEmbed::HB_FontMalloc()
 {
-	CPointerEmbedObject* pObject = new CPointerEmbedObject(NULL, [](void* data) { NSShaper::HB_FontFree(data); });
+	CPointerEmbedObject* pObject = new CPointerEmbedObject(nullptr, [](void* data) { NSShaper::HB_FontFree(data); });
 	return pObject->createObject();
 }
 
@@ -223,9 +223,7 @@ inline int GetUtf8SymbolLen(const unsigned char& c)
 		return 2;
 	else if (0x00 == (c & 0x10))
 		return 3;
-	else if (0x00 == (c & 0x0F))
-		return 4;
-	else if (0x00 == (c & 0x08))
+	else if (0x00 == (c & 0x0F) || 0x00 == (c & 0x08))
 		return 4;
 	else if (0x00 == (c & 0x04))
 		return 5;

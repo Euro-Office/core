@@ -22,8 +22,8 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#ifndef _PDF_WRITER_ONLINEOFFICEBINTOPDF_H
-#define _PDF_WRITER_ONLINEOFFICEBINTOPDF_H
+#ifndef PDF_WRITER_ONLINEOFFICEBINTOPDF_H
+#define PDF_WRITER_ONLINEOFFICEBINTOPDF_H
 
 #include <string>
 #include "PdfFile.h"
@@ -34,4 +34,4 @@ namespace NSOnlineOfficeBinToPdf
 	bool AddBinToPdf(CPdfFile* pPdf, BYTE* pBuffer, unsigned int nLen, CConvertFromBinParams* pParams);
 }
 
-#endif // _PDF_WRITER_ONLINEOFFICEBINTOPDF_H
+#endif // PDF_WRITER_ONLINEOFFICEBINTOPDF_H

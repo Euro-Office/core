@@ -68,7 +68,7 @@ namespace ImageHelper
 				
 				//if (header_core->bcWidth % 2 != 0 && sz_bitmap < size - offset)
 				//	header_core->bcWidth++;
-				///???? todooo непонятно .. в biff5 нужно флипать картинку, в biff8 не ясно ( - 
+				///???? TODO it's not clear .. in biff5 need to flip the image, in biff8 it's not clear ( -
 				
 				int stride =  -(size - offset) / header_core->bcHeight;
 				oFrame.put_Stride	(stride/*header_core->bcBitCount * header_core->bcWidth /8 */);
@@ -208,7 +208,7 @@ namespace DocFileFormat
 		if (lcb > 10000000) 
 			return;
 
-		if (lcb > sz && sz != 1 && sz != 2) //bullet picture с неверным размером
+		if (lcb > sz && sz != 1 && sz != 2) //bullet picture with wrong size
 		{
 			unsigned char* bytes = reader.ReadBytes(sz - fc - 4, false);
 			if ( bytes )

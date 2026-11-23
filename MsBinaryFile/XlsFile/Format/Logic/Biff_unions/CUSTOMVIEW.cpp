@@ -215,7 +215,7 @@ int CUSTOMVIEW::serialize(std::wostream & stream)
 			{
 				m_VerticalPageBreaks->serialize(CP_XML_STREAM());
 			}
-			//todooo пока не понятно как там определяется ref
+			//TODO it's not yet clear how ref is determined there
 			//if (m_AUTOFILTER)
 			//	m_AUTOFILTER->serialize(CP_XML_STREAM());
 		}

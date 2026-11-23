@@ -26,7 +26,7 @@
 #include "SimpleTypes_OMath.h"
 #include "../Base/Unit.h"
 
-// Здесь представлены все простые типы Drawing-Main из спецификации Office Open Xml (22.1.3)
+// Here are all the simple Drawing-Main types from the Office Open Xml specification (22.1.3)
 namespace SimpleTypes
 {
 	EBreakBin CBreakBin::FromString(const std::wstring &sValue)
@@ -44,7 +44,6 @@ namespace SimpleTypes
 		{
 		case breakBinAfter   : return L"after";
 		case breakBinBefore  : return L"before";
-		case breakBinRepeat  : return L"repeat";
 		default              : return L"repeat";
 		}
 	}
@@ -68,7 +67,6 @@ namespace SimpleTypes
 		{
 		case breakBinPlusMinus  : return L"+-";
 		case breakBinMinusPlus  : return L"-+";
-		case breakBinMinusMinus : return L"--";
 		default					: return L"--";
 		}
 	}
@@ -327,8 +325,7 @@ namespace SimpleTypes
 
 	ETopBot CTopBot::FromString(const std::wstring &sValue)
 	{
-		if       ( L"bot"	== sValue )	this->m_eValue = tbBot;
-		else if  ( L"bottom"== sValue )	this->m_eValue = tbBot;
+		if ((L"bot"	== sValue) || (L"bottom"== sValue))	this->m_eValue = tbBot;
 		else							this->m_eValue = tbTop;
 
 		return this->m_eValue;

@@ -54,7 +54,7 @@ void math_msub::oox_convert(oox::math_context & Context)
 {//2 elements
 	if (content_.size() != 2)
 	{
-		return;//todooo
+		return;//TODO
 	}
     std::wostream & strm = Context.output_stream();
 	
@@ -101,7 +101,7 @@ void math_msup::oox_convert(oox::math_context & Context)
 {//2 elements
 	if (content_.size() != 2)
 	{
-		return;//todooo
+		return;//TODO
 	}
     std::wostream & strm = Context.output_stream();
 	

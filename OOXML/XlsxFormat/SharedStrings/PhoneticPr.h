@@ -40,12 +40,12 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//raw:
 		class CPhonetic : public WritingElement
 		{
 		public:
 			WritingElement_AdditionMethods(CPhonetic)
-			CPhonetic(OOX::Document *pMain = NULL);
+			CPhonetic(OOX::Document *pMain = nullptr);
 			virtual ~CPhonetic();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -72,7 +72,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CRPh)
-			CRPh(OOX::Document *pMain = NULL);
+			CRPh(OOX::Document *pMain = nullptr);
 			virtual ~CRPh();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

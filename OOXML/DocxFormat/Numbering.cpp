@@ -293,11 +293,7 @@ namespace OOX
 					{
 						std::wstring sName = oReader.GetName();
 
-						if (L"mc:Choice" == sName)
-						{
-							ReadElements(oReader, nDepth + 2);
-						}
-						else if (L"mc:Fallback" == sName)
+						if (L"mc:Choice" == sName || L"mc:Fallback" == sName)
 						{
 							ReadElements(oReader, nDepth + 2);
 						}
@@ -326,18 +322,25 @@ namespace OOX
 
 			sResult += _T(">");
 
+			// Element order below follows the ECMA-376 CT_Lvl schema sequence
+			// (start, numFmt, lvlRestart, pStyle, isLgl, suff, lvlText,
+			// lvlPicBulletId, legacy, lvlJc, pPr, rPr) -- xsd:sequence mandates
+			// this relative order for whichever of these are present. Consumers
+			// such as Microsoft 365 Online rely on it to classify a list level's
+			// numFmt; out-of-order output (e.g. alphabetical by tag name) was
+			// silently tolerated by lenient readers but misclassified there.
+			WritingElement_WriteNode_1( _T("<w:start "),          m_oStart );
+			WritingElement_WriteNode_1( _T("<w:numFmt "),         m_oNumFmt );
+			WritingElement_WriteNode_1( _T("<w:lvlRestart "),     m_oLvlRestart );
+			WritingElement_WriteNode_1( _T("<w:pStyle "),         m_oPStyle );
 			WritingElement_WriteNode_1( _T("<w:isLgl "),          m_oIsLgl );
+			WritingElement_WriteNode_1( _T("<w:suff "),           m_oSuffix );
+			WritingElement_WriteNode_1( _T("<w:lvlText "),        m_oLvlText );
+			WritingElement_WriteNode_1( _T("<w:lvlPicBulletId "), m_oLvlPicBulletId );
 			WritingElement_WriteNode_1( _T("<w:legacy "),         m_oLegacy );
 			WritingElement_WriteNode_1( _T("<w:lvlJc "),          m_oLvlJc );
-			WritingElement_WriteNode_1( _T("<w:lvlPicBulletId "), m_oLvlPicBulletId );
-			WritingElement_WriteNode_1( _T("<w:lvlRestart "),     m_oLvlRestart );
-			WritingElement_WriteNode_1( _T("<w:lvlText "),        m_oLvlText );
-			WritingElement_WriteNode_1( _T("<w:numFmt "),         m_oNumFmt );
 			WritingElement_WriteNode_2( m_oPPr );
-			WritingElement_WriteNode_1( _T("<w:pStyle "),         m_oPStyle );
 			WritingElement_WriteNode_2( m_oRPr );
-			WritingElement_WriteNode_1( _T("<w:start "),          m_oStart );
-			WritingElement_WriteNode_1( _T("<w:suff "),           m_oSuffix );
 
 			sResult += _T("</w:lvl>");
 
@@ -368,7 +371,7 @@ namespace OOX
 			for ( size_t nIndex = 0; nIndex < m_arrLvl.size(); nIndex++ )
 			{
 				if ( m_arrLvl[nIndex] ) delete m_arrLvl[nIndex];
-				m_arrLvl[nIndex] = NULL;
+				m_arrLvl[nIndex] = nullptr;
 			}
 			m_arrLvl.clear();
 		}
@@ -494,8 +497,7 @@ namespace OOX
 		void CAbstractNum::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
 				WritingElement_ReadAttributes_Start( oReader )
-					WritingElement_ReadAttributes_Read_if		( oReader, _T("w:abstractNumId"), m_oAbstractNumId )
-					WritingElement_ReadAttributes_Read_else_if	( oReader, _T("w:listDefId"), m_oAbstractNumId )
+					if ( _T("w:abstractNumId") == wsName || _T("w:listDefId") == wsName ) m_oAbstractNumId = oReader.GetText();
 				WritingElement_ReadAttributes_End( oReader )
 			}
 
@@ -577,7 +579,7 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrLvlOverride.size(); nIndex++ )
 			{
 				if ( m_arrLvlOverride[nIndex] ) delete m_arrLvlOverride[nIndex];
-				m_arrLvlOverride[nIndex] = NULL;
+				m_arrLvlOverride[nIndex] = nullptr;
 			}
 			m_arrLvlOverride.clear();
 		}
@@ -673,8 +675,7 @@ namespace OOX
 		void CNum::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
 				WritingElement_ReadAttributes_Start( oReader )
-					WritingElement_ReadAttributes_Read_if		( oReader, _T("w:numId"), m_oNumId )
-					WritingElement_ReadAttributes_Read_else_if	( oReader, _T("w:ilfo"), m_oNumId )
+					if ( _T("w:numId") == wsName || _T("w:ilfo") == wsName ) m_oNumId = oReader.GetText();
 				WritingElement_ReadAttributes_End( oReader )
 			}
 
@@ -719,7 +720,7 @@ namespace OOX
 		}
 		std::wstring CNumPicBullet::toXML() const
 		{
-			if (false == m_oNumPicBulletId.IsInit()) return L"";
+			if (!m_oNumPicBulletId.IsInit()) return L"";
 
 			std::wstring sResult = L"<w:numPicBullet ";
 
@@ -764,35 +765,35 @@ namespace OOX
 			if (docx->m_bGlossaryRead)	docx->m_oGlossary.numbering = this;
 			else						docx->m_oMain.numbering = this;
 		}
-		read( oRootPath, oPath );
+		CNumbering::read( oRootPath, oPath );
 	}
-	CNumbering::CNumbering(XmlUtils::CXmlNode& oNode) : File(NULL), OOX::IFileContainer(NULL)
+	CNumbering::CNumbering(XmlUtils::CXmlNode& oNode) : File(nullptr), OOX::IFileContainer(nullptr)
 	{
-		fromXML( oNode );
+		CNumbering::fromXML( oNode );
 	}
-	CNumbering::CNumbering(XmlUtils::CXmlLiteReader& oReader) : File(NULL), OOX::IFileContainer(NULL)
+	CNumbering::CNumbering(XmlUtils::CXmlLiteReader& oReader) : File(nullptr), OOX::IFileContainer(nullptr)
 	{
-		fromXML( oReader );
+		CNumbering::fromXML( oReader );
 	}
 	CNumbering::~CNumbering()
 	{
 		for ( unsigned int nIndex = 0; nIndex < m_arrNumPicBullet.size(); nIndex++ )
 		{
 			if (m_arrNumPicBullet[nIndex])delete m_arrNumPicBullet[nIndex];
-			m_arrNumPicBullet[nIndex] = NULL;
+			m_arrNumPicBullet[nIndex] = nullptr;
 		}
 		m_arrNumPicBullet.clear();
 
 		for ( unsigned int nIndex = 0; nIndex < m_arrNum.size(); nIndex++ )
 		{
 			if (m_arrNum[nIndex])delete m_arrNum[nIndex];
-			m_arrNum[nIndex] = NULL;
+			m_arrNum[nIndex] = nullptr;
 		}
 		m_arrNum.clear();
 		for ( unsigned int nIndex = 0; nIndex < m_arrAbstractNum.size(); nIndex++ )
 		{
 			if (m_arrAbstractNum[nIndex])delete m_arrAbstractNum[nIndex];
-			m_arrAbstractNum[nIndex] = NULL;
+			m_arrAbstractNum[nIndex] = nullptr;
 		}
 
 		m_arrAbstractNum.clear();
@@ -860,6 +861,10 @@ namespace OOX
 				{
 					m_mapAbstractNum.insert(std::make_pair(*pAbstractNum->m_oAbstractNumId, m_arrAbstractNum.size()));
 					m_arrAbstractNum.push_back(pAbstractNum);
+				}
+				else
+				{
+					delete pAbstractNum;
 				}
 			}
 			else if ( L"w:num" == sName || L"w:list" == sName)

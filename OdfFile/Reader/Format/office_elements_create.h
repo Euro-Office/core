@@ -59,10 +59,10 @@ public:
     typedef boost::function< office_element_ptr () > CreateFuncImpl;
         
 public:
-    // Зарегестрировать элемент
+    // Register an item
     bool register_element(const std::wstring &ns, const std::wstring & name, CreateFuncImpl f);
 
-    // Создать элемент по имени
+    // Create element by name
     office_element_ptr create(const std::wstring & ns, const std::wstring & name, document_context * Context = NULL, bool isRoot = false) const;
 
 private:
@@ -70,7 +70,7 @@ private:
     MapType map_; 
             
 public:
-    // Обеспечение синглтона
+    // Providing a singleton
     static office_element_creator * get();
 
 private:
@@ -78,7 +78,7 @@ private:
     static office_element_creator * instance_;
 };
 
-/// Класс, обеспечивающий регистрацию элементов
+/// Class that provides element registration
 template <class T>
 class RegisterElement
 {
@@ -124,7 +124,7 @@ template<class T> int RegisterElement<T>::class_registered_		= 0; //with namespa
 template<class T> int RegisterElement<T>::class_registered_1_	= 0; //without namespace
 
 
-//  Создать элемент и в случае успеха прочитать его содержимое из SAX, поместить в shared_ptr
+//  Create an element and, if successful, read its contents from SAX, place it in shared_ptr
 bool create_element_and_read(xml::sax * Reader,
                              const std::wstring & Ns,
                              const std::wstring & Name,
@@ -132,7 +132,7 @@ bool create_element_and_read(xml::sax * Reader,
                              document_context * Context,
                              bool isRoot = false);
 
-//  Создать элемент и в случае успеха прочитать его содержимое из SAX, поместить в array
+//  Create an element and, if successful, read its contents from SAX, place it in an array
 bool create_element_and_read(xml::sax * Reader,
                              const std::wstring & Ns,
                              const std::wstring & Name,

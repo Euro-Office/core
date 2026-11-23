@@ -426,9 +426,7 @@ namespace XmlUtils
 	}
 	bool IsDigit(wchar_t c)
 	{
-		if (c >= '0' && c <= '9')
-			return true;
-		return false;
+		return c >= '0' && c <= '9';
 	}
 
 	_INT64 GetHex(const std::wstring& string)
@@ -531,7 +529,7 @@ namespace XmlUtils
 
 		try
 		{
-            return std::wcstoll(string.c_str(), NULL, 10);
+            return std::wcstoll(string.c_str(), nullptr, 10);
 		}
 		catch(...)
 		{
@@ -551,7 +549,7 @@ namespace XmlUtils
 		{
             try
             {
-                iVal = std::wcstoll(string.c_str(), NULL, 10);
+                iVal = std::wcstoll(string.c_str(), nullptr, 10);
             }
             catch(...)
             {
@@ -574,7 +572,7 @@ namespace XmlUtils
         {
             try
             {
-                iVal = std::wcstoll(string.c_str(), NULL, 10);
+                iVal = std::wcstoll(string.c_str(), nullptr, 10);
             }
             catch(...)
             {
@@ -635,112 +633,112 @@ namespace XmlUtils
 	}
 	std::wstring ToString(BYTE value, const wchar_t* format)
 	{
-		if (format == NULL) return L"";
+		if (format == nullptr) return L"";
 		std::wstringstream sstream;
 		sstream << boost::wformat(format) % value;
 		return sstream.str();
 	}
 	std::string ToString(BYTE value, const char* format)
 	{
-		if (format == NULL) return "";
+		if (format == nullptr) return "";
 		std::stringstream sstream;
 		sstream << boost::format(format) % value;
 		return sstream.str();
 	}
 	std::wstring ToString(_INT16 value, const wchar_t* format)
 	{
-		if (format == NULL) return L"";
+		if (format == nullptr) return L"";
 		std::wstringstream sstream;
 		sstream << boost::wformat(format) % value;
 		return sstream.str();
 	}
 	std::string ToString(_INT16 value, const char* format)
 	{
-		if (format == NULL) return "";
+		if (format == nullptr) return "";
 		std::stringstream sstream;
 		sstream << boost::format(format) % value;
 		return sstream.str();
 	}
 	std::wstring ToString(_UINT16 value, const wchar_t* format)
 	{
-		if (format == NULL) return L"";
+		if (format == nullptr) return L"";
 		std::wstringstream sstream;
 		sstream << boost::wformat(format) % value;
 		return sstream.str();
 	}
 	std::string ToString(_UINT16 value, const char* format)
 	{
-		if (format == NULL) return "";
+		if (format == nullptr) return "";
 		std::stringstream sstream;
 		sstream << boost::format(format) % value;
 		return sstream.str();
 	}
 	std::wstring ToString(_INT32 value, const wchar_t* format)
 	{
-		if (format == NULL) return L"";
+		if (format == nullptr) return L"";
 		std::wstringstream sstream;
 		sstream << boost::wformat(format) % value;
 		return sstream.str();
 	}
 	std::string ToString(_INT32 value, const char* format)
 	{
-		if (format == NULL) return "";
+		if (format == nullptr) return "";
 		std::stringstream sstream;
 		sstream << boost::format(format) % value;
 		return sstream.str();
 	}
 	std::wstring ToString(_UINT32 value, const wchar_t* format)
 	{
-		if (format == NULL) return L"";
+		if (format == nullptr) return L"";
 		std::wstringstream sstream;
 		sstream << boost::wformat(format) % value;
 		return sstream.str();
 	}
 	std::string ToString(_UINT32 value, const char* format)
 	{
-		if (format == NULL) return "";
+		if (format == nullptr) return "";
 		std::stringstream sstream;
 		sstream << boost::format(format) % value;
 		return sstream.str();
 	}
 	std::wstring ToString(_INT64 value, const wchar_t* format)
 	{
-		if (format == NULL) return L"";
+		if (format == nullptr) return L"";
 		std::wstringstream sstream;
 		sstream << boost::wformat(format) % value;
 		return sstream.str();
 	}
 	std::string ToString(_INT64 value, const char* format)
 	{
-		if (format == NULL) return "";
+		if (format == nullptr) return "";
 		std::stringstream sstream;
 		sstream << boost::format(format) % value;
 		return sstream.str();
 	}
 	std::wstring ToString(_UINT64 value, const wchar_t* format)
 	{
-		if (format == NULL) return L"";
+		if (format == nullptr) return L"";
 		std::wstringstream sstream;
 		sstream << boost::wformat(format) % value;
 		return sstream.str();
 	}
 	std::string ToString(_UINT64 value, const char* format)
 	{
-		if (format == NULL) return "";
+		if (format == nullptr) return "";
 		std::stringstream sstream;
 		sstream << boost::format(format) % value;
 		return sstream.str();
 	}
 	std::wstring ToString( double value, const wchar_t* format )
 	{
-		if ( format == NULL ) return L"";
+		if ( format == nullptr ) return L"";
 		std::wstringstream sstream;
 		sstream << boost::wformat(format) % value;
 		return sstream.str();
 	}
 	std::string ToString(double value, const char* format )
 	{
-		if ( format == NULL ) return "";
+		if ( format == nullptr ) return "";
 		std::stringstream sstream;
 		sstream << boost::format(format) % value;
 		return sstream.str();
@@ -753,7 +751,7 @@ namespace XmlUtils
 		if (!init)
 		{
 			init = true;
-			srand((unsigned int) time(NULL));
+			srand((unsigned int) time(nullptr));
 		}
 		return std::rand();
 	}
@@ -785,7 +783,7 @@ namespace XmlUtils
 	}
 	std::wstring DoubleToString( double value, wchar_t* format )
 	{
-		if ( format == NULL ) return L"";
+		if ( format == nullptr ) return L"";
 
 		std::wstringstream sstream;
 		sstream << boost::wformat(format) % value;
@@ -824,7 +822,7 @@ namespace XmlUtils
 				case '>':  buffer.append("&gt;");       break;
 				default:
 				{
-					if ( false == IsUnicodeSymbol( data[pos] ) )
+					if ( !IsUnicodeSymbol( data[pos] ) )
 					{
 						wchar_t symbol1 = data[pos];
 						if(0xD800 <= symbol1 && symbol1 <= 0xDFFF && pos + 1 < data.size())
@@ -889,7 +887,7 @@ namespace XmlUtils
 				case '>':  buffer.append(L"&gt;");       break;
 				default:
 				{
-					if ( false == IsUnicodeSymbol( data[pos] ) )
+					if ( !IsUnicodeSymbol( data[pos] ) )
 					{
 						wchar_t symbol1 = data[pos];
 						if(0xD800 <= symbol1 && symbol1 <= 0xDFFF && pos + 1 < data.size())
@@ -943,7 +941,7 @@ namespace XmlUtils
 
 		for (size_t pos = 0; pos < data.size(); ++pos)
 		{
-			if (false == IsUnicodeSymbol(data[pos]))
+			if (!IsUnicodeSymbol(data[pos]))
 			{
 				wchar_t symbol1 = data[pos];
 				if (0xD800 <= symbol1 && symbol1 <= 0xDFFF && pos + 1 < data.size())
@@ -992,7 +990,7 @@ namespace XmlUtils
 				case '\t': buffer.append(L"&#x9;");      break;
 				default:
 				{
-					if ( false == IsUnicodeSymbol( data[pos] ) )
+					if ( !IsUnicodeSymbol( data[pos] ) )
 					{
 						wchar_t symbol1 = data[pos];
 						if(0xD800 <= symbol1 && symbol1 <= 0xDFFF && pos + 1 < data.size())

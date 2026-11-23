@@ -125,7 +125,7 @@ void pptx_serialize_image(std::wostream & strm, _pptx_drawing & val)
 			//_CP_OPT(std::wstring) strTextContent;
 			//odf::GetProperty(properties,L"text-content",strTextContent);
 			//pptx_serialize_text(CP_XML_STREAM(),val.additional);
-			//на картинке тект нельзя... - выше сменили тип на рект с заливкой
+			//text isn't allowed in the image... - above we changed the type to rect with fill
         } 
     }  
 }
@@ -212,7 +212,7 @@ void pptx_serialize_media(std::wostream & strm, _pptx_drawing & val)
 			//_CP_OPT(std::wstring) strTextContent;
 			//odf::GetProperty(properties,L"text-content",strTextContent);
 			//pptx_serialize_text(CP_XML_STREAM(),val.additional);
-			//на картинке тект нельзя... - выше сменили тип на рект с заливкой
+			//text isn't allowed in the image... - above we changed the type to rect with fill
         } 
     }  
 }
@@ -227,13 +227,13 @@ void pptx_serialize_shape(std::wostream & strm, _pptx_drawing & val)
             {
                 CP_XML_NODE(L"p:cNvPr")
                 {
-                    CP_XML_ATTR(L"id", val.id);//числовое значение val.rId
+                    CP_XML_ATTR(L"id", val.id);//numeric value val.rId
                     CP_XML_ATTR(L"name", val.name); 
 					if (val.hidden) CP_XML_ATTR(L"hidden", true);
 
 					oox_serialize_action(CP_XML_STREAM(),val.action);
                 }
-				CP_XML_NODE(L"p:cNvSpPr")//non visual properies (собственно тока 1 там)
+				CP_XML_NODE(L"p:cNvSpPr")//non visual properties (actually 1 there)
 				{
 					if (val.sub_type == 1 || val.sub_type == 2)CP_XML_ATTR(L"txBox", 1);
 					//CP_XML_NODE(L"a:spLocks")
@@ -296,13 +296,13 @@ void pptx_serialize_connector(std::wostream & strm, _pptx_drawing & val)
             {
                 CP_XML_NODE(L"p:cNvPr")
                 {
-                    CP_XML_ATTR(L"id", val.id);//числовое значение val.rId
+                    CP_XML_ATTR(L"id", val.id);//numeric value val.rId
                     CP_XML_ATTR(L"name", val.name); 
 					if (val.hidden) CP_XML_ATTR(L"hidden", true);
 
 					oox_serialize_action(CP_XML_STREAM(), val.action);
                 }
-				CP_XML_NODE(L"p:cNvCxnSpPr")//non visual properies (собственно тока 1 там)
+				CP_XML_NODE(L"p:cNvCxnSpPr")//non visual properties (actually 1 there)
 				{
 					if (val.sub_type == 1 || val.sub_type == 2)CP_XML_ATTR(L"txBox", 1);
 					//CP_XML_NODE(L"a:spLocks")
@@ -449,13 +449,13 @@ void pptx_serialize_control(std::wostream& strm, _pptx_drawing& val)
 			{
 				CP_XML_NODE(L"p:cNvPr")
 				{
-					CP_XML_ATTR(L"id", val.id);//числовое значение val.rId
+					CP_XML_ATTR(L"id", val.id);//numeric value val.rId
 					CP_XML_ATTR(L"name", val.name);
 					if (val.hidden) CP_XML_ATTR(L"hidden", true);
 
 					oox_serialize_action(CP_XML_STREAM(), val.action);
 				}
-				CP_XML_NODE(L"p:cNvSpPr")//non visual properies (собственно тока 1 там)
+				CP_XML_NODE(L"p:cNvSpPr")//non visual properties (actually 1 there)
 				{
 					CP_XML_ATTR(L"txBox", 1);
 				}

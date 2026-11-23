@@ -120,10 +120,7 @@ namespace Aggplus
 		double x, y;
 		unsigned int nTip = m_internal->m_agg_ps.last_vertex(&x, &y);
 
-		if (nTip & agg::path_flags_close)
-			return true;
-
-		return false;
+		return (nTip & agg::path_flags_close) != 0;
 	}
 
 	Status CGraphicsPath::MoveTo(double x, double y)
@@ -184,7 +181,7 @@ namespace Aggplus
 
 		for (int i = 1; i <= n; ++i)
 		{
-			const double* points = &pPoints[i * 2];
+			const double* points = &pPoints[static_cast<size_t>(i) * 2];
 			m_internal->m_agg_ps.line_to(points[0], points[1]);
 		}
 		return Ok;
@@ -229,7 +226,7 @@ namespace Aggplus
 		int nCountTo = (nCount - 8) / 6;
 		for (int i = 0; i < nCountTo; ++i)
 		{
-			points = pPoints + 8 + 6 * i;
+			points = pPoints + 8 + 6 * static_cast<ptrdiff_t>(i);
 			CurveTo(points[0], points[1], points[2], points[3], points[4], points[5]);
 		}
 
@@ -238,7 +235,7 @@ namespace Aggplus
 	
 	Status CGraphicsPath::AddCurve(double* pPoints, int nCount)
 	{
-		// этим мы не пользуемся. Понадобится - реализую.
+		// Don't use this. Implement this if it becomes needed.
 		return AddBeziers(pPoints, nCount);
 	}
 
@@ -298,7 +295,7 @@ namespace Aggplus
 
 		for (int i = 1; i < n; ++i)
 		{
-			double* points = &pPoints[i * 2];
+			double* points = &pPoints[static_cast<size_t>(i) * 2];
 			m_internal->m_agg_ps.line_to(points[0], points[1]);
 		}
 
@@ -402,8 +399,8 @@ namespace Aggplus
 			{
 				if(!(nTip & agg::path_flags_close))
 				{
-					points[2 * k]		= x;
-					points[2 * k + 1]   = y;
+					points[static_cast<size_t>(k) * 2]		= x;
+					points[static_cast<size_t>(k) * 2 + 1]   = y;
 					++k;
 				}
 			}
@@ -463,7 +460,7 @@ namespace Aggplus
 
 	Status CGraphicsPath::Transform(const CMatrix* matrix)
 	{
-		if (NULL != matrix)
+		if (nullptr != matrix)
 		{
 			agg::path_storage p2(m_internal->m_agg_ps);
 			agg::conv_transform<agg::path_storage> trans(p2, matrix->m_internal->m_agg_mtx);
@@ -476,7 +473,7 @@ namespace Aggplus
 
 	bool CGraphicsPath::_MoveTo(double x, double y)
 	{
-		if (NULL != m_internal->m_pTransform)
+		if (nullptr != m_internal->m_pTransform)
 		{
 			m_internal->m_pTransform->TransformPoint(x, y);
 		}
@@ -484,7 +481,7 @@ namespace Aggplus
 	}
 	bool CGraphicsPath::_LineTo(double x, double y)
 	{
-		if (NULL != m_internal->m_pTransform)
+		if (nullptr != m_internal->m_pTransform)
 		{
 			m_internal->m_pTransform->TransformPoint(x, y);
 		}
@@ -492,7 +489,7 @@ namespace Aggplus
 	}
 	bool CGraphicsPath::_CurveTo(double x1, double y1, double x2, double y2, double x3, double y3)
 	{
-		if (NULL != m_internal->m_pTransform)
+		if (nullptr != m_internal->m_pTransform)
 		{
 			m_internal->m_pTransform->TransformPoint(x1, y1);
 			m_internal->m_pTransform->TransformPoint(x2, y2);
@@ -507,7 +504,7 @@ namespace Aggplus
 
 	Status CGraphicsPath::AddString(const std::wstring& strText, NSFonts::IFontManager* pFont, double x, double y)
 	{
-		if (NULL == pFont)
+		if (nullptr == pFont)
 			return InvalidParameter;
 
 		pFont->SetTextMatrix(1, 0, 0, 1, 0, 0);
@@ -516,7 +513,7 @@ namespace Aggplus
 	}
 	Status CGraphicsPath::AddString(const unsigned int* pGids, const unsigned int nGidsCount, NSFonts::IFontManager* pFont, double x, double y)
 	{
-		if (NULL == pFont)
+		if (nullptr == pFont)
 			return InvalidParameter;
 
 		pFont->SetTextMatrix(1, 0, 0, 1, 0, 0);
@@ -526,7 +523,7 @@ namespace Aggplus
 
 	Status CGraphicsPath::AddStringC(const LONG& lText, NSFonts::IFontManager* pFont, double x, double y)
 	{
-		if (NULL == pFont)
+		if (nullptr == pFont)
 			return InvalidParameter;
 
 		unsigned int _c = (int)lText;
@@ -556,7 +553,7 @@ namespace Aggplus
 
 	void CGraphicsPath::Widen(const double& size, const Aggplus::LineJoin& join, const CMatrix* matrix, float flatness)
 	{
-		if (NULL == matrix || 0.0f == flatness)
+		if (nullptr == matrix || 0.0f == flatness)
 			return;
 
 		typedef agg::conv_curve<agg::path_storage> conv_crv_type;
@@ -633,26 +630,26 @@ namespace Aggplus
 
 	double CGraphicsPath::AngToEllPrm(double fAngle, double fXRad, double fYRad)
 	{
-		// Функция для перевода реального угла в параметрическое задание эллписа
-		// т.е. x= a cos(t) y = b sin(t) - параметрическое задание эллписа.
+		// Function for converting a real angle into a parametric ellipse specification
+		// i.e. x= a cos(t) y = b sin(t) - parametric specification of the ellipse.
 		// x = r cos(p), y = r sin(p) => t = atan2( sin(p) / b, cos(p) / a );
 		return atan2( sin( fAngle ) / fYRad,  cos( fAngle ) / fXRad );
 	}
 
 	int CGraphicsPath::EllipseArc2(double fX, double fY, double fXRad, double fYRad, double fAngle1, double fAngle2, INT bClockDirection)
 	{
-		// переведем углы в радианы
+		// convert angles to radians
 		int nRet = 0;
 
 		double dAngle1 = fAngle1 * 3.141592 / 180;
 		double dAngle2 = fAngle2 * 3.141592 / 180;
 
-		// Выясним в каких четвертях находятся начальная и конечная точки
+		// Find out in which quarters the starting and ending points are located
 		unsigned int nFirstPointQuard  = int(fAngle1) / 90 + 1; 
 		unsigned int nSecondPointQuard = int(fAngle2) / 90 + 1;
 		nSecondPointQuard = std::min( 4, std::max( 1, (int)nSecondPointQuard ) );
 		nFirstPointQuard  = std::min( 4, std::max( 1, (int)nFirstPointQuard ) );
-		// Проведем линию в начальную точку дуги
+		// Draw a line to the starting point of the arc
 		double fStartX = 0.0, fStartY = 0.0, fEndX = 0.0, fEndY = 0.0;
 
 		fStartX = fX + fXRad * cos( AngToEllPrm( dAngle1, fXRad, fYRad ) );
@@ -660,9 +657,8 @@ namespace Aggplus
 
 		LineTo(fStartX, fStartY);
 
-		// Дальше рисуем по четверям
+		// Next, draw by quadrants
 
-		double fCurX = fStartX, fCurY = fStartY;
 		double dStartAngle = dAngle1;
 		double dEndAngle = 0;
 
@@ -702,7 +698,7 @@ namespace Aggplus
 
 	int CGraphicsPath::EllipseArc3(double fX, double fY, double fXRad, double fYRad, double dAngle1, double dAngle2, double *pfXCur, double *pfYCur, INT bClockDirection)
 	{
-		// Рассчитаем начальную, конечную и контрольные точки
+		// Calculate the start, end and control points
 		double fX1  = 0.0, fX2  = 0.0, fY1  = 0.0, fY2  = 0.0;
 		double fCX1 = 0.0, fCX2 = 0.0, fCY1 = 0.0, fCY2 = 0.0;
 
@@ -763,7 +759,7 @@ namespace Aggplus
 			double fStartX = fX + fWidth / 2.0 + fWidth / 2 * cos( AngToEllPrm( dStartAngle, fWidth / 2, fHeight / 2 ) );
 			double fStartY = fY + fHeight / 2.0 - fHeight / 2 * sin( AngToEllPrm ( dStartAngle, fWidth / 2, fHeight / 2 ) );
 
-			// В случае, когда эллипс рисуется целиком используется команда AppendEllipse, в которой команда MoveTo уже есть
+			// In the case when the entire ellipse is drawn, the AppendEllipse command is used, in which the MoveTo command already exists
 			if ( fSweepAngle < 360 )
 				if ( Ok != MoveTo( fStartX, fStartY ) )
 					return GenericError;
@@ -775,11 +771,11 @@ namespace Aggplus
 		if( fSweepAngle > 0 )
 			bClockDirection = TRUE;
 
-		if( fabs(fSweepAngle) >= 360 ) // Целый эллипс
+		if( fabs(fSweepAngle) >= 360 ) // Whole ellipse
 		{
 			return (0 == Ellipse(fX + fWidth / 2, fY + fHeight / 2, fWidth / 2, fHeight / 2)) ? Ok : GenericError;
 		}
-		else // Дуга эллипса
+		else // Ellipse arc
 		{
 			return (0 == EllipseArc(fX + fWidth / 2, fY + fHeight / 2, fWidth / 2, fHeight / 2, fSrtAngle, fEndAngle, bClockDirection)) ? Ok : GenericError;
 		}
@@ -842,7 +838,7 @@ namespace Aggplus
 	bool CGraphicsPath::IsClosePoint(unsigned idx) const noexcept
 	{
 		if (idx >= m_internal->m_agg_ps.total_vertices()) return false;
-		return this->m_internal->m_agg_ps.command(idx) == (agg::path_cmd_end_poly | agg::path_flags_close);
+		return this->m_internal->m_agg_ps.command(idx) == (static_cast<unsigned>(agg::path_cmd_end_poly) | agg::path_flags_close);
 	}
 
 	std::vector<PointD> CGraphicsPath::GetPoints(unsigned idx, unsigned count) const noexcept
@@ -908,7 +904,7 @@ namespace Aggplus
 				if (!close)
 				{
 					PointD firstPoint = subPath.GetPoints(0, 1)[0];
-					double x, y;
+					double x = 0, y = 0;
 					subPath.GetLastPoint(x, y);
 					if ((abs(firstPoint.X - x) >= 1e-2 || abs(firstPoint.Y - y) >= 1e-2) ||
 						subPath.GetPointCount() == 1)
@@ -939,7 +935,7 @@ namespace Aggplus
 			else if (IsClosePoint(i))
 			{
 				PointD firstPoint = subPath.GetPoints(0, 1)[0];
-				double x, y;
+				double x = 0, y = 0;
 				subPath.GetLastPoint(x, y);
 
 				if ((abs(firstPoint.X - x) >= 1e-2 || abs(firstPoint.Y - y) >= 1e-2) || subPath.GetPointCount() == 1)
@@ -955,7 +951,7 @@ namespace Aggplus
 		if (!close)
 		{
 			PointD firstPoint = subPath.GetPoints(0, 1)[0];
-			double x, y;
+			double x = 0, y = 0;
 			subPath.GetLastPoint(x, y);
 
 			if ((abs(firstPoint.X - x) <= 1e-2 && abs(firstPoint.Y - y) <= 1e-2) ||
@@ -978,7 +974,15 @@ namespace Aggplus
 		if (&other == this)
 			return *this;
 
-		m_internal = new CGraphicsPath_private;
+		try
+		{
+			m_internal = new CGraphicsPath_private;
+		}
+		catch (...)
+		{
+			// allocation failure is propagated (terminates in this noexcept function)
+			throw;
+		}
 		m_internal->m_agg_ps	= other.m_internal->m_agg_ps;
 		m_internal->m_bEvenOdd	= other.m_internal->m_bEvenOdd;
 		m_internal->m_bIsMoveTo	= other.m_internal->m_bIsMoveTo;
@@ -1023,7 +1027,7 @@ namespace Aggplus
 	// Converter
 	CGraphicsPathSimpleConverter::CGraphicsPathSimpleConverter()
 	{
-		m_pRenderer = NULL;
+		m_pRenderer = nullptr;
 		m_internal = new CGraphicsPathSimpleConverter_private();
 	}
 
@@ -1059,7 +1063,7 @@ namespace Aggplus
 	}
 	bool CGraphicsPathSimpleConverter::PathCommandLinesTo(double* pPoints, LONG lCount)
 	{
-		if (NULL == pPoints)
+		if (nullptr == pPoints)
 			return false;
 
 		double* pData = pPoints;
@@ -1085,7 +1089,7 @@ namespace Aggplus
 
 		for (int i = 1; i <= n; ++i)
 		{
-			double* points = &pData[i * 2];
+			double* points = &pData[static_cast<size_t>(i) * 2];
 			_LineTo(points[0], points[1]);
 		}
 		
@@ -1098,7 +1102,7 @@ namespace Aggplus
 	}
 	bool CGraphicsPathSimpleConverter::PathCommandCurvesTo(double* pData, LONG lCount)
 	{
-		if (NULL == pData)
+		if (nullptr == pData)
 			return false;
 
 		if (8 > lCount)
@@ -1124,7 +1128,7 @@ namespace Aggplus
 		int nCountTo = (lCount) / 6;
 		for (int i = 0; i < nCountTo; ++i)
 		{
-			points = pData + 6 * i;
+			points = pData + 6 * static_cast<ptrdiff_t>(i);
 			_CurveTo(points[0], points[1], points[2], points[3], points[4], points[5]);
 		}
 
@@ -1152,11 +1156,11 @@ namespace Aggplus
 		m_internal->m_agg_ps.last_vertex(fX, fY);
 		return true;
 	}
-	bool CGraphicsPathSimpleConverter::PathCommandText(const std::wstring& bsText, NSFonts::IFontManager* pManager, double fX, double fY, double fWidth, double fHeight, double fBaseLineOffset)
+	bool CGraphicsPathSimpleConverter::PathCommandText(const std::wstring& bsText, NSFonts::IFontManager* pManager, double fX, double fY, double  /*fWidth*/, double  /*fHeight*/, double fBaseLineOffset)
 	{
 		return AddString(bsText, pManager, fX, fY + fBaseLineOffset);
 	}
-	bool CGraphicsPathSimpleConverter::PathCommandTextEx(std::wstring& bsText, std::wstring& bsGidText, NSFonts::IFontManager* pManager, double fX, double fY, double fWidth, double fHeight, double fBaseLineOffset, DWORD lFlags)
+	bool CGraphicsPathSimpleConverter::PathCommandTextEx(std::wstring& bsText, std::wstring& bsGidText, NSFonts::IFontManager* pManager, double fX, double fY, double fWidth, double fHeight, double fBaseLineOffset, DWORD  /*lFlags*/)
 	{
 		if (!bsGidText.empty())
 		{
@@ -1167,35 +1171,35 @@ namespace Aggplus
 	}
 
 	bool CGraphicsPathSimpleConverter::PathCommandText2(const int* pUnicodes, const int* pGids, const int& nCount, NSFonts::IFontManager* pManager,
-					const double& x, const double& y, const double& w, const double& h)
+					const double& x, const double& y, const double&  /*w*/, const double&  /*h*/)
 	{
-		if (NULL == pGids)
+		if (nullptr == pGids)
 		{
 			pManager->SetStringGID(FALSE);
 			pManager->LoadString1((const unsigned int*)pUnicodes, (unsigned int)nCount, (float)x, (float)y);
-			return (TRUE == pManager->GetStringPath(this)) ? true : false;
+			return TRUE == pManager->GetStringPath(this);
 		}
 		else
 		{
 			pManager->SetStringGID(TRUE);
 			pManager->LoadString1((const unsigned int*)pGids, (unsigned int)nCount, (float)x, (float)y);
-			return (TRUE == pManager->GetStringPath(this)) ? true : false;
+			return TRUE == pManager->GetStringPath(this);
 		}
 	}
 	bool CGraphicsPathSimpleConverter::PathCommandText2(const std::wstring& sUnicodes, const int* pGids, const int& nCount, NSFonts::IFontManager* pManager,
-					const double& x, const double& y, const double& w, const double& h)
+					const double& x, const double& y, const double&  /*w*/, const double&  /*h*/)
 	{
-		if (NULL == pGids)
+		if (nullptr == pGids)
 		{
 			pManager->SetStringGID(FALSE);
 			pManager->LoadString1(sUnicodes, (float)x, (float)y);
-			return (TRUE == pManager->GetStringPath(this)) ? true : false;
+			return TRUE == pManager->GetStringPath(this);
 		}
 		else
 		{
 			pManager->SetStringGID(TRUE);
 			pManager->LoadString1((const unsigned int*)pGids, (unsigned int)nCount, (float)x, (float)y);
-			return (TRUE == pManager->GetStringPath(this)) ? true : false;
+			return TRUE == pManager->GetStringPath(this);
 		}
 	}
 
@@ -1238,7 +1242,7 @@ namespace Aggplus
 		m_internal->m_bIsMoveTo = true;
 		m_internal->m_agg_ps.move_to(x, y);
 
-		if (NULL != m_pRenderer)
+		if (nullptr != m_pRenderer)
 		{
 			m_pRenderer->BeginCommand(c_nSimpleGraphicType);
 			m_pRenderer->PathCommandMoveTo(x, y);
@@ -1255,7 +1259,7 @@ namespace Aggplus
 		
 		m_internal->m_agg_ps.line_to(x, y);
 		
-		if (NULL != m_pRenderer)
+		if (nullptr != m_pRenderer)
 		{
 			m_pRenderer->BeginCommand(c_nSimpleGraphicType);
 			m_pRenderer->PathCommandLineTo(x, y);
@@ -1273,7 +1277,7 @@ namespace Aggplus
 		
 		m_internal->m_agg_ps.curve4(x1, y1, x2, y2, x3, y3);
 
-		if (NULL != m_pRenderer)
+		if (nullptr != m_pRenderer)
 		{
 			m_pRenderer->BeginCommand(c_nSimpleGraphicType);
 			m_pRenderer->PathCommandCurveTo(x1, y1, x2, y2, x3, y3);
@@ -1287,7 +1291,7 @@ namespace Aggplus
 		m_internal->m_bIsClosed = true;
 		m_internal->m_agg_ps.close_polygon();
 		
-		if (NULL != m_pRenderer)
+		if (nullptr != m_pRenderer)
 		{
 			m_pRenderer->BeginCommand(c_nSimpleGraphicType);
 			m_pRenderer->PathCommandClose();
@@ -1303,7 +1307,7 @@ namespace Aggplus
 
 		m_internal->m_agg_ps.remove_all();
 
-		if (NULL != m_pRenderer)
+		if (nullptr != m_pRenderer)
 		{
 			m_pRenderer->BeginCommand(c_nSimpleGraphicType);
 			m_pRenderer->PathCommandEnd();
@@ -1316,7 +1320,7 @@ namespace Aggplus
 	{
 		m_internal->m_agg_ps.start_new_path();
 
-		if (NULL != m_pRenderer)
+		if (nullptr != m_pRenderer)
 		{
 			m_pRenderer->BeginCommand(c_nSimpleGraphicType);
 			m_pRenderer->PathCommandStart();
@@ -1328,11 +1332,11 @@ namespace Aggplus
 
 	bool CGraphicsPathSimpleConverter::AddString(const std::wstring& bstrText, NSFonts::IFontManager* pFont, double x, double y)
 	{
-		if (NULL == pFont)
+		if (nullptr == pFont)
 			return false;
 		
 		pFont->LoadString1(bstrText, (float)x, (float)y);
-		return (TRUE == pFont->GetStringPath(this)) ? true : false;
+		return TRUE == pFont->GetStringPath(this);
 	}
 
 	int CGraphicsPathSimpleConverter::EllipseArc(double fX, double fY, double fXRad, double fYRad, double fAngle1, double fAngle2, INT bClockDirection)
@@ -1376,26 +1380,26 @@ namespace Aggplus
 
 	double CGraphicsPathSimpleConverter::AngToEllPrm(double fAngle, double fXRad, double fYRad)
 	{
-		// Функция для перевода реального угла в параметрическое задание эллписа
-		// т.е. x= a cos(t) y = b sin(t) - параметрическое задание эллписа.
+		// Function for converting a real angle into a parametric ellipse specification
+		// i.e. x= a cos(t) y = b sin(t) - parametric specification of the ellipse.
 		// x = r cos(p), y = r sin(p) => t = atan2( sin(p) / b, cos(p) / a );
 		return atan2( sin( fAngle ) / fYRad,  cos( fAngle ) / fXRad );
 	}
 
 	int CGraphicsPathSimpleConverter::EllipseArc2(double fX, double fY, double fXRad, double fYRad, double fAngle1, double fAngle2, INT bClockDirection)
 	{
-		// переведем углы в радианы
+		// convert angles to radians
 		int nRet = 0;
 
 		double dAngle1 = fAngle1 * 3.141592 / 180;
 		double dAngle2 = fAngle2 * 3.141592 / 180;
 
-		// Выясним в каких четвертях находятся начальная и конечная точки
+		// Find out in which quarters the starting and ending points are located
 		unsigned int nFirstPointQuard  = int(fAngle1) / 90 + 1; 
 		unsigned int nSecondPointQuard = int(fAngle2) / 90 + 1;
 		nSecondPointQuard = std::min( 4, std::max( 1, (int)nSecondPointQuard ) );
 		nFirstPointQuard  = std::min( 4, std::max( 1, (int)nFirstPointQuard ) );
-		// Проведем линию в начальную точку дуги
+		// Draw a line to the starting point of the arc
 		double fStartX = 0.0, fStartY = 0.0, fEndX = 0.0, fEndY = 0.0;
 
 		fStartX = fX + fXRad * cos( AngToEllPrm( dAngle1, fXRad, fYRad ) );
@@ -1403,9 +1407,8 @@ namespace Aggplus
 
 		_LineTo(fStartX, fStartY);
 
-		// Дальше рисуем по четверям
+		// Next, draw by quadrants
 
-		double fCurX = fStartX, fCurY = fStartY;
 		double dStartAngle = dAngle1;
 		double dEndAngle = 0;
 
@@ -1445,7 +1448,7 @@ namespace Aggplus
 
 	int CGraphicsPathSimpleConverter::EllipseArc3(double fX, double fY, double fXRad, double fYRad, double dAngle1, double dAngle2, double *pfXCur, double *pfYCur, INT bClockDirection)
 	{
-		// Рассчитаем начальную, конечную и контрольные точки
+		// Calculate the start, end and control points
 		double fX1  = 0.0, fX2  = 0.0, fY1  = 0.0, fY2  = 0.0;
 		double fCX1 = 0.0, fCX2 = 0.0, fCY1 = 0.0, fCY2 = 0.0;
 
@@ -1506,9 +1509,9 @@ namespace Aggplus
 			double fStartX = fX + fWidth / 2.0 + fWidth / 2 * cos( AngToEllPrm( dStartAngle, fWidth / 2, fHeight / 2 ) );
 			double fStartY = fY + fHeight / 2.0 - fHeight / 2 * sin( AngToEllPrm ( dStartAngle, fWidth / 2, fHeight / 2 ) );
 
-			// В случае, когда эллипс рисуется целиком используется команда AppendEllipse, в которой команда MoveTo уже есть
+			// In the case when the entire ellipse is drawn, the AppendEllipse command is used, in which the MoveTo command already exists
 			if ( fSweepAngle < 360 )
-				if ( false == _MoveTo( fStartX, fStartY ) )
+				if ( !_MoveTo( fStartX, fStartY ) )
 					return false;
 		}
 
@@ -1518,13 +1521,13 @@ namespace Aggplus
 		if( fSweepAngle > 0 )
 			bClockDirection = TRUE;
 
-		if( fabs(fSweepAngle) >= 360 ) // Целый эллипс
+		if( fabs(fSweepAngle) >= 360 ) // Whole ellipse
 		{
-			return (0 == Ellipse(fX + fWidth / 2, fY + fHeight / 2, fWidth / 2, fHeight / 2)) ? true : false;
+			return 0 == Ellipse(fX + fWidth / 2, fY + fHeight / 2, fWidth / 2, fHeight / 2);
 		}
-		else // Дуга эллипса
+		else // Ellipse arc
 		{
-			return (0 == EllipseArc(fX + fWidth / 2, fY + fHeight / 2, fWidth / 2, fHeight / 2, fSrtAngle, fEndAngle, bClockDirection)) ? true : false;
+			return 0 == EllipseArc(fX + fWidth / 2, fY + fHeight / 2, fWidth / 2, fHeight / 2, fSrtAngle, fEndAngle, bClockDirection);
 		}
  
 		return Ok;
@@ -1538,10 +1541,7 @@ namespace Aggplus
 		double x, y;
 		unsigned int nTip = m_internal->m_agg_ps.last_vertex(&x, &y);
 		
-		if (nTip & agg::path_flags_close) 
-			return true;
-
-		return false;
+		return (nTip & agg::path_flags_close) != 0;
 	}
 }
 

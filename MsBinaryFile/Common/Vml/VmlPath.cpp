@@ -272,7 +272,7 @@ namespace ODRAW
 		{
 			if (2 >= (nCount - nStart))
 			{
-				// по идее такого быть не может
+				// in theory this can't happen
 				for (size_t i = nStart; i < nCount; ++i)
 				{
 					oArray.push_back(arOld[i]);
@@ -284,7 +284,7 @@ namespace ODRAW
 
 			if (4 == (nCount - nStart))
 			{
-				// ничего не поделаешь... делаем кривую третьего порядка
+				// nothing can be done... make a third-order curve
 				oArray.push_back(arOld[nStart]);
 				oArray.push_back(arOld[nStart + 1]);
 				oArray.push_back(arOld[nStart + 2]);
@@ -294,7 +294,7 @@ namespace ODRAW
 				break;
 			}
 
-			// значит есть еще
+			// it means there is more
 			CGeomShapeInfo::CPointD mem1;
 			mem1.dX = (arOld[nStart].dX + 2 * arOld[nStart + 1].dX) / 3.0;
 			mem1.dY = (arOld[nStart].dY + 2 * arOld[nStart + 1].dY) / 3.0;

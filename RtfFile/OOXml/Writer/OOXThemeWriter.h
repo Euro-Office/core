@@ -35,5 +35,5 @@ private:
 public: 
 	OOXThemeWriter(OOXWriter& oWriter,RtfDocument& oDocument );
 
-	bool Save( std::wstring sFolder ); //todo доделать очистку поле ошибок
+	bool Save( std::wstring sFolder ); //todo finish cleaning the error field
 };

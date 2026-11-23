@@ -231,7 +231,7 @@ void odf_table_styles_context::get_table_cell_properties (int col, int row, styl
 	bool first_row = (row == 1)? true: false;
 	bool first_col = (col == 1)? true: false;
 
-	bool odd_row = ((row+row_shift)%2 != 0) ? true : false;//нечетные
+	bool odd_row = ((row+row_shift)%2 != 0) ? true : false;//odd
 	bool odd_col = ((col+col_shift)%2 != 0) ? true : false;
 
 	bool last_row = (row == current_used_.back().table_row_count_) ? true: false; 
@@ -243,7 +243,7 @@ void odf_table_styles_context::get_table_cell_properties (int col, int row, styl
 	bool se = (row == current_used_.back().table_row_count_ && col == current_used_.back().table_col_count_) ? true: false; //bottom right cell
 	bool sw = (row == current_used_.back().table_row_count_ && col == 1) ? true: false;						//bottom left cell.
 //----------------------------------------------------------------------------------------------------------------------------------
-//порядок рассмотрения - main, odd, even first, last, ne, .... col, row
+//order of consideration - main, odd, even first, last, ne, .... col, row
 					cell_props->apply_from(dynamic_cast<style_table_cell_properties *>(state.table_.table_cell_props.get()));
 
 	if (current_used_.back().cols)
@@ -341,7 +341,7 @@ void odf_table_styles_context::get_text_properties (int col, int row, text_forma
 	bool first_row = (row == 1)? true: false;
 	bool first_col = (col == 1)? true: false;
 
-	bool odd_row = ((row+row_shift)%2 != 0) ? true : false;//нечетные
+	bool odd_row = ((row+row_shift)%2 != 0) ? true : false;//odd
 	bool odd_col = ((col+col_shift)%2 != 0) ? true : false;
 
 	bool last_row = (row == current_used_.back().table_row_count_) ? true: false; 
@@ -353,7 +353,7 @@ void odf_table_styles_context::get_text_properties (int col, int row, text_forma
 	bool se = (row == current_used_.back().table_row_count_ && col == current_used_.back().table_col_count_) ? true: false; //bottom right cell
 	bool sw = (row == current_used_.back().table_row_count_ && col == 1) ? true: false;						//bottom left cell
 //----------------------------------------------------------------------------------------------------------------------------------
-//порядок рассмотрения - main, odd, even first, last, ne, ....
+//order of consideration - main, odd, even first, last, ne, ....
 	style_text_properties *props = NULL;
 	
 	props = dynamic_cast<style_text_properties *>(state.table_.text_props.get());
@@ -454,7 +454,7 @@ bool odf_table_styles_context::is_styled(int col, int row)
 	if (state.lastCol_.is && last_col) return true;
 	if (state.lastRow_.is && last_row) return true;
 
-	bool odd_row = ((row + row_shift) % 2 != 0) ? true : false;//нечетные
+	bool odd_row = ((row + row_shift) % 2 != 0) ? true : false;//odd
 	bool odd_col = ((col + col_shift) % 2 != 0) ? true : false;
 
 	if (state.band1Vert_.is && odd_col) return true;
@@ -493,7 +493,7 @@ void odf_table_styles_context::get_paragraph_properties (int col, int row, parag
 	bool first_row = (row == 1)? true : false;
 	bool first_col = (col == 1)? true : false;
 
-	bool odd_row = ((row + row_shift) % 2 != 0) ? true : false;//нечетные
+	bool odd_row = ((row + row_shift) % 2 != 0) ? true : false;//odd
 	bool odd_col = ((col + col_shift) % 2 != 0) ? true : false;
 
 	bool last_row = (row == current_used_.back().table_row_count_) ? true: false; 

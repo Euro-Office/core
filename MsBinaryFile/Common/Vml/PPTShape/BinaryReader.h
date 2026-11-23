@@ -47,7 +47,7 @@ namespace ODRAW
 		CBinaryReader(BYTE* pBuffer, DWORD lCount);
 		~CBinaryReader();
 
-		LONG ReadLONG(); // int32 подразумевается
+		LONG ReadLONG(); // int32 is implied
 		DWORD ReadDWORD();
 		WORD ReadWORD();
 		SHORT ReadSHORT();

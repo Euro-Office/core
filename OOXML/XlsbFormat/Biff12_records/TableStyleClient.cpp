@@ -45,7 +45,7 @@ namespace XLSB
 
     void TableStyleClient::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> flags >> stStyleName;
 
         fFirstColumn            = GETBIT(flags, 0);

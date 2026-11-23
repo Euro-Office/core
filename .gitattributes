@@ -1,0 +1,7 @@
+# Shell scripts must be LF — Cygwin/Linux bash fails on CRLF
+*.sh      text eol=lf
+*.patch   text eol=lf
+
+# Windows batch files must be CRLF — cmd.exe mis-parses some LF constructs
+*.bat   text eol=crlf
+*.cmd   text eol=crlf

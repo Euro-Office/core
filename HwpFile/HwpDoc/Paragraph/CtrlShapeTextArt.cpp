@@ -39,9 +39,9 @@ void CCtrlShapeTextArt::ReadFromHWPX(CXMLReader &oReader)
 		START_READ_ATTRIBUTES(oReader)\
 		{\
 			if ("x" == sAttributeName)\
-				variable_point.m_nX = oReader.GetInt();\
+				(variable_point).m_nX = oReader.GetInt();\
 			else if ("y" == sAttributeName)\
-				variable_point.m_nY = oReader.GetInt();\
+				(variable_point).m_nY = oReader.GetInt();\
 		}\
 		END_READ_ATTRIBUTES(oReader)\
 	}
@@ -124,7 +124,7 @@ void CCtrlShapeTextArt::ReadTextArtShape(CXMLReader &oReader, EHanType eType)
 	}
 	END_READ_ATTRIBUTES(oReader)
 
-	//TODO:: реализовать shadows
+	//TODO:: implement shadows
 }
 
 void CCtrlShapeTextArt::ReadOutlineData(CXMLReader &oReader, EHanType eType)
@@ -155,9 +155,9 @@ EShapeType CCtrlShapeTextArt::GetShapeType() const
 	return EShapeType::TextArt;
 }
 
-int CCtrlShapeTextArt::ParseElement(CCtrlShapeTextArt& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlShapeTextArt::ParseElement(CCtrlShapeTextArt& /*oObj*/, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
-	// TODO:: проверить
+	// TODO:: check
 
 	// [HWP ambiguous] following 120bytes are unknown.
 	// Document doesn't mention about this at all.

@@ -7,13 +7,9 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 include(${CORE_ROOT_DIR}/common.cmake)
 
 set(OPENJPEG_ROOT_DIR "${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg")
-set(OPENJPEG_VERSION "2.4.0")
-set(OPENJPEG_PATH "${OPENJPEG_ROOT_DIR}/openjpeg-${OPENJPEG_VERSION}")
-set(OPENJPEG_LIB_JP2 "${OPENJPEG_PATH}/src/lib/openjp2")
+set(OPENJPEG_LIB_JP2 "${OPENJPEG_SOURCES_DIR}/src/lib/openjp2")
 
 set(DESKTOP_EDITOR_ROOT_DIR "../DesktopEditor")
-set(FREETYPE_VERSION_TO_USE "2.10.4")
-set(FREETYPE_SOURCES_DIR "${DESKTOP_EDITOR_ROOT_DIR}/freetype-${FREETYPE_VERSION_TO_USE}")
 set(FONT_ENGINE_SOURCES_DIR "${DESKTOP_EDITOR_ROOT_DIR}/fontengine")
 set(OFFICE_UTILS_ROOT_DIR "../OfficeUtils")
 
@@ -44,7 +40,7 @@ if(NOT TARGET CryptoPPLib)
 endif()
 
 # Note:
-# This need brotli and freetype, but thos are already included in
+# This needs brotli and freetype, but thos are already included in
 # graphics, so I'll just take the include paths and defines.
 
 add_library(PdfFile SHARED
@@ -364,6 +360,7 @@ add_library(PdfFile SHARED
     ${OPENJPEG_LIB_JP2}/dwt.c
     ${OPENJPEG_LIB_JP2}/event.c
     ${OPENJPEG_LIB_JP2}/function_list.c
+    ${OPENJPEG_LIB_JP2}/ht_dec.c
     ${OPENJPEG_LIB_JP2}/image.c
     ${OPENJPEG_LIB_JP2}/invert.c
     ${OPENJPEG_LIB_JP2}/j2k.c
@@ -410,9 +407,7 @@ add_library(PdfFile SHARED
     ${OPENJPEG_LIB_JP2}/opj_common.h
     ${OPENJPEG_LIB_JP2}/opj_includes.h
     ${OPENJPEG_LIB_JP2}/opj_intmath.h
-    ${OPENJPEG_LIB_JP2}/opj_inttypes.h
     ${OPENJPEG_LIB_JP2}/opj_malloc.h
-    ${OPENJPEG_LIB_JP2}/opj_stdint.h
     ${OPENJPEG_LIB_JP2}/pi.h
     ${OPENJPEG_LIB_JP2}/sparse_array.h
     ${OPENJPEG_LIB_JP2}/t1_luts.h
@@ -445,13 +440,16 @@ target_compile_definitions(PdfFile PRIVATE
     CRYPTOPP_DISABLE_ASM
     NOMINMAX
 
-    HAVE_UNISTD_H # Linux and mac
-    HAVE_FCNTL_H # Linux and mac
-
     # brotli.pri
     FT_CONFIG_OPTION_USE_BROTLI
-
 )
+
+if( UNIX )
+    target_compile_definitions(PdfFile PRIVATE
+        HAVE_UNISTD_H # Linux and mac
+        HAVE_FCNTL_H # Linux and mac
+    )
+endif()
 
 target_include_directories(PdfFile PRIVATE
     lib/goo
@@ -466,22 +464,108 @@ target_include_directories(PdfFile PRIVATE
     # freetype.pri
     ${FREETYPE_SOURCES_DIR}/include
     ${FREETYPE_SOURCES_DIR}/include/freetype
-    # !config_zlip_image {
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11
-        ${OFFICE_UTILS_ROOT_DIR}/src
-    # }
+    ${ZLIBNG_INCLUDEDIR_ABS}
+    ${OFFICE_UTILS_ROOT_DIR}/src
 
     # brotli.pri
     ${BROTLI_IN_TREE_LOCATION}/c/include
 )
 
-target_compile_options(PdfFile PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-include limits>
-)
+if( UNIX )
+    target_compile_options(PdfFile PRIVATE
+        $<$<COMPILE_LANGUAGE:CXX>:-include limits>
+    )
+endif()
 
 if(UNIX AND NOT APPLE)
     target_compile_options(PdfFile PRIVATE
         $<$<COMPILE_LANGUAGE:CXX>:-Wno-narrowing>
+    )
+endif()
+
+if(LINUX)
+    # Build a private FreeType (freetype.pri) instead of using the one from
+    # libgraphics, which no longer exports it (see graphics.map)
+    set(PDFFILE_FREETYPE_SOURCES
+        ${FREETYPE_SOURCES_DIR}/src/autofit/autofit.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftbase.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftbbox.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftbdf.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftbitmap.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftcid.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftdebug.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftfstype.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftgasp.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftglyph.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftgxval.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftinit.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftmm.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftotval.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftpatent.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftpfr.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftstroke.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftsynth.c
+        ${FREETYPE_SOURCES_DIR}/src/base/fttype1.c
+        ${FREETYPE_SOURCES_DIR}/src/base/ftwinfnt.c
+        ${FREETYPE_SOURCES_DIR}/src/bdf/bdf.c
+        ${FREETYPE_SOURCES_DIR}/src/bzip2/ftbzip2.c
+        ${FREETYPE_SOURCES_DIR}/src/cache/ftcache.c
+        ${FREETYPE_SOURCES_DIR}/src/cff/cff.c
+        ${FREETYPE_SOURCES_DIR}/src/cid/type1cid.c
+        ${FREETYPE_SOURCES_DIR}/src/gzip/ftgzip.c
+        ${FREETYPE_SOURCES_DIR}/src/hvf/hvf.c
+        ${FREETYPE_SOURCES_DIR}/src/lzw/ftlzw.c
+        ${FREETYPE_SOURCES_DIR}/src/pcf/pcf.c
+        ${FREETYPE_SOURCES_DIR}/src/pfr/pfr.c
+        ${FREETYPE_SOURCES_DIR}/src/psaux/psaux.c
+        ${FREETYPE_SOURCES_DIR}/src/pshinter/pshinter.c
+        ${FREETYPE_SOURCES_DIR}/src/psnames/psnames.c
+        ${FREETYPE_SOURCES_DIR}/src/raster/raster.c
+        ${FREETYPE_SOURCES_DIR}/src/sdf/sdf.c
+        ${FREETYPE_SOURCES_DIR}/src/sfnt/sfnt.c
+        ${FREETYPE_SOURCES_DIR}/src/smooth/smooth.c
+        ${FREETYPE_SOURCES_DIR}/src/svg/svg.c
+        ${FREETYPE_SOURCES_DIR}/src/truetype/truetype.c
+        ${FREETYPE_SOURCES_DIR}/src/type1/type1.c
+        ${FREETYPE_SOURCES_DIR}/src/type42/type42.c
+        ${FREETYPE_SOURCES_DIR}/src/winfonts/winfnt.c
+        ${FREETYPE_SOURCES_DIR}/builds/unix/ftsystem.c
+    )
+
+    set(PDFFILE_BROTLI_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli")
+
+    target_sources(PdfFile PRIVATE
+        ${PDFFILE_FREETYPE_SOURCES}
+
+        # brotli.pri
+        ${PDFFILE_BROTLI_DIR}/c/common/constants.c
+        ${PDFFILE_BROTLI_DIR}/c/common/context.c
+        ${PDFFILE_BROTLI_DIR}/c/common/dictionary.c
+        ${PDFFILE_BROTLI_DIR}/c/common/platform.c
+        ${PDFFILE_BROTLI_DIR}/c/common/shared_dictionary.c
+        ${PDFFILE_BROTLI_DIR}/c/common/transform.c
+        ${PDFFILE_BROTLI_DIR}/c/dec/bit_reader.c
+        ${PDFFILE_BROTLI_DIR}/c/dec/decode.c
+        ${PDFFILE_BROTLI_DIR}/c/dec/huffman.c
+        ${PDFFILE_BROTLI_DIR}/c/dec/prefix.c
+        ${PDFFILE_BROTLI_DIR}/c/dec/state.c
+        ${PDFFILE_BROTLI_DIR}/c/dec/static_init.c
+    )
+
+    set_source_files_properties(${PDFFILE_FREETYPE_SOURCES} PROPERTIES
+        COMPILE_DEFINITIONS "FT2_BUILD_LIBRARY;FT_CONFIG_OPTION_SYSTEM_ZLIB;HAVE_UNISTD_H;HAVE_FCNTL_H"
+    )
+
+    target_include_directories(PdfFile PRIVATE
+        ${PDFFILE_BROTLI_DIR}/c/include
+    )
+
+    # Keep the private FreeType, zlib and brotli out of the dynamic symbol table
+    target_link_options(PdfFile PRIVATE
+        "LINKER:--version-script=${CMAKE_CURRENT_LIST_DIR}/PdfFile.map"
+    )
+    set_property(TARGET PdfFile APPEND PROPERTY
+        LINK_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/PdfFile.map"
     )
 endif()
 
@@ -491,30 +575,15 @@ if(ANDROID)
     )
 endif()
 
-if(WIN32)
-    target_compile_options(PdfFile PRIVATE
-        -UUNICODE
-        -U_UNICODE
-    )
-endif()
-
-# static libs
 target_link_libraries(PdfFile PUBLIC
     CryptoPPLib
-)
-
-# dynamic libs
-target_link_libraries(PdfFile PUBLIC
     graphics
     kernel
     UnicodeConverter
     kernel_network
-
-    # gdi32 # Windows
-    # advapi32 # Windows
-    # user32 # Windows
-    # shell32 # Windows
-    # Ole32 # Windows
 )
 
 copy_artifacts_to_folder("PdfFile" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( PdfFile )
+

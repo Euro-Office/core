@@ -231,7 +231,7 @@ namespace OOX
 				WritingElement_ReadAttributes_End( oReader )
 			}
 			std::wstring GetMathNodeName(const EElementType & enumType)  const
-			{//todooo вытащить в одно место - пересекается с MathArgNodes
+			{//TODO pull into one place - intersects with MathArgNodes
 				switch(enumType)
 				{
 					case OOX::et_m_deg:				return L"m:deg";

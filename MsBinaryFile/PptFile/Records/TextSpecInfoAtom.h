@@ -32,8 +32,8 @@ namespace PPT
 class CRecordTextSpecInfoAtom : public CUnknownRecord
 {
 public:
-	// нужно еще хранить позицию в стриме, 
-	// указатель на начало
+	// still need to store the position in the stream,
+	// pointer to the beginning
 	LONG											m_lOffsetInStream;
 	_UINT32											m_lCount; 
 

@@ -25,6 +25,7 @@
 
 #include "paragraph_elements.h"
 
+#include <algorithm>
 #include <ostream>
 #include <string>
 
@@ -199,11 +200,11 @@ void text::docx_convert(oox::docx_conversion_context & Context)
 {
 	if (Context.get_process_note() != oox::docx_conversion_context::noNote && 
 		Context.get_delete_text_state()) 
-			return; //в ms нет рецензирования notes
+			return; //there is no review of notes in ms
 
 	bool add_del_run = false;
 	if (Context.get_drawing_state_content() && Context.get_delete_text_state())
-	{	//0503IG-AddingFormattingText.odt - удаленый текст в удаленом объекте
+	{	//0503IG-AddingFormattingText.odt - deleted text in a deleted object
 
 		oox::text_tracked_context::_state  &state = Context.get_text_tracked_context().get_tracked_change(L"");
 		if (state.type == 2)
@@ -454,7 +455,7 @@ void bookmark_ref::add_child_element(xml::sax* Reader, const std::wstring& Ns, c
 }
 void bookmark_ref::docx_convert(oox::docx_conversion_context& Context)
 {
-	std::wstring field_name = (ref_name_ ? L"REF " + *ref_name_ : L"REF") + L" \\h";
+	std::wstring field_name = (ref_name_ ? L"REF " + XmlUtils::EncodeXmlString(*ref_name_) : L"REF") + L" \\h";
 
 	if (reference_format_)
 	{
@@ -753,10 +754,10 @@ void a::docx_convert(oox::docx_conversion_context & Context)
 	Context.finish_run();    
 	
 	std::wostream& _Wostream = Context.output_stream();
-	if (Context.is_table_content() || office_target_frame_name_ || ref[0] == L'#')
+	if (Context.is_table_content() || ref[0] == L'#')
 	{
 		size_t pos_outline = ref.find(L"|outline");
-		if (std::wstring::npos != pos_outline)//без #
+		if (std::wstring::npos != pos_outline)//without #
 		{
 			std::wstringstream strm; 
 			text_to_stream(strm, false);
@@ -784,7 +785,14 @@ void a::docx_convert(oox::docx_conversion_context & Context)
 		std::wstring rId;
 		rId = Context.add_hyperlink(ref, false);
 
-		_Wostream << L"<w:hyperlink r:id=\"" << rId << L"\">";
+		_Wostream << L"<w:hyperlink r:id=\"" << rId << L"\"";
+		if (office_target_frame_name_)
+		{
+			std::wstringstream frame;
+			frame << *office_target_frame_name_;
+			_Wostream << L" w:tgtFrame=\"" << XmlUtils::EncodeXmlString(frame.str()) << L"\"";
+		}
+		_Wostream << L">";
 	}
 
     style_instance * styleInst = NULL;
@@ -966,7 +974,7 @@ void note::add_child_element( xml::sax * Reader, const std::wstring & Ns, const 
 }
 void note::pptx_convert(oox::pptx_conversion_context & Context)
 {
-	//см presentation:notes
+	//see presentation:notes
 }
 void note::docx_convert(oox::docx_conversion_context & Context)
 {
@@ -1161,6 +1169,8 @@ std::wostream & chapter::text_to_stream(std::wostream & _Wostream, bool bXmlEnco
 void chapter::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     CP_APPLY_ATTR(L"text:fixed", text_fixed_);
+    CP_APPLY_ATTR(L"text:display", text_display_);
+    CP_APPLY_ATTR(L"text:outline-level", text_outline_level_);
 }
 void chapter::add_text(const std::wstring & Text)
 {
@@ -1168,7 +1178,19 @@ void chapter::add_text(const std::wstring & Text)
 }
 void chapter::docx_convert(oox::docx_conversion_context & Context)
 {
- 	docx_serialize_field(L"BIBLIOGRAPHY", text_, Context);
+	// WordprocessingML has no chapter field: STYLEREF to the heading style of the outline
+	// level shows its name, with \n its number (LibreOffice's DOCX export writes STYLEREF
+	// "Heading N" too). Number and name together need two fields; the name is kept, the
+	// cached result keeps both. Both attributes are required; without them, number-and-name
+	// of level 1 is assumed.
+	const int level = (std::max)(1, text_outline_level_.get_value_or(1));
+	const std::wstring display = text_display_.get_value_or(L"number-and-name");
+
+	std::wstring instr = L" STYLEREF \"Heading " + std::to_wstring(level) + L"\"";
+	if (display == L"number" || display == L"plain-number")
+		instr += L" \\n";
+
+	docx_serialize_field(instr + L" ", text_, Context);
 }
 
 void chapter::xlsx_convert(oox::xlsx_conversion_context & Context)
@@ -1295,7 +1317,7 @@ void text_page_count::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conver
 }
 void text_page_count::pptx_convert(oox::pptx_conversion_context & Context)
 {
-	//поскольку такого поля в ms нет - конвертим как обычный текст
+	//since there is no such field in ms, convert it as plain text
 	if (text_)
     {
         text_->pptx_convert(Context);
@@ -1508,7 +1530,7 @@ void sequence_ref::docx_convert(oox::docx_conversion_context & Context)
 	if (!ref_name_) return;
 
 	Context.finish_run();
-	Context.output_stream() << L"<w:fldSimple w:instr=\" REF " << *ref_name_ << L" \\h\">";
+	Context.output_stream() << L"<w:fldSimple w:instr=\" REF " << XmlUtils::EncodeXmlString(*ref_name_) << L" \\h\">";
 	Context.add_new_run();
 	if (text_)
 		text_->docx_convert(Context);
@@ -1642,7 +1664,7 @@ void expression::docx_convert(oox::docx_conversion_context & Context)
 	strm << L"<w:r><w:fldChar w:fldCharType=\"begin\"></w:fldChar></w:r>";
 	strm << L"<w:r><w:instrText>FORMTEXT</w:instrText></w:r>";
 	strm << L"<w:r><w:fldChar w:fldCharType=\"separate\"/></w:r>";
-	strm << L"<w:r><w:t>" << text_ << L"</w:t></w:r>";
+	strm << L"<w:r><w:t>" << XmlUtils::EncodeXmlString(text_) << L"</w:t></w:r>";
     strm << L"<w:r><w:fldChar w:fldCharType=\"end\"/></w:r>";
 }
 //------------------------------------------------------------------------------------------------------------
@@ -1671,7 +1693,7 @@ void text_input::docx_convert(oox::docx_conversion_context & Context)
 	strm << L"<w:r><w:fldChar w:fldCharType=\"begin\"></w:fldChar></w:r>";
 	strm << L"<w:r><w:instrText>FORMTEXT</w:instrText></w:r>";
 	strm << L"<w:r><w:fldChar w:fldCharType=\"separate\"/></w:r>";
-	strm << L"<w:r><w:t>" << text_ << L"</w:t></w:r>";
+	strm << L"<w:r><w:t>" << XmlUtils::EncodeXmlString(text_) << L"</w:t></w:r>";
     strm << L"<w:r><w:fldChar w:fldCharType=\"end\"/></w:r>";
 }
 //-------------------------------------------------------------------------------------------------------------------
@@ -1731,7 +1753,7 @@ void text_drop_down::docx_convert(oox::docx_conversion_context & Context)
 		content_[i]->docx_convert(Context);
 	}
 	strm << L"</w:dropDownList></w:sdtPr><w:sdtEndPr/><w:sdtContent>";
-	strm << L"<w:r><w:t>" << text_ << L"</w:t></w:r>";
+	strm << L"<w:r><w:t>" << XmlUtils::EncodeXmlString(text_) << L"</w:t></w:r>";
 	strm << L"</w:sdtContent></w:sdt>";
 }
 //-------------------------------------------------------------------------------------------------------------------
@@ -1746,7 +1768,8 @@ void text_label::docx_convert(oox::docx_conversion_context & Context)
 {
     std::wostream & strm = Context.output_stream();
 	
-	strm << L"<w:listItem w:value=\"" << text_value_.get_value_or(L"") << L"\" w:displayText=\"" << text_value_.get_value_or(L"") << L"\"/>";
+	const std::wstring value = XmlUtils::EncodeXmlString(text_value_.get_value_or(L""));
+	strm << L"<w:listItem w:value=\"" << value << L"\" w:displayText=\"" << value << L"\"/>";
 }
 //-------------------------------------------------------------------------------------------------------------------
 const wchar_t * sheet_name::ns = L"text";
@@ -1872,6 +1895,33 @@ void sender_company::add_text(const std::wstring & Text)
 void sender_company::docx_convert(oox::docx_conversion_context & Context)
 {
 	docx_serialize_sdt_placeholder(L"Sender company", text_, Context);
+}
+//------------------------------------------------------------------------------------------------------------
+const wchar_t * database_display::ns = L"text";
+const wchar_t * database_display::name = L"database-display";
+
+std::wostream & database_display::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
+{
+    if (text_display_ && *text_display_ == L"none") return _Wostream;
+
+    CP_SERIALIZE_TEXT(text_, bXmlEncode);
+    return _Wostream;
+}
+void database_display::add_attributes( const xml::attributes_wc_ptr & Attributes )
+{
+	CP_APPLY_ATTR(L"text:display", text_display_);
+}
+void database_display::add_text(const std::wstring & Text)
+{
+    text_ = text::create(Text) ;
+}
+void database_display::docx_convert(oox::docx_conversion_context & Context)
+{
+	// text:display="none" is a hidden field: LibreOffice does not show its value.
+	if (text_display_ && *text_display_ == L"none") return;
+
+	// The current value of the database column, e.g. "<Last Name>" in a mail merge template.
+	docx_serialize_run(text_, Context);
 }
 //------------------------------------------------------------------------------------------------------------
 const wchar_t * sender_postal_code::ns = L"text";

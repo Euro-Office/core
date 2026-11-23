@@ -29,7 +29,7 @@
 
 #include "../Common/SimpleTypes_Word.h"
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:del>
 //        <w:ins>
@@ -45,7 +45,7 @@ namespace OOX
 	{
 	public:
 		WritingElement_AdditionMethods(CFtnEdn)
-		CFtnEdn(OOX::Document *pMain = NULL);
+		CFtnEdn(OOX::Document *pMain = nullptr);
 		virtual ~CFtnEdn();
 
 		virtual void ClearItems();
@@ -58,7 +58,7 @@ namespace OOX
 		virtual std::wstring toXML() const;
 		virtual EElementType getType() const;
 
-		OOX::EElementType                        m_eType; // <w:footnote> или <w:endnote>
+		OOX::EElementType                        m_eType; // <w:footnote> or <w:endnote>
 
 		nullable<SimpleTypes::CDecimalNumber>	m_oId;
 		nullable<SimpleTypes::CFtnEdn>			m_oType;
@@ -88,7 +88,7 @@ namespace OOX
 		void ReadAttributes(XmlUtils::CXmlLiteReader& oReader);
 
 	public:
-		OOX::EElementType m_eType; // <w:footnote> или <w:endnote>
+		OOX::EElementType m_eType; // <w:footnote> or <w:endnote>
 
 		nullable<SimpleTypes::CDecimalNumber> m_oId;
 	};

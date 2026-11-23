@@ -123,8 +123,8 @@ bool pptx_table_state::start_covered_cell(pptx_conversion_context & Context)
     std::wostream & _Wostream = context_.get_table_context().tableData();
     current_table_column_++;
 
-    // обновляем вектор, в котором хранятся информация об объединении строк
-    // добавляем в него новый столбец
+    // update the vector that stores row-merging information
+    // add a new column to it
 
     if (current_table_column_ >= (int)(rows_spanned_.size()))
         rows_spanned_.push_back(table_row_spanned());
@@ -147,8 +147,8 @@ bool pptx_table_state::start_covered_cell(pptx_conversion_context & Context)
 		context_.root()->odf_context().styleContainer().style_by_name(
 			rows_spanned_[current_table_column_].style(), odf_types::style_family::TableCell, false);
 
-    // использовали текущую ячейку, уменьшаем счетчики оставшихся объединенных ячеек
-    // для столбцов и строк
+    // used the current cell, decrease the counters of the remaining merged cells
+    // for columns and rows
 
     if (columns_spanned_num_ > 0)
         columns_spanned_num_--;
@@ -182,7 +182,7 @@ void pptx_table_state::end_covered_cell()
 
 	oox::oox_serialize_tcPr(_Wostream, style_instances, context_);
 
-	// закрываем открытую ячейку
+	// close an open cell
 	_Wostream << L"</a:tc>";
     
 }
@@ -464,7 +464,7 @@ void oox_serialize_tcPr(std::wostream & strm, std::vector<const odf_reader::styl
 				oox_serialize_border(CP_XML_STREAM(), L"a:lnR", right);
 				oox_serialize_border(CP_XML_STREAM(), L"a:lnT", top);
 				oox_serialize_border(CP_XML_STREAM(), L"a:lnB", bottom);
-				//диагональных в оо нет.
+				//There are no diagonal ones in oo.
 	////////////////////////////////////////////////////////////////////////////////////////////////			
 				oox::_oox_fill fill;
 				

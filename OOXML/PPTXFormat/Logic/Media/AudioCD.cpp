@@ -47,7 +47,7 @@ namespace PPTX
 		}
 		void AudioCD::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
-			//todooo
+			//TODO
 		}
 		void AudioCD::fromXML(XmlUtils::CXmlNode& node)
 		{

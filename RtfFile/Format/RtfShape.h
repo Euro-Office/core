@@ -161,7 +161,7 @@ public:
 	int m_nConnectorStyle;			//cxstyle Connector style
 
 //Picture Effects
-	int m_nCropFromTop;				//cropFromTop	Top cropping percentage. Измеряется в fraction 1 /65536
+	int m_nCropFromTop;				//cropFromTop Top cropping percentage. Measured in fraction 1 /65536
 	int m_nCropFromBottom;			//cropFromBottom	Bottom cropping percentage.
 	int m_nCropFromLeft;			//cropFromLeft	Left cropping percentage.
 	int m_nCropFromRight;			//cropFromRight	Right cropping percentage.
@@ -192,7 +192,7 @@ public:
 	int m_nFillToLeft;
 	int m_nFillShadeType;
     std::vector< std::pair<int, double> >	m_aFillShadeColors;
-	//int m_bFillShape;				//есть копия заливки картинкой	
+	//int m_bFillShape;				//there is a copy of the image fill
 //Line
 	int m_bLine;					//fLine Has a line
 	int m_nLineColor;
@@ -224,7 +224,7 @@ public:
 	std::wstring	m_sSigSetupSuggSigner2;
 	std::wstring	m_sSigSetupSuggSignerEmail;
 
-	RtfCharProperty	m_oCharProperty; // тут могут быть track changes ....
+	RtfCharProperty	m_oCharProperty; // there may be track changes...
 
 //pWrapPolygonVertices	Points of the text wrap polygon.
 	std::vector< std::pair<__int64, __int64> >	m_aWrapPoints;

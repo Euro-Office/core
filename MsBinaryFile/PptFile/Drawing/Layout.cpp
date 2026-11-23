@@ -94,7 +94,7 @@ void PPT::CLayout::Clear()
 
 void PPT::CLayout::CreateDublicateElements()
 {
-    // просто из всех своих элементов делаем дубликата
+    // Just make a duplicate of all our elements
 
     for (size_t nIndex = 0; nIndex < m_arElements.size(); ++nIndex)
     {

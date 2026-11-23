@@ -428,7 +428,7 @@ public:
 
 public:
 
-	static void _LOGGING_ERROR_(const std::wstring& strType, const std::wstring& strError);
+	static void LoggingError(const std::wstring& strType, const std::wstring& strError);
 
 	bool ExecuteCommand(const std::wstring& command, NSDoctRenderer::CDocBuilderValue* retValue = NULL, const bool& isEnterContext = true);
 
@@ -445,6 +445,9 @@ public:
 
 namespace NSDoctRenderer
 {
+	// In-process x2t conversion (CDocBuilder::SetX2tConverter), used instead of the x2t executable
+	inline int (*g_pX2tConverter)(const wchar_t* paramsPath) = nullptr;
+
 	class CDocBuilder_Private : public CDoctRendererConfig
 	{
 	public:
@@ -543,7 +546,7 @@ namespace NSDoctRenderer
 			oWorker.m_arAdditionalFolders.push_back(NSFile::GetProcessDirectory() + L"/fonts");
 			oWorker.m_bIsNeedThumbnails = false;
 			oWorker.m_sDirectory = sDirectory;
-			// это не рабочая папка, где только шрифты
+			// this isn't a working folder, where there are only fonts
 			oWorker.m_bIsCleanDirectory = false;
 			NSFonts::IApplicationFonts* pFonts = oWorker.Check();
 			if(pFonts)
@@ -672,8 +675,8 @@ namespace NSDoctRenderer
 			int n3 = (int)from.find (L"ftp");
 			int n4 = (int)from.find (L"https");
 
-			//если nI сранивать не с 0, то будут проблемы
-			//потому что в инсталяции мы кладем файлы в /var/www...
+			//if nI is compared with something other than 0, there will be problems
+			//because in the installation we put the files in /var/www...
 			if (0 == n1 || 0 == n2 || 0 == n3 || 0 == n4)
 			{
 				NSNetwork::NSFileTransport::CFileDownloader oDownloader(from, false);
@@ -719,7 +722,7 @@ namespace NSDoctRenderer
 			}
 #endif
 
-			// не открываем локальные файлы в серверной версии.
+			// Don't open local files in the server version.
 			if (m_bIsServerSafeVersion)
 				return;
 
@@ -761,6 +764,13 @@ namespace NSDoctRenderer
 
 			std::wstring sTempFileForParams = sFolder + L"/params_from.xml";
 			NSFile::CFileBinary::SaveToFile(sTempFileForParams, sXmlConvert, true);
+
+			if (g_pX2tConverter)
+			{
+				nReturnCode = g_pX2tConverter(sTempFileForParams.c_str());
+			}
+			else
+			{
 
 #ifdef WIN32
 			std::wstring sApp = L"x2t32 ";
@@ -864,6 +874,7 @@ namespace NSDoctRenderer
 				break;
 			}
 #endif
+			}
 
 			NSFile::CFileBinary::Remove(sTempFileForParams);
 
@@ -876,7 +887,7 @@ namespace NSDoctRenderer
 
 			if (true)
 			{
-				// для файлов по ссылке - расширение может быть плохим.
+				// for files from the link - the extension may be bad.
 				const wchar_t* sExtCopyPtr = sExtCopy.c_str();
 				int nExtCopyLen = sExtCopy.length();
 				int nValidIndex = 0;
@@ -951,7 +962,7 @@ namespace NSDoctRenderer
 			m_nFileType = -1;
 
 			std::wstring sErrorLog = L"open file error (" + std::to_wstring(nReturnCode) + L")";
-			CV8RealTimeWorker::_LOGGING_ERROR_(L"error: ", sErrorLog);
+			CV8RealTimeWorker::LoggingError(L"error: ", sErrorLog);
 			return nReturnCode;
 		}
 
@@ -1003,7 +1014,7 @@ namespace NSDoctRenderer
 
 			if (-1 == m_nFileType)
 			{
-				CV8RealTimeWorker::_LOGGING_ERROR_(L"error (save)", L"file not opened!");
+				CV8RealTimeWorker::LoggingError(L"error (save)", L"file not opened!");
 				return 1;
 			}
 
@@ -1097,6 +1108,13 @@ namespace NSDoctRenderer
 			std::wstring sTempFileForParams = m_sFileDir + L"/params_to.xml";
 			NSFile::CFileBinary::SaveToFile(sTempFileForParams, sXmlConvert, true);
 
+			if (g_pX2tConverter)
+			{
+				nReturnCode = g_pX2tConverter(sTempFileForParams.c_str());
+			}
+			else
+			{
+
 #ifdef WIN32
 			std::wstring sApp = L"x2t32 ";
 
@@ -1199,6 +1217,7 @@ namespace NSDoctRenderer
 				break;
 			}
 #endif
+			}
 
 			// html correct (TODO: move to x2t)
 			if (0 == nReturnCode && type == AVS_OFFICESTUDIO_FILE_DOCUMENT_HTML_IN_CONTAINER)
@@ -1230,7 +1249,7 @@ namespace NSDoctRenderer
 				return 0;
 
 			std::wstring sErrorLog = L"save file error (" + std::to_wstring(nReturnCode) + L")";
-			CV8RealTimeWorker::_LOGGING_ERROR_(L"error: ", sErrorLog);
+			CV8RealTimeWorker::LoggingError(L"error: ", sErrorLog);
 			return nReturnCode;
 		}
 
@@ -1355,7 +1374,7 @@ namespace NSDoctRenderer
 			FILE* pFile = oFile.OpenFileNative(sFile, append ? L"a+" : L"a");
 			if (pFile)
 			{
-				fprintf(pFile, sValueA.c_str());
+				fprintf(pFile, "%s", sValueA.c_str());
 				fclose(pFile);
 			}
 		}

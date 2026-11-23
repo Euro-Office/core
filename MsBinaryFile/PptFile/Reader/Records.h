@@ -116,7 +116,7 @@ public:
         if (NULL == pArray)
             return;
 
-        // возвращаем указатели, их не удалять наверху!!!!
+        // Return pointers; don't delete them at the top!!!!
         for (size_t nIndex = 0; nIndex < m_arRecords.size(); ++nIndex)
         {
             T pRec = dynamic_cast<T>(m_arRecords[nIndex]);

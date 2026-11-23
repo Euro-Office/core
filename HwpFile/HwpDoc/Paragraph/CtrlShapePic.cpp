@@ -18,7 +18,7 @@ EPicEffectType GetPicEffectType(int nValue)
 	}
 }
 
-CPicColor::CPicColor(CHWPStream& oBuffer, int nOff, int nSize)
+CPicColor::CPicColor(CHWPStream& oBuffer, int /*nOff*/, int nSize)
 {
 	oBuffer.ReadInt(m_nType);
 	oBuffer.ReadInt(m_nRGB);
@@ -27,9 +27,9 @@ CPicColor::CPicColor(CHWPStream& oBuffer, int nOff, int nSize)
 	m_nSize = nSize;
 }
 
-CPicColor::CPicColor(CXMLReader& oReader)
+CPicColor::CPicColor(CXMLReader& /*oReader*/)
 {
-	//TODO:: проверить
+	//TODO:: check
 	m_nType = 0;
 }
 
@@ -85,7 +85,7 @@ CShadow::CShadow(CXMLReader& oReader, EHanType eType)
 		else if (GetAttributeName(EAttribute::RotationStyle, eType) == sAttributeName)
 			m_nRotation = (int)oReader.GetBool();
 
-		// Далее идут атрибуты, которые встречаются только в HWPML
+		// Next are the attributes that are found only in HWPML
 		else if (EHanType::HWPML != eType)
 			continue;
 		else if ("SkewX" == sAttributeName)
@@ -99,7 +99,7 @@ CShadow::CShadow(CXMLReader& oReader, EHanType eType)
 	}
 	END_READ_ATTRIBUTES(oReader)
 
-	// Далее идут ноды, которые встречаются только в HWPX
+	// Next are the nodes that are found only in HWPX
 	if (EHanType::HWPX != eType)
 		return;
 
@@ -127,7 +127,7 @@ CShadow::CShadow(CXMLReader& oReader, EHanType eType)
 			}
 			END_READ_ATTRIBUTES(oReader)
 		}
-		// TODO:: реализовать для HWPX и HWPML при встрече
+		// TODO:: implement for HWPX and HWPML when encountered
 		else if ("hp:effectsColor" == sNodeName)
 			m_pColor = new CPicColor(oReader);
 	}
@@ -178,7 +178,7 @@ CNeon::~CNeon()
 		delete m_pColor;
 }
 
-CSoftEdge::CSoftEdge(int nTypeNum, CHWPStream& oBuffer, int nOff, int nSize)
+CSoftEdge::CSoftEdge(int nTypeNum, CHWPStream& oBuffer, int /*nOff*/, int /*nSize*/)
 	: CPicEffect(nTypeNum)
 {
 	oBuffer.ReadFloat(m_fRadius);
@@ -192,7 +192,7 @@ CSoftEdge::CSoftEdge(CXMLReader& oReader, EHanType eType)
 	m_fRadius = oReader.GetAttributeDouble(GetAttributeName(EAttribute::Radius, eType));
 }
 
-CReflect::CReflect(int nTypeNum, CHWPStream& oBuffer, int nOff, int nSize)
+CReflect::CReflect(int nTypeNum, CHWPStream& oBuffer, int /*nOff*/, int /*nSize*/)
 	: CPicEffect(nTypeNum)
 {
 	oBuffer.SavePosition();
@@ -231,7 +231,7 @@ CReflect::CReflect(CXMLReader& oReader, EHanType eType)
 		else if (GetAttributeName(EAttribute::FadeDirection, eType) == sAttributeName)
 			m_fOffsetDirection = oReader.GetDouble();
 
-		// Далее идут атрибуты, которые встречаются только в HWPML
+		// Next are the attributes that are found only in HWPML
 		else if (EHanType::HWPML != eType)
 			continue;
 		else if ("SkewX" == sAttributeName)
@@ -253,7 +253,7 @@ CReflect::CReflect(CXMLReader& oReader, EHanType eType)
 	}
 	END_READ_ATTRIBUTES(oReader)
 
-	// Далее идут ноды, которые встречаются только в HWPX
+	// Next are the nodes that are found only in HWPX
 	if (EHanType::HWPX != eType)
 		return;
 
@@ -261,10 +261,10 @@ CReflect::CReflect(CXMLReader& oReader, EHanType eType)
 	{\
 		START_READ_ATTRIBUTES(oReader)\
 		{\
-			if (value_1_name == sAttributeName)\
-				value_1_variable = oReader.GetDouble();\
-			else if (value_2_name == sAttributeName)\
-				value_2_variable = oReader.GetDouble();\
+			if ((value_1_name) == sAttributeName)\
+				(value_1_variable) = oReader.GetDouble();\
+			else if ((value_2_name) == sAttributeName)\
+				(value_2_variable) = oReader.GetDouble();\
 		}\
 		END_READ_ATTRIBUTES(oReader)\
 	}
@@ -511,7 +511,7 @@ int CCtrlShapePic::GetIMageRectHeight() const
 	return m_arBorderPoints[2].m_nY - m_arBorderPoints[0].m_nY;
 }
 
-int CCtrlShapePic::ParseElement(CCtrlShapePic& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlShapePic::ParseElement(CCtrlShapePic& oObj, int nSize, CHWPStream& oBuffer, int nOff, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

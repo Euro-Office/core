@@ -153,7 +153,7 @@
 		};
 
 		#define PRINT_EMF_RECORD(type) \
-			if (0 <= type && type <= EMR_CREATECOLORSPACEW) \
+			if (0 <= (type) && (type) <= EMR_CREATECOLORSPACEW) \
 				std::wcout << L"LEVEL [" << unFileLevel << L"] EMF Record: " << actionNamesEmf[type].actionName << std::endl
 	#endif
 	#endif
@@ -164,11 +164,11 @@
 namespace MetaFile
 {
 	CEmfParser::CEmfParser()
-	    : m_pEmfPlusParser(NULL) {}
+	    : m_pEmfPlusParser(nullptr) {}
 
 	CEmfParser::~CEmfParser()
 	{
-		ClearFile();
+		CEmfParser::ClearFile();
 		RELEASEOBJECT(m_pInterpretator);
 	}
 
@@ -186,7 +186,7 @@ namespace MetaFile
 		if (!m_oStream.IsValid())
 			SetError();
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			GO_UP_LEVEL;
 
 		unsigned int ulSize, ulType;
@@ -227,7 +227,7 @@ namespace MetaFile
 			if (0 == ulRecordIndex && EMR_HEADER != ulType)
 				return SetError();
 
-			if (NULL != m_pInterpretator && (!BanEMFProcesses()|| ulType == EMR_HEADER || ulType == EMR_EOF || ulType == EMR_GDICOMMENT))
+			if (nullptr != m_pInterpretator && (!BanEMFProcesses()|| ulType == EMR_HEADER || ulType == EMR_EOF || ulType == EMR_GDICOMMENT))
 				PRINT_EMF_RECORD(ulType);
 
 			switch (ulType)
@@ -353,7 +353,7 @@ namespace MetaFile
 
 			case EMR_GDICOMMENT: Read_EMR_COMMENT(); break;
 				//-----------------------------------------------------------
-				// Неизвестные записи
+				// Unknown entries
 				//-----------------------------------------------------------
 			default:
 			{
@@ -368,7 +368,7 @@ namespace MetaFile
 			int need_skip = m_ulRecordSize - (m_oStream.Tell() - m_ulRecordPos);
 			m_oStream.Skip(need_skip);
 
-			if (0 != need_skip && NULL != m_pInterpretator)
+			if (0 != need_skip && nullptr != m_pInterpretator)
 				PRINT_LOG(L"SKIP BYTES: " << need_skip);
 
 			ulRecordIndex++;
@@ -382,7 +382,7 @@ namespace MetaFile
 		if (!m_bEof)
 			HANDLE_EMR_EOF();
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			GO_DOWN_LEVEL_BELOW;
 
 		ClearFile();
@@ -391,7 +391,7 @@ namespace MetaFile
 	void CEmfParser::Scan()
 	{
 		CEmfInterpretatorBase *pInterpretator = m_pInterpretator;
-		m_pInterpretator = NULL;
+		m_pInterpretator = nullptr;
 		PlayFile();
 		m_pInterpretator = pInterpretator;
 	}
@@ -415,7 +415,7 @@ namespace MetaFile
 
 	bool CEmfParser::BanEMFProcesses() const
 	{
-		return NULL != m_pEmfPlusParser && m_pEmfPlusParser->GetBanEMFProcesses();
+		return nullptr != m_pEmfPlusParser && m_pEmfPlusParser->GetBanEMFProcesses();
 	}
 
 	bool CEmfParser::ReadImage(unsigned int offBmi, unsigned int cbBmi, unsigned int offBits, unsigned int cbBits, unsigned int ulSkip, BYTE **ppBgraBuffer, unsigned int *pulWidth, unsigned int *pulHeight)
@@ -427,7 +427,7 @@ namespace MetaFile
 
 		if (ulHeaderSize <= 0 || ulBitsSize <= 0 || lHeaderOffset < 0 || lBitsOffset < 0)
 		{
-			// TODO: Если попали сюда, значит надо смотреть BitBltRasterOperation
+			// TODO: If execution reaches this point, check BitBltRasterOperation
 			if (lHeaderOffset > 0)
 				m_oStream.Skip(lHeaderOffset);
 
@@ -621,7 +621,7 @@ namespace MetaFile
 	void CEmfParser::Read_EMR_EXTCREATEFONTINDIRECTW()
 	{
 		unsigned int unSize = m_ulRecordSize - 4;
-		bool bFixedLength = unSize <= 0x0140 ? true : false;
+		bool bFixedLength = unSize <= 0x0140;
 
 		unsigned int ulIndex;
 		CEmfLogFont* pFont = new CEmfLogFont(bFixedLength);
@@ -719,10 +719,10 @@ namespace MetaFile
 		}
 		else
 		{
-			pPen->pStyleEntry = NULL;
+			pPen->pStyleEntry = nullptr;
 		}
 
-		// Пропускаем часть с картинкой, если она была
+		// Skip the part with the image if there was one
 		m_oStream.Skip(current_size);
 
 		if (!BanEMFProcesses())
@@ -973,7 +973,7 @@ namespace MetaFile
 
 	void CEmfParser::Read_EMR_EXCLUDECLIPRECT()
 	{
-		// TODO: Проверить как найдется файл
+		// TODO: Check if a file is found
 		TRectL oClip;
 
 		m_oStream >> oClip;
@@ -1072,7 +1072,7 @@ namespace MetaFile
 
 	void CEmfParser::Read_EMR_ANGLEARC()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TPointL oCenter;
 		unsigned int unRadius;
 		double dStartAngle, dSweepAngle;
@@ -1096,11 +1096,11 @@ namespace MetaFile
 		dStartAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oStart.X, oStart.Y);
 		dSweepAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oEnd.X, oEnd.Y) - dStartAngle;
 
-		// TODO: Проверить здесь
+		// TODO: Check here
 		if (dSweepAngle < 0.001)
 			dSweepAngle += 360;
 
-		// TODO: Проверить здесь
+		// TODO: Check here
 		if (AD_COUNTERCLOCKWISE != m_pDC->GetArcDirection())
 		{
 			dSweepAngle = dSweepAngle - 360;
@@ -1121,7 +1121,7 @@ namespace MetaFile
 
 	void CEmfParser::Read_EMR_ARCTO()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TRectL oBox;
 		TPointL oStart, oEnd;
 		double dStartAngle, dSweep;
@@ -1134,7 +1134,7 @@ namespace MetaFile
 
 	void CEmfParser::Read_EMR_CHORD()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TRectL oBox;
 		TPointL oStart, oEnd;
 		double dStartAngle, dSweep;
@@ -1157,7 +1157,7 @@ namespace MetaFile
 
 	void CEmfParser::Read_EMR_EXTTEXTOUTA()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TEmfExtTextoutA oText;
 
 		m_oStream >> oText;
@@ -1188,7 +1188,7 @@ namespace MetaFile
 
 	void CEmfParser::Read_EMR_PIE()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TRectL oBox;
 		TPointL oStart, oEnd;
 		double dStartAngle, dSweep;
@@ -1281,8 +1281,8 @@ namespace MetaFile
 
 	template<typename T>void CEmfParser::Read_EMR_POLYDRAW_BASE()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
-		//bug #35006 - не прочитывается весь рекорд ... выравнивание?
+		// TODO: How to find files, check this entry.
+		//bug #35006 - the entire record isn't read... alignment?
 
 		TRectL oBounds;
 		unsigned int unCount;
@@ -1464,7 +1464,7 @@ namespace MetaFile
 		unsigned int ulNumberOfPolylines;
 		unsigned int ulTotalPointsCount;
 
-		//TODO: сделать сохранение в XML
+		//TODO: save to XML
 
 		m_oStream >> oBounds;
 		m_oStream >> ulNumberOfPolylines;
@@ -1498,10 +1498,10 @@ namespace MetaFile
 
 	void CEmfParser::Read_EMR_POLYTEXTOUTA()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TPolyTextoutA oText;
 
-		//TODO: сделать сохранение в XML
+		//TODO: save to XML
 
 		m_oStream >> oText;
 
@@ -1522,10 +1522,10 @@ namespace MetaFile
 
 	void CEmfParser::Read_EMR_POLYTEXTOUTW()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TPolyTextoutW oText;
 
-		//TODO: сделать сохранение в XML
+		//TODO: save to XML
 		m_oStream >> oText;
 
 		if (0 == oText.unCStrings)
@@ -1647,11 +1647,11 @@ namespace MetaFile
 		std::string sType = std::string((char*)m_oStream.GetCurPtr(), 4);
 		m_oStream.Skip(4);
 
-		if (sType == "EMF+" && NULL != m_pInterpretator)
+		if (sType == "EMF+" && nullptr != m_pInterpretator)
 		{
 			SaveDC();
 
-			if (NULL == m_pEmfPlusParser)
+			if (nullptr == m_pEmfPlusParser)
 			{
 				m_pEmfPlusParser = new CEmfPlusParser(m_pInterpretator, m_oHeader);
 				m_pEmfPlusParser->SetFontManager(GetFontManager());
@@ -1670,7 +1670,7 @@ namespace MetaFile
 
 			RestoreDC(-1);
 		}
-		else if (sType == "GDIC" && NULL != m_pInterpretator)
+		else if (sType == "GDIC" && nullptr != m_pInterpretator)
 		{
 			unsigned int unPublicCommentIdentifier;
 
@@ -1699,7 +1699,7 @@ namespace MetaFile
 				if (oWmfParser.CheckError())
 					return;
 
-				if (NULL == m_pInterpretator)
+				if (nullptr == m_pInterpretator)
 					HANDLE_EMR_EOF();
 				else if (InterpretatorType::Render == m_pInterpretator->GetType())
 				{
@@ -1710,7 +1710,7 @@ namespace MetaFile
 
 					HANDLE_EMR_EOF();
 				}
-				else if (NULL != m_pInterpretator && InterpretatorType::Svg == m_pInterpretator->GetType())
+				else if (nullptr != m_pInterpretator && InterpretatorType::Svg == m_pInterpretator->GetType())
 				{
 					((CWmfParserBase*)&oWmfParser)->SetInterpretator(InterpretatorType::Svg);
 

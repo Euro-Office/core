@@ -69,7 +69,7 @@ namespace NSFontDictionary
 					bool bIsEqual = true;
 					for (int j = 1; j < nNameLen; ++j)
 					{
-						if ('\0' == _name[j]) // короче чем нужно
+						if ('\0' == _name[j]) // shorter than necessary
 						{
 							bIsEqual = false;
 							break;
@@ -81,7 +81,7 @@ namespace NSFontDictionary
 						}
 					}
 
-					if (bIsEqual && _name[nNameLen] == '\0') // чтобы не длиннее, чем нужно
+					if (bIsEqual && _name[nNameLen] == '\0') // so as not to be longer than necessary
 					{
 						nIndex = i;
 						break;
@@ -169,7 +169,7 @@ namespace NSFontDictionary
 				bool bIsEqual = true;
 				for (int j = 1; j < nNameLen; ++j)
 				{
-					if ('\0' == _name[j]) // короче чем нужно
+					if ('\0' == _name[j]) // shorter than necessary
 					{
 						bIsEqual = false;
 						break;
@@ -181,7 +181,7 @@ namespace NSFontDictionary
 					}
 				}
 
-				if (bIsEqual && _name[nNameLen] == '\0') // чтобы не длиннее, чем нужно
+				if (bIsEqual && _name[nNameLen] == '\0') // so as not to be longer than necessary
 				{
 					nIndex = i;
 					break;
@@ -260,7 +260,7 @@ namespace NSFontDictionary
 		if (NULL == pFont)
 			return false;
 
-		// name - делаем ascii, чтобы сработал подбор
+		// name - make it ascii so that font matching works
 		oFormat.Destroy(true);
 
 		LONG nLen = (LONG)strlen(pFont->m_name);

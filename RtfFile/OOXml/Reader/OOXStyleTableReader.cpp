@@ -35,7 +35,7 @@ OOXStyleTableReader::OOXStyleTableReader(OOX::CStyles* ooxStyles)
 
 bool OOXStyleTableReader::Parse( ReaderParameter oParam )
 {
-	if (m_ooxStyles == NULL) return false;
+	if (m_ooxStyles == nullptr) return false;
 
 	if (m_ooxStyles->m_oDocDefaults.IsInit())
 	{
@@ -50,10 +50,10 @@ bool OOXStyleTableReader::Parse( ReaderParameter oParam )
 
 		oStyleReader.ParseStyle( oParam, oNewStyle);
 
-		if( NULL != oNewStyle )
+		if( nullptr != oNewStyle )
 			oParam.oRtf->m_oStyleTable.AddItem( oNewStyle );
 	}
-	//только чтобы добавить связи между стилями
+	//just to add connections between styles
 
 	for (size_t i=0; i< m_ooxStyles->m_arrStyle.size(); i++)
 	{

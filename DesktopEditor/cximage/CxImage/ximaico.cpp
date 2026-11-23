@@ -45,12 +45,21 @@ bool CxImageICO::Decode(CxFile *hFile)
 
 		if ((page>=0)&&(page<icon_header.idCount)){
 
+			// Images can be stored as PNG (Vista icons) whatever their size,
+			// not only at 256x256, where the directory says 0x0
+			bool bIsPng = false;
+			{
+				uint8_t sig[4] = {0, 0, 0, 0};
+				hFile->Seek(off + icon_list[page].dwImageOffset, SEEK_SET);
+				bIsPng = hFile->Read(sig, 1, 4) == 4 && sig[0] == 0x89 && sig[1] == 'P' && sig[2] == 'N' && sig[3] == 'G';
+			}
+
 			if (info.nEscape == -1) {
 				// Return output dimensions only
 				head.biWidth = icon_list[page].bWidth;
 				head.biHeight = icon_list[page].bHeight;
 #if CXIMAGE_SUPPORT_PNG
-				if (head.biWidth==0 && head.biHeight==0)
+				if (bIsPng)
 				{	// Vista icon support
 					hFile->Seek(off + icon_list[page].dwImageOffset, SEEK_SET);
 					CxImage png;
@@ -70,7 +79,7 @@ bool CxImageICO::Decode(CxFile *hFile)
 			BITMAPINFOHEADER bih;
 			hFile->Seek(off + icon_list[page].dwImageOffset, SEEK_SET);
 
-			if (icon_list[page].bWidth==0 && icon_list[page].bHeight==0)
+			if (bIsPng)
 			{	// Vista icon support
 #if CXIMAGE_SUPPORT_PNG
 				CxImage png;

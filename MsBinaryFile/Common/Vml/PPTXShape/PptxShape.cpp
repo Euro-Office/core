@@ -159,8 +159,8 @@ bool CPPTXShape::LoadAdjustHandlesList(const std::wstring& xml)
 											else
 													oH.position += _T(" ") + oNodeH.GetAttribute(_T("gdRefY"));
 									}
-									//TODO разобраться с полярными хендлами
-									//поля:
+									//TODO deal with polar handles
+									//fields:
 									//polar = 10800, 10800
 									//position = gdrefR, gdrefAng (adj)
 									//radiusrange = minR, maxR

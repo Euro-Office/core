@@ -96,7 +96,7 @@ EHanType CWriterContext::DetectHancom(const HWP_STRING& sPathToFile)
 
 	#define DETECT(hwp_class)\
 	{\
-		hwp_class* pTemp = new hwp_class(sPathToFile);\
+		auto* pTemp = new hwp_class(sPathToFile);\
 		if (nullptr != pTemp)\
 		{\
 			if (pTemp->Detect())\
@@ -148,10 +148,10 @@ bool CWriterContext::Open(const HWP_STRING& sPathToFile, EHanType eHanType)
 	m_eType = eHanType;
 
 	#define OPEN(variable_name, class_name)\
-	variable_name = new class_name(sPathToFile);\
-	if (nullptr == variable_name)\
+	(variable_name) = new class_name(sPathToFile);\
+	if (nullptr == (variable_name))\
 		return false;\
-	return variable_name->Open()
+	return (variable_name)->Open()
 	
 	switch (m_eType)
 	{
@@ -177,8 +177,8 @@ bool CWriterContext::Open(const HWP_STRING& sPathToFile, EHanType eHanType)
 void CWriterContext::Close()
 {
 	#define CLOSE(variable_name)\
-	if (nullptr != variable_name)\
-		variable_name->Close();\
+	if (nullptr != (variable_name))\
+		(variable_name)->Close();\
 	break
 	
 	switch (m_eType)
@@ -369,9 +369,9 @@ bool CWriterContext::GetBinBytes(const HWP_STRING& sId, CHWPStream& oBuffer, HWP
 	return false;
 }
 
-HWP_STRING CWriterContext::GetBinFormat(const HWP_STRING& sId)
+HWP_STRING CWriterContext::GetBinFormat(const HWP_STRING& /*sId*/)
 {
-	//TODO::реализовать
+	//TODO::implement
 	return HWP_STRING();
 }
 }

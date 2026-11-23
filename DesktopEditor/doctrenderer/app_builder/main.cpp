@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 			oBuilder.ExecuteCommand(L"checkL");
 
 			char* sSdkVer = oBuilder.GetVersion();
-			if (NULL != sSdkVer)
+			if (nullptr != sSdkVer)
 			{
 				std::string sSdkVerStd(sSdkVer);
 				std::cout << "sdk version: " << sSdkVerStd << std::endl;
@@ -179,11 +179,10 @@ int main(int argc, char *argv[])
 #endif
 
 	bool bResult = true;
-	if (true)
 	{
 		NSDoctRenderer::CDocBuilder oBuilder;
 
-		// если отключена эта опция - то она отключится на parse_args
+		// if this option is disabled, it will be disabled on parse_args
 		oBuilder.SetProperty("--check-fonts", L"");
 
 		//oBuilder.SetProperty("--use-doctrenderer-scheme", L"");

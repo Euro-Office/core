@@ -291,7 +291,7 @@ void table_database_source_sql::add_attributes( const xml::attributes_wc_ptr & A
 
 void table_database_source_sql::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
-	//todoooo split data-base-ranges & pivots
+	//TODO split data-base-ranges & pivots
 
 	if (table_database_name_)
 	{//table_parse_sql_statement_??

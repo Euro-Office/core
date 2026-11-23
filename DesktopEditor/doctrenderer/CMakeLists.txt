@@ -6,9 +6,6 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 # As far as I can tell, this should be set to 1 when building on mac.
 if(NOT DEFINED USE_JAVASCRIPT_CORE)
     set(USE_JAVASCRIPT_CORE 0)
@@ -19,7 +16,11 @@ if(NOT DEFINED DRAWINGFILE_SUPPORT)
 endif()
 
 if(NOT DEFINED V8_USE_INSPECTOR)
-    set(V8_USE_INSPECTOR 1)
+    if(ANDROID)
+        set(V8_USE_INSPECTOR 0) # no debugger on mobile
+    else()
+        set(V8_USE_INSPECTOR 1)
+    endif()
 endif()
 
 set(DESKTOP_EDITOR_ROOT "..")
@@ -58,40 +59,6 @@ if(DRAWINGFILE_SUPPORT)
         add_subdirectory(${CORE_ROOT_DIR}/DocxRenderer DocxRenderer)
     endif()
 endif()
-
-
-
-
-
-message( "Fetch and build OpenSSL" )
-set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
-set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl_build_linux_64")
-get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
-get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl" "${OPENSSL_INSTALL_DIR}"
-    WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS}
-)
-
-
-
-
-
-message( "Fetch, patch and build v8" )
-set(V8_INSTALL_DIR_ABS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/v8/v8")
-
-# Set TARGETARCH based on detected architecture (x64 or arm64)
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
-    set(TARGETARCH arm64)
-else()
-    set(TARGETARCH x64)
-endif()
-
-
-
-
-
 
 add_library(doctrenderer SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/docbuilder_p.cpp
@@ -152,6 +119,19 @@ add_library(doctrenderer SHARED
 )
 
 set_default_options(doctrenderer)
+
+if( MSVC )
+    set_property(TARGET doctrenderer PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+    target_compile_definitions( doctrenderer PRIVATE
+        _UNICODE
+        UNICODE
+    )
+
+    target_precompile_headers(doctrenderer PRIVATE
+        ${CORE_ROOT_DIR}/msvc_fix.h
+    )
+endif()
 
 if(USE_JAVASCRIPT_CORE)
     target_sources(doctrenderer PRIVATE
@@ -239,7 +219,7 @@ target_include_directories(doctrenderer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/addon
     ${CMAKE_CURRENT_SOURCE_DIR}/js_internal # js_base_embed.pri
-    ${OPENSSL_INSTALL_DIR}/include
+    ${OPENSSL_INSTALL_DIR_ABS}/include
     ${V8_INSTALL_DIR_ABS}/v8
     ${V8_INSTALL_DIR_ABS}/v8/include
 )
@@ -256,15 +236,49 @@ target_compile_definitions(doctrenderer PRIVATE
     BUIDLER_OPEN_DOWNLOAD_ENABLED
     BUIDLER_OPEN_BASE64_ENABLED
     SUPPORT_HARFBUZZ_SHAPER # textshaper.pri
-    V8_VERSION_89_PLUS # v8.pri
-    V8_SUPPORT_SNAPSHOTS  # v8.pri
-    V8_COMPRESS_POINTERS # v8.pri
 )
 
 if(USE_JAVASCRIPT_CORE)
     target_compile_definitions(doctrenderer PRIVATE
         JS_ENGINE_JAVASCRIPTCORE
     )
+else()
+    target_compile_definitions(doctrenderer PRIVATE
+        V8_VERSION_89_PLUS
+        V8_VERSION_121_PLUS
+        # No V8_SUPPORT_SNAPSHOTS: with V8 14.6, contexts created from an
+        # sdkjs startup snapshot abort in V8's deserializer. Nothing uses
+        # snapshots (DocumentServer and the mobile engine use the code cache),
+        # and without the define an existing sdk-all.bin is ignored.
+        # Take the defines that must match the V8 build (pointer compression
+        # etc.) from the v8-gn.h installed with it
+        V8_GN_HEADER
+    )
+
+    # The V8 headers require C++20
+    set_property(TARGET doctrenderer PROPERTY CXX_STANDARD 20)
+    if(MSVC)
+        # ... and check it via __cplusplus, which MSVC only sets correctly with this
+        target_compile_options(doctrenderer PRIVATE /Zc:__cplusplus)
+        if(V8_USE_INSPECTOR)
+            # Boost 1.83's Asio doesn't compile with MSVC in C++20 mode (no
+            # any_io_executor from io_context's executor). This file doesn't
+            # include V8, so keep it on C++17 (without the C++20 precompiled
+            # header).
+            set_source_files_properties(
+                ${CMAKE_CURRENT_SOURCE_DIR}/js_internal/v8/inspector/websocket_server.cpp
+                PROPERTIES COMPILE_OPTIONS "/std:c++17"
+                           SKIP_PRECOMPILE_HEADERS ON)
+        endif()
+    endif()
+
+    if(UNIX AND NOT APPLE)
+        # V8 calls some functions with clang's preserve_most convention. Called
+        # through a lazily bound PLT entry, glibc's resolver clobbers registers
+        # the caller expects preserved, and TurboFan crashes. So bind
+        # everything at load time, as Chromium does.
+        target_link_options(doctrenderer PRIVATE "-Wl,-z,now")
+    endif()
 endif()
 
 if(V8_USE_INSPECTOR)
@@ -286,13 +300,13 @@ if(DRAWINGFILE_SUPPORT)
 endif()
 
 if(APPLE)
-    target_compile_options(doctrenderer
+    target_compile_options(doctrenderer PRIVATE
         $<$<COMPILE_LANGUAGE:OBJC>:-fobjc-arc -fobjc-weak -framework Foundation -framework JavaScriptCore>
         $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc -fobjc-weak -framework Foundation -framework JavaScriptCore>
     )
 endif()
 
-target_link_libraries(CryptoPPLib INTERFACE 
+target_link_libraries(doctrenderer INTERFACE 
     Boost::system
     Boost::filesystem
     Boost::regex
@@ -300,17 +314,32 @@ target_link_libraries(CryptoPPLib INTERFACE
 )
 
 target_link_libraries(doctrenderer PRIVATE
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a
+    ${OPENSSL_LIBSSL}
+    ${OPENSSL_LIBCRYPTO}
+    ${V8_MONOLITH}
 )
 
+if(UNIX AND NOT APPLE AND NOT ANDROID)
+    # V8 uses atomics the compiler can't inline everywhere (e.g. clang on
+    # arm64), which call into libatomic. Linked after the V8 library, else
+    # --as-needed drops it.
+    target_link_libraries(doctrenderer PRIVATE atomic)
+endif()
+
 target_link_libraries(doctrenderer PUBLIC
-    ${V8_INSTALL_DIR_ABS}/libv8_monolith.a
     graphics
     kernel
     UnicodeConverter
     kernel_network
 )
+
+if( MSVC )
+    target_link_libraries(doctrenderer PUBLIC
+        Rpcrt4
+        Winmm
+        Dbghelp
+    )
+endif()
 
 if(DRAWINGFILE_SUPPORT)
     target_link_libraries(doctrenderer PUBLIC
@@ -321,10 +350,20 @@ if(DRAWINGFILE_SUPPORT)
     )
 endif()
 
-target_link_libraries(doctrenderer PUBLIC
-    pthread
-)
+# Android's libc includes pthreads
+if( UNIX AND NOT ANDROID )
+    target_link_libraries(doctrenderer PUBLIC
+        pthread
+    )
+endif()
+
+if( ANDROID )
+    # V8 and the JS console (ANDROID_LOGS) write to logcat
+    target_link_libraries(doctrenderer PRIVATE
+        log
+    )
+endif()
 
 copy_artifacts_to_folder("doctrenderer" "${EO_CORE_OUTPUT_DIR}")
 
-copy_boost_libs(doctrenderer)
+declare_victory( doctrenderer )

@@ -330,7 +330,7 @@ namespace ComplexTypes
 		}
 		void CChartBarGrouping::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_ReadSingle( oReader, _T("val"), m_oVal )
 				WritingElement_ReadAttributes_End( oReader )

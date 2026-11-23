@@ -45,37 +45,37 @@ namespace ComplexTypes
 		return *this;\
 	}
 #define ComplexTypes_WriteAttribute_( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString + oValue->ToString() + L"\"";\
+		sResult += (sStartString) + (oValue)->ToString() + L"\"";\
 	}
 #define ComplexTypes_WriteAttribute2_( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString + oValue.get2() + L"\"";\
+		sResult += (sStartString) + (oValue).get2() + L"\"";\
 	}
 //---------------------------------------------------------------------------------------------
 #define ComplexTypes_WriteAttribute( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString + oValue->ToString() + L"\" ";\
+		sResult += (sStartString) + (oValue)->ToString() + L"\" ";\
 	}
 
 #define ComplexTypes_WriteAttribute2( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString + oValue.get2() + L"\" ";\
+		sResult += (sStartString) + (oValue).get2() + L"\" ";\
 	}
 #define ComplexTypes_WriteAttribute3( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString + (*oValue) + L"\" ";\
+		sResult += (sStartString) + (*(oValue)) + L"\" ";\
 	}
 #define ComplexTypes_WriteAttribute2Encode( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString;\
-		sResult += XmlUtils::EncodeXmlString(oValue.get2());\
+		sResult += (sStartString);\
+		sResult += XmlUtils::EncodeXmlString((oValue).get2());\
 		sResult += L"\" ";\
 	}
 
@@ -197,7 +197,7 @@ namespace ComplexTypes
 			void ReadAttributes(XmlUtils::CXmlLiteReader& oReader);
 
 		public:
-			// TO DO: сделать парсер языка по спецификации RFC 4646/BCP 47 - CLang
+			// TO DO: make a language parser according to the RFC 4646/BCP 47 specification - CLang
 			nullable_string m_oBidi;
 			nullable_string m_oEastAsia;
 			nullable_string m_oVal;

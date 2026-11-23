@@ -35,7 +35,7 @@ ucs2_conversion::do_in(mbstate_t&,
 {
 	const int max_input = (from_end - from) & ~1;
 	const int max_output = (to_limit - to);
-	int count = std::min(max_input / 2, max_output); // TODO попробовать оптимизировать, заменив деление на сдвиг
+	int count = std::min(max_input / 2, max_output); // TODO try to optimize by replacing division with shift
 
 	from_next = from;
 	to_next = to;
@@ -60,7 +60,7 @@ ucs2_conversion::do_out(mbstate_t&,
 {
 	const int max_input = (from_end - from);
 	const int max_output = (to_limit - to) & ~1;
-	int count = std::min(max_input, max_output / 2);	// TODO попробовать оптимизировать, заменив деление на сдвиг
+	int count = std::min(max_input, max_output / 2);	// TODO try to optimize by replacing division with shift
 
 	from_next = from;
 	to_next = to;
@@ -82,7 +82,7 @@ ube_conversion::do_in(mbstate_t&,
 {
 	const int max_input = (from_end - from) & ~1;
 	const int max_output = (to_limit - to);
-	int count = std::min(max_input / 2, max_output); // TODO попробовать оптимизировать, заменив деление на сдвиг
+	int count = std::min(max_input / 2, max_output); // TODO try to optimize by replacing division with shift
 
 	from_next = from;
 	to_next = to;
@@ -106,7 +106,7 @@ ube_conversion::do_out(mbstate_t&,
 {
 	const int max_input = (from_end - from);
 	const int max_output = (to_limit - to) & ~1;
-	int count = std::min(max_input, max_output / 2);	// TODO попробовать оптимизировать, заменив деление на сдвиг
+	int count = std::min(max_input, max_output / 2);	// TODO try to optimize by replacing division with shift
 
 	from_next = from;
 	to_next = to;
@@ -153,8 +153,8 @@ utf8_conversion::do_in(mbstate_t&,
 }
 
 
-// TODO можно оптимизировать, считая что в utf8 максимальное значение байт на символ 4. 
-// И после заменив деление и умножение на сдвиги
+// TODO can be optimized by considering that in utf8 the maximum value of bytes per character is 4.
+// And then replacing division and multiplication with shifts
 utf8_conversion::result
 utf8_conversion::do_out(mbstate_t&,
 						const wchar_t* from, const wchar_t* from_end, const wchar_t*& from_next,
@@ -165,7 +165,7 @@ utf8_conversion::do_out(mbstate_t&,
 
 	for (;from_next < from_end; ++from_next)
 	{
-		const unsigned symbol = *from_next;
+		const unsigned symbol = *from_next; // NOLINT(bugprone-signed-char-misuse): full-width conversion intended; unsigned char would truncate
 
 		if (symbol < 0x7F)
 		{
@@ -182,10 +182,10 @@ utf8_conversion::do_out(mbstate_t&,
 			if (to_limit - to_next >= extra_bytes + 1)
 			{
 				*to_next = static_cast<unsigned char>(0xFF80 >> extra_bytes);
-				*to_next++ |= take_6_bits(symbol, extra_bytes * 6);
+				*to_next++ |= take_6_bits(symbol, static_cast<size_t>(extra_bytes) * 6);
 
 				for(;extra_bytes--;)
-					*to_next++ = 0x80 | take_6_bits(symbol, extra_bytes * 6);
+					*to_next++ = 0x80 | take_6_bits(symbol, static_cast<size_t>(extra_bytes) * 6);
 			}
 			else
 			{

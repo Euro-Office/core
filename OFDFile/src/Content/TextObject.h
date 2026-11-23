@@ -10,9 +10,9 @@ namespace OFD
 {
 struct TCGTransform
 {
-	unsigned int m_unCodePosition;
-	unsigned int m_unCodeCount;
-	unsigned int m_unGlyphCount;
+	unsigned int m_unCodePosition = 0;
+	unsigned int m_unCodeCount = 0;
+	unsigned int m_unGlyphCount = 0;
 
 	std::vector<unsigned int> m_arGlyphs;
 

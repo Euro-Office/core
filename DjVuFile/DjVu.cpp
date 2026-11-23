@@ -35,7 +35,7 @@ CDjVuFile::~CDjVuFile()
 		delete m_pImplementation;
 }
 bool CDjVuFile::LoadFromFile(const std::wstring& file, const std::wstring& options,
-							 const wchar_t* owner_password, const wchar_t* user_password)
+							 const wchar_t* /*owner_password*/, const wchar_t* /*user_password*/)
 {
     if (m_pImplementation)
         return m_pImplementation->LoadFromFile(file, options);
@@ -43,7 +43,7 @@ bool CDjVuFile::LoadFromFile(const std::wstring& file, const std::wstring& optio
     return false;
 }
 bool CDjVuFile::LoadFromMemory(BYTE* data, DWORD length, const std::wstring& options,
-							   const wchar_t* owner_password, const wchar_t* user_password)
+							   const wchar_t* /*owner_password*/, const wchar_t* /*user_password*/)
 {
     if (m_pImplementation)
         return m_pImplementation->LoadFromMemory(data, length, options);
@@ -86,7 +86,7 @@ void CDjVuFile::GetPageInfo(int nPageIndex, double* pdWidth, double* pdHeight, d
 	if (m_pImplementation)
 		m_pImplementation->GetPageInfo(nPageIndex, pdWidth, pdHeight, pdDpiX, pdDpiY);
 }
-void CDjVuFile::DrawPageOnRenderer(IRenderer* pRenderer, int nPageIndex, bool* pBreak, COfficeDrawingPageParams* pParams)
+void CDjVuFile::DrawPageOnRenderer(IRenderer* pRenderer, int nPageIndex, bool* pBreak, COfficeDrawingPageParams* /*pParams*/)
 {
 	if (m_pImplementation)
 		m_pImplementation->DrawPageOnRenderer(pRenderer, nPageIndex, pBreak);
@@ -106,23 +106,23 @@ BYTE* CDjVuFile::GetStructure()
 {
     if (m_pImplementation)
         return m_pImplementation->GetStructure();
-    return NULL;
+    return nullptr;
 }
 BYTE* CDjVuFile::GetLinks (int nPageIndex)
 {
     if (m_pImplementation)
         return m_pImplementation->GetPageLinks(nPageIndex);
-    return NULL;
+    return nullptr;
 }
 
 unsigned char* CDjVuFile::ConvertToPixels(
 	int nPageIndex,
 	int nRasterW, int nRasterH, bool bIsFlip,
-	NSFonts::IFontManager* pFonts,
-	int nBackgroundColor, bool bIsDarkMode,
-	int nBackgroundOpacity)
+	NSFonts::IFontManager* /*pFonts*/,
+	int /*nBackgroundColor*/, bool /*bIsDarkMode*/,
+	int /*nBackgroundOpacity*/)
 {
 	if (m_pImplementation)
 		return m_pImplementation->ConvertToPixels(nPageIndex, nRasterW, nRasterH, !bIsFlip);
-	return NULL;
+	return nullptr;
 }

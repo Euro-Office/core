@@ -113,7 +113,7 @@ namespace MetaFile
 
 	void CInterpretatorSvgBase::SetXmlWriter(XmlUtils::CXmlWriter *pXmlWriter)
 	{
-		if (NULL != pXmlWriter)
+		if (nullptr != pXmlWriter)
 		{
 			if (!m_bExternXmlWriter)
 				RELEASEOBJECT(m_pXmlWriter);
@@ -230,7 +230,7 @@ namespace MetaFile
 
 	void CInterpretatorSvgBase::WriteText(const std::wstring &wsText, const TPointD &oCoord, const TRectL &oBounds, const TPointD &oScale, const std::vector<double>& arDx, bool bUseGID)
 	{
-		if (NULL == m_pParser || NULL == m_pParser->GetFont())
+		if (nullptr == m_pParser || nullptr == m_pParser->GetFont())
 			return;
 
 		std::wstring wsNormalizedText{wsText};
@@ -297,7 +297,7 @@ namespace MetaFile
 
 			NSFonts::CFontInfo *pFontInfo = m_pParser->GetFontManager()->GetFontInfoByParams(oFormat);
 
-			if (NULL != pFontInfo && !StringEquals(*oFormat.wsName, pFontInfo->m_wsFontName))
+			if (nullptr != pFontInfo && !StringEquals(*oFormat.wsName, pFontInfo->m_wsFontName))
 			{
 				oFontName.Clear();
 				oFontName.WriteEncodeXmlString(L"\'");
@@ -319,7 +319,7 @@ namespace MetaFile
 				if (pFont->IsStrikeOut())
 					nStyle |= (1 << 7);
 
-				UpdateStringByGID(wsNormalizedText, (NULL != pFontInfo) ? pFontInfo->m_wsFontName : pFont->GetFaceName(),
+				UpdateStringByGID(wsNormalizedText, (nullptr != pFontInfo) ? pFontInfo->m_wsFontName : pFont->GetFaceName(),
 				                  dFontHeight, nStyle, m_pParser->GetFontManager());
 			}
 			#endif
@@ -339,7 +339,7 @@ namespace MetaFile
 		else if (pFont->IsStrikeOut())
 			arNodeAttributes.Add(L"text-decoration", L"line-through");
 
-		//TODO:: разобраться для корректной работы
+		//TODO:: investigate this for correct operation
 		//                        double dFontCharSpace = pFont->GetCharSet();
 
 		//                        if (dFontCharSpace > 1)
@@ -355,7 +355,7 @@ namespace MetaFile
 		if (ulTextAlign & TA_BASELINE)
 		{
 			ulTextAlign -= TA_BASELINE;
-			// Ничего не делаем
+			// Do nothing
 		}
 		else if (ulTextAlign & TA_BOTTOM || ulVTextAlign == VTA_BOTTOM)
 		{
@@ -389,10 +389,10 @@ namespace MetaFile
 		}
 		else  //if (ulTextAlign & TA_LEFT)
 		{
-			// Ничего не делаем
+			// Do nothing
 		}
 
-		if (oScale.Y < -0.00001) //TODO::Тоже нужно и для dXScale
+		if (oScale.Y < -0.00001) //TODO::Needed for dXScale too
 		{
 			dYCoord += dFontHeight;
 
@@ -403,7 +403,8 @@ namespace MetaFile
 
 		if (0 != pFont->GetEscapement())
 		{
-			double dEscapement = pFont->GetEscapement() / -10;
+			const int nEscapement = pFont->GetEscapement() / -10;
+			double dEscapement = nEscapement;
 
 			if (m_pParser->GetTransform().M22 < 0)
 				dEscapement = -dEscapement;
@@ -475,9 +476,9 @@ namespace MetaFile
 			m_pXmlWriter->WriteNodeEnd(L"g");
 	}
 
-	void CInterpretatorSvgBase::DrawBitmap(double dX, double dY, double dW, double dH, BYTE *pBuffer, unsigned int unWidth, unsigned int unHeight, unsigned int unBlendMode)
+	void CInterpretatorSvgBase::DrawBitmap(double dX, double dY, double dW, double dH, BYTE *pBuffer, unsigned int unWidth, unsigned int unHeight, unsigned int  /*unBlendMode*/)
 	{
-		if (NULL == pBuffer || Equals(0., dW) || Equals(0., dH) || 0 == unWidth || 0 == unHeight)
+		if (nullptr == pBuffer || Equals(0., dW) || Equals(0., dH) || 0 == unWidth || 0 == unHeight)
 			return;
 
 		TXForm oTransform;
@@ -535,23 +536,23 @@ namespace MetaFile
 		oFrame.put_Width(unWidth);
 		oFrame.put_Height(unHeight);
 
-		BYTE* pNewBuffer = NULL;
+		BYTE* pNewBuffer = nullptr;
 		int nNewSize = 0;
 
 		if (!oFrame.Encode(pNewBuffer, nNewSize, 4))
 		{
-			oFrame.put_Data(NULL);
+			oFrame.put_Data(nullptr);
 			return;
 		}
 
-		oFrame.put_Data(NULL);
+		oFrame.put_Data(nullptr);
 
 		if (0 < nNewSize)
 		{
 			int nImageSize = NSBase64::Base64EncodeGetRequiredLength(nNewSize);
 			unsigned char* ucValue = new unsigned char[nImageSize];
 
-			if (NULL == ucValue)
+			if (nullptr == ucValue)
 				return;
 
 			NSBase64::Base64Encode(pNewBuffer, nNewSize, ucValue, &nImageSize);
@@ -571,7 +572,7 @@ namespace MetaFile
 			WriteNode(L"image", arAttributes);
 		}
 
-		if (NULL != pNewBuffer)
+		if (nullptr != pNewBuffer)
 			delete [] pNewBuffer;
 	}
 
@@ -638,12 +639,12 @@ namespace MetaFile
 
 	void CInterpretatorSvgBase::AddStroke(NodeAttributes &arAttributes) const
 	{
-		if (NULL == m_pParser)
+		if (nullptr == m_pParser)
 			return;
 
 		const IPen *pPen = m_pParser->GetPen();
 
-		if (NULL == pPen || PS_NULL == pPen->GetStyle())
+		if (nullptr == pPen || PS_NULL == pPen->GetStyle())
 			return;
 
 		switch (m_pParser->GetRop2Mode())
@@ -660,7 +661,7 @@ namespace MetaFile
 		unsigned int ulPenEndCap    = unMetaPenStyle & PS_ENDCAP_MASK;
 		unsigned int ulPenJoin      = unMetaPenStyle & PS_JOIN_MASK;
 
-		// svg не поддерживает разные стили для разных сторон линии
+		// svg doesn't support different styles for different sides of a line
 		std::wstring wsLineCap, wsLineJoin;
 
 		if (PS_ENDCAP_ROUND == ulPenEndCap)
@@ -697,12 +698,12 @@ namespace MetaFile
 		arAttributes.Add(L"stroke-linecap",    wsLineCap);
 		arAttributes.Add(L"stroke-linejoin",   wsLineJoin);
 
-		double* arDatas = NULL;
+		double* arDatas = nullptr;
 		unsigned int unDataSize = 0;
 
 		pPen->GetDashData(arDatas, unDataSize);
 
-		if (NULL != arDatas && 0 != unDataSize)
+		if (nullptr != arDatas && 0 != unDataSize)
 		{
 			std::wstring wsDashArray;
 
@@ -729,26 +730,26 @@ namespace MetaFile
 
 	void CInterpretatorSvgBase::AddFill(NodeAttributes &arAttributes, double dWidth, double dHeight)
 	{
-		if (NULL == m_pParser)
+		if (nullptr == m_pParser)
 		{
 			arAttributes.Add(L"fill", L"none");
 			return;
 		}
 
-		const IBrush *pBrush = NULL;
+		const IBrush *pBrush = nullptr;
 
-		if (NULL != m_pParser->GetPen())
+		if (nullptr != m_pParser->GetPen())
 		{
 			const CEmfPlusPen *pPen = dynamic_cast<const CEmfPlusPen*>(m_pParser->GetPen());
 
-			if (NULL != pPen)
+			if (nullptr != pPen)
 				pBrush = pPen->pBrush;
 		}
 
-		if (NULL == pBrush)
+		if (nullptr == pBrush)
 			pBrush = m_pParser->GetBrush();
 
-		if (NULL == pBrush || BS_NULL == pBrush->GetStyle())
+		if (nullptr == pBrush || BS_NULL == pBrush->GetStyle())
 		{
 			arAttributes.Add(L"fill", L"none");
 			return;
@@ -814,12 +815,12 @@ namespace MetaFile
 
 	void CInterpretatorSvgBase::AddTransform(NodeAttributes &arAttributes, TXForm *pTransform) const
 	{
-		if (NULL == m_pParser)
+		if (nullptr == m_pParser)
 			return;
 
 		TXForm oOldTransform;
 
-		if (NULL != pTransform)
+		if (nullptr != pTransform)
 			oOldTransform.Copy(pTransform);
 		else
 			oOldTransform.Copy(m_pParser->GetTransform());
@@ -832,7 +833,7 @@ namespace MetaFile
 		if (oOldTransform.Dx != 0 || oOldTransform.Dy != 0)
 			bTranslate = true;
 
-		NodeAttribute *pFoundTransform = NULL;
+		NodeAttribute *pFoundTransform = nullptr;
 
 		for (NodeAttribute& oNode : arAttributes)
 		{
@@ -863,7 +864,7 @@ namespace MetaFile
 		}
 		else return;
 
-		if (NULL != pFoundTransform)
+		if (nullptr != pFoundTransform)
 			pFoundTransform->second.insert(0, wsValue + L' ');
 		else
 			arAttributes.Add(L"transform", wsValue);
@@ -883,7 +884,7 @@ namespace MetaFile
 		
 		const CClip *pClip = m_pParser->GetClip();
 
-		if (NULL == pClip || pClip->Empty()) 
+		if (nullptr == pClip || pClip->Empty()) 
 			return false;
 
 		pClip->DrawOnRenderer(this);
@@ -935,7 +936,7 @@ namespace MetaFile
 
 	TPointD GetFirstPoint(const CPathCommandBase* pPathCommand)
 	{
-		if (NULL == pPathCommand)
+		if (nullptr == pPathCommand)
 			return {0., 0.};
 
 		switch (pPathCommand->GetType())
@@ -957,14 +958,14 @@ namespace MetaFile
 
 	void CInterpretatorSvgBase::AddLineCaps(NodeAttributes& arAttributes, const CPath* pMainPath)
 	{
-		if (NULL == m_pParser || NULL == m_pParser->GetPen() || NULL == pMainPath)
+		if (nullptr == m_pParser || nullptr == m_pParser->GetPen() || nullptr == pMainPath)
 			return;
 
 		const IPen *pPen = m_pParser->GetPen();
 		const std::vector<CPathCommandBase *> arCommands{pMainPath->GetCommands()};
 		const CLineCapData* pStartLineCap = dynamic_cast<const CLineCapData*>(pPen->GetStartLineCap());
 
-		if (NULL != pStartLineCap)
+		if (nullptr != pStartLineCap)
 		{
 			double dAngle = 0.;
 
@@ -984,7 +985,7 @@ namespace MetaFile
 
 		const CLineCapData* pEndLineCap = dynamic_cast<const CLineCapData*>(pPen->GetEndLineCap());
 
-		if (NULL != pEndLineCap)
+		if (nullptr != pEndLineCap)
 		{
 			double dAngle = 0.;
 
@@ -1005,7 +1006,7 @@ namespace MetaFile
 
 	TPointD CInterpretatorSvgBase::GetCutPos() const
 	{
-		if (NULL != m_pParser)
+		if (nullptr != m_pParser)
 			return m_pParser->GetCurPos();
 
 		return TPointD(m_oViewport.dLeft, m_oViewport.dRight);
@@ -1013,7 +1014,7 @@ namespace MetaFile
 
 	std::wstring CInterpretatorSvgBase::CreatePath(const CPath& oPath, const TXForm *pTransform) const
 	{
-		if (NULL == m_pParser || oPath.Empty())
+		if (nullptr == m_pParser || oPath.Empty())
 			return std::wstring();
 
 		std::wstring wsValue, wsMoveValue;
@@ -1021,7 +1022,7 @@ namespace MetaFile
 
 		TXForm oTransform;
 
-		if (NULL != pTransform)
+		if (nullptr != pTransform)
 			oTransform.Copy(pTransform);
 
 		for (const CPathCommandBase* pCommand : oPath.GetCommands())
@@ -1117,6 +1118,10 @@ namespace MetaFile
 					oLastType = PATH_COMMAND_CLOSE;
 					break;
 				}
+				default:
+				{
+					break;
+				}
 			}
 		}
 
@@ -1128,20 +1133,18 @@ namespace MetaFile
 
 	std::wstring CInterpretatorSvgBase::CreateHatchStyle(unsigned int unHatchStyle, double dWidth, double dHeight)
 	{
-		if (NULL == m_pParser || NULL == m_pParser->GetBrush())
+		if (nullptr == m_pParser || nullptr == m_pParser->GetBrush())
 			return std::wstring();
 
 		double dStrokeWidth  = 1. / m_pParser->GetTransform().M11;
 
-		if (NULL != m_pParser->GetPen())
+		if (nullptr != m_pParser->GetPen())
 		{
 			dStrokeWidth = std::fabs(m_pParser->GetPen()->GetWidth());
 	
 			if (Equals(0, dStrokeWidth) || PS_COSMETIC == (m_pParser->GetPen()->GetStyle() & PS_TYPE_MASK))
 				dStrokeWidth = 1;
 		}
-
-		std::wstring wsStrokeColor = CalculateColor(m_pParser->GetBrush()->GetColor(), m_pParser->GetBrush()->GetAlpha());
 
 		CHatchGenerator oHatchGenerator;
 
@@ -1165,7 +1168,7 @@ namespace MetaFile
 
 	std::wstring CInterpretatorSvgBase::CreateDibPatternStyle(const IBrush *pBrush)
 	{
-		if (NULL == m_pParser || NULL == pBrush)
+		if (nullptr == m_pParser || nullptr == pBrush)
 			return std::wstring();
 
 		CBgraFrame oFrame;
@@ -1173,11 +1176,11 @@ namespace MetaFile
 
 		if (pBrush->GetDibPatterPath().empty())
 		{
-			BYTE* pBuffer = NULL;
+			BYTE* pBuffer = nullptr;
 
 			pBrush->GetDibPattern(&pBuffer, unWidth, unHeight);
 
-			if (NULL == pBuffer || 0 == unWidth || 0 == unHeight)
+			if (nullptr == pBuffer || 0 == unWidth || 0 == unHeight)
 				return std::wstring();
 
 			oFrame.put_Data(pBuffer);
@@ -1192,24 +1195,24 @@ namespace MetaFile
 			unHeight = oFrame.get_Height();
 		}
 
-		BYTE *pTempBuffer = NULL;
+		BYTE *pTempBuffer = nullptr;
 		int nTempSize;
 		std::wstring wsStyleId;
 
 		oFrame.Encode(pTempBuffer, nTempSize, 4);
-		oFrame.put_Data(NULL);
+		oFrame.put_Data(nullptr);
 
-		if (NULL == pTempBuffer || 0 == nTempSize)
+		if (nullptr == pTempBuffer || 0 == nTempSize)
 			return std::wstring();
 
-		char* pImageData = NULL;
+		char* pImageData = nullptr;
 		int nImageSize = 0;
 
 		NSFile::CBase64Converter::Encode(pTempBuffer, nTempSize, pImageData, nImageSize, NSBase64::B64_BASE64_FLAG_NOCRLF);
 
 		delete [] pTempBuffer;
 
-		if (NULL == pImageData || 0 == nImageSize)
+		if (nullptr == pImageData || 0 == nImageSize)
 			return std::wstring();
 
 		wsStyleId += L"DIBPATTERN_" + ConvertToWString(++m_unNumberDefs, 0);
@@ -1218,7 +1221,7 @@ namespace MetaFile
 
 		double dStrokeWidth  = 1. / m_pParser->GetTransform().M11;
 
-		if (NULL != m_pParser->GetPen())
+		if (nullptr != m_pParser->GetPen())
 		{
 			dStrokeWidth = std::fabs(m_pParser->GetPen()->GetWidth());
 	
@@ -1241,7 +1244,7 @@ namespace MetaFile
 
 	std::wstring CInterpretatorSvgBase::CreatePatternStyle(const IBrush *pBrush)
 	{
-		if (NULL == m_pParser || NULL == pBrush)
+		if (nullptr == m_pParser || nullptr == pBrush)
 			return std::wstring();
 
 		std::wstring wsPatterPath = pBrush->GetDibPatterPath();
@@ -1253,23 +1256,23 @@ namespace MetaFile
 
 		oFrame.OpenFile(wsPatterPath);
 
-		BYTE *pTempBuffer = NULL;
+		BYTE *pTempBuffer = nullptr;
 		int nTempSize;
 		std::wstring wsStyleId;
 
 		oFrame.Encode(pTempBuffer, nTempSize, 4);
 
-		if (NULL == pTempBuffer || 0 == nTempSize)
+		if (nullptr == pTempBuffer || 0 == nTempSize)
 			return std::wstring();
 
-		char* pImageData = NULL;
+		char* pImageData = nullptr;
 		int nImageSize = 0;
 
 		NSFile::CBase64Converter::Encode(pTempBuffer, nTempSize, pImageData, nImageSize, NSBase64::B64_BASE64_FLAG_NOCRLF);
 
 		delete [] pTempBuffer;
 
-		if (NULL == pImageData || 0 == nImageSize)
+		if (nullptr == pImageData || 0 == nImageSize)
 			return std::wstring();
 
 		wsStyleId += L"PATTERN_" + ConvertToWString(++m_unNumberDefs, 0);
@@ -1291,7 +1294,7 @@ namespace MetaFile
 
 	std::wstring CInterpretatorSvgBase::CreateGradient(const IBrush* pBrush)
 	{
-		if (pBrush == NULL)
+		if (pBrush == nullptr)
 			return std::wstring();
 
 		std::wstring wsStyleId;
@@ -1355,7 +1358,7 @@ namespace MetaFile
 
 	std::wstring CInterpretatorSvgBase::CreateLineCap(const CLineCapData* pLineCap, const double& dAngle)
 	{
-		if (NULL == pLineCap)
+		if (nullptr == pLineCap)
 			return std::wstring();
 
 		CustomLineCapDataType enLineCapDataType = pLineCap->GetType();
@@ -1364,7 +1367,7 @@ namespace MetaFile
 		{
 			const TEmfPlusCustomLineCapData* pCustomLineCap = dynamic_cast<const TEmfPlusCustomLineCapData*>(pLineCap);
 
-			if (NULL == pCustomLineCap)
+			if (nullptr == pCustomLineCap)
 				return std::wstring();
 
 			const std::wstring wsPath = CreatePath(*pCustomLineCap->pPath);
@@ -2057,6 +2060,10 @@ namespace MetaFile
 				wsClip = L"<clipPath id=\"" + oClipValue.m_wsId + L"\">" + oClipValue.m_wsValue + L"</clipPath>";
 				break;
 			}
+				default:
+				{
+					break;
+				}
 			}
 		}
 

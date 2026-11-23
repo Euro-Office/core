@@ -43,6 +43,6 @@ void CRecordTextCFExceptionAtom::ReadFromStream(SRecordHeader &oHeader, POLE::St
 
     m_oCFRun.LoadFromStream(pStream, false);
 
-    // это на всякий случай...
+    // this is just in case...
     StreamUtils::StreamSeek(lPosition + m_oHeader.RecLen, pStream);
 }

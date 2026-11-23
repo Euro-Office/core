@@ -43,14 +43,14 @@ namespace OOX
 			{
 				if ( m_arrChoiceItems[nIndex] )
 					delete m_arrChoiceItems[nIndex];
-				m_arrChoiceItems[nIndex] = NULL;
+				m_arrChoiceItems[nIndex] = nullptr;
 			}
 			m_arrChoiceItems.clear();
 			for (unsigned int nIndex = 0; nIndex < m_arrFallbackItems.size(); nIndex++ )
 			{
 				if ( m_arrFallbackItems[nIndex] )
 					delete m_arrFallbackItems[nIndex];
-				m_arrFallbackItems[nIndex] = NULL;
+				m_arrFallbackItems[nIndex] = nullptr;
 			}
 			m_arrFallbackItems.clear();
 		}
@@ -82,14 +82,14 @@ namespace OOX
 						}
 					}
 					
-					//без RemoveAll они очистятся вместе с altRun
+					//without RemoveAll they will be cleared along with altRun
 					altRun.m_arrItems.clear();
 				}
 				else if ( L"mc:Fallback" == sName )
 				{
 					//if (m_oChoiceRequires.is_init() && !m_arrChoiceItems.empty())
 					//{
-					//	continue; // не зачем баласт читать - берем более современную или оригинальную версию.
+					//	continue; // there is no need to read the rubbish - we take a more modern or original version.
 					//}
 					
 					CRun altRun;
@@ -103,7 +103,7 @@ namespace OOX
 						}
 					}
 					
-					//без RemoveAll они очистятся вместе с altRun
+					//without RemoveAll they will be cleared along with altRun
 					altRun.m_arrItems.clear();
 				}
 			}

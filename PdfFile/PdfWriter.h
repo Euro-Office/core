@@ -22,9 +22,10 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#ifndef _PDF_WRITER_H
-#define _PDF_WRITER_H
+#ifndef PDF_WRITER_H
+#define PDF_WRITER_H
 
+#include <map>
 #include <string>
 #include <vector>
 #include <math.h>
@@ -38,6 +39,15 @@
 #include "../../DesktopEditor/xmlsec/src/include/Certificate.h"
 #include "SrcWriter/States.h"
 #include "SrcWriter/Annotation.h"
+
+#if !defined(PDFFILE_DECL_EXPORT)
+#if defined(PDFFILE_USE_DYNAMIC_LIBRARY)
+#include "../DesktopEditor/common/base_export.h"
+#define PDFFILE_DECL_EXPORT Q_DECL_EXPORT
+#else
+#define PDFFILE_DECL_EXPORT
+#endif
+#endif
 
 namespace PdfWriter
 {
@@ -57,10 +67,10 @@ namespace Aggplus
 	class CImage;
 }
 
-class CPdfWriter
+class PDFFILE_DECL_EXPORT CPdfWriter
 {
 public:
-	CPdfWriter(NSFonts::IApplicationFonts* pAppFonts, bool isPDFA = false, IRenderer* pRenderer = NULL, bool bCreate = true, const std::wstring& wsTempDirectory = L"");
+	CPdfWriter(NSFonts::IApplicationFonts* pAppFonts, bool isPDFA = false, IRenderer* pRenderer = nullptr, bool bCreate = true, const std::wstring& wsTempDirectory = L"");
 	~CPdfWriter();
 	int          SaveToFile(const std::wstring& wsPath);
 	int          SaveToMemory(BYTE** pData, int* pLength);
@@ -70,7 +80,7 @@ public:
 	std::wstring GetTempFile(const std::wstring& wsDirectory);
 	void SetTempDirectory(const std::wstring& wsTempDirectory);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы со страницей
+	// Functions for working with the page
 	//----------------------------------------------------------------------------------------
 	HRESULT NewPage();
 	HRESULT get_Height(double* dHeight);
@@ -78,7 +88,7 @@ public:
 	HRESULT get_Width(double* dWidth);
 	HRESULT put_Width(const double& dWidth, bool bMM2PT = true);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с Pen
+	// Pen functions
 	//----------------------------------------------------------------------------------------
 	HRESULT get_PenColor(LONG* lColor);
 	HRESULT put_PenColor(const LONG& lColor);
@@ -102,7 +112,7 @@ public:
 	HRESULT put_PenMiterLimit(const double& dMiter);
 	HRESULT PenDashPattern(double* pPattern, LONG lCount);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с Brush
+	// Functions for working with Brush
 	//----------------------------------------------------------------------------------------
 	HRESULT get_BrushType(LONG* lType);
 	HRESULT put_BrushType(const LONG& lType);
@@ -133,7 +143,7 @@ public:
 	HRESULT get_BrushScale(bool& isScale, double& scaleX, double& scaleY) const;
 	HRESULT put_BrushScale(bool isScale, const double& scaleX, const double& scaleY);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы со шрифтами
+	// Functions for working with fonts
 	//----------------------------------------------------------------------------------------
 	HRESULT get_FontName(std::wstring* wsName);
 	HRESULT put_FontName(const std::wstring& wsName);
@@ -150,7 +160,7 @@ public:
 	HRESULT get_FontFaceIndex(int* lFaceIndex);
 	HRESULT put_FontFaceIndex(const int& lFaceIndex);
 	//----------------------------------------------------------------------------------------
-	// Функции для вывода текста
+	// Functions for text output
 	//----------------------------------------------------------------------------------------
 	HRESULT CommandDrawTextCHAR  (const LONG& lUnicode,                   const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT CommandDrawTextExCHAR(const LONG& lUnicode, const LONG& lGid, const double& dX, const double& dY, const double& dW, const double& dH);
@@ -158,11 +168,11 @@ public:
 	HRESULT CommandDrawTextEx    (const std::wstring& wsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT CommandDrawTextCHAR2 (unsigned int* unUnicode, const unsigned int& unUnicodeCount, const unsigned int& unGid, const double& dX, const double& dY, const double& dW, const double& dH);
 	//----------------------------------------------------------------------------------------
-	// Маркеры команд
+	// Command markers
 	//----------------------------------------------------------------------------------------
 	HRESULT EndCommand(const DWORD& lType);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с патом
+	// Functions for working with paths
 	//----------------------------------------------------------------------------------------
 	HRESULT PathCommandMoveTo(const double& dX, const double& dY);
 	HRESULT PathCommandLineTo(const double& dX, const double& dY);
@@ -180,18 +190,18 @@ public:
 	HRESULT PathCommandText      (const std::wstring& wsUnicodeText,                                                           const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT PathCommandTextEx    (const std::wstring& wsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& dX, const double& dY, const double& dW, const double& dH);
 	//----------------------------------------------------------------------------------------
-	// Функции для вывода изображений
+	// Functions for displaying images
 	//----------------------------------------------------------------------------------------
 	HRESULT DrawImage(IGrObject* pImage, const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT DrawImageFromFile(NSFonts::IApplicationFonts* pAppFonts, const std::wstring& wsTempDirectory, const std::wstring& wsImagePath, const double& dX, const double& dY, const double& dW, const double& dH, const BYTE& nAlpha = 255);
 	//----------------------------------------------------------------------------------------
-	// Функции для выставления преобразования
+	// Functions for setting conversion
 	//----------------------------------------------------------------------------------------
 	HRESULT SetTransform(const double& dM11, const double& dM12, const double& dM21, const double& dM22, const double& dX, const double& dY);
 	HRESULT GetTransform(double* dM11, double* dM12, double* dM21, double* dM22, double* dX, double* dY);
 	HRESULT ResetTransform();
 	//----------------------------------------------------------------------------------------
-	// Дополнительные функции
+	// Additional features
 	//----------------------------------------------------------------------------------------
 	HRESULT AddHyperlink(const double& dX, const double& dY, const double& dW, const double& dH, const std::wstring& wsUrl, const std::wstring& wsTooltip);
 	HRESULT AddLink(const double& dX, const double& dY, const double& dW, const double& dH, const double& dDestX, const double& dDestY, const int& nPage);
@@ -202,7 +212,7 @@ public:
 	HRESULT get_ClipMode(LONG* lMode);
 	HRESULT put_ClipMode(const LONG& lMode);
 	//----------------------------------------------------------------------------------------
-	// Дополнительные функции Pdf рендерера
+	// Additional functions of PDF renderer
 	//----------------------------------------------------------------------------------------
 	HRESULT DrawImage1bpp(NSImages::CPixJbig2* pImageBuffer, const unsigned int& unWidth, const unsigned int& unHeight, const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT EnableBrushRect(const LONG& lEnable);
@@ -210,7 +220,7 @@ public:
 	HRESULT SetRadialGradient(const double& dX1, const double& dY1, const double& dR1, const double& dX2, const double& dY2, const double& dR2);
 	HRESULT DrawImageWith1bppMask(IGrObject* pImage, NSImages::CPixJbig2* pMaskBuffer, const unsigned int& unMaskWidth, const unsigned int& unMaskHeight, const double& dX, const double& dY, const double& dW, const double& dH);
 	//----------------------------------------------------------------------------------------
-	// Дополнительные функции для дозаписи Pdf
+	// Additional functions for adding Pdf
 	//----------------------------------------------------------------------------------------
 	HRESULT EditWidgetParents(NSFonts::IApplicationFonts* pAppFonts, CWidgetsInfo* pFieldInfo, const std::wstring& wsTempDirectory);
 	void SetPage(PdfWriter::CPage* pPage);
@@ -236,9 +246,10 @@ private:
 	bool SkipRedact(const double& dX, const double& dY);
 	PdfWriter::CImageDict* LoadImage(Aggplus::CImage* pImage, BYTE nAlpha);
 	PdfWriter::CImageDict* DrawImage(Aggplus::CImage* pImage, const double& dX, const double& dY, const double& dW, const double& dH, const BYTE& nAlpha);
-	bool DrawText(unsigned char* pCodes, const unsigned int& unLen, const double& dX, const double& dY, const std::string& sPUA);
+	bool DrawText(unsigned char* pCodes, const unsigned int& unLen, const double& dX, const double& dY, const std::string& sPUA, bool bInvisible = false);
+	bool DrawColorGlyph(const unsigned int& unGID, const double& dX, const double& dY);
 	bool DrawTextToRenderer(const unsigned int* unGid, const unsigned int& unLen, const double& dX, const double& dY, const std::wstring& wsUnicodeText = L"");
-	bool PathCommandDrawText(unsigned int* pUnicodes, unsigned int unLen, const double& dX, const double& dY, const unsigned int* pGids = NULL);
+	bool PathCommandDrawText(unsigned int* pUnicodes, unsigned int unLen, const double& dX, const double& dY, const unsigned int* pGids = nullptr);
 	int  IsEmbeddedBase14(const std::wstring& wsFontName);
 	bool GetBaseFont14(const std::wstring& wsFontName, int nBase14);
 	bool IsEmbeddedFont(const std::wstring& wsName);
@@ -258,7 +269,7 @@ private:
 	bool IsPageValid();
 	void SetError();
 	void AddLink(PdfWriter::CPage* pPage, const double& dX, const double& dY, const double& dW, const double& dH, const double& dDestX, const double& dDestY, const unsigned int& unDestPage);
-	unsigned char* EncodeString(const unsigned int* pUnicodes, const unsigned int& unUnicodesCount, const unsigned int* pGIDs = NULL);
+	unsigned char* EncodeString(const unsigned int* pUnicodes, const unsigned int& unUnicodesCount, const unsigned int* pGIDs = nullptr);
 	unsigned char* EncodeGID(const unsigned int& unGID, const unsigned int* pUnicodes, const unsigned int& unUnicodesCount);
 	std::wstring GetDownloadFile(const std::wstring& sUrl, const std::wstring& wsTempDirectory);
 	PdfWriter::CAnnotAppearanceObject* DrawAP(PdfWriter::CAnnotation* pAnnot, BYTE* pRender, LONG nLenRender);
@@ -286,6 +297,12 @@ private:
 	CPath                        m_oPath;
 	CTransform                   m_oTransform;
 	bool                         m_bNeedUpdateTextFont;
+	std::wstring                 m_wsColorFontPath; // current font, set when it has COLR glyphs
+	LONG                         m_lColorFaceIndex;
+	struct TColorGlyph { int nLeft, nTop, nWidth, nHeight; }; // nWidth 0: refused, draw as text
+	std::map<std::wstring, bool>        m_mIsColorFont;  // path#face
+	std::map<std::wstring, TColorGlyph> m_mColorGlyphs;  // image key
+	long long                           m_nColorGlyphBytes = 0;
 	bool                         m_bNeedAddHelvetica;
 	double                       m_dPageHeight;
 	double                       m_dPageWidth;
@@ -303,4 +320,4 @@ private:
 	friend class PdfWriter::RedactOutputDev;
 };
 
-#endif // _PDF_WRITER_H
+#endif // PDF_WRITER_H

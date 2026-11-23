@@ -130,7 +130,7 @@ BiffStructurePtr SXAddl::createSxcView(CFRecord& record)
         //case 0x21: result = BiffStructurePtr(new SXAddl_SXCView_SXDCompactRwHdr());	break;
         //case 0x22: result = BiffStructurePtr(new SXAddl_SXCView_SXDCompactColHdr());	break;
         case 0x26:
-        case 0x36: result = BiffStructurePtr(new SXAddl_SXCView_SXDSXPIIvmb());		break; //ошибка в документации???
+        case 0x36: result = BiffStructurePtr(new SXAddl_SXCView_SXDSXPIIvmb());		break; //error in documentation???
 	}
 	return result;
 }

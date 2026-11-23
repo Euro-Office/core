@@ -64,12 +64,12 @@ public:
 
 	void process_master_styles			(office_element_ptr root );
 	void process_automatic_for_styles	(office_element_ptr root );
-	void process_office_styles			(office_element_ptr root );//картинки, шрифты, ... для мастер пэйджей и шаблонов
+	void process_office_styles			(office_element_ptr root );//images, fonts, ... for master pages and templates
 
     odf_layout_state * last_layout();
     odf_master_state * last_master();
 
-	odf_style_context_ptr get_local_styles_context() //для автоматических стилей самих стилей
+	odf_style_context_ptr get_local_styles_context() //for automatic styles the styles themselves
 		{return local_style_context_;}
 
 	void set_page_margin				(_CP_OPT(double) top, _CP_OPT(double) left, _CP_OPT(double) bottom, _CP_OPT(double) right, _CP_OPT(double) header, _CP_OPT(double) footer);
@@ -96,10 +96,12 @@ public:
 	void set_pages_mirrored				(bool val);
 	
 	bool add_footer(int type);
-		void set_footer_size(_CP_OPT(odf_types::length) length_, _CP_OPT(odf_types::length) length_min);
+		void set_footer_size(_CP_OPT(odf_types::length) length_, _CP_OPT(odf_types::length) length_min,
+			_CP_OPT(odf_types::length) page_margin = boost::none);
 	
 	bool add_header(int type);
-		void set_header_size(_CP_OPT(odf_types::length) length_, _CP_OPT(odf_types::length) length_min);
+		void set_header_size(_CP_OPT(odf_types::length) length_, _CP_OPT(odf_types::length) length_min,
+			_CP_OPT(odf_types::length) page_margin = boost::none);
 
 	void set_header_footer_image	(office_element_ptr image);
 	void set_background				(_CP_OPT(odf_types::color) & color, int type);
@@ -107,14 +109,16 @@ public:
 
 	void set_page_number_format		(_CP_OPT(int) & type, _CP_OPT(int) & start);
 
-	office_element_ptr	root_header_footer_; //для топовых элементов в style:footer
+	style_page_layout_properties	*get_properties(); // creates the element if it is missing
+
+	office_element_ptr	root_header_footer_; //for top elements in style:footer
 	
 	double				current_page_width_;
 	bool				even_and_left_headers_;
 private:
+	void apply_header_size();
+	void apply_footer_size();
 
-
-	style_page_layout_properties	*get_properties();
 	style_header_footer_properties	*get_header_properties();
 	style_header_footer_properties	*get_footer_properties();
 

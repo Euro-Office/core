@@ -259,8 +259,8 @@ void draw_image::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 	Context.get_drawing_context().set_image(href);
 
-////////////////////////////////////в принципе достаточно общая часть ...
-	Context.get_text_context()->start_drawing_content(); //...  если в объекте есть текст он привяжется к объекту - иначе к ячейке
+///////////////////////////////////in principle, a fairly general part...
+	Context.get_text_context()->start_drawing_content(); //... if there is text in the object it will be attached to the object - otherwise to the cell
 	Context.start_drawing_context();
 
 	for (size_t i = 0 ; i < content_.size(); i++)
@@ -353,7 +353,7 @@ void draw_object::xlsx_convert(oox::xlsx_conversion_context & Context)
 			{
 				std::wstring objectPath = folderPath + FILE_SEPARATOR_STR + href;
 
-				// normalize path ???? todooo
+				// normalize path ???? TODO
 				XmlUtils::replace_all(objectPath, FILE_SEPARATOR_STR + std::wstring(L"./"), FILE_SEPARATOR_STR);
 
 				odf_document_ = odf_document_ptr(new odf_document(objectPath, tempPath, L""));
@@ -362,8 +362,8 @@ void draw_object::xlsx_convert(oox::xlsx_conversion_context & Context)
 		office_element *contentSubDoc = odf_document_ ? odf_document_->get_impl()->get_content() : NULL;
 		if (!contentSubDoc)
 		{
-			//здесь другой формат xml (не Open Office)
-			//временно - замещающая картинка(если она конечно присутствует)
+			//here is a different xml format (not Open Office)
+			//temporarily - a replacement image (if it is present, of course)
 			return;
 		}		
 		object_odf_context objectBuild(href);
@@ -371,14 +371,14 @@ void draw_object::xlsx_convert(oox::xlsx_conversion_context & Context)
 		process_build_object process_build_object_(objectBuild, odf_document_.get());
 		contentSubDoc->accept(process_build_object_); 
 //---------------------------------------------------------------------------------------------------------------------
-		if (objectBuild.object_type_ == 1) //диаграмма
+		if (objectBuild.object_type_ == 1) //diagram
 		{		
 			const std::wstring href_draw = xlink_attlist_.href_.get_value_or(L"chart");
 			objectBuild.xlsx_convert(Context);
 			
-			Context.get_drawing_context().set_chart(href_draw); // в рисовательной части только место объекта, рамочки ... и релсы 
+			Context.get_drawing_context().set_chart(href_draw); // in the drawing part there is only the place of the object, frames... and rels
 		}
-		else if (objectBuild.object_type_ == 2) //текст (odt text)
+		else if (objectBuild.object_type_ == 2) //text (odt text)
 		{
 			Context.get_drawing_context().set_use_image_replacement();
 
@@ -391,7 +391,7 @@ void draw_object::xlsx_convert(oox::xlsx_conversion_context & Context)
 				Context.get_drawing_context().set_ms_object(href, L"Word.Document");
 			}
 		}
-		else if (objectBuild.object_type_ == 3) //мат формулы
+		else if (objectBuild.object_type_ == 3) //math formula
 		{
 			bool bNewObject = false;
 			if (bNewObject = Context.get_drawing_context().isDefault())
@@ -428,7 +428,7 @@ void draw_object::xlsx_convert(oox::xlsx_conversion_context & Context)
 		}
 		else
 		{
-			//замещающая картинка(если она конечно присутствует)
+			//replacement image (if it is present, of course)
 			Context.get_drawing_context().set_use_image_replacement();
 		}
 	

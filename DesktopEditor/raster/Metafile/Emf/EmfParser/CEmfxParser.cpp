@@ -12,7 +12,7 @@ namespace MetaFile
 		delete m_pOutput;
 	}
 
-	bool CEmfxParser::ReadFromBuffer(BYTE* pBuffer, unsigned int unSize, const bool& bIsExternal)
+	bool CEmfxParser::ReadFromBuffer(BYTE*  /*pBuffer*/, unsigned int  /*unSize*/, const bool&  /*bIsExternal*/)
 	{
 		return false;
 	}
@@ -25,7 +25,7 @@ namespace MetaFile
 	{
 		bool bEOF = false;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->Begin();
 
 		m_pOutput->ReadNextRecord();
@@ -48,6 +48,10 @@ namespace MetaFile
 				case L'L': Read_EMR_ALPHABLEND();  break;
 				case L'P': Read_EMR_ABORTPATH();   break;
 				case L'R': Read_EMR_ARCTO();       break;
+					default:
+					{
+						break;
+					}
 				}
 				break;
 			}
@@ -74,6 +78,10 @@ namespace MetaFile
 						Read_EMR_CREATEMONOBRUSH();
 					break;
 				}
+					default:
+					{
+						break;
+					}
 				}
 				break;
 			}
@@ -91,6 +99,10 @@ namespace MetaFile
 				case L'T': Read_EMR_EXCLUDECLIPRECT();      break;
 				case L'W': ((*(wsRecordName.end() - 3)) == L'U') ? Read_EMR_EXTTEXTOUTW()
 																 : Read_EMR_EXTCREATEFONTINDIRECTW(); break;
+					default:
+					{
+						break;
+					}
 				}
 				break;
 			}
@@ -126,6 +138,10 @@ namespace MetaFile
 						case '6': ((*(wsRecordName.end() - 3)) == L'R')
 									? Read_EMR_POLYBEZIER16()
 									: Read_EMR_POLYBEZIERTO16(); break;
+							default:
+							{
+								break;
+							}
 						}
 						break;
 					}
@@ -150,6 +166,10 @@ namespace MetaFile
 						case '6': ((*(wsRecordName.end() - 3)) == L'E')
 									? Read_EMR_POLYLINE16()
 									: Read_EMR_POLYLINETO16();break;
+							default:
+							{
+								break;
+							}
 						}
 						break;
 					}
@@ -162,6 +182,10 @@ namespace MetaFile
 						case '6': ((*(wsRecordName.end() - 3)) == L'E')
 									? Read_EMR_POLYPOLYLINE16()
 									: Read_EMR_POLYPOLYGON16(); break;
+							default:
+							{
+								break;
+							}
 						}
 						break;
 					}
@@ -171,6 +195,10 @@ namespace MetaFile
 													  : Read_EMR_POLYTEXTOUTA();
 						break;
 					}
+						default:
+						{
+							break;
+						}
 					}
 				}
 				break;
@@ -183,6 +211,10 @@ namespace MetaFile
 				case 'C': Read_EMR_RECTANGLE();         break;
 				case 'S': Read_EMR_RESTOREDC();         break;
 				case 'U': Read_EMR_ROUNDRECT();         break;
+					default:
+					{
+						break;
+					}
 				}
 				break;
 			}
@@ -200,6 +232,10 @@ namespace MetaFile
 						case 'E': Read_EMR_SETBKMODE();     break;
 						case 'R': Read_EMR_SETBKCOLOR();    break;
 						case 'X': Read_EMR_SETBRUSHORGEX(); break;
+							default:
+							{
+								break;
+							}
 						}
 						break;
 					}
@@ -213,6 +249,10 @@ namespace MetaFile
 						case 'E': Read_EMR_SETMAPMODE();    break;
 						case 'N': Read_EMR_SETMETARGN();    break;
 						case 'T': Read_EMR_SETMITERLIMIT(); break;
+							default:
+							{
+								break;
+							}
 						}
 						break;
 					}
@@ -243,10 +283,18 @@ namespace MetaFile
 						case 'O': Read_EMR_SETWORLDTRANSFORM(); break;
 						case 'G': Read_EMR_SETWINDOWORGEX();    break;
 						case 'T': Read_EMR_SETWINDOWEXTEX();    break;
+							default:
+							{
+								break;
+							}
 						}
 						break;
 					}
 
+						default:
+						{
+							break;
+						}
 					}
 				}
 				else
@@ -264,17 +312,29 @@ namespace MetaFile
 						case 'E': Read_EMR_STROKEPATH();        break;
 						case 'L': Read_EMR_STROKEANDFILLPATH(); break;
 						case 'P': Read_EMR_SELECTCLIPPATH();    break;
+							default:
+							{
+								break;
+							}
 						}
 						break;
 					}
 					case 'T': Read_EMR_SMALLTEXTOUT();  break;
 					case 'V': Read_EMR_SAVEDC();        break;
+						default:
+						{
+							break;
+						}
 					}
 				}
 				break;
 			}
 			case 'U': Read_EMR_UNKNOWN(); break;
 			case 'W': Read_EMR_WIDENPATH(); break;
+				default:
+				{
+					break;
+				}
 			}
 		}while (!CheckError() && !bEOF && m_pOutput->ReadNextRecord());
 
@@ -504,9 +564,9 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_EXTCREATEFONTINDIRECTW()
 	{
-		//TODO: переделать чтение из-за отсутствия m_ulRecordSize
+		//TODO: redo reading due to missing m_ulRecordSize
 		unsigned int unSize = m_ulRecordSize - 4;
-		bool bFixedLength = unSize <= 0x0140 ? true : false;
+		bool bFixedLength = unSize <= 0x0140;
 
 		unsigned int ulIndex;
 		CEmfLogFont* pFont = new CEmfLogFont(bFixedLength);
@@ -557,13 +617,11 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_EXTCREATEPEN()
 	{
-		//TODO: переделать чтение из-за отсутствия m_ulRecordSize
+		//TODO: redo reading due to missing m_ulRecordSize
 
 		unsigned int ulPenIndex;
 
 		*m_pOutput >> ulPenIndex;
-
-		unsigned int current_size = m_ulRecordSize - 20;
 
 		CEmfLogPen* pPen = new CEmfLogPen();
 		if (!pPen)
@@ -581,10 +639,8 @@ namespace MetaFile
 
 		*m_pOutput >> pPen->unNumStyleEntries;
 
-		current_size -= 24;
 		if (pPen->unNumStyleEntries > 0)
 		{
-			current_size -= pPen->unNumStyleEntries * 4;
 			pPen->pStyleEntry = new unsigned int[pPen->unNumStyleEntries];
 			if (!pPen->pStyleEntry)
 			{
@@ -597,7 +653,7 @@ namespace MetaFile
 		}
 		else
 		{
-			pPen->pStyleEntry = NULL;
+			pPen->pStyleEntry = nullptr;
 		}
 
 		HANDLE_EMR_EXTCREATEPEN(ulPenIndex, pPen, arUnused);
@@ -802,7 +858,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_EXCLUDECLIPRECT()
 	{
-		// TODO: Проверить как найдется файл
+		// TODO: Check if a file is found
 		TRectL oClip;
 
 		*m_pOutput >> oClip;
@@ -890,7 +946,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_ANGLEARC()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TPointL oCenter;
 		unsigned int unRadius;
 		double dStartAngle, dSweepAngle;
@@ -922,7 +978,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_ARCTO()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TRectL oBox;
 		TPointL oStart, oEnd;
 
@@ -932,7 +988,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_CHORD()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TRectL oBox;
 		TPointL oStart, oEnd;
 
@@ -951,7 +1007,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_EXTTEXTOUTA()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TEmfExtTextoutA oText;
 
 		*m_pOutput >> oText;
@@ -979,7 +1035,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_PIE()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TRectL oBox;
 		TPointL oStart, oEnd;
 
@@ -1041,8 +1097,8 @@ namespace MetaFile
 
 	template<typename T>void CEmfxParser::Read_EMR_POLYDRAW_BASE()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
-		//bug #35006 - не прочитывается весь рекорд ... выравнивание?
+		// TODO: How to find files, check this entry.
+		//bug #35006 - the entire record isn't read... alignment?
 
 		TRectL oBounds;
 		unsigned int unCount;
@@ -1183,10 +1239,10 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_POLYTEXTOUTA()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TPolyTextoutA oText;
 
-		//TODO: сделать сохранение в XML и чтение из него
+		//TODO: save to XML and read from it
 		return;
 
 		m_oStream >> oText;
@@ -1205,10 +1261,10 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_POLYTEXTOUTW()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: How to find files, check this entry.
 		TPolyTextoutW oText;
 
-		//TODO: сделать сохранение в XML и чтение из него
+		//TODO: save to XML and read from it
 		return;
 
 		m_oStream >> oText;
@@ -1252,10 +1308,10 @@ namespace MetaFile
 		*m_pOutput >> oPoint;
 		*m_pOutput >> oColor;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETPIXELV(oPoint, oColor);
 
-		// Делаем цветом кисти
+		// Making the brush color
 		BYTE pBgraBuffer[4];
 		pBgraBuffer[0] = oColor.b;
 		pBgraBuffer[1] = oColor.g;

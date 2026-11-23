@@ -361,6 +361,8 @@ void xlsx_table_state::set_row_break_after()
 void xlsx_table_state::non_empty_row()
 {
     empty_row_= false;
+	last_used_row_ = current_table_row_;
+	last_used_column_ = (std::max)(last_used_column_, current_table_column_);
 }
 
 bool xlsx_table_state::is_empty_row() const
@@ -379,9 +381,33 @@ std::wstring xlsx_table_state::default_column_cell_style() const
 		return column_default_cell_style_name_.at(current_table_column_ + 1);
 	else
 	{
-		//непонятная хрень!! - неправильно сформирован ods???
+		//unclear data!! - incorrectly formed ods???
 		return L"";
 	}
+}
+
+std::wstring xlsx_table_state::default_column_cell_style(unsigned int column) const
+{
+	return column < column_default_cell_style_name_.size() ? column_default_cell_style_name_[column] : L"";
+}
+
+bool xlsx_table_state::same_default_column_cell_style(unsigned int first, unsigned int end) const
+{
+	const size_t count = column_default_cell_style_name_.size();
+	if (first >= count)
+		return true;
+
+	// computed once per table (the columns come before the rows), so that a check per row is cheap
+	if (column_default_cell_style_end_.size() != count)
+	{
+		column_default_cell_style_end_.assign(count, count);
+		for (size_t i = count - 1; i > 0; i--)
+		{
+			column_default_cell_style_end_[i - 1] = column_default_cell_style_name_[i - 1] == column_default_cell_style_name_[i]
+				? column_default_cell_style_end_[i] : i;
+		}
+	}
+	return (end < count ? end : count) <= column_default_cell_style_end_[first];
 }
 
 void xlsx_table_state::end_row()
@@ -399,7 +425,7 @@ void xlsx_table_state::start_cell(size_t columnsSpanned, size_t rowsSpanned)
 {
     current_table_column_++;
 
-    // в случае если объединение имеет место добавляем запись о нем
+    // if a merger takes place, add a record about it
     if (columnsSpanned != 0 || rowsSpanned != 0)
 	{
 		xlsx_merge_cells_.add_merge(current_table_column_, current_table_row_, columnsSpanned, rowsSpanned);
@@ -412,8 +438,8 @@ void xlsx_table_state::start_cell(size_t columnsSpanned, size_t rowsSpanned)
 
     columns_spanned_num_ = static_cast<int>(columnsSpanned);
 
-    // обновляем вектор, в котором хранятся информация об объединении строк
-    // добавляем в него новый столбец
+    // update the vector that stores row-merging information
+    // add a new column to it
 
     
     for (size_t i = 0; i <= columns_spanned_num_; ++i)
@@ -465,14 +491,14 @@ void xlsx_table_state::start_covered_cell()
 {
     current_table_column_++;
 
-    // обновляем вектор, в котором хранятся информация об объединении строк
-    // добавляем в него новый столбец
+    // update the vector that stores row-merging information
+    // add a new column to it
 
     if (current_table_column_ >= (int)(rows_spanned_.size()))
         rows_spanned_.push_back(xlsx_row_spanned());
 
-    // использовали текущую ячейку, уменьшаем счетчики оставшихся объединенных ячеек
-    // для столбцов и строк
+    // used the current cell, decrease the counters of the remaining merged cells
+    // for columns and rows
 
     if (columns_spanned_num_ > 0)
         columns_spanned_num_--;
@@ -528,19 +554,50 @@ double charsToSize(unsigned int charsCount, double maxDigitSize)
 	return 1.0 * int((maxDigitSize * charsCount + 5.0) / maxDigitSize * 256.0) / 256.0;
 }
 
+namespace
+{
+	// The page layout of the sheet's master page, or NULL.
+	odf_reader::page_layout_instance * sheet_page_layout(odf_reader::odf_read_context & odfContext,
+														const std::wstring & table_style)
+	{
+		_CP_OPT(std::wstring) masterPageName = odfContext.styleContainer().master_page_name_by_name(table_style);
+		if (!masterPageName) return NULL;
+
+		odf_reader::style_master_page* master_style_ = odfContext.pageLayoutContainer().master_page_by_name(*masterPageName);
+		if (!master_style_) return NULL;
+		if (!master_style_->attlist_.style_page_layout_name_) return NULL;
+
+		return odfContext.pageLayoutContainer().page_layout_by_name(*master_style_->attlist_.style_page_layout_name_);
+	}
+
+	// style:display="false" on a master page's header (footer) switches it off: LibreOffice then prints
+	// neither it nor its left/first variants and reserves no space for it on the page.
+	bool header_footer_hidden(const odf_reader::office_element_ptr & elm)
+	{
+		const odf_reader::header_footer_impl* header_footer = dynamic_cast<odf_reader::header_footer_impl*>(elm.get());
+		return header_footer && !header_footer->attlist_.style_display_;
+	}
+}
+
 void xlsx_table_state::serialize_page_properties (std::wostream & strm)
 {
-	_CP_OPT(std::wstring) masterPageName = context_->root()->odf_context().styleContainer().master_page_name_by_name(table_style_);
-	if (!masterPageName) return;
+	odf_reader::odf_read_context & odfContext = context_->root()->odf_context();
 
-	odf_reader::style_master_page* master_style_ = context_->root()->odf_context().pageLayoutContainer().master_page_by_name(*masterPageName);
-	if (!master_style_) return;
-	if (!master_style_->attlist_.style_page_layout_name_) return;
-
-	odf_reader::page_layout_instance * page_layout = context_->root()->odf_context().pageLayoutContainer().page_layout_by_name(*master_style_->attlist_.style_page_layout_name_);
+	odf_reader::page_layout_instance * page_layout = sheet_page_layout(odfContext, table_style_);
 	if (!page_layout) return;
 
-	page_layout->xlsx_serialize(strm, *context_);
+	bool header_hidden = false, footer_hidden = false;
+
+	_CP_OPT(std::wstring) masterPageName = odfContext.styleContainer().master_page_name_by_name(table_style_);
+	odf_reader::style_master_page* master_style_ = masterPageName ?
+		odfContext.pageLayoutContainer().master_page_by_name(*masterPageName) : NULL;
+	if (master_style_)
+	{
+		header_hidden = header_footer_hidden(master_style_->style_header_);
+		footer_hidden = header_footer_hidden(master_style_->style_footer_);
+	}
+
+	page_layout->xlsx_serialize(strm, *context_, !header_hidden, !footer_hidden);
 }
 void xlsx_table_state::serialize_header_footer (std::wostream & strm)
 {
@@ -557,6 +614,15 @@ void xlsx_table_state::serialize_header_footer (std::wostream & strm)
 	odf_reader::style_footer		*footer_odd		= dynamic_cast<odf_reader::style_footer*>		(master_style_->style_footer_.get());
 	odf_reader::style_footer_first	*footer_first	= dynamic_cast<odf_reader::style_footer_first*>	(master_style_->style_footer_first_.get());
 	odf_reader::style_footer_left	*footer_even	= dynamic_cast<odf_reader::style_footer_left*>	(master_style_->style_footer_left_.get());
+
+	if (header_footer_hidden(master_style_->style_header_))
+	{
+		header_odd = NULL; header_first = NULL; header_even = NULL;
+	}
+	if (header_footer_hidden(master_style_->style_footer_))
+	{
+		footer_odd = NULL; footer_first = NULL; footer_even = NULL;
+	}
 
 	if (!header_odd && !header_first && !header_even && 
 		!footer_odd && !footer_first && !footer_even) return;
@@ -643,19 +709,33 @@ void xlsx_table_state::serialize_table_format (std::wostream & strm)
 		if ((tableStyle) && (tableStyle->content()))
 			table_prop = tableStyle->content()->get_style_table_properties();
 
-		if (table_prop)
+		bool fit_to_pages = false;
+		odf_reader::page_layout_instance * page_layout = sheet_page_layout(odfContext, table_style_);
+		if (page_layout && page_layout->properties())
+		{
+			unsigned int width = 0, height = 0;
+			fit_to_pages = page_layout->properties()->attlist_.get_fit_to_pages(width, height);
+		}
+
+		if (table_prop || fit_to_pages)
 		{
 			CP_XML_NODE(L"sheetPr")
 			{
 				//at filterMode="false">
-				if (table_prop->content().tableooo_tab_color_)
+				if (table_prop && table_prop->content().tableooo_tab_color_)
 				{
 					CP_XML_NODE(L"tabColor")
 					{
 						CP_XML_ATTR(L"rgb", table_prop->content().tableooo_tab_color_->get_hex_value());	
 					}
 				}
-				//<pageSetUpPr fitToPage="true"/>
+				if (fit_to_pages)
+				{
+					CP_XML_NODE(L"pageSetUpPr")
+					{
+						CP_XML_ATTR(L"fitToPage", 1);
+					}
+				}
 			}
 		}
 		int columns = (std::max)(current_table_column_, (int)columns_count_);

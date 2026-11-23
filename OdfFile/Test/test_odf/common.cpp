@@ -26,293 +26,313 @@
 // */
 //
 #include "common.h"
-//
-//#include "../../OfficeUtils/src/OfficeUtils.h"
-//#include "Reader/Converter/pptx_package.h"
-//
-//#include "Writer/Converter/Converter.h"
-//#include "Writer/Converter/PptxConverter.h"
-//#include "Writer/Format/office_elements.h"
-//
-//boost::shared_ptr<cpdoccore::odf_reader::odf_document> ReadOdfDocument(const std::wstring& from, const std::wstring& temp, const std::wstring& tempUnpackedOdf)
-//{
-//	COfficeUtils oCOfficeUtils(NULL);
-//	if (S_OK == oCOfficeUtils.ExtractToDirectory(from, tempUnpackedOdf, NULL, 0))
-//		return boost::make_shared<cpdoccore::odf_reader::odf_document>(tempUnpackedOdf, temp, L"");
-//	else
-//		return nullptr;
-//}
-//
-//boost::shared_ptr<cpdoccore::oox::pptx_conversion_context> Convert(boost::shared_ptr<cpdoccore::odf_reader::odf_document> inputOdf)
-//{
-//	cpdoccore::oox::package::pptx_document outputPptx;
-//	boost::shared_ptr<cpdoccore::oox::pptx_conversion_context> conversionContext = boost::make_shared<cpdoccore::oox::pptx_conversion_context>(inputOdf.get());
-//
-//	conversionContext->set_output_document(&outputPptx);
-//	conversionContext->set_font_directory(L"");
-//
-//	inputOdf->pptx_convert(*conversionContext);
-//
-//	return conversionContext;
-//}
-//
-//ODP2OOX_AnimationEnvironment::ODP2OOX_AnimationEnvironment(const std::wstring& exampleFilename, boost::shared_ptr<cpdoccore::odf_reader::odf_document>* doc, boost::shared_ptr<cpdoccore::oox::pptx_conversion_context>* context)
-//	: testing::Environment()
-//{
-//	sExampleFilename = NSFile::GetFileName(exampleFilename);
-//	mDocument = doc;
-//	mContext = context;
-//}
-//
-//ODP2OOX_AnimationEnvironment::~ODP2OOX_AnimationEnvironment()
-//{
-//}
-//
-//void ODP2OOX_AnimationEnvironment::SetUp()
-//{
-//	std::wstring rootDir = NSFile::GetProcessDirectory() + CH_DIR("..");
-//	std::wstring sExampleFilesDirectory = rootDir + CH_DIR("ExampleFiles");
-//
-//	sFrom = sExampleFilesDirectory + FILE_SEPARATOR_STR + sExampleFilename;
-//	sTemp = sFrom + _T(".tmp");
-//	sTempUnpackedOdf = sTemp + CH_DIR("odf_unpacked");
-//
-//	NSDirectory::CreateDirectory(sTemp);
-//	NSDirectory::CreateDirectory(sTempUnpackedOdf);
-//
-//	*mDocument = ReadOdfDocument(sFrom, sTemp, sTempUnpackedOdf);
-//	*mContext = Convert(*mDocument);
-//}
-//
-//void ODP2OOX_AnimationEnvironment::TearDown()
-//{
-//	NSDirectory::DeleteDirectory(sTemp);
-//}
-//
-////////////////////////////////////////////////////////////////////////////
-//
-//OOX2ODP_AnimationEnvironment::OOX2ODP_AnimationEnvironment(const std::wstring& exampleFilename, boost::shared_ptr<Oox2Odf::Converter>* converter, cpdoccore::odf_writer::odp_conversion_context** context)
-//{
-//	mExampleFilename = exampleFilename;
-//	mConverter = converter;
-//	mContext = context;
-//}
-//
-//void OOX2ODP_AnimationEnvironment::SetUp()
-//{
-//	std::wstring rootDir = NSFile::GetProcessDirectory() + CH_DIR("..");
-//	std::wstring exampleFilesDirectory = rootDir + CH_DIR("ExampleFiles");
-//
-//	mFrom = exampleFilesDirectory + FILE_SEPARATOR_STR + mExampleFilename;
-//	mTemp = mFrom + _T(".tmp");
-//	mTempUnpackedOox = mTemp + CH_DIR("pptx_unpacked");
-//
-//	NSDirectory::CreateDirectory(mTemp);
-//	NSDirectory::CreateDirectory(mTempUnpackedOox);
-//
-//	COfficeUtils oCOfficeUtils(NULL);
-//	if (S_OK == oCOfficeUtils.ExtractToDirectory(mFrom, mTempUnpackedOox, NULL, 0))
-//	{
-//		*mConverter = boost::make_shared<Oox2Odf::Converter>(mTempUnpackedOox, _T("presentation"), L"", false, mTemp);
-//
-//		try
-//		{
-//			(*mConverter)->convert();
-//			*mContext = dynamic_cast<cpdoccore::odf_writer::odp_conversion_context*>((*mConverter)->get_ooxConverter()->odf_context());
-//		}
-//		catch (...)
-//		{
-//			_CP_LOG << L"[ error ]: Failed to setup OOX2ODP_EntranceAnimationTestEnvironment";
-//		}
-//	}
-//}
-//
-//void OOX2ODP_AnimationEnvironment::TearDown()
-//{
-//	NSDirectory::DeleteDirectory(mTemp);
-//}
-//
-//const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetTimingRoot()
-//{
-//	using namespace cpdoccore::odf_writer;
-//	draw_page* page = dynamic_cast<draw_page*>(mContext->current_slide().page_elm_.get());
-//	if (!page)
-//		return nullptr;
-//
-//	anim_par* timing_root = dynamic_cast<anim_par*>(page->animation_.get());
-//	if (!timing_root)
-//		return nullptr;
-//
-//	return timing_root;
-//
-//}
-//
-//const cpdoccore::odf_writer::anim_seq* OOX2ODP_AnimationTest::GetMainSequence()
-//{
-//	using namespace cpdoccore::odf_writer;
-//	const anim_par* timing_root = GetTimingRoot();
-//	if (!timing_root)
-//		return nullptr;
-//
-//	if (timing_root->anim_seq_array_.size() < 1)
-//		return nullptr;
-//
-//	const anim_seq* main_sequence = dynamic_cast<anim_seq*>(timing_root->anim_seq_array_.at(0).get());
-//	if (!main_sequence)
-//		return nullptr;
-//
-//	return main_sequence;
-//}
-//
-//const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetMainSequenceParByIndex(size_t index)
-//{
-//	using namespace cpdoccore::odf_writer;
-//	const anim_seq* main_sequence = GetMainSequence();
-//
-//	if (index >= main_sequence->anim_par_array_.size())
-//		return nullptr;
-//
-//	const anim_par* par = dynamic_cast<anim_par*>(main_sequence->anim_par_array_[index].get());
-//	if (!par)
-//		return nullptr;
-//
-//	return par;
-//}
-//
-//const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetInnerPar(const cpdoccore::odf_writer::anim_par* par)
-//{
-//	using namespace cpdoccore::odf_writer;
-//
-//	if (!par)
-//		return nullptr;
-//
-//	if (par->anim_par_.size() == 0)
-//		return nullptr;
-//
-//	const anim_par* inner_par = dynamic_cast<anim_par*>(par->anim_par_[0].get());
-//
-//	if (!inner_par)
-//		return nullptr;
-//
-//	return inner_par;
-//}
-//
-//const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetInnermostPar(const cpdoccore::odf_writer::anim_par* par)
-//{
-//	using namespace cpdoccore::odf_writer;
-//
-//	if (!par)
-//		return nullptr;
-//
-//	const anim_par* innermost = GetInnerPar(par);
-//
-//	while (innermost->anim_par_.size())
-//	{
-//		innermost = dynamic_cast<anim_par*>(innermost->anim_par_[0].get());
-//		if (!innermost)
-//			return nullptr;
-//	}
-//
-//	return innermost;
-//}
-//
-//const cpdoccore::odf_writer::odp_conversion_context* OOX2ODP_AnimationTest::GetContext() const
-//{
-//	return mContext;
-//}
+
+#include "OfficeUtils/src/OfficeUtils.h"
+#include "DesktopEditor/common/File.h"
+#include "DesktopEditor/common/Directory.h"
+#include "Reader/Converter/pptx_package.h"
+
+#include "Writer/Converter/Converter.h"
+#include "Writer/Converter/PptxConverter.h"
+#include "Writer/Format/office_elements.h"
+
+boost::shared_ptr<cpdoccore::odf_reader::odf_document> ReadOdfDocument(const std::wstring& from, const std::wstring& temp, const std::wstring& tempUnpackedOdf)
+{
+	COfficeUtils oCOfficeUtils(NULL);
+	if (S_OK == oCOfficeUtils.ExtractToDirectory(from, tempUnpackedOdf, NULL, 0))
+		return boost::make_shared<cpdoccore::odf_reader::odf_document>(tempUnpackedOdf, temp, L"");
+	else
+		return nullptr;
+}
+
+boost::shared_ptr<cpdoccore::oox::pptx_conversion_context> Convert(boost::shared_ptr<cpdoccore::odf_reader::odf_document> inputOdf, cpdoccore::oox::package::pptx_document* outputPptx)
+{
+	boost::shared_ptr<cpdoccore::oox::pptx_conversion_context> conversionContext = boost::make_shared<cpdoccore::oox::pptx_conversion_context>(inputOdf.get());
+
+	conversionContext->set_output_document(outputPptx);
+	conversionContext->set_font_directory(L"");
+
+	inputOdf->pptx_convert(*conversionContext);
+
+	return conversionContext;
+}
+
+ODP2OOX_AnimationEnvironment::ODP2OOX_AnimationEnvironment(const std::wstring& exampleFilename, boost::shared_ptr<cpdoccore::odf_reader::odf_document>* doc, boost::shared_ptr<cpdoccore::oox::pptx_conversion_context>* context)
+	: testing::Environment()
+{
+	sExampleFilename = NSFile::GetFileName(exampleFilename);
+	mDocument = doc;
+	mContext = context;
+}
+
+ODP2OOX_AnimationEnvironment::~ODP2OOX_AnimationEnvironment()
+{
+}
+
+void ODP2OOX_AnimationEnvironment::SetUp()
+{
+	// Working-dir-relative, like the other suites: CMake stages ExampleFiles
+	// in the test's working directory.
+	sFrom = L"ExampleFiles" FILE_SEPARATOR_STR + sExampleFilename;
+	sTemp = sFrom + _T(".tmp");
+	sTempUnpackedOdf = sTemp + CH_DIR("odf_unpacked");
+
+	NSDirectory::CreateDirectory(sTemp);
+	NSDirectory::CreateDirectory(sTempUnpackedOdf);
+
+	*mDocument = ReadOdfDocument(sFrom, sTemp, sTempUnpackedOdf);
+	ASSERT_TRUE(*mDocument) << "Failed to read " << U_TO_UTF8(sFrom);
+	// The context keeps a pointer to the output document, so it has to live
+	// as long as the context the tests inspect.
+	mOutput = boost::make_shared<cpdoccore::oox::package::pptx_document>();
+	*mContext = Convert(*mDocument, mOutput.get());
+}
+
+void ODP2OOX_AnimationEnvironment::TearDown()
+{
+	NSDirectory::DeleteDirectory(sTemp);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+OOX2ODP_AnimationEnvironment::OOX2ODP_AnimationEnvironment(const std::wstring& exampleFilename, boost::shared_ptr<Oox2Odf::Converter>* converter, cpdoccore::odf_writer::odp_conversion_context** context)
+{
+	mExampleFilename = exampleFilename;
+	mConverter = converter;
+	mContext = context;
+}
+
+void OOX2ODP_AnimationEnvironment::SetUp()
+{
+	mFrom = L"ExampleFiles" FILE_SEPARATOR_STR + mExampleFilename;
+	mTemp = mFrom + _T(".tmp");
+	mTempUnpackedOox = mTemp + CH_DIR("pptx_unpacked");
+
+	NSDirectory::CreateDirectory(mTemp);
+	NSDirectory::CreateDirectory(mTempUnpackedOox);
+
+	COfficeUtils oCOfficeUtils(NULL);
+	if (S_OK == oCOfficeUtils.ExtractToDirectory(mFrom, mTempUnpackedOox, NULL, 0))
+	{
+		*mConverter = boost::make_shared<Oox2Odf::Converter>(mTempUnpackedOox, _T("presentation"), L"", false, mTemp);
+
+		try
+		{
+			(*mConverter)->convert();
+			*mContext = dynamic_cast<cpdoccore::odf_writer::odp_conversion_context*>((*mConverter)->get_ooxConverter()->odf_context());
+		}
+		catch (...)
+		{
+			_CP_LOG << L"[ error ]: Failed to setup OOX2ODP_EntranceAnimationTestEnvironment";
+		}
+	}
+}
+
+void OOX2ODP_AnimationEnvironment::TearDown()
+{
+	NSDirectory::DeleteDirectory(mTemp);
+}
+
+const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetTimingRoot()
+{
+	using namespace cpdoccore::odf_writer;
+	draw_page* page = dynamic_cast<draw_page*>(mContext->current_slide().page_elm_.get());
+	if (!page)
+		return nullptr;
+
+	anim_par* timing_root = dynamic_cast<anim_par*>(page->animation_.get());
+	if (!timing_root)
+		return nullptr;
+
+	return timing_root;
+
+}
+
+const cpdoccore::odf_writer::anim_seq* OOX2ODP_AnimationTest::GetMainSequence()
+{
+	using namespace cpdoccore::odf_writer;
+	const anim_par* timing_root = GetTimingRoot();
+	if (!timing_root)
+		return nullptr;
+
+	if (timing_root->anim_seq_array_.size() < 1)
+		return nullptr;
+
+	const anim_seq* main_sequence = dynamic_cast<anim_seq*>(timing_root->anim_seq_array_.at(0).get());
+	if (!main_sequence)
+		return nullptr;
+
+	return main_sequence;
+}
+
+const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetMainSequenceParByIndex(size_t index)
+{
+	using namespace cpdoccore::odf_writer;
+	const anim_seq* main_sequence = GetMainSequence();
+
+	if (index >= main_sequence->anim_par_array_.size())
+		return nullptr;
+
+	const anim_par* par = dynamic_cast<anim_par*>(main_sequence->anim_par_array_[index].get());
+	if (!par)
+		return nullptr;
+
+	return par;
+}
+
+const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetInnerPar(const cpdoccore::odf_writer::anim_par* par)
+{
+	using namespace cpdoccore::odf_writer;
+
+	if (!par)
+		return nullptr;
+
+	if (par->anim_par_.size() == 0)
+		return nullptr;
+
+	const anim_par* inner_par = dynamic_cast<anim_par*>(par->anim_par_[0].get());
+
+	if (!inner_par)
+		return nullptr;
+
+	return inner_par;
+}
+
+const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetInnermostPar(const cpdoccore::odf_writer::anim_par* par)
+{
+	using namespace cpdoccore::odf_writer;
+
+	if (!par)
+		return nullptr;
+
+	const anim_par* innermost = GetInnerPar(par);
+
+	while (innermost->anim_par_.size())
+	{
+		innermost = dynamic_cast<anim_par*>(innermost->anim_par_[0].get());
+		if (!innermost)
+			return nullptr;
+	}
+
+	return innermost;
+}
+
+const cpdoccore::odf_writer::odp_conversion_context* OOX2ODP_AnimationTest::GetContext() const
+{
+	return mContext;
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 #include <stdio.h>
-#include <tchar.h>
 
-#include "D:\ONLYOFFICE\core\Common\OfficeFileFormatChecker.h"
-#include "D:\ONLYOFFICE\core\OfficeUtils\src\OfficeUtils.h"
-#include "D:\ONLYOFFICE\core\DesktopEditor\common\Directory.h"
-#include "D:\ONLYOFFICE\core\OdfFile\Reader\Converter\ConvertOO2OOX.h"
-#include "D:\ONLYOFFICE\core\OdfFile\Common\logging.h"
+// Resolved relative to the repository root (the CMake target adds the core
+// root to the include path). The original sources used absolute Windows paths
+// and a per-platform "#pragma comment(lib, ...)" block; libraries are now
+// linked by CMake (see CMakeLists.txt), so those are gone.
+#include "Common/OfficeFileFormatChecker.h"
+#include "OfficeUtils/src/OfficeUtils.h"
+#include "DesktopEditor/common/Directory.h"
+#include "DesktopEditor/common/File.h"
+#include "DesktopEditor/xml/include/xmlutils.h"
+#include "OdfFile/Reader/Converter/ConvertOO2OOX.h"
+#include "OdfFile/Writer/Converter/Oox2OdfConverter.h"
+#include "OdfFile/Common/logging.h"
 
-#if defined(_WIN64)
-#pragma comment(lib, "D:/ONLYOFFICE/core/Common/3dParty/icu/win_64/build/icuuc.lib")
-#pragma comment(lib, "D:/ONLYOFFICE/core/build/lib/win_64/DEBUG/graphics.lib")
-#pragma comment(lib, "D:/ONLYOFFICE/core/build/lib/win_64/DEBUG/kernel.lib")
-#pragma comment(lib, "D:/ONLYOFFICE/core/build/lib/win_64/DEBUG/UnicodeConverter.lib")
-#pragma comment(lib, "D:/ONLYOFFICE/core/build/lib/win_64/DEBUG/CryptoPPLib.lib")
+// Packages and directories written by the conversion helpers during this run,
+// so the global environment TearDown() can remove them: the suite must not
+// leave generated files behind in the build directory.
+static std::vector<std::wstring> g_arTestEnvOutputs;
 
-#elif defined (_WIN32)
-
-#if defined(DEBUG)
-#pragma comment(lib, "../../../../build/lib/win_32/DEBUG/graphics.lib")
-#pragma comment(lib, "../../../../build/lib/win_32/DEBUG/kernel.lib")
-#pragma comment(lib, "../../../../build/lib/win_32/DEBUG/UnicodeConverter.dll")
-#else
-#pragma comment(lib, "../../../../build/lib/win_32/graphics.lib")
-#pragma comment(lib, "../../../../build/lib/win_32/kernel.lib")
-#pragma comment(lib, "../../../../build/lib/win_32/UnicodeConverter.dll")
-#endif
-#pragma comment(lib, "../../../../build/bin/icu/win_32/icuuc.lib")
-#endif
-
-HRESULT convert_single(std::wstring srcFileName)
+// Extension of the OOXML package an ODF file type converts to, or empty if
+// the type is not ODF.
+static std::wstring ooxml_extension_for(int nFileType)
 {
-	int nResult = 0;
-
-	COfficeFileFormatChecker fileChecker(srcFileName);
-
-	std::wstring dstPath = srcFileName;// + ; //xlsx pptx docx
-	switch (fileChecker.nFileType)
+	switch (nFileType)
 	{
 		case AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT:
 		case AVS_OFFICESTUDIO_FILE_DOCUMENT_OTT:
-		case AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT_FLAT:		dstPath += L"-tmp.docx"; break;
+		case AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT_FLAT:		return L"docx";
 
 		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS:
 		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS:
-		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS_FLAT:	dstPath += L"-tmp.xlsx"; break;
+		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS_FLAT:	return L"xlsx";
 
 		case AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP:
 		case AVS_OFFICESTUDIO_FILE_PRESENTATION_OTP:
-		case AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP_FLAT:	dstPath += L"-tmp.pptx"; break;
+		case AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP_FLAT:	return L"pptx";
 
-		default:
-			return -1;
+		default:											return L"";
 	}
-	//---------------------------------------------------------------------------------------------------
-	COfficeUtils oCOfficeUtils(NULL);
+}
 
-	std::wstring outputDir = NSDirectory::GetFolderPath(dstPath);
-	std::wstring dstTempPath = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
-	std::wstring srcTempPath;
-	std::wstring srcTempPath2 = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
+// Converts an ODF file into the existing directory dstDir as unpacked OOXML.
+// Packed files are extracted first; flat files are read in place.
+static HRESULT convert_odf_into_dir(const std::wstring& srcFileName, int nFileType, const std::wstring& dstDir)
+{
+	const bool bFlat = nFileType == AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT_FLAT ||
+		nFileType == AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS_FLAT ||
+		nFileType == AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP_FLAT;
 
-	if (fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT ||
-		fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS ||
-		fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP ||
-		fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_DOCUMENT_OTT ||
-		fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS ||
-		fileChecker.nFileType == AVS_OFFICESTUDIO_FILE_PRESENTATION_OTP)
+	const std::wstring outputDir = NSDirectory::GetFolderPath(dstDir);
+	std::wstring srcTempPath = srcFileName;
+
+	if (!bFlat)
 	{
 		srcTempPath = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
 
+		COfficeUtils oCOfficeUtils(NULL);
 		if (S_OK != oCOfficeUtils.ExtractToDirectory(srcFileName.c_str(), srcTempPath.c_str(), NULL, 0))
+		{
+			NSDirectory::DeleteDirectory(srcTempPath);
 			return -2;
+		}
 	}
-	else // flat
-	{
-		srcTempPath = srcFileName;
-	}
+	const std::wstring tempPath = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
 	_CP_LOG << L"[info] " << srcFileName << std::endl;
 
-	nResult = ConvertODF2OOXml(srcTempPath, dstTempPath, L"C:\\Windows\\Fonts", srcTempPath2, L"");
+	// The hardcoded Windows font directory never exists on Linux/macOS and is
+	// silently ignored by the converter there. Keep the Windows path and pass
+	// an empty directory elsewhere, matching the historical animation
+	// environments that used set_font_directory(L"").
+#if defined(_WIN32) || defined(_WIN64)
+	const std::wstring sFontsDirectory = L"C:\\Windows\\Fonts";
+#else
+	const std::wstring sFontsDirectory = L"";
+#endif
+	const HRESULT nResult = ConvertODF2OOXml(srcTempPath, dstDir, sFontsDirectory, tempPath, L"");
 
-	if (srcTempPath != srcFileName)
-	{
+	if (!bFlat)
 		NSDirectory::DeleteDirectory(srcTempPath);
-	}
-	NSDirectory::DeleteDirectory(srcTempPath2);
+	NSDirectory::DeleteDirectory(tempPath);
+
+	return nResult;
+}
+
+HRESULT convert_single(std::wstring srcFileName)
+{
+	COfficeFileFormatChecker fileChecker(srcFileName);
+
+	const std::wstring sExtension = ooxml_extension_for(fileChecker.nFileType);
+	if (sExtension.empty())
+		return -1;
+
+	const std::wstring dstPath = srcFileName + L"-tmp." + sExtension;
+	g_arTestEnvOutputs.push_back(dstPath);
+
+	//---------------------------------------------------------------------------------------------------
+	// A package left behind by an earlier run would satisfy the structural
+	// checks of the suite even if THIS conversion fails, so remove the
+	// destination first: the test must fail when the conversion fails.
+	NSFile::CFileBinary::Remove(dstPath);
+
+	const std::wstring dstTempPath = NSDirectory::CreateDirectoryWithUniqueName(NSDirectory::GetFolderPath(dstPath));
+
+	HRESULT nResult = convert_odf_into_dir(srcFileName, fileChecker.nFileType, dstTempPath);
 
 	if (nResult == 0)
 	{
+		COfficeUtils oCOfficeUtils(NULL);
 		if (S_OK != oCOfficeUtils.CompressFileOrDirectory(dstTempPath, dstPath, true))
 			nResult = -2;
 	}
@@ -320,6 +340,137 @@ HRESULT convert_single(std::wstring srcFileName)
 	NSDirectory::DeleteDirectory(dstTempPath);
 
 	return nResult;
+}
+
+std::vector<std::wstring> malformed_xml_parts(const std::wstring& packageDir)
+{
+	std::vector<std::wstring> arMalformed;
+	for (const std::wstring& path : NSDirectory::GetFiles(packageDir, true))
+	{
+		const std::wstring sExtension = NSFile::GetFileExtention(path);
+		if (sExtension != L"xml" && sExtension != L"rels")
+			continue;
+
+		std::wstring sXml;
+		if (!NSFile::CFileBinary::ReadAllTextUtf8(path, sXml) || !is_well_formed(sXml))
+			arMalformed.push_back(path);
+	}
+	return arMalformed;
+}
+
+// Word and LibreOffice refuse a whole file over one malformed part, so every
+// XML part a conversion writes is checked, not only the ones a test reads.
+// Called from the *_dir helpers, which run inside a test body.
+static void expect_xml_parts_well_formed(const std::wstring& packageDir)
+{
+	for (const std::wstring& path : malformed_xml_parts(packageDir))
+		ADD_FAILURE() << L"not well-formed: " << path;
+}
+
+std::wstring convert_odf_to_ooxml_dir(const std::wstring& srcFileName)
+{
+	COfficeFileFormatChecker fileChecker(srcFileName);
+	if (ooxml_extension_for(fileChecker.nFileType).empty())
+		return L"";
+
+	const std::wstring dstDir = NSDirectory::CreateDirectoryWithUniqueName(NSDirectory::GetFolderPath(srcFileName));
+	if (dstDir.empty())
+		return L"";
+	g_arTestEnvOutputs.push_back(dstDir);
+
+	if (convert_odf_into_dir(srcFileName, fileChecker.nFileType, dstDir) != 0)
+		return L"";
+
+	expect_xml_parts_well_formed(dstDir);
+	return dstDir;
+}
+
+std::wstring convert_ooxml_to_odf_dir(const std::wstring& srcFileName)
+{
+	// Oox2Odf::Converter document types, as X2tConverter/src/lib/odf.h passes them.
+	std::wstring sType;
+	switch (COfficeFileFormatChecker(srcFileName).nFileType)
+	{
+		case AVS_OFFICESTUDIO_FILE_DOCUMENT_DOCX:		sType = L"text"; break;
+		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX:	sType = L"spreadsheet"; break;
+		case AVS_OFFICESTUDIO_FILE_PRESENTATION_PPTX:	sType = L"presentation"; break;
+		default:										return L"";
+	}
+
+	const std::wstring outputDir = NSDirectory::GetFolderPath(srcFileName);
+	const std::wstring dstDir = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
+	if (dstDir.empty())
+		return L"";
+	g_arTestEnvOutputs.push_back(dstDir);
+
+	const std::wstring srcTempPath = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
+	const std::wstring tempPath = NSDirectory::CreateDirectoryWithUniqueName(outputDir);
+	_CP_LOG << L"[info] " << srcFileName << std::endl;
+
+	bool bResult = false;
+	COfficeUtils oCOfficeUtils(NULL);
+	if (S_OK == oCOfficeUtils.ExtractToDirectory(srcFileName, srcTempPath, NULL, 0))
+	{
+		// x2t catches everything the writer throws and reports a failed
+		// conversion; do the same so a test sees an empty result.
+		try
+		{
+			Oox2Odf::Converter converter(srcTempPath, sType, L"", false, tempPath);
+			bResult = converter.convert() && converter.write(dstDir, tempPath, L"", L"");
+		}
+		catch (...)
+		{
+			bResult = false;
+		}
+	}
+
+	NSDirectory::DeleteDirectory(srcTempPath);
+	NSDirectory::DeleteDirectory(tempPath);
+
+	if (!bResult)
+		return L"";
+
+	expect_xml_parts_well_formed(dstDir);
+	return dstDir;
+}
+
+std::wstring read_part(const std::wstring& packageDir, const std::wstring& partName)
+{
+	std::wstring sXml;
+	if (!NSFile::CFileBinary::ReadAllTextUtf8(packageDir + FILE_SEPARATOR_STR + partName, sXml))
+		return L"";
+	return sXml;
+}
+
+bool is_well_formed(const std::wstring& xml)
+{
+	// XmlUtils::CXmlNode::FromXmlString() is no use here: it keeps the nodes
+	// parsed before an error and still reports success. Walk the whole
+	// document instead. The reader stops at the first error, so the input is
+	// well-formed only if the walk got as far as the end of the root element.
+	XmlUtils::CXmlLiteReader oReader;
+	if (xml.empty() || !oReader.FromString(xml))
+		return false;
+
+	bool bRootClosed = false;
+	XmlUtils::XmlNodeType eType = XmlUtils::XmlNodeType_None;
+	while (oReader.Read(eType))
+	{
+		if (0 != oReader.GetDepth())
+			continue;
+
+		if (eType == XmlUtils::XmlNodeType_Element)
+		{
+			if (bRootClosed)
+				return false;
+			bRootClosed = oReader.IsEmptyElement();
+		}
+		else if (eType == XmlUtils::XmlNodeType_EndElement)
+		{
+			bRootClosed = true;
+		}
+	}
+	return bRootClosed;
 }
 
 HRESULT convert_directory(std::wstring pathName)
@@ -340,12 +491,35 @@ ODT2DOCX_ConversionEnvironment::ODT2DOCX_ConversionEnvironment(const std::wstrin
 {
 }
 
+// Result of the TestEnv conversion performed by
+// ODT2DOCX_ConversionEnvironment::SetUp() (the global environment runs
+// before any test), exposed so tests can assert on it instead of only
+// reading the log.
+// (-1: the same failure idiom convert_single() itself returns; E_FAIL
+// is not declared in this translation unit, S_OK is available.)
+static HRESULT g_nTestEnvConvertResult = -1;
+
+HRESULT GetTestEnvConvertResult()
+{
+	return g_nTestEnvConvertResult;
+}
+
 void ODT2DOCX_ConversionEnvironment::SetUp()
 {
-	convert_single(mFilename);
+	g_nTestEnvConvertResult = convert_single(mFilename);
 }
 
 void ODT2DOCX_ConversionEnvironment::TearDown()
 {
-
+	// Clean up after the suite: remove every package and directory the
+	// conversion helpers wrote during the run (including direct calls from
+	// tests).
+	for (size_t i = 0; i < g_arTestEnvOutputs.size(); ++i)
+	{
+		if (NSDirectory::Exists(g_arTestEnvOutputs[i]))
+			NSDirectory::DeleteDirectory(g_arTestEnvOutputs[i]);
+		else
+			NSFile::CFileBinary::Remove(g_arTestEnvOutputs[i]);
+	}
+	g_arTestEnvOutputs.clear();
 }

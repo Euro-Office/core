@@ -92,6 +92,7 @@ enum ElementType
 	typeTextSenderStateOrProvince,
 	typeTextAuthorInitials,
 	typeTextAuthorName,
+	typeTextDatabaseDisplay,
 
     typeTextSequenceDecls,
     typeTextSequenceDecl,
@@ -583,6 +584,7 @@ enum ElementType
     typeNumberText,
     typeNumberNumber,
     typeNumberEmbeddedText,
+    typeNumberFillCharacter,
     typeNumberScientificNumber,
     typeNumberFraction,
 	typeNumberBoolean,

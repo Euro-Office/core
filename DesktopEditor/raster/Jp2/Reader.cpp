@@ -42,15 +42,15 @@ namespace Jpeg2000
 		return *pStream->pCurPos++;
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------
-	// Основные функции
+	// Basic functions
 	//-------------------------------------------------------------------------------------------------------------------------------
 	ByteIO*        ByteIO_Open(PCommon pInfo, unsigned char *pBuffer, int nLength)
 	{
-		CodingParams *pCodingParams = NULL;
+		CodingParams *pCodingParams = nullptr;
 		ByteIO *pStream = (ByteIO*)Malloc(sizeof(ByteIO));
 
 		if (!pStream)
-			return NULL;
+			return nullptr;
 
 		//	pStream->pInfo = pInfo;
 
@@ -62,7 +62,7 @@ namespace Jpeg2000
 		}
 		else if (!pBuffer && !nLength && pInfo)
 		{
-			// Выделяем память для закодировнного изображения
+			// Allocating memory for the encoded image
 			pStream->nMode = STREAM_WRITE;
 			switch (pInfo->eCodecFormat)
 			{
@@ -74,23 +74,23 @@ namespace Jpeg2000
 				break;
 				default:
 				Free(pStream);
-				return NULL;
+				return nullptr;
 			}
 			pStream->nLength = pCodingParams->nXTsiz * pCodingParams->nYTsiz * pCodingParams->nXTilesCount * pCodingParams->nYTilesCount * 4;
 			pStream->pBuffer = (unsigned char *)Malloc(pStream->nLength);
 			if (!pStream->pBuffer)
 			{
 				Free(pStream);
-				return NULL;
+				return nullptr;
 			}
 		}
 		else
 		{
 			Free(pStream);
-			return NULL;
+			return nullptr;
 		}
 
-		// Инициализируем поток
+		// Initializing the stream
 		pStream->pStart  = pStream->pBuffer;
 		pStream->pEnd    = pStream->pBuffer + pStream->nLength;
 		pStream->pCurPos = pStream->pBuffer;
@@ -143,22 +143,22 @@ namespace Jpeg2000
 	//-------------------------------------------------------------------------------------------------------------------------------
 	CReaderStream::CReaderStream(void)
 	{
-		m_pStream = NULL;
-		Close();
+		m_pStream = nullptr;
+		CReaderStream::Close();
 	}
 	CReaderStream::CReaderStream(void* pStream, int nSizeStream)
 	{
-		m_pStream = NULL;
-		Open(pStream, nSizeStream);
+		m_pStream = nullptr;
+		CReaderStream::Open(pStream, nSizeStream);
 	}
 	CReaderStream::~CReaderStream(void)
 	{
-		Close();
+		CReaderStream::Close();
 	}
 	bool         CReaderStream::Open(void* pStream, int nSizeStream)
 	{
-		Close();
-		m_pStream = ByteIO_Open(NULL, (unsigned char *)pStream, nSizeStream);
+		CReaderStream::Close();
+		m_pStream = ByteIO_Open(nullptr, (unsigned char *)pStream, nSizeStream);
 
 		if (!m_pStream)
 			return false;
@@ -171,7 +171,7 @@ namespace Jpeg2000
 		if (m_pStream)
 			ByteIO_Close(m_pStream);
 
-		m_pStream   = NULL;
+		m_pStream   = nullptr;
 		m_nPosition = 0;
 		m_nSkiped   = 0;
 		m_nSize     = 0;
@@ -229,7 +229,7 @@ namespace Jpeg2000
 	void*        CReaderStream::GetOwner()
 	{
 		if (!m_pStream)
-			return NULL;
+			return nullptr;
 
 		return m_pStream->pBuffer;
 	}
@@ -255,19 +255,19 @@ namespace Jpeg2000
 	//-------------------------------------------------------------------------------------------------------------------------------
 	CReaderFile::CReaderFile(void)
 	{
-		Close();
+		CReaderFile::Close();
 	}
 	CReaderFile::CReaderFile(const std::wstring& wsFileName, long lMode)
 	{
-		Open(wsFileName, lMode);
+		CReaderFile::Open(wsFileName, lMode);
 	}
 	CReaderFile::~CReaderFile(void)
 	{
-		Close();
+		CReaderFile::Close();
 	}
 	bool         CReaderFile::Open(const std::wstring& wsFileName, int nSizeStream)
 	{
-		Close();
+		CReaderFile::Close();
 
 		bool bResult = true;
 		if (nSizeStream > 0)
@@ -293,7 +293,7 @@ namespace Jpeg2000
 	void         CReaderFile::Close()
 	{
 		m_oFile.CloseFile();
-		m_pFile     = NULL;
+		m_pFile     = nullptr;
 		m_nPosition = 0;
 		m_nSkiped   = 0;
 		m_nSize     = 0;

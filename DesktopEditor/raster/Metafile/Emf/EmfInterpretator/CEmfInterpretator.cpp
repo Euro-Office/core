@@ -390,7 +390,7 @@ namespace MetaFile
 
 	void CEmfInterpretator::HANDLE_EMR_EXTCREATEFONTINDIRECTW(const unsigned int &unIndex, CEmfLogFont *oLogFont)
 	{
-		if (NULL == oLogFont)
+		if (nullptr == oLogFont)
 			return;
 
 		int unExplicitRecordSize = (oLogFont->IsFixedLength()) ? 332 : (368 + oLogFont->oDesignVector.unNumAxes * sizeof(int));
@@ -492,7 +492,7 @@ namespace MetaFile
 
 	void CEmfInterpretator::HANDLE_EMR_EXTCREATEPEN(const unsigned int &unPenIndex, CEmfLogPen *pPen, const std::vector<unsigned int>& arUnused)
 	{
-		if(NULL == pPen || arUnused.size() < 2)
+		if(nullptr == pPen || arUnused.size() < 2)
 			return;
 
 		int unExplicitRecordSize = 52 + sizeof (unsigned int) * pPen->unNumStyleEntries + ((pPen->unPenStyle != PS_USERSTYLE) ? 4 : 0);
@@ -506,7 +506,7 @@ namespace MetaFile
 		m_pOutStream->WriteFile((BYTE*)&unExplicitRecordSize,  sizeof (int));
 
 		m_pOutStream->WriteFile((BYTE*)&unPenIndex,            sizeof (unsigned int));
-		//Заполняем нулями некоторые поля, так как не используем
+		//Fill some fields with zeros, since we don't use them
 		unsigned int unZero = 0;
 		m_pOutStream->WriteFile((BYTE*)&unExplicitRecordSize,  sizeof (unsigned int)); // offBmi
 		m_pOutStream->WriteFile((BYTE*)&unZero,                sizeof (unsigned int)); // cbBmi
@@ -534,7 +534,7 @@ namespace MetaFile
 
 	void CEmfInterpretator::HANDLE_EMR_CREATEPEN(const unsigned int &unPenIndex, const unsigned int &unWidthX, const CEmfLogPen *pPen)
 	{
-		if (NULL == pPen)
+		if (nullptr == pPen)
 			return;
 
 		const unsigned int unZero = 0;
@@ -963,7 +963,7 @@ namespace MetaFile
 
 	void CEmfInterpretator::HANDLE_EMR_CREATEPALETTE(const unsigned int &unPaletteIndex, const CEmfLogPalette *oEmfLogPalette)
 	{
-		if (NULL == oEmfLogPalette)
+		if (nullptr == oEmfLogPalette)
 			return;
 
 		int unExplicitRecordSize = 16 + sizeof (TEmfLogPaletteEntry) * oEmfLogPalette->ushNumberOfEntries;
@@ -1334,7 +1334,7 @@ namespace MetaFile
 
 	void CEmfInterpretator::HANDLE_EMR_POLYDRAW(const TRectL &oBounds, TPointL *arPoints, const unsigned int &unCount, const unsigned char *pAbTypes)
 	{
-		if (NULL == arPoints || NULL == pAbTypes)
+		if (nullptr == arPoints || nullptr == pAbTypes)
 			return;
 
 		int unExplicitRecordSize = 28 + 8 * unCount;
@@ -1359,7 +1359,7 @@ namespace MetaFile
 
 	void CEmfInterpretator::HANDLE_EMR_POLYDRAW(const TRectL &oBounds, TPointS *arPoints, const unsigned int &unCount, const unsigned char *pAbTypes)
 	{
-		if (NULL == arPoints || NULL == pAbTypes)
+		if (nullptr == arPoints || nullptr == pAbTypes)
 			return;
 
 		int unExplicitRecordSize = 28 + 4 * unCount;
@@ -1939,7 +1939,7 @@ namespace MetaFile
 	void CEmfInterpretator::WriteString(const unsigned short arshString[], const unsigned int &unSize)
 	{
 		unsigned int unZero = 0;
-		if (NULL == arshString)
+		if (nullptr == arshString)
 		{
 			m_pOutStream->WriteFile((BYTE*)&unZero, sizeof (unsigned int) * 4);
 			return;

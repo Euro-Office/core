@@ -1,5 +1,6 @@
 #include "Page.h"
 
+#include <cstdint>
 #include <memory>
 #include <map>
 #include <set>
@@ -313,7 +314,7 @@ namespace NSDocxRenderer
 				if (!CContText::IsUnicodeSymbol(pUnicodes[i]))
 					oText[i] = ' ';
 
-		// иногда приходит неверный? размер, нужно перемерить (XPS)
+		// sometimes the wrong size is received, need to be re-measured (XPS)
 		if (m_bIsRecalcFontSize)
 		{
 			m_oFont.Size *= ((m_oTransform.sx() + m_oTransform.sy()) / 2);
@@ -334,7 +335,7 @@ namespace NSDocxRenderer
 		}
 		else
 		{
-			// такого быть не должно (только из xps)
+			// This shouldn't happen (only from xps)
 			m_oManagers.pFontManager->SetStringGid(0);
 			m_oManagers.pFontManager->MeasureStringGids(pUnicodes, nCount, dTextX, dTextY, _x, _y, _w, _h, CFontManager::mtPosition);
 		}
@@ -490,7 +491,7 @@ namespace NSDocxRenderer
 	}
 	void CPage::ReorderShapesForPptx()
 	{
-		// переместим nullptr в конец и удалим
+		// move nullptr to the end and delete
 		auto right = MoveNullptr(m_arShapes.begin(), m_arShapes.end());
 		m_arShapes.erase(right, m_arShapes.end());
 
@@ -668,7 +669,7 @@ namespace NSDocxRenderer
 	{
 		for (size_t i = 0; i < m_arShapes.size(); ++i)
 		{
-			if (!m_arShapes[i] || m_arShapes[i]->m_dHeight > c_dMAX_LINE_HEIGHT_MM || // рассматриваем только тонкие объекты
+			if (!m_arShapes[i] || m_arShapes[i]->m_dHeight > c_dMAX_LINE_HEIGHT_MM || // Consider only thin objects
 			        (m_arShapes[i]->m_eGraphicsType != eGraphicsType::gtRectangle &&
 			         m_arShapes[i]->m_eGraphicsType != eGraphicsType::gtCurve))
 			{
@@ -680,22 +681,22 @@ namespace NSDocxRenderer
 
 			for (size_t j = i + 1; j < m_arShapes.size(); ++j)
 			{
-				if (!m_arShapes[j] || m_arShapes[i]->AreObjectsNoCrossingByVertically(m_arShapes[j].get())) // значительно ускоряет работу
+				if (!m_arShapes[j] || m_arShapes[i]->AreObjectsNoCrossingByVertically(m_arShapes[j].get())) // significantly speeds up work
 					continue;
 
 				bool bIf1 = m_arShapes[i]->IsCorrelated(m_arShapes[j]);
 
-				// довольно странное поведение - в зависимости от толщины линии информация о графике записывается в разные структуры
+				// rather strange behavior - depending on the line thickness, information about the graphics is written to different structures
 				bool bIf2 = m_arShapes[i]->m_oBrush.IsEqual(&m_arShapes[j]->m_oBrush);
 				bool bIf3 = m_arShapes[i]->m_oPen.IsEqual(&m_arShapes[j]->m_oPen);
 
-				// линия должна быть одного размера по высоте
+				// the line must be the same size in height
 				bool bIf4 = fabs(m_arShapes[i]->m_dHeight - m_arShapes[j]->m_dHeight) < c_dGRAPHICS_ERROR_IN_LINES_MM;
 
-				// все должно быть на одной линии
+				// everything should be on the same line
 				bool bIf5 = fabs(m_arShapes[i]->m_dBot - m_arShapes[j]->m_dBot) < c_dGRAPHICS_ERROR_IN_LINES_MM * 5;
 
-				if (bIf1 && (bIf2 || bIf3) && bIf4 && bIf5) // все должно быть на одной линии
+				if (bIf1 && (bIf2 || bIf3) && bIf4 && bIf5) // everything should be on the same line
 					curr_shape_indexes.push_back(j);
 			}
 
@@ -813,11 +814,11 @@ namespace NSDocxRenderer
 				if (!line || line == drop_cap_line)
 					continue;
 
-				// буквица должна быть левее
+				// the letter should be to the left
 				if (line->m_dLeft < drop_cap_cont->m_dLeft)
 					continue;
 
-				// если совпадает строка по высоте - берем ее и выходим
+				// if the line matches in height, take it and exit
 				if (fabs(line->m_dBotWithMaxDescent - drop_cap_cont->m_dBotWithDescent) < c_dTHE_SAME_STRING_Y_PRECISION_MM)
 				{
 					num_of_lines++;
@@ -843,7 +844,7 @@ namespace NSDocxRenderer
 			}
 		}
 
-		// шейпы из буквиц
+		// letter shapes
 		for (auto&& drop_cap : drop_caps)
 		{
 			if (!m_bUseDefaultFont)
@@ -870,24 +871,24 @@ namespace NSDocxRenderer
 				if (!pCurrCont)
 					continue;
 
-				// берем вторую линию, если символ последний - то начиная со следуюущей, иначе с той же
+				// take the second line, if the symbol is the last - then starting from the next one, otherwise from the same
 				for (size_t uNextLineIndex = uCurrContIndex >= pCurrLine->m_arConts.size() - 1 ?
 				     uCurrLineIndex + 1 : uCurrLineIndex; uNextLineIndex < m_arTextLines.size(); ++uNextLineIndex)
 				{
 					auto& pNextLine = m_arTextLines[uNextLineIndex];
 
-					// значительно ускоряет работу, то есть если никак не перескается - некст
+					// significantly speeds up the work, that is, if it doesn't get messed up, next
 					if (!pNextLine || pCurrLine->AreObjectsNoCrossingByVertically(pNextLine.get()))
 						continue;
 
-					// посимвольно смотрим некст линию - если та же то следующий символ, если другая - то с нуля
+					// look at the next line character by character - if it's the same, then the next character, if different, then from scratch
 					for (size_t uNextContIndex = uNextLineIndex != uCurrLineIndex ? 0 : uCurrContIndex + 1;
 					     uNextContIndex < pNextLine->m_arConts.size(); ++uNextContIndex)
 					{
 						if (!pCurrCont)
 							break;
 
-						// берем символ во второй линии
+						// take the symbol in the second line
 						auto& pNextCont = pNextLine->m_arConts[uNextContIndex];
 						if (!pNextCont)
 							continue;
@@ -1032,7 +1033,7 @@ namespace NSDocxRenderer
 						}
 					}
 
-					// проверили - удаляем
+					// checked - delete
 					if (is_smth_true)
 						shape_used = true;
 				}
@@ -1051,16 +1052,16 @@ namespace NSDocxRenderer
 		bool bIf1 = pShape->m_eGraphicsType == eGraphicsType::gtRectangle &&
 		        pShape->m_eLineType != eLineType::ltUnknown;
 
-		// Условие пересечения по вертикали
+		// Vertical intersection condition
 		bool bIf2 = pShape->m_dTop > dTopBorder && pShape->m_dBot < dBotBorder;
 
-		// Условие пересечения по горизонтали
+		// Horizontal intersection condition
 		bool bIf3 = h_type != eHorizontalCrossingType::hctUnknown &&
 		        h_type != eHorizontalCrossingType::hctCurrentLeftOfNext &&
 		        h_type != eHorizontalCrossingType::hctNoCrossingCurrentLeftOfNext &&
 		        h_type != eHorizontalCrossingType::hctNoCrossingCurrentRightOfNext;
 
-		// Условие для размеров по высоте
+		// Condition for height dimensions
 		bool bIf4 = pShape->m_dHeight < pCont->m_dHeight &&
 		        pCont->m_dHeight - pShape->m_dHeight > c_dERROR_FOR_TEXT_WITH_GRAPHICS_MM;
 
@@ -1074,17 +1075,17 @@ namespace NSDocxRenderer
 		             pShape->m_eGraphicsType == eGraphicsType::gtCurve) &&
 		        pShape->m_eLineType != eLineType::ltUnknown;
 
-		//Условие по вертикали
+		//Vertical condition
 		double max_diff = std::min(c_dGRAPHICS_ERROR_MM * 3, pCont->m_dHeight * 0.5);
 		bool bIf2 = fabs(pShape->m_dBot - pCont->m_dBot) < max_diff;
 
-		//Условие пересечения по горизонтали
+		//Horizontal intersection condition
 		bool bIf3 = h_type != eHorizontalCrossingType::hctUnknown &&
 		        h_type != eHorizontalCrossingType::hctCurrentLeftOfNext &&
 		        h_type != eHorizontalCrossingType::hctNoCrossingCurrentLeftOfNext &&
 		        h_type != eHorizontalCrossingType::hctNoCrossingCurrentRightOfNext;
 
-		//Условие для размеров по высоте
+		//Condition for height dimensions
 		bool bIf4 = pShape->m_dHeight < pCont->m_dHeight * 0.5 &&
 		        pCont->m_dHeight - pShape->m_dHeight > c_dERROR_FOR_TEXT_WITH_GRAPHICS_MM;
 
@@ -1101,22 +1102,22 @@ namespace NSDocxRenderer
 
 		bool bIf1 = pShape->m_eGraphicsType == eGraphicsType::gtRectangle;
 
-		//Условие пересечения по вертикали
+		//Vertical intersection condition
 		bool bIf2 = (dSomeBaseLine1 > pShape->m_dTop && dSomeBaseLine1 < pShape->m_dBot &&
 		             dSomeBaseLine2 > pShape->m_dTop && dSomeBaseLine2 < pShape->m_dBot &&
 		             dSomeBaseLine3 > pShape->m_dTop && dSomeBaseLine3 < pShape->m_dBot);
 
-		//Условие пересечения по горизонтали
+		//Horizontal intersection condition
 		bool bIf3 = h_type != eHorizontalCrossingType::hctUnknown &&
 		        h_type != eHorizontalCrossingType::hctNoCrossingCurrentLeftOfNext &&
 		        h_type != eHorizontalCrossingType::hctCurrentLeftOfNext &&
 		        h_type != eHorizontalCrossingType::hctNoCrossingCurrentRightOfNext;
 
-		//Цвета должны быть разными
+		//Colors must be different
 		bool bIf4 = pCont->m_pFontStyle->oBrush.Color1 != pShape->m_oBrush.Color1;
 		bool bIf5 = pShape->m_oBrush.Color1 == c_iBlackColor && pShape->m_oPen.Color == c_iWhiteColor;
-		bool bIf6 = pShape->m_bIsNoFill == false;
-		bool bIf7 = pShape->m_bIsNoStroke == true;
+		bool bIf6 = !pShape->m_bIsNoFill;
+		bool bIf7 = pShape->m_bIsNoStroke;
 
 		return bIf1 && bIf2 && bIf3 && bIf4 && !bIf5 && bIf6 && bIf7;
 	}
@@ -1241,7 +1242,7 @@ namespace NSDocxRenderer
 		if (bIsNeedWP)
 		{
 			oWriter.WriteString(L"<w:p>");
-			//note при удалении строки откуда-то добавляется <w:p/> в начале страницы (если есть графика и текст), что добавляет дополнительную строку и сдвигает текст
+			//note when deleting a line from somewhere, <w:p/> is added at the beginning of the page (if there are graphics and text), which adds an additional line and shifts the text
 			oWriter.WriteString(L"<w:pPr><w:spacing w:line=\"1\" w:lineRule=\"exact\"/></w:pPr>");
 		}
 
@@ -1411,8 +1412,8 @@ namespace NSDocxRenderer
 	{
 		for (const auto& text_line : m_arShapes)
 			if (text_line && text_line->m_eType == CShape::eShapeType::stTextBox && text_line->m_dBot > pFirst->m_dTop &&
-			        text_line->m_dBot < pFirst->m_dBot && !(
-			        text_line->m_dRight < pFirst->m_dLeft || text_line->m_dLeft > pFirst->m_dRight))
+			        text_line->m_dBot < pFirst->m_dBot &&
+			        text_line->m_dRight >= pFirst->m_dLeft && text_line->m_dLeft <= pFirst->m_dRight)
 				return true;
 
 		return false;
@@ -1588,14 +1589,14 @@ namespace NSDocxRenderer
 			        v_type == eVerticalCrossingType::vctNoCrossingCurrentBelowNext;
 		};
 
-		// линии из которых сделаем шейпы
+		// lines from which we will make shapes
 		for (size_t index = 0; index < m_arTextLines.size(); ++index)
 		{
 			auto& curr_line = m_arTextLines[index];
 			if (!curr_line)
 				continue;
 
-			// если линия пересекается с предыдущей линией
+			// if the line intersects with the previous line
 			if (index && m_arTextLines[index - 1])
 			{
 				auto& prev_line = m_arTextLines[index - 1];
@@ -1639,14 +1640,14 @@ namespace NSDocxRenderer
 		double min_left{m_dWidth};
 		double max_right{0.0};
 
-		// совпадает ли left, right, center со строкой ниже
+		// does left, right, center match with the line below
 		struct Position {
 			bool left{false};
 			bool center{false};
 			bool right{false};
 		};
 
-		// lamda to setup and add paragpraph
+		// lambda to setup and add paragraph
 		auto add_paragraph = [this, &max_right, &min_left, &ar_paragraphs] (paragraph_ptr_t& paragraph) {
 
 			std::shared_ptr<CTextLine>& firstLine = paragraph->m_arTextLines.front();
@@ -1747,7 +1748,7 @@ namespace NSDocxRenderer
 			max_right = 0.0;
 		};
 
-		// lamda to add line and setup min_left/max_right
+		// lambda to add line and setup min_left/max_right
 		auto add_line = [&min_left, &max_right] (paragraph_ptr_t& paragraph, const text_line_ptr_t& curr_line) {
 			min_left = std::min(min_left, curr_line->m_dLeft);
 			max_right = std::max(max_right, curr_line->m_dRight);
@@ -1756,23 +1757,23 @@ namespace NSDocxRenderer
 		};
 
 		auto build_paragraphs = [this, add_line, add_paragraph] (const std::vector<text_line_ptr_t>& text_lines) {
-			// ar_spacing[index]- расстояние строки до строки снизу
-			// если 0.0 - строка последняя
+			// ar_spacing[index] - distance of the line to the line below
+			// if 0.0 - last line
 			std::vector<double> ar_spacings(text_lines.size(), 0.0);
 
-			// позиции относительно других линий
+			// positions relative to other lines
 			std::vector<Position> ar_positions(text_lines.size());
 
-			// требуется ли отступ
+			// is indentation required?
 			std::vector<bool> ar_indents(text_lines.size(), false);
 
-			// если ar_delims[index] == true, после строчки index нужно начинать новый параграф
+			// if ar_delims[index] == true, after the line index start a new paragraph
 			std::vector<bool> ar_delims(text_lines.size(), false);
 
 			double avg_spacing{0.0};
 			size_t avg_spacing_n{0};
 
-			// параграф будет набиваться строчками
+			// the paragraph will be filled with lines
 			auto paragraph = std::make_shared<CParagraph>();
 
 			// calcs first word widths
@@ -1820,7 +1821,7 @@ namespace NSDocxRenderer
 					ar_delims[index] = false;
 				else
 				{
-					// берем доп строчки сверху и снизу для анализа
+					// take additional lines from above and below for analysis
 					bool same_double_top = false;
 					bool same_double_bot = false;
 
@@ -1837,7 +1838,7 @@ namespace NSDocxRenderer
 							same_double_bot = true;
 					}
 
-					// если анализ доп строчек ничего не дал - разбиваем наиболее "вероятным" способом
+					// if the analysis of additional lines yielded nothing, split it in the most "probable" way
 					if (same_double_top == same_double_bot)
 					{
 						if (spacing_top > spacing_bot)
@@ -1845,7 +1846,7 @@ namespace NSDocxRenderer
 						else if (spacing_top < spacing_bot)
 							ar_delims[index] = true;
 					}
-					// прикрепляем строчку к верху или низу
+					// attach the line to the top or bottom
 					else
 					{
 						if (same_double_top)
@@ -1880,16 +1881,14 @@ namespace NSDocxRenderer
 					curr_position.right &= position.right;
 				}
 
-				// первая строка может быть с отступом
+				// the first line may be indented
 				double first_line_indent = line_top->m_dLeft - line_bot->m_dLeft;
 				if (is_first_line && first_line_indent < c_dMAX_FIRST_LINE_INDENT)
 				{
-					// если больше трех линий - проверим третью
+					// if there are more than three lines, check the third
 					if (index < ar_positions.size() - 2)
 					{
-						if (!ar_delims[index] && !ar_delims[index + 1] && ar_positions[index + 1].left)
-							ar_indents[index] = true;
-						else if (!ar_delims[index] && ar_delims[index + 1])
+						if (!ar_delims[index] && (ar_delims[index + 1] || ar_positions[index + 1].left))
 							ar_indents[index] = true;
 					}
 					else
@@ -1919,8 +1918,8 @@ namespace NSDocxRenderer
 				auto& line_top = text_lines[index];
 				auto& line_bot = text_lines[index + 1];
 
-				bool is_start = index == 0 || ar_delims[index - 1] == true;
-				bool is_end = index == ar_positions.size() - 1 || ar_delims[index + 1] == true;
+				bool is_start = index == 0 || ar_delims[index - 1];
+				bool is_end = index == ar_positions.size() - 1 || ar_delims[index + 1];
 				bool is_diff = fabs(line_top->m_dHeight - line_bot->m_dHeight) > (line_top->m_dHeight + line_bot->m_dHeight) / 4;
 				if (is_start && is_end && is_diff)
 					ar_delims[index] = true;
@@ -1993,7 +1992,7 @@ namespace NSDocxRenderer
 					ar_delims[index] = true;
 			}
 
-			// если между линий шейп - делим
+			// if there is a shape between the lines, we divide
 			for (size_t index = 0; index < ar_positions.size() - 1; ++index)
 			{
 				if (IsHorizontalLineBetween(text_lines[index], text_lines[index + 1]))
@@ -2002,7 +2001,7 @@ namespace NSDocxRenderer
 					ar_delims[index] = true;
 			}
 
-			// на основе ar_delims разбиваем на параграфы
+			// based on ar_delims we divide into paragraphs
 			for (size_t index = 0; index < ar_delims.size(); ++index)
 			{
 				add_line(paragraph, text_lines[index]);
@@ -2011,7 +2010,7 @@ namespace NSDocxRenderer
 			}
 		};
 
-		// 1 строчка в параграфе
+		// 1 line per paragraph
 		if (m_eTextAssociationType == TextAssociationType::tatPlainLine ||
 		        m_eTextAssociationType == TextAssociationType::tatShapeLine)
 		{
@@ -2301,7 +2300,7 @@ namespace NSDocxRenderer
 		struct Crossing;
 		struct Line;
 
-		enum class eLineDirection
+		enum class eLineDirection : std::uint8_t
 		{
 			ldTop,
 			ldBot,

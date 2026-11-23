@@ -1,33 +1,130 @@
 # ==============================================================================
 # MODULE DOCKERFILE
-# This file is not meant to be built standalone. It is consumed by the 
+# This file is not meant to be built standalone. It is consumed by the
 # docker-bake.hcl files in the parent monorepos.
+#
+# BUILD BASE PER PRODUCT / ARCH
+#
+#               amd64           arm64
+#   server      Rocky Linux 9   Rocky Linux 9
+#   desktop     Rocky Linux 9   Ubuntu 24.04
+#
+# Server: the deploy target is Rocky 9 (glibc 2.34). The toolchain emits a
+#   reference to __libc_single_threaded (glibc 2.32), so the build glibc must
+#   be in [2.32, 2.34]. Ubuntu 20.04 (2.31) is below that window, Ubuntu 22.04
+#   (2.35) is above it; building on Rocky 9 itself matches the target exactly.
+#
+# Desktop: the prebuilt Qt host tools fetched via aqt need glibc >= 2.38 on
+#   arm64 (Qt builds its arm64 Linux binaries on Ubuntu 24.04), so arm64
+#   desktop must build on 24.04. amd64 Qt binaries only need glibc 2.34, so
+#   amd64 desktop reuses the Rocky 9 server base: building on 22.04 (2.35) leaks
+#   GLIBC_2.35 symbols (e.g. hypotf) into the binaries and the app then fails
+#   to start on RHEL/Rocky/Alma 9. Rocky 9 (2.34) cannot run the arm64 Qt tools.
+#
+# vcpkg binary cache: plain vcpkg "files" provider. The directory keeps the
+# historical /nuget-cache path because desktop-apps.bake.Dockerfile mounts
+# its cache there and inherits VCPKG_BINARY_SOURCES from core-base.
 # ==============================================================================
 
-ARG NUGET_CACHE=local
 ARG BUILD_ROOT
-ARG NUGET_SOURCE_PATH
+ARG PRODUCT=server
+ARG TARGETARCH
 
-#### VCPKG BASE ####
-FROM ubuntu:22.04 AS vcpkg-base
 
-    # Avoid interactive prompts during package install
+#### SERVER BASE (Rocky Linux 9, both arches) ####
+FROM rockylinux/rockylinux:9 AS core-base-server
+
+    # Skip mirrors slower than 200 kB/s. The mirrorlist can hand out one that
+    # serves ~10-80 kB/s, which stretches this stage to one or two hours.
+    RUN printf 'minrate=200k\ntimeout=30\nmax_parallel_downloads=10\n' >> /etc/dnf/dnf.conf
+
+    # EPEL + CRB provide ninja-build, ccache, python3-httplib2 and several
+    # -devel packages not in the base channels.
+    RUN dnf install -y dnf-plugins-core epel-release && \
+        dnf config-manager --set-enabled crb && \
+        dnf install -y \
+            ca-certificates git zip unzip tar \
+            sudo wget gnupg2 openssh-clients ccache \
+            gcc gcc-c++ libstdc++-static libatomic make ninja-build pkgconf-pkg-config \
+            glib2-devel \
+            python3 python3-pip python3-setuptools python3-httplib2 \
+            python3.12 python3.12-pip python3.12-setuptools \
+            python-unversioned-command \
+            autoconf automake libtool findutils \
+            perl perl-FindBin perl-IPC-Cmd perl-Data-Dumper \
+            diffutils which file xz bzip2 patch \
+        && dnf clean all
+
+    # rockylinux:9 ships curl-minimal; --allowerasing swaps in the full curl
+    # CLI (needed by some bootstrap scripts).
+    RUN dnf install -y --allowerasing curl && dnf clean all
+
+    # The core build scripts need Python >= 3.10 (PEP 604 "X | None" hints).
+    # el9's /usr/bin/python3 is 3.9 and must stay that way (dnf depends on it),
+    # so the build is pointed at the AppStream python3.12 instead via
+    # -DPYTHON_BIN (see core stage).
+    ENV CORE_PYTHON=/usr/bin/python3.12
+
+    # vcpkg requires a newer CMake than el9 ships (3.20-3.26). The PyPI wheel
+    # ships a prebuilt cmake binary, so no Kitware repo or GitHub access is
+    # needed.
+    RUN pip3 install --no-cache-dir "cmake>=4" && cmake --version
+
+    # Clang/LLVM for V8 (core itself builds with gcc). V8 14.x needs a recent
+    # clang; AppStream's current one (21.x on Rocky 9.8) is new enough. On el9
+    # the binaries are unversioned, so no update-alternatives needed.
+    RUN dnf install -y clang lld llvm compiler-rt && dnf clean all
+
+
+#### DESKTOP BASE (Rocky Linux 9 on amd64, Ubuntu 24.04 on arm64) ####
+FROM core-base-server AS core-base-desktop-amd64
+
+FROM ubuntu:24.04 AS core-base-desktop-arm64
+
+    # 24.04 ships Python 3.12, which is new enough.
+    ENV CORE_PYTHON=/usr/bin/python3
+    ENV TZ=Etc/UTC
     ENV DEBIAN_FRONTEND=noninteractive
 
-    # Install system dependencies
-    RUN apt-get update && apt-get install -y \
-        ca-certificates \
-        git \
-        curl \
-        zip \
-        unzip \
-        tar \
-        build-essential \
-        pkg-config \
-        cmake \
-        ninja-build \
-        mono-devel \
+    RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+        apt-get update && apt-get install -yq --no-install-recommends \
+            ca-certificates git curl zip unzip tar \
+            sudo wget ssh gpg ccache \
+            build-essential make cmake ninja-build pkg-config \
+            libglib2.0-dev \
+            python3 python-is-python3 python3-venv python3-setuptools \
+            python3-httplib2 \
+            lsb-release autoconf automake libtool findutils \
+            gn \
         && rm -rf /var/lib/apt/lists/*
+
+    # Clang/LLVM for V8. apt.llvm.org needs a pinned major; the Rocky 9 server
+    # base can't pin one, AppStream only has its current clang. libclang-rt
+    # has the builtins library V8's build links.
+    RUN mkdir -p /etc/apt/keyrings && \
+        wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | \
+        gpg --dearmor -o /etc/apt/keyrings/llvm-snapshot.gpg && \
+        echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/noble/ llvm-toolchain-noble-21 main" \
+        > /etc/apt/sources.list.d/llvm-21.list && \
+        apt-get update && apt-get install -yq --no-install-recommends \
+            clang-21 lld-21 llvm-21 libclang-rt-21-dev \
+            qemu-user-static binfmt-support && \
+        rm -rf /var/lib/apt/lists/*
+
+    # set clang 21 as standard
+    RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 100 && \
+        update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 100 && \
+        update-alternatives --install /usr/bin/llvm-ar llvm-ar /usr/bin/llvm-ar-21 100 && \
+        update-alternatives --install /usr/bin/llvm-nm llvm-nm /usr/bin/llvm-nm-21 100 && \
+        update-alternatives --install /usr/bin/llvm-ranlib llvm-ranlib /usr/bin/llvm-ranlib-21 100 && \
+        update-alternatives --install /usr/bin/lld lld /usr/bin/lld-21 100
+
+FROM core-base-desktop-${TARGETARCH} AS core-base-desktop
+
+
+#### CORE BASE (shared tail for both products) ####
+FROM core-base-${PRODUCT} AS core-base
+    ARG BUILD_ROOT=/package
 
     # Install vcpkg
     WORKDIR /opt
@@ -35,125 +132,42 @@ FROM ubuntu:22.04 AS vcpkg-base
         && cd vcpkg \
         && ./bootstrap-vcpkg.sh
 
-    # Make vcpkg available globally
     ENV VCPKG_ROOT=/opt/vcpkg
-    ENV PATH="${VCPKG_ROOT}:${PATH}"
+    ENV PATH="${VCPKG_ROOT}:/root/.cargo/bin:${PATH}"
 
-    ENV VCPKG_BINARY_SOURCES="clear;nuget,NuGetCache,readwrite;nugettimeout,3600"
-
-
-FROM vcpkg-base AS vcpkg-local
-
-    RUN vcpkg fetch nuget && \
-        mkdir /nuget-cache && \
-        mono $(vcpkg fetch nuget) sources add \
-            -Source "/nuget-cache" \
-            -Name "NuGetCache"
-
-
-FROM vcpkg-base AS vcpkg-remote
-
-    ARG NUGET_REMOTE_URL
-    ARG NUGET_USERNAME
-    ARG NUGET_PASSWORD
-
-    RUN vcpkg fetch nuget && \
-        mono $(vcpkg fetch nuget) sources add \
-            -Source "${NUGET_REMOTE_URL}" \
-            -Name "NuGetCache" \
-            -Username "${NUGET_USERNAME}" \
-            -Password "${NUGET_PASSWORD}" \
-            -StorePasswordInClearText
-
-
-
-#### CORE BASE ####
-# Build on Ubuntu 22.04 (Jammy, glibc 2.35) so the output binaries never
-# reference glibc symbols newer than 2.35.  This covers Debian 12 (glibc 2.36)
-# and Rocky Linux 9 (glibc 2.34 — glibc 2.35 symbols are avoided in practice
-# as the code does not call any functions first introduced in 2.35).
-# libstdc++ and libgcc are statically linked via -static-libstdc++ -static-libgcc
-# (see common.cmake) so the GLIBCXX version on the target system is irrelevant.
-# glibc itself cannot be statically linked into shared libraries, hence the
-# old Ubuntu base remains necessary.
-FROM vcpkg-${NUGET_CACHE} AS core-base
-    ARG BUILD_ROOT=/package
-    ARG TARGETARCH
-
-    ENV TZ=Etc/UTC
-    ENV DEBIAN_FRONTEND=noninteractive
-
-    # cmake from ubuntu noble is 3.28.x; vcpkg now requires >=4.x.
-    # Install cmake 4.x from Kitware's apt repo here (after vcpkg bootstrap)
-    # so the vcpkg-base git-clone+bootstrap layer remains cacheable even when
-    # GitHub CDN is unreachable in network-restricted build environments.
-    RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
-        apt-get update && \
-        DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            git curl sudo wget ssh gpg \
-            build-essential make ninja-build pkg-config \
-            libglib2.0-dev \
-            python3 python-is-python3 python3-venv python3-setuptools \
-            python3-httplib2 \
-            lsb-release autoconf automake libtool findutils \
-            gn \
-        #&& curl -fsSL https://apt.kitware.com/keys/kitware-archive-latest.asc \
-        #    | gpg --dearmor -o /etc/apt/keyrings/kitware.gpg \
-        #&& echo "deb [signed-by=/etc/apt/keyrings/kitware.gpg] https://apt.kitware.com/ubuntu/ noble main" \
-        #    > /etc/apt/sources.list.d/kitware.list \
-        #&& apt-get update && apt-get install -y cmake \
-        && rm -rf /var/lib/apt/lists/*
-
-    # clang-13 required for V8 9.x — only available on jammy (22.04), not noble (24.04)
-    RUN wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | \
-        gpg --dearmor -o /etc/apt/keyrings/llvm-snapshot.gpg && \
-        echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-13 main" \
-        > /etc/apt/sources.list.d/llvm-13.list && \
-        apt-get update && apt-get install -y \
-            clang-13 lld-13 llvm-13-dev llvm-13 \
-            libc++-13-dev libc++abi-13-dev \
-            qemu-user-static binfmt-support && \
-        rm -rf /var/lib/apt/lists/*
-
-    # set clang 13 as standard
-    RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-13 100 && \
-        update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-13 100 && \
-        update-alternatives --install /usr/bin/llvm-ar llvm-ar /usr/bin/llvm-ar-13 100 && \
-        update-alternatives --install /usr/bin/llvm-nm llvm-nm /usr/bin/llvm-nm-13 100 && \
-        update-alternatives --install /usr/bin/llvm-ranlib llvm-ranlib /usr/bin/llvm-ranlib-13 100 && \
-        update-alternatives --install /usr/bin/lld lld /usr/bin/lld-13 100
-
-
-    ENV PATH="/root/.cargo/bin:${PATH}"
+    # vcpkg binary cache (see header for why the path is /nuget-cache)
+    ENV VCPKG_BINARY_SOURCES="clear;files,/nuget-cache,readwrite"
+    RUN mkdir -p /nuget-cache
 
     # Git needs to allow repo paths copied by Docker
     RUN git config --global --add safe.directory '*'
-
-    # upstream behavior — unchanged
-    COPY core /core
 
     ENV BUILD_ROOT=${BUILD_ROOT}
 
 
 #### CORE ####
 FROM core-base AS core
-    ARG NUGET_SOURCE_PATH
-    ARG TARGETARCH
+
+    # copy sources right before the final build stage
+    COPY core /core
+
+    # Prebuilt third-party libs come from the remote cache (see
+    # Common/3dParty/build_3rdparty_common.py). The optional
+    # remote_cache_s3_access_key/remote_cache_s3_secret_key secrets also
+    # upload the ones missing there.
+    # CORE_CCACHE compiles through ccache, for runners whose BuildKit cache
+    # doesn't survive the job: they fill and save the mount core-ccache.
+    ARG CORE_CCACHE
     RUN --mount=type=cache,target=/build-cache \
-        --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw \
-        VCPKG_TRIPLET=$([ "$TARGETARCH" = "arm64" ] && echo "arm64-linux-dynamic" || echo "x64-linux-dynamic") && \
+        --mount=type=cache,target=/nuget-cache,id=vcpkg-binary-cache \
+        --mount=type=cache,target=/ccache,id=core-ccache \
+        --mount=type=secret,id=remote_cache_s3_access_key \
+        --mount=type=secret,id=remote_cache_s3_secret_key \
+        export REMOTE_CACHE_S3_ACCESS_KEY="$(cat /run/secrets/remote_cache_s3_access_key 2>/dev/null)" && \
+        export REMOTE_CACHE_S3_SECRET_KEY="$(cat /run/secrets/remote_cache_s3_secret_key 2>/dev/null)" && \
+        export CCACHE_DIR=/ccache CCACHE_MAXSIZE=2G && \
         mkdir -p ${BUILD_ROOT} && \
-        cd /build-cache && \
-        cmake -GNinja \
-        -DVCPKG_MANIFEST_MODE=ON \
-        -DVCPKG_MANIFEST_DIR=/core \
-        -DVCPKG_TARGET_TRIPLET=${VCPKG_TRIPLET} \
-        -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_CXX_FLAGS_RELEASE="-O3 -w" \
-        -DCMAKE_C_FLAGS_RELEASE="-O3 -w" \
-        -DEO_CORE_OUTPUT_DIR=./package/bin \
-        -DEO_CORE_TOOLS_DIR=./package/tools \
-        /core && \
-        cmake --build . && \
-        cp -r package/* ${BUILD_ROOT}
+        ${CORE_CCACHE:+ccache --zero-stats} && \
+        /core/scripts/build.sh --build-dir /build-cache --output /build-cache/package ${CORE_CCACHE:+--ccache} && \
+        ${CORE_CCACHE:+ccache --show-stats} && \
+        cp -r /build-cache/package/* ${BUILD_ROOT}

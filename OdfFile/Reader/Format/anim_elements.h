@@ -34,7 +34,7 @@ namespace cpdoccore {
 namespace odf_reader {
 
 //anim:par
-class anim_par : public office_element_impl<anim_par>//Параллельные анимации
+class anim_par : public office_element_impl<anim_par>//Parallel Animations
 {
 public:
     static const wchar_t * ns;
@@ -62,7 +62,7 @@ private:
 CP_REGISTER_OFFICE_ELEMENT2(anim_par);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //anim:seq
-class anim_seq : public office_element_impl<anim_seq>//Последовательные анимации
+class anim_seq : public office_element_impl<anim_seq>//Sequential animations
 {
 public:
     static const wchar_t * ns;

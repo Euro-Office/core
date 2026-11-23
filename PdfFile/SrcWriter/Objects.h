@@ -86,7 +86,7 @@ namespace PdfWriter
 			m_unFlags = 0;
 			m_unGenNo = 0;
 			m_unObjId = 0;
-			m_pXrefEntry = NULL;
+			m_pXrefEntry = nullptr;
 		}
 		virtual ~CObjectBase() 
 		{}
@@ -95,7 +95,7 @@ namespace PdfWriter
 		{
 			return object_type_UNKNOWN;
 		}
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const
 		{
 			return pOut ? pOut : new CObjectBase();
 		}
@@ -133,7 +133,7 @@ namespace PdfWriter
 	{
 	public:
 
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const
 		{
 			return pOut ? pOut : new CNullObject();
 		}
@@ -151,7 +151,7 @@ namespace PdfWriter
 		{
 			m_bValue = bValue;
 		}
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const
 		{
 			if (pOut && pOut->GetType() == object_type_BOOLEAN)
 			{
@@ -187,7 +187,7 @@ namespace PdfWriter
 		{
 			m_nValue = nValue;
 		}
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const
 		{
 			if (pOut && pOut->GetType() == object_type_NUMBER)
 			{
@@ -231,7 +231,7 @@ namespace PdfWriter
 		{
 			Set((float)dValue);
 		}
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const
 		{
 			if (pOut && pOut->GetType() == object_type_REAL)
 			{
@@ -273,7 +273,7 @@ namespace PdfWriter
 		{
 			return m_sValue;
 		}
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const
 		{
 			if (pOut && pOut->GetType() == object_type_NAME)
 			{
@@ -306,7 +306,7 @@ namespace PdfWriter
 		{
 			return m_unLen;
 		}
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const
 		{
 			if (pOut && pOut->GetType() == object_type_STRING)
 			{
@@ -349,7 +349,7 @@ namespace PdfWriter
 		{
 			return m_unLen;
 		}
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const
 		{
 			if (pOut && pOut->GetType() == object_type_BINARY)
 			{
@@ -377,7 +377,7 @@ namespace PdfWriter
 		{
 			return m_pObject;
 		}
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const
 		{
 			if (pOut && pOut->GetType() == object_type_PROXY && ((CProxyObject*)pOut)->m_pObject)
 			{
@@ -430,7 +430,7 @@ namespace PdfWriter
 		static CArrayObject* CreateBox(const TBox& oBox);
 		static CArrayObject* CreateBox(double dL, double dB, double dR, double dT);
 		static CArrayObject* CreateMatrix(double* m);
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const;
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const;
 		void FromXml(const std::wstring& sXml);
 
 	protected:
@@ -478,7 +478,7 @@ namespace PdfWriter
 		virtual void      BeforeWrite(){}
 		virtual void      Write(CStream* pStream){}
 		virtual void      AfterWrite(CStream* pStream){}
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const;
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const;
 		virtual EDictType GetDictType() const
 		{
 			return dict_type_UNKNOWN;

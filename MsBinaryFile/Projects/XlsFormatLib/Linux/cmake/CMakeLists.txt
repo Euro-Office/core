@@ -8,9 +8,6 @@ include(${CORE_ROOT_DIR}/common.cmake)
 set(XLS_FILE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/XlsFile")
 set(COMMON_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/Common")
 
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 add_library(XlsFormatLib STATIC
     ${XLS_FILE_SOURCES_DIR}/Format/Auxiliary/HelpFunc.cpp
     ${XLS_FILE_SOURCES_DIR}/Format/Binary/CFRecord.cpp
@@ -119,6 +116,13 @@ target_precompile_headers(XlsFormatLib PRIVATE
 
 set_default_options(XlsFormatLib)
 
+if( MSVC )
+    target_compile_definitions( XlsFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_include_directories(XlsFormatLib PRIVATE
     ${XLS_FILE_SOURCES_DIR}/Format
     ${XLS_FILE_SOURCES_DIR}/Format/Logic
@@ -133,6 +137,16 @@ target_link_libraries(XlsFormatLib PRIVATE
     Boost::date_time
 )
 
+if( MSVC )
+    target_compile_options( XlsFormatLib PRIVATE /bigobj )
+endif()
+
+# A non-void function that runs off its end is undefined behaviour. GCC only warns, and at -O3 it treated the
+# missing `return` in PIVOTLI::saveContent as unreachable code: every XLS export of a pivot table crashed.
+if( CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" )
+    target_compile_options( XlsFormatLib PRIVATE -Werror=return-type )
+endif()
+
 set_property(TARGET XlsFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-copy_boost_libs(XlsFormatLib)
+declare_victory( XlsFormatLib )

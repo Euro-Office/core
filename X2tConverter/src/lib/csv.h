@@ -174,7 +174,7 @@ namespace NExtractTools
 			std::wstring sXmlOptions = params.getXmlOptionsTo();
 			nRes = oCXlsxSerializer.loadFromFile(sTargetBin, sTo, sXmlOptions, sMediaPath, sEmbedPath);
 		}
-		// удаляем EditorWithChanges, потому что он не в Temp
+		// remove EditorWithChanges because it isn't in Temp
 		if (sFrom != sTargetBin)
 			NSFile::CFileBinary::Remove(sTargetBin);
 		return nRes;

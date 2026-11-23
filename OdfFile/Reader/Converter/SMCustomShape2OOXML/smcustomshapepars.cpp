@@ -345,7 +345,7 @@ namespace OdfCustomShape
 		else
 			return false;
 	}
-	//Нет сравнения + и /
+	//No comparison + and /
 	bool CElementArithmeticOperations::ComparisonSign(const std::wstring& wsSign)
 	{
 		return((m_enTypeSign == TypeElement::multiplication && wsSign == L"/") || (m_enTypeSign == TypeElement::plus && wsSign == L"-"));
@@ -913,7 +913,7 @@ namespace OdfCustomShape
 	}
 	std::wstring SMCustomShapeConversion::GetStringXml()
 	{
-		return m_pXmlWriter->GetXmlString();
+		return m_pXmlWriter ? m_pXmlWriter->GetXmlString() : L"";
 	}
 	void SMCustomShapeConversion::WritingFormulaXml(XmlUtils::CXmlWriter* pXmlWriter,const std::wstring& wsNameFormula,const std::wstring& wsFormula)
 	{

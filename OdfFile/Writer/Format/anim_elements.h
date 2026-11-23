@@ -37,7 +37,7 @@
 namespace cpdoccore { 
 namespace odf_writer {
 
-class anim_par : public office_element_impl<anim_par>//Параллельные анимации
+class anim_par : public office_element_impl<anim_par>//Parallel Animations
 {
 public:
     static const wchar_t * ns;
@@ -59,7 +59,7 @@ public:
 };
 CP_REGISTER_OFFICE_ELEMENT2(anim_par);
 
-class anim_seq : public office_element_impl<anim_seq>//Последовательные анимации
+class anim_seq : public office_element_impl<anim_seq>//Sequential animations
 {
 public:
     static const wchar_t * ns;

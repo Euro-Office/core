@@ -28,7 +28,7 @@
 #include "Types.h"
 #include "Objects.h"
 
-// Стандартные значения для Graphic State
+// Standard values for Graphic State
 #define DEF_FONT               "Helvetica"
 #define DEF_WORDSPACE          0
 #define DEF_CHARSPACE          0

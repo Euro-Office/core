@@ -23,7 +23,7 @@
 
 #if CXIMAGE_SUPPORT_TIF
 
-#include "../tiff/tiffio.h"
+#include <tiffio.h>
 
 class DLL_EXP CxImageTIF: public CxImage
 {
@@ -48,7 +48,7 @@ public:
 #endif // CXIMAGE_SUPPORT_ENCODE
 
 protected:
-	void TileToStrip(uint8* out, uint8* in,	uint32 rows, uint32 cols, int32_t outskew, int32_t inskew);
+	void TileToStrip(uint8_t* out, uint8_t* in,	uint32_t rows, uint32_t cols, int32_t outskew, int32_t inskew);
 	bool EncodeBody(TIFF *m_tif, bool multipage=false, int32_t page=0, int32_t pagecount=0);
 	TIFF *m_tif2;
 	bool m_multipage;

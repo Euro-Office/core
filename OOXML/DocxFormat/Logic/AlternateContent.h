@@ -41,7 +41,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CAlternateContent)
 
-			CAlternateContent(OOX::Document *pMain = NULL);
+			CAlternateContent(OOX::Document *pMain = nullptr);
 			virtual ~CAlternateContent();
 
 			void Clear();

@@ -32,7 +32,7 @@ namespace OOX
 	}
 	External::External(OOX::Document* pMain, const CPath& uri) : File(pMain)
 	{
-		read(uri);
+		External::read(uri);
 	}
 	External::~External()
 	{

@@ -151,7 +151,7 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 				Context.set_rtl(false);
 			}
 		}
-		if (Context.get_rtl()) //может быть он установился от стиля родителя !!
+		if (Context.get_rtl()) //maybe it was installed from the parent's style!!
 		{
 			_pPr << L"<w:bidi/>";
 		}
@@ -180,9 +180,10 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 			if (outline_style)
 			{
 				bool bListEnabled = true;
-				if (level < outline_style->content_.size())
+				// ODF counts outline levels from 1, content_ holds level 1 at index 0
+				if (level >= 1 && level <= (int)outline_style->content_.size())
 				{
-					office_element_ptr elm = outline_style->content_[level];
+					office_element_ptr elm = outline_style->content_[level - 1];
 					text_outline_level_style* outline_level = dynamic_cast<text_outline_level_style*>(elm.get());
 					if (outline_level)
 					{
@@ -198,7 +199,7 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 				_pPr << L"<w:numPr>";
 				    auto temp_name = Context.get_temp_style_name();
 					Context.status_para[temp_name] = true;
-					if (bListEnabled && level < 9 && bOutlineList)
+					if (bListEnabled && level <= 9 && bOutlineList)
 					{
 						_pPr << L"<w:ilvl w:val=\"" << level - 1 << L"\"/>";
 						_pPr << L"<w:numId w:val=\"" << list_styles.id_outline() << L"\"/>";
@@ -228,7 +229,7 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 
 			if (!jc.empty()) CP_XML_NODE(L"w:jc"){CP_XML_ATTR(L"w:val", jc );}
 		}
-		else if (fo_keep_with_next_) //&& Context.get_drop_cap_context().state() != 2
+		if (fo_keep_with_next_ && Context.get_drop_cap_context().state() != 2)
 		{
 			std::wstring val; 
 			if (fo_keep_with_next_->get_type() == keep_together::Always)
@@ -356,8 +357,12 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 					CP_XML_STREAM() << L"<w:bottom " << w_bottom << L" />";
 			}
 		}
+		// distance between a header/footer and the page body, for the header/footer paragraph next to the body
+		const bool edge_spacing = !Context.get_header_footer_context().edge_attr().empty();
+
 		if ((style_line_height_at_least_ || fo_line_height_ || style_line_spacing_ ||
-			fo_margin_top_ || fo_margin_bottom_ || fo_margin_) && Context.get_drop_cap_context().state() != 2)
+			fo_margin_top_ || fo_margin_bottom_ || fo_margin_ || edge_spacing) &&
+			Context.get_drop_cap_context().state() != 2)
 		{
 			std::wstring w_after, w_before;
 			std::wstring w_line, w_lineRule;
@@ -365,8 +370,15 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
             w_after = docx_process_margin(fo_margin_bottom_, 20.0);
             w_before = docx_process_margin(fo_margin_top_, 20.0);
 
-			// TODO :   здесь 240 берется из корневого стиля? надо не константу использовать а брать оттуда
-			//          в xsl преобразованиях так же написано 
+			if (edge_spacing)
+			{
+				oox::header_footer_context & edge = Context.get_header_footer_context();
+				(edge.edge_attr_name() == L"w:after" ? w_after : w_before) = std::to_wstring(edge.edge_attr_twips());
+				edge.reset_edge_attr();
+			}
+
+			// TODO: is 240 taken from the root style here? shouldn't use a constant but take it from there
+			//          in xsl transformations it is also written
 			if (fo_line_height_)
 			{
 				if (fo_line_height_->get_type() == line_width::Percent)
@@ -409,7 +421,7 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 			}
 		}
 		_CP_OPT(odf_types::length_or_percent) curr_margin_left_ = fo_margin_left_;
-		if (curr_margin_left_ || //? + буквица
+		if (curr_margin_left_ || //? + drop cap
 			fo_margin_right_ || 
 			(fo_text_indent_ && Context.get_drop_cap_context().state() != 1))
 		{
@@ -449,7 +461,7 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 			    CP_XML_ATTR(L"w:start", w_left);
 				CP_XML_ATTR(L"w:end", w_right);
 
-				if (Context.get_drop_cap_context().state() != 1 )//состояние сразу после добавления буквицы - не нужны ни отступы, ни висячие
+				if (Context.get_drop_cap_context().state() != 1 )//state immediately after adding a drop cap - no indents or hanging ones needed
 				{
 					if (!w_hanging.empty())
 						CP_XML_ATTR(L"w:hanging", w_hanging);
@@ -526,7 +538,7 @@ void style_tab_stop::docx_convert(oox::docx_conversion_context & Context, bool c
 
     _pPr << L"<w:tab";
 
-	length def_tab =  length(1.0, length::cm);// в ms значение 0.8 не корректно оО
+	length def_tab =  length(1.0, length::cm);// in ms the value 0.8 isn't correct OO
 		
 	double tab_pos_offset = (!Context.get_paragraph_state() || Context.is_table_content()) ? margin_left : 0;
 

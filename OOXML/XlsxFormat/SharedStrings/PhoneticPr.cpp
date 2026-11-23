@@ -113,7 +113,7 @@ namespace OOX
 		}
 		void CPhonetic::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 
 				WritingElement_ReadAttributes_Read_if     ( oReader, _T("alignment"),      m_oAlignment )
@@ -142,6 +142,7 @@ namespace OOX
 					case 3:
 						m_oAlignment = SimpleTypes::Spreadsheet::phoneticalignmentDistributed;
 						break;
+					default: break;
 				}
 
 				switch(ptr->phType)
@@ -158,6 +159,7 @@ namespace OOX
 					case 3:
 						m_oType = SimpleTypes::Spreadsheet::phonetictypeNoConversion;
 						break;
+					default: break;
 				}
 
 				m_oFontId = ptr->ifnt;
@@ -227,7 +229,7 @@ namespace OOX
 		}
 		void CRPh::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 
 			WritingElement_ReadAttributes_Read_if     ( oReader, _T("eb"),      m_oEb )

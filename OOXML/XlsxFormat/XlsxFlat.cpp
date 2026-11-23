@@ -62,7 +62,7 @@ namespace Spreadsheet
 		
 		m_maxDigitSize = std::make_pair(0, 0);
 		
-		read( oFilePath );
+		CXlsxFlat::read( oFilePath );
 	}
 	CXlsxFlat::~CXlsxFlat()
 	{
@@ -75,7 +75,7 @@ namespace Spreadsheet
 			if (m_arWorksheets[i])
 			{
 				delete m_arWorksheets[i];
-				m_arWorksheets[i] = NULL; 
+				m_arWorksheets[i] = nullptr; 
 			}
 		}
 		m_arWorksheets.clear();
@@ -91,9 +91,9 @@ namespace Spreadsheet
 		if ( !oReader.ReadNextNode() )
 			return;
 
-		fromXML(oReader);
+		CXlsxFlat::fromXML(oReader);
 	}
-	void CXlsxFlat::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
+	void CXlsxFlat::write(const CPath& oFilePath, const CPath&  /*oDirectory*/, CContentTypes&  /*oContent*/) const
 	{
 		std::wstring sXml = toXML();
 
@@ -135,11 +135,11 @@ namespace Spreadsheet
 		if ( oReader.IsEmptyNode() )
 			return;
 
-		if (false == m_pWorkbook.IsInit())
+		if (!m_pWorkbook.IsInit())
 		{
 			m_pWorkbook = new CWorkbook(dynamic_cast<OOX::Document*>(this));
 		}
-		if (false == m_pSharedStrings.IsInit())
+		if (!m_pSharedStrings.IsInit())
 		{
 			m_pSharedStrings = new CSharedStrings(dynamic_cast<OOX::Document*>(this));
 		}
@@ -187,7 +187,7 @@ namespace Spreadsheet
 			double fontSize = 10;
 			int fontStyle = 0;
 			//-----------------------------------------------------------
-			if ((m_pStyles.IsInit()) && (m_pStyles->m_oFonts.IsInit()) && (false == m_pStyles->m_oFonts->m_arrItems.empty()))
+			if ((m_pStyles.IsInit()) && (m_pStyles->m_oFonts.IsInit()) && (!m_pStyles->m_oFonts->m_arrItems.empty()))
 			{
 				fontSize = m_pStyles->m_oFonts->m_arrItems[0]->m_oSz->m_oVal->GetValue();
 				fontName = *m_pStyles->m_oFonts->m_arrItems[0]->m_oRFont->m_sVal;
@@ -196,9 +196,11 @@ namespace Spreadsheet
 			int hr = FALSE;
 
 			double dpi = 96;
-			if (FALSE == (hr = pFontManager->LoadFontByName(fontName, fontSize, fontStyle, dpi, dpi)))
+			hr = pFontManager->LoadFontByName(fontName, fontSize, fontStyle, dpi, dpi);
+			if (FALSE == hr)
 			{
-				if (FALSE == (hr = pFontManager->LoadFontByName(L"Arial", fontSize, fontStyle, dpi, dpi)))
+				hr = pFontManager->LoadFontByName(L"Arial", fontSize, fontStyle, dpi, dpi);
+				if (FALSE == hr)
 				{
 					delete pFontPicker;
 					m_maxDigitSize = std::pair<double, double>(7, 8);
@@ -210,7 +212,6 @@ namespace Spreadsheet
 			double maxHeight = 0;
 
 			double minWidth = 0xffffffff;
-			double minHeight = 0xfffffff;
 
 			// for (int i = 0; i <= 9; ++i)
 			//{
@@ -222,7 +223,8 @@ namespace Spreadsheet
 				//	box = pFontManager->MeasureString();
 				//}
 			//}
-			if (FALSE == (hr = pFontManager->LoadString2(L"0123456789", 0, 0)))//
+			hr = pFontManager->LoadString2(L"0123456789", 0, 0);//
+			if (FALSE == hr)
 			{
 				m_maxDigitSize = std::pair<double, double>(7., 8.);
 				return m_maxDigitSize;
@@ -250,7 +252,6 @@ namespace Spreadsheet
 			if (box.fMaxY - box.fMinY > maxHeight)  maxHeight = box.fMaxY - box.fMinY;
 
 			if (box.fMaxX - box.fMinX < minWidth)   minWidth = box.fMaxX - box.fMinX;
-			if (box.fMaxY - box.fMinY < minHeight)  minHeight = box.fMaxY - box.fMinY;
 
 			double width = (minWidth + 2 * maxWidth) / 10. / 3.;
 

@@ -25,9 +25,11 @@
 
 #include "RtfLex.h"
 
+#include <cstring>
+
 StringStream::StringStream()
 {
-	m_aBuffer = NULL;
+	m_aBuffer = nullptr;
 	Clear();
 }
 StringStream::~StringStream()
@@ -40,13 +42,14 @@ void StringStream::Clear()
 
 	m_nSizeAbs = 0;
 	m_nPosAbs = -1;
+	m_bLastGetcEof = false;
 }
 bool StringStream::SetSource( std::wstring sPath  )
 {
 	Clear();
 
 	NSFile::CFileBinary srcFile;
-	if (false == srcFile.OpenFile(sPath.c_str())) return false;
+	if (!srcFile.OpenFile(sPath.c_str())) return false;
 
 	__int64 totalFileSize = srcFile.GetFileSize();
 	if (totalFileSize < 5)
@@ -57,11 +60,9 @@ bool StringStream::SetSource( std::wstring sPath  )
 
 	m_nSizeAbs = (long)totalFileSize;
 	m_aBuffer = new unsigned char[m_nSizeAbs];
-	DWORD dwBytesRead = 0;
 
 	srcFile.ReadFile(m_aBuffer, (DWORD)m_nSizeAbs);
 
-	dwBytesRead = (DWORD)srcFile.GetPosition();
 	srcFile.CloseFile();
 	return true;
 }
@@ -81,28 +82,34 @@ int StringStream::getc()
 	{
 		m_nPosAbs++;
 		nResult = m_aBuffer[ m_nPosAbs ];
+		m_bLastGetcEof = false;
 	}
+	else
+		m_bLastGetcEof = true;
 	return nResult;
 }
 void StringStream::ungetc()
 {
-	//в проекте используется ungetcб только после getc
-	//поэтому проблем с выходом в 0 нет
-	//if( m_nPosAbs + 2 < m_nSizeAbs )
+	//the project uses ungetc only after getc, so there are no problems with going to 0.
+	//A getc that hit EOF did not advance the position, so its ungetc must not step back
+	//either -- otherwise the last byte of a truncated file is read a second time.
+	if (m_bLastGetcEof)
 	{
-		m_nPosAbs--;	//взять любой txt переименовать в rtf - зацикливание
+		m_bLastGetcEof = false;
+		return;
 	}
+	m_nPosAbs--;
 }
 void StringStream::putString( std::string sText )
 {
 	size_t nExtBufSize = sText.length();
-	//копируем буфер в темповый буфер
+	//copy the buffer to the temp buffer
 	unsigned char* aTempBuf = new unsigned char[ m_nSizeAbs ];
 	memcpy( aTempBuf, m_aBuffer, m_nSizeAbs );
-	//создаем новый буфер большего размера
+	//create a new buffer of a larger size
 	RELEASEARRAYOBJECTS( m_aBuffer );
 	m_aBuffer = new unsigned char[ m_nSizeAbs + nExtBufSize ];
-	//копируем все в новый буфер
+	//copy everything to a new buffer
 	unsigned long nDelimiter = (unsigned long)m_nPosAbs + 1;
 	memcpy( m_aBuffer, aTempBuf, nDelimiter );
 	memcpy( m_aBuffer + nDelimiter , sText.c_str(), nExtBufSize );
@@ -123,14 +130,14 @@ LONG64 StringStream::getSize()
 
 RtfLex::RtfLex()
 {
-	m_oFileWriter = NULL;
-	m_nReadBufSize = 1024 * 1024 * 5; // 5мб
-	m_caReadBuffer = new char[m_nReadBufSize];
+	m_oFileWriter = nullptr;
+	m_nReadBufSize = 1024 * 1024 * 5; // 5mb
+	m_caReadBuffer = new char[m_nReadBufSize + 1]; // +1: parseText terminates a full buffer
 }
 RtfLex::~RtfLex()
 {
 	if (m_caReadBuffer) delete []m_caReadBuffer;
-	m_caReadBuffer = NULL;
+	m_caReadBuffer = nullptr;
 	RELEASEOBJECT( m_oFileWriter );
 }
 double RtfLex::GetProgress()
@@ -139,13 +146,13 @@ double RtfLex::GetProgress()
 }
 bool RtfLex::SetSource( std::wstring sPath )
 {
-	if (false == m_oStream.SetSource(sPath)) return false;
+	if (!m_oStream.SetSource(sPath)) return false;
 
 	if (m_oStream.getSize() > m_nReadBufSize)
 	{
 		m_nReadBufSize = (int)m_oStream.getSize() ;
 		if (m_caReadBuffer) delete []m_caReadBuffer;
-		m_caReadBuffer = new char[m_nReadBufSize];
+		m_caReadBuffer = new char[m_nReadBufSize + 1]; // +1: parseText terminates a full buffer
 	}
 	return true;
 }
@@ -187,7 +194,7 @@ RtfToken RtfLex::NextToken()
 			break;
 		default:
 			m_oCurToken.Type = RtfToken::Text;
-			if( NULL == m_oFileWriter )
+			if( nullptr == m_oFileWriter )
 				parseText(c, m_oCurToken);
 			else
 				parseTextFile(c, m_oCurToken);
@@ -221,7 +228,13 @@ void RtfLex::parseKeyword(RtfToken& token)
 	{
 		c = m_oStream.getc();
 
-		if(c == '\\' || c == '{' || c == '}')
+		if (c == EOF)
+		{
+			// a lone backslash at the end of a truncated file: the input ends
+			// inside a control sequence, so there is nothing left to emit
+			token.Type = RtfToken::Eof;
+		}
+		else if(c == '\\' || c == '{' || c == '}')
 		{
 			token.Type = RtfToken::Text;
 			token.Key = (char)c;
@@ -255,7 +268,7 @@ void RtfLex::parseKeyword(RtfToken& token)
 				token.HasParameter = true;
 				int nCharCode = RtfUtility::ToByte( m_oStream.getc() ) << 4;
 				nCharCode |= RtfUtility::ToByte( m_oStream.getc() );
-				if( nCharCode >= 0 && nCharCode <=30 )//искуственно сидвигаем на 1 чтобы не потерять \'00 ( символов от 0 до 0x20 служебные)
+				if( nCharCode >= 0 && nCharCode <=30 )//artificially shift to 1 so as not to lose \'00 (characters from 0 to 0x20 are control characters)
 					nCharCode++;
 				token.Parameter = nCharCode;
 			}
@@ -299,7 +312,7 @@ void RtfLex::parseKeyword(RtfToken& token)
 		while (RtfUtility::IsDigit(c))
 		{
 			m_oStream.getc();
-			parametroStr += c;
+			parametroStr += (wchar_t)c;
 
 			c = m_oStream.getc();
 			m_oStream.ungetc();
@@ -316,6 +329,7 @@ void RtfLex::parseKeyword(RtfToken& token)
 			}
 			catch (...)
 			{
+				(void)0; // keep the default value
 			}
 		}
 
@@ -340,24 +354,23 @@ void RtfLex::parseKeyword(RtfToken& token)
 }
 void RtfLex::parseText(int car, RtfToken& token)
 {
-	int nTempBufPos = 0; //1 мб
+	int nTempBufPos = 0; //1 mb
 
 	int c = car;
-	//while ((isalnum(c) || c == '"'|| c == ':'|| c == '/' || c == '.') &&c != '\\' && c != '}' && c != '{' && c != Eof) // иправиЃEЃEрвьD усЃEвиЃE
+	//while ((isalnum(c) || c == '"'|| c == ':'|| c == '/' || c == '.') &&c != '\\' && c != '}' && c != '{' && c != Eof) // and correct it
 	//while (c != '\\' && c != '}' && c != '{' && c != Eof)
 	//while (c != ';' &&c ! = '\\' && c != '}' && c != '{' && c != EOF)
 	while (c != '\\' && c != '}' && c != '{' && c != EOF)
 	{
 		if( nTempBufPos >= m_nReadBufSize )
 		{
-			m_caReadBuffer[nTempBufPos++] = '\0';
-			token.Key += m_caReadBuffer ;
+			token.Key.append( m_caReadBuffer, strnlen( m_caReadBuffer, nTempBufPos ) );
 			nTempBufPos = 0;
 		}
 		m_caReadBuffer[nTempBufPos++] = (char)c;
 
 		c = m_oStream.getc();
-		//Se ignoran los retornos de carro, tabuladores y caracteres nulos
+		//Carriage returns, tabs and null characters are ignored
 		while (c == '\r' || c == '\n')
 			c = m_oStream.getc();
 	}
@@ -367,15 +380,14 @@ void RtfLex::parseText(int car, RtfToken& token)
 	}
 	if( nTempBufPos > 0 )
 	{
-		m_caReadBuffer[nTempBufPos++] = '\0';
-		token.Key += m_caReadBuffer ;
+		token.Key.append( m_caReadBuffer, strnlen( m_caReadBuffer, nTempBufPos ) );
 	}
 }
 bool RtfLex::GetNextChar( int& nChar )
 {
 	int c = m_oStream.getc();
 	m_oStream.ungetc();
-	//Se ignoran los retornos de carro, tabuladores y caracteres nulos
+	//Carriage returns, tabs and null characters are ignored
 	while (c == '\r' || c == '\n')
 	{
 		m_oStream.getc();
@@ -391,36 +403,37 @@ bool RtfLex::GetNextChar( int& nChar )
 	else
 		return false;
 }
-void RtfLex::parseTextFile(int car, RtfToken& token)
+void RtfLex::parseTextFile(int car, RtfToken& /*token*/)
 {
-	if (NULL == m_oFileWriter) return;
+	if (nullptr == m_oFileWriter) return;
 
 	try
 	{
 		int nFirst = car;
 		int nSecond = 0;
-		if( true == GetNextChar( nSecond ) )
+		if( GetNextChar( nSecond ) )
 		{
 			BYTE byteByte = 10 * RtfUtility::ToByte( nFirst ) + RtfUtility::ToByte( nSecond  );
 			m_oFileWriter->Write( &byteByte, 1 );
 			while( true )
 			{
 				bool bContinue = false;
-				if (true == GetNextChar(nFirst))
+				if (GetNextChar(nFirst))
 				{
-					if (true == GetNextChar(nSecond))
+					if (GetNextChar(nSecond))
 					{
 						byteByte = 10 * Strings::ToDigit(nFirst) + Strings::ToDigit(nSecond);
 						m_oFileWriter->Write(&byteByte, 1);
 						bContinue = true;
 					}
 				}
-				if ( false == bContinue)
+				if ( !bContinue)
 					break;
 			}
 		}
 	}
 	catch(...)
 	{
+		(void)0; // keep the default value
 	}
 }

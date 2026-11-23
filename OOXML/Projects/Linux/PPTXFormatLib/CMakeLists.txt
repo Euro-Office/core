@@ -9,9 +9,6 @@ include(${CORE_ROOT_DIR}/common.cmake)
 set(OOXML_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
 set(PPTX_FORMAT_DIR "${OOXML_ROOT_DIR}/PPTXFormat")
 
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 add_library(PPTXFormatLib STATIC
 	${PPTX_FORMAT_DIR}/Comments.cpp
 	${PPTX_FORMAT_DIR}/FileContainer.cpp
@@ -1271,6 +1268,13 @@ add_library(PPTXFormatLib STATIC
 
 set_default_options(PPTXFormatLib)
 
+if( MSVC )
+    target_compile_definitions( PPTXFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_compile_definitions(PPTXFormatLib PRIVATE
     AVS_USE_CONVERT_PPTX_TOCUSTOM_VML
 )
@@ -1298,4 +1302,4 @@ target_link_libraries(PPTXFormatLib PRIVATE
 
 set_property(TARGET PPTXFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-copy_boost_libs(PPTXFormatLib)
+declare_victory( PPTXFormatLib )

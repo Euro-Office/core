@@ -45,8 +45,8 @@ namespace OOX
 	}
 	const RId& RId::operator= (const std::wstring& rid)
 	{
-		//Учитывает только rid начинающиеся с rId, остальные сохраняем так как есть
-		//Tогда не будет проблем с добавление новый id, мы всегда будем генерировать их с префиксом rId
+		//Only rids starting with rId are taken into account, the rest are saved as is
+		//Then there will be no problems with adding a new id, we will always generate them with the rId prefix
 		std::wstring sFindString(L"rId");
 
 		if (0 == rid.find(sFindString) && rid.length() > 3 && rid.length() < 11 && 0 != isdigit(rid[3]))

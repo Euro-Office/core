@@ -72,7 +72,7 @@ bool DigitReader::ReadDigit(const std::wstring &value, std::wstring &digit, std:
 
 		if (0 != *pEndPtr)
 		{
-			if (false == postfix.empty())
+			if (!postfix.empty())
 			{
 				CurrencyReader currency{};
 				if (postfix[0] == L'%')
@@ -97,7 +97,7 @@ bool DigitReader::ReadDigit(const std::wstring &value, std::wstring &digit, std:
 				{
 					digit = std::to_wstring(dValue);
 
-						// Удаление лишних нулей после запятой
+						// Remove extra zeros after the decimal point
 					size_t dotPos = digit.find('.');
 					if (dotPos != std::wstring::npos)
 					{
@@ -143,7 +143,7 @@ std::wstring DigitReader::createFractionFormat(const std::wstring &value, const 
 			for (size_t i = 0; i < fraction && fraction != std::wstring::npos; ++i)
 				data_format += L"0";
 		}
-		if (false == data_format.empty()) data_format = L"." + data_format;
+		if (!data_format.empty()) data_format = L"." + data_format;
         if(pos != std::string::npos && pos < (value.size() - postfix.size() - 1))
 		{
             std::wstring wholePart(pos, '0');
@@ -186,7 +186,7 @@ bool DigitReader::ReadScientific(const std::wstring &value, std::wstring &digit,
                 _INT32 MainPartSize = value.find(L"E");
                 if(MainPartSize < 1)
                     MainPartSize = value.find(L"e");
-                ss.precision(MainPartSize); // Установить точность
+                ss.precision(MainPartSize); // Set precision
                 ss.setf(std::ios::scientific);
                 ss << doubleVal;
                 digit = ss.str();

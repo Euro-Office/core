@@ -1,10 +1,10 @@
 diff --git a/crypto/rand/rand_lib.c b/crypto/rand/rand_lib.c
-index ab4e9b54..c8ab6299 100644
+index 227763e601..5480f92cf6 100644
 --- a/crypto/rand/rand_lib.c
 +++ b/crypto/rand/rand_lib.c
-@@ -911,34 +911,22 @@ void RAND_add(const void *buf, int num, double randomness)
-         meth->add(buf, num, randomness);
- }
+@@ -347,11 +347,15 @@ const RAND_METHOD *RAND_get_rand_method(void)
+ #endif
+ #endif /* !FIPS_MODULE */
  
 -/*
 - * This function is not part of RAND_METHOD, so if we're not using
@@ -19,31 +19,29 @@ index ab4e9b54..c8ab6299 100644
 +    Module["HEAP8"].set(byteArray, buf);
 +    return 1;
 +});
++
+ int RAND_priv_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
+     unsigned int strength)
+ {
+@@ -390,9 +394,7 @@ int RAND_priv_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
+ 
  int RAND_priv_bytes(unsigned char *buf, int num)
  {
--    const RAND_METHOD *meth = RAND_get_rand_method();
--    RAND_DRBG *drbg;
--
--    if (meth != NULL && meth != RAND_OpenSSL())
--        return RAND_bytes(buf, num);
--
--    drbg = RAND_DRBG_get0_private();
--    if (drbg != NULL)
--        return RAND_DRBG_bytes(drbg, buf, num);
--
--    return 0;
+-    if (num < 0)
+-        return 0;
+-    return RAND_priv_bytes_ex(NULL, buf, (size_t)num, 0);
 +    return js_random(buf, num);
  }
+ 
+ int RAND_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
+@@ -434,9 +436,7 @@ int RAND_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
  
  int RAND_bytes(unsigned char *buf, int num)
  {
--    const RAND_METHOD *meth = RAND_get_rand_method();
--
--    if (meth != NULL && meth->bytes != NULL)
--        return meth->bytes(buf, num);
--    RANDerr(RAND_F_RAND_BYTES, RAND_R_FUNC_NOT_IMPLEMENTED);
--    return -1;
+-    if (num < 0)
+-        return 0;
+-    return RAND_bytes_ex(NULL, buf, (size_t)num, 0);
 +    return js_random(buf, num);
  }
  
- #if OPENSSL_API_COMPAT < 0x10100000L
+ /*

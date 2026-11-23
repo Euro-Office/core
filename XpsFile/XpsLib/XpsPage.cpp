@@ -39,7 +39,7 @@
 #define xpsUnitToMM(x) ((x) * 25.4 / 96)
 #endif
 
-#define IsFromResource(String) (!String.empty() && '{' == String[0])
+#define IsFromResource(String) (!(String).empty() && '{' == (String)[0])
 
 namespace XPS
 {
@@ -260,11 +260,7 @@ namespace XPS
 		{
 			wsNodeName = oReader.GetNameNoNS();
 
-			if (wsNodeName == L"FixedPage.Resources")
-			{
-				bResource = ReadResource(oReader, pRenderer, pState);
-			}
-			else if (wsNodeName == L"Canvas.Resources")
+			if (wsNodeName == L"FixedPage.Resources" || wsNodeName == L"Canvas.Resources")
 			{
 				bResource = ReadResource(oReader, pRenderer, pState);
 			}
@@ -306,20 +302,20 @@ namespace XPS
 							ReadAttribute(oReader, L"Requires", wsAttr);
 							if (wsAttr == L"xps")
 							{
-								DrawCanvas(oReader, pRenderer, pState, NULL);
+								DrawCanvas(oReader, pRenderer, pState, nullptr);
 								break;
 							}
 						}
 						else if (wsNodeName == L"Fallback")
 						{
-							DrawCanvas(oReader, pRenderer, pState, NULL);
+							DrawCanvas(oReader, pRenderer, pState, nullptr);
 							break;
 						}
 					}
 				}
 			}
 
-			if (NULL != pbBreak && *pbBreak)
+			if (nullptr != pbBreak && *pbBreak)
 				return;
 		}		
 
@@ -335,7 +331,7 @@ namespace XPS
 		if (bResource)
 			pState->PopResource();
 	}
-	bool Page::ReadResource(XmlUtils::CXmlLiteReader& oReader, IRenderer* pRenderer, CContextState* pState)
+	bool Page::ReadResource(XmlUtils::CXmlLiteReader& oReader, IRenderer* /*pRenderer*/, CContextState* pState)
 	{
 		if (oReader.IsEmptyNode())
 			return false;
@@ -411,8 +407,8 @@ namespace XPS
 		std::wstring wsIndicies;
 		int nBidiLevel = 0;
 		CWString wsClip, wsTransform;
-		unsigned short* pUtf16    = NULL;
-		unsigned short* pUtf16Ptr = NULL;
+		unsigned short* pUtf16    = nullptr;
+		unsigned short* pUtf16Ptr = nullptr;
 		unsigned int unUtf16Len = 0;
 		CWString wsIndices;
 		CWString wsFill;
@@ -451,10 +447,10 @@ namespace XPS
 					}
                     else
                     {
-                        // шрифт не odttf - надо добавить его во внешний сторадж шрифтов, если нужно
+                        // the font isn't odttf - need to add it to the external font storage if necessary
                         if (IFolder::iftZip == m_wsRootPath->getType() && NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())
                         {
-                            IFolder::CBuffer* buffer = NULL;
+                            IFolder::CBuffer* buffer = nullptr;
                             m_wsRootPath->read(wsFontPath, buffer);
 
                             if (NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())
@@ -554,7 +550,7 @@ namespace XPS
 		}
 		oReader.MoveToElement();
 
-		CBrush* pBrush = NULL;
+		CBrush* pBrush = nullptr;
 		bool bDeleteBrush = false;
 		if (!wsFill.empty())
 		{
@@ -608,9 +604,9 @@ namespace XPS
 			return;
 		}
 
-		// Сначала задается матрица преобразования, потом клип, потому что даже
-		// если преобразование задано в дочерней ноде, а клип задан в атрибутах данной ноды,
-		// то преобразование влияется на клип все равно.
+		// The transformation matrix is specified first, then the clip, because even
+		// if the transformation is specified in a child node, and the clip is specified in the attributes of this node,
+		// then the transformation affects the clip anyway.
 		if (!wsTransform.empty())
 		{
 			bTransform = TransformToRenderer(wsTransform.c_str(), pState);
@@ -631,7 +627,7 @@ namespace XPS
 		TIndicesEntry oEntry;
 		int nIndicesPos = 0, nIndicesLen = wsIndices.size();
 		int nUtf16Pos = 0;
-		bool bRtoL = (nBidiLevel % 2 ? true : false);
+		bool bRtoL = (nBidiLevel % 2 != 0);
 
 		std::wstring sFullFontPath = m_wsRootPath->getFullFilePath(wsFontPath);
 		if (NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())
@@ -824,7 +820,7 @@ namespace XPS
 		BYTE nJoinStyle = Aggplus::LineJoinMiter;
 		double dMiter   = 10.0;
 
-		double* pDashPattern  = NULL;
+		double* pDashPattern  = nullptr;
 		LONG lDashPatternSize = 0;
 		double dDashOffset    = 0.0;
 		CWString wsFill;
@@ -869,6 +865,7 @@ namespace XPS
 					int nDashArrayCount = arrDashArray.size();
 					if (nDashArrayCount > 0)
 					{
+						RELEASEARRAYOBJECTS(pDashPattern);
 						pDashPattern = new double[nDashArrayCount];
 						if (pDashPattern)
 						{
@@ -979,7 +976,7 @@ namespace XPS
 							oTransform.TransformPoint(x3, y3);
 						}
 					}
-					// Верхний левый угол
+					// Upper left corner
                     oLink.X = x1 == x2 ? fmin(x1, x3) : fmin(x1, x2);
                     oLink.Y = y1 == y2 ? fmin(y1, y3) : fmin(y1, y2);
                     oLink.H = x1 == x2 ? abs(y1 - y2) : abs(y1 - y3);
@@ -993,7 +990,7 @@ namespace XPS
 					}
 					else
 					{
-						// координата назначения на странице назначения
+						// destination coordinate on destination page
 						size_t nSharp = wsNameTarget.find(L'#');
 						if (nSharp != std::wstring::npos)
 						{
@@ -1022,12 +1019,12 @@ namespace XPS
 			{
 				size_t nFindEndY = wsPath.find(L' ', ++nFindY);
 				if (nFindEndY != std::wstring::npos)
-					// координата назначения на странице назначения
+					// destination coordinate on destination page
 					find->dY = GetDouble(wsPath.substr(nFindY, nFindEndY - nFindY));
 			}
 		}
 
-		CBrush* pBrush = NULL;
+		CBrush* pBrush = nullptr;
 		bool bDeleteBrush = false;
 		if (!wsFill.empty())
 		{
@@ -1090,9 +1087,9 @@ namespace XPS
 				RELEASEOBJECT(pBrush);
 		}
 
-		// Сначала задается матрица преобразования, потом клип, потому что даже
-		// если преобразование задано в дочерней ноде, а клип задан в атрибутах данной ноды,
-		// то преобразование влияется на клип все равно.
+		// The transformation matrix is specified first, then the clip, because even
+		// if the transformation is specified in a child node, and the clip is specified in the attributes of this node,
+		// then the transformation affects the clip anyway.
 		if (!wsTransform.empty())
 		{
 			bTransform = TransformToRenderer(wsTransform.c_str(), pState);

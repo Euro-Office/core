@@ -49,7 +49,7 @@ OOXDocumentReader::~OOXDocumentReader()
 }
 bool OOXDocumentReader::Parse(ReaderParameter oParam)
 {
-	if (m_ooxDocument == NULL) return false;
+	if (m_ooxDocument == nullptr) return false;
 
 	m_poReader = oParam.oReader;
 	m_poDocument = oParam.oRtf;
@@ -61,7 +61,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 		oBackgroundReader.Parse(oParam, m_poDocument->m_pBackground);
 	}
 
-	if (false == m_ooxDocument->m_arrSections.empty())
+	if (!m_ooxDocument->m_arrSections.empty())
 	{
 		for (size_t i = 0; i < m_ooxDocument->m_arrSections.size(); ++i)
 		{
@@ -74,7 +74,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 			section.end_para = m_ooxDocument->m_arrSections[i].end_elm;
 
 			OOXSectionPropertyReader oSectReader(dynamic_cast<OOX::Logic::CSectionProperty*>(m_ooxDocument->m_arrSections[i].sect));
-			if (true == oSectReader.Parse(oParam, section.props->m_oProperty))
+			if (oSectReader.Parse(oParam, section.props->m_oProperty))
 			{
 				m_poDocument->AddItem(section);
 			}
@@ -84,10 +84,10 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 	{
 		size_t last_section_start = 0;
 
-		//считаем количесво секций и заполняем их свойства .. 
+		//Count the number of sections and fill in their properties..
 		for (size_t i = 0; i < m_ooxDocument->m_arrItems.size(); ++i)
 		{
-			if (m_ooxDocument->m_arrItems[i] == NULL) continue;
+			if (m_ooxDocument->m_arrItems[i] == nullptr) continue;
 
 			if (m_ooxDocument->m_arrItems[i]->getType() == OOX::et_w_p)
 			{
@@ -108,7 +108,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 						section.props->m_oProperty.SetDefaultOOX();
 
 						OOXSectionPropertyReader oSectReader(para->m_oParagraphProperty->m_oSectPr.GetPointer());
-						if (true == oSectReader.Parse(oParam, section.props->m_oProperty))
+						if (oSectReader.Parse(oParam, section.props->m_oProperty))
 						{
 							m_poDocument->AddItem(section);
 						}
@@ -124,7 +124,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 		section.end_para = m_ooxDocument->m_arrItems.size();
 
 		section.props->m_oProperty.SetDefaultOOX();
-		if (m_ooxDocument->m_oSectPr.IsInit())// свойства последней секции
+		if (m_ooxDocument->m_oSectPr.IsInit())// properties of the last section
 		{
 			OOXSectionPropertyReader oSectReader(m_ooxDocument->m_oSectPr.GetPointer());
 			if (oSectReader.Parse(oParam, section.props->m_oProperty))
@@ -134,7 +134,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 		}
 	}
 	//-------------------------------------------------------------------------------------------------------------
-	m_poDocument->RemoveItem(0); //бланковый при инициализации
+	m_poDocument->RemoveItem(0); //blank upon initialization
 
 	for (int sect = 0; sect < m_poDocument->GetCount(); sect++)
 	{
@@ -156,13 +156,13 @@ bool OOXSettingsReader::Parse(ReaderParameter oParam)
 {
 	//oParam.oRtf->m_oColorSchemeMapping.SetDefaultOOX();
 
-	if (m_ooxSettings == NULL) return false;
+	if (m_ooxSettings == nullptr) return false;
 
 	if (m_ooxSettings->m_oMathPr.IsInit())
 	{
 		oParam.oRtf->m_pMathProp = RtfMathPtr(new RtfMath());
 
-		OOXMathReader oMathReader(NULL);
+		OOXMathReader oMathReader(nullptr);
 		oMathReader.ParseElement(oParam, m_ooxSettings->m_oMathPr.GetPointer(), oParam.oRtf->m_pMathProp);
 	}
 
@@ -180,11 +180,11 @@ bool OOXSettingsReader::Parse(ReaderParameter oParam)
 	}
 	if (m_ooxSettings->m_oHyphenationZone.IsInit() && m_ooxSettings->m_oHyphenationZone->m_oVal.IsInit())
 	{
-		oParam.oRtf->m_oProperty.m_nHyphenationRight = m_ooxSettings->m_oHyphenationZone->m_oVal->ToTwips(); //todooo проверить размерность
+		oParam.oRtf->m_oProperty.m_nHyphenationRight = m_ooxSettings->m_oHyphenationZone->m_oVal->ToTwips(); //TODO check dimension
 	}
 	if (m_ooxSettings->m_oDefaultTabStop.IsInit() && m_ooxSettings->m_oDefaultTabStop->m_oVal.IsInit())
 	{
-		oParam.oRtf->m_oProperty.m_nTabWidth = m_ooxSettings->m_oDefaultTabStop->m_oVal->ToTwips();//todooo
+		oParam.oRtf->m_oProperty.m_nTabWidth = m_ooxSettings->m_oDefaultTabStop->m_oVal->ToTwips();//TODO
 	}
 	if (m_ooxSettings->m_oBordersDoNotSurroundHeader.IsInit())
 	{
@@ -216,7 +216,7 @@ bool OOXSettingsReader::Parse(ReaderParameter oParam)
 	}
 	if (m_ooxSettings->m_oCompat.IsInit())
 	{
-		// todooo - реализовать в DocxFormat
+		// TODO - implement in DocxFormat
 
 		//if( L"w:doNotUseHTMLParagraphAutoSpacing" == sNodeName )
 		//	oParam.oRtf->m_oProperty.m_bHtmlAutoSpace = 0;

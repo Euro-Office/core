@@ -6,13 +6,13 @@ CHWPRecordFormObject::CHWPRecordFormObject(int nTagNum, int nLevel, int nSize)
 	: CHWPRecord(nTagNum, nLevel, nSize)
 {}
 
-int CHWPRecordFormObject::ParseCtrl(CCtrlForm& oForm, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CHWPRecordFormObject::ParseCtrl(CCtrlForm& /*oForm*/, int /*nSize*/, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 
 	oBuffer.Skip(4); // tbp+
 	oBuffer.Skip(4); // tbp+
-	oBuffer.Skip(4); // Длина строки?
+	oBuffer.Skip(4); // String length?
 
 	short shLen = oBuffer.ReadShort() * 2;
 	oBuffer.Skip(shLen);

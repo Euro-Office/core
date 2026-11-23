@@ -30,10 +30,10 @@
 #include "../../../Common/Vml/PPTShape/PptShape.h"
 
 /***************************************************************
-вот, создавая автофигуру, или любой другой элемент
-officedrawing, наследуясь от этого класса, в конструкторе
-задаем все строковые параметры, и вызываем SetProperties,
-которые придут, или NULL, но вызов этой функции - ОБяЗАTЕЛЕН!!!
+here, creating an autoshape, or any other element
+officedrawing, inheriting from this class, in the constructor
+set all string parameters and call SetProperties,
+which will come, or NULL, but calling this function is MANDATORY!!!
 ****************************************************************/
 
 const LONG c_ShapeDrawType_Graphic	= 0x01;
@@ -64,7 +64,7 @@ public:
 	double					m_dXLogic;
 	double					m_dYLogic;
 
-	/* в миллиметрах!!! */
+	/* in millimeters!!! */
 	double					m_dTextMarginX;
 	double					m_dTextMarginY;
 	double					m_dTextMarginRight;
@@ -179,7 +179,7 @@ public:
 			//m_oPen.SetToRenderer(pRenderer);
 			//m_oBrush.SetToRenderer(pRenderer);
 			//m_oShadow.SetToRenderer(pRenderer);
-			CBrush	brush; //копии с уровня выше нужны
+			CBrush	brush; //copies from the level above are needed
 			CPen	pen;
 
 			m_pShape->ToRenderer(pRenderer, oGeomInfo, dStartTime, dEndTime, pen, brush);

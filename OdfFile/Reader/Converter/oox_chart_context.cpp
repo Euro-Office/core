@@ -135,7 +135,7 @@ void oox_chart_context::serialize(std::wostream & strm)
 				{
 				  CP_XML_NODE(L"c:name")
 				  {
-					  CP_XML_STREAM() << pivot_source_;
+					  CP_XML_STREAM() << XmlUtils::EncodeXmlString(pivot_source_);
 				  }
 				  CP_XML_NODE(L"c:fmtId")
 				  {

@@ -31,7 +31,7 @@ OOXDrawingAnchorReader::OOXDrawingAnchorReader(OOX::Drawing::CAnchor *ooxAnchor)
 }
 int OOXDrawingAnchorReader::Parse( ReaderParameter oParam , RtfShapePtr & pOutput)
 {
-	if (m_ooxAnchor == NULL) return 0;
+	if (m_ooxAnchor == nullptr) return 0;
 
 	pOutput->m_eAnchorTypeShape	= RtfShape::st_anchor;
 
@@ -49,33 +49,17 @@ int OOXDrawingAnchorReader::Parse( ReaderParameter oParam , RtfShapePtr & pOutpu
 	pOutput->m_bHidden			= m_ooxAnchor->m_oHidden.IsInit()		? m_ooxAnchor->m_oHidden->ToBool()			: false;
 	pOutput->m_bLayoutInCell	= m_ooxAnchor->m_oLayoutInCell.IsInit() ? m_ooxAnchor->m_oLayoutInCell->ToBool()	: false;
 	pOutput->m_bLockAnchor		= m_ooxAnchor->m_oLocked.IsInit()		? m_ooxAnchor->m_oLocked->ToBool()			: false;
-	pOutput->m_nZOrder			= m_ooxAnchor->m_oRelativeHeight.IsInit() ? true : false;
-
-	int nDistLeft	= m_ooxAnchor->m_oDistL.IsInit() ? (int)(m_ooxAnchor->m_oDistL->ToTwips()) : PROP_DEF;
-	int nDistTop	= m_ooxAnchor->m_oDistT.IsInit() ? (int)(m_ooxAnchor->m_oDistT->ToTwips()) : PROP_DEF;
-	int nDistRight	= m_ooxAnchor->m_oDistR.IsInit() ? (int)(m_ooxAnchor->m_oDistR->ToTwips()) : PROP_DEF;
-	int nDistBottom = m_ooxAnchor->m_oDistB.IsInit() ? (int)(m_ooxAnchor->m_oDistB->ToTwips()) : PROP_DEF;
-
-	bool bSimplePos = m_ooxAnchor->m_oSimplePos.IsInit() ? true : false;
+	pOutput->m_nZOrder			= m_ooxAnchor->m_oRelativeHeight.IsInit();
 
 	int nWidth	= PROP_DEF;
 	int nHeight = PROP_DEF;
-
-	int nLeft	= PROP_DEF;
-	int nTop	= PROP_DEF;
-
-	if( m_ooxAnchor->m_oSimplePos.IsInit())
-	{
-		nLeft	= (int)m_ooxAnchor->m_oSimplePos->m_oX.ToTwips() ;
-		nTop	= (int)m_ooxAnchor->m_oSimplePos->m_oY.ToTwips();
-	}
 
 	if( m_ooxAnchor->m_oExtent.IsInit() )
 	{
 		nWidth	= (int)m_ooxAnchor->m_oExtent->m_oCx.ToTwips();
 		nHeight = (int)m_ooxAnchor->m_oExtent->m_oCy.ToTwips();
 
-		if( PROP_DEF != pOutput->m_nLeft && PROP_DEF != pOutput->m_nTop )//всегда !!
+		if( PROP_DEF != pOutput->m_nLeft && PROP_DEF != pOutput->m_nTop )//always!!
 		{
 			pOutput->m_nRight	= pOutput->m_nLeft	+ nWidth;
 			pOutput->m_nBottom	= pOutput->m_nTop	+ nHeight;
@@ -235,7 +219,7 @@ int OOXDrawingAnchorReader::Parse( ReaderParameter oParam , RtfShapePtr & pOutpu
 			case SimpleTypes::wraptextRight     : pOutput->m_nWrapSideType = 2; break;
 			}
 		}
-		if (m_ooxAnchor->m_oWrapThrough->m_oWrapPolygon.IsInit())///??? todooo twips ? pt?
+		if (m_ooxAnchor->m_oWrapThrough->m_oWrapPolygon.IsInit())///??? TODO twips ? pt?
 		{
 			int nValueX, nValueY;
 			if (m_ooxAnchor->m_oWrapThrough->m_oWrapPolygon->m_oStart.IsInit())

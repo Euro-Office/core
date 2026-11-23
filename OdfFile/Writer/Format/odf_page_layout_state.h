@@ -99,7 +99,7 @@ public:
 	void			set_name(std::wstring & name);
 	std::wstring	get_name();	
 
-	style_page_layout_properties	*get_properties();//пока не красиво ... лучше хранить прямую ссыль нежели искать
+	style_page_layout_properties	*get_properties();//It's not pretty yet... it's better to store the direct link rather than search
 	style_header_footer_properties	*get_header_properties();//-''-
 	style_header_footer_properties	*get_footer_properties();//-''-
 
@@ -110,6 +110,10 @@ public:
 	
 	_CP_OPT(odf_types::length) header_min_size_;
 	_CP_OPT(odf_types::length) footer_min_size_;
+
+	// page margin-top (margin-bottom) to use once the page layout has a header (footer)
+	_CP_OPT(odf_types::length) header_margin_;
+	_CP_OPT(odf_types::length) footer_margin_;
 
 	_CP_OPT(odf_types::style_numformat) page_number_format;
 

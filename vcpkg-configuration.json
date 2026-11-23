@@ -3,19 +3,5 @@
     "kind": "git",
     "repository": "https://github.com/microsoft/vcpkg",
     "baseline": "66c0373dc7fca549e5803087b9487edfe3aca0a1"
-  },
-  "registries": [
-    {
-      "kind": "git",
-      "repository": "https://github.com/microsoft/vcpkg",
-      "baseline": "53bef8994c541b6561884a8395ea35715ece75db",
-      "packages": [ "harfbuzz" ]
-    }
-  ],
-  "overlay-ports": [
-    "./Common/3dParty/cef",
-    "./Common/3dParty/qt",
-    "./Common/3dParty/boost",
-    "./Common/3dParty/v8"
-  ]
+  }
 }

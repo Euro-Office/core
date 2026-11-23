@@ -124,7 +124,7 @@ namespace OOX
 		}
 		void CDefault::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start(oReader)
 				WritingElement_ReadAttributes_ReadSingle(oReader, L"Extension", m_sExtension)
 				WritingElement_ReadAttributes_End(oReader)
@@ -224,7 +224,7 @@ namespace OOX
 	}
 	void CContentTypes::Merge(CContentTypes* pSrcContentTypes)
 	{
-		if (pSrcContentTypes == NULL) return;
+		if (pSrcContentTypes == nullptr) return;
 
 		for (std::unordered_map<std::wstring, ContentTypes::CDefault>::iterator it = pSrcContentTypes->m_mapDefaults.begin(); it != pSrcContentTypes->m_mapDefaults.end(); ++it)
 		{
@@ -289,7 +289,10 @@ namespace OOX
 	bool CContentTypes::ReadFromReader(XmlUtils::CXmlLiteReader& oReader)
 	{
 		std::wstring sName;
-		if (!oReader.ReadNextNode() || L"Types" != (sName = oReader.GetName()) || oReader.IsEmptyNode())
+		if (!oReader.ReadNextNode())
+			return false;
+		sName = oReader.GetName();
+		if (L"Types" != sName || oReader.IsEmptyNode())
 			return false;
 
 		int nTypesDepth = oReader.GetDepth();

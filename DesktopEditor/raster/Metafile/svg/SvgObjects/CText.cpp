@@ -7,7 +7,7 @@
 #include "CContainer.h"
 #include "CFont.h"
 
-#include "../../../../Common/3dParty/html/css/src/StaticFunctions.h"
+#include "../../../../../Common/3dParty/html/css/src/StaticFunctions.h"
 
 #include <cctype>
 
@@ -38,7 +38,7 @@ namespace SVG
 		  m_oFont(oTSpan.m_oFont), m_oText(oTSpan.m_oText)
 	{}
 
-	CTSpan::CTSpan(wchar_t wChar, const Point& oPosition, CRenderedObject* pParent, NSFonts::IFontManager* pFontManager)
+	CTSpan::CTSpan(wchar_t  /*wChar*/, const Point& oPosition, CRenderedObject* pParent, NSFonts::IFontManager* pFontManager)
 		: CRenderedObject(NSCSS::CNode(L"tspan", L"", L""), pParent), m_pFontManager(pFontManager),
 		  m_oX(oPosition.dX), m_oY(oPosition.dY)
 	{}
@@ -175,7 +175,7 @@ namespace SVG
 
 	bool CTSpan::Draw(IRenderer *pRenderer, const CSvgFile *pFile, CommandeMode oMode, const TSvgStyles *pOtherStyles, const CRenderedObject* pContexObject) const
 	{
-		if (NULL == pRenderer || (m_wsText.empty() && m_arObjects.empty()))
+		if (nullptr == pRenderer || (m_wsText.empty() && m_arObjects.empty()))
 			return false;
 
 		Aggplus::CMatrix oOldMatrix;
@@ -211,7 +211,7 @@ namespace SVG
 
 	bool CTSpan::AddObject(CTSpan *pObject)
 	{
-		if (NULL == pObject)
+		if (nullptr == pObject)
 			return false;
 
 		m_arObjects.push_back(pObject);
@@ -221,7 +221,7 @@ namespace SVG
 
 	void CTSpan::InheritStyles(const CTSpan *pTSpan)
 	{
-		if (NULL != pTSpan)
+		if (nullptr != pTSpan)
 		{
 			m_oStyles = pTSpan->m_oStyles;
 
@@ -285,12 +285,12 @@ namespace SVG
 		if (m_oText.Underline())
 			nStyle |= (1 << 2);
 
-		float fW, fUndX1, fUndY1, fUndX2, fUndY2, fUndSize;
+		float fW = 0, fUndX1 = 0, fUndY1 = 0, fUndX2 = 0, fUndY2 = 0, fUndSize = 0;
 		double dFHeight  = dFontSize;
 
-		if (NULL != m_pFontManager)
+		if (nullptr != m_pFontManager)
 		{
-			// Вычиления размеров текста
+			// Calculating text sizes
 			m_pFontManager->LoadFontByName(wsFontFamily, dFontSize, nStyle, 72., 72.);
 			m_pFontManager->SetCharSpacing(0);
 
@@ -299,13 +299,16 @@ namespace SVG
 			NSFonts::IFontFile* pFontFile = m_pFontManager->GetFile();
 
 			if (pFontFile)
-				dFHeight *= pFontFile->GetHeight() / pFontFile->Units_Per_Em() * dKoef;
+			{
+				const int nHeightPerEm = pFontFile->GetHeight() / pFontFile->Units_Per_Em();
+				dFHeight *= static_cast<double>(nHeightPerEm) * dKoef;
+			}
 
 			m_pFontManager->LoadString1(m_wsText, 0, 0);
 			TBBox oBox = m_pFontManager->MeasureString2();
 			fW = (float)dKoef * (oBox.fMaxX - oBox.fMinX);
 
-			// Просчитаем положение подчеркивания
+			// Calculate the position of the underline
 			m_pFontManager->GetUnderline(&fUndX1, &fUndY1, &fUndX2, &fUndY2, &fUndSize);
 			fUndX1   *= (float)dKoef;
 			fUndY1   *= (float)dKoef;
@@ -402,11 +405,11 @@ namespace SVG
 
 	void CTSpan::UpdateFontSize()
 	{
-		if (NULL != m_pParent)
+		if (nullptr != m_pParent)
 		{
 			const CTSpan* pParentTSpan{dynamic_cast<const CTSpan*>(m_pParent)};
 
-			if (NULL != pParentTSpan)
+			if (nullptr != pParentTSpan)
 			{
 				m_oFont.UpdateSize((!pParentTSpan->m_oFont.GetSize().Empty()) ? pParentTSpan->m_oFont.GetSize().ToDouble(NSCSS::Point) : DEFAULT_FONT_SIZE, DEFAULT_FONT_SIZE);
 				return;
@@ -428,12 +431,12 @@ namespace SVG
 
 		CFont *pFont = pFile->GetFont(wsFontFamily);
 
-		if (NULL == pFont)
+		if (nullptr == pFont)
 			return false;
 
 		TSvgStyles oStyle;
 
-		if (NULL != pOtherStyles)
+		if (nullptr != pOtherStyles)
 			oStyle = *pOtherStyles;
 
 		oStyle += m_oStyles;
@@ -505,7 +508,7 @@ namespace SVG
 			nStyle |= (1 << 2);
 
 		double dWidth = 0;
-		if (NULL != m_pFontManager)
+		if (nullptr != m_pFontManager)
 		{
 			m_pFontManager->LoadFontByName(wsName, dSize, nStyle, 72., 72.);
 
@@ -522,7 +525,7 @@ namespace SVG
 
 	void CTSpan::CorrectFontFamily(std::wstring &wsFontFamily) const
 	{
-		//TODO:: необходимо более подробно заняться подбором шрифтов
+		//TODO:: investigate font selection in more detail
 		if (L"sans-serif" == wsFontFamily)
 			wsFontFamily = L"Arial";
 		else if (L"serif" == wsFontFamily)
@@ -540,7 +543,7 @@ namespace SVG
 
 	void CTSpan::CalculatePosition(double &dX, double &dY) const
 	{
-		TBounds oBounds{(NULL != m_pParent) ? m_pParent->GetBounds() : TBounds{0., 0., 0., 0.}};
+		TBounds oBounds{(nullptr != m_pParent) ? m_pParent->GetBounds() : TBounds{0., 0., 0., 0.}};
 
 		dX = m_oX.ToDouble(NSCSS::Pixel, oBounds.m_dRight - oBounds.m_dLeft);
 		dY = m_oY.ToDouble(NSCSS::Pixel, oBounds.m_dBottom - oBounds.m_dTop);
@@ -583,14 +586,14 @@ namespace SVG
 
 	void CTSpan::SetPositionFromParent(CRenderedObject* pParent)
 	{
-		if (NULL == pParent)
+		if (nullptr == pParent)
 			return;
 
 		const TBounds oBounds{pParent->GetBounds()};
 
 		CTSpan *pTSpan = dynamic_cast<CTSpan*>(pParent);
 
-		if (NULL == pTSpan)
+		if (nullptr == pTSpan)
 			return;
 
 		m_oStyles = pTSpan->m_oStyles;
@@ -611,7 +614,7 @@ namespace SVG
 	double CTSpan::GetFontHeight() const
 	{
 
-		if (NULL == m_pFontManager)
+		if (nullptr == m_pFontManager)
 			return ((!m_oFont.GetSize().Empty()) ? m_oFont.GetSize().ToDouble(NSCSS::Pixel) : DEFAULT_FONT_SIZE) * 72. / 25.4;
 
 		std::wstring wsFontFamily = DefaultFontFamily;
@@ -632,7 +635,7 @@ namespace SVG
 		if (m_oText.Underline())
 			nStyle |= (1 << 2);
 
-		// Вычиления размеров текста
+		// Calculating text sizes
 		m_pFontManager->LoadFontByName(wsFontFamily, dFontSize, nStyle, 72., 72.);
 		m_pFontManager->SetCharSpacing(0);
 
@@ -666,7 +669,7 @@ namespace SVG
 
 	bool CText::Draw(IRenderer *pRenderer, const CSvgFile *pFile, CommandeMode oMode, const TSvgStyles *pOtherStyles, const CRenderedObject* pContexObject) const
 	{
-		if (NULL == pRenderer || NULL == pRenderer)
+		if (nullptr == pRenderer || nullptr == pRenderer)
 			return false;
 
 		CTSpan::Draw(pRenderer, pFile, oMode, pOtherStyles, pContexObject);
@@ -677,11 +680,11 @@ namespace SVG
 	CTextPath::CTextPath(CSvgReader& oReader, CRenderedObject *pParent, NSFonts::IFontManager* pFontManager)
 	    : CText(oReader, pParent, pFontManager)
 	{
-		if (NULL != pParent)
+		if (nullptr != pParent)
 		{
 			CTSpan *pTSpan = dynamic_cast<CTSpan*>(pParent);
 
-			if (NULL != pTSpan)
+			if (nullptr != pTSpan)
 				m_oX = pTSpan->m_oX;
 		}
 	}
@@ -701,14 +704,14 @@ namespace SVG
 			CText::SetAttribute(sName, oReader);
 	}
 
-	bool CTextPath::Draw(IRenderer *pRenderer, const CSvgFile *pFile, CommandeMode oMode, const TSvgStyles *pOtherStyles, const CRenderedObject* pContexObject) const
+	bool CTextPath::Draw(IRenderer *pRenderer, const CSvgFile *pFile, CommandeMode oMode, const TSvgStyles * /*pOtherStyles*/, const CRenderedObject* pContexObject) const
 	{
-		if (NULL == pRenderer || CommandeModeClip == oMode || m_wsHref.empty() || NULL == pFile)
+		if (nullptr == pRenderer || CommandeModeClip == oMode || m_wsHref.empty() || nullptr == pFile)
 			return false;
 
 		const CPath* pPath = dynamic_cast<const CPath*>(pFile->GetMarkedObject(m_wsHref));
 
-		if (NULL == pPath)
+		if (nullptr == pPath)
 			return false;
 
 		CMovingPath oMovingPath(pPath);
@@ -735,7 +738,7 @@ namespace SVG
 
 	void CTextPath::DrawGlyph(CTSpan* pTSpan, CMovingPath &oMovingPath, IRenderer *pRenderer, const CSvgFile *pFile, CommandeMode oMode, const CRenderedObject* pContexObject) const
 	{
-		if (NULL == pTSpan)
+		if (nullptr == pTSpan)
 			return;
 
 		pTSpan->InheritStyles(this);
@@ -750,7 +753,7 @@ namespace SVG
 
 		pTSpan->SetPosition(oPoint);
 		pTSpan->SetTransform({std::make_pair(L"transform", L"rotate(" + std::to_wstring(dAngle) + L',' + std::to_wstring(oPoint.dX) + L',' + std::to_wstring(oPoint.dY) + L')')}, 0, true);
-		pTSpan->Draw(pRenderer, pFile, oMode, NULL, pContexObject);
+		pTSpan->Draw(pRenderer, pFile, oMode, nullptr, pContexObject);
 
 		oMovingPath.Move(dWidthSpan / 2);
 	}

@@ -39,11 +39,11 @@ void oox_layout::oox_serialize(std::wostream & _Wostream)
     {
 		CP_XML_NODE(L"c:layout")
         {
-			//CP_XML_NODE(L"c:manualLayout") //вручную созданное описание и место
+			//CP_XML_NODE(L"c:manualLayout") //manually created description and location
 			//{
-			//	CP_XML_NODE(L"c:layoutTarget") //вручную созданное описание и место
+			//	CP_XML_NODE(L"c:layoutTarget") //manually created description and location
 			//	{
-			//		CP_XML_ATTR(L"val", "inner"); //все позиции относительно внешнего объекта (а не документа в целом)
+			//		CP_XML_ATTR(L"val", "inner"); //all positions are relative to the external object (not the document as a whole)
 			//	}
 			//	//<c:xMode val="edge"/> 
 			//	//<c:yMode val="edge"/>

@@ -127,7 +127,7 @@ namespace NSFontCutter
 	}
 	bool CEmbeddedFontsManager::GenerateSafearray(USHORT **ppArray, size_t& nCount)
 	{
-		// цифры нужны всем. остальное - каждый
+		// Numbers are needed by all fonts. The rest — all fonts too
 		CheckString(_T("0123456789"));
 		m_CharMap [(WCHAR)0x00B0] = true;
 		m_CharMap [(WCHAR)0x00B7] = true;
@@ -143,14 +143,11 @@ namespace NSFontCutter
 
 		USHORT *pArray = new USHORT [nCount];
 
-		if (NULL == pArray)
-			return false;
-
 		USHORT *pBuffer = pArray;
 
 		for (std::map<WCHAR, bool>::const_iterator pPair = m_CharMap.begin(); pPair != m_CharMap.end(); ++pPair)
 		{
-			*pBuffer = pPair->first;
+			*pBuffer = (USHORT)pPair->first; // NOLINT(bugprone-signed-char-misuse): an unsigned char cast would change stored codes >= 0x80
 			++pBuffer;
 		}
 		*ppArray = pArray;

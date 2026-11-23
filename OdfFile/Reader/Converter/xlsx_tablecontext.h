@@ -77,6 +77,7 @@ public:
 	void set_footer_page(_CP_OPT(double) val);
 	_CP_OPT(double) get_footer_page();
 
+	void trim_database_ranges();
 	void serialize_tableParts			(std::wostream & _Wostream, rels & Rels);
 	void serialize_sort					(std::wostream & _Wostream);
 	void serialize_autofilter			(std::wostream & _Wostream);

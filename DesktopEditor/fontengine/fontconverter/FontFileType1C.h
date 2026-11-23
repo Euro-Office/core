@@ -36,17 +36,17 @@ namespace NSFontConverter
 
     struct Type1CIndex
     {
-        int nPos;         // Позиция в файле от начала файла
-        int nCount;       // Количество вхождений
+        int nPos;         // Position in the file from the beginning of the file
+        int nCount;       // Number of occurrences
         int nOffsetSize;  // Offset size
-        int nStartPos;    // Начальная позиция index data - 1
-        int nEndPos;      // Позиция следующего байта после Type1CIndex
+        int nStartPos;    // Starting position index data - 1
+        int nEndPos;      // Position of the next byte after Type1CIndex
     };
 
     struct Type1CIndexVal
     {
-        int nPos;         // Позиция в файле от начала файла
-        int nLen;         // Длина в байтах
+        int nPos;         // Position in the file from the beginning of the file
+        int nLen;         // Length in bytes
     };
 
     struct Type1CTopDict
@@ -68,7 +68,7 @@ namespace NSFontConverter
         int    nPaintType;
         int    nCharStringType;
         double arrdFontMatrix[6];
-        bool   bHasFontMatrix;	// В CID фонтах возможно матрица фонта лежит в FD, а не в верхнем словаре
+        bool   bHasFontMatrix;	// In CID fonts, it is possible that the font matrix is in the FD, and not in the upper dictionary
         int    nUniqueID;
         double arrdFontBBox[4];
         double dStrokeWidth;
@@ -143,9 +143,9 @@ namespace NSFontConverter
     {
         FontFileOutputFunc pOutputFunc;
         void              *pOutputStream;
-        bool               bASKII;          // ASCII кодировка?
+        bool               bASKII;          // ASCII encoding?
         unsigned short     unEncryptionKey; // eexec encryption key
-        int                nLine;           // количество eexec-символов, оставшихся на текущей строке
+        int                nLine;           // number of eexec characters remaining on the current line
     };
 
     //------------------------------------------------------------------------
@@ -165,8 +165,8 @@ namespace NSFontConverter
 
         char *GetName();
 
-        // Возвращаем кодировку, как массив 256 имен (некоторые могут быть
-        // NULL). Используется только для 8-битных фонтов.
+        // Return the encoding as an array of 256 names (some may be
+        // NULL). Used only for 8-bit fonts.
         char **GetEncoding();
 
         unsigned short *GetCIDToGIDMap(int *arrCIDs);
@@ -189,7 +189,7 @@ namespace NSFontConverter
         // PostScript font name.
         void ToType0(char *sPSName, FontFileOutputFunc pOutputFunc, void *pOutputStream);
 
-        // Конвертируем в OpenType (CFF)
+        // Convert to OpenType (CFF)
         void ToOpenTypeCFF(FontFileOutputFunc pOutputFunc, void *pOutputStream, FT_Face pFace);
 
     private:
@@ -269,9 +269,9 @@ namespace NSFontConverter
 
         Type1COperator     m_arrOperators[49];
         int                m_nOperatorsCount;
-        int                m_nHints;           // для текущего символа
+        int                m_nHints;           // for the current character
         bool               m_bFirstOperator;
-        bool               m_bOpenPath;		   // true, если есть незакрытый пат
+        bool               m_bOpenPath;		   // true if there is an open path
     };
 }
 

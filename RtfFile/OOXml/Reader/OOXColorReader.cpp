@@ -28,7 +28,7 @@
 
 OOXColorReader::OOXColorReader()
 {
-	m_ooxColorScheme = NULL;
+	m_ooxColorScheme = nullptr;
 }
 OOXColorReader::OOXColorReader(PPTX::nsTheme::ClrScheme * ooxColorScheme)
 {
@@ -51,7 +51,7 @@ bool OOXColorReader::Parse( ReaderParameter oParam, const std::wstring &name, Rt
 		if (schemeColor.IsInit())
 		{
 			RtfColor::_ThemeColor oTheme;
-			if( true == RtfColor::GetThemeByOOX( (SimpleTypes::EShemeColorVal)schemeColor->val.GetBYTECode(), oTheme ))
+			if( RtfColor::GetThemeByOOX( (SimpleTypes::EShemeColorVal)schemeColor->val.GetBYTECode(), oTheme ))
 				return oParam.oRtf->m_oColorTable.GetColor( oTheme, oOutputColor );
 		}
 	}break;

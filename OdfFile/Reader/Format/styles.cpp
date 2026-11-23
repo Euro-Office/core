@@ -1073,7 +1073,7 @@ void style_page_layout_properties_attlist::add_attributes( const xml::attributes
     CP_APPLY_ATTR(L"style:print",					style_print_);
     CP_APPLY_ATTR(L"style:print-page-order",		style_print_page_order_);
     CP_APPLY_ATTR(L"style:scale-to",				style_scale_to_);
-    CP_APPLY_ATTR(L"style:scale-to_pages",			style_scale_to_pages_);
+    CP_APPLY_ATTR(L"style:scale-to-pages",			style_scale_to_pages_);
     CP_APPLY_ATTR(L"style:table-centering",			style_table_centering_);
     CP_APPLY_ATTR(L"style:footnote-max-height",		style_footnote_max_height_);
     
@@ -1087,8 +1087,36 @@ void style_page_layout_properties_attlist::add_attributes( const xml::attributes
     CP_APPLY_ATTR(L"style:layout-grid-ruby-below",	style_layout_grid_ruby_below_);  
     CP_APPLY_ATTR(L"style:layout-grid-print",		style_layout_grid_print_);
     CP_APPLY_ATTR(L"style:layout-grid-display",		style_layout_grid_display_);
+	CP_APPLY_ATTR(L"style:scale-to-X",				style_scale_to_X_);
+	CP_APPLY_ATTR(L"style:scale-to-Y",				style_scale_to_Y_);
 	CP_APPLY_ATTR(L"loext:scale-to-X",				loext_scale_to_X_);
 	CP_APPLY_ATTR(L"loext:scale-to-Y",				loext_scale_to_Y_);
+}
+
+bool style_page_layout_properties_attlist::get_fit_to_pages(unsigned int & width, unsigned int & height) const
+{
+	// style:scale-to-X/-Y (ODF 1.3), or loext:scale-to-X/-Y in files from before ODF 1.3;
+	// the values are positive integers, anything else counts as no limit
+	auto pages = [](const _CP_OPT(int) & value, const _CP_OPT(int) & fallback)
+	{
+		const int count = value ? *value : fallback.get_value_or(0);
+		return count > 0 ? (unsigned int)count : 0u;
+	};
+	width	= pages(style_scale_to_X_, loext_scale_to_X_);
+	height	= pages(style_scale_to_Y_, loext_scale_to_Y_);
+
+	if (width > 0 || height > 0)
+		return true;
+
+	// style:scale-to-pages is a page count in total, which XLSX does not have;
+	// one page wide and that many pages high, as LibreOffice exports it
+	if (style_scale_to_pages_ && *style_scale_to_pages_ > 0)
+	{
+		width	= 1;
+		height	= (unsigned int)*style_scale_to_pages_;
+		return true;
+	}
+	return false;
 }
 
 bool style_page_layout_properties_attlist::compare( const style_page_layout_properties_attlist & attlst )
@@ -1423,7 +1451,7 @@ bool style_page_layout_properties::docx_background_serialize(std::wostream & str
 	if (attlist_.common_background_color_attlist_.fo_background_color_ && 
 		attlist_.common_background_color_attlist_.fo_background_color_->get_type() == background_color::Transparent)
 		return true; //??
-    //прозрачный фон
+    //transparent background
 	
 	CP_XML_WRITER(strm)
 	{
@@ -1500,68 +1528,39 @@ void style_page_layout_properties::xlsx_serialize(std::wostream & strm, oox::xls
 			}
 		}
 
-		odf_types::common_horizontal_margin_attlist		horizontal_margins	= attlist_.common_horizontal_margin_attlist_;
-		odf_types::common_vertical_margin_attlist		vertical_margins	= attlist_.common_vertical_margin_attlist_;
-		
-		if (horizontal_margins.fo_margin_left_	|| horizontal_margins.fo_margin_right_	||
-			vertical_margins.fo_margin_top_		|| vertical_margins.fo_margin_bottom_ )
+		// LibreOffice prints with a 2 cm margin on each side the page layout leaves out, and puts the
+		// header and footer between that margin and the cells. Without pageMargins the editor takes
+		// Excel's narrower defaults and prints more rows and columns on each page.
+		const double default_margin = 0.7875; // 2 cm in inches
+		auto margin = [default_margin](const _CP_OPT(odf_types::length_or_percent)& value)
 		{
-			_CP_OPT(double)  header, footer, top, bottom;
+			if (value && value->get_type() == odf_types::length_or_percent::Length)
+				return value->get_length().get_value_unit(odf_types::length::inch);
+			return default_margin;
+		};
 
-			header	= Context.get_table_context().get_header_page();
-			footer = Context.get_table_context().get_footer_page();
+		const odf_types::common_horizontal_margin_attlist& horizontal_margins = attlist_.common_horizontal_margin_attlist_;
+		const odf_types::common_vertical_margin_attlist& vertical_margins = attlist_.common_vertical_margin_attlist_;
 
-			if (vertical_margins.fo_margin_bottom_ && vertical_margins.fo_margin_bottom_->get_type() == odf_types::length_or_percent::Length)
-			{
-				bottom = vertical_margins.fo_margin_bottom_->get_length().get_value_unit(odf_types::length::inch);
-			}
-			if (vertical_margins.fo_margin_top_ && vertical_margins.fo_margin_top_->get_type() == odf_types::length_or_percent::Length)
-			{
-				top = vertical_margins.fo_margin_top_->get_length().get_value_unit(odf_types::length::inch);
-			}
-			
-			CP_XML_NODE(L"pageMargins")
-			{
-				if (horizontal_margins.fo_margin_left_ && horizontal_margins.fo_margin_left_->get_type() == odf_types::length_or_percent::Length)
-					CP_XML_ATTR(L"left"		, horizontal_margins.fo_margin_left_->get_length().get_value_unit(odf_types::length::inch));
-				else CP_XML_ATTR(L"left", 0.7875);
-				
-				if (horizontal_margins.fo_margin_right_ && horizontal_margins.fo_margin_right_->get_type() == odf_types::length_or_percent::Length)
-					CP_XML_ATTR(L"right"	, horizontal_margins.fo_margin_right_->get_length().get_value_unit(odf_types::length::inch));
-				else CP_XML_ATTR(L"right", 0.7875);
-				
-				if (top)
-				{
-					CP_XML_ATTR(L"top", *top + header.get_value_or(0));
-				}
-				else CP_XML_ATTR(L"top", 1.025);
+		const double top = margin(vertical_margins.fo_margin_top_);
+		const double bottom = margin(vertical_margins.fo_margin_bottom_);
+		const _CP_OPT(double) header = Context.get_table_context().get_header_page();
+		const _CP_OPT(double) footer = Context.get_table_context().get_footer_page();
 
-				if (bottom)
-				{
-					CP_XML_ATTR(L"bottom", *bottom + footer.get_value_or(0));
-				}
-				else CP_XML_ATTR(L"bottom", 1.025);
-				
-				if (header)
-				{
-					double v = top ? *top : *header;
-					if (v < 0) v = 0.7875;
-					CP_XML_ATTR(L"header", v); 
-				}
-				else CP_XML_ATTR(L"header", 0.7875);
-
-				if (footer)
-				{
-					double v = bottom ? *bottom : *footer;
-					if (v < 0) v = 0.7875;
-
-					CP_XML_ATTR(L"footer", v);
-				}
-				else CP_XML_ATTR(L"footer", 0.7875);
-			}
+		CP_XML_NODE(L"pageMargins")
+		{
+			CP_XML_ATTR(L"left", margin(horizontal_margins.fo_margin_left_));
+			CP_XML_ATTR(L"right", margin(horizontal_margins.fo_margin_right_));
+			CP_XML_ATTR(L"top", top + header.get_value_or(0));
+			CP_XML_ATTR(L"bottom", bottom + footer.get_value_or(0));
+			CP_XML_ATTR(L"header", header && top >= 0 ? top : default_margin);
+			CP_XML_ATTR(L"footer", footer && bottom >= 0 ? bottom : default_margin);
 		}
+		unsigned int fit_width = 0, fit_height = 0;
+		const bool fit_to_pages = attlist_.get_fit_to_pages(fit_width, fit_height);
+
 		if (attlist_.fo_page_width_ || attlist_.fo_page_height_ || attlist_.style_print_orientation_ || 
-			attlist_.style_scale_to_ || attlist_.loext_scale_to_X_ || attlist_.loext_scale_to_Y_ || 
+			attlist_.style_scale_to_ || fit_to_pages ||
 			attlist_.common_page_number_attlist_.style_first_page_number_)
 		{
 			CP_XML_NODE(L"pageSetup")
@@ -1595,17 +1594,17 @@ void style_page_layout_properties::xlsx_serialize(std::wostream & strm, oox::xls
 				{
 					CP_XML_ATTR(L"scale", (int)attlist_.style_scale_to_->get_value());
 				}		
-				if (attlist_.loext_scale_to_X_)
+				if (fit_to_pages)
 				{
-					CP_XML_ATTR(L"fitToWidth", *attlist_.loext_scale_to_X_);
+					CP_XML_ATTR(L"fitToWidth", fit_width);
 				}
 				if (attlist_.common_page_number_attlist_.style_first_page_number_)
 				{
 					CP_XML_ATTR(L"firstPageNumber", *attlist_.common_page_number_attlist_.style_first_page_number_);
 				}	
-				if (attlist_.loext_scale_to_Y_)
+				if (fit_to_pages)
 				{
-					CP_XML_ATTR(L"fitToHeight", *attlist_.loext_scale_to_Y_);
+					CP_XML_ATTR(L"fitToHeight", fit_height);
 				}
 				if (attlist_.style_print_orientation_)
 				{
@@ -1678,7 +1677,7 @@ void style_page_layout_properties::docx_serialize(std::wostream & strm, oox::doc
 			oox::section_context::_section & section = Context.get_section_context().get_last();
 
 			attlist_.docx_convert_serialize(CP_XML_STREAM(), Context, section.margin_left_, section.margin_right_);
-			//todooo при появлении еще накладок - переписать !!
+			//TODO when more overlays appear - rewrite!!
 		}
 	}
 }
@@ -2087,15 +2086,100 @@ std::wostream & header_footer_impl::text_to_stream(std::wostream & _Wostream, bo
     return _Wostream;
 }
 
+namespace
+{
+	// The paragraph of a header/footer that is next to the page body: the last block of a header, the first block
+	// of a footer. NULL when that block is not a paragraph (a table, a list, a section).
+	const text::paragraph_attrs* edge_paragraph(const office_element_ptr_array & content, bool last)
+	{
+		for (size_t n = 0; n < content.size(); n++)
+		{
+			office_element* elm = content[last ? content.size() - 1 - n : n].get();
+			if (!elm) continue;
+
+			// office_element is a virtual base: no static_cast
+			switch (elm->get_type())
+			{
+			case typeTextP:
+			{
+				const text::p* para = dynamic_cast<const text::p*>(elm);
+				return para ? &para->paragraph_.attrs_ : NULL;
+			}
+			case typeTextH:
+			{
+				const text::h* heading = dynamic_cast<const text::h*>(elm);
+				return heading ? &heading->paragraph_.attrs_ : NULL;
+			}
+			// declarations take no room
+			case typeTextVariableDecls:
+			case typeTextSequenceDecls:
+			case typeTextUserFieldDecls:
+				continue;
+			default:
+				return NULL;
+			}
+		}
+		return NULL;
+	}
+}
 void header_footer_impl::docx_convert(oox::docx_conversion_context & Context)
 {
 	if (tracked_changes_)
 		tracked_changes_->docx_convert(Context);
 
+	// A header keeps fo:margin-bottom of its style free below its content, a footer fo:margin-top above it.
+	// Not when the distance is dynamic (it is given up as the content grows) or the height is fixed (svg:height
+	// includes the distance): there w:pgMar already describes the layout.
+	oox::header_footer_context::edge_spacing edge;
+	// not get_type(): it is typeStyleHeaderFooter for all six kinds
+	edge.header = dynamic_cast<const style_header*>(this) || dynamic_cast<const style_header_first*>(this) ||
+		dynamic_cast<const style_header_left*>(this);
+
+	const page_layout_instance* layout =
+		Context.root()->odf_context().pageLayoutContainer().page_layout_by_name(Context.get_page_properties());
+	const style_page_layout* page_layout = layout ? layout->style_page_layout_ : NULL;
+	const style_header_footer_properties* props = NULL;
+	if (page_layout && edge.header)
+	{
+		const style_header_style* style = dynamic_cast<style_header_style*>(page_layout->style_header_style_.get());
+		if (style) props = dynamic_cast<style_header_footer_properties*>(style->style_header_footer_properties_.get());
+	}
+	else if (page_layout)
+	{
+		const style_footer_style* style = dynamic_cast<style_footer_style*>(page_layout->style_footer_style_.get());
+		if (style) props = dynamic_cast<style_header_footer_properties*>(style->style_header_footer_properties_.get());
+	}
+	if (props)
+	{
+		const style_header_footer_properties_attlist & attr = props->style_header_footer_properties_attlist_;
+
+		_CP_OPT(length_or_percent) distance = edge.header ? attr.common_vertical_margin_attlist_.fo_margin_bottom_
+														 : attr.common_vertical_margin_attlist_.fo_margin_top_;
+		if (!distance) distance = attr.common_margin_attlist_.fo_margin_;
+
+		const bool fixed_height = attr.svg_height_ && !attr.fo_min_height_;
+		const bool dynamic = attr.style_dynamic_spacing_.get_value_or(false);
+
+		if (distance && distance->get_type() == length_or_percent::Length && !fixed_height && !dynamic)
+		{
+			edge.pt = distance->get_length().get_value_unit(length::pt);
+			if (edge.pt > 0)
+				edge.paragraph = edge_paragraph(content_, edge.header);
+
+			// A footer keeps the top margin of its first paragraph. A header drops the bottom margin of its last
+			// one, unless the document has the compatibility setting that LibreOffice sets for Word documents.
+			const _CP_OPT(std::wstring) below_last =
+				Context.root()->odf_context().Settings().find_by_name(L"HeaderSpacingBelowLastPara");
+			edge.add_own = !edge.header || (below_last && *below_last == L"true");
+		}
+	}
+	Context.get_header_footer_context().set_edge_spacing(edge);
+
     for (size_t i = 0; i < content_.size(); i++)
     {
 		content_[i]->docx_convert(Context);
     }
+	Context.get_header_footer_context().reset_edge_spacing();
 }
 void header_footer_impl::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context)
 {

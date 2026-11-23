@@ -128,6 +128,10 @@ public:
 	static const wchar_t * ns;
 	static const wchar_t * name;
 	static const ElementType type = typeOfficeMetaTemplate;
+
+	std::wstring xlink_title_;
+private:
+	virtual void add_attributes(const xml::attributes_wc_ptr & Attributes);
 };
 CP_REGISTER_OFFICE_ELEMENT2(meta_template);
 //  meta:editing-cycles

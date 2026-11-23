@@ -46,7 +46,7 @@ void anim_par::create_child_element(const std::wstring & Ns, const std::wstring 
 	if CP_CHECK_NAME(L"anim", L"par") 
 		CP_CREATE_ELEMENT(anim_par_);
 	else if	CP_CHECK_NAME(L"anim", L"seq") 
-		CP_CREATE_ELEMENT(anim_seq_array_);//более 1 элемента- взаимосвязанная анимация (между фигурами)
+		CP_CREATE_ELEMENT(anim_seq_array_);//more than 1 element - interconnected animation (between shapes)
 	else
 		CP_CREATE_ELEMENT(content_);
 }

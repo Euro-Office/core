@@ -60,7 +60,7 @@ public:
 	void set_data_table(odf_reader::chart::simple & content);
 private:
 	odf_reader::chart::simple data_table_content_;
-	void reset_cross_axis(); //обязательно после всех добавлений
+	void reset_cross_axis(); //required after all additions
  	bool no_used_local_tables_;
 	unsigned int axis_id_ = 0xf2905;
 };

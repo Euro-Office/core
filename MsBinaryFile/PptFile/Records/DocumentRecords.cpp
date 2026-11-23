@@ -75,7 +75,7 @@ void CRecordDocument::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStre
             }break;
             default:
             {
-                // этого не может быть...
+                // this can't be...
                 continue;
             }
         };

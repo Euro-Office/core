@@ -123,7 +123,7 @@ private:
 	std::vector<oox_external_context_ptr>	externals_;
 	std::vector<oox_activeX_context_ptr>	activeXs_;
 
-	size_t								next_vml_file_id_; //используется для footer/header & comments
+	size_t								next_vml_file_id_; //used for footer/header & comments
 
 	std::map<int, int>					sheets_map_;
     std::vector<xlsx_xml_worksheet_ptr>	sheets_;

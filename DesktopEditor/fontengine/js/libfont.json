@@ -41,6 +41,7 @@
 		"_ASC_FT_Get_Glyph_Measure_Params",
 		"_ASC_FT_Get_Glyph_Render_Params",
 		"_ASC_FT_Get_Glyph_Render_Buffer",
+		"_ASC_FT_Get_Glyph_Color_Render",
 		
 		"_ASC_HB_LanguageFromString",
 		"_ASC_HB_ShapeText",
@@ -370,7 +371,9 @@
 			"bit_reader.c",
 			"decode.c",
 			"huffman.c",
-			"state.c"
+			"prefix.c",
+			"state.c",
+			"static_init.c"
 		]
 	}
 	]

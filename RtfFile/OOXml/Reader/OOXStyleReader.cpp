@@ -35,13 +35,13 @@ OOXStyleReader::OOXStyleReader(OOX::CStyle    *ooxStyle)
 }
 bool OOXStyleReader::ParseStyle( ReaderParameter oParam, RtfStylePtr& oOutputStyle)
 {
-	if (m_ooxStyle == NULL) return false;
+	if (m_ooxStyle == nullptr) return false;
 
 	RtfStylePtr oNewStyle;
 
 	bool bDefault = m_ooxStyle->m_oDefault.IsInit() ? m_ooxStyle->m_oDefault->ToBool() : false;
 
-	if (m_ooxStyle->m_oType.IsInit() == false) return false;
+	if (!m_ooxStyle->m_oType.IsInit()) return false;
 
 	switch(m_ooxStyle->m_oType->GetValue())
 	{
@@ -51,7 +51,7 @@ bool OOXStyleReader::ParseStyle( ReaderParameter oParam, RtfStylePtr& oOutputSty
 	case SimpleTypes::styletypeTable     : oNewStyle = RtfStylePtr( new RtfTableStyle() );		break;
 	}
 
-	if (oNewStyle == NULL) return true;
+	if (oNewStyle == nullptr) return true;
 
 	RtfStyle::_StyleType eStyleType = oNewStyle->m_eType;
 
@@ -89,7 +89,7 @@ bool OOXStyleReader::ParseStyle( ReaderParameter oParam, RtfStylePtr& oOutputSty
 	if (m_ooxStyle->m_oUiPriority.IsInit())
 		oNewStyle->m_bCompose = *m_ooxStyle->m_oUiPriority->m_oVal;
 
-	if (m_ooxStyle->m_oRunPr.IsInit() && ( RtfStyle::stCharacter == eStyleType || RtfStyle::stParagraph == eStyleType || RtfStyle::stTable == eStyleType ))//todo с rtf стилями
+	if (m_ooxStyle->m_oRunPr.IsInit() && ( RtfStyle::stCharacter == eStyleType || RtfStyle::stParagraph == eStyleType || RtfStyle::stTable == eStyleType ))//todo with rtf styles
 	{
 		RtfCharStylePtr oNewCharStyle = boost::static_pointer_cast<RtfCharStyle, RtfStyle>( oNewStyle );
 
@@ -108,7 +108,7 @@ bool OOXStyleReader::ParseStyle( ReaderParameter oParam, RtfStylePtr& oOutputSty
 		CcnfStyle style;
 		opPrReader.Parse( oParam, oNewParStyle->m_oParProp, style );
 
-		//oNewParStyle->m_oParProp.m_nListId	= PROP_DEF; //экспериментально вроде нельзя иметь numbering в параграф стиле
+		//oNewParStyle->m_oParProp.m_nListId = PROP_DEF; //experimentally, it seems numbering can't be in a paragraph style
 		//oNewParStyle->m_oParProp.m_nListLevel = PROP_DEF;
 
 	}
@@ -168,7 +168,7 @@ bool OOXStyleReader::ParseStyle( ReaderParameter oParam, RtfStylePtr& oOutputSty
 					case SimpleTypes::tblstyleoverridetypeBand1Vert  :
 					{
 						oTableStyle->m_oBandVerOdd = boost::static_pointer_cast<RtfTableStyle, RtfStyle>( oNewSubStyle );
-						oTableStyle->m_oBandVerOdd->m_oParProp.m_bStyleOddColBand = 1; //для конвертации в Rtf
+						oTableStyle->m_oBandVerOdd->m_oParProp.m_bStyleOddColBand = 1; //to convert to Rtf
 					}break;
 					case SimpleTypes::tblstyleoverridetypeBand2Horz  :
 					{
@@ -228,15 +228,15 @@ bool OOXStyleReader::ParseStyle( ReaderParameter oParam, RtfStylePtr& oOutputSty
 			}
 		}
 	}
-	if( true == oNewStyle->IsValid() )
+	if( oNewStyle->IsValid() )
 	{
-		if( true == bDefault )
+		if( bDefault )
 		{
-			if( RtfStyle::stCharacter == eStyleType && NULL == oParam.oReader->m_oDefCharStyle )
+			if( RtfStyle::stCharacter == eStyleType && nullptr == oParam.oReader->m_oDefCharStyle )
 				oParam.oReader->m_oDefCharStyle = boost::static_pointer_cast<RtfCharStyle, RtfStyle>( oNewStyle );
-			else if( RtfStyle::stParagraph == eStyleType && NULL == oParam.oReader->m_oDefParStyle )
+			else if( RtfStyle::stParagraph == eStyleType && nullptr == oParam.oReader->m_oDefParStyle )
 				oParam.oReader->m_oDefParStyle = boost::static_pointer_cast<RtfParagraphStyle, RtfStyle>( oNewStyle );
-			else if( RtfStyle::stTable == eStyleType && NULL == oParam.oReader->m_oDefTableStyle )
+			else if( RtfStyle::stTable == eStyleType && nullptr == oParam.oReader->m_oDefTableStyle )
 				oParam.oReader->m_oDefTableStyle = boost::static_pointer_cast<RtfTableStyle, RtfStyle>( oNewStyle );
 		}
 		oOutputStyle = oNewStyle;
@@ -246,17 +246,17 @@ bool OOXStyleReader::ParseStyle( ReaderParameter oParam, RtfStylePtr& oOutputSty
 }
 bool OOXStyleReader::ParseTableStyle(OOX::Logic::CTableStyleProperties * oox_tableStyle, ReaderParameter oParam, RtfStylePtr& oOutputStyle)
 {
-	if (oox_tableStyle == NULL) return false;
+	if (oox_tableStyle == nullptr) return false;
 
-	if (oOutputStyle == NULL)
+	if (oOutputStyle == nullptr)
 	{
 		oOutputStyle		= RtfStylePtr ( new RtfTableStyle() );
 		oOutputStyle->m_nID = oParam.oRtf->m_oStyleTable.GetCount() + 1;
 	}
-	RtfStyle::_StyleType eStyleType = oOutputStyle->m_eType;//todooo проверить
+	RtfStyle::_StyleType eStyleType = oOutputStyle->m_eType;//TODO check
 
 	if (oox_tableStyle->m_oRunPr.IsInit() &&
-			( RtfStyle::stCharacter == eStyleType || RtfStyle::stParagraph == eStyleType || RtfStyle::stTable == eStyleType ))//todo с rtf стилями
+			( RtfStyle::stCharacter == eStyleType || RtfStyle::stParagraph == eStyleType || RtfStyle::stTable == eStyleType ))//todo with rtf styles
 	{
 		RtfCharStylePtr oNewCharStyle = boost::static_pointer_cast<RtfCharStyle, RtfStyle>( oOutputStyle );
 
@@ -276,7 +276,7 @@ bool OOXStyleReader::ParseTableStyle(OOX::Logic::CTableStyleProperties * oox_tab
 
 		opPrReader.Parse( oParam, oNewParStyle->m_oParProp, style );
 
-		oNewParStyle->m_oParProp.m_nListId = PROP_DEF; //экспериментально вроде нельзя иметь numbering в параграф стиле
+		oNewParStyle->m_oParProp.m_nListId = PROP_DEF; //experimentally it seems numbering can't be in a paragraph style
 		oNewParStyle->m_oParProp.m_nListLevel = PROP_DEF;
 
 	}
@@ -311,30 +311,30 @@ bool OOXStyleReader::ParseTableStyle(OOX::Logic::CTableStyleProperties * oox_tab
 }
 bool OOXStyleReader::ParseRelations( ReaderParameter oParam )
 {
-	if (m_ooxStyle == NULL) return false;
-	if (m_ooxStyle->m_sStyleId.IsInit() == false) return false;
+	if (m_ooxStyle == nullptr) return false;
+	if (!m_ooxStyle->m_sStyleId.IsInit()) return false;
 
 	RtfStylePtr oCurStyle ;
 	std::wstring sStyleName = *m_ooxStyle->m_sStyleId;
 
-	if( true == oParam.oRtf->m_oStyleTable.GetStyle(sStyleName, oCurStyle) )
+	if( oParam.oRtf->m_oStyleTable.GetStyle(sStyleName, oCurStyle) )
 	{
 		if (m_ooxStyle->m_oBasedOn.IsInit())
 		{
 			RtfStylePtr oBaseStyle;
-			if( true == oParam.oRtf->m_oStyleTable.GetStyle(*m_ooxStyle->m_oBasedOn->m_sVal, oBaseStyle) )
+			if( oParam.oRtf->m_oStyleTable.GetStyle(*m_ooxStyle->m_oBasedOn->m_sVal, oBaseStyle) )
 				oCurStyle->m_nBasedOn = oBaseStyle->m_nID;
 		}
 		if (m_ooxStyle->m_oNext.IsInit())
 		{
 			RtfStylePtr oNextStyle;
-			if( true == oParam.oRtf->m_oStyleTable.GetStyle(*m_ooxStyle->m_oNext->m_sVal, oNextStyle) )
+			if( oParam.oRtf->m_oStyleTable.GetStyle(*m_ooxStyle->m_oNext->m_sVal, oNextStyle) )
 				oCurStyle->m_nNext = oNextStyle->m_nID;
 		}
 		if (m_ooxStyle->m_oLink.IsInit())
 		{
 			RtfStylePtr oLinkStyle;
-			if( true == oParam.oRtf->m_oStyleTable.GetStyle(*m_ooxStyle->m_oLink->m_sVal, oLinkStyle) )
+			if( oParam.oRtf->m_oStyleTable.GetStyle(*m_ooxStyle->m_oLink->m_sVal, oLinkStyle) )
 				oCurStyle->m_nLink = oLinkStyle->m_nID;
 		}
 	}

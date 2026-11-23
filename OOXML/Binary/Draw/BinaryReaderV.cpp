@@ -60,7 +60,7 @@ namespace BinVsdxRW
 	
 		NSFile::CFileBinary oFile;
 	
-		if (false == oFile.OpenFile(sSrcFileName)) return AVS_FILEUTILS_ERROR_CONVERT;
+		if (!oFile.OpenFile(sSrcFileName)) return AVS_FILEUTILS_ERROR_CONVERT;
 
 		NSBinPptxRW::CBinaryFileReader& oBufferedStream = *pOfficeDrawingConverter->m_pBinaryReader;
 
@@ -69,7 +69,7 @@ namespace BinVsdxRW
 		oFile.ReadFile(pBase64Data, oFile.GetFileSize(), nBase64DataSize);
 		oFile.CloseFile();
 
-		//проверяем формат
+		//checking the format
 		bool bValidFormat = false;
 		std::wstring sSignature(g_sFormatSignature);
 		size_t nSigLength = sSignature.length();
@@ -85,7 +85,7 @@ namespace BinVsdxRW
 		}
 		if (bValidFormat)
 		{
-			//Читаем из файла версию и длину base64
+			//Read the base64 version and length from the file
 			int nIndex = (int)nSigLength;
 			int nType = 0;
 			std::string version = "";
@@ -123,7 +123,7 @@ namespace BinVsdxRW
 			bool bIsNoBase64 = nVersion == g_nFormatVersionNoBase64;
 
 			int nDataSize = 0;
-			BYTE* pData = NULL;
+			BYTE* pData = nullptr;
 			if (!bIsNoBase64)
 			{
 				nDataSize = atoi(dst_len.c_str());
@@ -145,7 +145,7 @@ namespace BinVsdxRW
 				oBufferedStream.Seek(nIndex);
 			}
 
-			if (NULL != pData)
+			if (nullptr != pData)
 			{
 				bResultOk = true;
 
@@ -177,7 +177,7 @@ namespace BinVsdxRW
 	}
 	int BinaryFileReader::ReadContent(OOX::Draw::CVsdx& oVsdx, NSBinPptxRW::CBinaryFileReader& oBufferedStream, const std::wstring& sFileInDir, const std::wstring& sOutDir, SaveParams& oSaveParams)
 	{
-		long res = oBufferedStream.Peek(1) == false ? c_oSerConstants::ErrorStream : c_oSerConstants::ReadOk;
+		long res = !oBufferedStream.Peek(1) ? c_oSerConstants::ErrorStream : c_oSerConstants::ReadOk;
 		
 		if (c_oSerConstants::ReadOk != res)
 			return res;
@@ -199,12 +199,12 @@ namespace BinVsdxRW
 		for (int i = 0; i < mtLen; ++i)
 		{
 			//mtItem
-			res = oBufferedStream.Peek(5) == false ? c_oSerConstants::ErrorStream : c_oSerConstants::ReadOk;
+			res = !oBufferedStream.Peek(5) ? c_oSerConstants::ErrorStream : c_oSerConstants::ReadOk;
 			if (c_oSerConstants::ReadOk != res)
 				return res;
 
 			BYTE mtiType = 0;
-			if (false == oBufferedStream.GetUCharWithResult(&mtiType))
+			if (!oBufferedStream.GetUCharWithResult(&mtiType))
 				break;
 
 			long mtiOffBits = oBufferedStream.GetLong();
@@ -223,7 +223,7 @@ namespace BinVsdxRW
 			{
 				case c_oSerTableTypes::App:
 				{
-					OOX::CApp* pApp = new OOX::CApp(NULL);
+					OOX::CApp* pApp = new OOX::CApp(nullptr);
 
 					smart_ptr<OOX::File> oCurFile(pApp);					
 					oVsdx.m_pApp = oCurFile.smart_dynamic_cast<OOX::CApp>();
@@ -236,7 +236,7 @@ namespace BinVsdxRW
 				}break;			
 				case c_oSerTableTypes::Core:
 				{
-					OOX::CCore* pCore = new OOX::CCore(NULL);
+					OOX::CCore* pCore = new OOX::CCore(nullptr);
 
 					smart_ptr<OOX::File> oCurFile(pCore);
 					oVsdx.m_pCore = oCurFile.smart_dynamic_cast<OOX::CCore>();					
@@ -248,7 +248,7 @@ namespace BinVsdxRW
 				}break;			
 				case c_oSerTableTypes::CustomProperties:
 				{
-					PPTX::CustomProperties* oCustomProperties = new PPTX::CustomProperties(NULL);
+					PPTX::CustomProperties* oCustomProperties = new PPTX::CustomProperties(nullptr);
 					oCustomProperties->fromPPTY(&oBufferedStream);
 					smart_ptr<OOX::File> oCurFile(oCustomProperties);
 					oVsdx.Add(oCurFile);
@@ -266,6 +266,8 @@ namespace BinVsdxRW
 
 					oSaveParams.bMacroEnabled = pDocument->m_bMacroEnabled;
 				}break;
+				default:
+					break;
 
 			}	
 			if (c_oSerConstants::ReadOk != res)

@@ -118,7 +118,7 @@ public:
 	pptx_xml_slideNotes				& current_notes();
 	pptx_xml_slideNotesMaster		& current_notesMaster();
 
-    pptx_xml_presentation	& current_presentation();//собственно она одна
+    pptx_xml_presentation	& current_presentation();//actually there is only one
   
 	oox_chart_context	& current_chart();
 	math_context		& get_math_context()	{ return math_context_; }

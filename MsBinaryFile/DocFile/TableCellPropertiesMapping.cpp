@@ -229,7 +229,7 @@ namespace DocFileFormat
 				break;
 				case sprmTDefTableShd80:
 				{
-					if (!tapx->IsSkipShading97())	// если такой операнд единственный то учитываем его, иначе скипаем его
+					if (!tapx->IsSkipShading97())	// if such an operand is the only one, then we take it into account, otherwise we skip it
 					{
 						apppendCellShading(iter->Arguments, iter->argumentsSize, _cellIndex);
 					}

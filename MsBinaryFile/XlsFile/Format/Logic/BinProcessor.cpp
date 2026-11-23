@@ -249,6 +249,7 @@ const int BinReaderProcessor::GetRecordPosition()
 {
  if (reader_)
      return reader_->GetRecordPosition();
+ return 0; // as StreamCacheReader::GetRecordPosition
 }
 void BinReaderProcessor::SetRecordPosition(const int position)
 {

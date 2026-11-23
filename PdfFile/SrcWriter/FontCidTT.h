@@ -131,9 +131,9 @@ namespace PdfWriter
 		CDictObject*                             m_pFont;
 		CDictObject*                             m_pFontDescriptor;
 
-		unsigned short                           m_ushCodesCount;   // Количество закодированных символов
-		std::map<unsigned int, unsigned short>   m_mUnicodeToCode;  // Мап Юникод->код символа
-		std::vector<std::vector<unsigned int>>   m_vUnicodes;       // Обратный мап код символа -> юникодЫ
+		unsigned short                           m_ushCodesCount;   // Number of encoded characters
+		std::map<unsigned int, unsigned short>   m_mUnicodeToCode;  // Map Unicode->character code
+		std::vector<std::vector<unsigned int>>   m_vUnicodes;       // Reverse character map code -> Unicodes
 
 		std::vector<unsigned int>                m_vCodeToGid;
 		std::vector<unsigned int>                m_vWidths;     // glyph.advance

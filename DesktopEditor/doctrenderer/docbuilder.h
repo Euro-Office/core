@@ -517,6 +517,14 @@ namespace NSDoctRenderer
 		 */
 		static void Dispose();
 
+		/**
+		 * Sets a function that runs x2t conversions in the current process instead of starting the x2t executable,
+		 * for platforms that cannot start processes (e.g. Android, with x2t built as a library).
+		 * The function receives the path of the x2t parameters XML file and returns the x2t result code.
+		 * Pass nullptr to use the x2t executable again.
+		 */
+		static void SetX2tConverter(int (*converter)(const wchar_t* paramsPath));
+
 		/*
 		 * Do not use this method. This is for internal needs.
 		 */

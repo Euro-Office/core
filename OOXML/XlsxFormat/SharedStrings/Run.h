@@ -31,12 +31,12 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//raw:
 		class CRun : public WritingElementWithChilds<CText>
 		{
 		public:
 			WritingElement_AdditionMethods(CRun)
-			CRun(OOX::Document *pMain = NULL);
+			CRun(OOX::Document *pMain = nullptr);
 			virtual ~CRun();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

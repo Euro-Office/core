@@ -25,8 +25,8 @@
 #ifndef _BUILD_APPLICATIONFONTS_H_
 #define _BUILD_APPLICATIONFONTS_H_
 
-#define UNKNOWN_CHARSET 3 // для случаев, когда задано значение DEFAULT_CHARSET, но 
-// на самом деле charset не учитывается
+#define UNKNOWN_CHARSET 3 // for cases where DEFAULT_CHARSET is set, but
+// actually charset isn't taken into account
 
 #include <vector>
 #include <list>
@@ -175,7 +175,7 @@ public:
 		return IsEqualsFontsAdvanced(name, req) ? 3000 : 10000;
 	}
 
-	// не учитываем регистр (латиница) и знаки /-/ /,/
+	// Ignore case (Latin) and the /-/ and /,/ signs
 	static bool IsEqualsFontsAdvanced(const std::wstring& name, const std::wstring& req, bool* bIsOneInAnother = NULL)
 	{
 		int lenName = (int)name.length();
@@ -241,7 +241,7 @@ private:
 	CFontRange*             m_pRanges;
 	int                     m_nRangesCount;
 
-	std::list<CFontRange>   m_listRanges; // последние использованные (найденные)
+	std::list<CFontRange>   m_listRanges; // last used (found)
 
 public:
 	CFontList()

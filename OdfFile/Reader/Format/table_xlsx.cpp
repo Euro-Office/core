@@ -31,6 +31,9 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <algorithm>
+#include <cmath>
+
 #include "serialize_elements.h"
 #include "odfcontext.h"
 #include "number_style.h"
@@ -91,7 +94,7 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 	}
 
     std::wostream & strm = Context.current_sheet().sheetData();
-///обработка чтилей для роу -
+/// processing styles for row -
 	size_t Default_Cell_style_in_row_ = 0; 
 
     const std::wstring rowStyleName			= attlist_.table_style_name_.get_value_or(L"");
@@ -104,21 +107,29 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 	
 	if ((instStyle_CellDefault) && (instStyle_CellDefault->content())) 
 		prop_CellDefault = instStyle_CellDefault->content()->get_style_table_cell_properties();
-//кастомные настройки стиля ячеек в данном роу
+//custom cell style settings in a given row
 
-	if (prop_CellDefault) //проверим что есть вообще кастом для роу- а потом уже посчитаем стиль
+	if (prop_CellDefault) //Check that there is a custom for row, and then we'll calculate the style
 	{
 		odf_reader::style_table_cell_properties_attlist	cellFormatProperties = calc_table_cell_properties(instStyle_CellDefault);
 		Default_Cell_style_in_row_ = Context.get_style_manager().xfId(NULL,NULL, &cellFormatProperties, NULL, L"", 0, true);	
 	}
-	else //стиля ячеек для строки нет глянем что там внутри строки в последней ячейке
-	{
-		//возьмем стиль из последнего cell если он повторяющийся (тогда и ячейки вхолостую ненадо писать)
-		int ind_last_cell = content_.size()-1;
-		table_table_cell *last_cell = NULL;
-		if (ind_last_cell > 0)
-			last_cell = dynamic_cast<table_table_cell *>(content_[ind_last_cell].get());
+	//There is no cell style for the row: take the style of the last cell if it repeats to the end of the row
+	//(then there is no need to write empty cells)
+	size_t trailing_xf = 0;
+	const bool bTrailingFormat = !prop_CellDefault && trailing_cells_format(Context, trailing_xf);
+	if (bTrailingFormat)
+		Default_Cell_style_in_row_ = trailing_xf;
 
+	for (size_t i = 0; i < content_.size(); i++)
+	{
+		if (table_table_cell * cell = dynamic_cast<table_table_cell*>(content_[i].get()))
+		{
+			cell->row_has_format_ = bTrailingFormat && trailing_xf > 0;
+			cell->is_row_format_ = bTrailingFormat && i == content_.size() - 1;
+		}
+		else if (table_covered_table_cell * covered = dynamic_cast<table_covered_table_cell*>(content_[i].get()))
+			covered->row_has_format_ = bTrailingFormat && trailing_xf > 0;
 	}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool skip_next_row = false;
@@ -141,9 +152,9 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 			if ((prop->attlist_.style_use_optimal_row_height_) && 
 						(*prop->attlist_.style_use_optimal_row_height_==true))
 			{
-				//автоматическая подстройка высоты.
-				//нету в оох
-				//todooo высилить по текущему шрифту размер у (двойной) и сравнить с заданным - перебить !!!
+				//automatic height adjustment.
+				//no in ooh
+				//TODO change the size y (double) according to the current font and compare it with the given one - interrupt !!!
 			}
 
 			std::wstringstream ht_s;
@@ -230,25 +241,26 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 							else if (covered_cell)	covered_cell->last_cell_	= true;
 						}
 						elm->xlsx_convert(Context);
-                    }              
-
+                    }
+					if (bTrailingFormat && trailing_xf > 0) // a formatted row is not empty: write every repetition of it
+						Context.get_table_context().state()->non_empty_row();
                 }
             }
         }
-        Context.get_table_context().state()->end_row();        
+        Context.get_table_context().state()->end_row();
 
 		if (Context.get_table_context().state()->is_empty_row() && Context.get_table_context().state()->group_rows_.empty())
 		{
             skip_next_row = true;  
 			if (attlist_.table_number_rows_repeated_ > 0xf000)
-				break;//Уведомление_о_вручении.ods (1 лист)
+				break;//Уведомление_о_вручении.ods (sheet 1)
 		}
 		if (content_.size() > 0 && attlist_.table_number_rows_repeated_ > 1000)
 		{
 			table_table_cell * table_cell = dynamic_cast<table_table_cell *>(content_[0].get());
 			if ((table_cell) && (table_cell->attlist_.table_number_columns_repeated_ > 1000))
 			{
-				break;//Уведомление_о_вручении.ods  (2 лист)
+				break;//Уведомление_о_вручении.ods (sheet 2)
 			}
 		}
     }
@@ -481,11 +493,16 @@ void table_table_column_group::xlsx_convert(oox::xlsx_conversion_context & Conte
 namespace {
 // see ECMA-376 page 1768
 
+// The column width in characters for a width in pixels. The editor draws a width w as
+// (256 * w + 128 / mdw) / 256 * mdw pixels, mdw being the digit width of the default font
+// rounded to whole pixels; the width includes the 5-pixel cell padding.
 double pixToSize(double pixels, double maxDigitSize)
 { 
 	if (pixels < 8) pixels = 8; //УВЕДОМЛЕНИЕ О ПРИБЫТИИ ИНОСТРАННОГО ГРАЖДАНИНА.ods
 
-	return (int(( pixels /*/ 0.75*/ - 5)/ maxDigitSize * 100. + 0.5)) /100. * 0.98; // * 9525. * 72.0 / (360000.0 * 2.54);
+	const double mdw = std::max(1., std::round(maxDigitSize));
+	const double chars = int((pixels - 5) / mdw * 100. + 0.5) / 100.;
+	return int((chars * mdw + 5) / mdw * 256.) / 256.;
 }
 
 }
@@ -539,7 +556,7 @@ void table_table_column::xlsx_convert(oox::xlsx_conversion_context & Context)
                     if (inst->content())
                     {
 						if (const style_table_cell_properties * prop = inst->content()->get_style_table_cell_properties())
-						{//сделать проверку чтоб сюда не попал дефолтный, то  сть пустой стиль
+						{//make a check so that the default, that is, empty, style doesn't appear here
 							odf_reader::style_table_cell_properties_attlist	cellFormatProperties = calc_table_cell_properties(inst);
 							
 							bool set_default = false;
@@ -612,6 +629,12 @@ void table_table_column::xlsx_convert(oox::xlsx_conversion_context & Context)
                     CP_XML_ATTR(L"customWidth", false);
                     Context.table_column_last_width(*width);
 				}
+			}
+			else
+			{//a column without a style has the default width, otherwise it prints with none
+				CP_XML_ATTR(L"width", 11.52);
+				CP_XML_ATTR(L"customWidth", false);
+				Context.table_column_last_width(11.52);
 			}
 
         } // col
@@ -701,17 +724,132 @@ std::wstring CalcCellDataStyle(oox::xlsx_conversion_context & Context,
     {
         std::wstring ds1 = SearchCellDataStyle(Context, cellStyle);
         if (!ds1.empty())
-            data_style = ds1;    
+            data_style = ds1;
     }
     return data_style;
 }
 
+// The number format of a cell data style; sets num_format_type when it converts the style.
+std::wstring CellNumFormat(oox::xlsx_conversion_context & Context, const std::wstring & data_style, office_value_type::type & num_format_type)
+{
+	if (data_style.empty())
+		return L"";
+
+	std::wstring num_format = Context.get_num_format_context().find_complex_format(data_style, num_format_type);
+
+	if (num_format.empty())
+	{
+		office_element_ptr elm = Context.root()->odf_context().numberStyles().find_by_style_name(data_style);
+		number_style_base* num_style = dynamic_cast<number_style_base*>(elm.get());
+
+		if (num_style)
+		{
+			Context.get_num_format_context().start_complex_format(data_style);
+			num_style->oox_convert(Context.get_num_format_context());
+			Context.get_num_format_context().end_complex_format();
+
+			num_format = Context.get_num_format_context().get_last_format();
+			num_format_type = Context.get_num_format_context().type();
+		}
+	}
+	return num_format;
+}
+
+// The xf of an empty cell (no value, formula or paragraphs) with a cell style, as table_table_cell::xlsx_convert
+// computes it.
+size_t EmptyStyledCellXf(oox::xlsx_conversion_context & Context, const std::wstring & columnStyleName,
+						 const std::wstring & rowStyleName, const std::wstring & cellStyleName, style_instance * cellStyle)
+{
+	std::vector<const style_instance*> instances;
+	instances.push_back(Context.root()->odf_context().styleContainer().style_default_by_type(style_family::TableCell));
+	instances.push_back(cellStyle);
+
+	text_format_properties_ptr textFormatProperties = calc_text_properties_content(instances);
+	paragraph_format_properties parFormatProperties = calc_paragraph_properties_content(instances);
+	style_table_cell_properties_attlist cellFormatProperties = calc_table_cell_properties(instances);
+
+	office_value_type::type num_format_type = office_value_type::Custom;
+	const std::wstring num_format = CellNumFormat(Context, CalcCellDataStyle(Context, columnStyleName, rowStyleName, cellStyleName), num_format_type);
+
+	oox::xlsx_cell_format cellFormat;
+	cellFormat.set_cell_type(oox::XlsxCellType::s);
+	cellFormat.set_num_format(oox::odf_string_to_build_in(office_value_type::Custom));
+
+	bool is_visible = true;
+	return Context.get_style_manager().xfId(textFormatProperties, &parFormatProperties, &cellFormatProperties,
+		&cellFormat, num_format, num_format_type, false, is_visible);
+}
+
+}
+
+// LibreOffice writes a row formatted to the end of the sheet as its cells: an empty cell with a cell style,
+// repeated up to the last column (often hundreds of columns). Written one by one, those cells count as used
+// (the editor's print range takes in every cell with a fill or border). If the last cell of this row is such
+// a run, returns true and its format in xf; the row then carries that format (row/@s, customFormat) instead.
+bool table_table_row::trailing_cells_format(oox::xlsx_conversion_context & Context, size_t & xf)
+{
+	if (content_.empty() || attlist_.table_default_cell_style_name_ || !Context.current_sheet().external_ref().empty())
+		return false;
+
+	table_table_cell * cell = dynamic_cast<table_table_cell*>(content_.back().get());
+	if (!cell || !cell->empty(false) || !cell->attlist_.table_style_name_ || cell->attlist_.table_content_validation_name_)
+		return false;
+
+	const common_value_and_type_attlist & value = cell->attlist_.common_value_and_type_attlist_;
+	if (value.office_value_type_ || value.office_value_ || value.office_date_value_ || value.office_time_value_ ||
+		value.office_boolean_value_ || value.office_string_value_)
+		return false;
+
+	unsigned int start = 0, unstyled = 0;
+	for (size_t i = 0; i + 1 < content_.size(); i++)
+	{
+		if (table_table_cell * c = dynamic_cast<table_table_cell*>(content_[i].get()))
+		{
+			start += c->attlist_.table_number_columns_repeated_;
+			if (c->empty())
+				unstyled += c->attlist_.table_number_columns_repeated_;
+		}
+		else if (table_covered_table_cell * c = dynamic_cast<table_covered_table_cell*>(content_[i].get()))
+		{
+			start += c->attlist_.table_number_columns_repeated_;
+			if (c->empty())
+				unstyled += c->attlist_.table_number_columns_repeated_;
+		}
+	}
+	const unsigned int repeated = cell->attlist_.table_number_columns_repeated_;
+	const unsigned int columns = Context.get_table_context().columns_count();
+
+	// Only a table as wide as a sheet (256 columns in OpenOffice.org, 1024 or 16384 in LibreOffice) is formatted
+	// to the end of the row. The run must also be at least as long as the cells before it. Those that are empty
+	// and have no style are then written with the default format, one cell per column and per repetition of the
+	// row, so that they don't take the row's: at most 256 of them in all, about as many cells as a run of 199 to
+	// 299 styled cells gave before.
+	const unsigned long long default_cells = (unsigned long long)unstyled * attlist_.table_number_rows_repeated_;
+	if (columns < 256 || start + repeated < columns || repeated < start || default_cells > 256)
+		return false;
+
+	// every cell of the run must get the same format, so their columns must share one default cell style
+	oox::xlsx_table_state_ptr state = Context.get_table_context().state();
+	const std::wstring columnStyleName = state->default_column_cell_style(start);
+	if (!state->same_default_column_cell_style(start, start + repeated))
+		return false;
+
+	const std::wstring cellStyleName = cell->attlist_.table_style_name_.get();
+	style_instance * cellStyle = Context.root()->odf_context().styleContainer().style_by_name(cellStyleName, style_family::TableCell, false);
+	if (!cellStyle)
+		return false;
+
+	xf = EmptyStyledCellXf(Context, columnStyleName, L"", cellStyleName, cellStyle);
+	return true;
 }
 
 void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
+	if (is_row_format_)
+		return; // written as the row's format, see table_table_row::trailing_cells_format
+
 	bool bExternalTable = !Context.current_sheet().external_ref().empty();
-	
+
 	std::wostream & strm = Context.current_sheet().sheetData();
     
 	const common_value_and_type_attlist & attr	= attlist_.common_value_and_type_attlist_;
@@ -747,7 +885,7 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 		if (num_format_type == office_value_type::Time ||
 			num_format_type == office_value_type::Date ||
 			num_format_type == office_value_type::Currency)
-		{//тип формата данных из стиля не соответствует формату анных ячейки
+		{//the data format type from the style doesn't match the cell data format
 			num_format.clear();
 			num_format_type = office_value_type::Custom;
 		}
@@ -760,7 +898,7 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 		if (num_format_type == office_value_type::Time ||
 			num_format_type == office_value_type::Date ||
 			num_format_type == office_value_type::Currency)
-		{//тип формата данных из стиля не соответствует формату анных ячейки
+		{//the data format type from the style doesn't match the cell data format
 			num_format.clear();
 			num_format_type = office_value_type::Percentage;
 		}
@@ -798,7 +936,7 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 					xlsx_value_type = oox::XlsxCellType::n;
 
 					if (num_format_type == office_value_type::Currency)
-					{//тип формата данных из стиля не соответствует формату данных ячейки
+					{//the data format type from the style doesn't match the cell data format
 						num_format.clear();
 						num_format_type = office_value_type::Date;
 					}
@@ -830,7 +968,7 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 					xlsx_value_type = oox::XlsxCellType::n;
 
 					if (num_format_type == office_value_type::Currency)
-					{//тип формата данных из стиля не соответствует формату анных ячейки
+					{//the data format type from the style doesn't match the cell data format
 						num_format.clear();
 						num_format_type = office_value_type::Time;
 					}
@@ -888,9 +1026,9 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 	for (unsigned int r = 0; r < attlist_.table_number_columns_repeated_; ++r)
 	{
-// вычислить стиль для ячейки
+// calculate style for cell
 //---------------------------------------------------------------------------------------------------------	
-		std::wstring columnStyleName = Context.get_table_context().default_column_cell_style(); // могут быть разные стили колонок при repeated (Book 24.ods)
+		std::wstring columnStyleName = Context.get_table_context().default_column_cell_style(); // there may be different column styles when repeated (Book 24.ods)
 
 		odf_read_context& odfContext = Context.root()->odf_context();
 
@@ -917,7 +1055,7 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 		std::wstring data_style = CalcCellDataStyle(Context, columnStyleName, rowStyleName, cellStyleName);
 
-		// стили не наследуются
+		// styles aren't inherited
 		std::vector<const style_instance*> instances;
 		instances.push_back(defaultCellStyle);
 
@@ -947,31 +1085,16 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 		if (false == data_style.empty())
 		{
-			num_format = Context.get_num_format_context().find_complex_format(data_style, num_format_type);
+			num_format = CellNumFormat(Context, data_style, num_format_type);
 
-			if (num_format.empty())
-			{
-				office_element_ptr elm = odfContext.numberStyles().find_by_style_name(data_style);
-				number_style_base* num_style = dynamic_cast<number_style_base*>(elm.get());
-
-				if (num_style)
-				{
-					Context.get_num_format_context().start_complex_format(data_style);
-					num_style->oox_convert(Context.get_num_format_context());
-					Context.get_num_format_context().end_complex_format();
-
-					num_format = Context.get_num_format_context().get_last_format();
-					num_format_type = Context.get_num_format_context().type();					
-				}
-			}
 			if (attr.office_value_type_)
 			{
 				if (attr.office_value_type_.get() != num_format_type && num_format_type != office_value_type::Custom)
-				{// reset from cell 
+				{// reset from cell
 					num_format_type = attr.office_value_type_->get_type();
 					num_format.clear();
 				}
-				
+
 			}
 		}
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -1036,7 +1159,7 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 		}
 		if (sharedStringId >= 0)
 		{
-			xlsx_value_type = oox::XlsxCellType::s;//в случае текста, если он есть берем кэшированное значение
+			xlsx_value_type = oox::XlsxCellType::s;//in the case of text, if there is one, we take the cached value
 		}		
 //---------------------------------------------------------------------------------------------------------			
 		if (skip_next_cell)
@@ -1045,7 +1168,7 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 			break;
 		}
 	
-	// пустые ячейки пропускаем.
+	// Skip empty cells.
         if ( is_data_visible || ((cellStyle || defaultColumnCellStyle) && is_style_visible))
         {
 			std::wstring ref = oox::getCellAddress(Context.current_table_column(), Context.current_table_row());
@@ -1115,9 +1238,9 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 				else
 				{
 					empty_cell_count++;
-					//Уведомление_о_вручении.ods - 13 повторов пустых с cellStyle=NULL - нужные !!!
+					//Уведомление_о_вручении.ods - 13 empty repetitions with cellStyle=NULL - necessary!!!
 					if (empty_cell_count > 19 && last_cell_&& (attlist_.table_number_columns_repeated_> 299 || cellStyle == NULL)) 
-					{//пишем простыню только если задан стиль тока для этих ячеек
+					{//write a sheet only if a style is specified only for these cells
 						skip_next_cell = true;
 					}
 				}				
@@ -1125,6 +1248,17 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 		}
         else
         {
+			if (row_has_format_ && false == bExternalTable)
+			{// the row carries the format of its trailing cells: keep this cell at the default format
+				CP_XML_WRITER(strm)
+				{
+					CP_XML_NODE(L"c")
+					{
+						CP_XML_ATTR(L"r", oox::getCellAddress(Context.current_table_column(), Context.current_table_row()));
+						CP_XML_ATTR(L"s", 0);
+					}
+				}
+			}
             if (last_cell_) // Vehicle log book.ods (row = 24 and more)
 				skip_next_cell = true;
         }
@@ -1156,14 +1290,14 @@ void table_covered_table_cell::xlsx_convert(oox::xlsx_conversion_context & Conte
 	bool	skip_next_cell		= false;
 	bool	is_style_visible	= true;
 	bool	is_data_visible		= false;
-// вычислить стиль для ячейки
+// calculate style for cell
 
     std::wstring cellStyleName		= attlist_.table_style_name_.get_value_or(L"");
 	std::wstring columnStyleName	= Context.get_table_context().default_column_cell_style();
 	std::wstring rowStyleName		= Context.get_table_context().default_row_cell_style();
 
 	if (attlist_.table_number_columns_repeated_ > 1)
-		columnStyleName.clear(); // могут быть разные стили колонок Book 24.ods
+		columnStyleName.clear(); // There may be different styles of columns Book 24.ods
 
 	odf_read_context & odfContext = Context.root()->odf_context();   
 
@@ -1183,7 +1317,7 @@ void table_covered_table_cell::xlsx_convert(oox::xlsx_conversion_context & Conte
 
     std::wstring data_style = CalcCellDataStyle(Context, columnStyleName, rowStyleName, cellStyleName);
 
-    // стили не наследуются
+    // styles aren't inherited
     std::vector<const style_instance *> instances;
     instances.push_back(defaultCellStyle);
 
@@ -1357,11 +1491,11 @@ void table_covered_table_cell::xlsx_convert(oox::xlsx_conversion_context & Conte
 		const int sharedStringId = content_.xlsx_convert(Context, textFormatProperties);
 
 		if (xlsx_value_type == oox::XlsxCellType::str && sharedStringId >= 0)
-			xlsx_value_type = oox::XlsxCellType::s;//в случае текста, если он есть берем кэшированное значение
+			xlsx_value_type = oox::XlsxCellType::s;//in the case of text, if there is one, we take the cached value
 			
 		if (skip_next_cell) break;
 
-        // пустые ячейки пропускаем.
+        // Skip empty cells.
         if ( is_data_visible || ((cellStyle || defaultColumnCellStyle) && is_style_visible))
         {
             CP_XML_WRITER(strm)
@@ -1412,9 +1546,9 @@ void table_covered_table_cell::xlsx_convert(oox::xlsx_conversion_context & Conte
 				else
 				{
 					empty_cell_count++;
-					//Уведомление_о_вручении.ods - 13 повторов пустых с cellStyle=NULL - нужные !!!
+					//Уведомление_о_вручении.ods - 13 empty repetitions with cellStyle=NULL - necessary!!!
 					if (empty_cell_count > 19 && last_cell_&& (attlist_.table_number_columns_repeated_> 299 || cellStyle == NULL)) 
-					{//пишем простыню только если задан стиль тока для этих ячеек
+					{//write a sheet only if a style is specified only for these cells
 						skip_next_cell = true;
 					}
 				}				
@@ -1422,6 +1556,17 @@ void table_covered_table_cell::xlsx_convert(oox::xlsx_conversion_context & Conte
 		}
         else
         {
+			if (row_has_format_ && false == bExternalTable)
+			{// the row carries the format of its trailing cells: keep this cell at the default format
+				CP_XML_WRITER(strm)
+				{
+					CP_XML_NODE(L"c")
+					{
+						CP_XML_ATTR(L"r", oox::getCellAddress(Context.current_table_column(), Context.current_table_row()));
+						CP_XML_ATTR(L"s", 0);
+					}
+				}
+			}
             if (last_cell_) // Vehicle log book.ods (row = 24 and more)
 				skip_next_cell = true;
         }

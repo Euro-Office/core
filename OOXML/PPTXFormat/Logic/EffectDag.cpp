@@ -99,7 +99,7 @@ namespace PPTX
 				
 				for (size_t i = 0; i < len; ++i)
 				{
-					pWriter->WriteRecord1(1, Effects[i]); // id неважен
+					pWriter->WriteRecord1(1, Effects[i]); // id isn't important
 				}
 				pWriter->EndRecord();
 

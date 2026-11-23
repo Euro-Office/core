@@ -60,11 +60,11 @@ namespace MathEquation
 			RULER  = 0x07,
 			FONT   = 0x08,
 			SIZE_CUSTOM      = 0x09,
-			SIZE_REGULAR     = 0x0a, // обычный
-			SIZE_BIGSCRIPT   = 0x0b, // крунпый индекс
-			SIZE_SMALLSCRIT  = 0x0c, // мелкий индекс
-			SIZE_BIGSYMBOL   = 0x0d, // большой символ
-			SIZE_SMALLSYMBOL = 0x0e  // мелкий символ
+			SIZE_REGULAR     = 0x0a, // regular
+			SIZE_BIGSCRIPT   = 0x0b, // large index
+			SIZE_SMALLSCRIT  = 0x0c, // small index
+			SIZE_BIGSYMBOL   = 0x0d, // big symbol
+			SIZE_SMALLSYMBOL = 0x0e  // small symbol
 		};
 
 	private:

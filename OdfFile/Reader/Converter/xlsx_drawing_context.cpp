@@ -499,8 +499,8 @@ std::wstring xlsx_drawing_context::add_hyperlink(std::wstring const & href)
 	std::wstring href_correct = XmlUtils::EncodeXmlString(href);
     XmlUtils::replace_all( href_correct, L" .", L".");//1 (130).odt
 
-	//корректность написания ссылки важна для ms office и не важна для open office ->
-//todooo 
+	//Correct spelling of the link is important for ms office and not important for open office ->
+//TODO
 	_hlink_desc desc = {hId, href_correct};
 	impl_->object_description_.hlinks_.push_back(desc);
 
@@ -552,7 +552,7 @@ void xlsx_drawing_context::process_common_properties(drawing_object_description 
 	{
 		_rect & r = obj.svg_rect_.get();
 
-		//todooo непонятно что делать с отрицательными значениями
+		//TODO it's not clear what to do with negative values
 		_INT32 val = 0;
 			
 		val = (_INT32) (0.5 + odf_types::length(obj.svg_rect_->x, odf_types::length::pt).get_value_unit(odf_types::length::emu));
@@ -646,7 +646,7 @@ void xlsx_drawing_context::process_image(drawing_object_description & obj, _xlsx
 	GetProperty(obj.additional_, L"luminance", drawing.fill.bitmap->luminance);
 	GetProperty(obj.additional_, L"contrast", drawing.fill.bitmap->contrast);
 
-	if (sTextContent)//в ms office на картинке нельзя сделать надпись - меняем тип на рект с заливкой картинкой
+	if (sTextContent)//in ms office an inscription can't be put on an image - change the type to rect with an image fill
 	{
 		drawing.type		= typeShape;
 		drawing.sub_type	= 2;//rect
@@ -669,27 +669,27 @@ void xlsx_drawing_context::process_image(drawing_object_description & obj, _xlsx
 	{
 		drawing.fill.bitmap->bStretch = true;
 	}
-	std::wstring ref;/// это ссылка на выходной внешний объект
+	std::wstring ref;/// is a reference to the output external object
 	bool isMediaInternal = false;
 
 	drawing.fill.bitmap->rId = impl_->get_mediaitems()->add_or_find(obj.xlink_href_, typeImage, isMediaInternal, ref, oox::document_place);		
 
 	if (drawing.type == typeShape)
 	{
-		impl_->get_drawings()->add(isMediaInternal, drawing.fill.bitmap->rId, ref, typeImage, false, false);//собственно это не объект, а доп рел и ref объекта
+		impl_->get_drawings()->add(isMediaInternal, drawing.fill.bitmap->rId, ref, typeImage, false, false);//actually this isn't an object, but an additional rel and ref of the object
 	
 		isMediaInternal=true;
 		std::wstring rId = impl_->get_mediaitems()->add_or_find(L"", typeShape, isMediaInternal, ref, oox::document_place);
 		
-		xlsx_drawings_->add(drawing, isMediaInternal, rId, ref, typeShape);//объект
+		xlsx_drawings_->add(drawing, isMediaInternal, rId, ref, typeShape);//object
 
 	}
 	else
 	{
-		xlsx_drawings_->add(drawing, isMediaInternal, drawing.fill.bitmap->rId , ref, typeImage);//объект
+		xlsx_drawings_->add(drawing, isMediaInternal, drawing.fill.bitmap->rId , ref, typeImage);//object
 		
 		if (drawing.inGroup)
-			impl_->get_drawings()->add(isMediaInternal, drawing.fill.bitmap->rId, ref, obj.type_, false, false); // не объект
+			impl_->get_drawings()->add(isMediaInternal, drawing.fill.bitmap->rId, ref, obj.type_, false, false); // not an object
 	}
 }
 
@@ -702,7 +702,7 @@ void xlsx_drawing_context::process_chart(drawing_object_description & obj,_xlsx_
     xlsx_drawings_->add(drawing, isMediaInternal, drawing.objectId, ref, obj.type_);
 	
 	if (drawing.inGroup)
-		impl_->get_drawings()->add(isMediaInternal, drawing.objectId, ref, obj.type_, false, false); // не объект
+		impl_->get_drawings()->add(isMediaInternal, drawing.objectId, ref, obj.type_, false, false); // not an object
 }
 
 void xlsx_drawing_context::process_object(drawing_object_description & obj, xlsx_table_metrics & table_metrics, _xlsx_drawing & drawing, xlsx_drawings_ptr xlsx_drawings_)
@@ -712,7 +712,7 @@ void xlsx_drawing_context::process_object(drawing_object_description & obj, xlsx
 	
 	if (drawing.type_anchor == 2) // absolute
 	{
-		//пересчет нужен 
+		//recount needed
 		xlsx_table_position from, to;
 		
 		process_position_properties	(obj, table_metrics, from, to);
@@ -745,7 +745,7 @@ void xlsx_drawing_context::process_object(drawing_object_description & obj, xlsx
 	}
 	
 	if (drawing.inGroup)
-	{// не объекты 
+	{// not objects
 		if (obj.type_ == typeControl || obj.type_ == typeComment)
 			impl_->get_drawings()->add(isMediaInternal, drawing.objectId, ref, obj.type_, false, false); 
 		else
@@ -813,7 +813,7 @@ void xlsx_drawing_context::process_group_objects(std::vector<drawing_object_desc
 			drawing.fill.bitmap->rId = impl_->get_mediaitems()->add_or_find(drawing.fill.bitmap->xlink_href_, typeImage, isMediaInternal, ref, oox::document_place);
 			
 			bool in_sheet = (obj.type_== typeOleObject || obj.type_== typeMsObject) ? true : false;
-			impl_->get_drawings()->add(isMediaInternal, drawing.fill.bitmap->rId, ref, typeImage, in_sheet, false);//собственно это не объект, а доп рел и ref объекта
+			impl_->get_drawings()->add(isMediaInternal, drawing.fill.bitmap->rId, ref, typeImage, in_sheet, false);//actually this isn't an object, but an additional rel and ref of the object
 
 			//object dumps in sheet rels !!
 		}

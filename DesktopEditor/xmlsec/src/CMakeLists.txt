@@ -1,39 +1,27 @@
 cmake_minimum_required(VERSION 3.10)
+
 project(ooxmlsignature VERSION 1)
 
-# Custom option to replace the `support_oform` scope
 option(SUPPORT_OFORM "Enable OFORM support" OFF)
 
 set(CORE_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-# Ensure Qt core and gui are NOT included automatically if using a Qt-aware environment
-# (In CMake, you simply don't call find_package(Qt...) if you don't need it)
-
-# Remove UNICODE definition if it was inherited from directory properties
-remove_definitions(-DUNICODE -D_UNICODE)
-
-# TEMPLATE = lib, CONFIG += shared plugin
-# In CMake, MODULE is often used for plugins loaded at runtime, but SHARED is standard 
-# for dynamic libraries linked at compile time.
 add_library(ooxmlsignature SHARED)
+
+if(APPLE)
+    set_target_properties(ooxmlsignature PROPERTIES
+        FRAMEWORK TRUE
+        MACOSX_FRAMEWORK_IDENTIFIER asc.euro-office.ooxmlsignature
+        MACOSX_FRAMEWORK_BUNDLE_VERSION 1.0
+        MACOSX_FRAMEWORK_SHORT_VERSION_STRING 1.0
+    )
+endif()
 
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
-
-message( "Fetch and build OpenSSL" )
-set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
-set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl_build_linux_64")
-get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
-get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl" "${OPENSSL_INSTALL_DIR}"
-    WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS}
-)
-
 
 # Set target version
 set_target_properties(ooxmlsignature PROPERTIES
@@ -43,65 +31,66 @@ set_target_properties(ooxmlsignature PROPERTIES
 
 # HEADERS and SOURCES
 target_sources(ooxmlsignature PRIVATE
-    include/Certificate.h
-    include/CertificateCommon.h
-    include/OOXMLSigner.h
-    include/OOXMLVerifier.h
-    #src/XmlCanonicalizator.h
-    src/XmlRels.h
-    src/XmlTransform.h
-    src/common.h
-    src/XmlTransform.cpp
-    src/CertificateCommon.cpp
-    src/OOXMLSigner.cpp
-    src/OOXMLVerifier.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Certificate.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/CertificateCommon.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/OOXMLSigner.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/OOXMLVerifier.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/src/XmlCanonicalizator.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/XmlRels.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/XmlTransform.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/common.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Certificate_openssl.h
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/XmlTransform.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/CertificateCommon.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/OOXMLSigner.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/OOXMLVerifier.cpp
     
-    # Global Openssl header
-    src/Certificate_openssl.h
 )
 
-# Add include directories so the compiler can find the headers
 target_include_directories(ooxmlsignature PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${OPENSSL_INSTALL_DIR}/include
 )
 
-target_link_libraries(ooxmlsignature PRIVATE
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a
-)
-
-# Global Defines
 target_compile_definitions(ooxmlsignature PRIVATE
     SUPPORT_OPENSSL
+    COMMON_OPENSSL_BUILDING
 )
 
-# ADD_DEPENDENCY(kernel)
-# Replaces your custom kernel dependency. 
-# Assumes 'kernel' is another CMake target defined elsewhere in your project.
-target_link_libraries(ooxmlsignature PRIVATE kernel)
+if( UNIX )
+    remove_definitions(-DUNICODE -D_UNICODE)
+endif()
 
+target_link_libraries(ooxmlsignature PRIVATE
+    ${OPENSSL_LIBSSL}
+    ${OPENSSL_LIBCRYPTO}
+    kernel
+)
 
-# core_windows { ... }
 if(WIN32)
     target_compile_definitions(ooxmlsignature PRIVATE SUPPORT_MS_CRYPTO)
     target_sources(ooxmlsignature PRIVATE src/Certificate_mscrypto.h)
     
-    # LIBS += -lcrypt32 -lcryptui -lAdvapi32 -lws2_32 -lUser32
     target_link_libraries(ooxmlsignature PRIVATE
-        crypt32
-        cryptui
-        advapi32
-        ws2_32
-        user32
+        Crypt32
+        Cryptui
+        Advapi32
+        Ws2_32
+        User32
     )
 endif()
 
-# support_oform { ... }
 if(SUPPORT_OFORM)
     target_compile_definitions(ooxmlsignature PRIVATE SUPPORT_OFORM)
-    target_sources(ooxmlsignature PRIVATE src/Certificate_oform.h)
+    target_sources(ooxmlsignature PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Certificate_oform.h)
 endif()
 
-copy_artifacts_to_folder("ooxmlsignature" "${EO_CORE_OUTPUT_DIR}")
+if(APPLE)
+    copy_framework_to_folder("ooxmlsignature" "${EO_CORE_OUTPUT_DIR}")
+else()
+    copy_artifacts_to_folder("ooxmlsignature" "${EO_CORE_OUTPUT_DIR}")
+endif()
+
+declare_victory( ooxmlsignature )

@@ -17,7 +17,6 @@ CORE_ROOT_DIR = $$PWD/../../../../..
 PWD_ROOT_DIR = $$PWD
 include($$CORE_ROOT_DIR/Common/base.pri)
 include($$CORE_ROOT_DIR/Common/3dParty/icu/icu.pri)
-include(../../freetype.pri)
 
 ADD_DEPENDENCY(UnicodeConverter, kernel)
 
@@ -26,8 +25,6 @@ INCLUDEPATH += \
 	$$CORE_ROOT_DIR/DesktopEditor/cximage/jasper/include \
 	$$CORE_ROOT_DIR/DesktopEditor/cximage/jpeg \
 	$$CORE_ROOT_DIR/DesktopEditor/cximage/png \
-	$$CORE_ROOT_DIR/DesktopEditor/freetype-2.10.4/include \
-	$$CORE_ROOT_DIR/DesktopEditor/freetype-2.10.4/include/freetype \
 	$$CORE_ROOT_DIR/Common/3dParty/openssl/openssl/include
 
 win32 {

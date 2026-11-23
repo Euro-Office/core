@@ -60,7 +60,7 @@ namespace AVSOfficeEWSEditorTest.Tests
             using (Workbook wb = editor.LoadWorkbook("../../TestFiles/ChartsSheets.xlsx"))
             {
                 Assert.NotNull(wb);
-                //             Worksheet ws = wb.Sheets["Лист1"] as Worksheet;
+                //             Worksheet ws = wb.Sheets["Sheet1"] as Worksheet;
 
                 Assert.NotNull(wb.Sheets["Лист1"] as Worksheet);
                 Assert.NotNull(wb.Sheets["Диаграмма2"] as Chartsheet);

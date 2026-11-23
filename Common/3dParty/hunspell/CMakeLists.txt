@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(spell)
 
-set(CMAKE_CXX_STANDARD 17)
-
 # -------------------------------------------------
 # Ensure Emscripten toolchain
 # -------------------------------------------------
@@ -15,25 +13,18 @@ set(CORE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../..)
 include(${CORE_ROOT}/common.cmake)
 
 # -------------------------------------------------
-# Pre / Post build scripts
-# -------------------------------------------------
-add_custom_target(${PROJECT_NAME}_run_before ALL
-    COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/hunspell"
-)
-
-# -------------------------------------------------
 # Source files (compile_files_array)
 # -------------------------------------------------
 set(HUNSPELL_SRC
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hunspell/src/hunspell/affentry.cxx
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hunspell/src/hunspell/affixmgr.cxx
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hunspell/src/hunspell/csutil.cxx
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hunspell/src/hunspell/hashmgr.cxx
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hunspell/src/hunspell/hunspell.cxx
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hunspell/src/hunspell/hunzip.cxx
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hunspell/src/hunspell/phonet.cxx
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hunspell/src/hunspell/replist.cxx
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hunspell/src/hunspell/suggestmgr.cxx
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hunspell/hunspell-wasm/src/hunspell/affentry.cxx
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hunspell/hunspell-wasm/src/hunspell/affixmgr.cxx
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hunspell/hunspell-wasm/src/hunspell/csutil.cxx
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hunspell/hunspell-wasm/src/hunspell/hashmgr.cxx
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hunspell/hunspell-wasm/src/hunspell/hunspell.cxx
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hunspell/hunspell-wasm/src/hunspell/hunzip.cxx
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hunspell/hunspell-wasm/src/hunspell/phonet.cxx
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hunspell/hunspell-wasm/src/hunspell/replist.cxx
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hunspell/hunspell-wasm/src/hunspell/suggestmgr.cxx
 )
 
 set_source_files_properties(${HUNSPELL_SRC} PROPERTIES GENERATED TRUE)
@@ -53,7 +44,6 @@ add_executable(${PROJECT_NAME}
     ${HUNSPELL_SRC}
     ${WRAPPER_SRC}
 )
-add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_run_before)
 
 # -------------------------------------------------
 # Output folder
@@ -66,7 +56,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Include directories
 # -------------------------------------------------
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hunspell/src/hunspell
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hunspell/hunspell-wasm/src/hunspell
     ${CMAKE_CURRENT_SOURCE_DIR}/wasm/src
 )
 
@@ -116,3 +106,6 @@ add_custom_target(${PROJECT_NAME}_copy_extra_files ALL
     COMMENT "Copying extra files to output"
     VERBATIM
 )
+
+declare_victory( ${PROJECT_NAME} )
+

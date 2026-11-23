@@ -102,7 +102,7 @@ BiffStructurePtr XLUnicodeRichExtendedString::clone()
 int XLUnicodeRichExtendedString::serialize (std::wostream & _stream)
 {
 	int start_string = 0;
-	int Fmt = 0; //форматы со сдвигом !!! .. первый - тот что определен в ячейке.
+	int Fmt = 0; //shift formats!!! .. the first one is the one defined in the cell.
 	
 	CP_XML_WRITER(_stream)    
 	{
@@ -143,16 +143,16 @@ int XLUnicodeRichExtendedString::serialize (std::wostream & _stream)
 }
 int XLUnicodeRichExtendedString::serialize_rPr	(std::wostream & _stream, int iFmt)
 {
-	if (!pGlobalWorkbookInfoPtr)			return 0;
+	if (!pGlobalWorkbookInfoPtr) return 0;
 
 	int sz = pGlobalWorkbookInfoPtr->m_arFonts.size();
-	if (iFmt -1 > sz || iFmt < 1) return 0;
+	if (iFmt > sz || iFmt < 1) return 0;
 
 	CP_XML_WRITER(_stream)    
 	{
 		CP_XML_NODE(L"rPr")
 		{
-			Font * font = dynamic_cast<Font*>(pGlobalWorkbookInfoPtr->m_arFonts[iFmt-1].get());
+			Font * font = dynamic_cast<Font*>(pGlobalWorkbookInfoPtr->m_arFonts[iFmt - 1].get());
 
 			if (font) font->serialize_properties(CP_XML_STREAM(), true);
 		}

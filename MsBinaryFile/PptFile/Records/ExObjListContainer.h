@@ -43,5 +43,9 @@ public:
     ~CRecordExObjStg();
 
     virtual void ReadFromStream(SRecordHeader& oHeader, POLE::Stream* pStream) override;
+
+private:
+    std::wstring m_sName;
+    std::wstring m_sTempPath;
 };
 }

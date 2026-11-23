@@ -8,33 +8,33 @@ namespace NSMemoryStreamEmbed
 {
 #define CURRENTWRAPPER CMemoryStreamEmbed
 
-	FUNCTION_WRAPPER_V8_3(_Copy, Copy)
-	FUNCTION_WRAPPER_V8_0(_ClearNoAttack, ClearNoAttack)
-	FUNCTION_WRAPPER_V8_1(_WriteByte, WriteByte)
-	FUNCTION_WRAPPER_V8_1(_WriteBool, WriteBool)
-	FUNCTION_WRAPPER_V8_1(_WriteLong, WriteLong)
-	FUNCTION_WRAPPER_V8_1(_WriteDouble, WriteDouble)
-	FUNCTION_WRAPPER_V8_1(_WriteDouble2, WriteDouble2)
-	FUNCTION_WRAPPER_V8_1(_WriteStringA, WriteStringA)
-	FUNCTION_WRAPPER_V8_1(_WriteString, WriteString)
-	FUNCTION_WRAPPER_V8_1(_WriteString2, WriteString2)
+	FUNCTION_WRAPPER_V8_3(CopyWrapper, Copy)
+	FUNCTION_WRAPPER_V8_0(ClearNoAttackWrapper, ClearNoAttack)
+	FUNCTION_WRAPPER_V8_1(WriteByteWrapper, WriteByte)
+	FUNCTION_WRAPPER_V8_1(WriteBoolWrapper, WriteBool)
+	FUNCTION_WRAPPER_V8_1(WriteLongWrapper, WriteLong)
+	FUNCTION_WRAPPER_V8_1(WriteDoubleWrapper, WriteDouble)
+	FUNCTION_WRAPPER_V8_1(WriteDouble2Wrapper, WriteDouble2)
+	FUNCTION_WRAPPER_V8_1(WriteStringAWrapper, WriteStringA)
+	FUNCTION_WRAPPER_V8_1(WriteStringWrapper, WriteString)
+	FUNCTION_WRAPPER_V8_1(WriteString2Wrapper, WriteString2)
 
-	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
+	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);
 		result->SetInternalFieldCount(1);
 
-		NSV8Objects::Template_Set(result, "Copy",	_Copy);
-		NSV8Objects::Template_Set(result, "ClearNoAttack",	_ClearNoAttack);
-		NSV8Objects::Template_Set(result, "WriteByte",	_WriteByte);
-		NSV8Objects::Template_Set(result, "WriteBool",	_WriteBool);
-		NSV8Objects::Template_Set(result, "WriteLong",	_WriteLong);
-		NSV8Objects::Template_Set(result, "WriteDouble",	_WriteDouble);
-		NSV8Objects::Template_Set(result, "WriteDouble2",	_WriteDouble2);
-		NSV8Objects::Template_Set(result, "WriteStringA",	_WriteStringA);
-		NSV8Objects::Template_Set(result, "WriteString",	_WriteString);
-		NSV8Objects::Template_Set(result, "WriteString2",	_WriteString2);
+		NSV8Objects::Template_Set(result, "Copy", CopyWrapper);
+		NSV8Objects::Template_Set(result, "ClearNoAttack", ClearNoAttackWrapper);
+		NSV8Objects::Template_Set(result, "WriteByte", WriteByteWrapper);
+		NSV8Objects::Template_Set(result, "WriteBool", WriteBoolWrapper);
+		NSV8Objects::Template_Set(result, "WriteLong", WriteLongWrapper);
+		NSV8Objects::Template_Set(result, "WriteDouble", WriteDoubleWrapper);
+		NSV8Objects::Template_Set(result, "WriteDouble2", WriteDouble2Wrapper);
+		NSV8Objects::Template_Set(result, "WriteStringA", WriteStringAWrapper);
+		NSV8Objects::Template_Set(result, "WriteString", WriteStringWrapper);
+		NSV8Objects::Template_Set(result, "WriteString2", WriteString2Wrapper);
 
 		return handle_scope.Escape(result);
 	}

@@ -63,7 +63,7 @@ namespace NExtractTools
 
 		if (bDataIntegrity == false)
 		{
-		  // было несанкционированое вешательство в файл
+		  // there was unauthorized tampering with the file
 		}
 
 		COfficeFileFormatChecker OfficeFileFormatChecker;
@@ -149,7 +149,7 @@ namespace NExtractTools
 
 		if (bDataIntegrity == false)
 		{
-		  // было несанкционированое вешательство в файл
+		  // there was unauthorized tampering with the file
 		}
 
 		return 0;
@@ -175,7 +175,7 @@ namespace NExtractTools
 
 		_UINT32 nRes = mscrypt2oox(sFrom, sResultDecryptFile, params, convertParams);
 
-		if (!SUCCEEDED_X2T(nRes) && password.empty()) // qiaoshemei1 (1).xlsx - запрокченный xlsx
+		if (!SUCCEEDED_X2T(nRes) && password.empty()) // qiaoshemei1 (1).xlsx - password-protected xlsx
 		{
 			if (!params.getDontSaveAdditional())
 			{

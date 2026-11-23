@@ -22,8 +22,15 @@ namespace NSJSBase
 		// initialize all V8 inspector stuff
 		m_pChannel.reset(new CV8InspectorChannelImpl(m_pIsolate, fOnResponse));
 		m_pInspector = v8_inspector::V8Inspector::create(m_pIsolate, this);
+#ifdef V8_VERSION_121_PLUS
+		// The inspector only runs on request (V8_USE_INSPECTOR) for local debugging
+		m_pSession = m_pInspector->connect(m_nContextGroupId, m_pChannel.get(), v8_inspector::StringView(),
+										   v8_inspector::V8Inspector::kFullyTrusted);
+		context->SetAlignedPointerInEmbedderData(1, this, v8::kEmbedderDataTypeTagDefault);
+#else
 		m_pSession = m_pInspector->connect(m_nContextGroupId, m_pChannel.get(), v8_inspector::StringView());
 		context->SetAlignedPointerInEmbedderData(1, this);
+#endif
 
 		v8_inspector::StringView oContextName = convertToStringView("inspector" + std::to_string(nContextGroupId));
 		m_pInspector->contextCreated(v8_inspector::V8ContextInfo(context, m_nContextGroupId, oContextName));
@@ -34,7 +41,7 @@ namespace NSJSBase
 		m_pSession->dispatchProtocolMessage(oMessage);
 	}
 
-	void CV8InspectorClientImpl::runMessageLoopOnPause(int nContextGroupId)
+	void CV8InspectorClientImpl::runMessageLoopOnPause(int  /*nContextGroupId*/)
 	{
 		if (m_bRunNestedLoop)
 		{
@@ -55,7 +62,7 @@ namespace NSJSBase
 		m_bTerminated = true;
 	}
 
-	v8::Local<v8::Context> CV8InspectorClientImpl::ensureDefaultContextInGroup(int nContextGroupId)
+	v8::Local<v8::Context> CV8InspectorClientImpl::ensureDefaultContextInGroup(int  /*nContextGroupId*/)
 	{
 		return m_pIsolate->GetCurrentContext();
 	}

@@ -439,7 +439,7 @@ namespace DocFileFormat
 			}
 			else if (fcEnd < (int)pcd.fc)		//	this piece is beyond the requested range
 			{	
-				// имеет место быть перескок по стриму, поэтому корректируем начальную позицию
+				// there may be a jump in the stream, so we adjust the starting position
 
 				//size_t count = encodingChars->size();
 				//if (count && fcSize > 0)

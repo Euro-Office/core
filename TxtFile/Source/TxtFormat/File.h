@@ -48,9 +48,9 @@ namespace Txt
 		
 		const bool isValid	(const std::wstring& filename) const;
 		
-        std::vector<std::wstring>	m_listContent;			//unicode  (ранее было utf8)
+        std::vector<std::wstring>	m_listContent;			//unicode (previously utf8)
         std::vector<std::string>	m_listContentutf8;
-		int							m_listContentSize;		//для вывода процентов конвертации
+		int							m_listContentSize;		//to display conversion percentages
 		int							m_nEncoding;
 	};
 } // namespace Txt

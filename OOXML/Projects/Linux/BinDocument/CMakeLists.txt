@@ -10,9 +10,6 @@ set(OOXML_ROOT_DIR "${CORE_ROOT_DIR}/OOXML")
 set(BIN_SOURCES_DIR "${OOXML_ROOT_DIR}/Binary")
 set(MS_BINARY_FILE_ROOT "${CORE_ROOT_DIR}/MsBinaryFile")
 
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 add_library(BinDocument STATIC
     ${BIN_SOURCES_DIR}/Document/DocWrapper/DocxSerializer.cpp
     ${BIN_SOURCES_DIR}/Document/DocWrapper/FontProcessor.cpp
@@ -112,6 +109,13 @@ add_library(BinDocument STATIC
 
 set_default_options(BinDocument)
 
+if( MSVC )
+    target_compile_definitions( BinDocument PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_compile_definitions(BinDocument PRIVATE
 	SOLUTION_ASCOFFICEDOCXFILE2
 	#DISABLE_FILE_DOWNLOADER
@@ -137,4 +141,4 @@ target_link_libraries(BinDocument PRIVATE
 
 set_property(TARGET BinDocument PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-copy_boost_libs(BinDocument)
+declare_victory( BinDocument )

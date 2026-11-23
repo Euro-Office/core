@@ -35,7 +35,7 @@ bool OOXFontTableReader::Parse( ReaderParameter oParam )
 	{
 		OOXFontReader oFontReader(m_fontTable->m_arrFonts[i]);
 		RtfFont oNewFont;
-		if( true == oFontReader.Parse( oParam, oNewFont ) )
+		if( oFontReader.Parse( oParam, oNewFont ) )
 			oParam.oRtf->m_oFontTable.AddItem(oNewFont);
 	}
 	return true;

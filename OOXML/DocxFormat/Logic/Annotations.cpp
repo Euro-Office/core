@@ -37,7 +37,7 @@
 
 #include "../../Common/SimpleTypes_Word.h"
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:subDoc>
 
@@ -49,7 +49,7 @@ namespace OOX
 		CCommentRangeEnd::CCommentRangeEnd(OOX::Document *pMain) : WritingElement(pMain)
 		{
 		}
-		CCommentRangeEnd::CCommentRangeEnd(CCommentRangeEnd *pOther) : WritingElement(NULL)
+		CCommentRangeEnd::CCommentRangeEnd(CCommentRangeEnd *pOther) : WritingElement(nullptr)
 		{
 			m_oDisplacedByCustomXml = pOther->m_oDisplacedByCustomXml;
 			m_oId                   = pOther->m_oId;
@@ -88,8 +88,7 @@ namespace OOX
 		{
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:displacedbyCustomXml", m_oDisplacedByCustomXml )
-			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:id",                   m_oId )
-			WritingElement_ReadAttributes_Read_else_if( oReader, L"aml:id",					m_oId )
+			else if ( L"w:id" == wsName || L"aml:id" == wsName ) m_oId = oReader.GetText();
 			WritingElement_ReadAttributes_End( oReader )
 		}
 
@@ -130,8 +129,7 @@ namespace OOX
 		{
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:displacedbyCustomXml", m_oDisplacedByCustomXml )
-			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:id",                   m_oId )
-			WritingElement_ReadAttributes_Read_else_if( oReader, L"aml:id",					m_oId )
+			else if ( L"w:id" == wsName || L"aml:id" == wsName ) m_oId = oReader.GetText();
 			WritingElement_ReadAttributes_End( oReader )
 		}
 
@@ -168,7 +166,7 @@ namespace OOX
 		}
 		void CCustomXmlDelRangeEnd::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, L"w:id", m_oId )
 			WritingElement_ReadAttributes_End( oReader )
@@ -277,7 +275,7 @@ namespace OOX
 		}
 		void CCustomXmlInsRangeEnd::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, L"w:id", m_oId )
 			WritingElement_ReadAttributes_End( oReader )
@@ -561,7 +559,7 @@ namespace OOX
 		}
 		void CCustomXmlMoveToRangeStart::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:author", m_sAuthor )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:date",   m_oDate )
@@ -605,7 +603,7 @@ namespace OOX
 		}
 		void CMoveFromRangeEnd::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:displacedbyCustomXml", m_oDisplacedByCustomXml )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:id",                   m_oId )
@@ -677,7 +675,7 @@ namespace OOX
 		}
 		void CMoveFromRangeStart::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:author",               m_sAuthor )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:colFirst",             m_oColFirst )
@@ -829,7 +827,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("w:bdo") == sName )
 					AssignPtrXmlContent(pItem, CBdo, oReader)
@@ -945,7 +943,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("w:bdo") == sName )
 					AssignPtrXmlContent(pItem, CBdo, oReader)
@@ -1082,8 +1080,7 @@ namespace OOX
 		{
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:displacedbyCustomXml", m_oDisplacedByCustomXml )
-			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:id",                   m_oId )
-			WritingElement_ReadAttributes_Read_else_if( oReader, L"aml:id",					m_oId )
+			else if ( L"w:id" == wsName || L"aml:id" == wsName ) m_oId = oReader.GetText();
 			WritingElement_ReadAttributes_End( oReader )
 		}
 
@@ -1144,8 +1141,7 @@ namespace OOX
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:colFirst",             m_oColFirst )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:colLast",              m_oColLast )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:displacedbyCustomXml", m_oDisplacedByCustomXml )
-			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:id",                   m_oId )
-			WritingElement_ReadAttributes_Read_else_if( oReader, L"aml:id",					m_oId )
+			else if ( L"w:id" == wsName || L"aml:id" == wsName ) m_oId = oReader.GetText();
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:name",                 m_sName )
 			WritingElement_ReadAttributes_End( oReader )
 		}
@@ -1191,7 +1187,7 @@ namespace OOX
 		}
 		void CPermEnd::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:displacedbyCustomXml", m_oDisplacedByCustomXml )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:id",                   m_sId )
@@ -1289,7 +1285,7 @@ namespace OOX
 		}
 		void CProofErr::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, L"w:type", m_oType )
 			WritingElement_ReadAttributes_End( oReader )
@@ -1316,7 +1312,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("w:bdo") == sName )
 					AssignPtrXmlContent(pItem, CBdo, oReader)
@@ -1407,7 +1403,7 @@ namespace OOX
 		}
 		void CIns::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if( oReader, L"w:author", m_sAuthor )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:date", m_oDate )
@@ -1437,7 +1433,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("w:bdo") == sName )
 					AssignPtrXmlContent(pItem, CBdo, oReader)
@@ -1526,7 +1522,7 @@ namespace OOX
 		}
 		void CDel::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if( oReader, L"w:author", m_sAuthor )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:date", m_oDate )

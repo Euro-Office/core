@@ -83,7 +83,7 @@ namespace NSOnlineOfficeBinToPdf
 		oFile.ReadFile(pFileContent, dwFileSize, dwReaded);
 		oFile.CloseFile();
 
-		bool bIsNeedDestroy = (NULL == pParams) ? true : false;
+		bool bIsNeedDestroy = (nullptr == pParams) ? true : false;
 		if (bIsNeedDestroy)
 			pParams = new CConvertFromBinParams();
 
@@ -137,7 +137,7 @@ namespace NSOnlineOfficeBinToPdf
 		return true;
 	}
 
-	enum class AddCommandType
+	enum class AddCommandType : unsigned char
 	{
 		EditPage   = 0,
 		AddPage    = 1,

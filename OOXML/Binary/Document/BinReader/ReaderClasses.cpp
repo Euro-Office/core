@@ -448,6 +448,8 @@ namespace BinDocxRW {
 				case 1: sType = _T("dxa");  break;
 				case 2: sType = _T("nil");  break;
 				case 3: sType = _T("pct");  break;
+				default:
+					break;
 				}
 				nVal = WDocx;
 			}
@@ -473,14 +475,14 @@ namespace BinDocxRW {
 
 	WriteHyperlink* WriteHyperlink::Parse(std::wstring fld)
 	{
-		WriteHyperlink* res = NULL;
+		WriteHyperlink* res = nullptr;
 		if (-1 != fld.find(L"HYPERLINK"))
 		{
 			std::wstring sLink;
 			std::wstring sTooltip;
 			bool bNextLink = false;
 			bool bNextTooltip = false;
-			//разбиваем по пробелам, но с учетом кавычек
+			//split by spaces, but including quotes
 			std::vector<std::wstring> aItems;
 			std::wstring sCurItem;
 			bool bDQuot = false;
@@ -490,12 +492,12 @@ namespace BinDocxRW {
 				wchar_t sCurLetter = fld[i];
 				if ('\"' == sCurLetter)
 					bDQuot = !bDQuot;
-				else if ('\\' == sCurLetter && true == bDQuot && i + 1 < length && '\"' == fld[i + 1])
+				else if ('\\' == sCurLetter && bDQuot && i + 1 < length && '\"' == fld[i + 1])
 				{
 					i++;
 					sCurItem += fld[i];
 				}
-				else if (' ' == sCurLetter && false == bDQuot)
+				else if (' ' == sCurLetter && !bDQuot)
 				{
 					if (sCurItem.length() > 0)
 					{
@@ -528,7 +530,7 @@ namespace BinDocxRW {
 				else if (L"\\o" == item)
 					bNextTooltip = true;
 			}
-			if (false == sLink.empty())
+			if (!sLink.empty())
 			{
 				res = new WriteHyperlink();
 				boost::algorithm::trim(sLink);
@@ -541,7 +543,7 @@ namespace BinDocxRW {
 				}
 				else
 					res->href = sLink;
-				if (false == sTooltip.empty())
+				if (!sTooltip.empty())
 				{
 					res->tooltip = boost::algorithm::trim_copy(sTooltip);
 				}
@@ -551,20 +553,20 @@ namespace BinDocxRW {
 	}
 	void WriteHyperlink::Write(NSStringUtils::CStringBuilder& wr)
 	{
-		if (false == rId.empty())
+		if (!rId.empty())
 		{
 			std::wstring sCorrect_rId = XmlUtils::EncodeXmlString(rId);
 			std::wstring sCorrect_tooltip = XmlUtils::EncodeXmlString(tooltip);
 			std::wstring sCorrect_anchor = XmlUtils::EncodeXmlString(anchor);
 			std::wstring sStart = L"<w:hyperlink r:id=\"" + sCorrect_rId + L"\"";
 
-			if (false == tooltip.empty())
+			if (!tooltip.empty())
 			{
 				sStart += L" w:tooltip=\"";
 				sStart += sCorrect_tooltip;
 				sStart += L"\"";
 			}
-			if (false == anchor.empty())
+			if (!anchor.empty())
 			{
 				sStart += L" w:anchor=\"";
 				sStart += sCorrect_anchor;
@@ -670,21 +672,21 @@ namespace BinDocxRW {
 			pComment->IdFormat = pComment->m_oFormatIdCounter.getNextId();
 		}
 		sRes += L"<w:comment w:id=\"" + std::to_wstring(pComment->IdFormat) + L"\"";
-		if (false == pComment->UserName.empty())
+		if (!pComment->UserName.empty())
 		{
 			std::wstring sUserName = XmlUtils::EncodeXmlString(pComment->UserName);
 			sRes += L" w:author=\"";
 			sRes += XmlUtils::EncodeXmlString(sUserName);
 			sRes += L"\"";
 		}
-		if (false == pComment->Date.empty())
+		if (!pComment->Date.empty())
 		{
 			std::wstring sDate = XmlUtils::EncodeXmlString(pComment->Date);
 			sRes += L" w:date=\"";
 			sRes += sDate;
 			sRes += L"\"";
 		}
-		if (false == pComment->Initials.empty())
+		if (!pComment->Initials.empty())
 		{
 			sRes += L" w:initials=\"";
 			sRes += XmlUtils::EncodeXmlString(pComment->Initials);
@@ -692,7 +694,7 @@ namespace BinDocxRW {
 		}
 		sRes += L">";
 
-		if (false == pComment->sContent.empty())
+		if (!pComment->sContent.empty())
 		{
 			sRes += pComment->sContent;
 		}
@@ -721,7 +723,7 @@ namespace BinDocxRW {
 	std::wstring CComment::writeContentExt(CComment* pComment)
 	{
 		std::wstring sRes;
-		if (false == pComment->sParaId.empty())
+		if (!pComment->sParaId.empty())
 		{
 			std::wstring sDone(L"0");
 			if (pComment->bSolved && pComment->Solved)
@@ -731,7 +733,7 @@ namespace BinDocxRW {
 w15:paraIdParent=\"" + pComment->sParaIdParent + L"\" w15:done=\"" + sDone + L"\"/>";
 			else
 				sRes += L"<w15:commentEx w15:paraId=\"" + pComment->sParaId + L"\" w15:done=\"" + sDone + L"\"/>";
-			//расставляем paraIdParent
+			//set paraIdParent
 			for(size_t i = 0; i < pComment->replies.size(); i++)
 				pComment->replies[i]->sParaIdParent = pComment->sParaId;
 		}
@@ -770,7 +772,7 @@ w15:paraIdParent=\"" + pComment->sParaIdParent + L"\" w15:done=\"" + sDone + L"\
 	std::wstring CComment::writePeople(CComment* pComment)
 	{
 		std::wstring sRes;
-		if (false == pComment->UserName.empty())
+		if (!pComment->UserName.empty())
 		{
 			sRes += L"<w15:person w15:author=\"";
 			sRes += XmlUtils::EncodeXmlString(pComment->UserName);
@@ -811,12 +813,12 @@ w15:paraIdParent=\"" + pComment->sParaIdParent + L"\" w15:done=\"" + sDone + L"\
 	}
 	void CComments::addAuthor(CComment* pComment)
 	{
-		if (false == pComment->UserName.empty() && false == pComment->UserId.empty())
+		if (!pComment->UserName.empty() && !pComment->UserId.empty())
 			m_mapAuthors[pComment->UserName] = pComment;
 	}
 	CComment* CComments::get(_INT32 nInd)
 	{
-		CComment* pRes = NULL;
+		CComment* pRes = nullptr;
 		boost::unordered_map<_INT32, CComment*>::const_iterator pair = m_mapComments.find(nInd);
 		if (m_mapComments.end() != pair)
 			pRes = pair->second;
@@ -948,7 +950,7 @@ w15:paraIdParent=\"" + pComment->sParaIdParent + L"\" w15:done=\"" + sDone + L"\
 	}
 	bool CDrawingProperty::IsGraphicFrameContent()
 	{
-		return false == sGraphicFrameContent.empty();
+		return !sGraphicFrameContent.empty();
 	}
 	std::wstring CDrawingProperty::Write()
 	{
@@ -1035,7 +1037,7 @@ distT=\"0\" distB=\"0\" distL=\"0\" distR=\"0\"><wp:extent cx=\"" + std::to_wstr
 				if (bBehindDoc && BehindDoc)
 					nBehindDoc = 1;
 				_INT32 nLayoutInCell = 1;
-				if (bLayoutInCell && false == LayoutInCell)
+				if (bLayoutInCell && !LayoutInCell)
 					nLayoutInCell = 0;
 
 				if (bGraphicFrameContent)
@@ -1077,6 +1079,8 @@ allowOverlap=\"1\">";
 					case 5: sRelativeFrom = _T("outsideMargin");break;
 					case 6: sRelativeFrom = _T("page");break;
 					case 7: sRelativeFrom = _T("rightMargin");break;
+					default:
+						break;
 					}
 					std::wstring sContent;
 					if (bPositionHAlign)
@@ -1088,6 +1092,8 @@ allowOverlap=\"1\">";
 						case 2: sContent = _T("<wp:align>left</wp:align>");     break;
 						case 3: sContent = _T("<wp:align>outside</wp:align>");  break;
 						case 4: sContent = _T("<wp:align>right</wp:align>");    break;
+						default:
+							break;
 						}
 					}
 					else if (bPositionHPosOffset)
@@ -1114,6 +1120,8 @@ allowOverlap=\"1\">";
 					case 5: sRelativeFrom = _T("page");break;
 					case 6: sRelativeFrom = _T("paragraph");break;
 					case 7: sRelativeFrom = _T("topMargin");break;
+					default:
+						break;
 					}
 					std::wstring sContent;
 					if (bPositionVAlign)
@@ -1125,6 +1133,8 @@ allowOverlap=\"1\">";
 						case 2: sContent = _T("<wp:align>inside</wp:align>");break;
 						case 3: sContent = _T("<wp:align>outside</wp:align>");break;
 						case 4: sContent = _T("<wp:align>top</wp:align>");break;
+						default:
+							break;
 						}
 					}
 					else if (bPositionVPosOffset)
@@ -1156,6 +1166,8 @@ allowOverlap=\"1\">";
 						case c_oSerImageType2::WrapThrough:sTagName     = _T("wrapThrough");        break;
 						case c_oSerImageType2::WrapTight:sTagName       = _T("wrapTight");          break;
 						case c_oSerImageType2::WrapTopAndBottom:sTagName = _T("wrapTopAndBottom");  break;
+					default:
+						break;
 					}
 					if (DrawingPropertyWrap.bStart || DrawingPropertyWrap.Points.size() > 0)
 					{
@@ -1191,7 +1203,7 @@ allowOverlap=\"1\">";
 					}
 					else
 					{
-						//для wrapThrough и wrapTight wrapPolygon обязательное поле, если его нет - меняем тип.
+						//for wrapThrough and wrapTight wrapPolygon is a required field; if it isn't there, change the type.
 						if ( c_oSerImageType2::WrapSquare	== DrawingPropertyWrap.WrappingType		||
 								c_oSerImageType2::WrapThrough	== DrawingPropertyWrap.WrappingType		||
 								c_oSerImageType2::WrapTight		== DrawingPropertyWrap.WrappingType)
@@ -1332,7 +1344,7 @@ allowOverlap=\"1\">";
 	}
 	void CFldSimple::Write(NSStringUtils::CStringBuilder& wr)
 	{
-		if (false == sInstr.empty())
+		if (!sInstr.empty())
 		{
 			std::wstring sCorrect_Instr = XmlUtils::EncodeXmlString(sInstr);
 			std::wstring sStart(L"<w:fldSimple w:instr=\"");
@@ -1346,15 +1358,15 @@ allowOverlap=\"1\">";
 
 	TrackRevision::TrackRevision()
 	{
-		Id = NULL;
-		vMerge = NULL;
-		vMergeOrigin = NULL;
-		tblPr = NULL;
-		tblGridChange = NULL;
-		trPr = NULL;
-		tcPr = NULL;
-		content = NULL;
-		contentRun = NULL;
+		Id = nullptr;
+		vMerge = nullptr;
+		vMergeOrigin = nullptr;
+		tblPr = nullptr;
+		tblGridChange = nullptr;
+		trPr = nullptr;
+		tcPr = nullptr;
+		content = nullptr;
+		contentRun = nullptr;
 	}
 	TrackRevision::~TrackRevision()
 	{
@@ -1374,7 +1386,7 @@ allowOverlap=\"1\">";
 		{
 			pCStringWriter->WriteString(L"<");
 			pCStringWriter->WriteString(sName);
-			if (NULL != Id)
+			if (nullptr != Id)
 			{
 				pCStringWriter->WriteString(L" w:id=\"" + std::to_wstring(*Id) + L"\"");
 			}
@@ -1396,45 +1408,45 @@ allowOverlap=\"1\">";
 				pCStringWriter->WriteEncodeXmlString(UserId);
 				pCStringWriter->WriteString(L"\"");
 			}
-			if (NULL != vMerge)
+			if (nullptr != vMerge)
 			{
 				pCStringWriter->WriteString(L" w:vMerge=\"" + std::to_wstring(*vMerge) + L"\"");
 			}
-			if ( NULL != vMergeOrigin )
+			if ( nullptr != vMergeOrigin )
 			{
 				pCStringWriter->WriteString(L" w:vMergeOrig=\"" + std::to_wstring(*vMergeOrigin) + L"\"");
 			}
-			if ( NULL != tblPr || NULL != tblGridChange || NULL != trPr || NULL != tcPr || NULL != content || NULL != contentRun)
+			if ( nullptr != tblPr || nullptr != tblGridChange || nullptr != trPr || nullptr != tcPr || nullptr != content || nullptr != contentRun)
 			{
 				pCStringWriter->WriteString(L">");
 
-				if (NULL != tblPr)
+				if (nullptr != tblPr)
 				{
 					pCStringWriter->WriteString(tblPr->Write());
 				}
-				if (NULL != tblGridChange)
+				if (nullptr != tblGridChange)
 				{
 					pCStringWriter->WriteString(L"<w:tblGrid>");
 					pCStringWriter->Write(*tblGridChange);
 					pCStringWriter->WriteString(L"</w:tblGrid>");
 				}
-				if (NULL != trPr)
+				if (nullptr != trPr)
 				{
 					pCStringWriter->WriteString(L"<w:trPr>");
 					pCStringWriter->Write(*trPr);
 					pCStringWriter->WriteString(L"</w:trPr>");
 				}
-				if (NULL != tcPr)
+				if (nullptr != tcPr)
 				{
 					pCStringWriter->WriteString(L"<w:tcPr>");
 					pCStringWriter->Write(*tcPr);
 					pCStringWriter->WriteString(L"</w:tcPr>");
 				}
-				if (NULL != content)
+				if (nullptr != content)
 				{
 					pCStringWriter->Write(*content);
 				}
-				if (NULL != contentRun)
+				if (nullptr != contentRun)
 				{
 					pCStringWriter->Write(*contentRun);
 				}
@@ -1451,7 +1463,7 @@ allowOverlap=\"1\">";
 	}
 	bool TrackRevision::IsNoEmpty()
 	{
-		return !Author.empty() || !Date.empty() || NULL != Id;
+		return !Author.empty() || !Date.empty() || nullptr != Id;
 	}
 	std::wstring TrackRevision::ToString(std::wstring sName)
 	{

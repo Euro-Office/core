@@ -140,7 +140,7 @@ const bool CONDFMTS::loadContent(BinProcessor& proc)
 				
 				if ((condFmt) && (condFmt->nID == cfEx->nID))
 				{
-					if (ind_cf >= CONDFMT_->m_arCF.size() && m_arCFEx[i].cf12)//4-ое и более условия - 5804543.xls
+					if (ind_cf >= CONDFMT_->m_arCF.size() && m_arCFEx[i].cf12)//4th or more conditions - 5804543.xls
 					{
 						CONDFMT_->m_arCF.push_back(m_arCFEx[i].cf12);
 						
