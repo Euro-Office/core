@@ -44,7 +44,7 @@ protected:
     }
 };
 
-// Levels 1-6 use the font OpenSymbol, level 7 has no font of its own.
+// Levels 1-6 and 9 use the font OpenSymbol, level 7 has no font of its own.
 TEST_F(OdtToDocxSymbolBullets, SymbolBulletsKeepTheirCodePoint)
 {
     EXPECT_EQ(level_text(0), L"\x2714"); // heavy check mark
@@ -54,6 +54,7 @@ TEST_F(OdtToDocxSymbolBullets, SymbolBulletsKeepTheirCodePoint)
     EXPECT_EQ(level_text(4), L"\x27A2"); // arrowhead
     EXPECT_EQ(level_text(5), L"\x2611"); // ballot box with check
     EXPECT_EQ(level_text(6), L"\x2794"); // heavy wide-headed arrow, no font
+    EXPECT_EQ(level_text(8), L"\xE00A"); // OpenSymbol private-use bullet
 }
 
 // The plain bullet is converted as before.
