@@ -91,11 +91,7 @@ namespace NSFonts
 		template <class T>
 		void Write(BYTE*& pBuffer, const T& value)
 		{
-#ifdef _ARM_ALIGN_
 			memcpy(pBuffer, &value, sizeof(T));
-#else
-			*((T*)(pBuffer)) = value;
-#endif
 			pBuffer += sizeof(T);
 		}
 	}
@@ -133,7 +129,7 @@ namespace NSFonts
 			nLen = sUtf16.Length;
 		}
 
-		return (int)(2 * (nLen + 1)) + sizeof(INT);
+		return (2 * (static_cast<size_t>(nLen) + 1)) + sizeof(INT);
 	}
 	void WriteUtf16ToBuffer(BYTE*& pBuffer, const std::wstring& value)
 	{
@@ -168,7 +164,7 @@ namespace NSFonts
 	}
 	CFontInfo* FromBuffer(BYTE*& pBuffer, std::wstring strDir)
 	{
-		LONG lRecordLen = NSBinarySerialize::Read<INT>(pBuffer);
+		NSBinarySerialize::Read<INT>(pBuffer);
 
 		std::wstring sName = ReadUtf8FromBuffer(pBuffer);
 
@@ -211,11 +207,8 @@ namespace NSFonts
 		SHORT shCapHeight = NSBinarySerialize::Read<SHORT>(pBuffer);
 		USHORT usType = NSBinarySerialize::Read<USHORT>(pBuffer);
 
-		bool bIsRelative = false;
-		if (sPath.find(wchar_t('/')) == std::wstring::npos)
-			bIsRelative = true;
-		else if (!sPath.empty() && sPath[0] == wchar_t('.'))
-			bIsRelative = true;
+		bool bIsRelative = sPath.find(wchar_t('/')) == std::wstring::npos ||
+			(!sPath.empty() && sPath[0] == wchar_t('.'));
 
 		if (bIsRelative)
 			sPath = strDir + L"/" + sPath;
@@ -507,7 +500,7 @@ std::wstring CFontList::GetFontBySymbol(int symbol)
 
 	int _center = 0;
 
-	if (_start > _end || m_pRanges == NULL)
+	if (_start > _end || m_pRanges == nullptr)
 		return L"";
 
 	while (_start < _end)
@@ -558,14 +551,14 @@ int CFontList::GetCharsetPenalty(UINT ulCandRanges[6], unsigned char unReqCharse
 
 	return 0;
 }
-int CFontList::GetSigPenalty(UINT ulCandRanges[6], UINT ulReqRanges[6], double dRangeWeight, double dRangeWeightSuferflouous)
+int CFontList::GetSigPenalty(UINT  /*ulCandRanges*/[6], UINT ulReqRanges[6], double dRangeWeight, double dRangeWeightSuferflouous)
 {
 	double dPenalty = 0;
 
 	// First, count how many distinct spaces are needed.
 	// Use the total count to calculate the weight of one missing space.
 
-	bool isSuferflouous = (dRangeWeightSuferflouous < 1) ? false : true;
+	bool isSuferflouous = dRangeWeightSuferflouous >= 1;
 	int nRangesCount = 0;
 	for ( int nIndex = 0; nIndex < 6; nIndex++ )
 	{
@@ -687,9 +680,8 @@ int CFontList::GetFamilyUnlikelyPenalty(int nCandFamilyClass, std::wstring sReqF
 	//sReqFamilyClass.MakeLower(); TODO:
 	if ( L"any" == sReqFamilyClass || L"unknown" == sReqFamilyClass )
 		return 0;
-	else if ( 0 == nCandClassID )
-		return 50;
-	else if ( ( ( L"swiss" == sReqFamilyClass ||
+	else if ( 0 == nCandClassID ||
+			  ( ( L"swiss" == sReqFamilyClass ||
 				  L"roman" == sReqFamilyClass ||
 				  L"modern" == sReqFamilyClass ) && nCandClassID > 8 ) ||
 			  ( (L"decorative" == sReqFamilyClass || L"script" == sReqFamilyClass ) && nCandClassID <= 8 ) )
@@ -762,15 +754,20 @@ int CFontList::GetPanosePenalty(BYTE *pCandPanose, BYTE *pReqPanose)
 			switch(nIndex)
 			{
 			case 0: nPenalty += 1000 * nKoef; break;
-			case 1: nPenalty += 100  * nKoef; break;
-			case 2: nPenalty += 100  * nKoef; break;
-			case 3: nPenalty += 100  * nKoef; break;
-			case 4: nPenalty += 100  * nKoef; break;
-			case 5: nPenalty += 100  * nKoef; break;
-			case 6: nPenalty += 100  * nKoef; break;
-			case 7: nPenalty += 100  * nKoef; break;
-			case 8: nPenalty += 100  * nKoef; break;
-			case 9: nPenalty += 100  * nKoef; break;
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+				nPenalty += 100 * nKoef; break;
+			default:
+			{
+				break;
+			}
 			}
 		}
 	}
@@ -868,9 +865,9 @@ private:
 public:
 	CFontSelectFormatCorrection()
 	{
-		m_oldName = NULL;
-		m_oldBold = NULL;
-		m_oldItalic = NULL;
+		m_oldName = nullptr;
+		m_oldBold = nullptr;
+		m_oldItalic = nullptr;
 	}
 
 	static CFontSelectFormatCorrection* CheckCorrection(NSFonts::CFontSelectFormat& oSelect)
@@ -879,8 +876,8 @@ public:
 		std::wstring sName = *oSelect.wsName;
 		NSFonts::makeLower(sName);
 
-		INT* oldBold = NULL;
-		INT* oldItalic = NULL;
+		INT* oldBold = nullptr;
+		INT* oldItalic = nullptr;
 
 		bool isCorrect = false;
 		if (std::wstring::npos != sName.find(L"bold"))
@@ -912,7 +909,7 @@ public:
 		}
 
 		if (!isCorrect)
-			return NULL;
+			return nullptr;
 
 		CFontSelectFormatCorrection* pCorrection = new CFontSelectFormatCorrection();
 		pCorrection->m_oldName = oSelect.wsName;
@@ -939,9 +936,9 @@ public:
 			oSelect.bItalic = m_oldItalic;
 		}
 
-		m_oldName = NULL;
-		m_oldBold = NULL;
-		m_oldItalic = NULL;
+		m_oldName = nullptr;
+		m_oldBold = nullptr;
+		m_oldItalic = nullptr;
 	}
 };
 
@@ -949,7 +946,7 @@ NSFonts::CFontInfo* CFontList::GetByParams(NSFonts::CFontSelectFormat& oSelect, 
 {
 	int nFontsCount = m_pList.size();
 	if (0 == nFontsCount)
-		return NULL;
+		return nullptr;
 
 	if (bIsDictionaryUse)
 	{
@@ -961,8 +958,8 @@ NSFonts::CFontInfo* CFontList::GetByParams(NSFonts::CFontSelectFormat& oSelect, 
 	int nMinPenalty = -1; // Minimum weight
 
 	int nDefPenalty = 2147483647;
-	NSFonts::CFontInfo* pInfoMin = NULL;
-	CFontSelectFormatCorrection* pSelectCorrection = NULL;
+	NSFonts::CFontInfo* pInfoMin = nullptr;
+	CFontSelectFormatCorrection* pSelectCorrection = nullptr;
 
 	while (true)
 	{
@@ -974,21 +971,20 @@ NSFonts::CFontInfo* CFontList::GetByParams(NSFonts::CFontSelectFormat& oSelect, 
 			if (!CheckEmbeddingRights(oSelect.usType, pInfo->m_usType))
 				continue;
 
-			if ( NULL != oSelect.pPanose )
+			if ( nullptr != oSelect.pPanose )
 			{
 				nCurPenalty += GetPanosePenalty( pInfo->m_aPanose, oSelect.pPanose );
 			}
 
 			UINT arrCandRanges[6] = { pInfo->m_ulUnicodeRange1, pInfo->m_ulUnicodeRange2, pInfo->m_ulUnicodeRange3, pInfo->m_ulUnicodeRange4, pInfo->m_ulCodePageRange1, pInfo->m_ulCodePageRange2 };
 
-			if (true)
 			{
-				if (NULL != oSelect.ulRange1 &&
-						NULL != oSelect.ulRange2 &&
-						NULL != oSelect.ulRange3 &&
-						NULL != oSelect.ulRange4 &&
-						NULL != oSelect.ulCodeRange1 &&
-						NULL != oSelect.ulCodeRange2)
+				if (nullptr != oSelect.ulRange1 &&
+						nullptr != oSelect.ulRange2 &&
+						nullptr != oSelect.ulRange3 &&
+						nullptr != oSelect.ulRange4 &&
+						nullptr != oSelect.ulCodeRange1 &&
+						nullptr != oSelect.ulCodeRange2)
 				{
 					UINT arrReqRanges[6]  = { *oSelect.ulRange1, *oSelect.ulRange2, *oSelect.ulRange3, *oSelect.ulRange4, *oSelect.ulCodeRange1, *oSelect.ulCodeRange2 };
 					nCurPenalty += GetSigPenalty( arrCandRanges, arrReqRanges, nCurPenalty >= 1000 ? 50 : 10, 10 );
@@ -996,22 +992,22 @@ NSFonts::CFontInfo* CFontList::GetByParams(NSFonts::CFontSelectFormat& oSelect, 
 			}
 
 			unsigned char unCharset = UNKNOWN_CHARSET;
-			if (NULL != oSelect.unCharset)
+			if (nullptr != oSelect.unCharset)
 				unCharset = *oSelect.unCharset;
 
-			if ( NULL != oSelect.bFixedWidth )
+			if ( nullptr != oSelect.bFixedWidth )
 				nCurPenalty += GetFixedPitchPenalty( pInfo->m_bIsFixed, *oSelect.bFixedWidth );
 
 			int nNamePenalty = 0;
-			if ( oSelect.wsName != NULL )
+			if ( oSelect.wsName != nullptr )
 				nNamePenalty = GetFaceNamePenalty2( pInfo, *oSelect.wsName, true );
-			if ( oSelect.wsAltName != NULL )
+			if ( oSelect.wsAltName != nullptr )
 			{
 				int nTmp = GetFaceNamePenalty2( pInfo, *oSelect.wsAltName, true );
 				if (nTmp < nNamePenalty)
 					nNamePenalty = nTmp;
 			}
-			if ( oSelect.wsDefaultName != NULL )
+			if ( oSelect.wsDefaultName != nullptr )
 			{
 				int nTmp = GetFaceNamePenalty2( pInfo, *oSelect.wsDefaultName, true );
 				if (nTmp < 3000) // max value in picker
@@ -1022,10 +1018,10 @@ NSFonts::CFontInfo* CFontList::GetByParams(NSFonts::CFontSelectFormat& oSelect, 
 
 			nCurPenalty += nNamePenalty;
 
-			if ( NULL != oSelect.usWidth )
+			if ( nullptr != oSelect.usWidth )
 				nCurPenalty += GetWidthPenalty( pInfo->m_usWidth, *oSelect.usWidth );
 
-			if ( NULL != oSelect.usWeight )
+			if ( nullptr != oSelect.usWeight )
 				nCurPenalty += GetWeightPenalty( pInfo->m_usWeigth, *oSelect.usWeight );
 
 			//if ( NULL != oSelect.bBold )
@@ -1034,41 +1030,36 @@ NSFonts::CFontInfo* CFontList::GetByParams(NSFonts::CFontSelectFormat& oSelect, 
 			//  nCurPenalty += GetItalicPenalty( pInfo->m_bItalic, *oSelect.bItalic );
 
 			// Always check; otherwise bold may be selected by name only, making the result depend on font order
-			nCurPenalty += GetBoldPenalty( pInfo->m_bBold, (NULL != oSelect.bBold) ? *oSelect.bBold : FALSE );
-			nCurPenalty += GetItalicPenalty( pInfo->m_bItalic, (NULL != oSelect.bItalic) ? *oSelect.bItalic : FALSE );
+			nCurPenalty += GetBoldPenalty( pInfo->m_bBold, (nullptr != oSelect.bBold) ? *oSelect.bBold : FALSE );
+			nCurPenalty += GetItalicPenalty( pInfo->m_bItalic, (nullptr != oSelect.bItalic) ? *oSelect.bItalic : FALSE );
 
-			if ( NULL != oSelect.wsFamilyClass )
+			if ( nullptr != oSelect.wsFamilyClass )
 				nCurPenalty += GetFamilyUnlikelyPenalty( pInfo->m_sFamilyClass, *oSelect.wsFamilyClass );
-			else if (NULL != oSelect.sFamilyClass)
+			else if (nullptr != oSelect.sFamilyClass)
 				nCurPenalty += GetFamilyUnlikelyPenalty( pInfo->m_sFamilyClass, *oSelect.sFamilyClass );
 
 			//nCurPenalty += GetFontFormatPenalty( pInfo->m_eFontFormat, fontTrueType );
 			nCurPenalty += GetCharsetPenalty( arrCandRanges, unCharset );
 
-			if ( NULL != oSelect.shAvgCharWidth )
+			if ( nullptr != oSelect.shAvgCharWidth )
 				nCurPenalty += GetAvgWidthPenalty( pInfo->m_shAvgCharWidth, *oSelect.shAvgCharWidth );
 
-			if ( NULL != oSelect.shAscent )
+			if ( nullptr != oSelect.shAscent )
 				nCurPenalty += GetAscentPenalty( pInfo->m_shAscent, *oSelect.shAscent );
 
-			if ( NULL != oSelect.shDescent )
+			if ( nullptr != oSelect.shDescent )
 				nCurPenalty += GetDescentPenalty( pInfo->m_shDescent, *oSelect.shDescent );
 
-			if ( NULL != oSelect.shLineGap )
+			if ( nullptr != oSelect.shLineGap )
 				nCurPenalty += GetLineGapPenalty( pInfo->m_shLineGap, *oSelect.shLineGap );
 
-			if ( NULL != oSelect.shXHeight )
+			if ( nullptr != oSelect.shXHeight )
 				nCurPenalty += GetXHeightPenalty( pInfo->m_shXHeight, *oSelect.shXHeight );
 
-			if ( NULL != oSelect.shCapHeight )
+			if ( nullptr != oSelect.shCapHeight )
 				nCurPenalty += GetCapHeightPenalty( pInfo->m_shCapHeight, *oSelect.shCapHeight );
 
-			if ( nMinPenalty < 0 )
-			{
-				pInfoMin   = pInfo;
-				nMinPenalty = nCurPenalty;
-			}
-			else if ( nCurPenalty < nMinPenalty )
+			if ( nMinPenalty < 0 || nCurPenalty < nMinPenalty )
 			{
 				pInfoMin   = pInfo;
 				nMinPenalty = nCurPenalty;
@@ -1082,11 +1073,11 @@ NSFonts::CFontInfo* CFontList::GetByParams(NSFonts::CFontSelectFormat& oSelect, 
 		if (0 == nMinPenalty)
 			break;
 
-		if (NULL == oSelect.wsName || pSelectCorrection)
+		if (nullptr == oSelect.wsName || pSelectCorrection)
 			break;
 
 		pSelectCorrection = CFontSelectFormatCorrection::CheckCorrection(oSelect);
-		if (NULL == pSelectCorrection)
+		if (nullptr == pSelectCorrection)
 			break;
 	}
 
@@ -1124,7 +1115,7 @@ void CFontList::Add(FT_Library pLibrary, FT_Parameter* pParams, const std::wstri
 	oOpenArgs.num_params = 4;
 	oOpenArgs.params     = pParams;
 
-	FT_Face pFace = NULL;
+	FT_Face pFace = nullptr;
 	if (FT_Open_Face( pLibrary, &oOpenArgs, 0, &pFace ))
 		return;
 
@@ -1152,20 +1143,20 @@ void CFontList::Add(FT_Library pLibrary, FT_Parameter* pParams, const std::wstri
 
 		const char* pPostName = FT_Get_Postscript_Name(pFace);
 		std::string sPostscriptName = "";
-		if (NULL != pPostName)
+		if (nullptr != pPostName)
 			sPostscriptName = FT_Get_Postscript_Name(pFace);
 
 		INT bFixedWidth = FT_IS_FIXED_WIDTH( pFace );
 
 		TT_OS2 *pOs2 = (TT_OS2 *)FT_Get_Sfnt_Table( pFace, ft_sfnt_os2 );
 
-		BYTE* pPanose = NULL;
+		BYTE* pPanose = nullptr;
 		ULONG ulRange1 = 0, ulRange2 = 0, ulRange3 = 0, ulRange4 = 0, ulCodeRange1 = 0, ulCodeRange2 = 0;
 		USHORT usWidth = 0, usWeight = 0, usType = 0;
 		SHORT sFamilyClass = 0;
 
 		SHORT shAvgCharWidth = 0, shAscent = 0, shDescent = 0, shLineGap = 0, shXHeight = 0, shCapHeight = 0;
-		if ( NULL != pOs2 )
+		if ( nullptr != pOs2 )
 		{
 			pPanose        = (BYTE *)pOs2->panose;
 
@@ -1204,7 +1195,6 @@ void CFontList::Add(FT_Library pLibrary, FT_Parameter* pParams, const std::wstri
 			}
 		}
 
-		if ( true )
 		{
 			// Special branch for cases when charset can be specified not through values
 			// ulCodePageRange, but directly through the Cmap type.
@@ -1259,7 +1249,7 @@ void CFontList::Add(FT_Library pLibrary, FT_Parameter* pParams, const std::wstri
 		std::wstring wsFamilyName = GetCorrectSfntName(pFace->family_name);
 		std::wstring wsStyleName = GetCorrectSfntName(pFace->style_name);
 
-		bool isBadASCII = (std::wstring::npos != wsFamilyName.find('?')) ? true : false;
+		bool isBadASCII = std::wstring::npos != wsFamilyName.find('?');
 
 #ifdef _MAC
 		if (wsFamilyName.find(L".") == 0)
@@ -1356,9 +1346,12 @@ void CFontList::Add(FT_Library pLibrary, FT_Parameter* pParams, const std::wstri
 					FT_Memory memory = pFace->memory;
 					FT_Error error = 0;
 
-					if ( FT_QNEW_ARRAY ( rec->string, rec->stringLength ) ||
-						 FT_STREAM_SEEK( rec->stringOffset )              ||
-						 FT_STREAM_READ( rec->string, rec->stringLength ) )
+					error = FT_QNEW_ARRAY ( rec->string, rec->stringLength );
+					if ( !error )
+						error = FT_STREAM_SEEK( rec->stringOffset );
+					if ( !error )
+						error = FT_STREAM_READ( rec->string, rec->stringLength );
+					if ( error )
 					{
 						FT_FREE( rec->string );
 						rec->stringLength = 0;
@@ -1410,19 +1403,19 @@ void CFontList::Add(const std::wstring& sFontPath, NSFonts::IFontStream* pStream
 	if (!pStream)
 		return;
 
-	FT_Library pLibrary = NULL;
+	FT_Library pLibrary = nullptr;
 	if (FT_Init_FreeType(&pLibrary))
 		return;
 
 	FT_Parameter *pParams = (FT_Parameter *)::malloc( sizeof(FT_Parameter) * 4 );
 	pParams[0].tag  = FT_MAKE_TAG( 'i', 'g', 'p', 'f' );
-	pParams[0].data = NULL;
+	pParams[0].data = nullptr;
 	pParams[1].tag  = FT_MAKE_TAG( 'i', 'g', 'p', 's' );
-	pParams[1].data = NULL;
+	pParams[1].data = nullptr;
 	pParams[2].tag  = FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY;
-	pParams[2].data = NULL;
+	pParams[2].data = nullptr;
 	pParams[3].tag  = FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY;
-	pParams[3].data = NULL;
+	pParams[3].data = nullptr;
 
 	Add(pLibrary, pParams, sFontPath, (CFontStream*)pStream, nFlag);
 
@@ -1434,19 +1427,19 @@ void CFontList::LoadFromArrayFiles(std::vector<std::wstring>& oArray, int nFlag)
 {
 	size_t nCount = oArray.size();
 
-	FT_Library pLibrary = NULL;
+	FT_Library pLibrary = nullptr;
 	if (FT_Init_FreeType(&pLibrary))
 		return;
 
 	FT_Parameter *pParams = (FT_Parameter *)::malloc( sizeof(FT_Parameter) * 4 );
 	pParams[0].tag  = FT_MAKE_TAG( 'i', 'g', 'p', 'f' );
-	pParams[0].data = NULL;
+	pParams[0].data = nullptr;
 	pParams[1].tag  = FT_MAKE_TAG( 'i', 'g', 'p', 's' );
-	pParams[1].data = NULL;
+	pParams[1].data = nullptr;
 	pParams[2].tag  = FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY;
-	pParams[2].data = NULL;
+	pParams[2].data = nullptr;
 	pParams[3].tag  = FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY;
-	pParams[3].data = NULL;
+	pParams[3].data = nullptr;
 
 	// determine the size of the buffer so as not to allocate many pieces, but to make do with one
 	int nMaxFontSize = 0;
@@ -1902,22 +1895,22 @@ namespace NSFonts
 
 		CApplicationFontsSymbols_Private()
 		{
-			m_library = NULL;
-			m_pData = NULL;
-			m_params = NULL;
+			m_library = nullptr;
+			m_pData = nullptr;
+			m_params = nullptr;
 
 			if (FT_Init_FreeType(&m_library))
 				return;
 
 			m_params = (FT_Parameter *)::malloc( sizeof(FT_Parameter) * 4 );
 			m_params[0].tag  = FT_MAKE_TAG( 'i', 'g', 'p', 'f' );
-			m_params[0].data = NULL;
+			m_params[0].data = nullptr;
 			m_params[1].tag  = FT_MAKE_TAG( 'i', 'g', 'p', 's' );
-			m_params[1].data = NULL;
+			m_params[1].data = nullptr;
 			m_params[2].tag  = FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY;
-			m_params[2].data = NULL;
+			m_params[2].data = nullptr;
 			m_params[3].tag  = FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY;
-			m_params[3].data = NULL;
+			m_params[3].data = nullptr;
 
 			int nSize = 100000000;
 			m_pData = new BYTE[nSize];
@@ -1957,7 +1950,7 @@ namespace NSFonts
 		oOpenArgs.num_params = 4;
 		oOpenArgs.params     = m_internal->m_params;
 
-		FT_Face pFace = NULL;
+		FT_Face pFace = nullptr;
 		if (FT_Open_Face(m_internal->m_library, &oOpenArgs, nFaceIndex, &pFace))
 			return;
 

@@ -29,21 +29,21 @@ using namespace MathEquation;
 
 #define CHECK_OPEN_BRACKET(nVaritation)  ((0 == nVariation) || (1 == nVariation))
 #define CHECK_CLOSE_BRACKET(nVaritation) ((0 == nVariation) || (2 == nVariation))
-#define CHECK_SUP(nVariation) ((0 == nVariation) || (2 == nVariation))
-#define CHECK_SUB(nVariation) ((1 == nVariation) || (2 == nVariation))
-#define GET_BARLINE_TYPE(nVariation)  (0 == nVariation? bartypeLine : bartypeDoubleLine)
-#define GET_BARARROW_TYPE(nVariation) (0 == nVariation? bartypeArrowLeft : (1 == nVariation? bartypeArrowRight : bartypeArrowDouble))
+#define CHECK_SUP(nVariation) ((0 == (nVariation)) || (2 == (nVariation)))
+#define CHECK_SUB(nVariation) ((1 == (nVariation)) || (2 == (nVariation)))
+#define GET_BARLINE_TYPE(nVariation)  (0 == (nVariation)? bartypeLine : bartypeDoubleLine)
+#define GET_BARARROW_TYPE(nVariation) (0 == (nVariation)? bartypeArrowLeft : (1 == (nVariation)? bartypeArrowRight : bartypeArrowDouble))
 
-CEquationReader::CEquationReader(const wchar_t* wsFilePath) : m_oStorage(wsFilePath), pStm(NULL), pS(NULL), nHAlign(0), nVAlign(0)
+CEquationReader::CEquationReader(const wchar_t* wsFilePath) : m_oStorage(wsFilePath), pStm(nullptr), pS(nullptr), nHAlign(0), nVAlign(0)
 {
 	InitSizes();
 }
 
 CEquationReader::~CEquationReader()
 {
-	if (NULL != pS)
+	if (nullptr != pS)
 		delete pS;
-	if (NULL != pStm)
+	if (nullptr != pStm)
 		delete pStm;
 }
 
@@ -74,14 +74,15 @@ void CEquationReader::InitFonts()
 		{
 			switch(i)
 			{
-			case 1: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // text
+			case 1: // text
 			case 2: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // function
 			case 3: pOutputDev->AddFont(i + 128, "Times New Roman", false, true);  break; // variable
 			case 4: pOutputDev->AddFont(i + 128, "Symbol",          false, true);  break; // standard Greek
-			case 5: pOutputDev->AddFont(i + 128, "Symbol",          false, false); break; // other Greek
+			case 5: // other Greek
 			case 6: pOutputDev->AddFont(i + 128, "Symbol",          false, false); break; // symbol
 			case 7: pOutputDev->AddFont(i + 128, "Times New Roman", true, false);  break; // matrix-vector
 			case 8: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // numbers
+			default: break;
 			}
 		}
 	}
@@ -210,8 +211,8 @@ int CEquationReader::HandleRecords()
 				break;
 
 			case END:
-			default:
-				break;
+		default:
+			break;
 		}
 	}
     while (nRecord != END && !pS->IsEof());
@@ -302,7 +303,7 @@ void CEquationReader::HandleStartTemplate(unsigned char nSelector, unsigned char
 
 	case 0xd:
 
-		pOutputDev->BeginRoot(0 == nVariation ? false : true);
+		pOutputDev->BeginRoot(0 != nVariation);
 		break;
 
 	case 0xe:
@@ -327,16 +328,16 @@ void CEquationReader::HandleStartTemplate(unsigned char nSelector, unsigned char
 
 	case 0x12:
 
-		pOutputDev->BeginArrow(arrowtypeLeft, 0 == nVariation ? true : false);
+		pOutputDev->BeginArrow(arrowtypeLeft, 0 == nVariation);
 		break;
 
 	case 0x13:
-		pOutputDev->BeginArrow(arrowtypeRight, 0 == nVariation ? true : false);
+		pOutputDev->BeginArrow(arrowtypeRight, 0 == nVariation);
 		break;
 
 	case 0x14:
 
-		pOutputDev->BeginArrow(arrowtypeDouble, 0 == nVariation ? true : false);
+		pOutputDev->BeginArrow(arrowtypeDouble, 0 == nVariation);
 		break;
 
 	case 0x15:
@@ -510,23 +511,15 @@ void CEquationReader::HandleEndTemplate(unsigned char nSelector, unsigned char n
 		break;
 
 	case 0xf:
-
-		pOutputDev->EndScript();
-		break;
-
 	case 0x2c:
 
 		pOutputDev->EndScript();
 		break;
 
-	case 0x2e:
-	case 0x2f:
-
-		pOutputDev->EndBar();
-		break;
-
 	case 0x10:
 	case 0x11:
+	case 0x2e:
+	case 0x2f:
 
 		pOutputDev->EndBar();
 		break;
@@ -539,10 +532,6 @@ void CEquationReader::HandleEndTemplate(unsigned char nSelector, unsigned char n
 		break;
 
 	case 0x1b:
-
-		pOutputDev->EndVerticalBrace();
-		break;
-
 	case 0x1c:
 
 		pOutputDev->EndVerticalBrace();
@@ -721,7 +710,6 @@ void CEquationReader::HandleSetSize(MTOKENS eType)
 				// TODO: Check this branch
 				nSize = nTemp;
 				*pS >> nTemp;
-                _UINT16 nTempSize = nTemp - 128;
 				break;
 			}
 		}
@@ -777,6 +765,8 @@ bool CEquationReader::IsSpecialChar(unsigned short nChar)
 	case 0xeb05: // large space
 	case 0xeb08: // 1pt space
 		return true;
+	default:
+		break;
 	}
 
 	return false;

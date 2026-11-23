@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginSXFilter::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> isxvd >> isxvdMProp >> sxft;
 
         record.skipNunBytes(4);

@@ -39,7 +39,7 @@ namespace DocWrapper {
     wchar_t* gc_sNoNameFont         = _T("NoNameFont");
     wchar_t* gc_sDefaultFontName    = _T("Arial");
 
-	FontProcessor::FontProcessor() : m_pFontManager(NULL)
+	FontProcessor::FontProcessor() : m_pFontManager(nullptr)
 	{
 	}
 	FontProcessor::~FontProcessor()
@@ -84,7 +84,7 @@ namespace DocWrapper {
 	{
         NSFonts::CFontSelectFormat oFontSelectFormat;
         std::wstring sFontName;
-		if(NULL != pTheme && oScheme.IsInit() && oScheme->m_oFontScheme.IsInit())
+		if(nullptr != pTheme && oScheme.IsInit() && oScheme->m_oFontScheme.IsInit())
 		{
 	//take the font from the theme
 			const SimpleTypes::Spreadsheet::EFontScheme eFontScheme = oScheme->m_oFontScheme->GetValue();
@@ -120,7 +120,7 @@ namespace DocWrapper {
 
         std::wstring sRes;
         NSFonts::CFontInfo* pFontInfo = m_pFontManager->GetFontInfoByParams(oFontSelectFormat);
-		if(NULL != pFontInfo)
+		if(nullptr != pFontInfo)
 			sRes = pFontInfo->m_wsFontName;
 		else
 			sRes = gc_sDefaultFontName;
@@ -199,7 +199,7 @@ namespace DocWrapper {
             ulCodeRange1 = (UINT)font.m_oCsb0->GetValue();
 		if (font.m_oCsb1.IsInit())
             ulCodeRange2 = (UINT)font.m_oCsb1->GetValue();
-		if ( !(0 == ulRange1 && 0 == ulRange2 && 0 == ulRange3 && 0 == ulRange4 && 0 == ulCodeRange1 && 0 == ulCodeRange2) )
+		if ( 0 != ulRange1 || 0 != ulRange2 || 0 != ulRange3 || 0 != ulRange4 || 0 != ulCodeRange1 || 0 != ulCodeRange2 )
 		{
             oFontSelectFormat.ulRange1 = new UINT;
 			*oFontSelectFormat.ulRange1 = ulRange1;
@@ -216,7 +216,7 @@ namespace DocWrapper {
 		}
 
         NSFonts::CFontInfo* pFontInfo = m_pFontManager->GetFontInfoByParams(oFontSelectFormat);
-		if(NULL != pFontInfo)
+		if(nullptr != pFontInfo)
 			fontMap[sFontName] = pFontInfo->m_wsFontName;
 		else
 			fontMap[sFontName] = gc_sDefaultFontName;

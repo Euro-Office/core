@@ -40,7 +40,7 @@ namespace BinVsdxRW
 
 	CVsdxSerializer::CVsdxSerializer() : m_bIsMacro(false), m_bIsNoBase64(false)
 	{
-		m_pExternalDrawingConverter = NULL;
+		m_pExternalDrawingConverter = nullptr;
 	}
 	CVsdxSerializer::~CVsdxSerializer()
 	{

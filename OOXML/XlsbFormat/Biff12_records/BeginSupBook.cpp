@@ -77,6 +77,9 @@ namespace XLSB
                 string2 = str.value();
                 break;
             }
+
+            default:
+                break;
         }
     }
 
@@ -112,6 +115,9 @@ namespace XLSB
 				record << relID << str;
 				break;
 			}
+
+			default:
+				break;
 		}
 	}
 

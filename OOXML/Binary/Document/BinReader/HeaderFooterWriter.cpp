@@ -50,7 +50,7 @@ namespace Writers
 			delete m_aFooters[i];
 		m_aFooters.clear();
 	}
-	void HeaderFooterWriter::Write(bool bGlossary)
+	void HeaderFooterWriter::Write(bool  /*bGlossary*/)
 	{
 		for (size_t i = 0, length = m_aHeaders.size(); i < length; ++i)
 		{
@@ -63,7 +63,7 @@ namespace Writers
 			WriteItem(L"footer", pFooter->m_sFilename, pFooter->Header, false);
 		}
 	}
-	void HeaderFooterWriter::WriteItem( std::wstring sHeader,  std::wstring& sFilename, ContentWriter& m_oWriter, bool bHeader)
+	void HeaderFooterWriter::WriteItem( std::wstring  /*sHeader*/,  std::wstring& sFilename, ContentWriter& m_oWriter, bool bHeader)
 	{
 		OOX::CPath filePath = m_sDir + FILE_SEPARATOR_STR + L"word" + FILE_SEPARATOR_STR + sFilename;
 

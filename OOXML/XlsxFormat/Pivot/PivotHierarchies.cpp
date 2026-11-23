@@ -142,8 +142,8 @@ namespace Spreadsheet
             WritingElement_ReadAttributes_Read_else_if	( oReader, L"time", m_oTime )
             WritingElement_ReadAttributes_Read_else_if	( oReader, L"oneField", m_oOneField )
             WritingElement_ReadAttributes_Read_else_if	( oReader, L"hidden", m_oHidden )
-            WritingElement_ReadAttributes_Read_else_if	( oReader, L"measures", m_oMeasure )
-            WritingElement_ReadAttributes_Read_else_if	( oReader, L"measure", m_oMeasure )
+            else if ( L"measures" == wsName || L"measure" == wsName )
+            	m_oMeasure = oReader.GetText();
             WritingElement_ReadAttributes_Read_else_if	( oReader, L"attribute", m_oAttribute )
             WritingElement_ReadAttributes_Read_else_if	( oReader, L"unbalanced", m_oUnbalanced )
             WritingElement_ReadAttributes_Read_else_if	( oReader, L"unbalancedGroup", m_oUnbalancedGroup )

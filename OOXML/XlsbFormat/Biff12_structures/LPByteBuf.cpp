@@ -35,7 +35,7 @@ namespace XLSB
 
     LPByteBuf::LPByteBuf(XLS::CFRecord& record)
     {
-        load(record);
+        LPByteBuf::load(record);
     }
 
     LPByteBuf::~LPByteBuf()
@@ -52,14 +52,14 @@ namespace XLSB
 		if (rgbData.empty()) return L"";
 		
 		int nLength = 0;
-		char *pData = NULL;
+		char *pData = nullptr;
 		std::string result;
 
 		NSFile::CBase64Converter::Encode(rgbData.data(), rgbData.size(), pData, nLength, NSBase64::B64_BASE64_FLAG_NOCRLF);
 		if (pData)
 		{
 			result = std::string(pData, nLength);
-			delete[]pData; pData = NULL;
+			delete[]pData; pData = nullptr;
 		}
 		return std::wstring(result.begin(), result.end());
 	}

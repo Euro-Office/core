@@ -115,7 +115,7 @@ std::wstring XMLMap::getNodeName(const std::wstring &name, std::set<std::wstring
 std::shared_ptr<XmlNode> XMLMap::searchSameNode(const std::wstring &name)
 {
     _UINT32 nodeCount = 0;
-    for(auto i = parents_.back()->childs.begin(); i != parents_.back()->childs.end(); i++)
+    for(auto i = parents_.back()->children.begin(); i != parents_.back()->children.end(); i++)
     {
         if(name == (*i)->name)
         {
@@ -144,7 +144,7 @@ void XMLMap::openNode()
         newElem->parents = parents_.back()->parents;
         newElem->parents.insert(newElem->parent);
         newElem->counter = 1;
-        parents_.back()->childs.emplace(newElem);
+        parents_.back()->children.emplace(newElem);
     }
 
     if(!reader_->IsEmptyNode())
@@ -178,12 +178,12 @@ void XMLMap::closeNode()
     parents_.back()->childColumns.insert(lastElem->childColumns.begin(), lastElem->childColumns.end());
     parents_.back()->childColumns.insert(lastElem->attributes.begin(), lastElem->attributes.end());
     //cut out the value of a node if it has descendants
-    if(!lastElem->childs.empty())
+    if(!lastElem->children.empty())
     {
         lastElem->ValueColumnName = L"";
     }
 
-    for(auto i = lastElem->childs.begin(); i != lastElem->childs.end(); i++)
+    for(auto i = lastElem->children.begin(); i != lastElem->children.end(); i++)
     {
         if((*i)->counter < 2)
         {

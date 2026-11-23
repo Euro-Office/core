@@ -61,7 +61,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSortRule)
-			CSortRule(OOX::Document* pMain = NULL) : WritingElement(pMain) {}
+			CSortRule(OOX::Document* pMain = nullptr) : WritingElement(pMain) {}
 			virtual ~CSortRule(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}
@@ -85,7 +85,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSortRules)
-			CSortRules(OOX::Document* pMain = NULL) : WritingElementWithChilds<CSortRule>(pMain) {}
+			CSortRules(OOX::Document* pMain = nullptr) : WritingElementWithChilds<CSortRule>(pMain) {}
 			virtual ~CSortRules(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}
@@ -109,7 +109,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CColumnFilter)
-			CColumnFilter(OOX::Document* pMain = NULL) : WritingElementWithChilds<CFilterColumn>(pMain) {}
+			CColumnFilter(OOX::Document* pMain = nullptr) : WritingElementWithChilds<CFilterColumn>(pMain) {}
 			virtual ~CColumnFilter(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}
@@ -134,7 +134,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CNsvFilter)
-			CNsvFilter(OOX::Document* pMain = NULL) : WritingElementWithChilds<CColumnFilter>(pMain) {}
+			CNsvFilter(OOX::Document* pMain = nullptr) : WritingElementWithChilds<CColumnFilter>(pMain) {}
 			virtual ~CNsvFilter(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}
@@ -159,7 +159,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CNamedSheetView)
-			CNamedSheetView(OOX::Document* pMain = NULL) : WritingElementWithChilds<CNsvFilter>(pMain) {}
+			CNamedSheetView(OOX::Document* pMain = nullptr) : WritingElementWithChilds<CNsvFilter>(pMain) {}
 			virtual ~CNamedSheetView(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}
@@ -183,7 +183,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CNamedSheetViews)
-			CNamedSheetViews(OOX::Document* pMain = NULL) : WritingElementWithChilds<CNamedSheetView>(pMain) {}
+			CNamedSheetViews(OOX::Document* pMain = nullptr) : WritingElementWithChilds<CNamedSheetView>(pMain) {}
 			virtual ~CNamedSheetViews(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}

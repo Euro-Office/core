@@ -36,7 +36,7 @@ namespace XLSB
 
     GrbitFmla::GrbitFmla(XLS::CFRecord& record)
     {
-        load(record);
+        GrbitFmla::load(record);
     }
 
     GrbitFmla::~GrbitFmla()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void GrbitFmla::load(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> flags;
 
         fAlwaysCalc   = GETBIT(flags, 1);
