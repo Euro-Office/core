@@ -461,6 +461,55 @@ void number_number::oox_convert(oox::num_format_context & Context)
         number_decimal_places_);
 }
 
+namespace
+{
+// Literal text of a percentage style goes into the XLSX format code as it is only where it is a
+// "%" sign or made of characters that Excel shows without quotes (spaces and $-+/():!^&'~{}<>=).
+// Any other run is quoted, so that its letters are not read as format tokens:
+// "Rendite " 0.00 "%" must give "Rendite "0.00%, not Rendite 0.00% (d and e are date tokens).
+std::wstring quote_percentage_text(const std::wstring & text)
+{
+	std::wstring result;
+	std::wstring run;
+	auto flush = [&]()
+	{
+		if (run.empty())
+			return;
+		if (run.find_first_not_of(L" \u00A0\u202F$-+/():!^&'~{}<>=") == std::wstring::npos)
+		{
+			result += run;
+		}
+		else
+		{
+			result += L'"';
+			for (wchar_t c : run)
+			{
+				if (c == L'"')
+					result += L"\"\\\"\""; // close the quote, an escaped quote, open again
+				else
+					result += c;
+			}
+			result += L'"';
+		}
+		run.clear();
+	};
+	for (wchar_t c : text)
+	{
+		if (c == L'%')
+		{
+			flush();
+			result += c;
+		}
+		else
+		{
+			run += c;
+		}
+	}
+	flush();
+	return result;
+}
+}
+
 void number_text::oox_convert(oox::num_format_context & Context)
 {
 	std::wstringstream strm;
@@ -472,10 +521,13 @@ void number_text::oox_convert(oox::num_format_context & Context)
 
 	std::wstring text_ = strm.str();
 
-	if (odf_types::office_value_type::Date == Context.type() || 
+	if (odf_types::office_value_type::Percentage == Context.type())
+	{
+		text_ = quote_percentage_text(text_);
+	}
+	else if (odf_types::office_value_type::Date == Context.type() ||
 		odf_types::office_value_type::Time == Context.type() ||
-		odf_types::office_value_type::Currency == Context.type() || 
-		odf_types::office_value_type::Percentage == Context.type())
+		odf_types::office_value_type::Currency == Context.type())
 	{
 	}
 	else

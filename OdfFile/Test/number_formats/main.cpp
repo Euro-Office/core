@@ -160,6 +160,9 @@ void percentage_builtin_formats()
             "Exact percentage format must use built-in ID 9");
     require(formats.add_or_find(L"0.00%", office_value_type::Percentage) == 10,
             "Exact decimal percentage format must use built-in ID 10");
+    require(formats.add_or_find(L"0%", office_value_type::Percentage) == 9 &&
+                formats.add_or_find(L"0.00%", office_value_type::Percentage) == 10,
+            "Repeated built-in percentage formats must keep their built-in IDs");
 
     std::wostringstream xml;
     formats.serialize(xml);
@@ -178,7 +181,10 @@ void percentage_custom_formats()
         L"0.0%",
         L"0.000%",
         L".00%",
-        L"0.00%;[Red]-0.00%"
+        L"0.00%;[Red]-0.00%",
+        L"[Red]0.00%",
+        L"\"Rendite \"0.00%",
+        L"0.00%\" p.a.\""
     };
     std::set<unsigned int> ids;
     for (const auto& code : codes)
@@ -193,8 +199,13 @@ void percentage_custom_formats()
     std::wostringstream xml;
     formats.serialize(xml);
     for (const auto& code : codes)
-        require(xml.str().find(L"formatCode=\"" + code + L"\"") != std::wstring::npos,
+    {
+        std::wstring escaped;
+        for (const wchar_t c : code)
+            escaped += c == L'"' ? std::wstring(L"&quot;") : std::wstring(1, c);
+        require(xml.str().find(L"formatCode=\"" + escaped + L"\"") != std::wstring::npos,
                 "Custom percentage format code must survive serialization unchanged");
+    }
 }
 }
 
