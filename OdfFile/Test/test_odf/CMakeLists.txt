@@ -61,6 +61,7 @@ add_core_gtest(
             xlsx2ods_header_footer_codes.cpp
             docx2odt_page_background.cpp
             docx2odt_section_footers.cpp
+            docx2odt_add_para_table_spacing.cpp
             math_bar.cpp
             chart_title.cpp
             odt2docx_underline.cpp
@@ -70,6 +71,7 @@ add_core_gtest(
             odp2pptx_line_height.cpp
             odp2pptx_transition_without_subtype.cpp
             odt2docx_default_tab_stop.cpp
+            odt2docx_add_para_table_spacing.cpp
             enhanced_path_quadratic_bezier.cpp
             pptx2odp_bullet_size.cpp
             xlsx2ods_page_margins.cpp

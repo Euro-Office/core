@@ -3641,6 +3641,16 @@ void DocxConverter::convert_settings()
 	if (!odt_context) return;
 
 	OOX::CSettings *settings = docx_document ? docx_document->m_oMain.settings : (docx_flat_document ? docx_flat_document->m_pSettings.GetPointer() : NULL);
+
+	// w:doNotUseHTMLParagraphAutoSpacing is ODF's AddParaTableSpacing: on, the spacing below a paragraph and the
+	// spacing above the next one add up; off (Word's default), only the larger one counts. Write it either way,
+	// also for a document without settings, because an ODF document without the setting uses the sum.
+	const bool bAddParaTableSpacing = settings && settings->m_oCompat.IsInit()
+		&& settings->m_oCompat->m_oDoNotUseHTMLParagraphAutoSpacing.IsInit()
+		&& settings->m_oCompat->m_oDoNotUseHTMLParagraphAutoSpacing->m_oVal.ToBool();
+	odt_context->settings_context()->add_config_content_item(L"AddParaTableSpacing", L"boolean",
+		bAddParaTableSpacing ? L"true" : L"false");
+
 	if (!settings) return;
 
 	if (settings->m_oWriteProtection.IsInit())
