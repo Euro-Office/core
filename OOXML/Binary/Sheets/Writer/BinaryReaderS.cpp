@@ -3231,6 +3231,8 @@ int BinaryWorkbookTableReader::ReadPreservedDefinedName(BYTE type, long length, 
 		pName->sXml = m_oBufferedStream.GetString4(length);
 	else if (c_oSerPreservedSheetTypes::DefinedNameLocal == type)
 		pName->bLocal = m_oBufferedStream.GetBool();
+	else if (c_oSerPreservedSheetTypes::DefinedNameScope == type)
+		pName->sScopeSheet = m_oBufferedStream.GetString4(length);
 	else
 		res = c_oSerConstants::ReadUnknown;
 	return res;

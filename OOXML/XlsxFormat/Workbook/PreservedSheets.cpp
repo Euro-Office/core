@@ -517,7 +517,9 @@ namespace
 		while (std::wstring::npos != (nPos = sRefLower.find(sPlain, nPos)))
 		{
 			wchar_t cPrev = nPos > 0 ? sRefLower[nPos - 1] : L' ';
-			if (!std::iswalnum(cPrev) && cPrev != L'_' && cPrev != L'.' && cPrev != L'\'')
+			// "[1]Name!" is a sheet in another workbook; "[0]Name!" is this one
+			bool bExternal = cPrev == L']' && (nPos < 3 || 0 != sRefLower.compare(nPos - 3, 3, L"[0]"));
+			if (!std::iswalnum(cPrev) && cPrev != L'_' && cPrev != L'.' && cPrev != L'\'' && !bExternal)
 				return true;
 			nPos += sPlain.size();
 		}
@@ -756,7 +758,10 @@ void CollectPreservedSheets(CWorkbook& workbook, const std::wstring& sPackageDir
 					nOwner = (int)k;
 					bLocal = true;
 				}
-				else if (pName->m_oRef.IsInit() && RefersToSheet(*pName->m_oRef, arSheets[k].sName))
+			}
+			for (size_t k = 0; k < arSheets.size() && nOwner < 0; ++k)
+			{
+				if (pName->m_oRef.IsInit() && RefersToSheet(*pName->m_oRef, arSheets[k].sName))
 					nOwner = (int)k;
 			}
 			if (nOwner >= 0)
@@ -766,6 +771,13 @@ void CollectPreservedSheets(CWorkbook& workbook, const std::wstring& sPackageDir
 				CPreservedDefinedName oName;
 				oName.sXml = oWriter.GetData();
 				oName.bLocal = bLocal;
+				// scoped to an editor sheet: its index changes with the editor's edits, so keep the sheet's name
+				if (!bLocal && pName->m_oLocalSheetId.IsInit())
+				{
+					unsigned int nScope = pName->m_oLocalSheetId->GetValue();
+					if (nScope < arItems.size() && arItems[nScope] && arItems[nScope]->m_oName.IsInit())
+						oName.sScopeSheet = *arItems[nScope]->m_oName;
+				}
 				arSheets[nOwner].arDefinedNames.push_back(oName);
 				delete pName;
 				continue;
@@ -825,12 +837,17 @@ void RestorePreservedSheets(CWorkbook& workbook)
 	}
 
 	std::set<std::wstring> setNames;
+	std::map<std::wstring, size_t> mapEditorSheets;
 	unsigned int nMaxSheetId = 0;
 	std::set<unsigned int> setSheetIds;
-	for (CSheet* pSheet : arItems)
+	for (size_t i = 0; i < arItems.size(); ++i)
 	{
+		CSheet* pSheet = arItems[i];
 		if (pSheet && pSheet->m_oName.IsInit())
+		{
 			setNames.insert(ToLower(*pSheet->m_oName));
+			mapEditorSheets.insert(std::make_pair(ToLower(*pSheet->m_oName), i));
+		}
 		if (pSheet && pSheet->m_oSheetId.IsInit())
 		{
 			setSheetIds.insert(pSheet->m_oSheetId->GetValue());
@@ -901,6 +918,20 @@ void RestorePreservedSheets(CWorkbook& workbook)
 				pName->m_oLocalSheetId.Init();
 				pName->m_oLocalSheetId->SetValue(arPreservedToFinal[k]);
 			}
+			else if (!oName.sScopeSheet.empty())
+			{
+				// like Excel, a name goes away with the sheet it is scoped to
+				auto itScope = mapEditorSheets.find(ToLower(oName.sScopeSheet));
+				if (itScope == mapEditorSheets.end())
+				{
+					delete pName;
+					continue;
+				}
+				pName->m_oLocalSheetId.Init();
+				pName->m_oLocalSheetId->SetValue(arEditorToFinal[itScope->second]);
+			}
+			else
+				pName->m_oLocalSheetId.reset();
 			if (!workbook.m_oDefinedNames.IsInit())
 				workbook.m_oDefinedNames.Init();
 			workbook.m_oDefinedNames->m_arrItems.push_back(pName);

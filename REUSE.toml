@@ -540,7 +540,7 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
-path = "Test/Applications/x2tTester/input_sheets_macro/macro_sheet.xlsm"
+path = "Test/Applications/x2tTester/input_sheets_macro/**"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 

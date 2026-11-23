@@ -258,7 +258,8 @@ namespace BinXlsxRW
 		PartData = 9,
 		DefinedName = 10,
 		DefinedNameXml = 11,
-		DefinedNameLocal = 12
+		DefinedNameLocal = 12,
+		DefinedNameScope = 13
 	};}
 	namespace c_oSerWorkbookProtection {enum c_oSerWorkbookProtection{
 		AlgorithmName = 0,

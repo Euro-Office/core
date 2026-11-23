@@ -17,10 +17,11 @@ sheetsZipFormats=( ods xlsx )
 sheetsFormats=(${sheetsZipFormats[@]})
 sheetsFiles=( spread_basic )
 
-# Round trip through the editor format (xlsm -> xlst -> xlsm): macro sheets must survive
+# Round trip through the editor format (xlsm -> xlst -> xlsm): macro sheets must survive,
+# with the names that belong to them, also in a file that has been saved this way before
 sheetsMacroZipFormats=( xlsm )
 sheetsMacroFormats=( xlst )
-sheetsMacroFiles=( macro_sheet )
+sheetsMacroFiles=( macro_sheet macro_sheet_names macro_sheet_resaved )
 
 cd $workDir
 

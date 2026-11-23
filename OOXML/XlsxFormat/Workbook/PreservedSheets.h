@@ -25,6 +25,7 @@ namespace Spreadsheet
 	{
 		std::wstring sXml;   // the <definedName> element as read
 		bool bLocal = false; // scoped to the preserved sheet; localSheetId is reapplied on write
+		std::wstring sScopeSheet; // otherwise, the editor sheet it is scoped to (by name: the editor renumbers sheets)
 	};
 
 	// A sheet the editor cannot represent (Excel 4.0 macro sheet). It is kept out of

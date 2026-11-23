@@ -3915,6 +3915,11 @@ void BinaryWorkbookTableWriter::WritePreservedSheets(const std::vector<OOX::Spre
 			nCurPos = m_oBcw.WriteItemStart(c_oSerPreservedSheetTypes::DefinedNameLocal);
 			m_oBcw.m_oStream.WriteBOOL(oName.bLocal);
 			m_oBcw.WriteItemWithLengthEnd(nCurPos);
+			if (!oName.sScopeSheet.empty())
+			{
+				m_oBcw.m_oStream.WriteBYTE(c_oSerPreservedSheetTypes::DefinedNameScope);
+				m_oBcw.m_oStream.WriteStringW(oName.sScopeSheet);
+			}
 			m_oBcw.WriteItemWithLengthEnd(nNamePos);
 		}
 		m_oBcw.WriteItemWithLengthEnd(nSheetPos);
