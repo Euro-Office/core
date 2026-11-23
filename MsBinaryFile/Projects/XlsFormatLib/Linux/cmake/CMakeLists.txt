@@ -141,6 +141,12 @@ if( MSVC )
     target_compile_options( XlsFormatLib PRIVATE /bigobj )
 endif()
 
+# A non-void function that runs off its end is undefined behaviour. GCC only warns, and at -O3 it treated the
+# missing `return` in PIVOTLI::saveContent as unreachable code: every XLS export of a pivot table crashed.
+if( CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" )
+    target_compile_options( XlsFormatLib PRIVATE -Werror=return-type )
+endif()
+
 set_property(TARGET XlsFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 declare_victory( XlsFormatLib )

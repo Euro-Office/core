@@ -66,7 +66,7 @@ namespace MetaFile
 
 		return unOffset;
 	}
-	bool ReadImageCoreHeader(BYTE* pHeaderBuffer, unsigned int ulHeaderBufferLen, BYTE* pImageBuffer, unsigned int ulImageBufferLen, BYTE** ppDstBuffer, unsigned int* pulWidth, unsigned int* pulHeight)
+	bool ReadImageCoreHeader(BYTE* pHeaderBuffer, unsigned int ulHeaderBufferLen, BYTE*  /*pImageBuffer*/, unsigned int  /*ulImageBufferLen*/, BYTE**  /*ppDstBuffer*/, unsigned int*  /*pulWidth*/, unsigned int*  /*pulHeight*/)
 	{
 		CDataStream oHeaderStream;
 		oHeaderStream.SetStream(pHeaderBuffer, ulHeaderBufferLen);
@@ -123,14 +123,14 @@ namespace MetaFile
 		if (nWidth < 0)
 			return false;
 
-		BYTE* pBgraBuffer = NULL;
+		BYTE* pBgraBuffer = nullptr;
 		unsigned int ulWidth  = 0;
 		unsigned int ulHeight = 0;
 
 		BYTE* pBuffer = pImageBuffer;
 		int  lBufLen = ulImageBufferLen;
 
-		*ppDstBuffer = NULL;
+		*ppDstBuffer = nullptr;
 		*pulWidth    = 0;
 		*pulHeight   = 0;
 
@@ -181,8 +181,8 @@ namespace MetaFile
 			if (lCalcLen > lBufLen)
 				return false;
 
-			pBgraBuffer = new BYTE[nWidth * abs(nHeight) * 4 * sizeof(BYTE)];
-			if (NULL == pBgraBuffer)
+			pBgraBuffer = new BYTE[static_cast<size_t>(nWidth) * abs(nHeight) * 4 * sizeof(BYTE)];
+			if (nullptr == pBgraBuffer)
 				return false;
 
 			ulHeight = (unsigned short)abs(nHeight);
@@ -312,8 +312,8 @@ namespace MetaFile
 			if (lBufLen < (nScanLineBytes * abs(nHeight)))
 				return false;
 
-			pBgraBuffer = new BYTE[nWidth * abs(nHeight) * 4 * sizeof(BYTE)];
-			if (NULL == pBgraBuffer)
+			pBgraBuffer = new BYTE[static_cast<size_t>(nWidth) * abs(nHeight) * 4 * sizeof(BYTE)];
+			if (nullptr == pBgraBuffer)
 				return false;
 
 			ulHeight = (unsigned short)abs(nHeight);
@@ -419,7 +419,7 @@ namespace MetaFile
 				nAdd++;
 			}
 
-			BYTE* pUncompressedBuffer = NULL;
+			BYTE* pUncompressedBuffer = nullptr;
 			if (BI_RLE8 == unCompression)
 			{
 				int nStride = nWidth + nAdd;
@@ -454,10 +454,6 @@ namespace MetaFile
 							continue;
 						}
 						// End of bitmap.
-						else if (1 == nColor)
-						{
-							break;
-						}
 						else
 						{
 							// TODO: 2
@@ -493,8 +489,8 @@ namespace MetaFile
 				return false;
 			}
 
-			pBgraBuffer = new BYTE[nWidth * abs(nHeight) * 4 * sizeof(BYTE)];
-			if (NULL == pBgraBuffer)
+			pBgraBuffer = new BYTE[static_cast<size_t>(nWidth) * abs(nHeight) * 4 * sizeof(BYTE)];
+			if (nullptr == pBgraBuffer)
 				return false;
 
 			ulHeight = (unsigned short)abs(nHeight);
@@ -589,8 +585,8 @@ namespace MetaFile
 				nAdd++;
 			}
 
-			pBgraBuffer = new BYTE[nWidth * abs(nHeight) * 4 * sizeof(BYTE)];
-			if (NULL == pBgraBuffer)
+			pBgraBuffer = new BYTE[static_cast<size_t>(nWidth) * abs(nHeight) * 4 * sizeof(BYTE)];
+			if (nullptr == pBgraBuffer)
 				return false;
 
 			ulHeight = (unsigned short)abs(nHeight);
@@ -664,8 +660,8 @@ namespace MetaFile
 				nAdd++;
 			}
 
-			pBgraBuffer = new BYTE[nWidth * abs(nHeight) * 4 * sizeof(BYTE)];
-			if (NULL == pBgraBuffer)
+			pBgraBuffer = new BYTE[static_cast<size_t>(nWidth) * abs(nHeight) * 4 * sizeof(BYTE)];
+			if (nullptr == pBgraBuffer)
 				return false;
 
 			ulHeight = (unsigned short)abs(nHeight);
@@ -742,8 +738,8 @@ namespace MetaFile
 				nAdd++;
 			}
 
-			pBgraBuffer = new BYTE[(nWidth + nAdd) * abs(nHeight) * 4 * sizeof(BYTE)];
-			if (NULL == pBgraBuffer)
+			pBgraBuffer = new BYTE[static_cast<size_t>(nWidth + nAdd) * abs(nHeight) * 4 * sizeof(BYTE)];
+			if (nullptr == pBgraBuffer)
 				return false;
 
 			ulHeight = (unsigned short)abs(nHeight);
@@ -811,7 +807,7 @@ namespace MetaFile
 	}
 	void ReadImage(BYTE* pHeaderBuffer, unsigned int ulHeaderBufferLen, BYTE* pImageBuffer, unsigned int ulImageBufferLen, BYTE** ppDstBuffer, unsigned int* pulWidth, unsigned int* pulHeight, unsigned int& unColorUsed)
 	{
-		if (ulHeaderBufferLen <= 0 || NULL == pHeaderBuffer || NULL == pImageBuffer || ulImageBufferLen < 0)
+		if (ulHeaderBufferLen <= 0 || nullptr == pHeaderBuffer || nullptr == pImageBuffer || ulImageBufferLen < 0)
 			return;
 
 		CDataStream oHeaderStream;
@@ -830,7 +826,7 @@ namespace MetaFile
 	}
 	void ReadImage(BYTE* pImageBuffer, unsigned int unBufferLen, unsigned int unColorUsage, BYTE** ppDstBuffer, unsigned int* punWidth, unsigned int* punHeight, unsigned int& unColorUsed)
 	{
-		if (unBufferLen <= 0 || NULL == pImageBuffer)
+		if (unBufferLen <= 0 || nullptr == pImageBuffer)
 			return;
 
 		CDataStream oHeaderStream;
@@ -840,9 +836,7 @@ namespace MetaFile
 		unsigned int unHeaderSize;
 		oHeaderStream >> unHeaderSize;
 
-		if (unHeaderSize > unBufferLen)
-			return;
-		else if (unHeaderSize < 0x0000000C)
+		if (unHeaderSize > unBufferLen || unHeaderSize < 0x0000000C)
 			return;
 		else if (0x0000000C == unHeaderSize) // BitmapCoreHeader
 			ReadImageCoreHeader(pImageBuffer + 4, unHeaderSize - 4, pImageBuffer + unHeaderSize, unBufferLen - unHeaderSize, ppDstBuffer, punWidth, punHeight);
@@ -928,6 +922,10 @@ namespace MetaFile
 		case 1: dAngle = 180 - dAngle; break;
 		case 2: dAngle = 180 + dAngle; break;
 		case 3: dAngle = 360 - dAngle; break;
+			default:
+			{
+				break;
+			}
 		}
 
 		return dAngle;
@@ -936,7 +934,7 @@ namespace MetaFile
 	{
 		BYTE* pBgra = *ppBgra;
 
-		if (NULL == pBgra)
+		if (nullptr == pBgra)
 			return;
 
 		// For SRCPAINT and SRCAND bit operations, treat the background as pure white.
@@ -1113,7 +1111,6 @@ namespace MetaFile
 		switch (uchCharSet)
 		{
 		default:
-		case DEFAULT_CHARSET:       eCharSet = NSStringExt::CConverter::ESingleByteEncoding::SINGLE_BYTE_ENCODING_DEFAULT; break;
 		case SYMBOL_CHARSET:        eCharSet = NSStringExt::CConverter::ESingleByteEncoding::SINGLE_BYTE_ENCODING_DEFAULT; break;
 		case ANSI_CHARSET:          eCharSet = NSStringExt::CConverter::ESingleByteEncoding::SINGLE_BYTE_ENCODING_CP1252; break;
 		case RUSSIAN_CHARSET:       eCharSet = NSStringExt::CConverter::ESingleByteEncoding::SINGLE_BYTE_ENCODING_CP1251; break;

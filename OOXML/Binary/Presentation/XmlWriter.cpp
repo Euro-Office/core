@@ -38,7 +38,7 @@ CXmlWriter::CXmlWriter (BYTE ooxType) : m_oWriter()
 
 	m_bIsUseOffice2007          = false;
 
-	m_pOOXToVMLRenderer         = NULL;
+	m_pOOXToVMLRenderer         = nullptr;
 	m_bIsTop                    = false;
 }
 CXmlWriter::~CXmlWriter()

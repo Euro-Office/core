@@ -160,7 +160,7 @@
 		};
 
 		#define PRINT_EMF_PLUS_RECORD(type, size) \
-			std::wcout << L"LEVEL [" << unFileLevel << L"] EMF_PLUS_RECORD: " << mActionNamesEmfPlus[unShType] << L" {DataSize = " << size << L"}" << std::endl
+			std::wcout << L"LEVEL [" << unFileLevel << L"] EMF_PLUS_RECORD: " << mActionNamesEmfPlus[unShType] << L" {DataSize = " << (size) << L"}" << std::endl
 	#endif
 	#endif
 	#endif
@@ -178,7 +178,7 @@ namespace MetaFile
 	{
 		m_oHeader = oHeader;
 
-		if (NULL != pEmfInterpretator)
+		if (nullptr != pEmfInterpretator)
 		{
 			m_pInterpretator = pEmfInterpretator;
 
@@ -194,12 +194,12 @@ namespace MetaFile
 			delete pIter->second;
 	}
 
-	bool CEmfPlusParser::ReadFromBuffer(BYTE *pBuffer, unsigned int unSize, const bool& bIsExternal)
+	bool CEmfPlusParser::ReadFromBuffer(BYTE * /*pBuffer*/, unsigned int  /*unSize*/, const bool&  /*bIsExternal*/)
 	{
 		return false;
 	}
 	
-	bool CEmfPlusParser::OpenFromFile(const wchar_t *wsFilePath)
+	bool CEmfPlusParser::OpenFromFile(const wchar_t * /*wsFilePath*/)
 	{
 		return false;
 	}
@@ -216,7 +216,7 @@ namespace MetaFile
 
 	void CEmfPlusParser::RegisterObject(CEmfPlusObject *pObject, unsigned int unIndex)
 	{
-		if (NULL == pObject) return;
+		if (nullptr == pObject) return;
 
 		EmfPlusObjects::const_iterator oFoundObject = m_mObjects.find(unIndex);
 
@@ -235,7 +235,7 @@ namespace MetaFile
 		unsigned short unShType, unShFlags;
 		unsigned int unSize;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			GO_UP_LEVEL;
 
 		do
@@ -259,7 +259,7 @@ namespace MetaFile
 
 			unsigned int unRecordPos = m_oStream.Tell();
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				PRINT_EMF_PLUS_RECORD(unShType, m_ulRecordSize);
 
 			m_bBanEmfProcessing = true;
@@ -337,12 +337,16 @@ namespace MetaFile
 				case EMFPLUS_SETPAGETRANSFORM:          Read_EMFPLUS_SETPAGETRANSFORM(unShFlags);       break;
 				case EMFPLUS_SETWORLDTRANSFORM:         Read_EMFPLUS_SETWORLDTRANSFORM();               break;
 				case EMFPLUS_TRANSLATEWORLDTRANSFORM:   Read_EMFPLUS_TRANSLATEWORLDTRANSFORM(unShFlags);break;
+				default:
+				{
+					break;
+				}
 			}
 
 			int nNeedSkip = (unRecordPos + m_ulRecordSize) - m_oStream.Tell();
 			m_oStream.Skip(nNeedSkip);
 
-			if (0 != nNeedSkip && NULL != m_pInterpretator)
+			if (0 != nNeedSkip && nullptr != m_pInterpretator)
 				PRINT_LOG(L"SKIP BYTES: " << nNeedSkip);
 
 			m_oStream.ClearCurrentBlockSize();
@@ -352,14 +356,14 @@ namespace MetaFile
 		if (!CheckError())
 			m_oStream.SeekToStart();
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			GO_DOWN_LEVEL_BELOW;
 	}
 
 	void CEmfPlusParser::Scan()
 	{
 		CEmfInterpretatorBase* pInterpretator = m_pInterpretator;
-		m_pInterpretator = NULL;
+		m_pInterpretator = nullptr;
 		PlayFile();
 		m_pInterpretator = pInterpretator;
 		this->ClearFile();
@@ -375,7 +379,7 @@ namespace MetaFile
 		return EmfParserType::EmfPlusParser;
 	}
 
-	bool CEmfPlusParser::ReadImage(unsigned int offBmi, unsigned int cbBmi, unsigned int offBits, unsigned int cbBits, unsigned int ulSkip, BYTE **ppBgraBuffer, unsigned int *pulWidth, unsigned int *pulHeight)
+	bool CEmfPlusParser::ReadImage(unsigned int  /*offBmi*/, unsigned int  /*cbBmi*/, unsigned int  /*offBits*/, unsigned int  /*cbBits*/, unsigned int  /*ulSkip*/, BYTE ** /*ppBgraBuffer*/, unsigned int * /*pulWidth*/, unsigned int * /*pulHeight*/)
 	{
 		return false;
 	}
@@ -393,7 +397,7 @@ namespace MetaFile
 			return;
 		}
 
-		CEmfPlusImage *pImage = NULL;
+		CEmfPlusImage *pImage = nullptr;
 
 		EmfPlusObjects::const_iterator oFoundElement = m_mObjects.find(shObjectIndex);
 
@@ -477,7 +481,7 @@ namespace MetaFile
 
 		BYTE* pBuffer = new BYTE[unMetafileSize];
 
-		if (NULL == pBuffer)
+		if (nullptr == pBuffer)
 			return;
 
 		m_oStream.ReadBytes(pBuffer, unMetafileSize);
@@ -504,7 +508,7 @@ namespace MetaFile
 
 		BYTE* pBuffer = new BYTE[m_ulRecordSize - 28];
 
-		if (NULL == pBuffer)
+		if (nullptr == pBuffer)
 			return;
 
 		m_oStream.ReadBytes(pBuffer, m_ulRecordSize - 28);
@@ -524,7 +528,7 @@ namespace MetaFile
 		if (m_mObjects.end() != oFoundElement && oFoundElement->second->GetObjectType() == ObjectTypeImage)
 			return (CEmfPlusImage*)oFoundElement->second;
 
-		return NULL;
+		return nullptr;
 	}
 
 	CEmfPlusBrush *CEmfPlusParser::ReadBrush()
@@ -621,7 +625,7 @@ namespace MetaFile
 				{
 					CEmfPlusPath* pPath = ReadPath();
 
-					if (NULL != pPath)
+					if (nullptr != pPath)
 					{
 						TRectD oRect = pPath->GetBounds();
 
@@ -715,7 +719,7 @@ namespace MetaFile
 		default:
 		{
 			RELEASEOBJECT(pEmfPlusBrush);
-			return NULL;
+			return nullptr;
 		}
 		}
 
@@ -729,7 +733,7 @@ namespace MetaFile
 		if (m_mObjects.end() != oFoundElement && oFoundElement->second->GetObjectType() == ObjectTypeBrush)
 			return (CEmfPlusBrush*)oFoundElement->second;
 
-		return NULL;
+		return nullptr;
 	}
 
 	CEmfPlusPen *CEmfPlusParser::ReadPen()
@@ -741,7 +745,7 @@ namespace MetaFile
 		m_oStream >> unType;
 
 		if(unType != 0)
-			return NULL;
+			return nullptr;
 
 		CEmfPlusPen *pEmfPlusPen = new CEmfPlusPen;
 
@@ -764,6 +768,10 @@ namespace MetaFile
 				case 0: pEmfPlusPen->unStyle |= PS_STARTCAP_MASK & PS_STARTCAP_FLAT;   break;
 				case 1: pEmfPlusPen->unStyle |= PS_STARTCAP_MASK & PS_STARTCAP_SQUARE; break;
 				case 2: pEmfPlusPen->unStyle |= PS_STARTCAP_MASK & PS_STARTCAP_ROUND;  break;
+				default:
+				{
+					break;
+				}
 			}
 		}
 		if (unFlags & PEN_DATA_ENDCAP)
@@ -777,6 +785,10 @@ namespace MetaFile
 				case 0: pEmfPlusPen->unStyle |= PS_ENDCAP_MASK & PS_ENDCAP_FLAT;   break;
 				case 1: pEmfPlusPen->unStyle |= PS_ENDCAP_MASK & PS_ENDCAP_SQUARE; break;
 				case 2: pEmfPlusPen->unStyle |= PS_ENDCAP_MASK & PS_ENDCAP_ROUND;  break;
+				default:
+				{
+					break;
+				}
 			}
 		}
 		if (unFlags & PEN_DATA_JOIN)
@@ -790,6 +802,10 @@ namespace MetaFile
 				case 0: pEmfPlusPen->unStyle |= PS_JOIN_MASK & PS_JOIN_MITER;   break;
 				case 1: pEmfPlusPen->unStyle |= PS_JOIN_MASK & PS_JOIN_BEVEL;   break;
 				case 2: pEmfPlusPen->unStyle |= PS_JOIN_MASK & PS_ENDCAP_ROUND; break;
+				default:
+				{
+					break;
+				}
 			}
 		}
 		if (unFlags & PEN_DATA_MITERLIMIT)
@@ -824,6 +840,10 @@ namespace MetaFile
 				(PS_ENDCAP_MASK   & PS_STARTCAP_ROUND);
 				break;
 			}
+				default:
+				{
+					break;
+				}
 			}
 		}
 		if (unFlags & PEN_DATA_DASHEDLINEOFFSET)
@@ -836,7 +856,7 @@ namespace MetaFile
 
 			pEmfPlusPen->pDataDash = new double[pEmfPlusPen->unSizeDash];
 
-			if (NULL != pEmfPlusPen->pDataDash)
+			if (nullptr != pEmfPlusPen->pDataDash)
 			{
 				for (unsigned int unIndex = 0; unIndex < pEmfPlusPen->unSizeDash; ++unIndex)
 					m_oStream >> pEmfPlusPen->pDataDash[unIndex];
@@ -945,7 +965,7 @@ namespace MetaFile
 		if (m_mObjects.end() != oFoundElement && oFoundElement->second->GetObjectType() == ObjectTypePen)
 			return (CEmfPlusPen*)oFoundElement->second;
 
-		return NULL;
+		return nullptr;
 	}
 
 	CEmfPlusFont *CEmfPlusParser::ReadFont()
@@ -986,7 +1006,7 @@ namespace MetaFile
 			m_oStream.ReadBytes(pString, unLength);
 		}
 
-		pFont->m_wsFamilyName = NSStringExt::CConverter::GetUnicodeFromUTF16((unsigned short*)pString, unLength);
+		pFont->m_wsFamilyName = NSStringExt::CConverter::GetUnicodeFromUTF16(pString, unLength);
 
 		RELEASEARRAYOBJECTS(pString)
 
@@ -1000,7 +1020,7 @@ namespace MetaFile
 		if (m_mObjects.end() != oFoundElement && oFoundElement->second->GetObjectType() == ObjectTypeFont)
 			return (CEmfPlusFont*)oFoundElement->second;
 
-		return NULL;
+		return nullptr;
 	}
 
 	CEmfPlusPath* CEmfPlusParser::ReadPath()
@@ -1011,7 +1031,7 @@ namespace MetaFile
 		m_oStream >> unPathPointCount;
 
 		if (unPathPointCount == 0)
-			return NULL;
+			return nullptr;
 
 		m_oStream >> unPathPointFlags;
 
@@ -1045,6 +1065,10 @@ namespace MetaFile
 					unIndex += 2;
 					break;
 				}
+					default:
+					{
+						break;
+					}
 				}
 
 				if ((((unsigned int)(arPointTypes[unIndex])) & 0xf0) == 0x80)
@@ -1079,6 +1103,10 @@ namespace MetaFile
 					unIndex += 2;
 					break;
 				}
+					default:
+					{
+						break;
+					}
 				}
 
 				if ((((unsigned int)(arPointTypes[unIndex])) & 0xf0) == 0x80)
@@ -1098,7 +1126,7 @@ namespace MetaFile
 
 	void CEmfPlusParser::ReadBufferPath(CEmfPlusBuffer *pDataPath)
 	{
-		if (NULL == pDataPath)
+		if (nullptr == pDataPath)
 			return;
 
 		unsigned int unTotalSize;
@@ -1120,7 +1148,7 @@ namespace MetaFile
 		if (m_mObjects.end() != oFoundElement && oFoundElement->second->GetObjectType() == ObjectTypeBuffer)
 			return (CEmfPlusBuffer*)oFoundElement->second;
 
-		return NULL;
+		return nullptr;
 	}
 
 	CEmfPlusPath *CEmfPlusParser::GetPath(unsigned int unPathIndex)
@@ -1130,7 +1158,7 @@ namespace MetaFile
 		if (m_mObjects.end() != oFoundElement && oFoundElement->second->GetObjectType() == ObjectTypePath)
 			return (CEmfPlusPath*)oFoundElement->second;
 
-		return NULL;
+		return nullptr;
 	}
 
 	CEmfPlusRegion *CEmfPlusParser::ReadRegion()
@@ -1146,7 +1174,7 @@ namespace MetaFile
 		{
 			CEmfPlusRegionNode *pNode = ReadRegionNode(unIndex);
 
-			if (NULL != pNode)
+			if (nullptr != pNode)
 				pRegion->arNodes.push_back(pNode);
 		}
 
@@ -1159,7 +1187,7 @@ namespace MetaFile
 
 		m_oStream >> unType;
 
-		CEmfPlusRegionNode *pNode = NULL;
+		CEmfPlusRegionNode *pNode = nullptr;
 
 		switch (unType)
 		{
@@ -1219,6 +1247,10 @@ namespace MetaFile
 				++unIndex;
 				break;
 			}
+			default:
+			{
+				break;
+			}
 		}
 
 		return pNode;
@@ -1271,7 +1303,7 @@ namespace MetaFile
 		if (m_mObjects.end() != oFoundElement && oFoundElement->second->GetObjectType() == ObjectTypeRegion)
 			return (CEmfPlusRegion*)oFoundElement->second;
 
-		return NULL;
+		return nullptr;
 	}
 
 	CEmfPlusStringFormat *CEmfPlusParser::GetStringFormat(unsigned int unStringFormatIndex)
@@ -1281,7 +1313,7 @@ namespace MetaFile
 		if (m_mObjects.end() != oFoundElement && oFoundElement->second->GetObjectType() == ObjectTypeStringFormat)
 			return (CEmfPlusStringFormat*)oFoundElement->second;
 
-		return NULL;
+		return nullptr;
 	}
 
 	CEmfPlusImageAttributes *CEmfPlusParser::GetImageAttributes(unsigned int unImageAttributesIndex)
@@ -1291,7 +1323,7 @@ namespace MetaFile
 		if (m_mObjects.end() != oFoundElement && oFoundElement->second->GetObjectType() == ObjectTypeImageAttributes)
 			return (CEmfPlusImageAttributes*)oFoundElement->second;
 
-		return NULL;
+		return nullptr;
 	}
 
 	template<typename PointType>
@@ -1317,7 +1349,7 @@ namespace MetaFile
 
 	void CEmfPlusParser::DrawRectangle(const TEmfPlusRectF& oRectangle, bool bStroke, bool bFill)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			if (AD_COUNTERCLOCKWISE != m_pDC->GetArcDirection())
 			{
@@ -1442,8 +1474,8 @@ namespace MetaFile
 
 	BYTE* GetClipedImage(const BYTE* pBuffer, LONG lWidth, LONG lHeight, const TRectL& oNewRect, unsigned int& nWidth, unsigned int& nHeight)
 	{
-		if (NULL == pBuffer)
-			return NULL;
+		if (nullptr == pBuffer)
+			return nullptr;
 
 		int nBeginX = (std::min)(oNewRect.Left, oNewRect.Right);
 		int nBeginY = (std::min)(oNewRect.Top,  oNewRect.Bottom);
@@ -1452,13 +1484,13 @@ namespace MetaFile
 		int nEndY   = (std::max)(oNewRect.Top,  oNewRect.Bottom);
 
 		if (nBeginX >= lWidth || nEndX <= 0)
-			return NULL;
+			return nullptr;
 		if (nBeginY >= lHeight || nEndY <= 0)
-			return NULL;
+			return nullptr;
 
 		if (nBeginX <= 0 && nEndX >= lWidth &&
 		    nBeginY <= 0 && nEndY >= lHeight)
-			return NULL;
+			return nullptr;
 
 		if (nBeginX < 0)
 			nBeginX = 0;
@@ -1471,18 +1503,18 @@ namespace MetaFile
 			nEndY = lHeight;
 
 		if (nEndX <= nBeginX || nEndY <= nBeginY)
-			return NULL;
+			return nullptr;
 
 		nWidth = nEndX - nBeginX;
 		nHeight = nEndY - nBeginY;
 
-		BYTE* pNewBuffer = new BYTE[nWidth * nHeight * 4];
+		BYTE* pNewBuffer = new BYTE[static_cast<size_t>(nWidth) * nHeight * 4];
 		BYTE* pCurrentLine = pNewBuffer;
 
 		int ulStride = 4 * nWidth;
 		for (int nPosY = nBeginY; nPosY < nEndY; ++nPosY)
 		{
-			memcpy(pCurrentLine, pBuffer + lWidth * 4 * nPosY + 4 * nBeginX, ulStride);
+			memcpy(pCurrentLine, pBuffer + static_cast<ptrdiff_t>(lWidth) * 4 * nPosY + static_cast<ptrdiff_t>(nBeginX) * 4, ulStride);
 			pCurrentLine += ulStride;
 		}
 
@@ -1491,7 +1523,7 @@ namespace MetaFile
 
 	HRESULT FlipYImage(BYTE* pImageBuffer, LONG lWidth, LONG lHeight)
 	{
-		if (NULL == pImageBuffer || lWidth == 0 || lHeight == 0)
+		if (nullptr == pImageBuffer || lWidth == 0 || lHeight == 0)
 			return S_FALSE;
 
 		BYTE* pTempLine = (BYTE*)malloc(lWidth * 4);
@@ -1509,15 +1541,15 @@ namespace MetaFile
 		return S_OK;
 	}
 
-	void CEmfPlusParser::DrawImagePoints(unsigned int unImageIndex, unsigned int unImageAttributeIndex,
+	void CEmfPlusParser::DrawImagePoints(unsigned int unImageIndex, unsigned int  /*unImageAttributeIndex*/,
 	                                     const TEmfPlusRectF& oSrcRect, const std::vector<TEmfPlusPointF>& arPoints)
 	{
-		if (NULL == m_pInterpretator)
+		if (nullptr == m_pInterpretator)
 			return;
 
 		CEmfPlusImage *pImage = GetImage(unImageIndex);
 
-		if (NULL == pImage)
+		if (nullptr == pImage)
 			return;
 
 		BYTE* pBuffer;
@@ -1525,7 +1557,7 @@ namespace MetaFile
 
 		pImage->GetData(pBuffer, unSizeBuffer);
 
-		if (NULL == pBuffer || unSizeBuffer == 0 || arPoints.size() != 3)
+		if (nullptr == pBuffer || unSizeBuffer == 0 || arPoints.size() != 3)
 			return;
 
  		if (ImageDataTypeBitmap == pImage->GetImageDataType())
@@ -1547,6 +1579,10 @@ namespace MetaFile
 				case MetafileDataTypeWmf:
 				case MetafileDataTypeWmfPlaceable:
 					return DrawMetafile<CWmfParser>(pBuffer, unSizeBuffer, oSrcRect, arPoints);
+				default:
+				{
+					break;
+				}
 			}
 		}
 	}
@@ -1554,7 +1590,7 @@ namespace MetaFile
 	template<typename MetafileType>
 	void CEmfPlusParser::DrawMetafile(BYTE *pBuffer, unsigned int unSize, const TEmfPlusRectF &oSrcRect, const std::vector<TEmfPlusPointF> &arPoints)
 	{
-		if (NULL == pBuffer || 0 == unSize || 3 != arPoints.size())
+		if (nullptr == pBuffer || 0 == unSize || 3 != arPoints.size())
 			return;
 
 		const TRectL& oOriginalBounds{GetOriginalDCBounds()};
@@ -1604,7 +1640,7 @@ namespace MetaFile
 			const int nWidth  = static_cast<int>(dFileWidth);
 			const int nHeight = static_cast<int>(dFileHeight);
 
-			BYTE* pBgraData = new(std::nothrow) BYTE[nWidth * nHeight * 4];
+			BYTE* pBgraData = new(std::nothrow) BYTE[static_cast<size_t>(nWidth) * nHeight * 4];
 
 			if (!pBgraData)
 				return;
@@ -1652,7 +1688,7 @@ namespace MetaFile
 			BYTE* pNewBuffer = GetClipedImage(pPixels, nWidth, nHeight, oClipRect, nW, nH);
 
 			m_pInterpretator->DrawBitmap(arPoints[0].X, arPoints[0].Y, arPoints[1].X - arPoints[0].X - m_pDC->GetPixelWidth(), arPoints[2].Y - arPoints[0].Y - m_pDC->GetPixelHeight(),
-			                             (NULL != pNewBuffer) ? pNewBuffer : pPixels, nW, nH, BLEND_MODE_DEFAULT);
+			                             (nullptr != pNewBuffer) ? pNewBuffer : pPixels, nW, nH, BLEND_MODE_DEFAULT);
 
 			RELEASEINTERFACE(pGrRenderer);
 			RELEASEARRAYOBJECTS(pNewBuffer);
@@ -1685,17 +1721,17 @@ namespace MetaFile
 			CInterpretatorSvgBase* pParserSvgInterpretator = dynamic_cast<CInterpretatorSvgBase*>(oParser.GetInterpretator());
 			CInterpretatorSvgBase *pSvgInterpretator = dynamic_cast<CInterpretatorSvgBase*>(m_pInterpretator);
 
-			if (NULL != pParserSvgInterpretator && NULL != pSvgInterpretator)
+			if (nullptr != pParserSvgInterpretator && nullptr != pSvgInterpretator)
 				pSvgInterpretator->IncludeSvg(pParserSvgInterpretator->GetFile(), oRect, oTempSrcRect, &oTransform);
 		}
 	}
 
 	void CEmfPlusParser::DrawBitmap(BYTE *pBuffer, unsigned int unSize, unsigned int unWidth, unsigned int unHeight, const TEmfPlusRectF& oSrcRect, const std::vector<TEmfPlusPointF>& arPoints)
 	{
-		if (NULL == pBuffer || 0 == unSize)
+		if (nullptr == pBuffer || 0 == unSize)
 			return;
 
-		BYTE* pBytes = NULL;
+		BYTE* pBytes = nullptr;
 		bool bExternalBuffer = false;
 
 		if (unWidth != 0 && unHeight != 0)
@@ -1714,7 +1750,7 @@ namespace MetaFile
 			unHeight = oBgraFrame.get_Height();
 			pBytes   = oBgraFrame.get_Data();
 
-			oBgraFrame.put_Data(NULL);
+			oBgraFrame.put_Data(nullptr);
 
 			FlipYImage(pBytes, unWidth, unHeight);
 		}
@@ -1726,12 +1762,12 @@ namespace MetaFile
 		oClipRect.Right  = std::floor((oSrcRect.dX + oSrcRect.dWidth));
 		oClipRect.Bottom = std::floor((oSrcRect.dY + oSrcRect.dHeight));
 
-		unsigned int nW = (unsigned int)unWidth;
-		unsigned int nH = (unsigned int)unHeight;
+		unsigned int nW = unWidth;
+		unsigned int nH = unHeight;
 		BYTE* pNewBuffer = GetClipedImage(pBytes, unWidth, unHeight, oClipRect, nW, nH);
 
 		m_pInterpretator->DrawBitmap(arPoints[0].X, arPoints[0].Y, arPoints[1].X - arPoints[0].X, arPoints[2].Y - arPoints[0].Y,
-		                             (NULL != pNewBuffer) ? pNewBuffer : pBytes, nW, nH, BLEND_MODE_DEFAULT);
+		                             (nullptr != pNewBuffer) ? pNewBuffer : pBytes, nW, nH, BLEND_MODE_DEFAULT);
 
 		if (!bExternalBuffer)
 			RELEASEARRAYOBJECTS(pBytes);
@@ -1739,7 +1775,7 @@ namespace MetaFile
 		RELEASEARRAYOBJECTS(pNewBuffer);
 	}
 
-	void CEmfPlusParser::Read_EMFPLUS_HEADER(unsigned short unShFlags)
+	void CEmfPlusParser::Read_EMFPLUS_HEADER(unsigned short  /*unShFlags*/)
 	{
 		m_oStream.Skip(4); //Data size
 
@@ -1749,7 +1785,7 @@ namespace MetaFile
 		m_oStream >> m_unLogicalDpiX;
 		m_oStream >> m_unLogicalDpiY;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			m_pInterpretator->Begin();
 			m_pInterpretator->HANDLE_EMFPLUS_HEADER(unEmfPlusFlags, m_unLogicalDpiX, m_unLogicalDpiY);
@@ -1763,7 +1799,7 @@ namespace MetaFile
 
 		m_oStream >> oARGB;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_CLEAR(oARGB);
 	}
 
@@ -1788,7 +1824,7 @@ namespace MetaFile
 
 		CEmfPlusPen *pPen = GetPen(chOgjectIndex);
 
-		if (NULL == pPen)
+		if (nullptr == pPen)
 			return;
 
 		m_pDC->SetPen(pPen);
@@ -1805,7 +1841,7 @@ namespace MetaFile
 		      dStartAngle, dSweepAngle);
 		DrawPath(true, false);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_DRAWARC(chOgjectIndex, dStartAngle, dSweepAngle, oConvertedRect);
 
 		m_pDC->RemovePen(pPen);
@@ -1849,7 +1885,7 @@ namespace MetaFile
 
 		CEmfPlusPen *pPen = GetPen(shOgjectIndex);
 
-		if (NULL == pPen)
+		if (nullptr == pPen)
 			return;
 
 		m_pDC->SetPen(pPen);
@@ -1865,7 +1901,7 @@ namespace MetaFile
 
 		DrawPath(true, false);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_DRAWBEZIERS(shOgjectIndex, arConvertedPoints);
 
 		m_pDC->RemovePen(pPen);
@@ -1910,7 +1946,7 @@ namespace MetaFile
 
 		CEmfPlusPen *pPen = GetPen(shOgjectIndex);
 
-		if (NULL == pPen)
+		if (nullptr == pPen)
 			return;
 
 		m_pDC->SetPen(pPen);
@@ -1928,7 +1964,7 @@ namespace MetaFile
 
 		DrawPath(true, false);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_DRAWCLOSEDCURVE(shOgjectIndex, dTension, arConvertedPoints);
 
 		m_pDC->RemovePen(pPen);
@@ -1961,7 +1997,7 @@ namespace MetaFile
 
 		CEmfPlusPen *pPen = GetPen(shOgjectIndex);
 
-		if (NULL == pPen)
+		if (nullptr == pPen)
 			return;
 
 		m_pDC->SetPen(pPen);
@@ -1977,7 +2013,7 @@ namespace MetaFile
 
 		DrawPath(true, false);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_DRAWCURVE(shOgjectIndex, dTension, unOffset, unNumSegments, arConvertedPoints);
 
 		m_pDC->RemovePen(pPen);
@@ -2005,7 +2041,7 @@ namespace MetaFile
 
 		std::wstring wsString;
 
-		wsString = NSStringExt::CConverter::GetUnicodeFromUTF16((unsigned short*)pString, unGlyphCount);
+		wsString = NSStringExt::CConverter::GetUnicodeFromUTF16(pString, unGlyphCount);
 
 		RELEASEARRAYOBJECTS(pString)
 
@@ -2018,7 +2054,7 @@ namespace MetaFile
 			m_oStream >> oMatrix;
 		}
 		//----------
-		if (NULL == m_pInterpretator || wsString.length() != arGlyphPos.size())
+		if (nullptr == m_pInterpretator || wsString.length() != arGlyphPos.size())
 			return;
 
 		std::vector<TPointD> arDPoints(arGlyphPos.size());
@@ -2030,7 +2066,7 @@ namespace MetaFile
 
 		CEmfPlusFont *pFont = GetFont(shOgjectIndex);
 
-		if (NULL == pFont)
+		if (nullptr == pFont)
 			return;
 
 		m_pDC->SetFont(pFont);
@@ -2049,7 +2085,7 @@ namespace MetaFile
 			m_pDC->SetTextColor(oColor);
 
 			m_pInterpretator->DrawDriverString(wsString, arDPoints);
-			m_pInterpretator->HANDLE_EMFPLUS_DRAWDRIVERSTRING(shOgjectIndex, unBrushId, unDriverStringOptionsFlags, unMatrixPresent, NULL, wsString, arDPoints);
+			m_pInterpretator->HANDLE_EMFPLUS_DRAWDRIVERSTRING(shOgjectIndex, unBrushId, unDriverStringOptionsFlags, unMatrixPresent, nullptr, wsString, arDPoints);
 
 			m_pDC->SetTextColor(oTextColor);
 		}
@@ -2057,7 +2093,7 @@ namespace MetaFile
 		{
 			CEmfPlusBrush *pBrush = GetBrush(unBrushId);
 
-			if (NULL == pBrush) return;
+			if (nullptr == pBrush) return;
 
 			TRGBA oColor;
 
@@ -2072,8 +2108,8 @@ namespace MetaFile
 
 			m_pInterpretator->DrawDriverString(wsString, arDPoints);
 
-			if (NULL != m_pInterpretator)
-				m_pInterpretator->HANDLE_EMFPLUS_DRAWDRIVERSTRING(shOgjectIndex, unBrushId, unDriverStringOptionsFlags, unMatrixPresent, NULL, wsString, arDPoints);
+			if (nullptr != m_pInterpretator)
+				m_pInterpretator->HANDLE_EMFPLUS_DRAWDRIVERSTRING(shOgjectIndex, unBrushId, unDriverStringOptionsFlags, unMatrixPresent, nullptr, wsString, arDPoints);
 
 			m_pDC->SetTextColor(oTextColor);
 		}
@@ -2099,9 +2135,9 @@ namespace MetaFile
 
 		CEmfPlusPen *pEmfPlusPen = GetPen(shObjectID);
 
-		if (NULL == pEmfPlusPen) return;
+		if (nullptr == pEmfPlusPen) return;
 
-		if (NULL != pEmfPlusPen->pBrush)
+		if (nullptr != pEmfPlusPen->pBrush)
 			m_pDC->SetBrush(pEmfPlusPen->pBrush);
 
 		m_pDC->SetPen(pEmfPlusPen);
@@ -2115,10 +2151,10 @@ namespace MetaFile
 
 		DrawPath(true, false);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_DRAWELLIPSE(shObjectID, GetConvertedRectangle(oRect));
 
-		if (NULL != pEmfPlusPen->pBrush)
+		if (nullptr != pEmfPlusPen->pBrush)
 			m_pDC->RemoveBrush(pEmfPlusPen->pBrush);
 
 		m_pDC->RemovePen(pEmfPlusPen);
@@ -2239,19 +2275,19 @@ namespace MetaFile
 
 		CEmfPlusPen *pEmfPlusPen = GetPen(shOgjectIndex);
 
-		if (NULL == pEmfPlusPen) return;
+		if (nullptr == pEmfPlusPen) return;
 
 		m_pDC->SetPen(pEmfPlusPen);
 
-		if (NULL != pEmfPlusPen->pBrush)
+		if (nullptr != pEmfPlusPen->pBrush)
 			m_pDC->SetBrush(pEmfPlusPen->pBrush);
 
 		DrawLines(GetConvertedPoints(arPoints), ((unShFlags >>(13)) & 1));
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_DRAWLINES(shOgjectIndex, GetConvertedPoints(arPoints));
 
-		if (NULL != pEmfPlusPen->pBrush)
+		if (nullptr != pEmfPlusPen->pBrush)
 			m_pDC->RemoveBrush(pEmfPlusPen->pBrush);
 
 		m_pDC->RemovePen(pEmfPlusPen);
@@ -2266,18 +2302,18 @@ namespace MetaFile
 
 		CEmfPlusPath *pPath = GetPath(shOgjectIndex);
 
-		if (NULL != pPath)
+		if (nullptr != pPath)
 		{
 			CEmfPlusPen *pEmfPlusPen = GetPen(unPenId);
 
-			if (NULL == pEmfPlusPen) return;
+			if (nullptr == pEmfPlusPen) return;
 
 			m_pDC->SetPen(pEmfPlusPen);
 
-			if (NULL != pEmfPlusPen->pBrush)
+			if (nullptr != pEmfPlusPen->pBrush)
 				m_pDC->SetBrush(pEmfPlusPen->pBrush);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 			{
 				if (InterpretatorType::Render == m_pInterpretator->GetType())
 				{
@@ -2293,7 +2329,7 @@ namespace MetaFile
 					m_pInterpretator->HANDLE_EMFPLUS_DRAWPATH(shOgjectIndex, unPenId, pPath);
 			}
 
-			if (NULL != pEmfPlusPen->pBrush)
+			if (nullptr != pEmfPlusPen->pBrush)
 				m_pDC->RemoveBrush(pEmfPlusPen->pBrush);
 
 			m_pDC->RemovePen(pEmfPlusPen);
@@ -2319,7 +2355,7 @@ namespace MetaFile
 		m_oStream >> dSweepAngle;
 		m_oStream >> oRect;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_DRAWPIE(shOgjectIndex, dStartAngle, dSweepAngle, GetConvertedRectangle(oRect));
 
 		//TODO: implement
@@ -2346,11 +2382,11 @@ namespace MetaFile
 
 		CEmfPlusPen *pEmfPlusPen = GetPen(shPenIndex);
 
-		if (NULL == pEmfPlusPen) return;
+		if (nullptr == pEmfPlusPen) return;
 
 		m_pDC->SetPen(pEmfPlusPen);
 
-		if (NULL != pEmfPlusPen->pBrush)
+		if (nullptr != pEmfPlusPen->pBrush)
 			m_pDC->SetBrush(pEmfPlusPen->pBrush);
 
 		std::vector<TEmfPlusRectF> arRects(unCount);
@@ -2363,10 +2399,10 @@ namespace MetaFile
 			DrawRectangle(arRects[unIndex], true, false);
 		}
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_DRAWRECTS(shPenIndex, arRects);
 
-		if (NULL != pEmfPlusPen->pBrush)
+		if (nullptr != pEmfPlusPen->pBrush)
 			m_pDC->RemoveBrush(pEmfPlusPen->pBrush);
 
 		m_pDC->RemovePen(pEmfPlusPen);
@@ -2399,16 +2435,16 @@ namespace MetaFile
 
 		std::wstring wsString;
 
-		wsString = NSStringExt::CConverter::GetUnicodeFromUTF16((unsigned short*)pString, unLength);
+		wsString = NSStringExt::CConverter::GetUnicodeFromUTF16(pString, unLength);
 
 		RELEASEARRAYOBJECTS(pString)
 
-		if (NULL == m_pInterpretator)
+		if (nullptr == m_pInterpretator)
 			return;
 
 		CEmfPlusFont *pFont = GetFont(shOgjectIndex);
 
-		if (NULL == pFont)
+		if (nullptr == pFont)
 			return;
 
 		m_pDC->SetFont(pFont);
@@ -2417,7 +2453,7 @@ namespace MetaFile
 
 		unsigned int unOldTextAlign = m_pDC->GetTextAlign();
 
-		if (NULL != pStringFormat)
+		if (nullptr != pStringFormat)
 		{
 			unsigned int unNewTextAlign = 0;
 
@@ -2459,9 +2495,9 @@ namespace MetaFile
 
 			m_pDC->SetTextColor(oColor);
 
-			m_pInterpretator->DrawString(wsString, wsString.length(), oRect.dX, oRect.dY, NULL, GM_ADVANCED);
+			m_pInterpretator->DrawString(wsString, wsString.length(), oRect.dX, oRect.dY, nullptr, GM_ADVANCED);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				m_pInterpretator->HANDLE_EMFPLUS_DRAWSTRING(shOgjectIndex, unBrushId, unFormatID, wsString, oRect);
 
 			m_pDC->SetTextColor(oTextColor);
@@ -2470,7 +2506,7 @@ namespace MetaFile
 		{
 			CEmfPlusBrush *pBrush = GetBrush(unBrushId);
 
-			if (NULL == pBrush) return;
+			if (nullptr == pBrush) return;
 
 			TRGBA oColor;
 
@@ -2483,9 +2519,9 @@ namespace MetaFile
 
 			m_pDC->SetTextColor(oColor);
 
-			m_pInterpretator->DrawString(wsString, wsString.length(), oRect.dX, oRect.dX, NULL, GM_ADVANCED);
+			m_pInterpretator->DrawString(wsString, wsString.length(), oRect.dX, oRect.dX, nullptr, GM_ADVANCED);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				m_pInterpretator->HANDLE_EMFPLUS_DRAWSTRING(shOgjectIndex, unBrushId, unFormatID, wsString, oRect);
 
 			m_pDC->SetTextColor(oTextColor);
@@ -2516,7 +2552,7 @@ namespace MetaFile
 	}
 
 	template<typename T>
-	void CEmfPlusParser::Read_EMFPLUS_FILLCLOSEDCURVE_BASE(unsigned short unShFlags)
+	void CEmfPlusParser::Read_EMFPLUS_FILLCLOSEDCURVE_BASE(unsigned short  /*unShFlags*/)
 	{
 		unsigned int unBrushId, unCount;
 		double dTension;
@@ -2572,7 +2608,7 @@ namespace MetaFile
 
 			DrawPath(false, true);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				m_pInterpretator->HANDLE_EMFPLUS_FILLELLIPSE(unBrushId, GetConvertedRectangle(oRect));
 
 			m_pDC->RemoveBrush(&oBrush);
@@ -2581,7 +2617,7 @@ namespace MetaFile
 		{
 			CEmfPlusBrush *pBrush = GetBrush(unBrushId);
 
-			if (NULL == pBrush) return;
+			if (nullptr == pBrush) return;
 
 			m_pDC->SetBrush(pBrush);
 
@@ -2592,7 +2628,7 @@ namespace MetaFile
 
 			DrawPath(false, true);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				m_pInterpretator->HANDLE_EMFPLUS_FILLELLIPSE(unBrushId, GetConvertedRectangle(oRect));
 
 			m_pDC->RemoveBrush(pBrush);
@@ -2608,7 +2644,7 @@ namespace MetaFile
 
 		CEmfPlusPath *pPath = GetPath(shOgjectIndex);
 
-		if (NULL == pPath) return;
+		if (nullptr == pPath) return;
 
 		if ((unShFlags >>(15)) & 1 )//BrushId = Color
 		{
@@ -2623,7 +2659,7 @@ namespace MetaFile
 
 			pPath->DrawOn(m_pInterpretator, false, true);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				m_pInterpretator->HANDLE_EMFPLUS_FILLPATH(shOgjectIndex, unBrushId, pPath);
 
 			m_pDC->RemoveBrush(&oBrush);
@@ -2632,13 +2668,13 @@ namespace MetaFile
 		{
 			CEmfPlusBrush *pBrush = GetBrush(unBrushId);
 
-			if (NULL == pBrush) return;
+			if (nullptr == pBrush) return;
 
 			m_pDC->SetBrush(pBrush);
 
 			pPath->DrawOn(m_pInterpretator, false, true);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				m_pInterpretator->HANDLE_EMFPLUS_FILLPATH(shOgjectIndex, unBrushId, pPath);
 
 			m_pDC->RemoveBrush(pBrush);
@@ -2654,7 +2690,7 @@ namespace MetaFile
 	}
 
 	template<typename T>
-	void CEmfPlusParser::Read_EMFPLUS_FILLPIE_BASE(unsigned short unShFlags)
+	void CEmfPlusParser::Read_EMFPLUS_FILLPIE_BASE(unsigned short  /*unShFlags*/)
 	{
 		unsigned int unBrushId;
 		double dStartAngle, dSweepAngle;
@@ -2665,7 +2701,7 @@ namespace MetaFile
 		m_oStream >> dSweepAngle;
 		m_oStream >> oRect;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_FILLPIE(unBrushId, dStartAngle, dSweepAngle, GetConvertedRectangle(oRect));
 
 		//TODO: implement
@@ -2727,7 +2763,7 @@ namespace MetaFile
 			ClosePath();
 			DrawPath(false, true);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				m_pInterpretator->HANDLE_EMFPLUS_FILLPOLYGON(unBrushId, arNewPoints);
 
 			m_pDC->RemoveBrush(&oBrush);
@@ -2736,7 +2772,7 @@ namespace MetaFile
 		{
 			CEmfPlusBrush *pEmfPlusBrush = GetBrush(unBrushId);
 
-			if (NULL == pEmfPlusBrush) return;
+			if (nullptr == pEmfPlusBrush) return;
 
 			m_pDC->SetBrush(pEmfPlusBrush);
 
@@ -2745,7 +2781,7 @@ namespace MetaFile
 			for (unsigned int unIndex = 1; unIndex < unCount; ++unIndex)
 				LineTo(arNewPoints[unIndex].X, arNewPoints[unIndex].Y);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				m_pInterpretator->HANDLE_EMFPLUS_FILLPOLYGON(unBrushId, arNewPoints);
 
 			ClosePath();
@@ -2797,7 +2833,7 @@ namespace MetaFile
 			for (TEmfPlusRectF &oRectangle : arRects)
 				DrawRectangle(oRectangle, false, true);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				m_pInterpretator->HANDLE_EMFPLUS_FILLRECTS(unBrushId, arRects);
 
 			m_pDC->RemoveBrush(&oBrush);
@@ -2806,21 +2842,21 @@ namespace MetaFile
 		{
 			CEmfPlusBrush *pEmfPlusBrush = GetBrush(unBrushId);
 
-			if (NULL == pEmfPlusBrush) return;
+			if (nullptr == pEmfPlusBrush) return;
 
 			m_pDC->SetBrush(pEmfPlusBrush);
 
 			for (TEmfPlusRectF &oRectangle : arRects)
 				DrawRectangle(oRectangle, false, true);
 
-			if (NULL != m_pInterpretator)
+			if (nullptr != m_pInterpretator)
 				m_pInterpretator->HANDLE_EMFPLUS_FILLRECTS(unBrushId, arRects);
 
 			m_pDC->RemoveBrush(pEmfPlusBrush);
 		}
 	}
 
-	void CEmfPlusParser::Read_EMFPLUS_FILLREGION(unsigned short unShFlags)
+	void CEmfPlusParser::Read_EMFPLUS_FILLREGION(unsigned short  /*unShFlags*/)
 	{
 		// short shOgjectIndex = ExpressValue(unShFlags, 0, 7);
 		unsigned int unBrushId;
@@ -2867,7 +2903,7 @@ namespace MetaFile
 				CEmfPlusBuffer *pPathBuffer = GetBuffer(shObjectIndex);
 				bool bRegister = true;
 
-				if (NULL == pPathBuffer)
+				if (nullptr == pPathBuffer)
 					pPathBuffer = new CEmfPlusBuffer();
 				else
 					bRegister = false;
@@ -2946,7 +2982,7 @@ namespace MetaFile
 
 			CEmfPlusImageAttributes *pImageAttributes = new CEmfPlusImageAttributes();
 
-			if (NULL != pImageAttributes)
+			if (nullptr != pImageAttributes)
 			{
 				m_oStream >> *pImageAttributes;
 				RegisterObject(pImageAttributes, shObjectIndex);
@@ -2968,7 +3004,7 @@ namespace MetaFile
 		//TODO: implement
 	}
 
-	void CEmfPlusParser::Read_EMFPLUS_SERIALIZABLEOBJECT(unsigned short unShFlags)
+	void CEmfPlusParser::Read_EMFPLUS_SERIALIZABLEOBJECT(unsigned short  /*unShFlags*/)
 	{
 		TGUID oGUID;
 		unsigned int unBufferSize;
@@ -3036,7 +3072,7 @@ namespace MetaFile
 		//TODO: implement
 	}
 
-	void CEmfPlusParser::Read_EMFPLUS_BEGINCONTAINER(unsigned short unShFlags)
+	void CEmfPlusParser::Read_EMFPLUS_BEGINCONTAINER(unsigned short  /*unShFlags*/)
 	{
 		// short shPageUnit = ExpressValue(unShFlags, 8, 15);
 		TEmfPlusRectF oDestRect, oSrcRect;
@@ -3112,7 +3148,7 @@ namespace MetaFile
 		//TODO: implement
 	}
 
-	void CEmfPlusParser::Read_EMFPLUS_SETTSGRAPHICS(unsigned short unShFlags)
+	void CEmfPlusParser::Read_EMFPLUS_SETTSGRAPHICS(unsigned short  /*unShFlags*/)
 	{
 		unsigned char unChAntiAliasMode, unChTextRenderHint, unChCompositingMode, unChCompositingQuality, unChFilterType, unChPixelOffset;
 		short shRenderOriginX, shRenderOriginY;
@@ -3224,12 +3260,12 @@ namespace MetaFile
 
 	void CEmfPlusParser::Read_EMFPLUS_ENDOFFILE()
 	{
-		if(NULL != m_pInterpretator)
+		if(nullptr != m_pInterpretator)
 			m_pInterpretator->End();
 
 		m_bEof = true;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_ENDOFFILE();
 	}
 
@@ -3237,7 +3273,7 @@ namespace MetaFile
 	{
 		m_bBanEmfProcessing = false;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_GETDC();
 	}
 
@@ -3248,7 +3284,7 @@ namespace MetaFile
 		m_oStream >> dX;
 		m_oStream >> dY;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_OFFSETCLIP(dX, dY);
 
 		//TODO: implement
@@ -3259,7 +3295,7 @@ namespace MetaFile
 		m_pDC->GetClip()->Reset();
 		UpdateOutputDC();
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_RESETCLIP();
 	}
 
@@ -3269,7 +3305,7 @@ namespace MetaFile
 
 		CEmfPlusPath* pPath = GetPath(uchObjectId);
 
-		if (NULL == pPath) return;
+		if (nullptr == pPath) return;
 
 		BYTE uchCM = ExpressValue(unShFlags, 8, 11);
 
@@ -3277,7 +3313,7 @@ namespace MetaFile
 		m_pDC->GetClip()->SetPath(*pPath, uchCM, GetTransform());
 		UpdateOutputDC();
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_SETCLIPPATH(unShFlags, pPath);
 	}
 
@@ -3296,7 +3332,7 @@ namespace MetaFile
 		CombineClip(oRect.ToRectD(), shCM);
 		UpdateOutputDC();
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_SETCLIPRECT(shCM, oRect);
 	}
 
@@ -3307,7 +3343,7 @@ namespace MetaFile
 
 		CEmfPlusRegion *pRegion = GetRegion(shObjectIndex);
 
-		if (NULL != pRegion)
+		if (nullptr != pRegion)
 		{
 			m_pDC->GetClip()->Reset();
 
@@ -3351,7 +3387,7 @@ namespace MetaFile
 
 		UpdateOutputDC();
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_SETCLIPREGION(shObjectIndex, shCM, pRegion);
 	}
 
@@ -3359,7 +3395,7 @@ namespace MetaFile
 	{
 		m_oStream.Skip(m_ulRecordSize);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMFPLUS_COMMENT(m_oStream, m_ulRecordSize);
 	}
 

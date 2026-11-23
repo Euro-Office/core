@@ -53,6 +53,7 @@ add_core_gtest(
             docx2odt_header_drawing_anchor.cpp
             xlsx2ods_date_cells.cpp
             xlsx2ods_empty_cells.cpp
+            xlsx2ods_inline_strings.cpp
             xlsx2ods_print_area.cpp
             xlsx2ods_header_footer.cpp
             odt2docx_fields.cpp

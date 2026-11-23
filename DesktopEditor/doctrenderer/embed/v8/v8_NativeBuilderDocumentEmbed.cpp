@@ -8,11 +8,11 @@ namespace NSNativeBuilderDocumentEmbed
 {
 #define CURRENTWRAPPER CBuilderDocumentEmbed
 
-	FUNCTION_WRAPPER_V8_0(_IsValid, IsValid)
-	FUNCTION_WRAPPER_V8_0(_GetBinary, GetBinary)
-	FUNCTION_WRAPPER_V8_0(_GetFolder, GetFolder)
-	FUNCTION_WRAPPER_V8_0(_Close, Close)
-	FUNCTION_WRAPPER_V8_0(_GetImageMap, GetImageMap)
+	FUNCTION_WRAPPER_V8_0(IsValidWrapper, IsValid)
+	FUNCTION_WRAPPER_V8_0(GetBinaryWrapper, GetBinary)
+	FUNCTION_WRAPPER_V8_0(GetFolderWrapper, GetFolder)
+	FUNCTION_WRAPPER_V8_0(CloseWrapper, Close)
+	FUNCTION_WRAPPER_V8_0(GetImageMapWrapper, GetImageMap)
 
 	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
@@ -20,11 +20,11 @@ namespace NSNativeBuilderDocumentEmbed
 		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);
 		result->SetInternalFieldCount(1);
 
-		NSV8Objects::Template_Set(result, "IsValid",	_IsValid);
-		NSV8Objects::Template_Set(result, "GetBinary",	_GetBinary);
-		NSV8Objects::Template_Set(result, "GetFolder",	_GetFolder);
-		NSV8Objects::Template_Set(result, "Close",	_Close);
-		NSV8Objects::Template_Set(result, "GetImageMap",	_GetImageMap);
+		NSV8Objects::Template_Set(result, "IsValid", IsValidWrapper);
+		NSV8Objects::Template_Set(result, "GetBinary", GetBinaryWrapper);
+		NSV8Objects::Template_Set(result, "GetFolder", GetFolderWrapper);
+		NSV8Objects::Template_Set(result, "Close", CloseWrapper);
+		NSV8Objects::Template_Set(result, "GetImageMap", GetImageMapWrapper);
 
 		return handle_scope.Escape(result);
 	}
