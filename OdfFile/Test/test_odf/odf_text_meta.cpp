@@ -163,3 +163,29 @@ TEST(OdfTextMeta, OdpTextBoxKeepsMetaText)
     const std::vector<std::wstring> expected = {L"Slide kept text", L"Field 9", L"plain"};
     EXPECT_EQ(texts(xml, L"a:p", L"a:t"), expected) << xml;
 }
+
+// A drop cap takes its letter from the first text of the paragraph, also when that text is inside a text:meta or a
+// text:meta-field. Before, the scan for that text stopped only at text and spans: the meta's runs were written first,
+// the drop cap paragraph properties then ended up inside a run (<w:r><w:pPr>, invalid DOCX) and the drop cap took the
+// space after the word.
+TEST(OdfTextMeta, OdtDropCapTakesItsLetterFromMeta)
+{
+    const std::wstring xml = part(L"text_meta_drop_cap.odt", L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_TRUE(is_well_formed(xml));
+    const std::vector<std::wstring> expected = {L"L", L"orem ipsum dolor sit amet.", L"M", L"agna aliqua ut enim.", L"After."};
+    EXPECT_EQ(texts(xml, L"w:p", L"w:t"), expected) << xml;
+    for (const std::wstring letter : {L"L", L"M"})
+    {
+        const std::wstring paragraph = element_with_text(xml, L"w:p", L"w:t", letter);
+        EXPECT_NE(paragraph.find(L"w:dropCap=\"drop\""), std::wstring::npos) << paragraph;
+    }
+}
+
+TEST(OdfTextMeta, OdtDropCapParagraphPropertiesStayOutsideRuns)
+{
+    const std::wstring xml = part(L"text_meta_drop_cap.odt", L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    for (const auto& run : elements(xml, L"w:r"))
+        EXPECT_EQ(run.find(L"<w:pPr"), std::wstring::npos) << run;
+}

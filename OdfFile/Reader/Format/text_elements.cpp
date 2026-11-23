@@ -195,10 +195,10 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 
 	while(index < content_.size()) // there may be track-change, ...
 	{
-		if (content_[index]->get_type() == typeTextText || 
-			content_[index]->get_type() == typeTextSpan)
+		const ElementType type = content_[index]->get_type();
+		if (type == typeTextText || type == typeTextSpan || type == typeTextMeta || type == typeTextMetaField)
 			break;
-		content_[index++]->docx_convert(Context); 
+		content_[index++]->docx_convert(Context);
 	}
 
 	if (index >= content_.size()) return index;
@@ -207,10 +207,14 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 	{
 		drop_cap_text_docx_convert(content_[index], Context);
 	}
-	else if (content_[index]->get_type() == typeTextSpan)
+	else
 	{
+		// a span, or a text:meta / text:meta-field: the drop cap comes from the first text inside it
 		span* first_span_in_paragraph = dynamic_cast<span*>(content_[index].get());
-		
+		meta* first_meta_in_paragraph = dynamic_cast<meta*>(content_[index].get());
+		const office_element_ptr_array* first_content = first_span_in_paragraph ? &first_span_in_paragraph->content_ :
+			(first_meta_in_paragraph ? &first_meta_in_paragraph->content_ : NULL);
+
 		if (Context.get_drop_cap_context().FontSize < 1)
 		{
 			style_instance * styleInst = NULL;
@@ -237,10 +241,10 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 			}
 		}
 		//Only the first elements are taken into account!!! there are different break-and cancel the drop_cap mode!!
-		if ((!first_span_in_paragraph->content_.empty()) &&
-			 (first_span_in_paragraph->content_[0]->get_type() == typeTextText))
+		if ((first_content) && (!first_content->empty()) &&
+			 ((*first_content)[0]->get_type() == typeTextText))
 		{
-			drop_cap_text_docx_convert(first_span_in_paragraph->content_[0], Context);
+			drop_cap_text_docx_convert((*first_content)[0], Context);
 		}
 	}
 	return index;
