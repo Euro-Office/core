@@ -50,6 +50,7 @@ add_core_gtest(
             number_styles.cpp
             conversion_helpers.cpp
             docx2odt_content_controls.cpp
+            docx2odt_contextual_spacing.cpp
             docx2odt_header_drawing_anchor.cpp
             xlsx2ods_date_cells.cpp
             xlsx2ods_inline_strings.cpp
@@ -66,6 +67,7 @@ add_core_gtest(
             chart_title.cpp
             odt2docx_underline.cpp
             odt2docx_keep_next.cpp
+            odt2docx_contextual_spacing.cpp
             odt2docx_header_footer_spacing.cpp
             odt2docx_links.cpp
             odp2pptx_line_height.cpp

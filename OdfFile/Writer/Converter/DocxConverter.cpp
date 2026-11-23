@@ -1610,7 +1610,7 @@ void DocxConverter::convert(OOX::Logic::CParagraphProperty	*oox_paragraph_pr,
 			//nullable<SimpleTypes::CDecimalNumber<>    > m_oBeforeLines;
 	}
 	if (oox_paragraph_pr->m_oContextualSpacing.IsInit())
-		paragraph_properties->style_contextual_spacing_ = true;
+		paragraph_properties->style_contextual_spacing_ = oox_paragraph_pr->m_oContextualSpacing->m_oVal.ToBool();
 
 	if (oox_paragraph_pr->m_oInd.IsInit())
 	{

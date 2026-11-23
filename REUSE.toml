@@ -191,6 +191,21 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_false.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_loext_false.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_loext_true.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_missing.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_on.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_true.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_val_0.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_val_1.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_val_false.docx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OdfFile/Test/test_odf/ExampleFiles/hyperlink_target_frame.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
