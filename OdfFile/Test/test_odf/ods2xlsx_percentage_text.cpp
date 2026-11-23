@@ -52,3 +52,17 @@ TEST(OdsToXlsxPercentageText, PlainPercentStaysBuiltIn)
     EXPECT_NE(styles_xml().find(L"numFmtId=\"10\""), std::wstring::npos) << styles_xml();
     EXPECT_FALSE(has_format(L"0.00%")) << styles_xml();
 }
+
+// 0.00 "% a"b": a quote inside quoted text is closed, escaped and opened again ("\"").
+TEST(OdsToXlsxPercentageText, QuoteInTextIsEscaped)
+{
+    ASSERT_FALSE(styles_xml().empty()) << "ODS -> XLSX conversion failed";
+    EXPECT_TRUE(has_format(L"0.00%&quot; a&quot;\\&quot;&quot;b&quot;")) << styles_xml();
+}
+
+// 0.00 "% <&>": characters Excel shows without quotes stay unquoted, also when XML-encoded.
+TEST(OdsToXlsxPercentageText, EncodedSymbolsStayUnquoted)
+{
+    ASSERT_FALSE(styles_xml().empty()) << "ODS -> XLSX conversion failed";
+    EXPECT_TRUE(has_format(L"0.00% &lt;&amp;&gt;")) << styles_xml();
+}
