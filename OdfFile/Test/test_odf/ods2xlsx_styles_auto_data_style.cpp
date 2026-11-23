@@ -65,7 +65,9 @@ TEST(OdsToXlsxStylesAutoDataStyle, ColumnDefaultFindsTheDataStyle)
 }
 
 // styles.xml's automatic styles also define N8 and N7 under names that content.xml (N8, "0.00000") and office:styles
-// (N7, "0.0") define as well: those definitions are used, as before.
+// (N7, "0.0") define as well: those definitions are used, as before. LibreOffice shows C1 with the styles.xml
+// definition (one decimal); the converter keeps content.xml's own definition, because the automatic styles of
+// styles.xml are only a fallback for names that would not resolve otherwise.
 TEST(OdsToXlsxStylesAutoDataStyle, OtherDefinitionsOfTheNameUnchanged)
 {
     ASSERT_FALSE(part(L"xl/styles.xml").empty()) << "ODS -> XLSX conversion failed";
