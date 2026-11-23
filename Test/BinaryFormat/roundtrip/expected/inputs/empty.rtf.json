@@ -1,0 +1,21 @@
+{
+ "editor": "word",
+ "facts": {
+  "comments": [],
+  "drawings": {},
+  "elements": {
+   "count": 1,
+   "types": {
+    "paragraph": 1
+   }
+  },
+  "paragraphs": 1,
+  "sections": 1,
+  "tableRows": [],
+  "text": {
+   "fnv1a": "7d7dfd96",
+   "head": "\r\n",
+   "length": 2
+  }
+ }
+}
