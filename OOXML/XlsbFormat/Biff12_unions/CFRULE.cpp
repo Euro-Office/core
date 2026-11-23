@@ -59,17 +59,7 @@ namespace XLSB
             elements_.pop_back();
         }
 
-        if(proc.optional<COLORSCALE>())
-        {
-            m_source = elements_.back();
-            elements_.pop_back();
-        }
-        else if(proc.optional<DATABAR>())
-        {
-            m_source = elements_.back();
-            elements_.pop_back();
-        }
-        else if(proc.optional<ICONSET>())
+        if(proc.optional<COLORSCALE>() || proc.optional<DATABAR>() || proc.optional<ICONSET>())
         {
             m_source = elements_.back();
             elements_.pop_back();

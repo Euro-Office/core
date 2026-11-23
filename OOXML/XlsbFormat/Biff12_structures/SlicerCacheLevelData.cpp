@@ -36,7 +36,7 @@ namespace XLSB
 
     SlicerCacheLevelData::SlicerCacheLevelData(XLS::CFRecord& record)
     {
-        load(record);
+        SlicerCacheLevelData::load(record);
     }
 
     SlicerCacheLevelData::~SlicerCacheLevelData()

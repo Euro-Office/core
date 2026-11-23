@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginPNPair::readFields(XLS::CFRecord& record)
     {
-        BYTE    flags;
+        BYTE    flags = 0;
         record >> flags >> ifield >> iitem;
 
         fPhysical    = GETBIT(flags, 0);

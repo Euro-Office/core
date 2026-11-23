@@ -36,7 +36,7 @@ namespace XLSB
 
     FRTProductVersion::FRTProductVersion(XLS::CFRecord& record)
     {
-        load(record);
+        FRTProductVersion::load(record);
     }
 
     FRTProductVersion::~FRTProductVersion()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void FRTProductVersion::load(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
 
         record >> version >> flags;
 

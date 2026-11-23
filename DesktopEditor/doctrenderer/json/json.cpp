@@ -690,14 +690,14 @@ namespace NSJSON
 	CValue CValue::CreateEmptyImage(ImageFormat format)
 	{
 		CValue ret;
-		ret.m_internal->m_value = std::make_shared<CImage>((BYTE*)NULL, 0, 0, format, false);
+		ret.m_internal->m_value = std::make_shared<CImage>((BYTE*)nullptr, 0, 0, format, false);
 		ret.m_internal->m_type = CTypedValue::vtImage;
 		return ret;
 	}
 
 	BYTE* CValue::AllocImageBits(int width, int height)
 	{
-		return new BYTE[4 * width * height];
+		return new BYTE[static_cast<size_t>(4) * width * height];
 	}
 
 	void CValue::FreeImageBits(BYTE* bits)
@@ -844,7 +844,7 @@ namespace NSJSON
 					}
 				}
 			}
-			// if did not encounter closing qoutes, return undefined
+			// if did not encounter closing quotes, return undefined
 			if (pos == str.size())
 				return CValue();
 			pos++;

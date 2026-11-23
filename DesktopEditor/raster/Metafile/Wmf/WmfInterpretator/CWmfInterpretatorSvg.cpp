@@ -22,7 +22,7 @@ namespace MetaFile
 		return InterpretatorType::Svg;
 	}
 
-	void CWmfInterpretatorSvg::HANDLE_META_HEADER(const TWmfPlaceable& oPlaceable, const TWmfHeader& oHeader)
+	void CWmfInterpretatorSvg::HANDLE_META_HEADER(const TWmfPlaceable&  /*oPlaceable*/, const TWmfHeader&  /*oHeader*/)
 	{
 		m_pXmlWriter->WriteNodeBegin(L"svg", true);
 		m_pXmlWriter->WriteAttribute(L"xmlns", L"http://www.w3.org/2000/svg");
@@ -144,18 +144,18 @@ namespace MetaFile
 		WriteNode(L"ellipse", arAttributes);
 	}
 
-	void CWmfInterpretatorSvg::HANDLE_META_EXTTEXTOUT(short shY, short shX, short shStringLength, unsigned short ushFwOptions, const TRectL &oRectangle, unsigned char *pString, short *pDx)
+	void CWmfInterpretatorSvg::HANDLE_META_EXTTEXTOUT(short shY, short shX, short shStringLength, unsigned short  /*ushFwOptions*/, const TRectL &oRectangle, unsigned char *pString, short *pDx)
 	{
-		const IFont* pFont = NULL;
+		const IFont* pFont = nullptr;
 
-		if (NULL != m_pParser)
+		if (nullptr != m_pParser)
 			pFont = m_pParser->GetFont();
 
-		const std::wstring wsText{ConvertToUnicode(pString, (long)shStringLength, (NULL != pFont) ? pFont->GetCharSet() : DEFAULT_CHARSET)};
+		const std::wstring wsText{ConvertToUnicode(pString, (long)shStringLength, (nullptr != pFont) ? pFont->GetCharSet() : DEFAULT_CHARSET)};
 
 		TPointD oScale(1, 1);
 
-		if (NULL != m_pParser)
+		if (nullptr != m_pParser)
 		{
 			oScale.X = m_pParser->IsWindowFlippedX() ? -1 : 1;
 			oScale.Y = m_pParser->IsWindowFlippedY() ? -1 : 1;
@@ -163,17 +163,17 @@ namespace MetaFile
 
 		std::vector<double> arDx(0);
 
-		if (NULL != pDx && shStringLength == wsText.length())
+		if (nullptr != pDx && shStringLength == wsText.length())
 			arDx = std::vector<double>(pDx, pDx + wsText.length());
 
 		WriteText(wsText, TPointD(shX, shY), oRectangle, oScale, arDx);
 	}
 
-	void CWmfInterpretatorSvg::HANDLE_META_FILLREGION(unsigned short ushRegionIndex, unsigned short ushBrushIndex)
+	void CWmfInterpretatorSvg::HANDLE_META_FILLREGION(unsigned short  /*ushRegionIndex*/, unsigned short  /*ushBrushIndex*/)
 	{
 		const CWmfRegion *pRegion = dynamic_cast<const CWmfRegion*>(m_pParser->GetRegion());
 
-		if (NULL == pRegion)
+		if (nullptr == pRegion)
 			return;
 
 		std::wstring wsValue;
@@ -236,7 +236,7 @@ namespace MetaFile
 		//TODO::implement
 	}
 
-	void CWmfInterpretatorSvg::HANDLE_META_PATBLT(unsigned int unRasterOperation, short shH, short shW, short shY, short shX)
+	void CWmfInterpretatorSvg::HANDLE_META_PATBLT(unsigned int  /*unRasterOperation*/, short shH, short shW, short shY, short shX)
 	{
 		TRectD oNewRect;
 
@@ -395,9 +395,9 @@ namespace MetaFile
 
 	void CWmfInterpretatorSvg::HANDLE_META_TEXTOUT(short shStringLength, unsigned char *pString, short shX, short shY)
 	{
-		const IFont* pFont = NULL;
+		const IFont* pFont = nullptr;
 
-		if (NULL != m_pParser)
+		if (nullptr != m_pParser)
 			pFont = m_pParser->GetFont();
 
 		NSStringExt::CConverter::ESingleByteEncoding eCharSet = NSStringExt::CConverter::ESingleByteEncoding::SINGLE_BYTE_ENCODING_DEFAULT;;
@@ -430,7 +430,6 @@ namespace MetaFile
 			switch (pFont->GetCharSet())
 			{
 			default:
-			case DEFAULT_CHARSET:       eCharSet = NSStringExt::CConverter::ESingleByteEncoding::SINGLE_BYTE_ENCODING_DEFAULT; break;
 			case SYMBOL_CHARSET:        eCharSet = NSStringExt::CConverter::ESingleByteEncoding::SINGLE_BYTE_ENCODING_DEFAULT; break;
 			case ANSI_CHARSET:          eCharSet = NSStringExt::CConverter::ESingleByteEncoding::SINGLE_BYTE_ENCODING_CP1252; break;
 			case RUSSIAN_CHARSET:       eCharSet = NSStringExt::CConverter::ESingleByteEncoding::SINGLE_BYTE_ENCODING_CP1251; break;
@@ -455,12 +454,12 @@ namespace MetaFile
 		WriteText(wsText, TPointD(shX, shY));
 	}
 
-	void CWmfInterpretatorSvg::HANDLE_META_EXCLUDECLIPRECT(short shLeft, short shTop, short shRight, short shBottom)
+	void CWmfInterpretatorSvg::HANDLE_META_EXCLUDECLIPRECT(short  /*shLeft*/, short  /*shTop*/, short  /*shRight*/, short  /*shBottom*/)
 	{
 		m_bUpdatedClip = false;
 	}
 
-	void CWmfInterpretatorSvg::HANDLE_META_INTERSECTCLIPRECT(short shLeft, short shTop, short shRight, short shBottom)
+	void CWmfInterpretatorSvg::HANDLE_META_INTERSECTCLIPRECT(short  /*shLeft*/, short  /*shTop*/, short  /*shRight*/, short  /*shBottom*/)
 	{
 		m_bUpdatedClip = false;
 	}

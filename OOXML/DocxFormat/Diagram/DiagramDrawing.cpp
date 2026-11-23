@@ -38,23 +38,23 @@ namespace OOX
 	CDiagramDrawing::CDiagramDrawing(OOX::Document* pMain, bool bDocument) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 	{
 		m_bDocument = bDocument;
-		m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+		m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
 	}
 
 	CDiagramDrawing::CDiagramDrawing(OOX::Document* pMain, const CPath& uri) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 	{
-		m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-		m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+		m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+		m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
 
-		read(uri.GetDirectory(), uri);
+		CDiagramDrawing::read(uri.GetDirectory(), uri);
 	}
 
 	CDiagramDrawing::CDiagramDrawing(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 	{
-		m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-		m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+		m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+		m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
 
-		read( oRootPath, oPath );
+		CDiagramDrawing::read( oRootPath, oPath );
 	}
 
 	CDiagramDrawing::~CDiagramDrawing()

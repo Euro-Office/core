@@ -131,7 +131,7 @@ const CFormulaCF CFormulaCF::Merge(const CFormulaCF& oPrev, const CFormulaCF& oC
 {
 	CFormulaCF oFormula;
 
-	if (oCurrent.m_sText.empty() == false)
+	if (!oCurrent.m_sText.empty())
 	{
 		oFormula.m_sText = oCurrent.m_sText;
 		oFormula.m_sNodeName = oCurrent.m_sNodeName;
@@ -184,9 +184,9 @@ void CConditionalFormatValueObject::ReadAttributes(XmlUtils::CXmlLiteReader& oRe
 }
 void CConditionalFormatValueObject::toXML2(NSStringUtils::CStringBuilder& writer, bool bExtendedWrite) const
 {
-	if (false == m_oType.IsInit()) return;
+	if (!m_oType.IsInit()) return;
 
-	if (bExtendedWrite == false)
+	if (!bExtendedWrite)
 	{
 		if (m_oType->GetValue() == SimpleTypes::Spreadsheet::autoMin) m_oType->SetValue(SimpleTypes::Spreadsheet::Minimum);
 		if (m_oType->GetValue() == SimpleTypes::Spreadsheet::autoMax) m_oType->SetValue(SimpleTypes::Spreadsheet::Maximum);
@@ -196,7 +196,7 @@ void CConditionalFormatValueObject::toXML2(NSStringUtils::CStringBuilder& writer
 
 	writer.WriteString(L"<" + node_name);
 		WritingStringAttrString(L"type", m_oType->ToString());
-		if (m_oGte.IsInit() && false == m_oGte->ToBool())
+		if (m_oGte.IsInit() && !m_oGte->ToBool())
 		{
 			writer.WriteString(L" gte=\"0\"");
 		}
@@ -216,7 +216,7 @@ void CConditionalFormatValueObject::toXML2(NSStringUtils::CStringBuilder& writer
 
 	if (bExtendedWrite)
 	{
-		if (true == m_oFormula.IsInit())
+		if (m_oFormula.IsInit())
 		{
 			m_oFormula->toXML2(writer, true);
 		}
@@ -257,9 +257,7 @@ XLS::BaseObjectPtr CConditionalFormatValueObject::toBin(bool isIcon)
         ptr1->fGTE = m_oGte->GetValue();
     else
         ptr1->fGTE = true;
-    if (m_oType == SimpleTypes::Spreadsheet::ECfvoType::Number)
-        ptr1->iType = XLSB::CFVOtype::CFVONUM;
-    else if (m_oType == SimpleTypes::Spreadsheet::ECfvoType::Minimum)
+    if (m_oType == SimpleTypes::Spreadsheet::ECfvoType::Minimum)
         ptr1->iType = XLSB::CFVOtype::CFVOMIN;
     else if (m_oType == SimpleTypes::Spreadsheet::ECfvoType::Maximum)
         ptr1->iType = XLSB::CFVOtype::CFVOMAX;
@@ -288,9 +286,7 @@ XLS::BaseObjectPtr CConditionalFormatValueObject::toBin(bool isIcon)
 
             ptr1->cbFmla = 1;
         }
-    if(ptr1->iType.get_type() == XLSB::CFVOtype::CFVOMIN)
-        ptr1->numParam.data.value = 0;
-    else if(ptr1->iType.get_type() == XLSB::CFVOtype::CFVOMAX)
+    if(ptr1->iType.get_type() == XLSB::CFVOtype::CFVOMIN || ptr1->iType.get_type() == XLSB::CFVOtype::CFVOMAX)
         ptr1->numParam.data.value = 0;
 
     if(static_cast<_UINT32>(ptr1->iType) == XLSB::CFVOtype::CFVOFMLA && m_oVal.IsInit())
@@ -321,9 +317,7 @@ void CConditionalFormatValueObject::toBin(XLS::StreamCacheWriterPtr& writer, con
         cfvo.fGTE = true;
 
     auto valType = m_oType->GetValue();
-    if (valType == SimpleTypes::Spreadsheet::ECfvoType::Number)
-        cfvo.iType = XLSB::CFVOtype::CFVONUM;
-    else if (valType == SimpleTypes::Spreadsheet::ECfvoType::Minimum || valType == SimpleTypes::Spreadsheet::ECfvoType::autoMin)
+    if (valType == SimpleTypes::Spreadsheet::ECfvoType::Minimum || valType == SimpleTypes::Spreadsheet::ECfvoType::autoMin)
         cfvo.iType = XLSB::CFVOtype::CFVOMIN;
     else if (valType == SimpleTypes::Spreadsheet::ECfvoType::Maximum || valType == SimpleTypes::Spreadsheet::ECfvoType::autoMax)
         cfvo.iType = XLSB::CFVOtype::CFVOMAX;
@@ -353,9 +347,7 @@ void CConditionalFormatValueObject::toBin(XLS::StreamCacheWriterPtr& writer, con
 
             cfvo.cbFmla = 1;
         }
-    if(cfvo.iType.get_type() == XLSB::CFVOtype::CFVOMIN)
-        cfvo.numParam.data.value = 0;
-    else if(cfvo.iType.get_type() == XLSB::CFVOtype::CFVOMAX)
+    if(cfvo.iType.get_type() == XLSB::CFVOtype::CFVOMIN || cfvo.iType.get_type() == XLSB::CFVOtype::CFVOMAX)
         cfvo.numParam.data.value = 0;
 
     if(static_cast<_UINT32>(cfvo.iType) == XLSB::CFVOtype::CFVOFMLA && m_oVal.IsInit())
@@ -375,7 +367,7 @@ void CConditionalFormatValueObject::toBin(XLS::StreamCacheWriterPtr& writer, con
     }
     cfvo.write(writer, nullptr);
 }
-XLS::BiffStructurePtr CConditionalFormatValueObject::toXLS(const bool isIcon)
+XLS::BiffStructurePtr CConditionalFormatValueObject::toXLS(const bool  /*isIcon*/)
 {
 	auto ptr = new XLS::CFVO;
 	if(!m_oType.IsInit())
@@ -389,6 +381,8 @@ XLS::BiffStructurePtr CConditionalFormatValueObject::toXLS(const bool isIcon)
 
 		}  catch (std::exception)
 		{
+			// malformed numeric value: keep the default 0
+			(void)0;
 		}
 	}
 	switch(m_oType->GetValue())
@@ -452,9 +446,7 @@ XLS::BaseObjectPtr CConditionalFormatValueObject::toBin14(bool isIcon)
         ptr1->fGTE = m_oGte->GetValue();
     else
         ptr1->fGTE = true;
-    if (m_oType == SimpleTypes::Spreadsheet::ECfvoType::Number)
-        ptr1->iType = XLSB::CFVOtype::CFVONUM;
-    else if (m_oType == SimpleTypes::Spreadsheet::ECfvoType::Minimum)
+    if (m_oType == SimpleTypes::Spreadsheet::ECfvoType::Minimum)
         ptr1->iType = XLSB::CFVOtype::CFVOMIN;
     else if (m_oType == SimpleTypes::Spreadsheet::ECfvoType::Maximum)
         ptr1->iType = XLSB::CFVOtype::CFVOMAX;
@@ -471,9 +463,7 @@ XLS::BaseObjectPtr CConditionalFormatValueObject::toBin14(bool isIcon)
     else
         ptr1->iType = XLSB::CFVOtype::CFVONUM;
 
-    if(ptr1->iType.get_type() == XLSB::CFVOtype::CFVOMIN)
-        ptr1->numParam.data.value = 0;
-    else if(ptr1->iType.get_type() == XLSB::CFVOtype::CFVOMAX)
+    if(ptr1->iType.get_type() == XLSB::CFVOtype::CFVOMIN || ptr1->iType.get_type() == XLSB::CFVOtype::CFVOMAX)
         ptr1->numParam.data.value = 0;
     if(static_cast<_UINT32>(ptr1->iType) == XLSB::CFVOtype::CFVOFMLA && !(m_oVal.IsInit()) && m_oFormula.IsInit() && !m_oFormula->m_sText.empty())
         m_oVal = m_oFormula->m_sText;
@@ -501,7 +491,10 @@ XLS::BaseObjectPtr CConditionalFormatValueObject::toBin14(bool isIcon)
             ptr1->numParam.data.value = std::stod(m_oFormula->m_sText);
         }
         catch(std::exception)
-        {}
+        {
+            // malformed numeric value: keep the default 0
+            (void)0;
+        }
     }
     return objectPtr;
 }
@@ -541,6 +534,7 @@ void CConditionalFormatValueObject::ReadAttributes(XLS::BaseObjectPtr& obj)
                     case XLSB::CFVOtype::CFVOFMLA:
                         m_oType     = SimpleTypes::Spreadsheet::ECfvoType::Formula;
                         break;
+                    default: break;
                 }
                 m_oVal = std::to_wstring(ptr1->numParam.data.value);
                 if(ptr1->cbFmla)
@@ -589,6 +583,7 @@ void CConditionalFormatValueObject::ReadAttributes(XLS::BaseObjectPtr& obj)
                     case XLSB::CFVOType14::CFVOAUTOMAX_14:
                         m_oType     = SimpleTypes::Spreadsheet::ECfvoType::autoMax;
                         break;
+                    default: break;
                 }
                 m_oVal = std::to_wstring(ptr1->numParam.data.value);
                 if(ptr1->cbFmla && ptr1->FRTheader.rgFormulas.array.size() > 1)
@@ -770,6 +765,7 @@ void CConditionalFormatIconSet::ReadAttributes(XLS::BaseObjectPtr& obj)
                 m_oIconSet = SimpleTypes::Spreadsheet::EIconSetType::Boxes5;
                 break;
             }
+            default: break;
         }
     }
 }
@@ -777,7 +773,6 @@ void CColorScale::toXML2(NSStringUtils::CStringBuilder& writer, bool bExtendedWr
 {
 	if (1 < m_arrValues.size() && 1 < m_arrColors.size()) // min 2 + 2
 	{
-        std::wstring sValue;
 		writer.WriteString(L"<colorScale>");
 
         for ( size_t i = 0; i < m_arrValues.size(); ++i)//TODO - check whether it is possible not to alternate, but to write as-is
@@ -1013,13 +1008,9 @@ const CColorScale CColorScale::Merge(const CColorScale& oPrev, const CColorScale
 }
 bool CDataBar::isExtended ()
 {
-	if (m_oAxisColor.IsInit() || m_oAxisPosition.IsInit() || m_oDirection.IsInit() || m_oBorderColor.IsInit()
+	return m_oAxisColor.IsInit() || m_oAxisPosition.IsInit() || m_oDirection.IsInit() || m_oBorderColor.IsInit()
 			|| m_oNegativeFillColor.IsInit() || m_oNegativeBorderColor.IsInit()
-			|| m_oNegativeBarColorSameAsPositive.IsInit() || m_oNegativeBarBorderColorSameAsPositive.IsInit())
-	{
-		return true;
-	}
-	return false;
+			|| m_oNegativeBarColorSameAsPositive.IsInit() || m_oNegativeBarBorderColorSameAsPositive.IsInit();
 }
 
 CDataBar::CDataBar()
@@ -1045,14 +1036,14 @@ EElementType CDataBar::getType () const
 }
 void CDataBar::toXML2(NSStringUtils::CStringBuilder& writer, bool bExtendedWrite) const
 {
-	if (2 != m_arrValues.size() || false == m_oColor.IsInit()) return;
+	if (2 != m_arrValues.size() || !m_oColor.IsInit()) return;
 
 	std::wstring node_name = bExtendedWrite ? L"x14:dataBar" : L"dataBar";
 
 	writer.WriteString(L"<" + node_name);
 		WritingStringNullableAttrInt(L"maxLength", m_oMaxLength, m_oMaxLength->GetValue());
 		WritingStringNullableAttrInt(L"minLength", m_oMinLength, m_oMinLength->GetValue());
-		if (m_oShowValue.IsInit() && false == m_oShowValue->ToBool())
+		if (m_oShowValue.IsInit() && !m_oShowValue->ToBool())
 		{
 			writer.WriteString(L" showValue=\"0\"");
 		}
@@ -1062,15 +1053,15 @@ void CDataBar::toXML2(NSStringUtils::CStringBuilder& writer, bool bExtendedWrite
 			WritingStringNullableAttrString(L"axisPosition", m_oAxisPosition, m_oAxisPosition->ToString())
 			WritingStringNullableAttrString(L"direction", m_oDirection, m_oDirection->ToString())
 
-			if (m_oGradient.IsInit() && false == m_oGradient->ToBool())
+			if (m_oGradient.IsInit() && !m_oGradient->ToBool())
 			{
 				writer.WriteString(L" gradient=\"0\"");
 			}
-			if (m_oNegativeBarColorSameAsPositive.IsInit() && true == m_oNegativeBarColorSameAsPositive->ToBool())
+			if (m_oNegativeBarColorSameAsPositive.IsInit() && m_oNegativeBarColorSameAsPositive->ToBool())
 			{
 				writer.WriteString(L" negativeBarColorSameAsPositive=\"1\"");
 			}
-			if (m_oNegativeBarBorderColorSameAsPositive.IsInit() && false == m_oNegativeBarBorderColorSameAsPositive->ToBool())
+			if (m_oNegativeBarBorderColorSameAsPositive.IsInit() && !m_oNegativeBarBorderColorSameAsPositive->ToBool())
 			{
 				writer.WriteString(L" negativeBarBorderColorSameAsPositive=\"0\"");
 			}
@@ -1164,17 +1155,17 @@ void CDataBar::fromBin(XLS::BaseObjectPtr& obj)
                     m_oColor.Init();
                     m_oColor->fromBin(dynamic_cast<XLS::BaseObject*>(&color->color));
                 }
-                else if(m_oBorder.IsInit() && m_oBorder->GetValue() == true && !m_oBorderColor.IsInit())
+                else if(m_oBorder.IsInit() && static_cast<bool>(m_oBorder->GetValue()) && !m_oBorderColor.IsInit())
                 {
                     m_oBorderColor.Init();
                     m_oBorderColor->fromBin(dynamic_cast<XLS::BaseObject*>(&color->color));
                 }
-                else if(m_oNegativeBarColorSameAsPositive.IsInit() && m_oNegativeBarColorSameAsPositive->GetValue() == false && !m_oNegativeFillColor.IsInit())
+                else if(m_oNegativeBarColorSameAsPositive.IsInit() && !static_cast<bool>(m_oNegativeBarColorSameAsPositive->GetValue()) && !m_oNegativeFillColor.IsInit())
                 {
                     m_oNegativeFillColor.Init();
                     m_oNegativeFillColor->fromBin(dynamic_cast<XLS::BaseObject*>(&color->color));
                 }
-                else if(m_oNegativeBarBorderColorSameAsPositive.IsInit() && m_oNegativeBarBorderColorSameAsPositive->GetValue() == false && !m_oNegativeBorderColor.IsInit())
+                else if(m_oNegativeBarBorderColorSameAsPositive.IsInit() && !static_cast<bool>(m_oNegativeBarBorderColorSameAsPositive->GetValue()) && !m_oNegativeBorderColor.IsInit())
                 {
                     m_oNegativeBorderColor.Init();
                     m_oNegativeBorderColor->fromBin(dynamic_cast<XLS::BaseObject*>(&color->color));
@@ -1449,22 +1440,21 @@ void CIconSet::toXML2(NSStringUtils::CStringBuilder& writer, bool bExtendedWrite
 
 	std::wstring node_name = bExtendedWrite ? L"x14:iconSet" : L"iconSet";
 
-	std::wstring sValue;
 	writer.WriteString(L"<" + node_name);
 	WritingStringNullableAttrString(L"iconSet", m_oIconSet, m_oIconSet->ToString())
-	if (m_oPercent.IsInit() && false == m_oPercent->ToBool())
+	if (m_oPercent.IsInit() && !m_oPercent->ToBool())
 	{
 		writer.WriteString(L" percent=\"0\"");
 	}
-	if (m_oReverse.IsInit() && true == m_oReverse->ToBool())
+	if (m_oReverse.IsInit() && m_oReverse->ToBool())
 	{
 		writer.WriteString(L" reverse=\"1\"");
 	}
-	if (m_oShowValue.IsInit() && false == m_oShowValue->ToBool())
+	if (m_oShowValue.IsInit() && !m_oShowValue->ToBool())
 	{
 		writer.WriteString(L" showValue=\"0\"");
 	}
-	if (bExtendedWrite && false == m_arrIconSets.empty())
+	if (bExtendedWrite && !m_arrIconSets.empty())
 	{
 		writer.WriteString(L" custom=\"1\"");
 	}
@@ -2238,6 +2228,7 @@ void CIconSet::ReadAttributes(XLS::BaseObjectPtr& obj)
                     m_oIconSet = SimpleTypes::Spreadsheet::EIconSetType::Quarters5;
                     break;
                 }
+                default: break;
             }
 
         }
@@ -2359,6 +2350,7 @@ void CIconSet::ReadAttributes(XLS::BaseObjectPtr& obj)
                     m_oIconSet = SimpleTypes::Spreadsheet::EIconSetType::Boxes5;
                     break;
                 }
+                default: break;
             }
 
         }
@@ -2410,7 +2402,7 @@ const CIconSet CIconSet::Merge(const CIconSet& oPrev, const CIconSet& oCurrent)
 }
 bool CIconSet::isExtended ()
 {
-	return (false == m_arrIconSets.empty() || (m_oIconSet.IsInit() && m_oIconSet->GetValue() > 15));
+	return (!m_arrIconSets.empty() || (m_oIconSet.IsInit() && m_oIconSet->GetValue() > 15));
 }
 void CIconSet::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 {
@@ -2467,33 +2459,33 @@ bool CConditionalFormattingRule::isExtended()
 }
 void CConditionalFormattingRule::toXML2(NSStringUtils::CStringBuilder& writer, bool bExtendedWrite) const
 {
-	if (false == isValid()) return;
+	if (!isValid()) return;
 
 	std::wstring node_name = bExtendedWrite ? L"x14:cfRule" : L"cfRule";
 
 	writer.WriteString(L"<" + node_name);
 		WritingStringNullableAttrString(L"type", m_oType, m_oType->ToString());
 		WritingStringNullableAttrInt(L"priority", m_oPriority, m_oPriority->GetValue());
-		if (m_oAboveAverage.IsInit() && false == m_oAboveAverage->ToBool())
+		if (m_oAboveAverage.IsInit() && !m_oAboveAverage->ToBool())
 			writer.WriteString(L" aboveAverage=\"0\"");
-		if (m_oBottom.IsInit() && true == m_oBottom->ToBool())
+		if (m_oBottom.IsInit() && m_oBottom->ToBool())
 			writer.WriteString(L" bottom=\"1\"");
 		WritingStringNullableAttrInt(L"dxfId", m_oDxfId, m_oDxfId->GetValue());
-		if (m_oEqualAverage.IsInit() && true == m_oEqualAverage->ToBool())
+		if (m_oEqualAverage.IsInit() && m_oEqualAverage->ToBool())
 			writer.WriteString(L" equalAverage=\"1\"");
 		WritingStringNullableAttrString(L"operator", m_oOperator, m_oOperator->ToString());
-		if (m_oPercent.IsInit() && true == m_oPercent->ToBool())
+		if (m_oPercent.IsInit() && m_oPercent->ToBool())
 			writer.WriteString(L" percent=\"1\"");
 		WritingStringNullableAttrInt(L"rank", m_oRank, m_oRank->GetValue());
 		WritingStringNullableAttrInt(L"stdDev", m_oStdDev, m_oStdDev->GetValue());
-		if (m_oStopIfTrue.IsInit() && true == m_oStopIfTrue->ToBool())
+		if (m_oStopIfTrue.IsInit() && m_oStopIfTrue->ToBool())
 			writer.WriteString(L" stopIfTrue=\"1\"");
 		WritingStringNullableAttrEncodeXmlString(L"text", m_oText, m_oText.get());
 		WritingStringNullableAttrString(L"timePeriod", m_oTimePeriod, m_oTimePeriod->ToString());
 
 		if (bExtendedWrite)
 		{
-			if (false == m_oId.IsInit())
+			if (!m_oId.IsInit())
 			{
 				WritingStringAttrString(L"id", L"{" + XmlUtils::GenerateGuid() + L"}");
 			}
@@ -3470,10 +3462,7 @@ XLS::BaseObjectPtr CConditionalFormattingRule::toXLS(const  XLS::CellRef &cellRe
 	{
 		ptr->ct = 5;
 		ptr->icfTemplate = 5;
-		if(m_oBottom.IsInit() && m_oBottom->GetValue())
-			ptr->rgbTemplateParms.data.filter.fTop = false;
-		else
-			ptr->rgbTemplateParms.data.filter.fTop = true;
+		ptr->rgbTemplateParms.data.filter.fTop = !(m_oBottom.IsInit() && m_oBottom->GetValue());
 		if(m_oPercent.IsInit())
 			ptr->rgbTemplateParms.data.filter.fPercent = m_oPercent->GetValue();
 		else
@@ -3727,6 +3716,7 @@ void CConditionalFormattingRule::ReadAttributes(XLS::BaseObjectPtr& obj)
                         case XLSB::CFOper::CF_OPER_LE:
                             m_oOperator = SimpleTypes::Spreadsheet::ECfOperator::Operator_lessThanOrEqual;
                             break;
+                        default: break;
                     }
                     break;
                 }
@@ -3770,6 +3760,7 @@ void CConditionalFormattingRule::ReadAttributes(XLS::BaseObjectPtr& obj)
                                     m_oType     = SimpleTypes::Spreadsheet::ECfType::endsWith;
                                     m_oOperator = SimpleTypes::Spreadsheet::ECfOperator::Operator_endsWith;
                                     break;
+                                default: break;
                             }
                             break;
                         }
@@ -3837,6 +3828,7 @@ void CConditionalFormattingRule::ReadAttributes(XLS::BaseObjectPtr& obj)
                                 case XLSB::CFDateOper::CF_TIMEPERIOD_THISMONTH:
                                     m_oTimePeriod = SimpleTypes::Spreadsheet::ETimePeriod::thisMonth;
                                     break;
+                                default: break;
                             }
                             break;
                         }
@@ -3853,6 +3845,7 @@ void CConditionalFormattingRule::ReadAttributes(XLS::BaseObjectPtr& obj)
                             break;
                         }
 
+                        default: break;
                     }
                     break;
                 }
@@ -3877,6 +3870,7 @@ void CConditionalFormattingRule::ReadAttributes(XLS::BaseObjectPtr& obj)
                     m_oRank = ptr->iParam;
                     break;
                 }
+                default: break;
             }
 
             if(ptr->iType.value().get() != XLSB::CFType::CF_TYPE_GRADIENT
@@ -3955,6 +3949,7 @@ void CConditionalFormattingRule::ReadAttributes(XLS::BaseObjectPtr& obj)
                         case XLSB::CFOper::CF_OPER_LE:
                             m_oOperator = SimpleTypes::Spreadsheet::ECfOperator::Operator_lessThanOrEqual;
                             break;
+                        default: break;
                     }
                     break;
                 }
@@ -3998,6 +3993,7 @@ void CConditionalFormattingRule::ReadAttributes(XLS::BaseObjectPtr& obj)
                                     m_oType     = SimpleTypes::Spreadsheet::ECfType::endsWith;
                                     m_oOperator = SimpleTypes::Spreadsheet::ECfOperator::Operator_endsWith;
                                     break;
+                                default: break;
                             }
                             break;
                         }
@@ -4065,6 +4061,7 @@ void CConditionalFormattingRule::ReadAttributes(XLS::BaseObjectPtr& obj)
                                 case XLSB::CFDateOper::CF_TIMEPERIOD_THISMONTH:
                                     m_oTimePeriod = SimpleTypes::Spreadsheet::ETimePeriod::thisMonth;
                                     break;
+                                default: break;
                             }
                             break;
                         }
@@ -4081,6 +4078,7 @@ void CConditionalFormattingRule::ReadAttributes(XLS::BaseObjectPtr& obj)
                             break;
                         }
 
+                        default: break;
                     }
                     break;
                 }
@@ -4105,6 +4103,7 @@ void CConditionalFormattingRule::ReadAttributes(XLS::BaseObjectPtr& obj)
                     m_oRank = ptr->iParam;
                     break;
                 }
+                default: break;
             }
 
             if(ptr->iType.value().get() != XLSB::CFType::CF_TYPE_GRADIENT
@@ -4165,9 +4164,9 @@ std::wstring CConditionalFormatting::toXML() const
 }
 void CConditionalFormatting::toXML(NSStringUtils::CStringBuilder& writer) const
 {
-	if (m_bIsValid == false) return;
+	if (!m_bIsValid) return;
 
-	if (m_bIsExtended == false)
+	if (!m_bIsExtended)
 		toXML2(writer, false);
 }
 EElementType CConditionalFormatting::getType () const
@@ -4179,7 +4178,7 @@ bool CConditionalFormatting::IsExtended()
 	m_bIsExtended = false;
 	m_bIsValid = false;
 
-	if (m_oSqRef.IsInit() == false) return m_bIsExtended;
+	if (!m_oSqRef.IsInit()) return m_bIsExtended;
 
 	m_bIsValid = true;
 
@@ -4187,9 +4186,9 @@ bool CConditionalFormatting::IsExtended()
 	{
         if ( !m_arrItems[i]) continue;
 
-		if (m_arrItems[i]->isValid() == false)
+		if (!m_arrItems[i]->isValid())
 			m_bIsValid = false;
-		if (m_arrItems[i]->isExtended() == true)
+		if (m_arrItems[i]->isExtended())
 			m_bIsExtended = true;
 	}
 	return m_bIsExtended;
@@ -4207,7 +4206,7 @@ void CConditionalFormatting::toXML2(NSStringUtils::CStringBuilder& writer, bool 
 		{
 			WritingStringAttrString(L"sqref", m_oSqRef.get());
 		}
-		if (m_oPivot.IsInit() && true == m_oPivot->ToBool())
+		if (m_oPivot.IsInit() && m_oPivot->ToBool())
 		{
 			writer.WriteString(L" pivot=\"1\"");
 		}

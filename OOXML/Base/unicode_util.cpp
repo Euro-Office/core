@@ -197,7 +197,7 @@ if (result == sourceIllegal) {
  * left as-is for anyone who may want to do such conversion, which was
  * allowed in earlier algorithms.
  */
-static const char trailingBytesForUTF8[256] = {
+static const unsigned char trailingBytesForUTF8[256] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -220,7 +220,7 @@ static const UTF32 offsetsFromUTF8[6] = { 0x00000000UL, 0x00003080UL, 0x000E2080
  * Once the bits are split out into bytes of UTF-8, this is a mask OR-ed
  * into the first byte, depending on how many bytes follow.  There are
  * as many entries in this table as there are UTF-8 sequence types.
- * (I.e., one byte sequence, two byte... etc.). Remember that sequencs
+ * (I.e., one byte sequence, two byte... etc.). Remember that sequences
  * for *legal* UTF-8 will be 4 or fewer bytes total.
  */
 static const UTF8 firstByteMark[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
@@ -293,10 +293,11 @@ ConversionResult ConvertUTF16toUTF8 (
         target -= bytesToWrite; result = targetExhausted; break;
     }
     switch (bytesToWrite) { /* note: everything falls through. */
-        case 4: *--target = (UTF8)((ch | byteMark) & byteMask); ch >>= 6;
+        case 4: *--target = (UTF8)((ch | byteMark) & byteMask); ch >>= 6; // NOLINT(bugprone-branch-clone)
         case 3: *--target = (UTF8)((ch | byteMark) & byteMask); ch >>= 6;
         case 2: *--target = (UTF8)((ch | byteMark) & byteMask); ch >>= 6;
         case 1: *--target =  (UTF8)(ch | firstByteMark[bytesToWrite]);
+        default: break;
     }
     target += bytesToWrite;
     }
@@ -324,9 +325,9 @@ static Boolean isLegalUTF8(const UTF8 *source, int length) {
     switch (length) {
     default: return false;
     /* Everything else falls through when "true"... */
-    case 4: if ((a = (*--srcptr)) < 0x80 || a > 0xBF) return false;
-    case 3: if ((a = (*--srcptr)) < 0x80 || a > 0xBF) return false;
-    case 2: if ((a = (*--srcptr)) > 0xBF) return false;
+    case 4: a = *--srcptr; if (a < 0x80 || a > 0xBF) return false; // NOLINT(bugprone-branch-clone)
+    case 3: a = *--srcptr; if (a < 0x80 || a > 0xBF) return false;
+    case 2: a = *--srcptr; if (a > 0xBF) return false;
 
     switch (*source) {
         /* no fall-through in this inner switch */
@@ -380,14 +381,15 @@ ConversionResult ConvertUTF8toUTF16 (
      * The cases all fall through. See "Note A" below.
      */
     switch (extraBytesToRead) {
-        case 5: ch += *source++; ch <<= 6; /* remember, illegal UTF-8 */
-        case 4: ch += *source++; ch <<= 6; /* remember, illegal UTF-8 */
+        case 5: ch += *source++; ch <<= 6; // NOLINT(bugprone-branch-clone)
+        case 4: ch += *source++; ch <<= 6;
         case 3: ch += *source++; ch <<= 6;
         case 2: ch += *source++; ch <<= 6;
         case 1: ch += *source++; ch <<= 6;
         case 0: ch += *source++;
+        default: break;
     }
-    ch -= offsetsFromUTF8[extraBytesToRead];
+    ch -= offsetsFromUTF8[extraBytesToRead]; // NOLINT(clang-analyzer-security.ArrayBound)
 
     if (target >= targetEnd) {
         source -= (extraBytesToRead+1); /* Back up source pointer! */
@@ -471,10 +473,11 @@ ConversionResult ConvertUTF32toUTF8 (
         target -= bytesToWrite; result = targetExhausted; break;
     }
     switch (bytesToWrite) { /* note: everything falls through. */
-        case 4: *--target = (UTF8)((ch | byteMark) & byteMask); ch >>= 6;
+        case 4: *--target = (UTF8)((ch | byteMark) & byteMask); ch >>= 6; // NOLINT(bugprone-branch-clone)
         case 3: *--target = (UTF8)((ch | byteMark) & byteMask); ch >>= 6;
         case 2: *--target = (UTF8)((ch | byteMark) & byteMask); ch >>= 6;
         case 1: *--target = (UTF8) (ch | firstByteMark[bytesToWrite]);
+        default: break;
     }
     target += bytesToWrite;
     }
@@ -506,14 +509,15 @@ ConversionResult ConvertUTF8toUTF32 (
      * The cases all fall through. See "Note A" below.
      */
     switch (extraBytesToRead) {
-        case 5: ch += *source++; ch <<= 6;
+        case 5: ch += *source++; ch <<= 6; // NOLINT(bugprone-branch-clone)
         case 4: ch += *source++; ch <<= 6;
         case 3: ch += *source++; ch <<= 6;
         case 2: ch += *source++; ch <<= 6;
         case 1: ch += *source++; ch <<= 6;
         case 0: ch += *source++;
+        default: break;
     }
-    ch -= offsetsFromUTF8[extraBytesToRead];
+    ch -= offsetsFromUTF8[extraBytesToRead]; // NOLINT(clang-analyzer-security.ArrayBound)
 
     if (target >= targetEnd) {
         source -= (extraBytesToRead+1); /* Back up the source pointer! */

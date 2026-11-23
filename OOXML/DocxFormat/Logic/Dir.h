@@ -39,7 +39,7 @@ namespace OOX
 		class CDir : public WritingElementWithChilds<>
 		{
 		public:
-			CDir(OOX::Document *pMain = NULL);			
+			CDir(OOX::Document *pMain = nullptr);			
 			virtual ~CDir();
 
 			const CDir &operator =(const XmlUtils::CXmlNode& oNode);
@@ -55,7 +55,7 @@ namespace OOX
 
 		public:
 			nullable<SimpleTypes::CDirVal> m_oVal;
-			// Childs
+			// Children
 		};
 	} // namespace Logic
 } // namespace OOX

@@ -39,7 +39,7 @@ namespace NSWMFToImageConverter
 		LONG GetImageType(std::wstring strFile)
 		{		
 			NSFile::CFileBinary oFile;
-			if (false == oFile.OpenFile(strFile))
+			if (!oFile.OpenFile(strFile))
 			{
 				oFile.CloseFile();
 				return 0;

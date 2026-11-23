@@ -9,7 +9,7 @@
 #define SVG_FILE_HEIGHT 150
 
 CSvgFile::CSvgFile()
-	: m_pContainer(NULL), m_pFontManager(NULL)
+	: m_pContainer(nullptr), m_pFontManager(nullptr)
 {}
 
 CSvgFile::~CSvgFile()
@@ -17,7 +17,7 @@ CSvgFile::~CSvgFile()
 	Clear();
 }
 
-bool CSvgFile::ReadFromBuffer(BYTE *pBuffer, unsigned int unSize)
+bool CSvgFile::ReadFromBuffer(BYTE * /*pBuffer*/, unsigned int  /*unSize*/)
 {
 	Clear();
 	return false;
@@ -65,7 +65,7 @@ void CSvgFile::SetWorkingDirectory(const std::wstring &wsWorkingDirectory)
 
 bool CSvgFile::MarkObject(SVG::CObject *pObject)
 {
-	if (NULL == pObject || pObject->GetId().empty())
+	if (nullptr == pObject || pObject->GetId().empty())
 		return false;
 
 	pObject->Mark();
@@ -83,7 +83,7 @@ bool CSvgFile::MarkObject(SVG::CObject *pObject)
 SVG::CObject *CSvgFile::GetMarkedObject(const std::wstring &wsId) const
 {
 	if (wsId.empty() || m_mMarkedObjects.empty())
-		return NULL;
+		return nullptr;
 
 	std::wstring wsNewId = wsId;
 
@@ -97,7 +97,7 @@ SVG::CObject *CSvgFile::GetMarkedObject(const std::wstring &wsId) const
 	if (m_mMarkedObjects.end() != oConstIter)
 		return oConstIter->second;
 
-	return NULL;
+	return nullptr;
 }
 
 SVG::CFont *CSvgFile::GetFont(const std::wstring &wsFontFamily) const
@@ -105,7 +105,7 @@ SVG::CFont *CSvgFile::GetFont(const std::wstring &wsFontFamily) const
 	FontsFaceMap::const_iterator itFound = std::find_if(m_mFontsFace.cbegin(), m_mFontsFace.cend(), [&wsFontFamily](const std::pair<std::wstring, std::wstring>& oValue){ return wsFontFamily == oValue.first; });
 	
 	if (m_mFontsFace.cend() == itFound)
-		return NULL;
+		return nullptr;
 
 	return dynamic_cast<SVG::CFont*>(GetMarkedObject(itFound->second));
 }
@@ -125,9 +125,9 @@ void CSvgFile::AddFontFace(const SVG::TFontArguments& oArguments, const std::wst
 	m_mFontsFace.insert(std::make_pair(oArguments.m_wsFontFamily, wsId));
 }
 
-bool CSvgFile::Draw(IRenderer *pRenderer, double dX, double dY, double dWidth, double dHeight)
+bool CSvgFile::Draw(IRenderer *pRenderer, double  /*dX*/, double  /*dY*/, double dWidth, double dHeight)
 {
-	if (NULL == pRenderer || NULL == m_pContainer || m_pContainer->Empty())
+	if (nullptr == pRenderer || nullptr == m_pContainer || m_pContainer->Empty())
 		return false;
 
 	double dFileX, dFileY, dFileWidth, dFileHeight;
@@ -182,7 +182,7 @@ void CSvgFile::Clear()
 
 bool CSvgFile::CalculateFinalSize(bool bUseViewBox, double& dX, double& dY, double& dWidth, double& dHeight) const
 {
-	if (NULL == m_pContainer || m_pContainer->Empty())
+	if (nullptr == m_pContainer || m_pContainer->Empty())
 		return false;
 
 	const SVG::TRect oWindow  = m_pContainer->GetWindow();
@@ -257,7 +257,7 @@ bool CSvgFile::CalculateFinalSize(bool bUseViewBox, double& dX, double& dY, doub
 			return true;
 		}
 
-		if (NULL != m_pContainer && !m_pContainer->Empty())
+		if (nullptr != m_pContainer && !m_pContainer->Empty())
 		{
 			SVG::SvgMatrix oTransform;
 			const SVG::TBounds oBounds{m_pContainer->GetBounds(&oTransform)};
@@ -298,7 +298,7 @@ bool CSvgFile::CalculateFinalSize(bool bUseViewBox, double& dX, double& dY, doub
 		return true;
 	}
 
-	if (NULL != m_pContainer && !m_pContainer->Empty())
+	if (nullptr != m_pContainer && !m_pContainer->Empty())
 	{
 		SVG::SvgMatrix oTransform;
 		const SVG::TBounds oBounds{m_pContainer->GetBounds(&oTransform)};

@@ -143,7 +143,7 @@ namespace OOX
 		public:
 	// Attributes
 			nullable<SimpleTypes::CSizeRelFromH>	m_oRelativeFrom;
-	// Childs
+	// Children
 			nullable<SimpleTypes::CPercentage>		m_oPctWidth;
 		};
 
@@ -166,7 +166,7 @@ namespace OOX
 		public:
 	// Attributes
 			nullable<SimpleTypes::CSizeRelFromV>	m_oRelativeFrom;
-	// Childs
+	// Children
 			nullable<SimpleTypes::CPercentage>		m_oPctHeight;
 		};
 
@@ -345,7 +345,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CAnchor)
 
-			CAnchor(OOX::Document *pMain = NULL);
+			CAnchor(OOX::Document *pMain = nullptr);
 			virtual ~CAnchor();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -398,7 +398,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CInline)
 
-			CInline(OOX::Document *pMain = NULL);
+			CInline(OOX::Document *pMain = nullptr);
 			virtual ~CInline();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -416,7 +416,7 @@ namespace OOX
 			nullable<SimpleTypes::CWrapDistance>				m_oDistL;
 			nullable<SimpleTypes::CWrapDistance>				m_oDistR;
 			nullable<SimpleTypes::CWrapDistance>				m_oDistT;
-	// Childs
+	// Children
 			nullable<PPTX::Logic::CNvPr>						m_oDocPr;
 			nullable<OOX::Drawing::CEffectExtent>				m_oEffectExtent;
 			nullable<ComplexTypes::Drawing::CPositiveSize2D>	m_oExtent;
@@ -437,7 +437,7 @@ namespace OOX
 		class CDrawing : public WritingElement
 		{
 		public:
-			CDrawing(OOX::Document *pMain = NULL);
+			CDrawing(OOX::Document *pMain = nullptr);
 			CDrawing(XmlUtils::CXmlNode& oNode);
 			CDrawing(XmlUtils::CXmlLiteReader& oReader);
 
@@ -456,7 +456,7 @@ namespace OOX
 			bool IsInline() const;
 
 			bool                            m_bAnchor; // use Anchor or Inline
-	// Childs
+	// Children
 			nullable<OOX::Drawing::CAnchor> m_oAnchor;
 			nullable<OOX::Drawing::CInline> m_oInline;
 		};
