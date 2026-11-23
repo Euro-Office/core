@@ -20,7 +20,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "3"
+    version = "4"
 )
 
 sioxx_src = nc.work_dir / "sioxx"
@@ -34,10 +34,14 @@ def cmake_build_args( cpu_count: int ) -> list[str]:
 def cmake_android_args() -> list[str]:
     if not nc.is_android():
         return []
+    boost_install_dir         = nc.install_dir.parent / "boost"
+    nlohmann_json_install_dir = nc.install_dir.parent / "nlohmann_json"
+    openssl_install_dir       = nc.install_dir.parent / "openssl"
     return [
         f"-DCMAKE_TOOLCHAIN_FILE={ nc.android_ndk_root() / 'build' / 'cmake' / 'android.toolchain.cmake' }",
         f"-DANDROID_ABI={ nc.android_abi() }",
         f"-DANDROID_PLATFORM=android-{ nc.ANDROID_API_LEVEL }",
+        f"-DCMAKE_FIND_ROOT_PATH={boost_install_dir};{nlohmann_json_install_dir};{openssl_install_dir}",
     ]
 
 def fetch_and_patch():
