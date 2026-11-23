@@ -1202,6 +1202,17 @@ static bool is_row_hidden_or_grouped(OOX::Spreadsheet::CRow *oox_row)
 		(oox_row->m_oCollapsed.IsInit() && oox_row->m_oCollapsed->ToBool()) ||
 		(oox_row->m_oOutlineLevel.IsInit() && oox_row->m_oOutlineLevel->GetValue() > 0);
 }
+// Folded rows are written as copies of this row, so its cells must hold nothing but a style. The reader folds only such rows,
+// but a cell with a value, inline text or a formula would otherwise be copied into every folded row.
+static bool row_has_cell_content(OOX::Spreadsheet::CRow *oox_row)
+{
+	for (OOX::Spreadsheet::CCell *oox_cell : oox_row->m_arrItems)
+	{
+		if (oox_cell && (oox_cell->m_oValue.IsInit() || oox_cell->m_oRichText.IsInit() || oox_cell->m_oFormula.IsInit()))
+			return true;
+	}
+	return false;
+}
 void XlsxConverter::convert(OOX::Spreadsheet::CRow *oox_row, OOX::Spreadsheet::CRow *oox_row_prev)
 {
 	if (oox_row == NULL)return;
@@ -1216,7 +1227,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CRow *oox_row, OOX::Spreadsheet::C
 	// is left as it was.
 	int folded_rows = 0;
 	if (row_number > 0 && oox_row->m_oRepeated.IsInit() && *oox_row->m_oRepeated > 1 && *oox_row->m_oRepeated <= 1048576 &&
-		false == is_row_hidden_or_grouped(oox_row) && ods_context->get_repeat_at_lasts() &&
+		false == is_row_hidden_or_grouped(oox_row) && false == row_has_cell_content(oox_row) && ods_context->get_repeat_at_lasts() &&
 		ods_context->current_table()->is_rows_plain(row_number, (int)*oox_row->m_oRepeated))
 	{
 		folded_rows = (int)*oox_row->m_oRepeated - 1;

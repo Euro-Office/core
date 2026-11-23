@@ -73,6 +73,7 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/cell_merged_without_covered_cells.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_repeated_empty_styled.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/cell_repeated_rows_with_content.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_inline_strings.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_date.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_datetime.xlsx",

@@ -341,6 +341,12 @@ TEST(XlsxToOds, EmptyCellsOfOneStyleKeepTheStyle)
 
 	// Rows 13 to 1112: 1100 empty rows of one custom height, folded into row 13; rows 1113 to 1199 are
 	// missing. A1200 stays in row 1200.
+	// The row element of row 13 is repeated at most 1023 times (XlsxConverter::add_folded_rows): rows 13 to 1035 keep the
+	// height, rows 1036 to 1112 are written as default rows (a known limit, as on main).
+	const std::wstring height_style_13 = row_style(xml, 12);
+	EXPECT_FALSE(height_style_13.empty()) << "row 13 has no style";
+	EXPECT_EQ(row_style(xml, 1034), height_style_13) << "row 1035";
+	EXPECT_NE(row_style(xml, 1035), height_style_13) << "row 1036";
 	const std::vector<Cell> row1200 = row_cells(xml, 1199);
 	ASSERT_FALSE(row1200.empty()) << "no row 1200";
 	EXPECT_EQ(row1200[0].text, L"8") << "A1200";
@@ -381,4 +387,37 @@ TEST(XlsxToOds, EmptyCellsOfOneStyleKeepTheStyle)
 	const std::vector<Cell> row1214 = row_cells(xml, 1213);
 	ASSERT_FALSE(row1214.empty()) << "no row 1214";
 	EXPECT_EQ(row1214[0].text, L"11") << "A1214";
+}
+
+// Rows 1 to 3 hold inline strings and rows 8 and 9 a formula without a cached value followed by empty cells, all of one
+// style. The XLSX reader must not fold them (Euro-Office/core#417), and the folded-row repeat must not copy a row with
+// content: every row keeps its own text and formula.
+TEST(XlsxToOds, RowsWithInlineTextOrFormulasAreNotRepeated)
+{
+	const std::wstring xml = convert_xlsx_content(L"ExampleFiles/cell_repeated_rows_with_content.xlsx");
+	ASSERT_FALSE(xml.empty()) << "XLSX -> ODS conversion failed";
+	EXPECT_TRUE(is_well_formed(xml));
+
+	const std::vector<std::vector<std::wstring>> expected = {
+		{L"Item", L"Region", L"Amount"}, {L"apple", L"East", L"five"}, {L"pear", L"West", L"six"}};
+	for (size_t row = 0; row < expected.size(); ++row)
+	{
+		const std::vector<Cell> cells = row_cells(xml, row, 3);
+		ASSERT_EQ(cells.size(), 3u) << "row " << row + 1;
+		for (size_t col = 0; col < 3; ++col)
+			EXPECT_EQ(cells[col].text, expected[row][col]) << static_cast<char>('A' + col) << row + 1;
+	}
+
+	const std::wstring row8 = row_xml(xml, 7);
+	const std::wstring row9 = row_xml(xml, 8);
+	ASSERT_FALSE(row8.empty()) << "no row 8";
+	ASSERT_FALSE(row9.empty()) << "no row 9";
+	EXPECT_NE(row8.find(L"[.B1]*2"), std::wstring::npos) << "A8: " << row8;
+	EXPECT_NE(row9.find(L"[.B2]*2"), std::wstring::npos) << "A9: " << row9;
+	EXPECT_EQ(row9.find(L"[.B1]*2"), std::wstring::npos) << "A9 repeats A8";
+	EXPECT_EQ(attr_value(row8.substr(0, row8.find(L'>') + 1), L"table:number-rows-repeated"), L"") << "row 8 is repeated";
+
+	const std::vector<Cell> row10 = row_cells(xml, 9);
+	ASSERT_FALSE(row10.empty()) << "no row 10";
+	EXPECT_EQ(row10[0].text, L"10") << "A10";
 }
