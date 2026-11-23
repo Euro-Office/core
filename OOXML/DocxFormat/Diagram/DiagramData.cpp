@@ -1755,24 +1755,24 @@ namespace OOX
 	CDiagramData::CDiagramData(OOX::Document* pMain, bool bDocument) : OOX::IFileContainer(pMain), OOX::FileGlobalEnumerated(pMain)
 	{
 		m_bDocument = bDocument;
-		m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+		m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
 	}
 
 	CDiagramData::CDiagramData(OOX::Document* pMain, const CPath& uri) : OOX::IFileContainer(pMain), OOX::FileGlobalEnumerated(pMain)
 	{
-		m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-		m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+		m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+		m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
 
-		read(uri.GetDirectory(), uri);
+		CDiagramData::read(uri.GetDirectory(), uri);
 	}
 
 	CDiagramData::CDiagramData(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::IFileContainer(pMain), OOX::FileGlobalEnumerated(pMain)
 	{
-		m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-		m_bSpreadsheets = (NULL != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
-		m_bVisioPages = (NULL != dynamic_cast<OOX::Draw::CVsdx*>(pMain));
+		m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+		m_bSpreadsheets = (nullptr != dynamic_cast<OOX::Spreadsheet::CXlsx*>(pMain));
+		m_bVisioPages = (nullptr != dynamic_cast<OOX::Draw::CVsdx*>(pMain));
 
-		read( oRootPath, oPath );
+		CDiagramData::read( oRootPath, oPath );
 	}
 
 	CDiagramData::~CDiagramData()
@@ -1804,7 +1804,7 @@ namespace OOX
 		{
 			m_oDataModel = oReader;
 		}
-		if (false == id_drawing.IsInit() && m_oDataModel.IsInit())
+		if (!id_drawing.IsInit() && m_oDataModel.IsInit())
 		{
 			for (size_t i = 0; m_oDataModel->m_oExtLst.IsInit() && (i < m_oDataModel->m_oExtLst->m_arrExt.size()); i++)
 			{

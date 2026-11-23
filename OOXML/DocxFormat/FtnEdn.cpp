@@ -77,7 +77,7 @@ namespace OOX
 				if (oItem.IsValid())
 				{
 					std::wstring sName = oItem.GetName();
-					WritingElement *pItem = NULL;
+					WritingElement *pItem = nullptr;
 
 					if ( L"w:altChunk" == sName )
 						AssignPtrXmlContent(pItem, Logic::CAltChunk, oItem)
@@ -165,7 +165,7 @@ namespace OOX
 		while( oReader.ReadNextSiblingNode( nParentDepth ) )
 		{
 			sName = oReader.GetName();
-			WritingElement *pItem = NULL;
+			WritingElement *pItem = nullptr;
 
 			if ( L"w:altChunk" == sName )
 				AssignPtrXmlContent(pItem, Logic::CAltChunk, oReader)
@@ -287,12 +287,12 @@ namespace OOX
 	CFtnEdnSepRef::CFtnEdnSepRef(XmlUtils::CXmlNode& oNode)
 	{
 		m_eType = et_Unknown;
-		fromXML( (XmlUtils::CXmlNode&)oNode );
+		CFtnEdnSepRef::fromXML( oNode );
 	}
 	CFtnEdnSepRef::CFtnEdnSepRef(XmlUtils::CXmlLiteReader& oReader)
 	{
 		m_eType = et_Unknown;
-		fromXML( oReader );
+		CFtnEdnSepRef::fromXML( oReader );
 	}
 	CFtnEdnSepRef::~CFtnEdnSepRef()
 	{

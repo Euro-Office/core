@@ -53,12 +53,12 @@ namespace OOX
 	{
 		CRun::CRun(OOX::Document *pMain, WritingElement *parent) : WritingElementWithChilds<>(pMain)
 		{
-			m_oRunProperty = NULL;
+			m_oRunProperty = nullptr;
 			m_oParent = parent;
 		}
 		CRun::~CRun()
 		{
-			ClearItems();
+			CRun::ClearItems();
 		}
 		const CRun& CRun::operator =(const XmlUtils::CXmlNode& oNode)
 		{
@@ -80,13 +80,13 @@ namespace OOX
 			m_oRsidR.reset();
 			m_oRsidRPr.reset();
 			
-			m_oRunProperty = NULL;
+			m_oRunProperty = nullptr;
 
 			WritingElementWithChilds<>::ClearItems();
 		}
 		void CRun::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			m_oRunProperty = NULL;
+			m_oRunProperty = nullptr;
 			
 			XmlMacroReadAttributeBase( oNode, L"w:rsidDel", m_oRsidDel );
 			XmlMacroReadAttributeBase( oNode, L"w:rsidR",   m_oRsidR );
@@ -101,7 +101,7 @@ namespace OOX
 					if (oItem.IsValid())
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( L"w:annotationRef" == sName )
 							AssignPtrXmlContent(pItem, CAnnotationRef, oItem)
@@ -193,12 +193,12 @@ namespace OOX
 			if ((m_oRunProperty) && (m_oRunProperty->m_pText))
 			{
 				m_arrItems.push_back( m_oRunProperty->m_pText);
-				m_oRunProperty->m_pText = NULL;
+				m_oRunProperty->m_pText = nullptr;
 			}
 		}
 		void CRun::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
-			m_oRunProperty = NULL;
+			m_oRunProperty = nullptr;
 
 			ReadAttributes( oReader );
 
@@ -212,7 +212,7 @@ namespace OOX
 			if ( oReader.IsEmptyNode() )
 				return;
 
-			WritingElement *pItem = NULL;
+			WritingElement *pItem = nullptr;
 			int nParentDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
@@ -226,7 +226,7 @@ namespace OOX
 		WritingElement* CRun::fromXMLElem(XmlUtils::CXmlLiteReader& oReader)
 		{
 			std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
-			WritingElement *pItem = NULL;
+			WritingElement *pItem = nullptr;
 
 			OOX::Document* document = WritingElement::m_pMainDocument;
 			
@@ -283,7 +283,7 @@ namespace OOX
 			else if (L"tbl" == sName)
 			{//ERP
 				CParagraph *paragraph = dynamic_cast<CParagraph*>(m_oParent);
-				WritingElementWithChilds *parent = paragraph ? dynamic_cast<WritingElementWithChilds*>(paragraph->m_oParent) : NULL;
+				WritingElementWithChilds *parent = paragraph ? dynamic_cast<WritingElementWithChilds*>(paragraph->m_oParent) : nullptr;
 
 				if (!parent) parent = dynamic_cast<WritingElementWithChilds*>(m_oParent);
 				if (parent)
@@ -405,7 +405,7 @@ namespace OOX
 						}
 						docx_flat->m_pComments->m_arrComments.push_back( pComment );	
 
-						pItem = NULL;
+						pItem = nullptr;
 					}
 				}
 			}
@@ -426,14 +426,14 @@ namespace OOX
 
 			if ((docx) && (docx->m_oMain.document))
 			{
-				if (false == oSpace.IsInit() && docx->m_oMain.document->m_oSpace.IsInit())
+				if (!oSpace.IsInit() && docx->m_oMain.document->m_oSpace.IsInit())
 				{
 					oSpace = docx->m_oMain.document->m_oSpace;
 				}
 			}
 			else if (docx_flat)
 			{
-				if (false == oSpace.IsInit() && docx_flat->m_oSpace.IsInit())
+				if (!oSpace.IsInit() && docx_flat->m_oSpace.IsInit())
 				{
 					oSpace = docx_flat->m_oSpace;
 				}
@@ -442,8 +442,8 @@ namespace OOX
 				return;
 
 			bool bTrimLeft, bTrimRight;
-			bTrimLeft = bTrimRight = !(oSpace.IsInit() && SimpleTypes::xmlspacePreserve == oSpace->GetValue());
-			CText* pTextLast = NULL;
+			bTrimLeft = bTrimRight = !oSpace.IsInit() || SimpleTypes::xmlspacePreserve != oSpace->GetValue();
+			CText* pTextLast = nullptr;
 			int nDepth = oReader.GetDepth();
 			XmlUtils::XmlNodeType eNodeType = XmlUtils::XmlNodeType_EndElement;
 			while (oReader.Read(eNodeType) && oReader.GetDepth() >= nDepth && XmlUtils::XmlNodeType_EndElement != eNodeType)
@@ -472,7 +472,7 @@ namespace OOX
 					if ( pItem )
 						m_arrItems.push_back( pItem );
 					bTrimLeft = false;
-					pTextLast = NULL;
+					pTextLast = nullptr;
 				}
 			}
 			if(bTrimRight && pTextLast)

@@ -165,7 +165,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CTabs)
 
-			CTabs(OOX::Document *pMain = NULL);
+			CTabs(OOX::Document *pMain = nullptr);
 			virtual ~CTabs();
 			CTabs(const CTabs& oSrc);
 
@@ -186,7 +186,7 @@ namespace OOX
 		class CParagraphProperty : public WritingElement
 		{
 		public:
-			CParagraphProperty(OOX::Document *pMain = NULL);
+			CParagraphProperty(OOX::Document *pMain = nullptr);
 			CParagraphProperty(XmlUtils::CXmlNode& oNode);
 			CParagraphProperty(XmlUtils::CXmlLiteReader& oReader);
 			virtual ~CParagraphProperty();
