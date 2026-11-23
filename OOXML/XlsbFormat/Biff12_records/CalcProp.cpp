@@ -45,7 +45,7 @@ namespace XLSB
 
     void CalcProp::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> recalcID >> fAutoRecalc >> cCalcCount >> xnumDelta >> cUserThreadCount;
         record >> flags;
 

@@ -6,7 +6,7 @@ CHWPRecordFormObject::CHWPRecordFormObject(int nTagNum, int nLevel, int nSize)
 	: CHWPRecord(nTagNum, nLevel, nSize)
 {}
 
-int CHWPRecordFormObject::ParseCtrl(CCtrlForm& oForm, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CHWPRecordFormObject::ParseCtrl(CCtrlForm& /*oForm*/, int /*nSize*/, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

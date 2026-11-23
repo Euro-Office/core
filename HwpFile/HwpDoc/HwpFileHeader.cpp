@@ -55,7 +55,7 @@ bool CHwpFileHeader::Parse(CHWPStream& oBuffer)
 	//encryptVersion
 	oBuffer.Skip(4);
 
-	m_nCountryKOGLLicensed = (int)oBuffer[0];
+	m_nCountryKOGLLicensed = (int)(unsigned char)oBuffer[0];
 
 	return true;
 }

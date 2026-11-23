@@ -58,12 +58,7 @@ namespace XLSB
 
         while(true)
         {
-            if (proc.optional<PCDI>())
-            {
-                m_arSource.insert(m_arSource.begin(), elements_.back());
-                elements_.pop_back();
-            }
-            else if (proc.optional<PCDIA>())
+            if (proc.optional<PCDI>() || proc.optional<PCDIA>())
             {
                 m_arSource.insert(m_arSource.begin(), elements_.back());
                 elements_.pop_back();

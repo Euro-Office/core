@@ -47,12 +47,12 @@ CHWPDocInfo::CHWPDocInfo(CHWPMLFile* pHWPMLFile)
 CHWPDocInfo::~CHWPDocInfo()
 {
 	#define REMOVE_LIST_DATA(array) \
-	for (CHWPRecord* pRecord : array) \
+	for (CHWPRecord* pRecord : (array)) \
 	{ \
 		if (nullptr != pRecord) \
 			delete pRecord; \
 	} \
-	array.clear() \
+	(array).clear() \
 
 	REMOVE_LIST_DATA(m_arRecords);
 	REMOVE_LIST_DATA(m_arFaseNames);
@@ -96,7 +96,7 @@ bool CHWPDocInfo::Parse(CHWPStream& oBuffer, int nVersion)
 		#define CREATE_AND_ADD_RECORD(type_record, array) \
 		pRecord = new type_record(*this, nTagNum, nLevel, nSize, oBuffer, 0, nVersion); \
 		if (nullptr != pRecord) \
-			array.push_back(pRecord)
+			(array).push_back(pRecord)
 
 		oBuffer.SavePosition();
 
@@ -316,9 +316,9 @@ bool CHWPDocInfo::ReadContentHpf(CXMLReader& oReader)
 }
 
 #define GET_RECORD(array_records, index) \
-	if (array_records.size() <= index || index < 0) \
+	if ((array_records).size() <= (index) || (index) < 0) \
 		return nullptr; \
-	return array_records[index]
+	return (array_records)[index]
 
 const CHWPRecord* CHWPDocInfo::GetRecord(int nIndex) const
 {

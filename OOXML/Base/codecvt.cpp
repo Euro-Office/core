@@ -165,7 +165,7 @@ utf8_conversion::do_out(mbstate_t&,
 
 	for (;from_next < from_end; ++from_next)
 	{
-		const unsigned symbol = *from_next;
+		const unsigned symbol = *from_next; // NOLINT(bugprone-signed-char-misuse): full-width conversion intended; unsigned char would truncate
 
 		if (symbol < 0x7F)
 		{
@@ -182,10 +182,10 @@ utf8_conversion::do_out(mbstate_t&,
 			if (to_limit - to_next >= extra_bytes + 1)
 			{
 				*to_next = static_cast<unsigned char>(0xFF80 >> extra_bytes);
-				*to_next++ |= take_6_bits(symbol, extra_bytes * 6);
+				*to_next++ |= take_6_bits(symbol, static_cast<size_t>(extra_bytes) * 6);
 
 				for(;extra_bytes--;)
-					*to_next++ = 0x80 | take_6_bits(symbol, extra_bytes * 6);
+					*to_next++ = 0x80 | take_6_bits(symbol, static_cast<size_t>(extra_bytes) * 6);
 			}
 			else
 			{

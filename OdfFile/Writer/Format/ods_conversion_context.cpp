@@ -259,7 +259,12 @@ void ods_conversion_context::start_row(int _start_row, int repeated, int level, 
 			row_properties->style_table_row_properties_attlist_.common_break_attlist_.fo_break_before_ = fo_break(fo_break::Auto);
 	}
 	in_header_row_ = false;
-	if (_start_row == 1 && (false == current_table()->table_parts().empty()) && (false == current_table()->table_parts().back().columns.empty()))
+	// Header rows and columns mark the series names and categories of a chart's local table (the only
+	// converter that turns repeat_at_lasts_ off). In a sheet they would be print titles the XLSX file
+	// does not have.
+	if (_start_row == 1 && false == repeat_at_lasts_ &&
+		(false == current_table()->table_parts().empty()) &&
+		(false == current_table()->table_parts().back().columns.empty()))
 	{
 		in_header_row_ = true;
 		repeated = 1;
@@ -636,7 +641,10 @@ void ods_conversion_context::add_column(int start_column, int repeated, int leve
 	office_element_ptr column_elm;
 	create_element(L"table", L"table-column", column_elm, this);
 
-	if (start_column == 1 && (false == current_table()->table_parts().empty()) && (false == current_table()->table_parts().back().columns.empty()))
+	// Chart local tables only, see start_row.
+	if (start_column == 1 && false == repeat_at_lasts_ &&
+		(false == current_table()->table_parts().empty()) &&
+		(false == current_table()->table_parts().back().columns.empty()))
 	{
 		office_element_ptr column_headers_elm;
 		create_element(L"table", L"table-header-columns", column_headers_elm, this);

@@ -112,8 +112,8 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"dde"),			m_oDde )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"defaultSize"),	m_oDefaultSize )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"disabled"),		m_oDisabled )
-				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"r:id"),			m_oRid )
-				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"relationships:id"), m_oRid )
+				else if ( (L"r:id") == wsName || (L"relationships:id") == wsName )
+					m_oRid = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"locked"),		m_oLocked )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"macro"),			m_oMacro )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"print"),			m_oPrint )
@@ -266,8 +266,8 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"oleUpdate"),	m_oOleUpdate )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"autoLoad"),		m_oAutoLoad )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"shapeId"),		m_oShapeId )
-				WritingElement_ReadAttributes_Read_else_if( oReader, (L"r:id"),			m_oRid )
-				WritingElement_ReadAttributes_Read_else_if( oReader, (L"relationships:id"), m_oRid )
+				else if ( (L"r:id") == wsName || (L"relationships:id") == wsName )
+					m_oRid = oReader.GetText();
 			WritingElement_ReadAttributes_End( oReader )
 		}
 
@@ -610,7 +610,7 @@ namespace OOX
 		CCtrlPropFile::CCtrlPropFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 		{
 			m_bSpreadsheets = true;
-			read( oRootPath, oPath );
+			CCtrlPropFile::read( oRootPath, oPath );
 		}
 		CCtrlPropFile::~CCtrlPropFile()
 		{
@@ -654,7 +654,7 @@ namespace OOX
 		}
 		void CCtrlPropFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 		{
-			if(false == m_oFormControlPr.IsInit()) return;
+			if(!m_oFormControlPr.IsInit()) return;
 
 			NSStringUtils::CStringBuilder sXml;
 

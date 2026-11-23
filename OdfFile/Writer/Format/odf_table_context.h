@@ -53,6 +53,7 @@ public:
 	void set_table_size(size_t cols, size_t rows);
 
 	bool empty();
+	size_t depth(); // open tables, nested ones included
 
 	int current_column ();
 	int current_row ();

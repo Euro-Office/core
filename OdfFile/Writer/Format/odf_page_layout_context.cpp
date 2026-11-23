@@ -248,23 +248,32 @@ void odf_page_layout_context::set_page_gutter(_CP_OPT(length) length_)
 	//	props->attlist_.common_horizontal_margin_attlist_.fo_margin_left_= length(length_->get_value_unit(length::cm),length::cm);
 
 }
-void odf_page_layout_context::set_footer_size(_CP_OPT(length) length_, _CP_OPT(odf_types::length) length_min)
+void odf_page_layout_context::set_footer_size(_CP_OPT(length) length_, _CP_OPT(odf_types::length) length_min,
+	_CP_OPT(odf_types::length) page_margin)
 //here it's not the footer itself, but the size after the footer
 {
 	if (layout_state_list_.size() < 1) return;
 
 	//layout_state_list_.back().footer_size_ = length_;
 	layout_state_list_.back().footer_min_size_ = length_min;
+	layout_state_list_.back().footer_margin_ = page_margin;
 	//Actually build it into the layout later - based on the presence of at least one header and footer
+	//(at once if the page layout already has a footer, e.g. for a continuous section)
+	if (page_margin && layout_state_list_.back().get_footer_properties())
+		apply_footer_size();
 	return;
 }
-void odf_page_layout_context::set_header_size(_CP_OPT(length) length_, _CP_OPT(odf_types::length) length_min)
+void odf_page_layout_context::set_header_size(_CP_OPT(length) length_, _CP_OPT(odf_types::length) length_min,
+	_CP_OPT(odf_types::length) page_margin)
 {
 	if (layout_state_list_.size() < 1) return;
 
 	layout_state_list_.back().header_size_ = length_;
 	layout_state_list_.back().header_min_size_ = length_min;
+	layout_state_list_.back().header_margin_ = page_margin;
 
+	if (page_margin && layout_state_list_.back().get_header_properties())
+		apply_header_size();
 	return;
 }
 
@@ -318,26 +327,38 @@ bool odf_page_layout_context::add_footer(int type)
 
 /////////////////////////////////////////////////////////////////////
 //needs to be configured once
-	if (!layout_state_list_.back().footer_size_ && !layout_state_list_.back().footer_min_size_) return true;
+	apply_footer_size();
+	return true;
+}
+void odf_page_layout_context::apply_footer_size()
+{
+	odf_layout_state & state = layout_state_list_.back();
+	if (!state.footer_size_ && !state.footer_min_size_ && !state.footer_margin_) return;
 
 	style_header_footer_properties *footer_props = get_footer_properties();
-	if (!footer_props) return true;
+	if (!footer_props) return;
 	style_page_layout_properties *props = get_properties();
-	if (!props) return true;
+	if (!props) return;
 
-	if (layout_state_list_.back().footer_size_)
+	if (state.footer_size_)
 	{
-		length length_ = length(layout_state_list_.back().footer_size_->get_value_unit(length::cm), length::cm);
+		length length_ = length(state.footer_size_->get_value_unit(length::cm), length::cm);
 		footer_props->style_header_footer_properties_attlist_.svg_height_ = length_;
-		layout_state_list_.back().footer_size_ = boost::none;
+		state.footer_size_ = boost::none;
 	}
-	if (layout_state_list_.back().footer_min_size_)
+	if (state.footer_min_size_)
 	{
-		length length_min = length(layout_state_list_.back().footer_min_size_->get_value_unit(length::cm), length::cm);
+		length length_min = length(state.footer_min_size_->get_value_unit(length::cm), length::cm);
 		footer_props->style_header_footer_properties_attlist_.fo_min_height_ = length_min;
-		layout_state_list_.back().footer_min_size_ = boost::none;
+		state.footer_min_size_ = boost::none;
 	}
-	return true;
+	if (state.footer_margin_)
+	{
+		props->attlist_.common_vertical_margin_attlist_.fo_margin_bottom_ =
+			length(state.footer_margin_->get_value_unit(length::cm), length::cm);
+		footer_props->style_header_footer_properties_attlist_.style_dynamic_spacing_ = Bool(true);
+		state.footer_margin_ = boost::none;
+	}
 }
 bool odf_page_layout_context::add_header(int type)
 {
@@ -365,28 +386,39 @@ bool odf_page_layout_context::add_header(int type)
 	master_state_list_.back().add_header(root_header_footer_);
 ////////////////////////////////////////////////////////////////////////
 //needs to be configured once
-	if (!layout_state_list_.back().header_size_ && !layout_state_list_.back().header_min_size_) return true;
-	
-	style_header_footer_properties *header_props = get_header_properties();
-	if (!header_props)return true;
-	
-	style_page_layout_properties *props = get_properties();
-	if (!props)return true;
-
-	if (layout_state_list_.back().header_size_)
-	{
-		length length_ = length(layout_state_list_.back().header_size_->get_value_unit(length::cm), length::cm);
-		header_props->style_header_footer_properties_attlist_.svg_height_ = length_;
-		layout_state_list_.back().header_size_ = boost::none;
-	}
-	if (layout_state_list_.back().header_min_size_)
-	{
-		length length_min = length(layout_state_list_.back().header_min_size_->get_value_unit(length::cm), length::cm);
-		header_props->style_header_footer_properties_attlist_.fo_min_height_ = length_min;
-		layout_state_list_.back().header_min_size_ = boost::none;
-	}
-
+	apply_header_size();
 	return true;
+}
+void odf_page_layout_context::apply_header_size()
+{
+	odf_layout_state & state = layout_state_list_.back();
+	if (!state.header_size_ && !state.header_min_size_ && !state.header_margin_) return;
+
+	style_header_footer_properties *header_props = get_header_properties();
+	if (!header_props)return;
+
+	style_page_layout_properties *props = get_properties();
+	if (!props)return;
+
+	if (state.header_size_)
+	{
+		length length_ = length(state.header_size_->get_value_unit(length::cm), length::cm);
+		header_props->style_header_footer_properties_attlist_.svg_height_ = length_;
+		state.header_size_ = boost::none;
+	}
+	if (state.header_min_size_)
+	{
+		length length_min = length(state.header_min_size_->get_value_unit(length::cm), length::cm);
+		header_props->style_header_footer_properties_attlist_.fo_min_height_ = length_min;
+		state.header_min_size_ = boost::none;
+	}
+	if (state.header_margin_)
+	{
+		props->attlist_.common_vertical_margin_attlist_.fo_margin_top_ =
+			length(state.header_margin_->get_value_unit(length::cm), length::cm);
+		header_props->style_header_footer_properties_attlist_.style_dynamic_spacing_ = Bool(true);
+		state.header_margin_ = boost::none;
+	}
 }
 
 void odf_page_layout_context::set_header_footer_image(office_element_ptr image)

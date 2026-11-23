@@ -18,7 +18,7 @@ EPicEffectType GetPicEffectType(int nValue)
 	}
 }
 
-CPicColor::CPicColor(CHWPStream& oBuffer, int nOff, int nSize)
+CPicColor::CPicColor(CHWPStream& oBuffer, int /*nOff*/, int nSize)
 {
 	oBuffer.ReadInt(m_nType);
 	oBuffer.ReadInt(m_nRGB);
@@ -27,7 +27,7 @@ CPicColor::CPicColor(CHWPStream& oBuffer, int nOff, int nSize)
 	m_nSize = nSize;
 }
 
-CPicColor::CPicColor(CXMLReader& oReader)
+CPicColor::CPicColor(CXMLReader& /*oReader*/)
 {
 	//TODO:: check
 	m_nType = 0;
@@ -178,7 +178,7 @@ CNeon::~CNeon()
 		delete m_pColor;
 }
 
-CSoftEdge::CSoftEdge(int nTypeNum, CHWPStream& oBuffer, int nOff, int nSize)
+CSoftEdge::CSoftEdge(int nTypeNum, CHWPStream& oBuffer, int /*nOff*/, int /*nSize*/)
 	: CPicEffect(nTypeNum)
 {
 	oBuffer.ReadFloat(m_fRadius);
@@ -192,7 +192,7 @@ CSoftEdge::CSoftEdge(CXMLReader& oReader, EHanType eType)
 	m_fRadius = oReader.GetAttributeDouble(GetAttributeName(EAttribute::Radius, eType));
 }
 
-CReflect::CReflect(int nTypeNum, CHWPStream& oBuffer, int nOff, int nSize)
+CReflect::CReflect(int nTypeNum, CHWPStream& oBuffer, int /*nOff*/, int /*nSize*/)
 	: CPicEffect(nTypeNum)
 {
 	oBuffer.SavePosition();
@@ -261,10 +261,10 @@ CReflect::CReflect(CXMLReader& oReader, EHanType eType)
 	{\
 		START_READ_ATTRIBUTES(oReader)\
 		{\
-			if (value_1_name == sAttributeName)\
-				value_1_variable = oReader.GetDouble();\
-			else if (value_2_name == sAttributeName)\
-				value_2_variable = oReader.GetDouble();\
+			if ((value_1_name) == sAttributeName)\
+				(value_1_variable) = oReader.GetDouble();\
+			else if ((value_2_name) == sAttributeName)\
+				(value_2_variable) = oReader.GetDouble();\
 		}\
 		END_READ_ATTRIBUTES(oReader)\
 	}
@@ -511,7 +511,7 @@ int CCtrlShapePic::GetIMageRectHeight() const
 	return m_arBorderPoints[2].m_nY - m_arBorderPoints[0].m_nY;
 }
 
-int CCtrlShapePic::ParseElement(CCtrlShapePic& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlShapePic::ParseElement(CCtrlShapePic& oObj, int nSize, CHWPStream& oBuffer, int nOff, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

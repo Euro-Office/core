@@ -136,7 +136,7 @@ namespace BinXlsxRW
 		PivotButton = 10,
 		QuotePrefix = 11,
 		XfId = 12,
-		Aligment = 13,
+		Alignment = 13,
 		Protection = 14,
 		// Euro-Office only: a reserved id far from upstream growth (upstream uses 15 for Complement)
 		CellControl = 100
@@ -1428,7 +1428,7 @@ namespace BinXlsxRW
 		ErrorStyle = 9,
 		ImeMode = 10,
 		Operator = 11,
-		Promt = 12,
+		Prompt = 12,
 		PromptTitle = 13,
 		ShowDropDown = 14,
 		ShowErrorMessage = 15,

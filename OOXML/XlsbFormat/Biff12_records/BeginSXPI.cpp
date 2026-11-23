@@ -45,7 +45,7 @@ namespace XLSB
 
 	void BeginSXPI::readFields(XLS::CFRecord& record)
 	{
-		BYTE flags;
+		BYTE flags = 0;
 		record >> isxvd >> isxvi >> isxth >> flags;
 
 		fUnique = GETBIT(flags, 0);

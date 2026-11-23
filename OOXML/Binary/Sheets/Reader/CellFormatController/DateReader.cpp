@@ -117,16 +117,16 @@ bool tryGetInt(std::vector<wchar_t> &data, _INT32 &value)
 }
 
 
-enum class DateElemTypes
+enum class DateElemTypes : unsigned char
 {
     none = 0,
     letter,
     digit,
-    delimeter,
+    delimiter,
     space
 };
 
-enum class ParsingElem
+enum class ParsingElem : unsigned char
 {
     none = 0,
     date,
@@ -222,7 +222,6 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
     bool Byear = false;
 
     DateElemTypes CurrentElementType = DateElemTypes::none;
-    DateElemTypes PrevType = DateElemTypes::none;
     std::vector<wchar_t> StringBuf;
 
     //parse the date character by character
@@ -235,7 +234,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
         else if(charElement >= L'0' && charElement<= L'9')
             elementType = DateElemTypes::digit;
         else if(separators.find(charElement) != separators.end())
-            elementType = DateElemTypes::delimeter;
+            elementType = DateElemTypes::delimiter;
         else
             elementType = DateElemTypes::letter;
         if(CurrentElementType == DateElemTypes::none)//first pass
@@ -247,11 +246,8 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
             if(CurrentElementType == elementType)
             {
                 //checking the validity of date element sizes
-                if(elementType == DateElemTypes::digit && StringBuf.size() < 4)
-                {
-                    StringBuf.push_back(charElement);
-                }
-                else if(elementType == DateElemTypes::letter && StringBuf.size() < 9)
+                if((elementType == DateElemTypes::digit && StringBuf.size() < 4) ||
+                   (elementType == DateElemTypes::letter && StringBuf.size() < 9))
                 {
                     StringBuf.push_back(charElement);
                 }
@@ -265,7 +261,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
             }
             else
             {
-                if(CurrentElementType == DateElemTypes::digit && elementType == DateElemTypes::delimeter)
+                if(CurrentElementType == DateElemTypes::digit && elementType == DateElemTypes::delimiter)
                 {
                     if(timeSeparator != locInf.DateSeparator[0])
                     {
@@ -292,7 +288,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
                     }
                     ///todo option when both date and time are separated by "."
                 }
-                if(CurrentElementType == DateElemTypes::letter && elementType == DateElemTypes::delimeter)
+                if(CurrentElementType == DateElemTypes::letter && elementType == DateElemTypes::delimiter)
                 {
                     if(!parseAmPm(StringBuf, result))
                     {
@@ -303,7 +299,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
                     }
                     StringBuf.clear();
                 }
-                else if((CurrentElementType == DateElemTypes::delimeter || CurrentElementType == DateElemTypes::space) && elementType != DateElemTypes::space)
+                else if((CurrentElementType == DateElemTypes::delimiter || CurrentElementType == DateElemTypes::space) && elementType != DateElemTypes::space)
                 {
                     //just add to the buffer what was behind the separator
                     StringBuf.push_back(charElement);
@@ -351,7 +347,6 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
                     bError = true;
                 }
                 //analyze the assembled element
-                PrevType = CurrentElementType;
             }
         }
         CurrentElementType = elementType;
@@ -392,8 +387,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
         {
             if(!parseAmPm(StringBuf, result))
             {
-                if(parseMonthName(StringBuf, result))
-                    Bmonth = true;
+                parseMonthName(StringBuf, result); // the element is consumed either way
             }
             StringBuf.clear();
         }

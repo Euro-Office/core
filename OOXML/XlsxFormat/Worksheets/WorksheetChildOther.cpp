@@ -846,10 +846,7 @@ namespace OOX
                 ptr->fNoOrient = true;
             }
 
-            if (m_oPageOrder.IsInit() && m_oPageOrder->GetValue() == SimpleTypes::Spreadsheet::EPageOrder::pageorderOverThenDown)
-				ptr->fLeftToRight = true;
-			else
-				ptr->fLeftToRight = false;
+            ptr->fLeftToRight = m_oPageOrder.IsInit() && m_oPageOrder->GetValue() == SimpleTypes::Spreadsheet::EPageOrder::pageorderOverThenDown;
 
 			if (m_oPaperSize.IsInit())
 				ptr->iPaperSize = m_oPaperSize->m_eValue;
@@ -992,10 +989,7 @@ namespace OOX
 
 			if (m_oOrientation.IsInit())
 			{
-				if (m_oOrientation == SimpleTypes::EPageOrientation::pageorientLandscape)
-					ptr->fLandscape = true;
-				else
-					ptr->fLandscape = false;
+				ptr->fLandscape = m_oOrientation == SimpleTypes::EPageOrientation::pageorientLandscape;
 			}
 
 			if (m_oPaperSize.IsInit())
@@ -1035,8 +1029,8 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"fitToHeight"), m_oFitToHeight)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"fitToWidth"), m_oFitToWidth)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"horizontalDpi"), m_oHorizontalDpi)
-				WritingElement_ReadAttributes_Read_else_if(oReader, (L"r:id"), m_oRId)
-				WritingElement_ReadAttributes_Read_else_if(oReader, (L"relationships:id"), m_oRId)
+				else if ( (L"r:id") == wsName || (L"relationships:id") == wsName )
+					m_oRId = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"orientation"), m_oOrientation)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"pageOrder"), m_oPageOrder)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"paperHeight"), m_oPaperHeight)
@@ -1637,6 +1631,7 @@ namespace OOX
 				case 1:  m_oActivePane = SimpleTypes::Spreadsheet::EActivePane::activepaneTopRight; break;
 				case 2:  m_oActivePane = SimpleTypes::Spreadsheet::EActivePane::activepaneBottomLeft; break;
 				case 3:  m_oActivePane = SimpleTypes::Spreadsheet::EActivePane::activepaneTopLeft; break;
+				default: break;
 				}
 
 				if (pPane->fFrozen)
@@ -1806,6 +1801,7 @@ namespace OOX
 				case 1:  m_oPane = SimpleTypes::Spreadsheet::EActivePane::activepaneTopRight; break;
 				case 2:  m_oPane = SimpleTypes::Spreadsheet::EActivePane::activepaneBottomLeft; break;
 				case 3:  m_oPane = SimpleTypes::Spreadsheet::EActivePane::activepaneTopLeft; break;
+				default: break;
 				}
 			}
 		}
@@ -3230,8 +3226,8 @@ namespace OOX
 		void CLegacyDrawingHFWorksheet::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
 			WritingElement_ReadAttributes_Start(oReader)
-				WritingElement_ReadAttributes_Read_if(oReader, (L"r:id"), m_oId)
-				WritingElement_ReadAttributes_Read_else_if(oReader, (L"relationships:id"), m_oId)
+				if ( (L"r:id") == wsName || (L"relationships:id") == wsName )
+					m_oId = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"cfe"), m_oCfe)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"cff"), m_oCff)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"cfo"), m_oCfo)
@@ -3899,7 +3895,7 @@ namespace OOX
         void CSheetProtection::toBin(XLS::StreamCacheWriterPtr& writer)
         {
             XLS::CFRecordPtr record;
-            unsigned char *flagBuf = NULL;
+            unsigned char *flagBuf = nullptr;
             if(m_oSpinCount.IsInit() || m_oHashValue.IsInit() || m_oSaltValue.IsInit())
             {
                 record = writer->getNextRecord(XLSB::rt_SheetProtectionIso);
@@ -4498,8 +4494,8 @@ namespace OOX
 		void CDataRef::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
 			WritingElement_ReadAttributes_Start(oReader)
-				WritingElement_ReadAttributes_Read_if(oReader, (L"r:id"), m_oId)
-				WritingElement_ReadAttributes_Read_else_if(oReader, (L"relationships:id"), m_oId)
+				if ( (L"r:id") == wsName || (L"relationships:id") == wsName )
+					m_oId = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"name"), m_oName)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"ref"), m_oRef)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"sheet"), m_oSheet)
@@ -4853,7 +4849,7 @@ namespace OOX
 				writer.WriteString(*m_oText);
 				writer.WriteString(L"</text>");
 			}
-			if (false == m_arUsers.empty())
+			if (!m_arUsers.empty())
 			{
 				writer.WriteString(L"<users>");
 				for (size_t i = 0; i < m_arUsers.size(); ++i)
@@ -4866,7 +4862,7 @@ namespace OOX
 				}
 				writer.WriteString(L"</users>");
 			}
-			if (false == m_arUsersGroups.empty())
+			if (!m_arUsersGroups.empty())
 			{
 				writer.WriteString(L"<usersGroups>");
 				for (size_t i = 0; i < m_arUsersGroups.size(); ++i)

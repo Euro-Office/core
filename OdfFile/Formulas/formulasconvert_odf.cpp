@@ -34,6 +34,129 @@
 namespace cpdoccore {
 namespace formulasconvert {
 
+	namespace
+	{
+		// The OOXML name as Excel stores it, the OpenFormula name as LibreOffice writes it
+		typedef std::unordered_map<std::wstring, std::wstring> names_map;
+
+		void add_names(names_map& ooxml_by_odf, const std::wstring& odf_prefix, const std::wstring& ooxml_prefix, std::initializer_list<const wchar_t*> names)
+		{
+			for (const wchar_t* name : names)
+				ooxml_by_odf[odf_prefix + name] = ooxml_prefix + name;
+		}
+
+		const names_map& ooxml_by_odf_name()
+		{
+			static const names_map names = []
+			{
+				names_map n;
+				add_names(n, L"COM.MICROSOFT.", L"_xlfn.", {
+					L"AGGREGATE", L"BETA.DIST", L"BETA.INV", L"BINOM.DIST", L"BINOM.INV", L"CEILING.MATH", L"CEILING.PRECISE",
+					L"CHISQ.DIST", L"CHISQ.DIST.RT", L"CHISQ.INV", L"CHISQ.INV.RT", L"CHISQ.TEST", L"CHOOSECOLS", L"CHOOSEROWS",
+					L"CONCAT", L"CONFIDENCE.NORM", L"CONFIDENCE.T", L"COVARIANCE.P", L"COVARIANCE.S", L"DROP", L"ENCODEURL",
+					L"ERF.PRECISE", L"ERFC.PRECISE", L"EXPAND", L"EXPON.DIST", L"F.DIST.RT", L"F.INV.RT", L"F.TEST", L"FILTERXML",
+					L"FLOOR.MATH", L"FLOOR.PRECISE", L"FORECAST.ETS", L"FORECAST.ETS.CONFINT", L"FORECAST.ETS.SEASONALITY",
+					L"FORECAST.ETS.STAT", L"FORECAST.LINEAR", L"GAMMA.DIST", L"GAMMA.INV", L"GAMMALN.PRECISE", L"HSTACK",
+					L"HYPGEOM.DIST", L"IFS", L"LET", L"LOGNORM.DIST", L"LOGNORM.INV", L"MAXIFS", L"MINIFS", L"MODE.MULT",
+					L"MODE.SNGL", L"NEGBINOM.DIST", L"NORM.DIST", L"NORM.INV", L"NORM.S.DIST", L"NORM.S.INV", L"PERCENTILE.EXC",
+					L"PERCENTILE.INC", L"PERCENTRANK.EXC", L"PERCENTRANK.INC", L"POISSON.DIST", L"QUARTILE.EXC", L"QUARTILE.INC",
+					L"RANDARRAY", L"RANK.AVG", L"RANK.EQ", L"SEQUENCE", L"SORTBY", L"STDEV.P", L"STDEV.S", L"SWITCH", L"T.DIST",
+					L"T.DIST.2T", L"T.DIST.RT", L"T.INV", L"T.INV.2T", L"T.TEST", L"TAKE", L"TEXTAFTER", L"TEXTBEFORE",
+					L"TEXTJOIN", L"TEXTSPLIT", L"TOCOL", L"TOROW", L"UNIQUE", L"VAR.P", L"VAR.S", L"VSTACK", L"WEBSERVICE",
+					L"WEIBULL.DIST", L"WRAPCOLS", L"WRAPROWS", L"XLOOKUP", L"XMATCH", L"Z.TEST"});
+				add_names(n, L"COM.MICROSOFT.", L"_xlfn._xlws.", {L"FILTER", L"SORT"});
+				add_names(n, L"COM.MICROSOFT.", L"", {L"BAHTTEXT", L"CEILING", L"FLOOR", L"ISO.CEILING", L"NETWORKDAYS.INTL", L"WORKDAY.INTL"});
+				add_names(n, L"LEGACY.", L"", {
+					L"CHIDIST", L"CHIINV", L"CHITEST", L"FDIST", L"FINV", L"NORMSDIST", L"NORMSINV", L"TDIST"});
+				// OpenFormula functions that Excel added later and stores with the _xlfn. prefix
+				add_names(n, L"", L"_xlfn.", {
+					L"ACOT", L"ACOTH", L"ARABIC", L"BASE", L"BINOM.DIST.RANGE", L"BITAND", L"BITLSHIFT", L"BITOR", L"BITRSHIFT",
+					L"BITXOR", L"COMBINA", L"COT", L"COTH", L"CSC", L"CSCH", L"DAYS", L"DECIMAL", L"GAMMA", L"GAUSS", L"IFNA",
+					L"IMCOSH", L"IMCOT", L"IMCSC", L"IMCSCH", L"IMSEC", L"IMSECH", L"IMSINH", L"IMTAN", L"ISFORMULA",
+					L"ISOWEEKNUM", L"MUNIT", L"NUMBERVALUE", L"PDURATION", L"PERMUTATIONA", L"PHI", L"RRI", L"SEC", L"SECH",
+					L"SHEET", L"SHEETS", L"UNICHAR", L"UNICODE", L"XOR"});
+				n[L"FDIST"]		= L"_xlfn.F.DIST";
+				n[L"FINV"]		= L"_xlfn.F.INV";
+				n[L"FORMULA"]	= L"_xlfn.FORMULATEXT";
+				n[L"SKEWP"]		= L"_xlfn.SKEW.P";
+				return n;
+			}();
+			return names;
+		}
+
+		std::wstring bare_ooxml_name(std::wstring name)
+		{
+			for (const std::wstring prefix : {L"_XLFN.", L"_XLWS."})
+			{
+				if (boost::algorithm::starts_with(name, prefix))
+					name.erase(0, prefix.size());
+			}
+			return name;
+		}
+
+		const names_map& odf_by_bare_ooxml_name()
+		{
+			static const names_map names = []
+			{
+				names_map n;
+				for (const auto& name : ooxml_by_odf_name())
+					n[bare_ooxml_name(boost::algorithm::to_upper_copy(name.second))] = name.first;
+				return n;
+			}();
+			return names;
+		}
+
+		// A name directly before "(", not part of a longer name, a sheet reference or an ODF condition like is-true-formula(
+		const boost::wregex function_name_re(L"(?<![\\w.$])(?!(?<=[a-z]-)[a-z]+\\()[A-Za-z_][\\w.]*(?=\\()");
+
+		std::wstring odf2oox_function_name(const boost::wsmatch& what)
+		{
+			const std::wstring name = boost::algorithm::to_upper_copy(what.str());
+			const names_map& names = ooxml_by_odf_name();
+
+			auto it = names.find(name);
+			if (it != names.end())
+				return it->second;
+
+			// Take one to three arguments, the editor's CEILING and FLOOR exactly two. Import only:
+			// the editor's CEILING and FLOOR export as COM.MICROSOFT.CEILING and COM.MICROSOFT.FLOOR
+			if (name == L"CEILING" || name == L"FLOOR")
+				return L"_xlfn." + name + L".MATH";
+
+			// Functions LibreOffice learns later get the same prefixes
+			if (boost::algorithm::starts_with(name, L"COM.MICROSOFT."))
+				return L"_xlfn." + name.substr(14);
+			if (boost::algorithm::starts_with(name, L"LEGACY."))
+				return name.substr(7);
+
+			return what.str();
+		}
+
+		std::wstring oox2odf_function_name(const boost::wsmatch& what)
+		{
+			const names_map& names = odf_by_bare_ooxml_name();
+
+			auto it = names.find(bare_ooxml_name(boost::algorithm::to_upper_copy(what.str())));
+			return it != names.end() ? it->second : what.str();
+		}
+	}
+
+	std::wstring odf2oox_function_names(const std::wstring& expr)
+	{
+		return boost::regex_replace(expr, function_name_re, &odf2oox_function_name, boost::match_default | boost::format_all);
+	}
+
+	std::wstring oox2odf_function_names(const std::wstring& expr, void (*mask)(std::wstring&))
+	{
+		return boost::regex_replace(expr, function_name_re, [mask](const boost::wsmatch& what)
+		{
+			std::wstring name = oox2odf_function_name(what);
+			if (mask)
+				mask(name);
+			return name;
+		}, boost::match_default | boost::format_all);
+	}
+
 	class odf2oox_converter::Impl
 	{
 	public:
@@ -200,24 +323,6 @@ namespace formulasconvert {
 				return what[3].str();
 
 			return L"";
-		}
-
-		static std::wstring is_forbidden(const std::wstring & formula)
-		{
-			std::wstring result = formula;
-			std::map<std::wstring, std::wstring> forbidden_formulas;
-
-			forbidden_formulas.insert(std::make_pair(L"FORMULA", L"_xlfn.FORMULATEXT"));
-			
-			for (std::map<std::wstring, std::wstring>::iterator it = forbidden_formulas.begin(); it != forbidden_formulas.end(); ++it)
-			{
-				if (boost::algorithm::contains(formula, it->first))
-				{
-
-					XmlUtils::replace_all(result, it->first, it->second);
-				}
-			}
-			return result;
 		}
 
 
@@ -590,7 +695,7 @@ namespace formulasconvert {
 
 	std::wstring odf2oox_converter::Impl::convert(const std::wstring& expr)
 	{
-		std::wstring workstr = is_forbidden(expr);
+		std::wstring workstr = expr;
 
 		bool isFormula = check_formula(workstr);
 
@@ -606,10 +711,10 @@ namespace formulasconvert {
 		replace_tilda		(workstr);
 		replace_vertical	(workstr);
 		//replace_apersand	(workstr);
+		workstr = odf2oox_function_names(workstr);
 
 		if (isFormula)
 		{
-			XmlUtils::replace_all( workstr, L"FDIST(", L"_xlfn.F.DIST(");
 			// ROUNDUP( - there are 2 parameters in oox - the bit width is needed - ,0) - EV Requirements v2.2.3.ods
 			
 			if (std::wstring::npos != workstr.find(L"CONCATINATE"))
@@ -668,7 +773,7 @@ namespace formulasconvert {
 		mapReplacements.emplace_back();
 
 		std::wstring workstr = boost::regex_replace(
-			is_forbidden(expr),
+			expr,
 			boost::wregex(L"('.*?')|(\".*?\")"),
 			&convert_scobci, boost::match_default | boost::format_all);
 	    
@@ -778,6 +883,7 @@ namespace formulasconvert {
 			workstr = replace_cells_range(workstr, withTableName, bAbsoluteAlways);
 			replace_semicolons(workstr);
 			replace_vertical(workstr);
+			workstr = odf2oox_function_names(workstr);
 
 			size_t res_find = 0;
 			if ((res_find = workstr.find(L"CONCATINATE")) != std::wstring::npos)

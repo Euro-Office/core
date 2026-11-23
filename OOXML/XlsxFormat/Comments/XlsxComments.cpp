@@ -60,7 +60,7 @@ namespace OOX
 	{
 		CCommentItem::CCommentItem()
 		{
-			m_pThreadedComment = NULL;
+			m_pThreadedComment = nullptr;
 			m_bThreadedCommentCopy = false;
 		}
 		bool CCommentItem::IsValid()
@@ -73,7 +73,7 @@ namespace OOX
 		}
 		CAuthors::~CAuthors()
 		{
-			ClearItems();
+			CAuthors::ClearItems();
 		}
 		void CAuthors::ClearItems()
 		{
@@ -426,7 +426,7 @@ namespace OOX
 			{
 				xlsx->m_arWorksheets.back()->m_pComments = this;
 			}
-			read( oRootPath, oPath );
+			CComments::read( oRootPath, oPath );
 		}
 		CComments::~CComments()
 		{
