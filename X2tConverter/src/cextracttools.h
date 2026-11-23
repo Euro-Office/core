@@ -471,6 +471,10 @@ namespace NExtractTools
 		// for doct_bin2docx_dir, xlst_bin2xlsx_dir, pptt_bin2pptx_dir
 		std::wstring m_sTempResultOOXMLDirectory;
 
+		// xlst_bin2xlsx_dir -> xlsx_dir2ods: the file type (AVS_OFFICESTUDIO_FILE_*) the Editor.bin records
+		// as the source of the workbook; 0 = none
+		int m_nEditorBinSourceFileType = 0;
+
 		// xlsx_dir2xlst_bin
 		bool m_bTempIsXmlOptions = false;
 

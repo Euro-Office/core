@@ -154,7 +154,12 @@ namespace Oox2Odf
 		virtual NSCommon::smart_ptr<OOX::File>		find_file_by_id (const std::wstring & sId);
 
 		void convert(OOX::Spreadsheet::WritingElement	*oox_unknown);
+
+		// The file type (AVS_OFFICESTUDIO_FILE_*) the workbook was first opened from; 0 = not known
+		void set_source_file_type(int nFileType) { source_file_type_ = nFileType; }
     private:		
+		int										source_file_type_ = 0;
+
 		OOX::Spreadsheet::CXlsxFlat				*xlsx_flat_document;
 		OOX::Spreadsheet::CXlsx					*xlsx_document;
 		OOX::IFileContainer						*xlsx_current_container; 

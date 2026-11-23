@@ -26,6 +26,7 @@
 #include "../../../OOXML/XlsxFormat/Xlsx.h"
 #include "../../../OOXML/XlsxFormat/XlsxFlat.h"
 #include "../../../OOXML/XlsxFormat/Workbook/Workbook.h"
+#include "../../../Common/OfficeFileFormats.h"
 #include "../../../OOXML/XlsxFormat/Drawing/Pos.h"
 #include "../../../OOXML/XlsxFormat/Worksheets/Worksheet.h"
 #include "../../../OOXML/XlsxFormat/Comments/Comments.h"
@@ -531,6 +532,15 @@ void XlsxConverter::convert(OOX::Spreadsheet::CWorksheet *oox_sheet)
 /////////////////////////////////////////////////////////////////////////
 	convert(oox_sheet->m_oSheetViews.GetPointer());
 	convert(oox_sheet->m_oPageSetup.GetPointer());
+	if (source_file_type_ == AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS ||
+		source_file_type_ == AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS_FLAT ||
+		source_file_type_ == AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS)
+	{
+		// The workbook came from ODS, where the printed pages are numbered on across the sheets, and the
+		// editor prints it that way. A sheet without a first page number of its own goes on from the sheet
+		// before; without "continue" LibreOffice starts such a sheet (it has a page style of its own) at 1.
+		ods_context->page_layout_context()->set_page_first_page_continue();
+	}
 	convert(oox_sheet->m_oPageMargins.GetPointer(), oox_sheet->m_oHeaderFooter.GetPointer());
 	convert(oox_sheet->m_oPrintOptions.GetPointer());
 	convert(oox_sheet->m_oPicture.GetPointer());

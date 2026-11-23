@@ -93,7 +93,9 @@ namespace BinXlsxRW{
 		oDrawingConverter.SetTempPath(m_sTempDir);
 
 		BinXlsxRW::BinaryFileReader oBinaryFileReader;		
-		return oBinaryFileReader.ReadFile(sSrcFileName, sDstPath, &oDrawingConverter, sXMLOptions, m_bIsMacro);
+		_UINT32 nRes = oBinaryFileReader.ReadFile(sSrcFileName, sDstPath, &oDrawingConverter, sXMLOptions, m_bIsMacro);
+		m_nSourceFileType = oBinaryFileReader.m_nSourceFileType;
+		return nRes;
 	}
 	_UINT32 CXlsxSerializer::saveToFile(const std::wstring& sDstFileName, const std::wstring& sSrcPath, const std::wstring& sXMLOptions)
 	{
@@ -276,6 +278,10 @@ namespace BinXlsxRW{
 	void CXlsxSerializer::setSourceFileType(int nFileType)
 	{
 		m_nSourceFileType = nFileType;
+	}
+	int CXlsxSerializer::getSourceFileType()
+	{
+		return m_nSourceFileType;
 	}
 	void CXlsxSerializer::setMacroEnabled(bool val)
 	{
