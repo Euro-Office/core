@@ -83,6 +83,17 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/row_format_all_columns.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/row_format_default_columns.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/row_format_columns_past_last.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/row_format_columns_start_past_last.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/row_format_columns_malformed.xlsx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OdfFile/Test/test_odf/ExampleFiles/print_area_bad_local_sheet.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/print_area_local_sheet.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/print_area_local_sheet_past_end.xlsx",
