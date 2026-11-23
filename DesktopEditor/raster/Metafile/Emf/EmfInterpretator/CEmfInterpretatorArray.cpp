@@ -17,7 +17,7 @@ namespace MetaFile
 
 	void CEmfInterpretatorArray::AddEmfInterpretator(const wchar_t *wsFilepath)
 	{
-		if (wsFilepath == NULL)
+		if (wsFilepath == nullptr)
 			return;
 
 		CEmfInterpretator *pEmfInterpretator = new CEmfInterpretator(wsFilepath);
@@ -27,7 +27,7 @@ namespace MetaFile
 #ifdef METAFILE_SUPPORT_WMF_EMF_XML
 	void CEmfInterpretatorArray::AddXmlInterpretator(const wchar_t *wsFilepath)
 	{
-		if (wsFilepath == NULL)
+		if (wsFilepath == nullptr)
 			return;
 
 		CEmfInterpretatorXml *pXmlInterpretator = new CEmfInterpretatorXml(wsFilepath);
@@ -37,7 +37,7 @@ namespace MetaFile
 
 	void CEmfInterpretatorArray::AddRenderInterpretator(IOutputDevice *pIOutputDevice)
 	{
-		if (pIOutputDevice == NULL)
+		if (pIOutputDevice == nullptr)
 			return;
 
 		CEmfInterpretatorRender *pRenderInterpretator = new CEmfInterpretatorRender(pIOutputDevice);

@@ -36,7 +36,7 @@ namespace NSShaper
 
 	CExternalPointer::CExternalPointer()
 	{
-		Data = NULL;
+		Data = nullptr;
 		Len = 0;
 	}
 	CExternalPointer::~CExternalPointer()
@@ -77,7 +77,7 @@ namespace NSShaper
 
 	void FT_Decompose_Outline_Buffer_Init(FT_Decompose_Outline_Buffer* buffer)
 	{
-		buffer->buffer = NULL;
+		buffer->buffer = nullptr;
 		buffer->size = 0;
 		buffer->pos = 0;
 	}
@@ -92,7 +92,7 @@ namespace NSShaper
 		if ((buffer->pos + add) < buffer->size)
 			return;
 
-		if (NULL == buffer->buffer)
+		if (nullptr == buffer->buffer)
 		{
 			buffer->buffer = (FT_Pos*)ft_smalloc(FT_DECOMPOSE_OUTLINE_BUFFER_INIT_SIZE * sizeof(FT_Pos));
 			buffer->size = FT_DECOMPOSE_OUTLINE_BUFFER_INIT_SIZE;
@@ -163,7 +163,7 @@ namespace NSShaper
 
 	void* FT_Library_Init()
 	{
-		FT_Library library = NULL;
+		FT_Library library = nullptr;
 		FT_Init_FreeType(&library);
 		FT_Library_SetLcdFilter(library, FT_LCD_FILTER_DEFAULT);
 		return library;
@@ -200,13 +200,13 @@ namespace NSShaper
 
 		FT_Parameter *pParams = (FT_Parameter *)ft_smalloc( sizeof(FT_Parameter) * 4 );
 		pParams[0].tag  = FT_MAKE_TAG( 'i', 'g', 'p', 'f' );
-		pParams[0].data = NULL;
+		pParams[0].data = nullptr;
 		pParams[1].tag  = FT_MAKE_TAG( 'i', 'g', 'p', 's' );
-		pParams[1].data = NULL;
+		pParams[1].data = nullptr;
 		pParams[2].tag  = FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY;
-		pParams[2].data = NULL;
+		pParams[2].data = nullptr;
 		pParams[3].tag  = FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY;
-		pParams[3].data = NULL;
+		pParams[3].data = nullptr;
 
 		oOpenArgs.params = pParams;
 		oOpenArgs.num_params = 4;
@@ -217,7 +217,7 @@ namespace NSShaper
 		ft_sfree(pParams);
 
 		if (error)
-			return NULL;
+			return nullptr;
 
 		return face;
 	}
@@ -232,7 +232,7 @@ namespace NSShaper
 		FT_Face ftface = (FT_Face)face;
 		FT_Library library = ftface->driver->root.library;
 
-		bool bIsNeedUnreferenceLibrary = (1 == ftface->internal->refcount) ? true : false;
+		bool bIsNeedUnreferenceLibrary = 1 == ftface->internal->refcount;
 		::FT_Done_Face(ftface);
 
 		if (bIsNeedUnreferenceLibrary)
@@ -321,7 +321,7 @@ namespace NSShaper
 		m.yx = yx;
 		m.xy = xy;
 		m.yy = yy;
-		::FT_Set_Transform((FT_Face)face, &m, NULL);
+		::FT_Set_Transform((FT_Face)face, &m, nullptr);
 	}
 
 	int FT_Load_Glyph(void* face, unsigned int glyph_index, int load_flags)
@@ -440,12 +440,12 @@ namespace NSShaper
 
 		//isSymbolic
 
-		int* family_name = NULL;
+		int* family_name = nullptr;
 		unsigned int family_name_len = 0;
 		CheckUnicodeFaceName(face, family_name, family_name_len);
 
-		unsigned int nLen1 = (unsigned int)family_name_len;
-		unsigned int nLen2 = (unsigned int)((face->style_name != NULL) ? strlen(face->style_name) : 0);
+		unsigned int nLen1 = family_name_len;
+		unsigned int nLen2 = (unsigned int)((face->style_name != nullptr) ? strlen(face->style_name) : 0);
 
 		unsigned int nLen = 28 + nLen1 + 1 + nLen2 + 1 + 1 + (int)face->num_fixed_sizes;
 
@@ -533,7 +533,7 @@ namespace NSShaper
 	{
 		FT_GlyphSlot slot = ((FT_Face)face)->glyph;
 
-		if (!isVector && slot->bitmap.buffer != NULL && slot->format == FT_GLYPH_FORMAT_BITMAP)
+		if (!isVector && slot->bitmap.buffer != nullptr && slot->format == FT_GLYPH_FORMAT_BITMAP)
 		{
 			ALLOC_WRITER(15 * 4);
 			WRITE_INT(15);
@@ -701,7 +701,7 @@ namespace NSShaper
 
 		// font
 		hb_font_t* pFont;
-		if (NULL == font)
+		if (nullptr == font)
 		{
 			if (!bIsJSVersion)
 			{
@@ -785,7 +785,7 @@ namespace NSShaper
 
 	void HB_FontFree(void* font)
 	{
-		if (NULL == font)
+		if (nullptr == font)
 			return;
 		hb_font_destroy((hb_font_t*)font);
 	}

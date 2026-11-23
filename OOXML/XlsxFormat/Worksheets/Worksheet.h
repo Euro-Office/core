@@ -24,6 +24,8 @@
  */
 #pragma once
 
+#include <set>
+
 #include "SheetData.h"
 #include "Cols.h"
 #include "Hyperlinks.h"
@@ -70,7 +72,9 @@ namespace OOX
 
             void readBin(const CPath& oPath);
 			XLS::BaseObjectPtr WriteBin() const;
-			XLS::BaseObjectPtr toXLS();
+			// pivotCacheIds: the cacheIds of the pivot caches the XLS gets (CWorkbook::GetPivotCachesForXLS); a pivot
+			// table whose cacheId is not among them gets no pivot view.
+			XLS::BaseObjectPtr toXLS(const std::set<unsigned int>& pivotCacheIds);
             void WriteBin(XLS::StreamCacheWriterPtr& writer) const;
 			virtual void read(const CPath& oPath);
 			virtual void read(const CPath& oRootPath, const CPath& oPath);

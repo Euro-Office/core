@@ -52,8 +52,9 @@ namespace SVG
 		while (unEncodingBegin < wsContent.length() && std::isspace(wsContent[unEncodingBegin]))
 			++unEncodingBegin;
 
-		if (unEncodingBegin >= wsContent.length() || '=' != wsContent[unEncodingBegin++])
+		if (unEncodingBegin >= wsContent.length() || '=' != wsContent[unEncodingBegin])
 			return std::string();
+		++unEncodingBegin;
 
 		while (unEncodingBegin < wsContent.length() && std::isspace(wsContent[unEncodingBegin]))
 			++unEncodingBegin;
@@ -76,7 +77,7 @@ namespace SVG
 
 	bool CSvgParser::LoadFromFile(const std::wstring &wsFile, CGraphicsContainer*& pContainer, CSvgFile* pFile) const
 	{
-		if (wsFile.empty() || NULL == pFile)
+		if (wsFile.empty() || nullptr == pFile)
 			return false;
 
 		std::string sXml;
@@ -107,7 +108,7 @@ namespace SVG
 
 	bool CSvgParser::LoadFromString(const std::wstring &wsContent, CGraphicsContainer*& pContainer, CSvgFile* pFile) const
 	{
-		if (wsContent.empty() || NULL == pFile)
+		if (wsContent.empty() || nullptr == pFile)
 			return false;
 
 		CSvgReader oReader;
@@ -121,7 +122,7 @@ namespace SVG
 
 		pContainer = CObject::Create<CGraphicsContainer>(oReader, pFile);
 
-		if (NULL == pContainer)
+		if (nullptr == pContainer)
 			return false;
 
 		return ReadChildrens(oReader, pContainer, pFile, pContainer);
@@ -129,7 +130,7 @@ namespace SVG
 
 	bool CSvgParser::ScanStyles(CSvgReader& oReader, CSvgFile *pFile) const
 	{
-		if (oReader.IsEmptyNode() || NULL == pFile)
+		if (oReader.IsEmptyNode() || nullptr == pFile)
 			return false;
 
 		const std::string sElementName = oReader.GetName();
@@ -157,7 +158,7 @@ namespace SVG
 	
 	void CSvgParser::ParseStyles(const std::wstring &wsStyles, CSvgFile *pFile) const
 	{
-		if (NULL == pFile)
+		if (nullptr == pFile)
 			return;
 
 		pFile->AddStyles(wsStyles);
@@ -186,8 +187,14 @@ namespace SVG
 
 			for (unsigned int unIndex = 0; unIndex < arWords.size(); ++unIndex)
 			{
-				if (arWords[unIndex].length() > 3 && L"src" == arWords[unIndex].substr(0, 3) && L':' == arWords[unIndex].back() && 
-				    unIndex + 1 < arWords.size() && oURL.SetValue(arWords[++unIndex]))
+				bool bSrcValue = false;
+				if (arWords[unIndex].length() > 3 && L"src" == arWords[unIndex].substr(0, 3) && L':' == arWords[unIndex].back() &&
+				    unIndex + 1 < arWords.size())
+				{
+					bSrcValue = oURL.SetValue(arWords[++unIndex]);
+				}
+
+				if (bSrcValue)
 				{
 					continue;
 				}
@@ -212,12 +219,12 @@ namespace SVG
 	template <class ObjectType>
 	bool CSvgParser::ReadObject(CSvgReader& oReader, CContainer<ObjectType> *pContainer, CSvgFile *pFile, CRenderedObject *pParent) const
 	{
-		if (NULL == pFile)
+		if (nullptr == pFile)
 			return false;
 
 		const std::string sElementName = oReader.GetName();
 
-		CObject *pObject = NULL;
+		CObject *pObject = nullptr;
 
 		if ("svg" == sElementName || "g" == sElementName || "a" == sElementName)
 		{
@@ -259,7 +266,7 @@ namespace SVG
 		}
 		//defs
 		else if ("defs" == sElementName)
-			return ReadChildrens<CRenderedObject>(oReader, NULL, pFile);
+			return ReadChildrens<CRenderedObject>(oReader, nullptr, pFile);
 		else if("linearGradient" == sElementName)
 			pObject = CObject::Create<CLinearGradient>(oReader, pFile);
 		else if ("radialGradient" == sElementName)
@@ -267,7 +274,7 @@ namespace SVG
 		else if ("pattern" == sElementName)
 		{
 			pObject = CObject::Create<CPattern>(oReader, pFile);
-			ReadChildrens(oReader, (CGraphicsContainer*)(&((CPattern*)pObject)->GetContainer()), pFile);
+			ReadChildrens(oReader, (&((CPattern*)pObject)->GetContainer()), pFile);
 		}
 		else if ("clipPath" == sElementName)
 		{
@@ -297,7 +304,7 @@ namespace SVG
 			pObject = CObject::Create<CFont>(oReader, pFile, pFile);
 		}
 
-		if (NULL == pObject)
+		if (nullptr == pObject)
 			return false;
 
 		if ((RendererObject == pObject->GetType() && (AddObject((ObjectType*)pObject, pContainer) || pObject->Marked())) ||
@@ -311,7 +318,7 @@ namespace SVG
 	template <class ObjectType>
 	bool CSvgParser::AddObject(ObjectType *pObject, CContainer<ObjectType> *pContainer) const
 	{
-		return (NULL != pContainer && pContainer->AddObject(pObject));
+		return (nullptr != pContainer && pContainer->AddObject(pObject));
 	}
 
 	template <class ObjectType>

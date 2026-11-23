@@ -163,7 +163,7 @@ namespace SimpleTypes
 			case parameterValue :	return L"value";
 			case parameterCell :	return L"cell";
 			case parameterPrompt :
-			default :				return L"promt"; // TODO: the format value is "prompt"; fix separately
+			default :				return L"prompt";
 			}
 		}
 

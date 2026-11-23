@@ -115,8 +115,7 @@ namespace NSFontConverter
 		else if ( L"Ccedillasmall" == wsName ) return 0xF7E7;
 		else if ( L"Ccircle" == wsName ) return 0x24B8;
 		else if ( L"Ccircumflex" == wsName ) return 0x0108;
-		else if ( L"Cdot" == wsName ) return 0x010A;
-		else if ( L"Cdotaccent" == wsName ) return 0x010A;
+		else if ( L"Cdot" == wsName || L"Cdotaccent" == wsName ) return 0x010A;
 		else if ( L"Cedillasmall" == wsName ) return 0xF7B8;
 		else if ( L"Chaarmenian" == wsName ) return 0x0549;
 		else if ( L"Cheabkhasiancyrillic" == wsName ) return 0x04BC;
@@ -148,7 +147,7 @@ namespace NSFontConverter
 		else if ( L"Dcedilla" == wsName ) return 0x1E10;
 		else if ( L"Dcircle" == wsName ) return 0x24B9;
 		else if ( L"Dcircumflexbelow" == wsName ) return 0x1E12;
-		else if ( L"Dcroat" == wsName ) return 0x0110;
+		else if ( L"Dcroat" == wsName || L"Dslash" == wsName ) return 0x0110;
 		else if ( L"Ddotaccent" == wsName ) return 0x1E0A;
 		else if ( L"Ddotbelow" == wsName ) return 0x1E0C;
 		else if ( L"Decyrillic" == wsName ) return 0x0414;
@@ -165,7 +164,6 @@ namespace NSFontConverter
 		else if ( L"Dlinebelow" == wsName ) return 0x1E0E;
 		else if ( L"Dmonospace" == wsName ) return 0xFF24;
 		else if ( L"Dotaccentsmall" == wsName ) return 0xF6F7;
-		else if ( L"Dslash" == wsName ) return 0x0110;
 		else if ( L"Dsmall" == wsName ) return 0xF764;
 		else if ( L"Dtopbar" == wsName ) return 0x018B;
 		else if ( L"Dz" == wsName ) return 0x01F2;
@@ -198,8 +196,7 @@ namespace NSFontConverter
 		else if ( L"Edblgrave" == wsName ) return 0x0204;
 		else if ( L"Edieresis" == wsName ) return 0x00CB;
 		else if ( L"Edieresissmall" == wsName ) return 0xF7EB;
-		else if ( L"Edot" == wsName ) return 0x0116;
-		else if ( L"Edotaccent" == wsName ) return 0x0116;
+		else if ( L"Edot" == wsName || L"Edotaccent" == wsName ) return 0x0116;
 		else if ( L"Edotbelow" == wsName ) return 0x1EB8;
 		else if ( L"Efcyrillic" == wsName ) return 0x0424;
 		else if ( L"Egrave" == wsName ) return 0x00C8;
@@ -272,12 +269,10 @@ namespace NSFontConverter
 		else if ( L"Gangiacoptic" == wsName ) return 0x03EA;
 		else if ( L"Gbreve" == wsName ) return 0x011E;
 		else if ( L"Gcaron" == wsName ) return 0x01E6;
-		else if ( L"Gcedilla" == wsName ) return 0x0122;
+		else if ( L"Gcedilla" == wsName || L"Gcommaaccent" == wsName ) return 0x0122;
 		else if ( L"Gcircle" == wsName ) return 0x24BC;
 		else if ( L"Gcircumflex" == wsName ) return 0x011C;
-		else if ( L"Gcommaaccent" == wsName ) return 0x0122;
-		else if ( L"Gdot" == wsName ) return 0x0120;
-		else if ( L"Gdotaccent" == wsName ) return 0x0120;
+		else if ( L"Gdot" == wsName || L"Gdotaccent" == wsName ) return 0x0120;
 		else if ( L"Gecyrillic" == wsName ) return 0x0413;
 		else if ( L"Ghadarmenian" == wsName ) return 0x0542;
 		else if ( L"Ghemiddlehookcyrillic" == wsName ) return 0x0494;
@@ -344,8 +339,7 @@ namespace NSFontConverter
 		else if ( L"Idieresisacute" == wsName ) return 0x1E2E;
 		else if ( L"Idieresiscyrillic" == wsName ) return 0x04E4;
 		else if ( L"Idieresissmall" == wsName ) return 0xF7EF;
-		else if ( L"Idot" == wsName ) return 0x0130;
-		else if ( L"Idotaccent" == wsName ) return 0x0130;
+		else if ( L"Idot" == wsName || L"Idotaccent" == wsName ) return 0x0130;
 		else if ( L"Idotbelow" == wsName ) return 0x1ECA;
 		else if ( L"Iebrevecyrillic" == wsName ) return 0x04D6;
 		else if ( L"Iecyrillic" == wsName ) return 0x0415;
@@ -402,9 +396,8 @@ namespace NSFontConverter
 		else if ( L"Kastrokecyrillic" == wsName ) return 0x049E;
 		else if ( L"Kaverticalstrokecyrillic" == wsName ) return 0x049C;
 		else if ( L"Kcaron" == wsName ) return 0x01E8;
-		else if ( L"Kcedilla" == wsName ) return 0x0136;
+		else if ( L"Kcedilla" == wsName || L"Kcommaaccent" == wsName ) return 0x0136;
 		else if ( L"Kcircle" == wsName ) return 0x24C0;
-		else if ( L"Kcommaaccent" == wsName ) return 0x0136;
 		else if ( L"Kdotbelow" == wsName ) return 0x1E32;
 		else if ( L"Keharmenian" == wsName ) return 0x0554;
 		else if ( L"Kenarmenian" == wsName ) return 0x053F;
@@ -429,12 +422,10 @@ namespace NSFontConverter
 		else if ( L"Lacute" == wsName ) return 0x0139;
 		else if ( L"Lambda" == wsName ) return 0x039B;
 		else if ( L"Lcaron" == wsName ) return 0x013D;
-		else if ( L"Lcedilla" == wsName ) return 0x013B;
+		else if ( L"Lcedilla" == wsName || L"Lcommaaccent" == wsName ) return 0x013B;
 		else if ( L"Lcircle" == wsName ) return 0x24C1;
 		else if ( L"Lcircumflexbelow" == wsName ) return 0x1E3C;
-		else if ( L"Lcommaaccent" == wsName ) return 0x013B;
-		else if ( L"Ldot" == wsName ) return 0x013F;
-		else if ( L"Ldotaccent" == wsName ) return 0x013F;
+		else if ( L"Ldot" == wsName || L"Ldotaccent" == wsName ) return 0x013F;
 		else if ( L"Ldotbelow" == wsName ) return 0x1E36;
 		else if ( L"Ldotbelowmacron" == wsName ) return 0x1E38;
 		else if ( L"Liwnarmenian" == wsName ) return 0x053C;
@@ -472,10 +463,9 @@ namespace NSFontConverter
 		else if ( L"NJ" == wsName ) return 0x01CA;
 		else if ( L"Nacute" == wsName ) return 0x0143;
 		else if ( L"Ncaron" == wsName ) return 0x0147;
-		else if ( L"Ncedilla" == wsName ) return 0x0145;
+		else if ( L"Ncedilla" == wsName || L"Ncommaaccent" == wsName ) return 0x0145;
 		else if ( L"Ncircle" == wsName ) return 0x24C3;
 		else if ( L"Ncircumflexbelow" == wsName ) return 0x1E4A;
-		else if ( L"Ncommaaccent" == wsName ) return 0x0145;
 		else if ( L"Ndotaccent" == wsName ) return 0x1E44;
 		else if ( L"Ndotbelow" == wsName ) return 0x1E46;
 		else if ( L"Nhookleft" == wsName ) return 0x019D;
@@ -513,7 +503,7 @@ namespace NSFontConverter
 		else if ( L"Ocircumflexsmall" == wsName ) return 0xF7F4;
 		else if ( L"Ocircumflextilde" == wsName ) return 0x1ED6;
 		else if ( L"Ocyrillic" == wsName ) return 0x041E;
-		else if ( L"Odblacute" == wsName ) return 0x0150;
+		else if ( L"Odblacute" == wsName || L"Ohungarumlaut" == wsName ) return 0x0150;
 		else if ( L"Odblgrave" == wsName ) return 0x020C;
 		else if ( L"Odieresis" == wsName ) return 0x00D6;
 		else if ( L"Odieresiscyrillic" == wsName ) return 0x04E6;
@@ -523,7 +513,7 @@ namespace NSFontConverter
 		else if ( L"Ograve" == wsName ) return 0x00D2;
 		else if ( L"Ogravesmall" == wsName ) return 0xF7F2;
 		else if ( L"Oharmenian" == wsName ) return 0x0555;
-		else if ( L"Ohm" == wsName ) return 0x2126;
+		else if ( L"Ohm" == wsName || L"Omega" == wsName ) return 0x2126;
 		else if ( L"Ohookabove" == wsName ) return 0x1ECE;
 		else if ( L"Ohorn" == wsName ) return 0x01A0;
 		else if ( L"Ohornacute" == wsName ) return 0x1EDA;
@@ -531,13 +521,11 @@ namespace NSFontConverter
 		else if ( L"Ohorngrave" == wsName ) return 0x1EDC;
 		else if ( L"Ohornhookabove" == wsName ) return 0x1EDE;
 		else if ( L"Ohorntilde" == wsName ) return 0x1EE0;
-		else if ( L"Ohungarumlaut" == wsName ) return 0x0150;
 		else if ( L"Oi" == wsName ) return 0x01A2;
 		else if ( L"Oinvertedbreve" == wsName ) return 0x020E;
 		else if ( L"Omacron" == wsName ) return 0x014C;
 		else if ( L"Omacronacute" == wsName ) return 0x1E52;
 		else if ( L"Omacrongrave" == wsName ) return 0x1E50;
-		else if ( L"Omega" == wsName ) return 0x2126;
 		else if ( L"Omegacyrillic" == wsName ) return 0x0460;
 		else if ( L"Omegagreek" == wsName ) return 0x03A9;
 		else if ( L"Omegaroundcyrillic" == wsName ) return 0x047A;
@@ -551,10 +539,9 @@ namespace NSFontConverter
 		else if ( L"Oogonekmacron" == wsName ) return 0x01EC;
 		else if ( L"Oopen" == wsName ) return 0x0186;
 		else if ( L"Oslash" == wsName ) return 0x00D8;
-		else if ( L"Oslashacute" == wsName ) return 0x01FE;
+		else if ( L"Oslashacute" == wsName || L"Ostrokeacute" == wsName ) return 0x01FE;
 		else if ( L"Oslashsmall" == wsName ) return 0xF7F8;
 		else if ( L"Osmall" == wsName ) return 0xF76F;
-		else if ( L"Ostrokeacute" == wsName ) return 0x01FE;
 		else if ( L"Otcyrillic" == wsName ) return 0x047E;
 		else if ( L"Otilde" == wsName ) return 0x00D5;
 		else if ( L"Otildeacute" == wsName ) return 0x1E4C;
@@ -598,9 +585,8 @@ namespace NSFontConverter
 		else if ( L"Raarmenian" == wsName ) return 0x054C;
 		else if ( L"Racute" == wsName ) return 0x0154;
 		else if ( L"Rcaron" == wsName ) return 0x0158;
-		else if ( L"Rcedilla" == wsName ) return 0x0156;
+		else if ( L"Rcedilla" == wsName || L"Rcommaaccent" == wsName ) return 0x0156;
 		else if ( L"Rcircle" == wsName ) return 0x24C7;
-		else if ( L"Rcommaaccent" == wsName ) return 0x0156;
 		else if ( L"Rdblgrave" == wsName ) return 0x0210;
 		else if ( L"Rdotaccent" == wsName ) return 0x1E58;
 		else if ( L"Rdotbelow" == wsName ) return 0x1E5A;
@@ -700,10 +686,9 @@ namespace NSFontConverter
 		else if ( L"Tau" == wsName ) return 0x03A4;
 		else if ( L"Tbar" == wsName ) return 0x0166;
 		else if ( L"Tcaron" == wsName ) return 0x0164;
-		else if ( L"Tcedilla" == wsName ) return 0x0162;
+		else if ( L"Tcedilla" == wsName || L"Tcommaaccent" == wsName ) return 0x0162;
 		else if ( L"Tcircle" == wsName ) return 0x24C9;
 		else if ( L"Tcircumflexbelow" == wsName ) return 0x1E70;
-		else if ( L"Tcommaaccent" == wsName ) return 0x0162;
 		else if ( L"Tdotaccent" == wsName ) return 0x1E6A;
 		else if ( L"Tdotbelow" == wsName ) return 0x1E6C;
 		else if ( L"Tecyrillic" == wsName ) return 0x0422;
@@ -744,7 +729,7 @@ namespace NSFontConverter
 		else if ( L"Ucircumflexbelow" == wsName ) return 0x1E76;
 		else if ( L"Ucircumflexsmall" == wsName ) return 0xF7FB;
 		else if ( L"Ucyrillic" == wsName ) return 0x0423;
-		else if ( L"Udblacute" == wsName ) return 0x0170;
+		else if ( L"Udblacute" == wsName || L"Uhungarumlaut" == wsName ) return 0x0170;
 		else if ( L"Udblgrave" == wsName ) return 0x0214;
 		else if ( L"Udieresis" == wsName ) return 0x00DC;
 		else if ( L"Udieresisacute" == wsName ) return 0x01D7;
@@ -764,7 +749,6 @@ namespace NSFontConverter
 		else if ( L"Uhorngrave" == wsName ) return 0x1EEA;
 		else if ( L"Uhornhookabove" == wsName ) return 0x1EEC;
 		else if ( L"Uhorntilde" == wsName ) return 0x1EEE;
-		else if ( L"Uhungarumlaut" == wsName ) return 0x0170;
 		else if ( L"Uhungarumlautcyrillic" == wsName ) return 0x04F2;
 		else if ( L"Uinvertedbreve" == wsName ) return 0x0216;
 		else if ( L"Ukcyrillic" == wsName ) return 0x0478;
@@ -774,12 +758,11 @@ namespace NSFontConverter
 		else if ( L"Umonospace" == wsName ) return 0xFF35;
 		else if ( L"Uogonek" == wsName ) return 0x0172;
 		else if ( L"Upsilon" == wsName ) return 0x03A5;
-		else if ( L"Upsilon1" == wsName ) return 0x03D2;
+		else if ( L"Upsilon1" == wsName || L"Upsilonhooksymbol" == wsName ) return 0x03D2;
 		else if ( L"Upsilonacutehooksymbolgreek" == wsName ) return 0x03D3;
 		else if ( L"Upsilonafrican" == wsName ) return 0x01B1;
 		else if ( L"Upsilondieresis" == wsName ) return 0x03AB;
 		else if ( L"Upsilondieresishooksymbolgreek" == wsName ) return 0x03D4;
-		else if ( L"Upsilonhooksymbol" == wsName ) return 0x03D2;
 		else if ( L"Upsilontonos" == wsName ) return 0x038E;
 		else if ( L"Uring" == wsName ) return 0x016E;
 		else if ( L"Ushortcyrillic" == wsName ) return 0x040E;
@@ -874,8 +857,7 @@ namespace NSFontConverter
 		else if ( L"Zcaronsmall" == wsName ) return 0xF6FF;
 		else if ( L"Zcircle" == wsName ) return 0x24CF;
 		else if ( L"Zcircumflex" == wsName ) return 0x1E90;
-		else if ( L"Zdot" == wsName ) return 0x017B;
-		else if ( L"Zdotaccent" == wsName ) return 0x017B;
+		else if ( L"Zdot" == wsName || L"Zdotaccent" == wsName ) return 0x017B;
 		else if ( L"Zdotbelow" == wsName ) return 0x1E92;
 		else if ( L"Zecyrillic" == wsName ) return 0x0417;
 		else if ( L"Zedescendercyrillic" == wsName ) return 0x0498;
@@ -944,8 +926,7 @@ namespace NSFontConverter
 			else if ( L"acircumflextilde" == wsName ) return 0x1EAB;
 			else if ( L"acute" == wsName ) return 0x00B4;
 			else if ( L"acutebelowcmb" == wsName ) return 0x0317;
-			else if ( L"acutecmb" == wsName ) return 0x0301;
-			else if ( L"acutecomb" == wsName ) return 0x0301;
+			else if ( L"acutecmb" == wsName || L"acutecomb" == wsName ) return 0x0301;
 			else if ( L"acutedeva" == wsName ) return 0x0954;
 			else if ( L"acutelowmod" == wsName ) return 0x02CF;
 			else if ( L"acutetonecmb" == wsName ) return 0x0341;
@@ -1263,6 +1244,10 @@ namespace NSFontConverter
 					if      ( L"afii57929" == wsName ) return 0x02BC;
 					break;
 				}
+					default:
+					{
+						break;
+					}
 				}
 				break;
 			}
@@ -1279,6 +1264,10 @@ namespace NSFontConverter
 				else if ( L"afii64937" == wsName ) return 0x02BD;
 				break;
 			}
+				default:
+				{
+					break;
+				}
 			}
 			break;
 		}
@@ -1323,7 +1312,7 @@ namespace NSFontConverter
 		}
 		case 'l':
 		{
-			if      ( L"alef" == wsName ) return 0x05D0;
+			if ( L"alef" == wsName || L"alefhebrew" == wsName ) return 0x05D0;
 			else if ( L"alefarabic" == wsName ) return 0x0627;
 			else if ( L"alefdageshhebrew" == wsName ) return 0xFB30;
 			else if ( L"aleffinalarabic" == wsName ) return 0xFE8E;
@@ -1331,7 +1320,6 @@ namespace NSFontConverter
 			else if ( L"alefhamzaabovefinalarabic" == wsName ) return 0xFE84;
 			else if ( L"alefhamzabelowarabic" == wsName ) return 0x0625;
 			else if ( L"alefhamzabelowfinalarabic" == wsName ) return 0xFE88;
-			else if ( L"alefhebrew" == wsName ) return 0x05D0;
 			else if ( L"aleflamedhebrew" == wsName ) return 0xFB4F;
 			else if ( L"alefmaddaabovearabic" == wsName ) return 0x0622;
 			else if ( L"alefmaddaabovefinalarabic" == wsName ) return 0xFE82;
@@ -1361,13 +1349,11 @@ namespace NSFontConverter
 		{
 			if      ( L"anbopomofo" == wsName ) return 0x3122;
 			else if ( L"angbopomofo" == wsName ) return 0x3124;
-			else if ( L"angbracketleft" == wsName ) return 0x3008;
-			else if ( L"angbracketright" == wsName ) return 0x3009;
+			else if ( L"angbracketleft" == wsName || L"anglebracketleft" == wsName ) return 0x3008;
+			else if ( L"angbracketright" == wsName || L"anglebracketright" == wsName ) return 0x3009;
 			else if ( L"angkhankhuthai" == wsName ) return 0x0E5A;
 			else if ( L"angle" == wsName ) return 0x2220;
-			else if ( L"anglebracketleft" == wsName ) return 0x3008;
 			else if ( L"anglebracketleftvertical" == wsName ) return 0xFE3F;
-			else if ( L"anglebracketright" == wsName ) return 0x3009;
 			else if ( L"anglebracketrightvertical" == wsName ) return 0xFE40;
 			else if ( L"angleleft" == wsName ) return 0x2329;
 			else if ( L"angleright" == wsName ) return 0x232A;
@@ -1413,7 +1399,7 @@ namespace NSFontConverter
 			else if ( L"arrowdashup" == wsName ) return 0x21E1;
 			else if ( L"arrowdblboth" == wsName ) return 0x21D4;
 			else if ( L"arrowdbldown" == wsName ) return 0x21D3;
-			else if ( L"arrowdblleft" == wsName ) return 0x21D0;
+			else if ( L"arrowdblleft" == wsName || L"arrowleftdbl" == wsName ) return 0x21D0;
 			else if ( L"arrowdblright" == wsName ) return 0x21D2;
 			else if ( L"arrowdblup" == wsName ) return 0x21D1;
 			else if ( L"arrowdown" == wsName ) return 0x2193;
@@ -1426,7 +1412,6 @@ namespace NSFontConverter
 			else if ( L"arrowheadupmod" == wsName ) return 0x02C4;
 			else if ( L"arrowhorizex" == wsName ) return 0xF8E7;
 			else if ( L"arrowleft" == wsName ) return 0x2190;
-			else if ( L"arrowleftdbl" == wsName ) return 0x21D0;
 			else if ( L"arrowleftdblstroke" == wsName ) return 0x21CD;
 			else if ( L"arrowleftoverright" == wsName ) return 0x21C6;
 			else if ( L"arrowleftwhite" == wsName ) return 0x21E6;
@@ -1439,8 +1424,7 @@ namespace NSFontConverter
 			else if ( L"arrowtabright" == wsName ) return 0x21E5;
 			else if ( L"arrowup" == wsName ) return 0x2191;
 			else if ( L"arrowupdn" == wsName ) return 0x2195;
-			else if ( L"arrowupdnbse" == wsName ) return 0x21A8;
-			else if ( L"arrowupdownbase" == wsName ) return 0x21A8;
+			else if ( L"arrowupdnbse" == wsName || L"arrowupdownbase" == wsName ) return 0x21A8;
 			else if ( L"arrowupleft" == wsName ) return 0x2196;
 			else if ( L"arrowupleftofdown" == wsName ) return 0x21C5;
 			else if ( L"arrowupright" == wsName ) return 0x2197;
@@ -1460,8 +1444,7 @@ namespace NSFontConverter
 			else if ( L"asmallkatakana" == wsName ) return 0x30A1;
 			else if ( L"asmallkatakanahalfwidth" == wsName ) return 0xFF67;
 			else if ( L"asterisk" == wsName ) return 0x002A;
-			else if ( L"asteriskaltonearabic" == wsName ) return 0x066D;
-			else if ( L"asteriskarabic" == wsName ) return 0x066D;
+			else if ( L"asteriskaltonearabic" == wsName || L"asteriskarabic" == wsName ) return 0x066D;
 			else if ( L"asteriskmath" == wsName ) return 0x2217;
 			else if ( L"asteriskmonospace" == wsName ) return 0xFF0A;
 			else if ( L"asterisksmall" == wsName ) return 0xFE61;
@@ -1501,11 +1484,14 @@ namespace NSFontConverter
 		case 'y':
 		{
 			if      ( L"aybarmenian" == wsName ) return 0x0561;
-			else if ( L"ayin" == wsName ) return 0x05E2;
+			else if ( L"ayin" == wsName || L"ayinhebrew" == wsName ) return 0x05E2;
 			else if ( L"ayinaltonehebrew" == wsName ) return 0xFB20;
-			else if ( L"ayinhebrew" == wsName ) return 0x05E2;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -1541,12 +1527,10 @@ namespace NSFontConverter
 		else if ( L"behnoonfinalarabic" == wsName ) return 0xFC6D;
 		else if ( L"bekatakana" == wsName ) return 0x30D9;
 		else if ( L"benarmenian" == wsName ) return 0x0562;
-		else if ( L"bet" == wsName ) return 0x05D1;
+		else if ( L"bet" == wsName || L"bethebrew" == wsName ) return 0x05D1;
 		else if ( L"beta" == wsName ) return 0x03B2;
 		else if ( L"betasymbolgreek" == wsName ) return 0x03D0;
-		else if ( L"betdagesh" == wsName ) return 0xFB31;
-		else if ( L"betdageshhebrew" == wsName ) return 0xFB31;
-		else if ( L"bethebrew" == wsName ) return 0x05D1;
+		else if ( L"betdagesh" == wsName || L"betdageshhebrew" == wsName ) return 0xFB31;
 		else if ( L"betrafehebrew" == wsName ) return 0xFB4C;
 		else if ( L"bhabengali" == wsName ) return 0x09AD;
 		else if ( L"bhadeva" == wsName ) return 0x092D;
@@ -1683,8 +1667,7 @@ namespace NSFontConverter
 		}
 		case 'd':
 		{
-			if      ( L"cdot" == wsName ) return 0x010B;
-			else if ( L"cdotaccent" == wsName ) return 0x010B;
+			if ( L"cdot" == wsName || L"cdotaccent" == wsName ) return 0x010B;
 			else if ( L"cdsquare" == wsName ) return 0x33C5;
 			break;
 		}
@@ -1758,8 +1741,7 @@ namespace NSFontConverter
 			else if ( L"clickdental" == wsName ) return 0x01C0;
 			else if ( L"clicklateral" == wsName ) return 0x01C1;
 			else if ( L"clickretroflex" == wsName ) return 0x01C3;
-			else if ( L"club" == wsName ) return 0x2663;
-			else if ( L"clubsuitblack" == wsName ) return 0x2663;
+			else if ( L"club" == wsName || L"clubsuitblack" == wsName ) return 0x2663;
 			else if ( L"clubsuitwhite" == wsName ) return 0x2667;
 			break;
 		}
@@ -1774,9 +1756,8 @@ namespace NSFontConverter
 		{
 			if      ( L"coarmenian" == wsName ) return 0x0581;
 			else if ( L"colon" == wsName ) return 0x003A;
-			else if ( L"colonmonetary" == wsName ) return 0x20A1;
+			else if ( L"colonmonetary" == wsName || L"colonsign" == wsName ) return 0x20A1;
 			else if ( L"colonmonospace" == wsName ) return 0xFF1A;
-			else if ( L"colonsign" == wsName ) return 0x20A1;
 			else if ( L"colonsmall" == wsName ) return 0xFE55;
 			else if ( L"colontriangularhalfmod" == wsName ) return 0x02D1;
 			else if ( L"colontriangularmod" == wsName ) return 0x02D0;
@@ -1874,6 +1855,10 @@ namespace NSFontConverter
 			else if ( L"cyrflex" == wsName ) return 0xF6D5;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -1897,8 +1882,7 @@ namespace NSFontConverter
 			else if ( L"dadfinalarabic" == wsName ) return 0xFEBE;
 			else if ( L"dadinitialarabic" == wsName ) return 0xFEBF;
 			else if ( L"dadmedialarabic" == wsName ) return 0xFEC0;
-			else if ( L"dagesh" == wsName ) return 0x05BC;
-			else if ( L"dageshhebrew" == wsName ) return 0x05BC;
+			else if ( L"dagesh" == wsName || L"dageshhebrew" == wsName ) return 0x05BC;
 			else if ( L"dagger" == wsName ) return 0x2020;
 			else if ( L"daggerdbl" == wsName ) return 0x2021;
 			else if ( L"dagujarati" == wsName ) return 0x0AA6;
@@ -1906,38 +1890,23 @@ namespace NSFontConverter
 			else if ( L"dahiragana" == wsName ) return 0x3060;
 			else if ( L"dakatakana" == wsName ) return 0x30C0;
 			else if ( L"dalarabic" == wsName ) return 0x062F;
-			else if ( L"dalet" == wsName ) return 0x05D3;
-			else if ( L"daletdagesh" == wsName ) return 0xFB33;
-			else if ( L"daletdageshhebrew" == wsName ) return 0xFB33;
-			else if ( L"dalethatafpatah" == wsName ) return 0x05D305B2;
-			else if ( L"dalethatafpatahhebrew" == wsName ) return 0x05D305B2;
-			else if ( L"dalethatafsegol" == wsName ) return 0x05D305B1;
-			else if ( L"dalethatafsegolhebrew" == wsName ) return 0x05D305B1;
-			else if ( L"dalethebrew" == wsName ) return 0x05D3;
-			else if ( L"dalethiriq" == wsName ) return 0x05D305B4;
-			else if ( L"dalethiriqhebrew" == wsName ) return 0x05D305B4;
-			else if ( L"daletholam" == wsName ) return 0x05D305B9;
-			else if ( L"daletholamhebrew" == wsName ) return 0x05D305B9;
-			else if ( L"daletpatah" == wsName ) return 0x05D305B7;
-			else if ( L"daletpatahhebrew" == wsName ) return 0x05D305B7;
-			else if ( L"daletqamats" == wsName ) return 0x05D305B8;
-			else if ( L"daletqamatshebrew" == wsName ) return 0x05D305B8;
-			else if ( L"daletqubuts" == wsName ) return 0x05D305BB;
-			else if ( L"daletqubutshebrew" == wsName ) return 0x05D305BB;
-			else if ( L"daletsegol" == wsName ) return 0x05D305B6;
-			else if ( L"daletsegolhebrew" == wsName ) return 0x05D305B6;
-			else if ( L"daletsheva" == wsName ) return 0x05D305B0;
-			else if ( L"daletshevahebrew" == wsName ) return 0x05D305B0;
-			else if ( L"dalettsere" == wsName ) return 0x05D305B5;
-			else if ( L"dalettserehebrew" == wsName ) return 0x05D305B5;
+			else if ( L"dalet" == wsName || L"dalethebrew" == wsName ) return 0x05D3;
+			else if ( L"daletdagesh" == wsName || L"daletdageshhebrew" == wsName ) return 0xFB33;
+			else if ( L"dalethatafpatah" == wsName || L"dalethatafpatahhebrew" == wsName ) return 0x05D305B2;
+			else if ( L"dalethatafsegol" == wsName || L"dalethatafsegolhebrew" == wsName ) return 0x05D305B1;
+			else if ( L"dalethiriq" == wsName || L"dalethiriqhebrew" == wsName ) return 0x05D305B4;
+			else if ( L"daletholam" == wsName || L"daletholamhebrew" == wsName ) return 0x05D305B9;
+			else if ( L"daletpatah" == wsName || L"daletpatahhebrew" == wsName ) return 0x05D305B7;
+			else if ( L"daletqamats" == wsName || L"daletqamatshebrew" == wsName ) return 0x05D305B8;
+			else if ( L"daletqubuts" == wsName || L"daletqubutshebrew" == wsName ) return 0x05D305BB;
+			else if ( L"daletsegol" == wsName || L"daletsegolhebrew" == wsName ) return 0x05D305B6;
+			else if ( L"daletsheva" == wsName || L"daletshevahebrew" == wsName ) return 0x05D305B0;
+			else if ( L"dalettsere" == wsName || L"dalettserehebrew" == wsName ) return 0x05D305B5;
 			else if ( L"dalfinalarabic" == wsName ) return 0xFEAA;
-			else if ( L"dammaarabic" == wsName ) return 0x064F;
-			else if ( L"dammalowarabic" == wsName ) return 0x064F;
-			else if ( L"dammatanaltonearabic" == wsName ) return 0x064C;
-			else if ( L"dammatanarabic" == wsName ) return 0x064C;
+			else if ( L"dammaarabic" == wsName || L"dammalowarabic" == wsName ) return 0x064F;
+			else if ( L"dammatanaltonearabic" == wsName || L"dammatanarabic" == wsName ) return 0x064C;
 			else if ( L"danda" == wsName ) return 0x0964;
-			else if ( L"dargahebrew" == wsName ) return 0x05A7;
-			else if ( L"dargalefthebrew" == wsName ) return 0x05A7;
+			else if ( L"dargahebrew" == wsName || L"dargalefthebrew" == wsName ) return 0x05A7;
 			else if ( L"dasiapneumatacyrilliccmb" == wsName ) return 0x0485;
 			break;
 		}
@@ -1993,8 +1962,7 @@ namespace NSFontConverter
 		}
 		case 'e':
 		{
-			if      ( L"decimalseparatorarabic" == wsName ) return 0x066B;
-			else if ( L"decimalseparatorpersian" == wsName ) return 0x066B;
+			if ( L"decimalseparatorarabic" == wsName || L"decimalseparatorpersian" == wsName ) return 0x066B;
 			else if ( L"decyrillic" == wsName ) return 0x0434;
 			else if ( L"degree" == wsName ) return 0x00B0;
 			else if ( L"dehihebrew" == wsName ) return 0x05AD;
@@ -2020,7 +1988,7 @@ namespace NSFontConverter
 		}
 		case 'i':
 		{
-			if      ( L"dialytikatonos" == wsName ) return 0x0385;
+			if ( L"dialytikatonos" == wsName || L"dieresistonos" == wsName ) return 0x0385;
 			else if ( L"dialytikatonoscmb" == wsName ) return 0x0344;
 			else if ( L"diamond" == wsName ) return 0x2666;
 			else if ( L"diamondsuitwhite" == wsName ) return 0x2662;
@@ -2029,7 +1997,6 @@ namespace NSFontConverter
 			else if ( L"dieresisbelowcmb" == wsName ) return 0x0324;
 			else if ( L"dieresiscmb" == wsName ) return 0x0308;
 			else if ( L"dieresisgrave" == wsName ) return 0xF6D8;
-			else if ( L"dieresistonos" == wsName ) return 0x0385;
 			else if ( L"dihiragana" == wsName ) return 0x3062;
 			else if ( L"dikatakana" == wsName ) return 0x30C2;
 			else if ( L"dittomark" == wsName ) return 0x3003;
@@ -2081,16 +2048,14 @@ namespace NSFontConverter
 			else if ( L"dorusquare" == wsName ) return 0x3326;
 			else if ( L"dotaccent" == wsName ) return 0x02D9;
 			else if ( L"dotaccentcmb" == wsName ) return 0x0307;
-			else if ( L"dotbelowcmb" == wsName ) return 0x0323;
-			else if ( L"dotbelowcomb" == wsName ) return 0x0323;
+			else if ( L"dotbelowcmb" == wsName || L"dotbelowcomb" == wsName ) return 0x0323;
 			else if ( L"dotkatakana" == wsName ) return 0x30FB;
 			else if ( L"dotlessi" == wsName ) return 0x0131;
 			else if ( L"dotlessj" == wsName ) return 0xF6BE;
 			else if ( L"dotlessjstrokehook" == wsName ) return 0x0284;
 			else if ( L"dotmath" == wsName ) return 0x22C5;
 			else if ( L"dottedcircle" == wsName ) return 0x25CC;
-			else if ( L"doubleyodpatah" == wsName ) return 0xFB1F;
-			else if ( L"doubleyodpatahhebrew" == wsName ) return 0xFB1F;
+			else if ( L"doubleyodpatah" == wsName || L"doubleyodpatahhebrew" == wsName ) return 0xFB1F;
 			else if ( L"downtackbelowcmb" == wsName ) return 0x031E;
 			else if ( L"downtackmod" == wsName ) return 0x02D5;
 			break;
@@ -2128,6 +2093,10 @@ namespace NSFontConverter
 			else if ( L"dzhecyrillic" == wsName ) return 0x045F;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -2181,8 +2150,7 @@ namespace NSFontConverter
 			if      ( L"edblgrave" == wsName ) return 0x0205;
 			else if ( L"edeva" == wsName ) return 0x090F;
 			else if ( L"edieresis" == wsName ) return 0x00EB;
-			else if ( L"edot" == wsName ) return 0x0117;
-			else if ( L"edotaccent" == wsName ) return 0x0117;
+			else if ( L"edot" == wsName || L"edotaccent" == wsName ) return 0x0117;
 			else if ( L"edotbelow" == wsName ) return 0x1EB9;
 			break;
 		}
@@ -2215,7 +2183,7 @@ namespace NSFontConverter
 		{
 			if      ( L"eibopomofo" == wsName ) return 0x311F;
 			else if ( L"eight" == wsName ) return 0x0038;
-			else if ( L"eightarabic" == wsName ) return 0x0668;
+			else if ( L"eightarabic" == wsName || L"eighthackarabic" == wsName ) return 0x0668;
 			else if ( L"eightbengali" == wsName ) return 0x09EE;
 			else if ( L"eightcircle" == wsName ) return 0x2467;
 			else if ( L"eightcircleinversesansserif" == wsName ) return 0x2791;
@@ -2225,7 +2193,6 @@ namespace NSFontConverter
 			else if ( L"eighteenperiod" == wsName ) return 0x2499;
 			else if ( L"eightgujarati" == wsName ) return 0x0AEE;
 			else if ( L"eightgurmukhi" == wsName ) return 0x0A6E;
-			else if ( L"eighthackarabic" == wsName ) return 0x0668;
 			else if ( L"eighthangzhou" == wsName ) return 0x3028;
 			else if ( L"eighthnotebeamed" == wsName ) return 0x266B;
 			else if ( L"eightideographicparen" == wsName ) return 0x3227;
@@ -2349,10 +2316,7 @@ namespace NSFontConverter
 			else if ( L"eth" == wsName ) return 0x00F0;
 			else if ( L"etilde" == wsName ) return 0x1EBD;
 			else if ( L"etildebelow" == wsName ) return 0x1E1B;
-			else if ( L"etnahtafoukhhebrew" == wsName ) return 0x0591;
-			else if ( L"etnahtafoukhlefthebrew" == wsName ) return 0x0591;
-			else if ( L"etnahtahebrew" == wsName ) return 0x0591;
-			else if ( L"etnahtalefthebrew" == wsName ) return 0x0591;
+			else if ( L"etnahtafoukhhebrew" == wsName || L"etnahtafoukhlefthebrew" == wsName || L"etnahtahebrew" == wsName || L"etnahtalefthebrew" == wsName ) return 0x0591;
 			else if ( L"eturned" == wsName ) return 0x01DD;
 			break;
 		}
@@ -2390,6 +2354,10 @@ namespace NSFontConverter
 			else if ( L"ezhtail" == wsName ) return 0x01BA;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -2400,8 +2368,7 @@ namespace NSFontConverter
 		else if ( L"fadeva" == wsName ) return 0x095E;
 		else if ( L"fagurmukhi" == wsName ) return 0x0A5E;
 		else if ( L"fahrenheit" == wsName ) return 0x2109;
-		else if ( L"fathaarabic" == wsName ) return 0x064E;
-		else if ( L"fathalowarabic" == wsName ) return 0x064E;
+		else if ( L"fathaarabic" == wsName || L"fathalowarabic" == wsName ) return 0x064E;
 		else if ( L"fathatanarabic" == wsName ) return 0x064B;
 		else if ( L"fbopomofo" == wsName ) return 0x3108;
 		else if ( L"fcircle" == wsName ) return 0x24D5;
@@ -2423,27 +2390,19 @@ namespace NSFontConverter
 		else if ( L"figuredash" == wsName ) return 0x2012;
 		else if ( L"filledbox" == wsName ) return 0x25A0;
 		else if ( L"filledrect" == wsName ) return 0x25AC;
-		else if ( L"finalkaf" == wsName ) return 0x05DA;
-		else if ( L"finalkafdagesh" == wsName ) return 0xFB3A;
-		else if ( L"finalkafdageshhebrew" == wsName ) return 0xFB3A;
-		else if ( L"finalkafhebrew" == wsName ) return 0x05DA;
-		else if ( L"finalkafqamats" == wsName ) return 0x05DA05B8;
-		else if ( L"finalkafqamatshebrew" == wsName ) return 0x05DA05B8;
-		else if ( L"finalkafsheva" == wsName ) return 0x05DA05B0;
-		else if ( L"finalkafshevahebrew" == wsName ) return 0x05DA05B0;
-		else if ( L"finalmem" == wsName ) return 0x05DD;
-		else if ( L"finalmemhebrew" == wsName ) return 0x05DD;
-		else if ( L"finalnun" == wsName ) return 0x05DF;
-		else if ( L"finalnunhebrew" == wsName ) return 0x05DF;
-		else if ( L"finalpe" == wsName ) return 0x05E3;
-		else if ( L"finalpehebrew" == wsName ) return 0x05E3;
-		else if ( L"finaltsadi" == wsName ) return 0x05E5;
-		else if ( L"finaltsadihebrew" == wsName ) return 0x05E5;
+		else if ( L"finalkaf" == wsName || L"finalkafhebrew" == wsName ) return 0x05DA;
+		else if ( L"finalkafdagesh" == wsName || L"finalkafdageshhebrew" == wsName ) return 0xFB3A;
+		else if ( L"finalkafqamats" == wsName || L"finalkafqamatshebrew" == wsName ) return 0x05DA05B8;
+		else if ( L"finalkafsheva" == wsName || L"finalkafshevahebrew" == wsName ) return 0x05DA05B0;
+		else if ( L"finalmem" == wsName || L"finalmemhebrew" == wsName ) return 0x05DD;
+		else if ( L"finalnun" == wsName || L"finalnunhebrew" == wsName ) return 0x05DF;
+		else if ( L"finalpe" == wsName || L"finalpehebrew" == wsName ) return 0x05E3;
+		else if ( L"finaltsadi" == wsName || L"finaltsadihebrew" == wsName ) return 0x05E5;
 		else if ( L"firsttonechinese" == wsName ) return 0x02C9;
 		else if ( L"fisheye" == wsName ) return 0x25C9;
 		else if ( L"fitacyrillic" == wsName ) return 0x0473;
 		else if ( L"five" == wsName ) return 0x0035;
-		else if ( L"fivearabic" == wsName ) return 0x0665;
+		else if ( L"fivearabic" == wsName || L"fivehackarabic" == wsName ) return 0x0665;
 		else if ( L"fivebengali" == wsName ) return 0x09EB;
 		else if ( L"fivecircle" == wsName ) return 0x2464;
 		else if ( L"fivecircleinversesansserif" == wsName ) return 0x278E;
@@ -2451,7 +2410,6 @@ namespace NSFontConverter
 		else if ( L"fiveeighths" == wsName ) return 0x215D;
 		else if ( L"fivegujarati" == wsName ) return 0x0AEB;
 		else if ( L"fivegurmukhi" == wsName ) return 0x0A6B;
-		else if ( L"fivehackarabic" == wsName ) return 0x0665;
 		else if ( L"fivehangzhou" == wsName ) return 0x3025;
 		else if ( L"fiveideographicparen" == wsName ) return 0x3224;
 		else if ( L"fiveinferior" == wsName ) return 0x2085;
@@ -2472,14 +2430,13 @@ namespace NSFontConverter
 		else if ( L"fongmanthai" == wsName ) return 0x0E4F;
 		else if ( L"forall" == wsName ) return 0x2200;
 		else if ( L"four" == wsName ) return 0x0034;
-		else if ( L"fourarabic" == wsName ) return 0x0664;
+		else if ( L"fourarabic" == wsName || L"fourhackarabic" == wsName ) return 0x0664;
 		else if ( L"fourbengali" == wsName ) return 0x09EA;
 		else if ( L"fourcircle" == wsName ) return 0x2463;
 		else if ( L"fourcircleinversesansserif" == wsName ) return 0x278D;
 		else if ( L"fourdeva" == wsName ) return 0x096A;
 		else if ( L"fourgujarati" == wsName ) return 0x0AEA;
 		else if ( L"fourgurmukhi" == wsName ) return 0x0A6A;
-		else if ( L"fourhackarabic" == wsName ) return 0x0664;
 		else if ( L"fourhangzhou" == wsName ) return 0x3024;
 		else if ( L"fourideographicparen" == wsName ) return 0x3223;
 		else if ( L"fourinferior" == wsName ) return 0x2084;
@@ -2523,12 +2480,10 @@ namespace NSFontConverter
 		else if ( L"gbopomofo" == wsName ) return 0x310D;
 		else if ( L"gbreve" == wsName ) return 0x011F;
 		else if ( L"gcaron" == wsName ) return 0x01E7;
-		else if ( L"gcedilla" == wsName ) return 0x0123;
+		else if ( L"gcedilla" == wsName || L"gcommaaccent" == wsName ) return 0x0123;
 		else if ( L"gcircle" == wsName ) return 0x24D6;
 		else if ( L"gcircumflex" == wsName ) return 0x011D;
-		else if ( L"gcommaaccent" == wsName ) return 0x0123;
-		else if ( L"gdot" == wsName ) return 0x0121;
-		else if ( L"gdotaccent" == wsName ) return 0x0121;
+		else if ( L"gdot" == wsName || L"gdotaccent" == wsName ) return 0x0121;
 		else if ( L"gecyrillic" == wsName ) return 0x0433;
 		else if ( L"gehiragana" == wsName ) return 0x3052;
 		else if ( L"gekatakana" == wsName ) return 0x30B2;
@@ -2559,10 +2514,8 @@ namespace NSFontConverter
 		else if ( L"gihiragana" == wsName ) return 0x304E;
 		else if ( L"gikatakana" == wsName ) return 0x30AE;
 		else if ( L"gimarmenian" == wsName ) return 0x0563;
-		else if ( L"gimel" == wsName ) return 0x05D2;
-		else if ( L"gimeldagesh" == wsName ) return 0xFB32;
-		else if ( L"gimeldageshhebrew" == wsName ) return 0xFB32;
-		else if ( L"gimelhebrew" == wsName ) return 0x05D2;
+		else if ( L"gimel" == wsName || L"gimelhebrew" == wsName ) return 0x05D2;
+		else if ( L"gimeldagesh" == wsName || L"gimeldageshhebrew" == wsName ) return 0xFB32;
 		else if ( L"gjecyrillic" == wsName ) return 0x0453;
 		else if ( L"glottalinvertedstroke" == wsName ) return 0x01BE;
 		else if ( L"glottalstop" == wsName ) return 0x0294;
@@ -2582,8 +2535,7 @@ namespace NSFontConverter
 		else if ( L"gradient" == wsName ) return 0x2207;
 		else if ( L"grave" == wsName ) return 0x0060;
 		else if ( L"gravebelowcmb" == wsName ) return 0x0316;
-		else if ( L"gravecmb" == wsName ) return 0x0300;
-		else if ( L"gravecomb" == wsName ) return 0x0300;
+		else if ( L"gravecmb" == wsName || L"gravecomb" == wsName ) return 0x0300;
 		else if ( L"gravedeva" == wsName ) return 0x0953;
 		else if ( L"gravelowmod" == wsName ) return 0x02CE;
 		else if ( L"gravemonospace" == wsName ) return 0xFF40;
@@ -2637,12 +2589,11 @@ namespace NSFontConverter
 			else if ( L"hakatakana" == wsName ) return 0x30CF;
 			else if ( L"hakatakanahalfwidth" == wsName ) return 0xFF8A;
 			else if ( L"halantgurmukhi" == wsName ) return 0x0A4D;
-			else if ( L"hamzaarabic" == wsName ) return 0x0621;
+			else if ( L"hamzaarabic" == wsName || L"hamzalowarabic" == wsName ) return 0x0621;
 			else if ( L"hamzadammaarabic" == wsName ) return 0x0621064F;
 			else if ( L"hamzadammatanarabic" == wsName ) return 0x0621064C;
 			else if ( L"hamzafathaarabic" == wsName ) return 0x0621064E;
 			else if ( L"hamzafathatanarabic" == wsName ) return 0x0621064B;
-			else if ( L"hamzalowarabic" == wsName ) return 0x0621;
 			else if ( L"hamzalowkasraarabic" == wsName ) return 0x06210650;
 			else if ( L"hamzalowkasratanarabic" == wsName ) return 0x0621064D;
 			else if ( L"hamzasukunarabic" == wsName ) return 0x06210652;
@@ -2651,30 +2602,9 @@ namespace NSFontConverter
 			else if ( L"harpoonleftbarbup" == wsName ) return 0x21BC;
 			else if ( L"harpoonrightbarbup" == wsName ) return 0x21C0;
 			else if ( L"hasquare" == wsName ) return 0x33CA;
-			else if ( L"hatafpatah" == wsName ) return 0x05B2;
-			else if ( L"hatafpatah16" == wsName ) return 0x05B2;
-			else if ( L"hatafpatah23" == wsName ) return 0x05B2;
-			else if ( L"hatafpatah2f" == wsName ) return 0x05B2;
-			else if ( L"hatafpatahhebrew" == wsName ) return 0x05B2;
-			else if ( L"hatafpatahnarrowhebrew" == wsName ) return 0x05B2;
-			else if ( L"hatafpatahquarterhebrew" == wsName ) return 0x05B2;
-			else if ( L"hatafpatahwidehebrew" == wsName ) return 0x05B2;
-			else if ( L"hatafqamats" == wsName ) return 0x05B3;
-			else if ( L"hatafqamats1b" == wsName ) return 0x05B3;
-			else if ( L"hatafqamats28" == wsName ) return 0x05B3;
-			else if ( L"hatafqamats34" == wsName ) return 0x05B3;
-			else if ( L"hatafqamatshebrew" == wsName ) return 0x05B3;
-			else if ( L"hatafqamatsnarrowhebrew" == wsName ) return 0x05B3;
-			else if ( L"hatafqamatsquarterhebrew" == wsName ) return 0x05B3;
-			else if ( L"hatafqamatswidehebrew" == wsName ) return 0x05B3;
-			else if ( L"hatafsegol" == wsName ) return 0x05B1;
-			else if ( L"hatafsegol17" == wsName ) return 0x05B1;
-			else if ( L"hatafsegol24" == wsName ) return 0x05B1;
-			else if ( L"hatafsegol30" == wsName ) return 0x05B1;
-			else if ( L"hatafsegolhebrew" == wsName ) return 0x05B1;
-			else if ( L"hatafsegolnarrowhebrew" == wsName ) return 0x05B1;
-			else if ( L"hatafsegolquarterhebrew" == wsName ) return 0x05B1;
-			else if ( L"hatafsegolwidehebrew" == wsName ) return 0x05B1;
+			else if ( L"hatafpatah" == wsName || L"hatafpatah16" == wsName || L"hatafpatah23" == wsName || L"hatafpatah2f" == wsName || L"hatafpatahhebrew" == wsName || L"hatafpatahnarrowhebrew" == wsName || L"hatafpatahquarterhebrew" == wsName || L"hatafpatahwidehebrew" == wsName ) return 0x05B2;
+			else if ( L"hatafqamats" == wsName || L"hatafqamats1b" == wsName || L"hatafqamats28" == wsName || L"hatafqamats34" == wsName || L"hatafqamatshebrew" == wsName || L"hatafqamatsnarrowhebrew" == wsName || L"hatafqamatsquarterhebrew" == wsName || L"hatafqamatswidehebrew" == wsName ) return 0x05B3;
+			else if ( L"hatafsegol" == wsName || L"hatafsegol17" == wsName || L"hatafsegol24" == wsName || L"hatafsegol30" == wsName || L"hatafsegolhebrew" == wsName || L"hatafsegolnarrowhebrew" == wsName || L"hatafsegolquarterhebrew" == wsName || L"hatafsegolwidehebrew" == wsName ) return 0x05B1;
 			break;
 		}
 		case 'b':
@@ -2700,18 +2630,14 @@ namespace NSFontConverter
 		}
 		case 'e':
 		{
-			if      ( L"he" == wsName ) return 0x05D4;
-			else if ( L"heart" == wsName ) return 0x2665;
-			else if ( L"heartsuitblack" == wsName ) return 0x2665;
+			if ( L"he" == wsName || L"hehebrew" == wsName ) return 0x05D4;
+			else if ( L"heart" == wsName || L"heartsuitblack" == wsName ) return 0x2665;
 			else if ( L"heartsuitwhite" == wsName ) return 0x2661;
-			else if ( L"hedagesh" == wsName ) return 0xFB34;
-			else if ( L"hedageshhebrew" == wsName ) return 0xFB34;
+			else if ( L"hedagesh" == wsName || L"hedageshhebrew" == wsName ) return 0xFB34;
 			else if ( L"hehaltonearabic" == wsName ) return 0x06C1;
 			else if ( L"heharabic" == wsName ) return 0x0647;
-			else if ( L"hehebrew" == wsName ) return 0x05D4;
 			else if ( L"hehfinalaltonearabic" == wsName ) return 0xFBA7;
-			else if ( L"hehfinalalttwoarabic" == wsName ) return 0xFEEA;
-			else if ( L"hehfinalarabic" == wsName ) return 0xFEEA;
+			else if ( L"hehfinalalttwoarabic" == wsName || L"hehfinalarabic" == wsName ) return 0xFEEA;
 			else if ( L"hehhamzaabovefinalarabic" == wsName ) return 0xFBA5;
 			else if ( L"hehhamzaaboveisolatedarabic" == wsName ) return 0xFBA4;
 			else if ( L"hehinitialaltonearabic" == wsName ) return 0xFBA8;
@@ -2725,8 +2651,7 @@ namespace NSFontConverter
 			else if ( L"hekutaarusquare" == wsName ) return 0x3336;
 			else if ( L"henghook" == wsName ) return 0x0267;
 			else if ( L"herutusquare" == wsName ) return 0x3339;
-			else if ( L"het" == wsName ) return 0x05D7;
-			else if ( L"hethebrew" == wsName ) return 0x05D7;
+			else if ( L"het" == wsName || L"hethebrew" == wsName ) return 0x05D7;
 			break;
 		}
 		case 'h':
@@ -2745,14 +2670,7 @@ namespace NSFontConverter
 			else if ( L"hihiragana" == wsName ) return 0x3072;
 			else if ( L"hikatakana" == wsName ) return 0x30D2;
 			else if ( L"hikatakanahalfwidth" == wsName ) return 0xFF8B;
-			else if ( L"hiriq" == wsName ) return 0x05B4;
-			else if ( L"hiriq14" == wsName ) return 0x05B4;
-			else if ( L"hiriq21" == wsName ) return 0x05B4;
-			else if ( L"hiriq2d" == wsName ) return 0x05B4;
-			else if ( L"hiriqhebrew" == wsName ) return 0x05B4;
-			else if ( L"hiriqnarrowhebrew" == wsName ) return 0x05B4;
-			else if ( L"hiriqquarterhebrew" == wsName ) return 0x05B4;
-			else if ( L"hiriqwidehebrew" == wsName ) return 0x05B4;
+			else if ( L"hiriq" == wsName || L"hiriq14" == wsName || L"hiriq21" == wsName || L"hiriq2d" == wsName || L"hiriqhebrew" == wsName || L"hiriqnarrowhebrew" == wsName || L"hiriqquarterhebrew" == wsName || L"hiriqwidehebrew" == wsName ) return 0x05B4;
 			break;
 		}
 		case 'l':
@@ -2772,17 +2690,9 @@ namespace NSFontConverter
 			else if ( L"hohiragana" == wsName ) return 0x307B;
 			else if ( L"hokatakana" == wsName ) return 0x30DB;
 			else if ( L"hokatakanahalfwidth" == wsName ) return 0xFF8E;
-			else if ( L"holam" == wsName ) return 0x05B9;
-			else if ( L"holam19" == wsName ) return 0x05B9;
-			else if ( L"holam26" == wsName ) return 0x05B9;
-			else if ( L"holam32" == wsName ) return 0x05B9;
-			else if ( L"holamhebrew" == wsName ) return 0x05B9;
-			else if ( L"holamnarrowhebrew" == wsName ) return 0x05B9;
-			else if ( L"holamquarterhebrew" == wsName ) return 0x05B9;
-			else if ( L"holamwidehebrew" == wsName ) return 0x05B9;
+			else if ( L"holam" == wsName || L"holam19" == wsName || L"holam26" == wsName || L"holam32" == wsName || L"holamhebrew" == wsName || L"holamnarrowhebrew" == wsName || L"holamquarterhebrew" == wsName || L"holamwidehebrew" == wsName ) return 0x05B9;
 			else if ( L"honokhukthai" == wsName ) return 0x0E2E;
-			else if ( L"hookabovecomb" == wsName ) return 0x0309;
-			else if ( L"hookcmb" == wsName ) return 0x0309;
+			else if ( L"hookabovecomb" == wsName || L"hookcmb" == wsName ) return 0x0309;
 			else if ( L"hookpalatalizedbelowcmb" == wsName ) return 0x0321;
 			else if ( L"hookretroflexbelowcmb" == wsName ) return 0x0322;
 			else if ( L"hoonsquare" == wsName ) return 0x3342;
@@ -2833,6 +2743,10 @@ namespace NSFontConverter
 			else if ( L"hyphentwo" == wsName ) return 0x2010;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -3002,11 +2916,9 @@ namespace NSFontConverter
 			else if ( L"infinity" == wsName ) return 0x221E;
 			else if ( L"iniarmenian" == wsName ) return 0x056B;
 			else if ( L"integral" == wsName ) return 0x222B;
-			else if ( L"integralbottom" == wsName ) return 0x2321;
-			else if ( L"integralbt" == wsName ) return 0x2321;
+			else if ( L"integralbottom" == wsName || L"integralbt" == wsName ) return 0x2321;
 			else if ( L"integralex" == wsName ) return 0xF8F5;
-			else if ( L"integraltop" == wsName ) return 0x2320;
-			else if ( L"integraltp" == wsName ) return 0x2320;
+			else if ( L"integraltop" == wsName || L"integraltp" == wsName ) return 0x2320;
 			else if ( L"intersection" == wsName ) return 0x2229;
 			else if ( L"intisquare" == wsName ) return 0x3305;
 			else if ( L"invbullet" == wsName ) return 0x25D8;
@@ -3072,6 +2984,10 @@ namespace NSFontConverter
 			else if ( L"izhitsadblgravecyrillic" == wsName ) return 0x0477;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -3118,12 +3034,10 @@ namespace NSFontConverter
 		else if ( L"kacyrillic" == wsName ) return 0x043A;
 		else if ( L"kadescendercyrillic" == wsName ) return 0x049B;
 		else if ( L"kadeva" == wsName ) return 0x0915;
-		else if ( L"kaf" == wsName ) return 0x05DB;
+		else if ( L"kaf" == wsName || L"kafhebrew" == wsName ) return 0x05DB;
 		else if ( L"kafarabic" == wsName ) return 0x0643;
-		else if ( L"kafdagesh" == wsName ) return 0xFB3B;
-		else if ( L"kafdageshhebrew" == wsName ) return 0xFB3B;
+		else if ( L"kafdagesh" == wsName || L"kafdageshhebrew" == wsName ) return 0xFB3B;
 		else if ( L"kaffinalarabic" == wsName ) return 0xFEDA;
-		else if ( L"kafhebrew" == wsName ) return 0x05DB;
 		else if ( L"kafinitialarabic" == wsName ) return 0xFEDB;
 		else if ( L"kafmedialarabic" == wsName ) return 0xFEDC;
 		else if ( L"kafrafehebrew" == wsName ) return 0xFB4D;
@@ -3140,8 +3054,7 @@ namespace NSFontConverter
 		else if ( L"kapyeounpieupkorean" == wsName ) return 0x3178;
 		else if ( L"kapyeounssangpieupkorean" == wsName ) return 0x3179;
 		else if ( L"karoriisquare" == wsName ) return 0x330D;
-		else if ( L"kashidaautoarabic" == wsName ) return 0x0640;
-		else if ( L"kashidaautonosidebearingarabic" == wsName ) return 0x0640;
+		else if ( L"kashidaautoarabic" == wsName || L"kashidaautonosidebearingarabic" == wsName ) return 0x0640;
 		else if ( L"kasmallkatakana" == wsName ) return 0x30F5;
 		else if ( L"kasquare" == wsName ) return 0x3384;
 		else if ( L"kasraarabic" == wsName ) return 0x0650;
@@ -3152,9 +3065,8 @@ namespace NSFontConverter
 		else if ( L"kbopomofo" == wsName ) return 0x310E;
 		else if ( L"kcalsquare" == wsName ) return 0x3389;
 		else if ( L"kcaron" == wsName ) return 0x01E9;
-		else if ( L"kcedilla" == wsName ) return 0x0137;
+		else if ( L"kcedilla" == wsName || L"kcommaaccent" == wsName ) return 0x0137;
 		else if ( L"kcircle" == wsName ) return 0x24DA;
-		else if ( L"kcommaaccent" == wsName ) return 0x0137;
 		else if ( L"kdotbelow" == wsName ) return 0x1E33;
 		else if ( L"keharmenian" == wsName ) return 0x0584;
 		else if ( L"kehiragana" == wsName ) return 0x3051;
@@ -3248,14 +3160,11 @@ namespace NSFontConverter
 		else if ( L"lamarabic" == wsName ) return 0x0644;
 		else if ( L"lambda" == wsName ) return 0x03BB;
 		else if ( L"lambdastroke" == wsName ) return 0x019B;
-		else if ( L"lamed" == wsName ) return 0x05DC;
-		else if ( L"lameddagesh" == wsName ) return 0xFB3C;
-		else if ( L"lameddageshhebrew" == wsName ) return 0xFB3C;
-		else if ( L"lamedhebrew" == wsName ) return 0x05DC;
-		else if ( L"lamedholam" == wsName ) return 0x05DC05B9;
+		else if ( L"lamed" == wsName || L"lamedhebrew" == wsName ) return 0x05DC;
+		else if ( L"lameddagesh" == wsName || L"lameddageshhebrew" == wsName ) return 0xFB3C;
+		else if ( L"lamedholam" == wsName || L"lamedholamhebrew" == wsName ) return 0x05DC05B9;
 		// "lamedholamdagesh"  "05DC 05B9 05BC";
 		// "lamedholamdageshhebrew"  "05DC 05B9 05BC";
-		else if ( L"lamedholamhebrew" == wsName ) return 0x05DC05B9;
 		else if ( L"lamfinalarabic" == wsName ) return 0xFEDE;
 		else if ( L"lamhahinitialarabic" == wsName ) return 0xFCCA;
 		else if ( L"laminitialarabic" == wsName ) return 0xFEDF;
@@ -3272,12 +3181,10 @@ namespace NSFontConverter
 		else if ( L"lbelt" == wsName ) return 0x026C;
 		else if ( L"lbopomofo" == wsName ) return 0x310C;
 		else if ( L"lcaron" == wsName ) return 0x013E;
-		else if ( L"lcedilla" == wsName ) return 0x013C;
+		else if ( L"lcedilla" == wsName || L"lcommaaccent" == wsName ) return 0x013C;
 		else if ( L"lcircle" == wsName ) return 0x24DB;
 		else if ( L"lcircumflexbelow" == wsName ) return 0x1E3D;
-		else if ( L"lcommaaccent" == wsName ) return 0x013C;
-		else if ( L"ldot" == wsName ) return 0x0140;
-		else if ( L"ldotaccent" == wsName ) return 0x0140;
+		else if ( L"ldot" == wsName || L"ldotaccent" == wsName ) return 0x0140;
 		else if ( L"ldotbelow" == wsName ) return 0x1E37;
 		else if ( L"ldotbelowmacron" == wsName ) return 0x1E39;
 		else if ( L"leftangleabovecmb" == wsName ) return 0x031A;
@@ -3356,8 +3263,7 @@ namespace NSFontConverter
 			else if ( L"madeva" == wsName ) return 0x092E;
 			else if ( L"magujarati" == wsName ) return 0x0AAE;
 			else if ( L"magurmukhi" == wsName ) return 0x0A2E;
-			else if ( L"mahapakhhebrew" == wsName ) return 0x05A4;
-			else if ( L"mahapakhlefthebrew" == wsName ) return 0x05A4;
+			else if ( L"mahapakhhebrew" == wsName || L"mahapakhlefthebrew" == wsName ) return 0x05A4;
 			else if ( L"mahiragana" == wsName ) return 0x307E;
 			else if ( L"maichattawalowleftthai" == wsName ) return 0xF895;
 			else if ( L"maichattawalowrightthai" == wsName ) return 0xF894;
@@ -3382,10 +3288,9 @@ namespace NSFontConverter
 			else if ( L"maiyamokthai" == wsName ) return 0x0E46;
 			else if ( L"makatakana" == wsName ) return 0x30DE;
 			else if ( L"makatakanahalfwidth" == wsName ) return 0xFF8F;
-			else if ( L"male" == wsName ) return 0x2642;
+			else if ( L"male" == wsName || L"mars" == wsName ) return 0x2642;
 			else if ( L"mansyonsquare" == wsName ) return 0x3347;
 			else if ( L"maqafhebrew" == wsName ) return 0x05BE;
-			else if ( L"mars" == wsName ) return 0x2642;
 			else if ( L"masoracirclehebrew" == wsName ) return 0x05AF;
 			else if ( L"masquare" == wsName ) return 0x3383;
 			break;
@@ -3421,15 +3326,11 @@ namespace NSFontConverter
 			else if ( L"meizierasquare" == wsName ) return 0x337E;
 			else if ( L"mekatakana" == wsName ) return 0x30E1;
 			else if ( L"mekatakanahalfwidth" == wsName ) return 0xFF92;
-			else if ( L"mem" == wsName ) return 0x05DE;
-			else if ( L"memdagesh" == wsName ) return 0xFB3E;
-			else if ( L"memdageshhebrew" == wsName ) return 0xFB3E;
-			else if ( L"memhebrew" == wsName ) return 0x05DE;
+			else if ( L"mem" == wsName || L"memhebrew" == wsName ) return 0x05DE;
+			else if ( L"memdagesh" == wsName || L"memdageshhebrew" == wsName ) return 0xFB3E;
 			else if ( L"menarmenian" == wsName ) return 0x0574;
-			else if ( L"merkhahebrew" == wsName ) return 0x05A5;
-			else if ( L"merkhakefulahebrew" == wsName ) return 0x05A6;
-			else if ( L"merkhakefulalefthebrew" == wsName ) return 0x05A6;
-			else if ( L"merkhalefthebrew" == wsName ) return 0x05A5;
+			else if ( L"merkhahebrew" == wsName || L"merkhalefthebrew" == wsName ) return 0x05A5;
+			else if ( L"merkhakefulahebrew" == wsName || L"merkhakefulalefthebrew" == wsName ) return 0x05A6;
 			break;
 		}
 		case 'h':
@@ -3507,8 +3408,7 @@ namespace NSFontConverter
 		}
 		case 'u':
 		{
-			if      ( L"mu" == wsName ) return 0x00B5;
-			else if ( L"mu1" == wsName ) return 0x00B5;
+			if ( L"mu" == wsName || L"mu1" == wsName ) return 0x00B5;
 			else if ( L"muasquare" == wsName ) return 0x3382;
 			else if ( L"muchgreater" == wsName ) return 0x226B;
 			else if ( L"muchless" == wsName ) return 0x226A;
@@ -3521,8 +3421,7 @@ namespace NSFontConverter
 			else if ( L"mulsquare" == wsName ) return 0x3395;
 			else if ( L"multiply" == wsName ) return 0x00D7;
 			else if ( L"mumsquare" == wsName ) return 0x339B;
-			else if ( L"munahhebrew" == wsName ) return 0x05A3;
-			else if ( L"munahlefthebrew" == wsName ) return 0x05A3;
+			else if ( L"munahhebrew" == wsName || L"munahlefthebrew" == wsName ) return 0x05A3;
 			else if ( L"musicalnote" == wsName ) return 0x266A;
 			else if ( L"musicalnotedbl" == wsName ) return 0x266B;
 			else if ( L"musicflatsign" == wsName ) return 0x266D;
@@ -3544,6 +3443,10 @@ namespace NSFontConverter
 			else if ( L"mwsquare" == wsName ) return 0x33BD;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -3582,10 +3485,9 @@ namespace NSFontConverter
 		case 'c':
 		{
 			if      ( L"ncaron" == wsName ) return 0x0148;
-			else if ( L"ncedilla" == wsName ) return 0x0146;
+			else if ( L"ncedilla" == wsName || L"ncommaaccent" == wsName ) return 0x0146;
 			else if ( L"ncircle" == wsName ) return 0x24DD;
 			else if ( L"ncircumflexbelow" == wsName ) return 0x1E4B;
-			else if ( L"ncommaaccent" == wsName ) return 0x0146;
 			break;
 		}
 		case 'd':
@@ -3641,14 +3543,13 @@ namespace NSFontConverter
 			else if ( L"nikhahitleftthai" == wsName ) return 0xF899;
 			else if ( L"nikhahitthai" == wsName ) return 0x0E4D;
 			else if ( L"nine" == wsName ) return 0x0039;
-			else if ( L"ninearabic" == wsName ) return 0x0669;
+			else if ( L"ninearabic" == wsName || L"ninehackarabic" == wsName ) return 0x0669;
 			else if ( L"ninebengali" == wsName ) return 0x09EF;
 			else if ( L"ninecircle" == wsName ) return 0x2468;
 			else if ( L"ninecircleinversesansserif" == wsName ) return 0x2792;
 			else if ( L"ninedeva" == wsName ) return 0x096F;
 			else if ( L"ninegujarati" == wsName ) return 0x0AEF;
 			else if ( L"ninegurmukhi" == wsName ) return 0x0A6F;
-			else if ( L"ninehackarabic" == wsName ) return 0x0669;
 			else if ( L"ninehangzhou" == wsName ) return 0x3029;
 			else if ( L"nineideographicparen" == wsName ) return 0x3228;
 			else if ( L"nineinferior" == wsName ) return 0x2089;
@@ -3719,8 +3620,7 @@ namespace NSFontConverter
 			else if ( L"noonmeemisolatedarabic" == wsName ) return 0xFC4E;
 			else if ( L"noonnoonfinalarabic" == wsName ) return 0xFC8D;
 			else if ( L"notcontains" == wsName ) return 0x220C;
-			else if ( L"notelement" == wsName ) return 0x2209;
-			else if ( L"notelementof" == wsName ) return 0x2209;
+			else if ( L"notelement" == wsName || L"notelementof" == wsName ) return 0x2209;
 			else if ( L"notequal" == wsName ) return 0x2260;
 			else if ( L"notgreater" == wsName ) return 0x226F;
 			else if ( L"notgreaternorequal" == wsName ) return 0x2271;
@@ -3768,10 +3668,8 @@ namespace NSFontConverter
 			else if ( L"numeralsigngreek" == wsName ) return 0x0374;
 			else if ( L"numeralsignlowergreek" == wsName ) return 0x0375;
 			else if ( L"numero" == wsName ) return 0x2116;
-			else if ( L"nun" == wsName ) return 0x05E0;
-			else if ( L"nundagesh" == wsName ) return 0xFB40;
-			else if ( L"nundageshhebrew" == wsName ) return 0xFB40;
-			else if ( L"nunhebrew" == wsName ) return 0x05E0;
+			else if ( L"nun" == wsName || L"nunhebrew" == wsName ) return 0x05E0;
+			else if ( L"nundagesh" == wsName || L"nundageshhebrew" == wsName ) return 0xFB40;
 			break;
 		}
 		case 'v':
@@ -3792,6 +3690,10 @@ namespace NSFontConverter
 			else if ( L"nyagurmukhi" == wsName ) return 0x0A1E;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -3917,7 +3819,7 @@ namespace NSFontConverter
 		case 'n':
 		{
 			if      ( L"one" == wsName ) return 0x0031;
-			else if ( L"onearabic" == wsName ) return 0x0661;
+			else if ( L"onearabic" == wsName || L"onehackarabic" == wsName ) return 0x0661;
 			else if ( L"onebengali" == wsName ) return 0x09E7;
 			else if ( L"onecircle" == wsName ) return 0x2460;
 			else if ( L"onecircleinversesansserif" == wsName ) return 0x278A;
@@ -3927,7 +3829,6 @@ namespace NSFontConverter
 			else if ( L"onefitted" == wsName ) return 0xF6DC;
 			else if ( L"onegujarati" == wsName ) return 0x0AE7;
 			else if ( L"onegurmukhi" == wsName ) return 0x0A67;
-			else if ( L"onehackarabic" == wsName ) return 0x0661;
 			else if ( L"onehalf" == wsName ) return 0x00BD;
 			else if ( L"onehangzhou" == wsName ) return 0x3021;
 			else if ( L"oneideographicparen" == wsName ) return 0x3220;
@@ -3973,11 +3874,10 @@ namespace NSFontConverter
 			if      ( L"oshortdeva" == wsName ) return 0x0912;
 			else if ( L"oshortvowelsigndeva" == wsName ) return 0x094A;
 			else if ( L"oslash" == wsName ) return 0x00F8;
-			else if ( L"oslashacute" == wsName ) return 0x01FF;
+			else if ( L"oslashacute" == wsName || L"ostrokeacute" == wsName ) return 0x01FF;
 			else if ( L"osmallhiragana" == wsName ) return 0x3049;
 			else if ( L"osmallkatakana" == wsName ) return 0x30A9;
 			else if ( L"osmallkatakanahalfwidth" == wsName ) return 0xFF6B;
-			else if ( L"ostrokeacute" == wsName ) return 0x01FF;
 			else if ( L"osuperior" == wsName ) return 0xF6F0;
 			break;
 		}
@@ -4008,6 +3908,10 @@ namespace NSFontConverter
 			else if ( L"ovowelsigngujarati" == wsName ) return 0x0ACB;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -4065,14 +3969,7 @@ namespace NSFontConverter
 			else if ( L"paseqhebrew" == wsName ) return 0x05C0;
 			else if ( L"pashtahebrew" == wsName ) return 0x0599;
 			else if ( L"pasquare" == wsName ) return 0x33A9;
-			else if ( L"patah" == wsName ) return 0x05B7;
-			else if ( L"patah11" == wsName ) return 0x05B7;
-			else if ( L"patah1d" == wsName ) return 0x05B7;
-			else if ( L"patah2a" == wsName ) return 0x05B7;
-			else if ( L"patahhebrew" == wsName ) return 0x05B7;
-			else if ( L"patahnarrowhebrew" == wsName ) return 0x05B7;
-			else if ( L"patahquarterhebrew" == wsName ) return 0x05B7;
-			else if ( L"patahwidehebrew" == wsName ) return 0x05B7;
+			else if ( L"patah" == wsName || L"patah11" == wsName || L"patah1d" == wsName || L"patah2a" == wsName || L"patahhebrew" == wsName || L"patahnarrowhebrew" == wsName || L"patahquarterhebrew" == wsName || L"patahwidehebrew" == wsName ) return 0x05B7;
 			else if ( L"pazerhebrew" == wsName ) return 0x05A1;
 			break;
 		}
@@ -4093,15 +3990,13 @@ namespace NSFontConverter
 		}
 		case 'e':
 		{
-			if      ( L"pe" == wsName ) return 0x05E4;
+			if ( L"pe" == wsName || L"pehebrew" == wsName ) return 0x05E4;
 			else if ( L"pecyrillic" == wsName ) return 0x043F;
-			else if ( L"pedagesh" == wsName ) return 0xFB44;
-			else if ( L"pedageshhebrew" == wsName ) return 0xFB44;
+			else if ( L"pedagesh" == wsName || L"pedageshhebrew" == wsName ) return 0xFB44;
 			else if ( L"peezisquare" == wsName ) return 0x333B;
 			else if ( L"pefinaldageshhebrew" == wsName ) return 0xFB43;
 			else if ( L"peharabic" == wsName ) return 0x067E;
 			else if ( L"peharmenian" == wsName ) return 0x057A;
-			else if ( L"pehebrew" == wsName ) return 0x05E4;
 			else if ( L"pehfinalarabic" == wsName ) return 0xFB57;
 			else if ( L"pehinitialarabic" == wsName ) return 0xFB58;
 			else if ( L"pehiragana" == wsName ) return 0x307A;
@@ -4139,7 +4034,7 @@ namespace NSFontConverter
 			else if ( L"phagujarati" == wsName ) return 0x0AAB;
 			else if ( L"phagurmukhi" == wsName ) return 0x0A2B;
 			else if ( L"phi" == wsName ) return 0x03C6;
-			else if ( L"phi1" == wsName ) return 0x03D5;
+			else if ( L"phi1" == wsName || L"phisymbolgreek" == wsName ) return 0x03D5;
 			else if ( L"phieuphacirclekorean" == wsName ) return 0x327A;
 			else if ( L"phieuphaparenkorean" == wsName ) return 0x321A;
 			else if ( L"phieuphcirclekorean" == wsName ) return 0x326C;
@@ -4147,7 +4042,6 @@ namespace NSFontConverter
 			else if ( L"phieuphparenkorean" == wsName ) return 0x320C;
 			else if ( L"philatin" == wsName ) return 0x0278;
 			else if ( L"phinthuthai" == wsName ) return 0x0E3A;
-			else if ( L"phisymbolgreek" == wsName ) return 0x03D5;
 			else if ( L"phook" == wsName ) return 0x01A5;
 			else if ( L"phophanthai" == wsName ) return 0x0E1E;
 			else if ( L"phophungthai" == wsName ) return 0x0E1C;
@@ -4251,6 +4145,10 @@ namespace NSFontConverter
 			if      ( L"pwsquare" == wsName ) return 0x33BA;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -4264,61 +4162,27 @@ namespace NSFontConverter
 		else if ( L"qaffinalarabic" == wsName ) return 0xFED6;
 		else if ( L"qafinitialarabic" == wsName ) return 0xFED7;
 		else if ( L"qafmedialarabic" == wsName ) return 0xFED8;
-		else if ( L"qamats" == wsName ) return 0x05B8;
-		else if ( L"qamats10" == wsName ) return 0x05B8;
-		else if ( L"qamats1a" == wsName ) return 0x05B8;
-		else if ( L"qamats1c" == wsName ) return 0x05B8;
-		else if ( L"qamats27" == wsName ) return 0x05B8;
-		else if ( L"qamats29" == wsName ) return 0x05B8;
-		else if ( L"qamats33" == wsName ) return 0x05B8;
-		else if ( L"qamatsde" == wsName ) return 0x05B8;
-		else if ( L"qamatshebrew" == wsName ) return 0x05B8;
-		else if ( L"qamatsnarrowhebrew" == wsName ) return 0x05B8;
-		else if ( L"qamatsqatanhebrew" == wsName ) return 0x05B8;
-		else if ( L"qamatsqatannarrowhebrew" == wsName ) return 0x05B8;
-		else if ( L"qamatsqatanquarterhebrew" == wsName ) return 0x05B8;
-		else if ( L"qamatsqatanwidehebrew" == wsName ) return 0x05B8;
-		else if ( L"qamatsquarterhebrew" == wsName ) return 0x05B8;
-		else if ( L"qamatswidehebrew" == wsName ) return 0x05B8;
+		else if ( L"qamats" == wsName || L"qamats10" == wsName || L"qamats1a" == wsName || L"qamats1c" == wsName || L"qamats27" == wsName || L"qamats29" == wsName || L"qamats33" == wsName || L"qamatsde" == wsName || L"qamatshebrew" == wsName || L"qamatsnarrowhebrew" == wsName || L"qamatsqatanhebrew" == wsName || L"qamatsqatannarrowhebrew" == wsName || L"qamatsqatanquarterhebrew" == wsName || L"qamatsqatanwidehebrew" == wsName || L"qamatsquarterhebrew" == wsName || L"qamatswidehebrew" == wsName ) return 0x05B8;
 		else if ( L"qarneyparahebrew" == wsName ) return 0x059F;
 		else if ( L"qbopomofo" == wsName ) return 0x3111;
 		else if ( L"qcircle" == wsName ) return 0x24E0;
 		else if ( L"qhook" == wsName ) return 0x02A0;
 		else if ( L"qmonospace" == wsName ) return 0xFF51;
-		else if ( L"qof" == wsName ) return 0x05E7;
-		else if ( L"qofdagesh" == wsName ) return 0xFB47;
-		else if ( L"qofdageshhebrew" == wsName ) return 0xFB47;
-		else if ( L"qofhatafpatah" == wsName ) return 0x05E705B2;
-		else if ( L"qofhatafpatahhebrew" == wsName ) return 0x05E705B2;
-		else if ( L"qofhatafsegol" == wsName ) return 0x05E705B1;
-		else if ( L"qofhatafsegolhebrew" == wsName ) return 0x05E705B1;
-		else if ( L"qofhebrew" == wsName ) return 0x05E7;
-		else if ( L"qofhiriq" == wsName ) return 0x05E705B4;
-		else if ( L"qofhiriqhebrew" == wsName ) return 0x05E705B4;
-		else if ( L"qofholam" == wsName ) return 0x05E705B9;
-		else if ( L"qofholamhebrew" == wsName ) return 0x05E705B9;
-		else if ( L"qofpatah" == wsName ) return 0x05E705B7;
-		else if ( L"qofpatahhebrew" == wsName ) return 0x05E705B7;
-		else if ( L"qofqamats" == wsName ) return 0x05E705B8;
-		else if ( L"qofqamatshebrew" == wsName ) return 0x05E705B8;
-		else if ( L"qofqubuts" == wsName ) return 0x05E705BB;
-		else if ( L"qofqubutshebrew" == wsName ) return 0x05E705BB;
-		else if ( L"qofsegol" == wsName ) return 0x05E705B6;
-		else if ( L"qofsegolhebrew" == wsName ) return 0x05E705B6;
-		else if ( L"qofsheva" == wsName ) return 0x05E705B0;
-		else if ( L"qofshevahebrew" == wsName ) return 0x05E705B0;
-		else if ( L"qoftsere" == wsName ) return 0x05E705B5;
-		else if ( L"qoftserehebrew" == wsName ) return 0x05E705B5;
+		else if ( L"qof" == wsName || L"qofhebrew" == wsName ) return 0x05E7;
+		else if ( L"qofdagesh" == wsName || L"qofdageshhebrew" == wsName ) return 0xFB47;
+		else if ( L"qofhatafpatah" == wsName || L"qofhatafpatahhebrew" == wsName ) return 0x05E705B2;
+		else if ( L"qofhatafsegol" == wsName || L"qofhatafsegolhebrew" == wsName ) return 0x05E705B1;
+		else if ( L"qofhiriq" == wsName || L"qofhiriqhebrew" == wsName ) return 0x05E705B4;
+		else if ( L"qofholam" == wsName || L"qofholamhebrew" == wsName ) return 0x05E705B9;
+		else if ( L"qofpatah" == wsName || L"qofpatahhebrew" == wsName ) return 0x05E705B7;
+		else if ( L"qofqamats" == wsName || L"qofqamatshebrew" == wsName ) return 0x05E705B8;
+		else if ( L"qofqubuts" == wsName || L"qofqubutshebrew" == wsName ) return 0x05E705BB;
+		else if ( L"qofsegol" == wsName || L"qofsegolhebrew" == wsName ) return 0x05E705B6;
+		else if ( L"qofsheva" == wsName || L"qofshevahebrew" == wsName ) return 0x05E705B0;
+		else if ( L"qoftsere" == wsName || L"qoftserehebrew" == wsName ) return 0x05E705B5;
 		else if ( L"qparen" == wsName ) return 0x24AC;
 		else if ( L"quarternote" == wsName ) return 0x2669;
-		else if ( L"qubuts" == wsName ) return 0x05BB;
-		else if ( L"qubuts18" == wsName ) return 0x05BB;
-		else if ( L"qubuts25" == wsName ) return 0x05BB;
-		else if ( L"qubuts31" == wsName ) return 0x05BB;
-		else if ( L"qubutshebrew" == wsName ) return 0x05BB;
-		else if ( L"qubutsnarrowhebrew" == wsName ) return 0x05BB;
-		else if ( L"qubutsquarterhebrew" == wsName ) return 0x05BB;
-		else if ( L"qubutswidehebrew" == wsName ) return 0x05BB;
+		else if ( L"qubuts" == wsName || L"qubuts18" == wsName || L"qubuts25" == wsName || L"qubuts31" == wsName || L"qubutshebrew" == wsName || L"qubutsnarrowhebrew" == wsName || L"qubutsquarterhebrew" == wsName || L"qubutswidehebrew" == wsName ) return 0x05BB;
 		else if ( L"question" == wsName ) return 0x003F;
 		else if ( L"questionarabic" == wsName ) return 0x061F;
 		else if ( L"questionarmenian" == wsName ) return 0x055E;
@@ -4335,8 +4199,7 @@ namespace NSFontConverter
 		else if ( L"quotedblprimereversed" == wsName ) return 0x301D;
 		else if ( L"quotedblright" == wsName ) return 0x201D;
 		else if ( L"quoteleft" == wsName ) return 0x2018;
-		else if ( L"quoteleftreversed" == wsName ) return 0x201B;
-		else if ( L"quotereversed" == wsName ) return 0x201B;
+		else if ( L"quoteleftreversed" == wsName || L"quotereversed" == wsName ) return 0x201B;
 		else if ( L"quoteright" == wsName ) return 0x2019;
 		else if ( L"quoterightn" == wsName ) return 0x0149;
 		else if ( L"quotesinglbase" == wsName ) return 0x201A;
@@ -4366,8 +4229,7 @@ namespace NSFontConverter
 			else if ( L"radoverssquare" == wsName ) return 0x33AE;
 			else if ( L"radoverssquaredsquare" == wsName ) return 0x33AF;
 			else if ( L"radsquare" == wsName ) return 0x33AD;
-			else if ( L"rafe" == wsName ) return 0x05BF;
-			else if ( L"rafehebrew" == wsName ) return 0x05BF;
+			else if ( L"rafe" == wsName || L"rafehebrew" == wsName ) return 0x05BF;
 			else if ( L"ragujarati" == wsName ) return 0x0AB0;
 			else if ( L"ragurmukhi" == wsName ) return 0x0A30;
 			else if ( L"rahiragana" == wsName ) return 0x3089;
@@ -4387,9 +4249,8 @@ namespace NSFontConverter
 		case 'c':
 		{
 			if      ( L"rcaron" == wsName ) return 0x0159;
-			else if ( L"rcedilla" == wsName ) return 0x0157;
+			else if ( L"rcedilla" == wsName || L"rcommaaccent" == wsName ) return 0x0157;
 			else if ( L"rcircle" == wsName ) return 0x24E1;
-			else if ( L"rcommaaccent" == wsName ) return 0x0157;
 			break;
 		}
 		case 'd':
@@ -4415,32 +4276,20 @@ namespace NSFontConverter
 			//{ "rehyehaleflamarabic" == wsName ) return "0631 FEF3 FE8E 0644";
 			else if ( L"rekatakana" == wsName ) return 0x30EC;
 			else if ( L"rekatakanahalfwidth" == wsName ) return 0xFF9A;
-			else if ( L"resh" == wsName ) return 0x05E8;
+			else if ( L"resh" == wsName || L"reshhebrew" == wsName ) return 0x05E8;
 			else if ( L"reshdageshhebrew" == wsName ) return 0xFB48;
-			else if ( L"reshhatafpatah" == wsName ) return 0x05E805B2;
-			else if ( L"reshhatafpatahhebrew" == wsName ) return 0x05E805B2;
-			else if ( L"reshhatafsegol" == wsName ) return 0x05E805B1;
-			else if ( L"reshhatafsegolhebrew" == wsName ) return 0x05E805B1;
-			else if ( L"reshhebrew" == wsName ) return 0x05E8;
-			else if ( L"reshhiriq" == wsName ) return 0x05E805B4;
-			else if ( L"reshhiriqhebrew" == wsName ) return 0x05E805B4;
-			else if ( L"reshholam" == wsName ) return 0x05E805B9;
-			else if ( L"reshholamhebrew" == wsName ) return 0x05E805B9;
-			else if ( L"reshpatah" == wsName ) return 0x05E805B7;
-			else if ( L"reshpatahhebrew" == wsName ) return 0x05E805B7;
-			else if ( L"reshqamats" == wsName ) return 0x05E805B8;
-			else if ( L"reshqamatshebrew" == wsName ) return 0x05E805B8;
-			else if ( L"reshqubuts" == wsName ) return 0x05E805BB;
-			else if ( L"reshqubutshebrew" == wsName ) return 0x05E805BB;
-			else if ( L"reshsegol" == wsName ) return 0x05E805B6;
-			else if ( L"reshsegolhebrew" == wsName ) return 0x05E805B6;
-			else if ( L"reshsheva" == wsName ) return 0x05E805B0;
-			else if ( L"reshshevahebrew" == wsName ) return 0x05E805B0;
-			else if ( L"reshtsere" == wsName ) return 0x05E805B5;
-			else if ( L"reshtserehebrew" == wsName ) return 0x05E805B5;
+			else if ( L"reshhatafpatah" == wsName || L"reshhatafpatahhebrew" == wsName ) return 0x05E805B2;
+			else if ( L"reshhatafsegol" == wsName || L"reshhatafsegolhebrew" == wsName ) return 0x05E805B1;
+			else if ( L"reshhiriq" == wsName || L"reshhiriqhebrew" == wsName ) return 0x05E805B4;
+			else if ( L"reshholam" == wsName || L"reshholamhebrew" == wsName ) return 0x05E805B9;
+			else if ( L"reshpatah" == wsName || L"reshpatahhebrew" == wsName ) return 0x05E805B7;
+			else if ( L"reshqamats" == wsName || L"reshqamatshebrew" == wsName ) return 0x05E805B8;
+			else if ( L"reshqubuts" == wsName || L"reshqubutshebrew" == wsName ) return 0x05E805BB;
+			else if ( L"reshsegol" == wsName || L"reshsegolhebrew" == wsName ) return 0x05E805B6;
+			else if ( L"reshsheva" == wsName || L"reshshevahebrew" == wsName ) return 0x05E805B0;
+			else if ( L"reshtsere" == wsName || L"reshtserehebrew" == wsName ) return 0x05E805B5;
 			else if ( L"reversedtilde" == wsName ) return 0x223D;
-			else if ( L"reviahebrew" == wsName ) return 0x0597;
-			else if ( L"reviamugrashhebrew" == wsName ) return 0x0597;
+			else if ( L"reviahebrew" == wsName || L"reviamugrashhebrew" == wsName ) return 0x0597;
 			else if ( L"revlogicalnot" == wsName ) return 0x2310;
 			break;
 		}
@@ -4574,6 +4423,10 @@ namespace NSFontConverter
 			else if ( L"rvocalicvowelsigngujarati" == wsName ) return 0x0AC3;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -4604,10 +4457,8 @@ namespace NSFontConverter
 			else if ( L"sakatakana" == wsName ) return 0x30B5;
 			else if ( L"sakatakanahalfwidth" == wsName ) return 0xFF7B;
 			else if ( L"sallallahoualayhewasallamarabic" == wsName ) return 0xFDFA;
-			else if ( L"samekh" == wsName ) return 0x05E1;
-			else if ( L"samekhdagesh" == wsName ) return 0xFB41;
-			else if ( L"samekhdageshhebrew" == wsName ) return 0xFB41;
-			else if ( L"samekhhebrew" == wsName ) return 0x05E1;
+			else if ( L"samekh" == wsName || L"samekhhebrew" == wsName ) return 0x05E1;
+			else if ( L"samekhdagesh" == wsName || L"samekhdageshhebrew" == wsName ) return 0xFB41;
 			else if ( L"saraaathai" == wsName ) return 0x0E32;
 			else if ( L"saraaethai" == wsName ) return 0x0E41;
 			else if ( L"saraaimaimalaithai" == wsName ) return 0x0E44;
@@ -4664,15 +4515,8 @@ namespace NSFontConverter
 			else if ( L"seenfinalarabic" == wsName ) return 0xFEB2;
 			else if ( L"seeninitialarabic" == wsName ) return 0xFEB3;
 			else if ( L"seenmedialarabic" == wsName ) return 0xFEB4;
-			else if ( L"segol" == wsName ) return 0x05B6;
-			else if ( L"segol13" == wsName ) return 0x05B6;
-			else if ( L"segol1f" == wsName ) return 0x05B6;
-			else if ( L"segol2c" == wsName ) return 0x05B6;
-			else if ( L"segolhebrew" == wsName ) return 0x05B6;
-			else if ( L"segolnarrowhebrew" == wsName ) return 0x05B6;
-			else if ( L"segolquarterhebrew" == wsName ) return 0x05B6;
+			else if ( L"segol" == wsName || L"segol13" == wsName || L"segol1f" == wsName || L"segol2c" == wsName || L"segolhebrew" == wsName || L"segolnarrowhebrew" == wsName || L"segolquarterhebrew" == wsName || L"segolwidehebrew" == wsName ) return 0x05B6;
 			else if ( L"segoltahebrew" == wsName ) return 0x0592;
-			else if ( L"segolwidehebrew" == wsName ) return 0x05B6;
 			else if ( L"seharmenian" == wsName ) return 0x057D;
 			else if ( L"sehiragana" == wsName ) return 0x305B;
 			else if ( L"sekatakana" == wsName ) return 0x30BB;
@@ -4686,7 +4530,7 @@ namespace NSFontConverter
 			else if ( L"sentisquare" == wsName ) return 0x3322;
 			else if ( L"sentosquare" == wsName ) return 0x3323;
 			else if ( L"seven" == wsName ) return 0x0037;
-			else if ( L"sevenarabic" == wsName ) return 0x0667;
+			else if ( L"sevenarabic" == wsName || L"sevenhackarabic" == wsName ) return 0x0667;
 			else if ( L"sevenbengali" == wsName ) return 0x09ED;
 			else if ( L"sevencircle" == wsName ) return 0x2466;
 			else if ( L"sevencircleinversesansserif" == wsName ) return 0x2790;
@@ -4694,7 +4538,6 @@ namespace NSFontConverter
 			else if ( L"seveneighths" == wsName ) return 0x215E;
 			else if ( L"sevengujarati" == wsName ) return 0x0AED;
 			else if ( L"sevengurmukhi" == wsName ) return 0x0A6D;
-			else if ( L"sevenhackarabic" == wsName ) return 0x0667;
 			else if ( L"sevenhangzhou" == wsName ) return 0x3027;
 			else if ( L"sevenideographicparen" == wsName ) return 0x3226;
 			else if ( L"seveninferior" == wsName ) return 0x2087;
@@ -4728,10 +4571,9 @@ namespace NSFontConverter
 			else if ( L"shaddafathatanarabic" == wsName ) return 0x0651064B;
 			else if ( L"shaddakasraarabic" == wsName ) return 0xFC62;
 			else if ( L"shaddakasratanarabic" == wsName ) return 0xFC5F;
-			else if ( L"shade" == wsName ) return 0x2592;
+			else if ( L"shade" == wsName || L"shademedium" == wsName ) return 0x2592;
 			else if ( L"shadedark" == wsName ) return 0x2593;
 			else if ( L"shadelight" == wsName ) return 0x2591;
-			else if ( L"shademedium" == wsName ) return 0x2592;
 			else if ( L"shadeva" == wsName ) return 0x0936;
 			else if ( L"shagujarati" == wsName ) return 0x0AB6;
 			else if ( L"shagurmukhi" == wsName ) return 0x0A36;
@@ -4743,46 +4585,29 @@ namespace NSFontConverter
 			else if ( L"sheeninitialarabic" == wsName ) return 0xFEB7;
 			else if ( L"sheenmedialarabic" == wsName ) return 0xFEB8;
 			else if ( L"sheicoptic" == wsName ) return 0x03E3;
-			else if ( L"sheqel" == wsName ) return 0x20AA;
-			else if ( L"sheqelhebrew" == wsName ) return 0x20AA;
-			else if ( L"sheva" == wsName ) return 0x05B0;
-			else if ( L"sheva115" == wsName ) return 0x05B0;
-			else if ( L"sheva15" == wsName ) return 0x05B0;
-			else if ( L"sheva22" == wsName ) return 0x05B0;
-			else if ( L"sheva2e" == wsName ) return 0x05B0;
-			else if ( L"shevahebrew" == wsName ) return 0x05B0;
-			else if ( L"shevanarrowhebrew" == wsName ) return 0x05B0;
-			else if ( L"shevaquarterhebrew" == wsName ) return 0x05B0;
-			else if ( L"shevawidehebrew" == wsName ) return 0x05B0;
+			else if ( L"sheqel" == wsName || L"sheqelhebrew" == wsName ) return 0x20AA;
+			else if ( L"sheva" == wsName || L"sheva115" == wsName || L"sheva15" == wsName || L"sheva22" == wsName || L"sheva2e" == wsName || L"shevahebrew" == wsName || L"shevanarrowhebrew" == wsName || L"shevaquarterhebrew" == wsName || L"shevawidehebrew" == wsName ) return 0x05B0;
 			else if ( L"shhacyrillic" == wsName ) return 0x04BB;
 			else if ( L"shimacoptic" == wsName ) return 0x03ED;
-			else if ( L"shin" == wsName ) return 0x05E9;
-			else if ( L"shindagesh" == wsName ) return 0xFB49;
-			else if ( L"shindageshhebrew" == wsName ) return 0xFB49;
-			else if ( L"shindageshshindot" == wsName ) return 0xFB2C;
-			else if ( L"shindageshshindothebrew" == wsName ) return 0xFB2C;
-			else if ( L"shindageshsindot" == wsName ) return 0xFB2D;
-			else if ( L"shindageshsindothebrew" == wsName ) return 0xFB2D;
+			else if ( L"shin" == wsName || L"shinhebrew" == wsName ) return 0x05E9;
+			else if ( L"shindagesh" == wsName || L"shindageshhebrew" == wsName ) return 0xFB49;
+			else if ( L"shindageshshindot" == wsName || L"shindageshshindothebrew" == wsName ) return 0xFB2C;
+			else if ( L"shindageshsindot" == wsName || L"shindageshsindothebrew" == wsName ) return 0xFB2D;
 			else if ( L"shindothebrew" == wsName ) return 0x05C1;
-			else if ( L"shinhebrew" == wsName ) return 0x05E9;
-			else if ( L"shinshindot" == wsName ) return 0xFB2A;
-			else if ( L"shinshindothebrew" == wsName ) return 0xFB2A;
-			else if ( L"shinsindot" == wsName ) return 0xFB2B;
-			else if ( L"shinsindothebrew" == wsName ) return 0xFB2B;
+			else if ( L"shinshindot" == wsName || L"shinshindothebrew" == wsName ) return 0xFB2A;
+			else if ( L"shinsindot" == wsName || L"shinsindothebrew" == wsName ) return 0xFB2B;
 			else if ( L"shook" == wsName ) return 0x0282;
 			break;
 		}
 		case 'i':
 		{
 			if      ( L"sigma" == wsName ) return 0x03C3;
-			else if ( L"sigma1" == wsName ) return 0x03C2;
-			else if ( L"sigmafinal" == wsName ) return 0x03C2;
+			else if ( L"sigma1" == wsName || L"sigmafinal" == wsName ) return 0x03C2;
 			else if ( L"sigmalunatesymbolgreek" == wsName ) return 0x03F2;
 			else if ( L"sihiragana" == wsName ) return 0x3057;
 			else if ( L"sikatakana" == wsName ) return 0x30B7;
 			else if ( L"sikatakanahalfwidth" == wsName ) return 0xFF7C;
-			else if ( L"siluqhebrew" == wsName ) return 0x05BD;
-			else if ( L"siluqlefthebrew" == wsName ) return 0x05BD;
+			else if ( L"siluqhebrew" == wsName || L"siluqlefthebrew" == wsName ) return 0x05BD;
 			else if ( L"similar" == wsName ) return 0x223C;
 			else if ( L"sindothebrew" == wsName ) return 0x05C2;
 			else if ( L"siosacirclekorean" == wsName ) return 0x3274;
@@ -4796,14 +4621,13 @@ namespace NSFontConverter
 			else if ( L"siospieupkorean" == wsName ) return 0x317D;
 			else if ( L"siostikeutkorean" == wsName ) return 0x317C;
 			else if ( L"six" == wsName ) return 0x0036;
-			else if ( L"sixarabic" == wsName ) return 0x0666;
+			else if ( L"sixarabic" == wsName || L"sixhackarabic" == wsName ) return 0x0666;
 			else if ( L"sixbengali" == wsName ) return 0x09EC;
 			else if ( L"sixcircle" == wsName ) return 0x2465;
 			else if ( L"sixcircleinversesansserif" == wsName ) return 0x278F;
 			else if ( L"sixdeva" == wsName ) return 0x096C;
 			else if ( L"sixgujarati" == wsName ) return 0x0AEC;
 			else if ( L"sixgurmukhi" == wsName ) return 0x0A6C;
-			else if ( L"sixhackarabic" == wsName ) return 0x0666;
 			else if ( L"sixhangzhou" == wsName ) return 0x3026;
 			else if ( L"sixideographicparen" == wsName ) return 0x3225;
 			else if ( L"sixinferior" == wsName ) return 0x2086;
@@ -4853,10 +4677,8 @@ namespace NSFontConverter
 		}
 		case 'p':
 		{
-			if      ( L"space" == wsName ) return 0x0020;
-			else if ( L"spacehackarabic" == wsName ) return 0x0020;
-			else if ( L"spade" == wsName ) return 0x2660;
-			else if ( L"spadesuitblack" == wsName ) return 0x2660;
+			if ( L"space" == wsName || L"spacehackarabic" == wsName ) return 0x0020;
+			else if ( L"spade" == wsName || L"spadesuitblack" == wsName ) return 0x2660;
 			else if ( L"spadesuitwhite" == wsName ) return 0x2664;
 			else if ( L"sparen" == wsName ) return 0x24AE;
 			break;
@@ -4941,6 +4763,10 @@ namespace NSFontConverter
 			if      ( L"syouwaerasquare" == wsName ) return 0x337C;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 
@@ -4974,11 +4800,8 @@ namespace NSFontConverter
 			else if ( L"takatakanahalfwidth" == wsName ) return 0xFF80;
 			else if ( L"tatweelarabic" == wsName ) return 0x0640;
 			else if ( L"tau" == wsName ) return 0x03C4;
-			else if ( L"tav" == wsName ) return 0x05EA;
-			else if ( L"tavdages" == wsName ) return 0xFB4A;
-			else if ( L"tavdagesh" == wsName ) return 0xFB4A;
-			else if ( L"tavdageshhebrew" == wsName ) return 0xFB4A;
-			else if ( L"tavhebrew" == wsName ) return 0x05EA;
+			else if ( L"tav" == wsName || L"tavhebrew" == wsName ) return 0x05EA;
+			else if ( L"tavdages" == wsName || L"tavdagesh" == wsName || L"tavdageshhebrew" == wsName ) return 0xFB4A;
 			break;
 		}
 		case 'b':
@@ -4991,7 +4814,7 @@ namespace NSFontConverter
 		{
 			if      ( L"tcaron" == wsName ) return 0x0165;
 			else if ( L"tccurl" == wsName ) return 0x02A8;
-			else if ( L"tcedilla" == wsName ) return 0x0163;
+			else if ( L"tcedilla" == wsName || L"tcommaaccent" == wsName ) return 0x0163;
 			else if ( L"tcheharabic" == wsName ) return 0x0686;
 			else if ( L"tchehfinalarabic" == wsName ) return 0xFB7B;
 			else if ( L"tchehinitialarabic" == wsName ) return 0xFB7C;
@@ -4999,7 +4822,6 @@ namespace NSFontConverter
 			else if ( L"tchehmeeminitialarabic" == wsName ) return 0xFB7CFEE4;
 			else if ( L"tcircle" == wsName ) return 0x24E3;
 			else if ( L"tcircumflexbelow" == wsName ) return 0x1E71;
-			else if ( L"tcommaaccent" == wsName ) return 0x0163;
 			break;
 		}
 		case 'd':
@@ -5039,13 +4861,10 @@ namespace NSFontConverter
 			else if ( L"tenperiod" == wsName ) return 0x2491;
 			else if ( L"tenroman" == wsName ) return 0x2179;
 			else if ( L"tesh" == wsName ) return 0x02A7;
-			else if ( L"tet" == wsName ) return 0x05D8;
-			else if ( L"tetdagesh" == wsName ) return 0xFB38;
-			else if ( L"tetdageshhebrew" == wsName ) return 0xFB38;
-			else if ( L"tethebrew" == wsName ) return 0x05D8;
+			else if ( L"tet" == wsName || L"tethebrew" == wsName ) return 0x05D8;
+			else if ( L"tetdagesh" == wsName || L"tetdageshhebrew" == wsName ) return 0xFB38;
 			else if ( L"tetsecyrillic" == wsName ) return 0x04B5;
-			else if ( L"tevirhebrew" == wsName ) return 0x059B;
-			else if ( L"tevirlefthebrew" == wsName ) return 0x059B;
+			else if ( L"tevirhebrew" == wsName || L"tevirlefthebrew" == wsName ) return 0x059B;
 			break;
 		}
 		case 'h':
@@ -5067,8 +4886,7 @@ namespace NSFontConverter
 			else if ( L"thereexists" == wsName ) return 0x2203;
 			else if ( L"therefore" == wsName ) return 0x2234;
 			else if ( L"theta" == wsName ) return 0x03B8;
-			else if ( L"theta1" == wsName ) return 0x03D1;
-			else if ( L"thetasymbolgreek" == wsName ) return 0x03D1;
+			else if ( L"theta1" == wsName || L"thetasymbolgreek" == wsName ) return 0x03D1;
 			else if ( L"thieuthacirclekorean" == wsName ) return 0x3279;
 			else if ( L"thieuthaparenkorean" == wsName ) return 0x3219;
 			else if ( L"thieuthcirclekorean" == wsName ) return 0x326B;
@@ -5086,10 +4904,9 @@ namespace NSFontConverter
 			else if ( L"thothongthai" == wsName ) return 0x0E18;
 			else if ( L"thothungthai" == wsName ) return 0x0E16;
 			else if ( L"thousandcyrillic" == wsName ) return 0x0482;
-			else if ( L"thousandsseparatorarabic" == wsName ) return 0x066C;
-			else if ( L"thousandsseparatorpersian" == wsName ) return 0x066C;
+			else if ( L"thousandsseparatorarabic" == wsName || L"thousandsseparatorpersian" == wsName ) return 0x066C;
 			else if ( L"three" == wsName ) return 0x0033;
-			else if ( L"threearabic" == wsName ) return 0x0663;
+			else if ( L"threearabic" == wsName || L"threehackarabic" == wsName ) return 0x0663;
 			else if ( L"threebengali" == wsName ) return 0x09E9;
 			else if ( L"threecircle" == wsName ) return 0x2462;
 			else if ( L"threecircleinversesansserif" == wsName ) return 0x278C;
@@ -5097,7 +4914,6 @@ namespace NSFontConverter
 			else if ( L"threeeighths" == wsName ) return 0x215C;
 			else if ( L"threegujarati" == wsName ) return 0x0AE9;
 			else if ( L"threegurmukhi" == wsName ) return 0x0A69;
-			else if ( L"threehackarabic" == wsName ) return 0x0663;
 			else if ( L"threehangzhou" == wsName ) return 0x3023;
 			else if ( L"threeideographicparen" == wsName ) return 0x3222;
 			else if ( L"threeinferior" == wsName ) return 0x2083;
@@ -5127,15 +4943,13 @@ namespace NSFontConverter
 			else if ( L"tikeutparenkorean" == wsName ) return 0x3202;
 			else if ( L"tilde" == wsName ) return 0x02DC;
 			else if ( L"tildebelowcmb" == wsName ) return 0x0330;
-			else if ( L"tildecmb" == wsName ) return 0x0303;
-			else if ( L"tildecomb" == wsName ) return 0x0303;
+			else if ( L"tildecmb" == wsName || L"tildecomb" == wsName ) return 0x0303;
 			else if ( L"tildedoublecmb" == wsName ) return 0x0360;
 			else if ( L"tildeoperator" == wsName ) return 0x223C;
 			else if ( L"tildeoverlaycmb" == wsName ) return 0x0334;
 			else if ( L"tildeverticalcmb" == wsName ) return 0x033E;
 			else if ( L"timescircle" == wsName ) return 0x2297;
-			else if ( L"tipehahebrew" == wsName ) return 0x0596;
-			else if ( L"tipehalefthebrew" == wsName ) return 0x0596;
+			else if ( L"tipehahebrew" == wsName || L"tipehalefthebrew" == wsName ) return 0x0596;
 			else if ( L"tippigurmukhi" == wsName ) return 0x0A70;
 			else if ( L"titlocyrilliccmb" == wsName ) return 0x0483;
 			else if ( L"tiwnarmenian" == wsName ) return 0x057F;
@@ -5198,19 +5012,10 @@ namespace NSFontConverter
 		case 's':
 		{
 			if      ( L"ts" == wsName ) return 0x02A6;
-			else if ( L"tsadi" == wsName ) return 0x05E6;
-			else if ( L"tsadidagesh" == wsName ) return 0xFB46;
-			else if ( L"tsadidageshhebrew" == wsName ) return 0xFB46;
-			else if ( L"tsadihebrew" == wsName ) return 0x05E6;
+			else if ( L"tsadi" == wsName || L"tsadihebrew" == wsName ) return 0x05E6;
+			else if ( L"tsadidagesh" == wsName || L"tsadidageshhebrew" == wsName ) return 0xFB46;
 			else if ( L"tsecyrillic" == wsName ) return 0x0446;
-			else if ( L"tsere" == wsName ) return 0x05B5;
-			else if ( L"tsere12" == wsName ) return 0x05B5;
-			else if ( L"tsere1e" == wsName ) return 0x05B5;
-			else if ( L"tsere2b" == wsName ) return 0x05B5;
-			else if ( L"tserehebrew" == wsName ) return 0x05B5;
-			else if ( L"tserenarrowhebrew" == wsName ) return 0x05B5;
-			else if ( L"tserequarterhebrew" == wsName ) return 0x05B5;
-			else if ( L"tserewidehebrew" == wsName ) return 0x05B5;
+			else if ( L"tsere" == wsName || L"tsere12" == wsName || L"tsere1e" == wsName || L"tsere2b" == wsName || L"tserehebrew" == wsName || L"tserenarrowhebrew" == wsName || L"tserequarterhebrew" == wsName || L"tserewidehebrew" == wsName ) return 0x05B5;
 			else if ( L"tshecyrillic" == wsName ) return 0x045B;
 			else if ( L"tsuperior" == wsName ) return 0xF6F3;
 			break;
@@ -5253,17 +5058,15 @@ namespace NSFontConverter
 			else if ( L"twentyparen" == wsName ) return 0x2487;
 			else if ( L"twentyperiod" == wsName ) return 0x249B;
 			else if ( L"two" == wsName ) return 0x0032;
-			else if ( L"twoarabic" == wsName ) return 0x0662;
+			else if ( L"twoarabic" == wsName || L"twohackarabic" == wsName ) return 0x0662;
 			else if ( L"twobengali" == wsName ) return 0x09E8;
 			else if ( L"twocircle" == wsName ) return 0x2461;
 			else if ( L"twocircleinversesansserif" == wsName ) return 0x278B;
 			else if ( L"twodeva" == wsName ) return 0x0968;
-			else if ( L"twodotenleader" == wsName ) return 0x2025;
-			else if ( L"twodotleader" == wsName ) return 0x2025;
+			else if ( L"twodotenleader" == wsName || L"twodotleader" == wsName ) return 0x2025;
 			else if ( L"twodotleadervertical" == wsName ) return 0xFE30;
 			else if ( L"twogujarati" == wsName ) return 0x0AE8;
 			else if ( L"twogurmukhi" == wsName ) return 0x0A68;
-			else if ( L"twohackarabic" == wsName ) return 0x0662;
 			else if ( L"twohangzhou" == wsName ) return 0x3022;
 			else if ( L"twoideographicparen" == wsName ) return 0x3221;
 			else if ( L"twoinferior" == wsName ) return 0x2082;
@@ -5280,6 +5083,10 @@ namespace NSFontConverter
 			else if ( L"twothirds" == wsName ) return 0x2154;
 			break;
 		}
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
@@ -5298,7 +5105,7 @@ namespace NSFontConverter
 		else if ( L"ucircumflexbelow" == wsName ) return 0x1E77;
 		else if ( L"ucyrillic" == wsName ) return 0x0443;
 		else if ( L"udattadeva" == wsName ) return 0x0951;
-		else if ( L"udblacute" == wsName ) return 0x0171;
+		else if ( L"udblacute" == wsName || L"uhungarumlaut" == wsName ) return 0x0171;
 		else if ( L"udblgrave" == wsName ) return 0x0215;
 		else if ( L"udeva" == wsName ) return 0x0909;
 		else if ( L"udieresis" == wsName ) return 0x00FC;
@@ -5320,7 +5127,6 @@ namespace NSFontConverter
 		else if ( L"uhorngrave" == wsName ) return 0x1EEB;
 		else if ( L"uhornhookabove" == wsName ) return 0x1EED;
 		else if ( L"uhorntilde" == wsName ) return 0x1EEF;
-		else if ( L"uhungarumlaut" == wsName ) return 0x0171;
 		else if ( L"uhungarumlautcyrillic" == wsName ) return 0x04F3;
 		else if ( L"uinvertedbreve" == wsName ) return 0x0217;
 		else if ( L"ukatakana" == wsName ) return 0x30A6;
@@ -5382,13 +5188,9 @@ namespace NSFontConverter
 		else if ( L"vagujarati" == wsName ) return 0x0AB5;
 		else if ( L"vagurmukhi" == wsName ) return 0x0A35;
 		else if ( L"vakatakana" == wsName ) return 0x30F7;
-		else if ( L"vav" == wsName ) return 0x05D5;
-		else if ( L"vavdagesh" == wsName ) return 0xFB35;
-		else if ( L"vavdagesh65" == wsName ) return 0xFB35;
-		else if ( L"vavdageshhebrew" == wsName ) return 0xFB35;
-		else if ( L"vavhebrew" == wsName ) return 0x05D5;
-		else if ( L"vavholam" == wsName ) return 0xFB4B;
-		else if ( L"vavholamhebrew" == wsName ) return 0xFB4B;
+		else if ( L"vav" == wsName || L"vavhebrew" == wsName ) return 0x05D5;
+		else if ( L"vavdagesh" == wsName || L"vavdagesh65" == wsName || L"vavdageshhebrew" == wsName ) return 0xFB35;
+		else if ( L"vavholam" == wsName || L"vavholamhebrew" == wsName ) return 0xFB4B;
 		else if ( L"vavvavhebrew" == wsName ) return 0x05F0;
 		else if ( L"vavyodhebrew" == wsName ) return 0x05F1;
 		else if ( L"vcircle" == wsName ) return 0x24E5;
@@ -5562,8 +5364,7 @@ namespace NSFontConverter
 		else if ( L"yenmonospace" == wsName ) return 0xFFE5;
 		else if ( L"yeokorean" == wsName ) return 0x3155;
 		else if ( L"yeorinhieuhkorean" == wsName ) return 0x3186;
-		else if ( L"yerahbenyomohebrew" == wsName ) return 0x05AA;
-		else if ( L"yerahbenyomolefthebrew" == wsName ) return 0x05AA;
+		else if ( L"yerahbenyomohebrew" == wsName || L"yerahbenyomolefthebrew" == wsName ) return 0x05AA;
 		else if ( L"yericyrillic" == wsName ) return 0x044B;
 		else if ( L"yerudieresiscyrillic" == wsName ) return 0x04F9;
 		else if ( L"yesieungkorean" == wsName ) return 0x3181;
@@ -5579,10 +5380,8 @@ namespace NSFontConverter
 		else if ( L"yinyang" == wsName ) return 0x262F;
 		else if ( L"yiwnarmenian" == wsName ) return 0x0582;
 		else if ( L"ymonospace" == wsName ) return 0xFF59;
-		else if ( L"yod" == wsName ) return 0x05D9;
-		else if ( L"yoddagesh" == wsName ) return 0xFB39;
-		else if ( L"yoddageshhebrew" == wsName ) return 0xFB39;
-		else if ( L"yodhebrew" == wsName ) return 0x05D9;
+		else if ( L"yod" == wsName || L"yodhebrew" == wsName ) return 0x05D9;
+		else if ( L"yoddagesh" == wsName || L"yoddageshhebrew" == wsName ) return 0xFB39;
 		else if ( L"yodyodhebrew" == wsName ) return 0x05F2;
 		else if ( L"yodyodpatahhebrew" == wsName ) return 0xFB1F;
 		else if ( L"yohiragana" == wsName ) return 0x3088;
@@ -5643,17 +5442,14 @@ namespace NSFontConverter
 		else if ( L"zaqefgadolhebrew" == wsName ) return 0x0595;
 		else if ( L"zaqefqatanhebrew" == wsName ) return 0x0594;
 		else if ( L"zarqahebrew" == wsName ) return 0x0598;
-		else if ( L"zayin" == wsName ) return 0x05D6;
-		else if ( L"zayindagesh" == wsName ) return 0xFB36;
-		else if ( L"zayindageshhebrew" == wsName ) return 0xFB36;
-		else if ( L"zayinhebrew" == wsName ) return 0x05D6;
+		else if ( L"zayin" == wsName || L"zayinhebrew" == wsName ) return 0x05D6;
+		else if ( L"zayindagesh" == wsName || L"zayindageshhebrew" == wsName ) return 0xFB36;
 		else if ( L"zbopomofo" == wsName ) return 0x3117;
 		else if ( L"zcaron" == wsName ) return 0x017E;
 		else if ( L"zcircle" == wsName ) return 0x24E9;
 		else if ( L"zcircumflex" == wsName ) return 0x1E91;
 		else if ( L"zcurl" == wsName ) return 0x0291;
-		else if ( L"zdot" == wsName ) return 0x017C;
-		else if ( L"zdotaccent" == wsName ) return 0x017C;
+		else if ( L"zdot" == wsName || L"zdotaccent" == wsName ) return 0x017C;
 		else if ( L"zdotbelow" == wsName ) return 0x1E93;
 		else if ( L"zecyrillic" == wsName ) return 0x0437;
 		else if ( L"zedescendercyrillic" == wsName ) return 0x0499;
@@ -5661,12 +5457,11 @@ namespace NSFontConverter
 		else if ( L"zehiragana" == wsName ) return 0x305C;
 		else if ( L"zekatakana" == wsName ) return 0x30BC;
 		else if ( L"zero" == wsName ) return 0x0030;
-		else if ( L"zeroarabic" == wsName ) return 0x0660;
+		else if ( L"zeroarabic" == wsName || L"zerohackarabic" == wsName ) return 0x0660;
 		else if ( L"zerobengali" == wsName ) return 0x09E6;
 		else if ( L"zerodeva" == wsName ) return 0x0966;
 		else if ( L"zerogujarati" == wsName ) return 0x0AE6;
 		else if ( L"zerogurmukhi" == wsName ) return 0x0A66;
-		else if ( L"zerohackarabic" == wsName ) return 0x0660;
 		else if ( L"zeroinferior" == wsName ) return 0x2080;
 		else if ( L"zeromonospace" == wsName ) return 0xFF10;
 		else if ( L"zerooldstyle" == wsName ) return 0xF730;
@@ -5702,7 +5497,6 @@ namespace NSFontConverter
 	int Type1NameToUnicodeW(CWCharWrapper wsName)
 	{
 		wchar_t wChar0 = wsName[0];
-		wchar_t wChar1 = wsName[1];
 
 		switch(wChar0)
 		{
@@ -5758,6 +5552,10 @@ namespace NSFontConverter
 		case 'x': return Type1NameToUnicode_x( wsName );
 		case 'y': return Type1NameToUnicode_y( wsName );
 		case 'z': return Type1NameToUnicode_z( wsName );
+			default:
+			{
+				break;
+			}
 		}
 
 		return 0;
