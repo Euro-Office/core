@@ -580,6 +580,13 @@ namespace Oox2Odf
 				odf_context()->drawing_context()->end_hatch_style();
 			}
 		}break;
+		case SimpleTypes::filltypeTile:
+			// a picture repeated at its own size, not recoloured
+			if (!sImagePath.empty())
+				odf_context()->drawing_context()->set_image_style_repeat(2);
+			else if (sRgbColor1)
+				odf_context()->drawing_context()->set_solid_fill(*sRgbColor1);
+			break;
 		case SimpleTypes::filltypeSolid:
 		default:
 			if (sImagePath.empty() && sRgbColor1)

@@ -26,6 +26,7 @@
 #define _CPDOCCORE_DOCX_HEADERS_FOOTERS_H_
 
 #include <string>
+#include <set>
 #include <boost/unordered_map.hpp>
 
 #include "oox_rels.h"
@@ -43,7 +44,10 @@ namespace oox {
 class headers_footers
 {
 public:
-    headers_footers() : size_(0) {}
+    headers_footers() : size_(0)
+    {
+        for (int i = 0; i < none; i++) shown_[i] = false;
+    }
 
     enum Type { header, footer, headerLeft, footerLeft, headerFirst, footerFirst, none };
     std::wstring add(const std::wstring & StyleName, const std::wstring & Content, Type type,rels &_rels);
@@ -52,16 +56,22 @@ public:
     {
         instance(const std::wstring & Id,
             const std::wstring & Content,
-            Type _Type, const std::wstring & Name) : id_(Id), content_(Content), type_(_Type), name_(Name){}
+            Type _Type, const std::wstring & Name)
+            : id_(Id), content_(Content), type_(_Type), name_(Name), empty_(false){}
         std::wstring id_;
         std::wstring content_;
         Type type_;
         std::wstring name_;
+        bool empty_;	// written only to hide the header/footer of an earlier section
 		rels rels_;
     };
 
     void dump_rels(rels & Rels) const;
     bool write_sectPr(const std::wstring & StyleName, bool next_page, std::wostream & _Wostream);
+
+    // A section without w:headerReference (w:footerReference) shows the header (footer) of the section before it.
+    // Sections of this style get an empty one instead where the style has none.
+    void set_no_inherit(const std::wstring & StyleName) { no_inherit_.insert(StyleName); }
 
     typedef boost::shared_ptr<instance> instance_ptr;
     typedef std::vector<instance_ptr> instances_array;
@@ -71,6 +81,8 @@ public:
 
 private:
 	std::wstring last_write_style_;
+	std::set<std::wstring> no_inherit_;
+	bool shown_[none];	// by Type: a section without a reference of that type would show an earlier section's
 
 	static std::wstring create_id(size_t i);
 	static std::wstring create_name(size_t i, Type _Type);

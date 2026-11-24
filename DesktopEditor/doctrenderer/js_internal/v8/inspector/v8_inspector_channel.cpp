@@ -11,7 +11,7 @@ namespace NSJSBase
 	{
 	}
 
-	void CV8InspectorChannelImpl::sendResponse(int nCallId, std::unique_ptr<v8_inspector::StringBuffer> pMessage)
+	void CV8InspectorChannelImpl::sendResponse(int  /*nCallId*/, std::unique_ptr<v8_inspector::StringBuffer> pMessage)
 	{
 		const std::string response = convertToString(m_pIsolate, pMessage->string());
 		m_fOnResponce(response);

@@ -44,7 +44,19 @@
 namespace cpdoccore { 
 namespace odf_reader {
 
-
+namespace
+{
+// The body element after content[i], or NULL at the end. Soft page breaks between the two do not count.
+const office_element * element_after(const office_element_ptr_array & content, size_t i)
+{
+	for (++i; i < content.size(); ++i)
+	{
+		if (content[i] && content[i]->get_type() != typeTextSoftPageBreak)
+			return content[i].get();
+	}
+	return NULL;
+}
+}
 
 // office:text
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -362,6 +374,27 @@ void office_text::docx_convert(oox::docx_conversion_context & Context)
 				}
 			}
 		} 
+		// A table never gets here through next_element_style_name: the paragraph that knows the style of
+		// the element after the table is the last one inside the table. So when that element names another
+		// page style, ask for the section properties of the page style that ends before the table is
+		// converted: the table writes them into an empty paragraph after itself.
+		if (content_[i]->get_type() == typeTableTable && false == Context.get_paragraph_state())
+		{
+			const office_element * next = element_after(content_, i);
+			if (next && next->element_style_name)
+			{
+				odf_read_context & odfContext = Context.root()->odf_context();
+				const _CP_OPT(std::wstring) next_masterPageName =
+					odfContext.styleContainer().master_page_name_by_name(*next->element_style_name);
+
+				if ((next_masterPageName) && (Context.get_master_page_name() != *next_masterPageName) &&
+					false == odfContext.pageLayoutContainer().compare_page_properties(
+						Context.get_master_page_name(), *next_masterPageName))
+				{
+					Context.next_dump_page_properties(true);
+				}
+			}
+		}
 		content_[i]->docx_convert(Context);
     }
 	// An empty paragraph of minimal height (the endnote page section and the save in DocxConverter

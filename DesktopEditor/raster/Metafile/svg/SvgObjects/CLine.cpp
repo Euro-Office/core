@@ -16,43 +16,46 @@ namespace SVG
 		{
 			CMoveElement* pMoveElement{dynamic_cast<CMoveElement*>(operator[](0))};
 
-			if (NULL != pMoveElement)
+			if (nullptr != pMoveElement)
 				pMoveElement->m_oPoint.dX = oReader.GetDouble();
 		}
 		else if ("y1" == sName)
 		{
 			CMoveElement* pMoveElement{dynamic_cast<CMoveElement*>(operator[](0))};
 
-			if (NULL != pMoveElement)
+			if (nullptr != pMoveElement)
 				pMoveElement->m_oPoint.dY = oReader.GetDouble();
 		}
 		else if ("x2" == sName)
 		{
 			CLineElement* pLineElement{dynamic_cast<CLineElement*>(operator[](1))};
 
-			if (NULL != pLineElement)
+			if (nullptr != pLineElement)
 				pLineElement->m_oPoint.dX = oReader.GetDouble();
 		}
 		else if ("y2" == sName)
 		{
 			CLineElement* pLineElement{dynamic_cast<CLineElement*>(operator[](1))};
 
-			if (NULL != pLineElement)
+			if (nullptr != pLineElement)
 				pLineElement->m_oPoint.dY = oReader.GetDouble();
 		}
 		else
-			CRenderedObject::SetAttribute(sName, oReader);
+			// A <line> has no path data: fall back to the generic attribute handling
+			// instead of CPath::SetAttribute, which would parse a "d" attribute.
+			CRenderedObject::SetAttribute(sName, oReader); // NOLINT(bugprone-parent-virtual-call)
 	}
 
 	void CLine::SetData(const std::map<std::wstring, std::wstring> &mAttributes, unsigned short ushLevel, bool bHardMode)
 	{
-		CRenderedObject::SetData(mAttributes, ushLevel, bHardMode);
+		// See SetAttribute(): the CPath override is skipped on purpose.
+		CRenderedObject::SetData(mAttributes, ushLevel, bHardMode); // NOLINT(bugprone-parent-virtual-call)
 
 		SetStroke(mAttributes, ushLevel, bHardMode);
 		SetMarker(mAttributes, ushLevel, bHardMode);
 	}
 
-	void CLine::ApplyStyle(IRenderer *pRenderer, const TSvgStyles *pStyles, const CSvgFile *pFile, int &nTypePath, const CRenderedObject* pContexObject) const
+	void CLine::ApplyStyle(IRenderer *pRenderer, const TSvgStyles *pStyles, const CSvgFile * /*pFile*/, int &nTypePath, const CRenderedObject* pContexObject) const
 	{
 		if (ApplyStroke(pRenderer, &pStyles->m_oStroke, true, pContexObject))
 			nTypePath += c_nStroke;

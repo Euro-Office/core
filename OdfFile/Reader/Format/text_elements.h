@@ -48,6 +48,7 @@ public:
     void add_child_element	( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name, document_context * Context);
     void add_text			(const std::wstring & Text);
 	void add_space			(const std::wstring & Text);
+	void process_white_space(document_context * Context);
 
  	//_CP_OPT(std::wstring)	next_element_style_name; //for master page
    
@@ -103,6 +104,7 @@ public:
     void pptx_convert(oox::pptx_conversion_context & Context) ;
 
 	virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
+    virtual void afterReadContent();
 
     paragraph paragraph_;
 
@@ -110,7 +112,7 @@ private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
     virtual void add_text(const std::wstring & Text);
-	virtual void add_space(const std::wstring & Text){}
+	virtual void add_space(const std::wstring & Text);
 
     // heading-attrs
     _CP_OPT(unsigned int)	outline_level_;
@@ -138,6 +140,7 @@ public:
 	void pptx_convert(oox::pptx_conversion_context & Context) ;
 
 	virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
+    virtual void afterReadContent();
 
     p(){};
 	paragraph paragraph_;
