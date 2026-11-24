@@ -22,6 +22,7 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
+#include <cmath>
 #include <iostream>
 
 #include "../../DesktopEditor/common/File.h"
@@ -201,12 +202,12 @@ namespace NSX2T
             const char* nargs[3];
             nargs[0] = sProgramm.c_str();
             nargs[1] = sXmlA.c_str();
-            nargs[2] = NULL;
+            nargs[2] = nullptr;
 
 #ifndef _MAC
             const char* nenv[2];
             nenv[0] = sLibraryDir.c_str();
-            nenv[1] = NULL;
+            nenv[1] = nullptr;
 #else
             const char* nenv[3];
             nenv[0] = sLibraryDir.c_str();
@@ -266,16 +267,16 @@ void ParseStringAsInts(const std::string& s, std::vector<int>& arr)
 
 std::wstring GetThemePathByScale(const double& dScale)
 {
-    int nScaleOut = (int)(dScale * 100 + 0.5);
+    int nScaleOut = static_cast<int>(std::lround(dScale * 100));
 
     if (nScaleOut == 100)
         return L".png";
     else if ((nScaleOut % 100) == 0)
-        return L"@" + std::to_wstring((int)(nScaleOut / 100)) + L"x.png";
+        return L"@" + std::to_wstring((nScaleOut / 100)) + L"x.png";
     else if ((nScaleOut % 10) == 0)
-        return L"@" + std::to_wstring((int)(nScaleOut / 100)) + L"." + std::to_wstring((int)((nScaleOut / 10) % 10)) + L"x.png";
+        return L"@" + std::to_wstring((nScaleOut / 100)) + L"." + std::to_wstring(((nScaleOut / 10) % 10)) + L"x.png";
 
-    return L"@" + std::to_wstring((int)(nScaleOut / 100)) + L"." + std::to_wstring((int)(nScaleOut % 100)) + L"x.png";
+    return L"@" + std::to_wstring((nScaleOut / 100)) + L"." + std::to_wstring((nScaleOut % 100)) + L"x.png";
 }
 
 #ifdef WIN32
@@ -519,11 +520,11 @@ int main(int argc, char** argv)
             }
         }
 
-        BYTE* pData = NULL;
+        BYTE* pData = nullptr;
         DWORD nBytesCount = 0;
         if (NSFile::CFileBinary::ReadAllBytes(sThemeFile, &pData, nBytesCount))
         {
-            NSOnlineOfficeBinToPdf::CMetafileToRenderterRaster imageWriter(NULL);
+            NSOnlineOfficeBinToPdf::CMetafileToRenderterRaster imageWriter(nullptr);
 			imageWriter.SetMediaDirectory(sOut);
 			imageWriter.SetThemesDirectory(L"");
 			imageWriter.SetTempDirectory(sOut);
@@ -633,7 +634,7 @@ int main(int argc, char** argv)
 
                 int nRow = 4 * nRasterW;
                 int nSize = nRow * nRasterH;
-                BYTE* pData = new BYTE[nSize * nThemeIndex];
+                BYTE* pData = new BYTE[static_cast<size_t>(nSize) * nThemeIndex];
                 BYTE* pDataCur = pData;
 
                 std::wstring sCurrentPath = L"thumbnail" + GetThemePathByScale(dScale);
@@ -642,15 +643,8 @@ int main(int argc, char** argv)
                     CBgraFrame oFrame;
                     oFrame.OpenFile(sSrcThemesDir + L"/theme" + std::to_wstring(nIndex) + L"/" + sCurrentPath);
 
-                    if (false)
                     {
-                        // flip
-                        memcpy(pDataCur, oFrame.get_Data(), nSize);
-                        pDataCur += nSize;
-                    }
-                    else
-                    {
-                        BYTE* pTmp = oFrame.get_Data() + nRow * (nRasterH - 1);
+                        BYTE* pTmp = oFrame.get_Data() + static_cast<ptrdiff_t>(nRow) * (nRasterH - 1);
                         for (int nH = 0; nH < nRasterH; ++nH)
                         {
                             memcpy(pDataCur, pTmp, nRow);

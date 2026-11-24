@@ -3581,7 +3581,10 @@ std::wstring RtfParagraphProperty::RenderToRtf(RenderParameter oRenderParameter)
 	RENDER_RTF_INT( m_nSpaceAfterLine	, sResult, L"lisa" );
 	RENDER_RTF_INT( m_nSpaceBetween		, sResult, L"sl" );
 	RENDER_RTF_INT( m_nSpaceMultiLine	, sResult, L"slmult" );
-	RENDER_RTF_BOOL( m_bContextualSpacing, sResult, L"contextualspace" );
+	// \contextualspace is a flag without a value: readers turn the property on
+	// when they see it, also as \contextualspace0. Off is the state after \pard.
+	if ( PROP_DEF != m_bContextualSpacing && 0 != m_bContextualSpacing )
+		sResult += L"\\contextualspace";
 	
 	if( 0 == m_bRtl )				sResult += L"\\ltrpar";
 	else if( PROP_DEF != m_bRtl )	sResult += L"\\rtlpar";

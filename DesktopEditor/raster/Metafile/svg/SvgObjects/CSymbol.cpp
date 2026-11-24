@@ -2,13 +2,13 @@
 
 namespace SVG
 {
-	CSymbol::CSymbol(CSvgReader& oReader, CRenderedObject *pParent)
+	CSymbol::CSymbol(CSvgReader& oReader, CRenderedObject * /*pParent*/)
 		: CGraphicsContainer(oReader)
 	{}
 
 	bool CSymbol::Draw(IRenderer *pRenderer, const CSvgFile *pFile, CommandeMode oMode, const TSvgStyles *pOtherStyles, const CRenderedObject* pContexObject) const
 	{
-		if (NULL == pRenderer)
+		if (nullptr == pRenderer)
 			return false;
 
 		double dScaleX = 1, dScaleY = 1;
