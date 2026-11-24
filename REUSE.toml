@@ -143,6 +143,9 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/deletion_around_note.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/deletion_over_paragraph_break.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/deletion_same_id_apart.docx",
     "OdfFile/Test/test_odf/ExampleFiles/column_break_after_text.docx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_merged_without_covered_cells.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_repeated_empty_styled.xlsx",
