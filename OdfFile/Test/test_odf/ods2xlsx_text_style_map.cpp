@@ -57,6 +57,7 @@ TEST(OdsToXlsxTextStyleMap, DateWithTextPartKeepsTheDate)
 }
 
 // The last map of a text style is for all other numbers whatever its condition (LibreOffice), so -5 shows as -5.00.
+// Here the only map is "value()>0".
 TEST(OdsToXlsxTextStyleMap, LastMapIsForAllOtherNumbers)
 {
     ASSERT_FALSE(part(L"xl/styles.xml").empty()) << "ODS -> XLSX conversion failed";
@@ -68,4 +69,13 @@ TEST(OdsToXlsxTextStyleMap, ThreeNumberPartsUnchanged)
 {
     ASSERT_FALSE(part(L"xl/styles.xml").empty()) << "ODS -> XLSX conversion failed";
     EXPECT_EQ(cell_format(L"B2"), L"0.0;&quot;-&quot;0.0;&quot;zero&quot;");
+}
+
+// Maps for the positive and the negative numbers cover all numbers: their conditions are kept, and zero shows with
+// the first part as in LibreOffice ("0.00", not "(0.00)").
+TEST(OdsToXlsxTextStyleMap, PositiveAndNegativeMapsKeepZeroInTheFirstPart)
+{
+    ASSERT_FALSE(part(L"xl/styles.xml").empty()) << "ODS -> XLSX conversion failed";
+    EXPECT_EQ(cell_format(L"A3"), L"0.00;&quot;(&quot;0.00&quot;)&quot;") << "maps value()>0 and value()<0";
+    EXPECT_EQ(cell_format(L"B3"), L"0.00;&quot;-&quot;0.00;0.00") << "maps value()>=0 and value()<0";
 }
