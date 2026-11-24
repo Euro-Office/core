@@ -1358,8 +1358,9 @@ void XlsxConverter::convert(OOX::Spreadsheet::CRow *oox_row, OOX::Spreadsheet::C
 	}
 	if (false == _default)
 	{
-		if ((oox_row->m_oCustomHeight.IsInit() && oox_row->m_oCustomHeight->GetValue() == 1) ||
-			(oox_row->m_oCustomFormat.IsInit() && oox_row->m_oCustomFormat->GetValue() == 1 && oox_row->m_oHt.IsInit()))
+		// Only customHeight fixes the height. customFormat applies the row's cell
+		// format (s) and says nothing about the height, as in LibreOffice.
+		if (oox_row->m_oCustomHeight.IsInit() && oox_row->m_oCustomHeight->GetValue() == 1)
 		{
 			ods_context->current_table()->set_row_optimal_height(false);
 		}
