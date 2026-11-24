@@ -1508,7 +1508,9 @@ public:
 			oFrame.SaveFile(strThumbnailPath, 4);
 
 			LONG lBinarySize = lWidthPix * lHeightPix;
-			BYTE* pBinaryFormat = new BYTE[lBinarySize + 12];
+			// A run of transparent pixels takes two bytes, so a single
+			// transparent pixel between opaque ones can use two bytes per pixel.
+			BYTE* pBinaryFormat = new BYTE[2 * lBinarySize + 12];
 
 			pBinaryFormat[0] = 0xFF & (lWidthPix >> 24);
 			pBinaryFormat[1] = 0xFF & (lWidthPix >> 16);
@@ -1547,7 +1549,8 @@ public:
 						++nIndexCur;
 						pImageDataAlpha += 4;
 
-						if (0 != *pImageDataAlpha)
+						// Don't read the pixel past the end of the image.
+						if (nIndexCur >= nIndexCurLimit || 0 != *pImageDataAlpha)
 							break;
 					}
 
