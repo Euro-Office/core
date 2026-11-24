@@ -2,7 +2,7 @@
 
 namespace SVG 
 {
-	CGlyph::CGlyph(CSvgReader& oReader, CSvgFile* pFile)
+	CGlyph::CGlyph(CSvgReader& oReader, CSvgFile*  /*pFile*/)
 		: CPath(oReader)
 	{}
 
@@ -26,11 +26,11 @@ namespace SVG
 		return m_wchUnicode;
 	}
 
-	CFontFace::CFontFace(CSvgReader& oReader)
+	CFontFace::CFontFace(CSvgReader&  /*oReader*/)
 	{}
 
 	CFont::CFont(CSvgReader& oReader, CSvgFile* pFile)
-		: CAppliedObject(oReader), m_pMissingGlyph(NULL)
+		: CAppliedObject(oReader), m_pMissingGlyph(nullptr)
 	{
 		ParseGlyphs(oReader, pFile);
 	}
@@ -61,14 +61,14 @@ namespace SVG
 	{
 	}
 
-	bool CFont::Apply(IRenderer *pRenderer, const CSvgFile *pFile, const TBounds &oObjectBounds)
+	bool CFont::Apply(IRenderer * /*pRenderer*/, const CSvgFile * /*pFile*/, const TBounds & /*oObjectBounds*/)
 	{
 		return false;
 	}
 
 	bool CFont::Draw(const std::wstring &wsText, const double& dX, const double& dY, const double& dFontHeight, IRenderer *pRenderer, const CSvgFile *pFile, CommandeMode oMode, const TSvgStyles *pStyles, const CRenderedObject* pContexObject) const
 	{
-		if (NULL == pRenderer || wsText.empty())
+		if (nullptr == pRenderer || wsText.empty())
 			return false;
 		
 		double dM11, dM12, dM21, dM22, dRx, dRy;
@@ -91,7 +91,7 @@ namespace SVG
 			oMatrix.Scale(dGlyphScale, -dGlyphScale); \
 			pRenderer->SetTransform(oMatrix.sx(), oMatrix.shy(), oMatrix.shx(), oMatrix.sy(), oMatrix.tx(), oMatrix.ty()); \
 		} \
-		function; \
+		(function); \
 		if (!Equals(1., dGlyphScale)) \
 		{ \
 			oMatrix.Scale(1. / dGlyphScale, -1. / dGlyphScale); \
@@ -104,7 +104,7 @@ namespace SVG
 
 			if (m_mGlyphs.cend() == itFound)
 			{
-				if (NULL == m_pMissingGlyph)
+				if (nullptr == m_pMissingGlyph)
 					continue;
 
 				DrawGlyph(m_pMissingGlyph, m_pMissingGlyph->Draw(pRenderer, pFile, oMode, pStyles, pContexObject))
@@ -137,7 +137,7 @@ namespace SVG
 			{
 				CGlyph *pGlyph = CObject::Create<CGlyph>(oReader, pFile, pFile);
 
-				if (NULL == pGlyph)
+				if (nullptr == pGlyph)
 					continue;
 
 				if (m_mGlyphs.end() == m_mGlyphs.find(pGlyph->GetUnicode()))
@@ -150,7 +150,7 @@ namespace SVG
 				WHILE_READ_NEXT_NODE_WITH_DEPTH_ONE_NAME(oReader, Child, "path")
 				{
 					m_pMissingGlyph = new CPath(oReader);
-					if (NULL != m_pMissingGlyph)
+					if (nullptr != m_pMissingGlyph)
 						break;
 				}
 				END_WHILE

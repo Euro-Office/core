@@ -245,7 +245,7 @@ namespace NSBinPptxRW
 		CCommonWriter* m_pCommon;
 		std::wstring m_strMainFolder;
 
-		BinDocxRW::CDocxSerializer* m_pDocxSerializer = NULL;
+		BinDocxRW::CDocxSerializer* m_pDocxSerializer = nullptr;
 
 		NSCommon::smart_ptr<PPTX::Theme>* m_pTheme;
 		NSCommon::smart_ptr<PPTX::Logic::ClrMap>* m_pClrMap;
@@ -254,7 +254,7 @@ namespace NSBinPptxRW
 		void SetRelsPtr(OOX::IFileContainer *container);
 		
 	protected:
-		OOX::IFileContainer* m_pCurrentContainer = NULL;
+		OOX::IFileContainer* m_pCurrentContainer = nullptr;
 		
 		BYTE* m_pStreamData;
 		BYTE* m_pStreamCur;
@@ -472,7 +472,7 @@ namespace NSBinPptxRW
 		unsigned int m_lNextRelsID;
 		CImageManager2* m_pManager;
 
-		CRelsGenerator(CImageManager2* pManager = NULL);
+		CRelsGenerator(CImageManager2* pManager = nullptr);
 		~CRelsGenerator();
 		
 		void Clear();
@@ -511,21 +511,21 @@ namespace NSBinPptxRW
 	class CBinaryFileReader
 	{
 	protected:
-		BYTE*	m_pData = NULL;
+		BYTE*	m_pData = nullptr;
 		LONG	m_lSize;
 		LONG	m_lPos;
-		BYTE*	m_pDataCur = NULL;
+		BYTE*	m_pDataCur = nullptr;
 
 		_INT32 m_lNextId;
 
 		std::vector<CRelsGenerator*> m_stackRels;
 		int m_nCurrentRelsStack;
-		OOX::IFileContainer* m_pCurrentContainer = NULL;
+		OOX::IFileContainer* m_pCurrentContainer = nullptr;
 	public:
 		void SetRelsPtr(OOX::IFileContainer* container);		
 		OOX::IFileContainer* GetRelsPtr();
 
-		CRelsGenerator*					m_pRels = NULL;
+		CRelsGenerator*					m_pRels = nullptr;
 
 		std::wstring					m_strFolder;
 		std::wstring					m_strFolderThemes;
@@ -538,7 +538,7 @@ namespace NSBinPptxRW
 		_INT32							m_nCountActiveX = 1;
 		_INT32							m_nThemeOverrideCount = 1;
 
-		BinDocxRW::CDocxSerializer*		m_pDocxSerializer = NULL;
+		BinDocxRW::CDocxSerializer*		m_pDocxSerializer = nullptr;
 		int								m_nDocumentType;
 	
 		CBinaryFileReader();

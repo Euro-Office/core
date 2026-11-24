@@ -44,9 +44,10 @@ const wchar_t* gc_XVal = L"xVal";
 const wchar_t* gc_YVal = L"yVal";
 const wchar_t* gc_BubbleSize = L"bubbleSize";
 
+// NOLINTBEGIN(bugprone-macro-parentheses): the type argument is used in declarations
 #define PARSE_CT_CHART(chart, type) \
 {\
-	for(size_t i = 0; i < chart->m_ser.size();++i)\
+	for(size_t i = 0; i < (chart)->m_ser.size();++i)\
 	{\
 		type* ser = chart->m_ser[i];\
 		PARSE_TITLE(ser, true, NULL);\
@@ -56,7 +57,7 @@ const wchar_t* gc_BubbleSize = L"bubbleSize";
 }
 #define PARSE_CT_CHART_SCATTER(chart, type) \
 {\
-	for(size_t i = 0; i < chart->m_ser.size();++i)\
+	for(size_t i = 0; i < (chart)->m_ser.size();++i)\
 	{\
 		type* ser = chart->m_ser[i];\
 		PARSE_TITLE(ser, true, NULL);\
@@ -66,7 +67,7 @@ const wchar_t* gc_BubbleSize = L"bubbleSize";
 }
 #define PARSE_TRENDLINE(chart, type) \
 {\
-	for(size_t i = 0; i < chart->m_ser.size();++i)\
+	for(size_t i = 0; i < (chart)->m_ser.size();++i)\
 	{\
 		type* ser = chart->m_ser[i];\
 		for(size_t j = 0; j < ser->m_trendline.size(); ++j)\
@@ -81,7 +82,7 @@ const wchar_t* gc_BubbleSize = L"bubbleSize";
 }
 #define PARSE_ERRBARS(chart, type) \
 {\
-	for(size_t i = 0; i < chart->m_ser.size();++i)\
+	for(size_t i = 0; i < (chart)->m_ser.size();++i)\
 	{\
 		type* ser = chart->m_ser[i];\
 		for(size_t j = 0; j < ser->m_errBars.size(); ++j)\
@@ -94,17 +95,18 @@ const wchar_t* gc_BubbleSize = L"bubbleSize";
 }
 #define PARSE_BUBBLE_SIZE(chart, type) \
 {\
-	for(size_t i = 0; i < chart->m_ser.size();++i)\
+	for(size_t i = 0; i < (chart)->m_ser.size();++i)\
 	{\
 		type* ser = chart->m_ser[i];\
 		parseNumDataSource(ser->m_bubbleSize, true, gc_BubbleSize);\
 	}\
 }
+// NOLINTEND(bugprone-macro-parentheses)
 #define PARSE_TITLE(pTitle, bUpdateRange, cRangeName)\
 {\
-	if(NULL != pTitle && NULL != pTitle->m_tx)\
+	if(NULL != (pTitle) && NULL != (pTitle)->m_tx)\
 	{\
-		parseStrRef(pTitle->m_tx->m_strRef, bUpdateRange, cRangeName);\
+		parseStrRef((pTitle)->m_tx->m_strRef, bUpdateRange, cRangeName);\
 	}\
 }
 
@@ -149,7 +151,7 @@ namespace BinXlsxRW{
 		oXlsx.m_pWorkbook->m_oSheets.Init();
 
 		int nSheetId = 1;
-		OOX::Spreadsheet::CWorksheet* pFirstWorksheet = NULL;
+		OOX::Spreadsheet::CWorksheet* pFirstWorksheet = nullptr;
 
         for (std::map<std::wstring, std::map<int, std::map<int, OOX::Spreadsheet::CCell*>*>*>::iterator it = m_mapSheets.begin(); it != m_mapSheets.end(); ++it)
 		{
@@ -172,7 +174,7 @@ namespace BinXlsxRW{
 			
 			oXlsx.m_pWorkbook->m_oSheets->m_arrItems.push_back(pSheet);
 
-			if(NULL == pFirstWorksheet)
+			if(nullptr == pFirstWorksheet)
 			{
 				pFirstWorksheet = pWorksheet;
 			}
@@ -254,7 +256,7 @@ namespace BinXlsxRW{
 		//todo table in case of several sheets or if series are spread across sheets
 		if(m_aTableNames.size() > 0)
 		{
-			OOX::Spreadsheet::CTableFile* pTable = new OOX::Spreadsheet::CTableFile(NULL);
+			OOX::Spreadsheet::CTableFile* pTable = new OOX::Spreadsheet::CTableFile(nullptr);
 			pTable->m_oTable.Init();
 			pTable->m_oTable->m_oDisplayName = L"Table1";
 			pTable->m_oTable->m_oRef.Init();
@@ -313,15 +315,20 @@ namespace BinXlsxRW{
 				pFirstWorksheet->m_oTableParts->m_oCount.Init();
 				pFirstWorksheet->m_oTableParts->m_oCount->SetValue(pFirstWorksheet->m_oTableParts->m_arrItems.size());
 			}
+			else
+			{
+				// duplicate column names: the table cannot be attached, release it
+				delete pTable;
+			}
 		}
 	}
 	void ChartWriter::parseChart(const OOX::Spreadsheet::CT_Chart* pChart)
 	{
-		if(NULL != pChart)
+		if(nullptr != pChart)
 		{
-			PARSE_TITLE(pChart->m_title, false, NULL);
+			PARSE_TITLE(pChart->m_title, false, nullptr);
 			OOX::Spreadsheet::CT_PlotArea* pPlotArea = pChart->m_plotArea;
-			if(NULL != pPlotArea)
+			if(nullptr != pPlotArea)
 			{
 				for(size_t i = 0; i < pPlotArea->m_ItemsElementName1.size(); ++i)
 				{
@@ -332,28 +339,28 @@ namespace BinXlsxRW{
 					case OOX::Spreadsheet::itemschoicetype6CATAX:
 					{
 						OOX::Spreadsheet::CT_CatAx* pCatax = static_cast<OOX::Spreadsheet::CT_CatAx*>(pItem);
-						PARSE_TITLE(pCatax->m_title, false, NULL);
+						PARSE_TITLE(pCatax->m_title, false, nullptr);
 						break;
 					}
 					case OOX::Spreadsheet::itemschoicetype6DATEAX:
 					{
 						OOX::Spreadsheet::CT_DateAx* pDateax = static_cast<OOX::Spreadsheet::CT_DateAx*>(pItem);
-						PARSE_TITLE(pDateax->m_title, false, NULL);
+						PARSE_TITLE(pDateax->m_title, false, nullptr);
 						break;
 					}
 					case OOX::Spreadsheet::itemschoicetype6SERAX:
 					{
 						OOX::Spreadsheet::CT_SerAx* pSerax = static_cast<OOX::Spreadsheet::CT_SerAx*>(pItem);
-						PARSE_TITLE(pSerax->m_title, false, NULL);
+						PARSE_TITLE(pSerax->m_title, false, nullptr);
 						break;
 					}
 					case OOX::Spreadsheet::itemschoicetype6VALAX:
 					{
 						OOX::Spreadsheet::CT_ValAx* pValax = static_cast<OOX::Spreadsheet::CT_ValAx*>(pItem);
-						PARSE_TITLE(pValax->m_title, false, NULL);
-						if(NULL != pValax->m_dispUnits)
+						PARSE_TITLE(pValax->m_title, false, nullptr);
+						if(nullptr != pValax->m_dispUnits)
 						{
-							PARSE_TITLE(pValax->m_dispUnits->m_dispUnitsLbl, false, NULL);
+							PARSE_TITLE(pValax->m_dispUnits->m_dispUnitsLbl, false, nullptr);
 						}
 						break;
 					}
@@ -507,12 +514,12 @@ namespace BinXlsxRW{
 	}
 	OOX::Spreadsheet::CWorksheet* ChartWriter::toXlsxGetSheet(std::vector<OOX::Spreadsheet::CWorksheet*>& arWorksheets, std::map<std::wstring, OOX::Spreadsheet::CWorksheet*>& mapWorksheets, const std::wstring& sName)
 	{
-		OOX::Spreadsheet::CWorksheet* pWorksheet = NULL;
+		OOX::Spreadsheet::CWorksheet* pWorksheet = nullptr;
 		std::map<std::wstring, OOX::Spreadsheet::CWorksheet*>::const_iterator pFind = mapWorksheets.find(sName);
 
         if (pFind == mapWorksheets.end())
 		{
-			pWorksheet = new OOX::Spreadsheet::CWorksheet(NULL);
+			pWorksheet = new OOX::Spreadsheet::CWorksheet(nullptr);
 			pWorksheet->m_oSheetFormatPr.Init();
 			pWorksheet->m_oSheetFormatPr->m_oDefaultRowHeight = 15.;
 			pWorksheet->m_oPageMargins.Init();
@@ -581,7 +588,7 @@ namespace BinXlsxRW{
 						aSharedStrings.push_back(pCell->m_oValue->m_sText);
 						pCell->m_oValue->m_sText = std::to_wstring(aSharedStrings.size() - 1);
 					}
-					else if (false == pCell->m_oStyle.IsInit())
+					else if (!pCell->m_oStyle.IsInit())
 					{
 						pCell->m_oType.Init();
 						const std::wstring& val = pCell->m_oValue->m_sText;
@@ -629,7 +636,7 @@ namespace BinXlsxRW{
 	void ChartWriter::parseCell(const std::wstring& sheet, const int& nRow, const int& nCol, const std::wstring& val, std::wstring format, bool bAlwaysSharedString)
 	{
         std::map<std::wstring, std::map<int, std::map<int, OOX::Spreadsheet::CCell*>*>*>::const_iterator itSheets = m_mapSheets.find(sheet);
-        std::map<int, std::map<int, OOX::Spreadsheet::CCell*>*>* rows = NULL;
+        std::map<int, std::map<int, OOX::Spreadsheet::CCell*>*>* rows = nullptr;
 
         if(itSheets == m_mapSheets.end())
 		{
@@ -641,7 +648,7 @@ namespace BinXlsxRW{
 			rows = itSheets->second;
 		}
         std::map<int, std::map<int, OOX::Spreadsheet::CCell*>*>::const_iterator itRows = rows->find(nRow);
-        std::map<int, OOX::Spreadsheet::CCell*>* cells = NULL;
+        std::map<int, OOX::Spreadsheet::CCell*>* cells = nullptr;
 
         if(itRows == rows->end())
 		{
@@ -703,18 +710,18 @@ namespace BinXlsxRW{
 	}
 	void ChartWriter::parseStrRef(const OOX::Spreadsheet::CT_StrRef* pStrRef, bool bUpdateRange, const wchar_t* cRangeName)
 	{
-		if(NULL != pStrRef && pStrRef->m_f.IsInit())
+		if(nullptr != pStrRef && pStrRef->m_f.IsInit())
 		{
 			std::wstring wb, sheetFrom, sheetTo;
 			int nRow1, nCol1, nRow2, nCol2;
 			
 			if(OOX::Spreadsheet::CCell::parse3DRef(*pStrRef->m_f, wb, sheetFrom, sheetTo, nRow1, nCol1, nRow2, nCol2) &&
-					sheetFrom.length() > 0 && 0 == sheetTo.length() && NULL != pStrRef->m_strCache)
+					sheetFrom.length() > 0 && 0 == sheetTo.length() && nullptr != pStrRef->m_strCache)
 			{
 				bool bRow = nRow1 == nRow2;
 				if(bUpdateRange)
 				{
-					if(NULL != cRangeName)
+					if(nullptr != cRangeName)
 					{
 						if(bRow)
 						{
@@ -772,17 +779,17 @@ namespace BinXlsxRW{
 	}
 	void ChartWriter::parseNumRef(const OOX::Spreadsheet::CT_NumRef* pNumRef, bool bUpdateRange, const wchar_t* cRangeName)
 	{
-		if(NULL != pNumRef && pNumRef->m_f.IsInit())
+		if(nullptr != pNumRef && pNumRef->m_f.IsInit())
 		{
 			std::wstring wb, sheetFrom, sheetTo;
 			int nRow1, nCol1, nRow2, nCol2;
 			if(OOX::Spreadsheet::CCell::parse3DRef(*pNumRef->m_f, wb, sheetFrom, sheetTo, nRow1, nCol1, nRow2, nCol2) &&
-					sheetFrom.length() > 0 && 0 == sheetTo.length() && NULL != pNumRef->m_numCache)
+					sheetFrom.length() > 0 && 0 == sheetTo.length() && nullptr != pNumRef->m_numCache)
 			{
 				bool bRow = nRow1 == nRow2;
 				if(bUpdateRange)
 				{
-					if(NULL != cRangeName)
+					if(nullptr != cRangeName)
 					{
 						if(bRow)
 						{
@@ -850,7 +857,7 @@ namespace BinXlsxRW{
 	}
 	void ChartWriter::parseAxDataSource(const OOX::Spreadsheet::CT_AxDataSource* pAxDataSource, bool bUpdateRange, const wchar_t* cRangeName)
 	{
-		if(NULL != pAxDataSource)
+		if(nullptr != pAxDataSource)
 		{
 			parseStrRef(pAxDataSource->m_strRef, bUpdateRange, cRangeName);
 			parseNumRef(pAxDataSource->m_numRef, bUpdateRange, cRangeName);
@@ -859,7 +866,7 @@ namespace BinXlsxRW{
 	}
 	void ChartWriter::parseNumDataSource(const OOX::Spreadsheet::CT_NumDataSource* pNumDataSource, bool bUpdateRange, const wchar_t* cRangeName)
 	{
-		if(NULL != pNumDataSource)
+		if(nullptr != pNumDataSource)
 		{
 			parseNumRef(pNumDataSource->m_numRef, bUpdateRange, cRangeName);
 		}

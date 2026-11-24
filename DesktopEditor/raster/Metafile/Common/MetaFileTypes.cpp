@@ -41,7 +41,7 @@ namespace MetaFile
 		: r((nValue >> 0)  & 0xFF), g((nValue >> 8)  & 0xFF), b((nValue >> 16)  & 0xFF), a((nValue >> 24)  & 0xFF)
 	{}
 
-	void TRGBA::Set(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
+	void TRGBA::Set(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char  /*_a*/)
 	{
 		r = _r;
 		g = _g;
@@ -122,7 +122,7 @@ namespace MetaFile
 
 	void TXForm::Copy(const TXForm *pOther)
 	{
-		if (NULL == pOther)
+		if (nullptr == pOther)
 			return;
 
 		M11 = pOther->M11;

@@ -69,7 +69,7 @@ namespace NSThreads
 #else
 		struct timespec tim, tim2;
 		tim.tv_sec = nMilliseconds / 1000;
-		tim.tv_nsec = (nMilliseconds % 1000) * 1000000;
+		tim.tv_nsec = static_cast<long>(nMilliseconds % 1000) * 1000000;
 
 		::nanosleep(&tim, &tim2);
 #endif
@@ -89,7 +89,7 @@ namespace NSThreads
 		return value;
 	}
 
-	class __native_thread : public CThreadDescriptor
+	class native_thread_t : public CThreadDescriptor
 	{
 		friend class CBaseThread;
 
@@ -97,10 +97,10 @@ namespace NSThreads
 		HANDLE m_thread = nullptr;
 
 	public:
-		__native_thread() : CThreadDescriptor()
+		native_thread_t() : CThreadDescriptor()
 		{
 		}
-		virtual ~__native_thread()
+		virtual ~native_thread_t()
 		{
 			if (m_thread)
 			{
@@ -120,15 +120,15 @@ namespace NSThreads
 		CBaseThread* pThis = (CBaseThread*)pv;
 
 		CBaseThreadMonitor::Get().Register(pThis);
-		DWORD value = pThis->ThreadProc();
+		pThis->ThreadProc();
 		CBaseThreadMonitor::Get().Unregister(pThis);
 
 		if (pThis->m_bIsNeedDestroy)
 			delete pThis;
 
-		return NULL;
+		return nullptr;
 	}
-	class __native_thread : public CThreadDescriptor
+	class native_thread_t : public CThreadDescriptor
 	{
 		friend class CBaseThread;
 
@@ -136,11 +136,11 @@ namespace NSThreads
 		pthread_t m_thread;
 
 	public:
-		__native_thread() : CThreadDescriptor()
+		native_thread_t() : CThreadDescriptor()
 		{
 			m_thread = 0;
 		}
-		virtual ~__native_thread()
+		virtual ~native_thread_t()
 		{
 		}
 	};
@@ -148,7 +148,7 @@ namespace NSThreads
 
 	CBaseThread::CBaseThread()
 	{
-		m_hThread = NULL;
+		m_hThread = nullptr;
 		m_bRunThread = FALSE;
 		m_bSuspend = FALSE;
 
@@ -159,7 +159,7 @@ namespace NSThreads
 	}
 	CBaseThread::~CBaseThread()
 	{
-		Stop();
+		CBaseThread::Stop();
 	}
 	void CBaseThread::Start(int lPriority)
 	{
@@ -168,17 +168,17 @@ namespace NSThreads
 		m_lError = 0;
 		m_bSuspend = FALSE;
 
-		m_hThread = new __native_thread();
+		m_hThread = new native_thread_t();
 
 		m_bRunThread = TRUE;
 
 		m_bIsExit.store(false);
 #if defined(_WIN32) || defined(_WIN64) || defined(_WIN32_WCE)
 		DWORD dwTemp;
-		((__native_thread*)m_hThread)->m_thread = CreateThread(NULL, 0, &__ThreadProc, (void*)this, 0, &dwTemp);
-		SetThreadPriority(((__native_thread*)m_hThread)->m_thread, lPriority);
+		((native_thread_t*)m_hThread)->m_thread = CreateThread(NULL, 0, &__ThreadProc, (void*)this, 0, &dwTemp);
+		SetThreadPriority(((native_thread_t*)m_hThread)->m_thread, lPriority);
 #else
-		pthread_create(&((__native_thread*)m_hThread)->m_thread, 0, &__ThreadProc, (void*)this);
+		pthread_create(&((native_thread_t*)m_hThread)->m_thread, nullptr, &__ThreadProc, (void*)this);
 #endif
 		m_lThreadPriority = lPriority;
 	}
@@ -198,7 +198,7 @@ namespace NSThreads
 		m_bIsExit.store(true);
 		m_bRunThread = FALSE;
 
-		Join();
+		CBaseThread::Join();
 		RELEASEOBJECT(m_hThread);
 	}
 	void CBaseThread::StopNoJoin()
@@ -246,19 +246,19 @@ namespace NSThreads
 
 	void CBaseThread::Join()
 	{
-		if (NULL == m_hThread)
+		if (nullptr == m_hThread)
 			return;
 
 #if defined(_WIN32) || defined(_WIN64) || defined(_WIN32_WCE)
-		WaitForSingleObject(((__native_thread*)m_hThread)->m_thread, INFINITE);
+		WaitForSingleObject(((native_thread_t*)m_hThread)->m_thread, INFINITE);
 #else
-		pthread_join(((__native_thread*)m_hThread)->m_thread, 0);
+		pthread_join(((native_thread_t*)m_hThread)->m_thread, nullptr);
 #endif
 	}
 
 	void CBaseThread::Cancel()
 	{
-		if (NULL == m_hThread)
+		if (nullptr == m_hThread)
 			return;
 
 		m_bIsExit.store(true);
