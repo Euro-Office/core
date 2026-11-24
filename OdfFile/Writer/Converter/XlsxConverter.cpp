@@ -530,7 +530,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CWorksheet *oox_sheet)
 
 /////////////////////////////////////////////////////////////////////////
 	convert(oox_sheet->m_oSheetViews.GetPointer());
-	convert(oox_sheet->m_oPageSetup.GetPointer());
+	convert(oox_sheet->m_oPageSetup.GetPointer(), oox_sheet->m_oSheetPr.GetPointer());
 	convert(oox_sheet->m_oPageMargins.GetPointer(), oox_sheet->m_oHeaderFooter.GetPointer());
 	convert(oox_sheet->m_oPrintOptions.GetPointer());
 	convert(oox_sheet->m_oPicture.GetPointer());
@@ -1196,11 +1196,42 @@ void XlsxConverter::convert(OOX::Spreadsheet::CHyperlink *oox_hyperlink,OOX::Spr
 	}
 }
 
+static bool is_row_hidden_or_grouped(OOX::Spreadsheet::CRow *oox_row)
+{
+	return (oox_row->m_oHidden.IsInit() && oox_row->m_oHidden->ToBool()) ||
+		(oox_row->m_oCollapsed.IsInit() && oox_row->m_oCollapsed->ToBool()) ||
+		(oox_row->m_oOutlineLevel.IsInit() && oox_row->m_oOutlineLevel->GetValue() > 0);
+}
+// Folded rows are written as copies of this row, so its cells must hold nothing but a style. The reader folds only such rows,
+// but a cell with a value, inline text or a formula would otherwise be copied into every folded row.
+static bool row_has_cell_content(OOX::Spreadsheet::CRow *oox_row)
+{
+	for (OOX::Spreadsheet::CCell *oox_cell : oox_row->m_arrItems)
+	{
+		if (oox_cell && (oox_cell->m_oValue.IsInit() || oox_cell->m_oRichText.IsInit() || oox_cell->m_oFormula.IsInit()))
+			return true;
+	}
+	return false;
+}
 void XlsxConverter::convert(OOX::Spreadsheet::CRow *oox_row, OOX::Spreadsheet::CRow *oox_row_prev)
 {
 	if (oox_row == NULL)return;
 
 	int row_number = oox_row->m_oR.IsInit() ? oox_row->m_oR->GetValue() : -1;
+
+	// The XLSX reader folds rows that repeat the row before them (CSheetData::compressRow: empty rows, or rows of
+	// one run of empty cells of one style, with the same style and height) into that row. Write the folded rows
+	// back as repeats of the row element, unless one of them needs an element of its own (then they stay lost, as before).
+	// The reader folds without comparing hidden, collapsed and outline level, so the folded rows may differ from this row
+	// in those: a hidden, collapsed or outlined row is not repeated. A chart's local table (no rows added between rows)
+	// is left as it was.
+	int folded_rows = 0;
+	if (row_number > 0 && oox_row->m_oRepeated.IsInit() && *oox_row->m_oRepeated > 1 && *oox_row->m_oRepeated <= 1048576 &&
+		false == is_row_hidden_or_grouped(oox_row) && false == row_has_cell_content(oox_row) && ods_context->get_repeat_at_lasts() &&
+		ods_context->current_table()->is_rows_plain(row_number, (int)*oox_row->m_oRepeated))
+	{
+		folded_rows = (int)*oox_row->m_oRepeated - 1;
+	}
 
 	if (oox_row_prev)
 	{
@@ -1306,7 +1337,9 @@ void XlsxConverter::convert(OOX::Spreadsheet::CRow *oox_row, OOX::Spreadsheet::C
 				else bEqual = false;
 			}
 
-			if (bEqual)
+			// Rows equal to the row before would have been folded into it by the reader, so a row with folded rows lacks
+			// the height or style of the row before: it gets an element of its own, and its folded rows repeat that one.
+			if (bEqual && folded_rows == 0)
 			{
 				int repeated = 1;
 				if ( ods_context->current_table()->is_row_comment(row_number, repeated) < 0 &&
@@ -1358,8 +1391,9 @@ void XlsxConverter::convert(OOX::Spreadsheet::CRow *oox_row, OOX::Spreadsheet::C
 	}
 	if (false == _default)
 	{
-		if ((oox_row->m_oCustomHeight.IsInit() && oox_row->m_oCustomHeight->GetValue() == 1) ||
-			(oox_row->m_oCustomFormat.IsInit() && oox_row->m_oCustomFormat->GetValue() == 1 && oox_row->m_oHt.IsInit()))
+		// Only customHeight fixes the height. customFormat applies the row's cell
+		// format (s) and says nothing about the height, as in LibreOffice.
+		if (oox_row->m_oCustomHeight.IsInit() && oox_row->m_oCustomHeight->GetValue() == 1)
 		{
 			ods_context->current_table()->set_row_optimal_height(false);
 		}
@@ -1372,6 +1406,15 @@ void XlsxConverter::convert(OOX::Spreadsheet::CRow *oox_row, OOX::Spreadsheet::C
 		convert(oox_row->m_arrItems[cell]);
 	}
 	ods_context->end_row();
+
+	add_folded_rows(folded_rows);
+}
+void XlsxConverter::add_folded_rows(int count)
+{
+	// ods_conversion_context::add_default_row() writes no rows after a row element repeated 1024 times or more,
+	// so a gap after the folded rows would be lost and the next rows would move up: stop before that.
+	for (int i = 0; i < count && ods_context->current_table()->get_last_row_repeated() < 1023; i++)
+		ods_context->add_row_repeated();
 }
 void XlsxConverter::convert(OOX::Spreadsheet::CCell *oox_cell)
 {
@@ -1419,6 +1462,13 @@ void XlsxConverter::convert(OOX::Spreadsheet::CCell *oox_cell)
 	}
 
 	ods_context->end_cell();
+
+	// The XLSX reader folds the empty cells that follow a cell without a value and have its style into that
+	// cell (CRow::compressCell sets m_oRepeated). Write them back as empty cells of that style.
+	if (oox_cell->m_oRepeated.IsInit() && *oox_cell->m_oRepeated > 1)
+	{
+		ods_context->add_repeated_cells((int)*oox_cell->m_oRepeated - 1, ifx_style);
+	}
 }
 
 void XlsxConverter::convert_sharing_string(int number)
@@ -1695,10 +1745,17 @@ void XlsxConverter::convert(OOX::Spreadsheet::CCol *oox_column)
 {
 	if (oox_column == NULL)return;
 
-	int start_column = oox_column->m_oMin.IsInit() ? oox_column->m_oMin->GetValue() : 0 ;
-	
-	int repeated =	(oox_column->m_oMax.IsInit() ? oox_column->m_oMax->GetValue() : 0) - 
-					(oox_column->m_oMin.IsInit() ? oox_column->m_oMin->GetValue() : 0) + 1;
+	//a sheet has the columns 1 to XFD (16384): a malformed <col> past it is cut there, and one that starts outside it
+	//or ends before it starts is dropped (min and max are compared before they are narrowed to int)
+	const long long min_column = oox_column->m_oMin.IsInit() ? (long long)oox_column->m_oMin->GetValue() : 0;
+	long long max_column = oox_column->m_oMax.IsInit() ? (long long)oox_column->m_oMax->GetValue() : 0;
+	if (min_column < 1 || min_column > 16384 || max_column < min_column)
+		return;
+	if (max_column > 16384)
+		max_column = 16384;
+
+	int start_column = (int)min_column;
+	int repeated = (int)(max_column - min_column + 1);
 
 	int level = 0;
 	if (oox_column->m_oOutlineLevel.IsInit())
@@ -2018,8 +2075,25 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPrintOptions *oox_print_options)
 	}
 	ods_context->page_layout_context()->set_page_centered(bHorizontal, bVertical);
 }
-void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page)
+void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page, OOX::Spreadsheet::CSheetPr *oox_sheet_pr)
 {
+	// With sheetPr/pageSetUpPr fitToPage the sheet is fitted to fitToWidth x fitToHeight pages (1 each by
+	// default, 0 = no limit, at most 1000) and scale does not apply, as LibreOffice reads it.
+	const bool fit_to_page = oox_sheet_pr && oox_sheet_pr->m_oPageSetUpPr.IsInit() &&
+		oox_sheet_pr->m_oPageSetUpPr->m_oFitToPage.IsInit() && oox_sheet_pr->m_oPageSetUpPr->m_oFitToPage->ToBool();
+	unsigned int fit_width = 0, fit_height = 0;
+	if (fit_to_page)
+	{
+		fit_width	= (oox_page && oox_page->m_oFitToWidth.IsInit()) ? oox_page->m_oFitToWidth->GetValue() : 1;
+		fit_height	= (oox_page && oox_page->m_oFitToHeight.IsInit()) ? oox_page->m_oFitToHeight->GetValue() : 1;
+		fit_width	= (std::min)(fit_width, 1000u);
+		fit_height	= (std::min)(fit_height, 1000u);
+	}
+	if (fit_width > 0)
+		ods_context->page_layout_context()->set_page_scaleToX(fit_width);
+	if (fit_height > 0)
+		ods_context->page_layout_context()->set_page_scaleToY(fit_height);
+
 	if (!oox_page) return;
 
 	int type = 1;	
@@ -2128,7 +2202,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPageSetup *oox_page)
 	}
 	ods_context->page_layout_context()->set_page_size(width, height);
 
-	if (oox_page->m_oScale.IsInit())
+	if (oox_page->m_oScale.IsInit() && !fit_to_page)
 	{
 		ods_context->page_layout_context()->set_page_scale(oox_page->m_oScale->GetValue());
 	}
