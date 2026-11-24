@@ -112,6 +112,7 @@ add_core_gtest(
             docx2odt_style_based_on.cpp
             odf_bitmap_fill_size.cpp
             xlsx2ods_default_cell_style.cpp
+            ods2xlsx_default_cell_style_font.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
