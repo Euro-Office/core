@@ -56,6 +56,7 @@ private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
     virtual void add_text(const std::wstring & Text);
+    virtual void add_space(const std::wstring & Text);
 
     office_element_ptr_array content_;
   

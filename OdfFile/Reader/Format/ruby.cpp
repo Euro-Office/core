@@ -69,6 +69,13 @@ void ruby_base::add_text(const std::wstring & Text)
     content_.push_back( elm );
 }
 
+// whitespace between child elements (<text:span>A</text:span> <text:span>B</text:span>) is text too, as in a span
+void ruby_base::add_space(const std::wstring & Text)
+{
+    office_element_ptr elm = text::create(Text);
+    content_.push_back( elm );
+}
+
 // text:ruby-text
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * ruby_text::ns = L"text";

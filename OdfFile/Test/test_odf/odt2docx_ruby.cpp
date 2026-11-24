@@ -142,6 +142,14 @@ TEST(OdtToDocxRuby, ParagraphWithOnlyRubyKeepsItsText)
     EXPECT_TRUE(has_paragraph(xml, L"上")) << xml;
 }
 
+// <text:span>春</text:span> <text:span>夏</text:span> in a ruby base: the space between the spans is text too.
+TEST(OdtToDocxRuby, SpaceBetweenSpansInBaseIsKept)
+{
+    const std::wstring xml = part(L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_TRUE(has_paragraph(xml, L"Space: 春 夏 end")) << xml;
+}
+
 TEST(OdtToDocxRuby, AnnotationIsDropped)
 {
     const std::wstring xml = part(L"word/document.xml");
