@@ -111,6 +111,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/field_expression_ampersand.odt",
     "OdfFile/Test/test_odf/ExampleFiles/field_sequence_ref_ampersand.odt",
     "OdfFile/Test/test_odf/ExampleFiles/field_text_input_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/cell_text_fields.ods",
     "OdfFile/Test/test_odf/ExampleFiles/field_variable_input_ampersand.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
