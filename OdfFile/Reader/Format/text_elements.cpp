@@ -187,6 +187,22 @@ void paragraph::drop_cap_text_docx_convert(office_element_ptr first_text_element
 	if (textStyle == 1) Context.pop_text_properties();
 }
 
+namespace {
+// A text:meta / text:meta-field that holds nothing but empty metas: it writes nothing. (A span is never empty here:
+// a styled span writes a run even without text.)
+bool meta_is_empty(const office_element_ptr & element)
+{
+	meta* m = dynamic_cast<meta*>(element.get());
+	if (!m) return false;
+
+	for (size_t i = 0; i < m->content_.size(); i++)
+	{
+		if (!meta_is_empty(m->content_[i])) return false;
+	}
+	return true;
+}
+}
+
 size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 {
 	if ( content_.empty()) return 0;
@@ -196,7 +212,11 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 	while(index < content_.size()) // there may be track-change, ...
 	{
 		const ElementType type = content_[index]->get_type();
-		if (type == typeTextText || type == typeTextSpan || type == typeTextMeta || type == typeTextMetaField)
+		if (type == typeTextText || type == typeTextSpan)
+			break;
+		// a text:meta / text:meta-field with content stops the scan too: its runs must come after the drop cap paragraph
+		// properties. An empty one writes nothing and the scan goes on.
+		if ((type == typeTextMeta || type == typeTextMetaField) && !meta_is_empty(content_[index]))
 			break;
 		content_[index++]->docx_convert(Context);
 	}
@@ -209,11 +229,26 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 	}
 	else
 	{
-		// a span, or a text:meta / text:meta-field: the drop cap comes from the first text inside it
+		// a span, or a text:meta / text:meta-field: the drop cap comes from the first text inside it. A meta is followed
+		// through the spans and metas it starts with (LibreOffice writes formatted text in a meta as a span inside it).
 		span* first_span_in_paragraph = dynamic_cast<span*>(content_[index].get());
-		meta* first_meta_in_paragraph = dynamic_cast<meta*>(content_[index].get());
-		const office_element_ptr_array* first_content = first_span_in_paragraph ? &first_span_in_paragraph->content_ :
-			(first_meta_in_paragraph ? &first_meta_in_paragraph->content_ : NULL);
+		const office_element_ptr_array* first_content = first_span_in_paragraph ? &first_span_in_paragraph->content_ : NULL;
+		if (meta* first_meta_in_paragraph = dynamic_cast<meta*>(content_[index].get()))
+		{
+			first_content = &first_meta_in_paragraph->content_;
+			while (!first_content->empty())
+			{
+				if (span* inner_span = dynamic_cast<span*>((*first_content)[0].get()))
+				{
+					first_span_in_paragraph = inner_span; // its style gives the drop cap size, as for a span first
+					first_content = &inner_span->content_;
+				}
+				else if (meta* inner_meta = dynamic_cast<meta*>((*first_content)[0].get()))
+					first_content = &inner_meta->content_;
+				else
+					break;
+			}
+		}
 
 		if (Context.get_drop_cap_context().FontSize < 1)
 		{

@@ -189,3 +189,29 @@ TEST(OdfTextMeta, OdtDropCapParagraphPropertiesStayOutsideRuns)
     for (const auto& run : elements(xml, L"w:r"))
         EXPECT_EQ(run.find(L"<w:pPr"), std::wstring::npos) << run;
 }
+
+// An empty text:meta writes nothing, so it does not hold the drop cap: the letter comes from the text after it.
+TEST(OdfTextMeta, OdtDropCapSkipsAnEmptyMeta)
+{
+    const std::wstring xml = part(L"text_meta_drop_cap_nested.odt", L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_TRUE(is_well_formed(xml));
+    const std::wstring paragraph = element_with_text(xml, L"w:p", L"w:t", L"N");
+    EXPECT_NE(paragraph.find(L"w:dropCap=\"drop\""), std::wstring::npos) << xml;
+    EXPECT_FALSE(element_with_text(xml, L"w:p", L"w:t", L"isi ut aliquip.").empty()) << xml;
+}
+
+// LibreOffice writes formatted text in a text:meta as a span inside it: the drop cap letter is the first letter of that
+// span, and the rest of the span keeps its formatting.
+TEST(OdfTextMeta, OdtDropCapTakesItsLetterFromASpanInAMeta)
+{
+    const std::wstring xml = part(L"text_meta_drop_cap_nested.odt", L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    const std::wstring paragraph = element_with_text(xml, L"w:p", L"w:t", L"D");
+    EXPECT_NE(paragraph.find(L"w:dropCap=\"drop\""), std::wstring::npos) << xml;
+    EXPECT_FALSE(element_with_text(xml, L"w:p", L"w:t", L"uis aute irure.").empty()) << xml;
+    const std::wstring run = element_with_text(xml, L"w:r", L"w:t", L"uis");
+    EXPECT_NE(run.find(L"<w:b/>"), std::wstring::npos) << run;
+    for (const auto& r : elements(xml, L"w:r"))
+        EXPECT_EQ(r.find(L"<w:pPr"), std::wstring::npos) << r;
+}

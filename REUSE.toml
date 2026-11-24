@@ -313,6 +313,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/text_meta.ods",
     "OdfFile/Test/test_odf/ExampleFiles/text_meta.odt",
     "OdfFile/Test/test_odf/ExampleFiles/text_meta_drop_cap.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/text_meta_drop_cap_nested.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
