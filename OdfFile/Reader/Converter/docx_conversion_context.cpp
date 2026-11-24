@@ -24,6 +24,7 @@
  */
 
 #include <algorithm>
+#include <map>
 #include <iostream>
 
 #include <xml/utils.h>
@@ -1024,8 +1025,18 @@ std::wstring  docx_conversion_context::dump_settings_document()
 				}
 			}
 			
+			// ODF AddParaTableSpacing (true or missing: space below + space above of adjacent
+			// paragraphs add up) is Word's doNotUseHTMLParagraphAutoSpacing. Like LibreOffice, take
+			// only the exact value "true" as true.
+			_CP_OPT(std::wstring) addParaTableSpacing = root()->odf_context().Settings().find_by_name(L"AddParaTableSpacing");
+			const bool bAddParaTableSpacing = !addParaTableSpacing || *addParaTableSpacing == L"true";
+
 			CP_XML_NODE(L"w:compat")
 			{
+				if (bAddParaTableSpacing)
+				{
+					CP_XML_NODE(L"w:doNotUseHTMLParagraphAutoSpacing");
+				}
 				CP_XML_NODE(L"w:compatSetting")
 				{
 					CP_XML_ATTR(L"w:name",  L"compatibilityMode" );
@@ -2471,6 +2482,12 @@ void docx_conversion_context::process_headers_footers()
 	{
 		set_settings_property(odf_reader::_property(L"evenAndOddHeaders", true));
 	}
+	// master pages per page layout: no section starts between master pages that share one
+	std::map<std::wstring, size_t> layout_users;
+	for (size_t i = 0; i < master_pages.size(); i++)
+	{
+		layout_users[pageLayouts.page_layout_name_by_style(master_pages[i]->attlist_.style_name_.get_value_or(L""))]++;
+	}
  	for (size_t i = 0; i < master_pages.size(); i++)
 	{
         const std::wstring & styleName = master_pages[i]->attlist_.style_name_.get_value_or( L"" );
@@ -2496,6 +2513,15 @@ void docx_conversion_context::process_headers_footers()
 			//disabled headers and footers
 			rels rels_;
 			get_headers_footers().add(styleName, L"", headers_footers::none, rels_);
+		}
+		// A master page that is followed by itself has no header or footer where it defines none. One that hands
+		// over to another master page, or shares its page layout with one, is left as it is: its section can also
+		// hold pages of the other one.
+		const _CP_OPT(std::wstring) & nextStyleName = master_pages[i]->attlist_.style_next_style_name_;
+		if ((!nextStyleName || nextStyleName->empty() || *nextStyleName == styleName) &&
+			layout_users[masterPageNameLayout] == 1)
+		{
+			get_headers_footers().set_no_inherit(styleName);
 		}
 		
 		remove_page_properties();
