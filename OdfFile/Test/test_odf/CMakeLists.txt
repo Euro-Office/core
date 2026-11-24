@@ -103,6 +103,9 @@ add_core_gtest(
             ods2xlsx_header_footer_ampersand.cpp
             ods2xlsx_fit_to_page.cpp
             ods2xlsx_page_margins.cpp
+            odt2docx_heading_spaces.cpp
+            odf2ooxml_white_space.cpp
+            docx2odt_white_space.cpp
             ods2xlsx_hidden_header_footer.cpp
             ods2xlsx_font_size_column_width.cpp
             ods2xlsx_database_range.cpp

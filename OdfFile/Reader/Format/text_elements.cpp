@@ -25,6 +25,8 @@
 
 #include "text_elements.h"
 
+#include <cwchar>
+
 #include <xml/xmlchar.h>
 #include <xml/utils.h>
 
@@ -146,13 +148,40 @@ void paragraph::add_child_element( xml::sax * Reader, const std::wstring & Ns, c
 
 void paragraph::add_text(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text) ;
+    office_element_ptr elm = text::create_in_paragraph(Text) ;
 	content_.push_back( elm );
 }
 void paragraph::add_space(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text) ;
+    office_element_ptr elm = text::create_in_paragraph(Text) ;
 	content_.push_back( elm );
+}
+void paragraph::process_white_space(document_context * Context)
+{
+	// LibreOffice takes the text of spreadsheet cells and of charts as it is. Every other paragraph
+	// text follows the ODF white-space rules: Writer, Impress, Draw, headers and footers, and shapes
+	// and comments, also when they sit in a spreadsheet. The innermost of these containers decides.
+	bool collapse = true;
+	if (Context)
+	{
+		for (size_t i = Context->levels.size(); i > 0; i--)
+		{
+			const office_element * elm = Context->levels[i - 1];
+			if (!elm) continue;
+
+			const ElementType type = elm->get_type();
+			const wchar_t * ns = elm->get_ns();
+			if (type == typeOfficeAnnotation || (ns && std::wcscmp(ns, L"draw") == 0))
+				break;
+			if (type == typeOfficeChart || type == typeOfficeSpreadsheet)
+			{
+				collapse = false;
+				break;
+			}
+		}
+	}
+	bool ignore = true;
+	cpdoccore::odf_reader::text::process_white_space(content_, collapse, ignore);
 }
 const wchar_t * emptyParagraphContent = L"<w:pPr></w:pPr><w:r><w:rPr></w:rPr></w:r>";
 
@@ -567,6 +596,15 @@ void h::add_text(const std::wstring & Text)
 {
     paragraph_.add_text(Text);
 }
+void h::add_space(const std::wstring & Text)
+{
+    paragraph_.add_space(Text);
+}
+void h::afterReadContent()
+{
+    paragraph_.process_white_space(getContext());
+    office_element::afterReadContent();
+}
 
 void h::docx_convert(oox::docx_conversion_context & Context) 
 {
@@ -630,6 +668,11 @@ void p::add_text(const std::wstring & Text)
 void p::add_space(const std::wstring & Text)
 {
     paragraph_.add_space(Text);
+}
+void p::afterReadContent()
+{
+    paragraph_.process_white_space(getContext());
+    office_element::afterReadContent();
 }
 
 void p::docx_convert(oox::docx_conversion_context & Context)
