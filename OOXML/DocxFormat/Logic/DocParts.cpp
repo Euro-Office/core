@@ -54,7 +54,7 @@ namespace OOX
 			while (oReader.ReadNextSiblingNode(nParentDepth))
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if (L"w:docPart" == sName)
 				{
@@ -144,7 +144,7 @@ namespace OOX
 					if (oItem.IsValid())
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if (L"w:bookmarkEnd" == sName)
 							AssignPtrXmlContent(pItem, CBookmarkEnd, oItem)
@@ -222,7 +222,7 @@ namespace OOX
 			while (oReader.ReadNextSiblingNode(nParentDepth))
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if (L"w:bookmarkEnd" == sName)
 					AssignPtrXmlContent(pItem, CBookmarkEnd, oReader)
@@ -328,7 +328,7 @@ namespace OOX
 			while (oReader.ReadNextSiblingNode(nParentDepth))
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if (L"w:name" == sName)
 					m_oName = oReader;
@@ -381,7 +381,7 @@ namespace OOX
 			while (oReader.ReadNextSiblingNode(nParentDepth))
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if (L"w:name" == sName)
 					m_oName = oReader;

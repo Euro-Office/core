@@ -163,7 +163,7 @@ namespace MetaFile
 
 	void CClip::DrawOnRenderer(IOutputDevice *pOutput) const
 	{
-		if (NULL == pOutput)
+		if (nullptr == pOutput)
 			return;
 
 		pOutput->ResetClip();
@@ -203,7 +203,7 @@ namespace MetaFile
 
 	bool CClip::AddCommand(CClipCommandBase *pCommande)
 	{
-		if (NULL == pCommande)
+		if (nullptr == pCommande)
 			return false;
 
 		m_arCommands.push_back(pCommande);

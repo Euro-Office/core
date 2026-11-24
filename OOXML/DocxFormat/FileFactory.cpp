@@ -196,7 +196,7 @@ namespace OOX
 
 	const smart_ptr<OOX::File> CreateFile(const OOX::CPath& oRootPath, const OOX::CPath& oPath, OOX::Rels::CRelationShip* pRelation, OOX::Document* pMain)
 	{
-		if (pRelation == NULL) return smart_ptr<OOX::File>( new UnknowTypeFile(pMain) );
+		if (pRelation == nullptr) return smart_ptr<OOX::File>( new UnknowTypeFile(pMain) );
 
 		OOX::CPath oRelationFilename = pRelation->Filename();
 		CPath oFileName;

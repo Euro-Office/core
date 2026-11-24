@@ -3,7 +3,7 @@
 namespace Aggplus
 {
 	CAlphaMask::CAlphaMask()
-		: m_pBuffer(NULL)
+		: m_pBuffer(nullptr)
 	{}
 
 	CAlphaMask::CAlphaMask(BYTE *pBuffer, EMaskDataType eDataType, bool bExternalBuffer)
@@ -47,7 +47,7 @@ namespace Aggplus
 		
 		m_pBuffer = new BYTE[unSize];
 
-		if (NULL == m_pBuffer)
+		if (nullptr == m_pBuffer)
 			return OutOfMemory;
 
 		memset(m_pBuffer, 0x00, unSize);

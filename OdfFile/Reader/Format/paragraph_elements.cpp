@@ -57,6 +57,26 @@ namespace odf_reader {
 
 namespace text {
 
+namespace {
+
+// In an XLSX header or footer '&' starts a code (&P, &D, &"font", ...), so a '&' of the text itself
+// is written as "&&". The text here is already XML-encoded, where '&' is "&amp;".
+std::wstring xlsx_header_footer_text(const std::wstring & xml_text)
+{
+	return boost::algorithm::replace_all_copy(xml_text, L"&amp;", L"&amp;&amp;");
+}
+
+}
+
+void xlsx_serialize_header_footer_text(std::wostream & _Wostream, const office_element_ptr & Elm)
+{
+	if (!Elm)
+		return;
+	std::wstringstream val;
+	Elm->text_to_stream(val, true);
+	_Wostream << xlsx_header_footer_text(val.str());
+}
+
 //------------------------------------------------------------------------------------------------------------
 const wchar_t * paragraph_content_element::ns = L"";
 const wchar_t * paragraph_content_element::name = L"";
@@ -161,7 +181,7 @@ void paragraph_content_element::xlsx_serialize(std::wostream& _Wostream, oox::xl
 	std::wstring val_text = val.str();
 	if (val_text != L"???")
 	{
-		_Wostream << val_text;
+		_Wostream << xlsx_header_footer_text(val_text);
 	}
 }
 //------------------------------------------------------------------------------------------------------------
@@ -780,7 +800,9 @@ void span::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_contex
 		text *t = dynamic_cast<text*>(content_[i].get());
 		if (t)
 		{
-			t->text_to_stream(_Wostream, true);
+			std::wstringstream val;
+			t->text_to_stream(val, true);
+			_Wostream << xlsx_header_footer_text(val.str());
 		}
 		else
 		{
@@ -1205,7 +1227,7 @@ void title::xlsx_serialize(std::wostream& _Wostream, oox::xlsx_conversion_contex
 	}
 	else
 	{
-		_Wostream << _title;
+		_Wostream << xlsx_header_footer_text(_title);
 	}
 }
 void title::pptx_convert(oox::pptx_conversion_context & Context)

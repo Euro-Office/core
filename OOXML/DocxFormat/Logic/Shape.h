@@ -38,7 +38,7 @@ namespace OOX
 		class CTxbxContent : public WritingElementWithChilds<>
 		{
 		public:
-			CTxbxContent(OOX::Document *pMain = NULL);			
+			CTxbxContent(OOX::Document *pMain = nullptr);			
 			virtual ~CTxbxContent();
 
 			const CTxbxContent &operator =(const XmlUtils::CXmlNode& oNode);

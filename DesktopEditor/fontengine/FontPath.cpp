@@ -41,12 +41,12 @@
 
 CFontPath::CFontPath() : NSFonts::IFontPath()
 {
-	m_pPoints = NULL;
-	m_pFlags = NULL;
+	m_pPoints = nullptr;
+	m_pFlags = nullptr;
 	m_nPointsCount = m_nSize = 0;
 	m_nCurSubpath = 0;
 
-	m_pHints = NULL;
+	m_pHints = nullptr;
 	m_nHintsCount = m_nHintsSize = 0;
 }
 
@@ -70,7 +70,7 @@ CFontPath::CFontPath(CFontPath *pPath) : NSFonts::IFontPath()
 	}
 	else
 	{
-		m_pHints = NULL;
+		m_pHints = nullptr;
 	}
 }
 

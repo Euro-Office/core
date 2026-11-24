@@ -241,7 +241,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CFormPr)
-			CFormPr(OOX::Document *pMain = NULL);
+			CFormPr(OOX::Document *pMain = nullptr);
 			virtual ~CFormPr();
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
@@ -265,7 +265,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CTextFormPr)
-			CTextFormPr(OOX::Document *pMain = NULL);
+			CTextFormPr(OOX::Document *pMain = nullptr);
 			virtual ~CTextFormPr();
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
@@ -288,7 +288,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CComplexFormPr)
-			CComplexFormPr(OOX::Document *pMain = NULL);
+			CComplexFormPr(OOX::Document *pMain = nullptr);
 			virtual ~CComplexFormPr();
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
@@ -308,7 +308,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSdtComboBox)
-			CSdtComboBox(OOX::Document *pMain = NULL);
+			CSdtComboBox(OOX::Document *pMain = nullptr);
 			virtual ~CSdtComboBox();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -334,7 +334,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CDate)
-			CDate(OOX::Document *pMain = NULL);
+			CDate(OOX::Document *pMain = nullptr);
 			virtual ~CDate();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -362,7 +362,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSdtDocPart)
-			CSdtDocPart(OOX::Document *pMain = NULL);
+			CSdtDocPart(OOX::Document *pMain = nullptr);
 			virtual ~CSdtDocPart();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -386,7 +386,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSdtDropDownList)
-			CSdtDropDownList(OOX::Document *pMain = NULL);
+			CSdtDropDownList(OOX::Document *pMain = nullptr);
 			virtual ~CSdtDropDownList();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -410,7 +410,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CPlaceHolder)
-			CPlaceHolder(OOX::Document *pMain = NULL);
+			CPlaceHolder(OOX::Document *pMain = nullptr);
 			virtual ~CPlaceHolder();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -431,7 +431,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSdtEndPr)
-			CSdtEndPr(OOX::Document *pMain = NULL);
+			CSdtEndPr(OOX::Document *pMain = nullptr);
 			virtual ~CSdtEndPr();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -448,7 +448,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSdtCheckBoxSymbol)
-			CSdtCheckBoxSymbol(OOX::Document *pMain = NULL);
+			CSdtCheckBoxSymbol(OOX::Document *pMain = nullptr);
 			virtual ~CSdtCheckBoxSymbol();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -471,7 +471,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSdtCheckBox)
-			CSdtCheckBox(OOX::Document *pMain = NULL);
+			CSdtCheckBox(OOX::Document *pMain = nullptr);
 			virtual ~CSdtCheckBox();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -492,7 +492,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSdtPicture)
-			CSdtPicture(OOX::Document *pMain = NULL);
+			CSdtPicture(OOX::Document *pMain = nullptr);
 			virtual ~CSdtPicture();
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
@@ -536,7 +536,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSdtPr)
-			CSdtPr(OOX::Document *pMain = NULL);
+			CSdtPr(OOX::Document *pMain = nullptr);
 			virtual ~CSdtPr();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -588,7 +588,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSdtContent)
-			CSdtContent(OOX::Document *pMain = NULL);
+			CSdtContent(OOX::Document *pMain = nullptr);
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
@@ -596,7 +596,7 @@ namespace OOX
 			virtual std::wstring toXML() const;
 			virtual EElementType getType() const;
 
-			// Childs
+			// Children
 		};
 
 		//--------------------------------------------------------------------------------
@@ -606,7 +606,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSdt)
-			CSdt(OOX::Document *pMain = NULL);
+			CSdt(OOX::Document *pMain = nullptr);
 			virtual ~CSdt();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);

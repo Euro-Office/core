@@ -48,7 +48,7 @@ namespace OOX
 	}
 	CDocxFlat::CDocxFlat(const CPath& oFilePath) : File(dynamic_cast<Document*>(this))
 	{
-		read(oFilePath);
+		CDocxFlat::read(oFilePath);
 	}
 	CDocxFlat::~CDocxFlat()
 	{
@@ -67,7 +67,7 @@ namespace OOX
 
 		fromXML(oReader);
 	}
-	void CDocxFlat::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
+	void CDocxFlat::write(const CPath& oFilePath, const CPath& /*oDirectory*/, CContentTypes& /*oContent*/) const
 	{
 		std::wstring sXml = toXML();
 
@@ -162,7 +162,7 @@ namespace OOX
 
 		if (!m_sCompatibilityMode.IsInit() && m_pCore.IsInit() && (m_pCore->m_sVersion.IsInit()))
 		{
-			if (false == m_pSettings.IsInit()) m_pSettings = new CSettings(this);
+			if (!m_pSettings.IsInit()) m_pSettings = new CSettings(this);
 			if (m_pSettings->m_oCompat.IsInit()) m_pSettings->m_oCompat.Init();
 
 			Settings::CCompatSetting* pSett = new Settings::CCompatSetting();
@@ -176,15 +176,15 @@ namespace OOX
 		{
 			m_pDocument->m_bMacroEnabled = true;
 		}
-		if (false == m_pStyles->m_oDocDefaults.IsInit())
+		if (!m_pStyles->m_oDocDefaults.IsInit())
 			m_pStyles->m_oDocDefaults.Init();
 
-		if (false == m_pStyles->m_oDocDefaults->m_oParPr.IsInit())
+		if (!m_pStyles->m_oDocDefaults->m_oParPr.IsInit())
 			m_pStyles->m_oDocDefaults->m_oParPr.Init();
 
 		if ((m_pFontTable.IsInit() && m_pStyles.IsInit()) && (m_pFontTable->m_oDefaultFonts.IsInit()))
 		{
-			if (false == m_pStyles->m_oDocDefaults->m_oRunPr.IsInit())
+			if (!m_pStyles->m_oDocDefaults->m_oRunPr.IsInit())
 				m_pStyles->m_oDocDefaults->m_oRunPr.Init();
 
 			if (!m_pStyles->m_oDocDefaults->m_oRunPr->m_oRFonts.IsInit())
@@ -331,15 +331,15 @@ namespace OOX
 
 		smart_ptr<OOX::File> pFile = pDocumentContainer->Find(rId);
 		if (pFile.IsInit() && (OOX::FileTypes::Header == pFile->type() || OOX::FileTypes::Footer == pFile->type()))
-			return (OOX::CHdrFtr*)pFile.GetPointer();
+			return (OOX::CHdrFtr*)pFile.GetPointer(); // NOLINT(clang-analyzer-cplusplus.NewDelete): the container map keeps the refcount alive
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	void CDocxFlat::ParsingOleData()
 	{
-		if (false == m_oDocOleData.IsInit()) return;
-		if (false == m_oDocOleData->m_oBinData.IsInit()) return;
+		if (!m_oDocOleData.IsInit()) return;
+		if (!m_oDocOleData->m_oBinData.IsInit()) return;
 
 		std::vector<BYTE> pData = m_oDocOleData->m_oBinData->GetBytes();
 
@@ -347,13 +347,13 @@ namespace OOX
 
 		std::wstring tempOleData = m_sTempPath + FILE_SEPARATOR_STR + L"DocOleData.bin";
 
-		if (false == fileTest.CreateFileW(tempOleData)) return;
+		if (!fileTest.CreateFileW(tempOleData)) return;
 		
 		fileTest.WriteFile(pData.data(), pData.size());
 		fileTest.CloseFile();
 
 		POLE::Storage storage(tempOleData.c_str());
-		if (false == storage.open()) return;
+		if (!storage.open()) return;
 
 		std::list<std::wstring> msoStores = storage.entries();
 
@@ -371,7 +371,7 @@ namespace OOX
 			_UINT64 size = stream.read(pOleObjectFile->m_Data.data(), stream.size());
 			pOleObjectFile->m_Data.resize(size);
 
-			COfficeUtils oCOfficeUtils(NULL);
+			COfficeUtils oCOfficeUtils(nullptr);
 			if (oCOfficeUtils.IsArchive(pOleObjectFile->m_Data.data(), pOleObjectFile->m_Data.size()))
 			{//gzip
 				ULONG nBytesUncompress = (std::max)((_UINT32)pOleObjectFile->m_Data.size() * 10, ((_UINT32*)pOleObjectFile->m_Data.data())[0]);
@@ -392,8 +392,8 @@ namespace OOX
 	}
 	void CDocxFlat::ParsingSuppData()
 	{
-		if (false == m_oDocSuppData.IsInit()) return;
-		if (false == m_oDocSuppData->m_oBinData.IsInit()) return;
+		if (!m_oDocSuppData.IsInit()) return;
+		if (!m_oDocSuppData->m_oBinData.IsInit()) return;
 
 		std::vector<BYTE> pData = m_oDocSuppData->m_oBinData->GetBytes();
 		//COfficeUtils oCOfficeUtils(NULL);

@@ -18,6 +18,8 @@ SOURCES += main.cpp\
            richvalue.cpp\
            conversion.cpp\
            editorbin_pivots.cpp\
+           parameter_type.cpp\
+           vml_shape_size.cpp\
            workbook_facts.cpp\
 
 HEADERS += common.h workbook_facts.h

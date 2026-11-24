@@ -96,7 +96,7 @@ namespace OOX
 			std::wstring pathJsa = m_filename.GetPath();
 			if (pathMain.empty() || std::wstring::npos != pathJsa.find(pathMain))
 			{
-				BYTE* pData = NULL;
+				BYTE* pData = nullptr;
 				DWORD nBytesCount;
 				if (NSFile::CFileBinary::ReadAllBytes(m_filename.GetPath(), &pData, nBytesCount))
 				{
