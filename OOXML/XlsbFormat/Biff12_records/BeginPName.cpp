@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginPName::readFields(XLS::CFRecord& record)
     {
-        BYTE    flags;
+        BYTE    flags = 0;
         record >> ifdb >> ifn >> flags;
 
         fErrName    = GETBIT(flags, 0);

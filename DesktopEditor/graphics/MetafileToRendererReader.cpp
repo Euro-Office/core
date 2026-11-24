@@ -68,6 +68,6 @@ namespace NSOnlineOfficeBinToPdf
 		default: break;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 }

@@ -59,7 +59,7 @@ namespace OOX
 		{
 			toXMLWithNS(writer, L"", sHeader, L"");
 		}
-		void CNumFmt::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring &child_ns) const
+		void CNumFmt::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring & /*child_ns*/) const
 		{
 			writer.StartNodeWithNS(node_ns, node_name);
 			writer.StartAttributes();

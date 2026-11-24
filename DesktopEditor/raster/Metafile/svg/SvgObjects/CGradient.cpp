@@ -22,7 +22,7 @@ namespace SVG
 		return m_oColor;
 	}
 
-	void CStopElement::SetData(const std::map<std::wstring, std::wstring> &mAttributes, unsigned short ushLevel, bool bHardMode)
+	void CStopElement::SetData(const std::map<std::wstring, std::wstring> &mAttributes, unsigned short  /*ushLevel*/, bool  /*bHardMode*/)
 	{
 		if (mAttributes.end() != mAttributes.find(L"stop-color"))
 			m_oColor.SetValue(mAttributes.at(L"stop-color"));
@@ -58,7 +58,7 @@ namespace SVG
 
 	void CGradient::ReadChildrens(CSvgReader& oReader, CSvgFile* pSvgFile)
 	{
-		if (NULL == pSvgFile || NULL == pSvgFile->GetSvgCalculator())
+		if (nullptr == pSvgFile || nullptr == pSvgFile->GetSvgCalculator())
 			return;
 
 		WHILE_READ_NEXT_NODE_WITH_ONE_NAME(oReader, "stop")
@@ -66,9 +66,9 @@ namespace SVG
 		END_WHILE
 	}
 
-	bool CGradient::Apply(IRenderer *pRenderer, const CSvgFile *pFile, const TBounds &oObjectBounds)
+	bool CGradient::Apply(IRenderer *pRenderer, const CSvgFile * /*pFile*/, const TBounds & /*oObjectBounds*/)
 	{
-		if (NULL == pRenderer || m_arObjects.empty())
+		if (nullptr == pRenderer || m_arObjects.empty())
 			return false;
 
 		std::vector<LONG> arColors;
@@ -88,7 +88,7 @@ namespace SVG
 	
 	void CGradient::ApplyTransform(IRenderer* pRenderer, const TBounds& oBounds, double& dAngle) const
 	{
-		if (NULL == pRenderer)
+		if (nullptr == pRenderer)
 			return;
 		
 		TBounds oNewBounds(oBounds);
@@ -110,24 +110,24 @@ namespace SVG
 
 	CGradient *CGradient::GetRefGradient(const CSvgFile *pFile) const
 	{
-		if (m_wsXlinkHref.empty() || NULL == pFile)
-			return NULL;
+		if (m_wsXlinkHref.empty() || nullptr == pFile)
+			return nullptr;
 
 		CGradient *pGradiend = dynamic_cast<CGradient*>(pFile->GetMarkedObject(m_wsXlinkHref));
 
-		if (NULL == pGradiend)
-			return NULL;
+		if (nullptr == pGradiend)
+			return nullptr;
 
 		CGradient *pRefGradient = pGradiend->GetRefGradient(pFile);
 
-		return (NULL != pRefGradient) ? pRefGradient : pGradiend;
+		return (nullptr != pRefGradient) ? pRefGradient : pGradiend;
 	}
 
 	bool CGradient::ApplyRefGradient(IRenderer *pRenderer, const CSvgFile *pFile, const TBounds &oObjectBounds) const
 	{
 		CGradient *pRefGradient = GetRefGradient(pFile);
 
-		if (NULL == pRefGradient)
+		if (nullptr == pRefGradient)
 			return false;
 
 		return pRefGradient->Apply(pRenderer, pFile, oObjectBounds);

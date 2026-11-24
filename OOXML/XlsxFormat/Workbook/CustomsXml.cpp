@@ -39,11 +39,11 @@ namespace Spreadsheet
 	}
 	CXmlMapsFile::CXmlMapsFile(OOX::Document* pMain, const CPath& uri) : OOX::File(pMain)
 	{
-		read(uri.GetDirectory(), uri);
+		CXmlMapsFile::read(uri.GetDirectory(), uri);
 	}
 	CXmlMapsFile::CXmlMapsFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 	{
-		read(oRootPath, oPath);
+		CXmlMapsFile::read(oRootPath, oPath);
 	}
 	CXmlMapsFile::~CXmlMapsFile()
 	{
@@ -53,7 +53,7 @@ namespace Spreadsheet
 		CPath oRootPath;
 		read(oRootPath, oFilePath);
 	}
-	void CXmlMapsFile::read(const CPath& oRootPath, const CPath& oFilePath)
+	void CXmlMapsFile::read(const CPath&  /*oRootPath*/, const CPath& oFilePath)
 	{
 		XmlUtils::CXmlLiteReader oReader;
 
@@ -145,7 +145,7 @@ namespace Spreadsheet
 		{
 			std::wstring sName = oReader.GetNameNoNS();
 
-			OOX::Spreadsheet::WritingElement* pItem = NULL;
+			OOX::Spreadsheet::WritingElement* pItem = nullptr;
 			if (L"Schema" == sName)
 			{
 				pItem = new OOX::Spreadsheet::CSchema();
@@ -194,6 +194,7 @@ namespace Spreadsheet
 			{
 				SelectionNamespaces = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -330,6 +331,7 @@ namespace Spreadsheet
 			{
 				PreserveFormat = pReader->GetBool();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -444,6 +446,7 @@ namespace Spreadsheet
 			{
 				content = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -528,6 +531,7 @@ namespace Spreadsheet
 			{
 				content = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);

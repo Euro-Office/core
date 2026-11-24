@@ -211,7 +211,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CCell)
-			CCell(OOX::Document *pMain = NULL);
+			CCell(OOX::Document *pMain = nullptr);
 			virtual ~CCell();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -287,7 +287,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CRow)
-			CRow(OOX::Document *pMain = NULL);
+			CRow(OOX::Document *pMain = nullptr);
 			virtual ~CRow();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -342,7 +342,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CSheetData)
             //WritingElement_XlsbConstructors(CSheetData)
-			CSheetData(OOX::Document *pMain = NULL);
+			CSheetData(OOX::Document *pMain = nullptr);
 			virtual ~CSheetData();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

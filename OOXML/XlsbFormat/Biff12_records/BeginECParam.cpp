@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginECParam::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> flags;
 
         pbt              = GETBITS(flags, 0, 2);

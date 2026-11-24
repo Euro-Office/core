@@ -23,7 +23,9 @@ namespace SVG
 				AddElement(new CLineElement(Point{arValues[unIndex + 0], arValues[unIndex + 1]}));
 		}
 		else
-			CRenderedObject::SetAttribute(sName, oReader);
+			// A <polyline> has no path data: fall back to the generic attribute
+			// handling instead of CPath::SetAttribute ("d" parsing).
+			CRenderedObject::SetAttribute(sName, oReader); // NOLINT(bugprone-parent-virtual-call)
 	}
 
 	CPolygon::CPolygon(CSvgReader& oReader, CRenderedObject* pParent)

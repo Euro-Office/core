@@ -74,6 +74,7 @@ namespace Draw
 			{
 				ID = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -123,6 +124,7 @@ namespace Draw
 			{
 				ID = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -149,7 +151,7 @@ namespace Draw
 		{
 			std::wstring sName = oReader.GetName();
 
-			WritingElement* pItem = NULL;
+			WritingElement* pItem = nullptr;
 			if (L"PublishedPage" == sName)
 			{
 				pItem = new CPublishedPage();
@@ -300,6 +302,7 @@ namespace Draw
 			{
 				HeaderFooterColor = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -349,7 +352,7 @@ namespace Draw
 		{
 			std::wstring sName = oReader.GetName();
 
-			WritingElement* pItem = NULL;
+			WritingElement* pItem = nullptr;
 			if (L"Cell" == sName)
 			{
 				pItem = new CCell();
@@ -438,6 +441,7 @@ namespace Draw
 			{
 				TextStyle = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -554,6 +558,7 @@ namespace Draw
 			{
 				TargetArgs = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -658,7 +663,7 @@ namespace Draw
 		{
 			std::wstring sName = oReader.GetName();
 
-			WritingElement* pItem = NULL;
+			WritingElement* pItem = nullptr;
 			if (L"Cell" == sName)
 			{
 				pItem = new CCell();
@@ -747,6 +752,7 @@ namespace Draw
 			{
 				TextStyle = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -898,6 +904,7 @@ namespace Draw
 			{
 				RGB = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1039,6 +1046,7 @@ namespace Draw
 				{
 					Flags = pReader->GetULong();
 				}break;		
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1287,6 +1295,7 @@ namespace Draw
 			{
 				AttachedToolbars = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -1348,14 +1357,14 @@ namespace Draw
 		m_bMacroEnabled = false;
 		m_bVisioPages = true;
 		
-		read(uri.GetDirectory(), uri);
+		CDocumentFile::read(uri.GetDirectory(), uri);
 	}
 	OOX::Draw::CDocumentFile::CDocumentFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bMacroEnabled = false;
 		m_bVisioPages = true;
 
-		read(oRootPath, oPath);
+		CDocumentFile::read(oRootPath, oPath);
 	}
 	OOX::Draw::CDocumentFile::~CDocumentFile()
 	{
@@ -1632,7 +1641,7 @@ namespace Draw
 				oBinaryFile.WriteFile(pData, _len);
 				oBinaryFile.CloseFile();
 
-				smart_ptr<OOX::JsaProject> oFileJsaProject(new OOX::JsaProject(NULL));
+				smart_ptr<OOX::JsaProject> oFileJsaProject(new OOX::JsaProject(nullptr));
 				smart_ptr<OOX::File> oFile = oFileJsaProject.smart_dynamic_cast<OOX::File>();
 				if (pReader->GetRelsPtr())
 				{
@@ -1748,7 +1757,7 @@ namespace Draw
 				bThemes = true;
 			}
 		}
-		if (false == bThemes)
+		if (!bThemes)
 		{//incorrect container???
 			OOX::Draw::CVsdx *vsdx = dynamic_cast<OOX::Draw::CVsdx*>(((OOX::File*)this)->m_pMainDocument);
 
@@ -1786,10 +1795,9 @@ namespace Draw
 		{
 			if (pJsaProject->IsExist() && !pJsaProject->IsExternal())
 			{
-				std::wstring pathJsa = pJsaProject->filename().GetPath();
 				//if (std::wstring::npos != pathJsa.find(pWriter->m_strMainFolder)) //out path
 				{
-					BYTE* pData = NULL;
+					BYTE* pData = nullptr;
 					DWORD nBytesCount;
 					if (NSFile::CFileBinary::ReadAllBytes(pJsaProject->filename().GetPath(), &pData, nBytesCount))
 					{
@@ -1869,6 +1877,7 @@ namespace Draw
 			{
 				content = pReader->GetDoubleReal();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -2194,6 +2203,7 @@ namespace Draw
 			{
 				StencilGroupPos = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -2311,6 +2321,7 @@ namespace Draw
 			{
 				ClientHeight = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < end)
@@ -2363,11 +2374,11 @@ namespace Draw
 	}
 	OOX::Draw::CWindowsFile::CWindowsFile(OOX::Document* pMain, const CPath& uri) : OOX::File(pMain)
 	{
-		read(uri.GetDirectory(), uri);
+		CWindowsFile::read(uri.GetDirectory(), uri);
 	}
 	OOX::Draw::CWindowsFile::CWindowsFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 	{
-		read(oRootPath, oPath);
+		CWindowsFile::read(oRootPath, oPath);
 	}
 	OOX::Draw::CWindowsFile::~CWindowsFile()
 	{
@@ -2377,7 +2388,7 @@ namespace Draw
 		CPath oRootPath;
 		read(oRootPath, oFilePath);
 	}
-	void OOX::Draw::CWindowsFile::read(const CPath& oRootPath, const CPath& oFilePath)
+	void OOX::Draw::CWindowsFile::read(const CPath&  /*oRootPath*/, const CPath& oFilePath)
 	{
 		XmlUtils::CXmlLiteReader oReader;
 

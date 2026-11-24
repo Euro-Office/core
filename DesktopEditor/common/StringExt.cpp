@@ -28,13 +28,13 @@
 namespace NSStringExt
 {
 #define NSSTRING_COMMON_CP(UnicodeMapCP, lCount, pData) \
-	for (long i = 0; i < lCount; ++i)\
+	for (long i = 0; i < (lCount); ++i)\
 	{\
-		unsigned char unChar = (unsigned char)pData[i];\
+		unsigned char unChar = (unsigned char)(pData)[i];\
 		if (unChar < MSCP_FIRST_CHAR || unChar > MSCP_LAST_CHAR)\
 			pUnicode[i] = (wchar_t)unChar;\
 		else\
-			pUnicode[i] = (wchar_t)(UnicodeMapCP[unChar - MSCP_FIRST_CHAR]);\
+			pUnicode[i] = (wchar_t)((UnicodeMapCP)[unChar - MSCP_FIRST_CHAR]);\
 	}
 // end define
 
@@ -167,7 +167,10 @@ namespace NSStringExt
         }
 
         if (0 == pCur - pUnicode)
+        {
+            delete[] pUnicode;
             return L"";
+        }
 
         std::wstring sRet(pUnicode, pCur - pUnicode);
 
@@ -210,7 +213,10 @@ namespace NSStringExt
         }
 
         if (0 == pCur - pUnicode)
+        {
+            delete[] pUnicode;
             return L"";
+        }
 
         std::wstring sRet(pUnicode, pCur - pUnicode);
 
@@ -286,13 +292,12 @@ namespace NSStringExt
     unsigned int* CConverter::GetUtf32FromUnicode(const std::wstring& wsUnicodeText, unsigned int& unLen)
     {
         if (wsUnicodeText.size() <= 0)
-            return NULL;
+            return nullptr;
 
         unsigned int* pUnicodes = new unsigned int[wsUnicodeText.size()];
         if (!pUnicodes)
-            return NULL;
+            return nullptr;
 
-        unsigned int* pOutput = pUnicodes;
         unLen = 0;
         if (2 == sizeof(wchar_t))
         {
@@ -306,7 +311,7 @@ namespace NSStringExt
                 wLeading = *wsInput++;
                 if (wLeading < 0xD800 || wLeading > 0xDFFF)
                 {
-                    pUnicodes[unLen++] = (unsigned int)wLeading;
+                    pUnicodes[unLen++] = static_cast<unsigned int>(static_cast<unsigned long>(wLeading));
                 }
                 else if (wLeading >= 0xDC00)
                 {
@@ -324,7 +329,7 @@ namespace NSStringExt
                     }
                     else
                     {
-                        pUnicodes[unLen++] = (unCode | (wTrailing & 0x3FF) + 0x10000);
+                        pUnicodes[unLen++] = ((unCode | (wTrailing & 0x3FF)) + 0x10000);
                     }
                 }
             }
@@ -334,7 +339,7 @@ namespace NSStringExt
             unLen = (unsigned int)wsUnicodeText.size();
             for (unsigned int unIndex = 0; unIndex < unLen; unIndex++)
             {
-                pUnicodes[unIndex] = (unsigned int)wsUnicodeText.at(unIndex);
+                pUnicodes[unIndex] = static_cast<unsigned int>(static_cast<unsigned long>(wsUnicodeText.at(unIndex)));
             }
         }
 
@@ -344,34 +349,34 @@ namespace NSStringExt
     {
         unsigned int unTextLen = (unsigned int)wsUnicodeText.size();
         if (unTextLen <= 0)
-            return NULL;
+            return nullptr;
 
-        unsigned short* pUtf16 = NULL;
+        unsigned short* pUtf16 = nullptr;
         unLen = 0;
         if (2 == sizeof(wchar_t))
         {
             pUtf16 = new unsigned short[unTextLen];
             if (!pUtf16)
-                return NULL;
+                return nullptr;
 
             unLen = unTextLen;
             for (unsigned int unIndex = 0; unIndex < unLen; unIndex++)
             {
-                pUtf16[unIndex] = (unsigned short)wsUnicodeText.at(unIndex);
+                pUtf16[unIndex] = static_cast<unsigned short>(static_cast<unsigned long>(wsUnicodeText.at(unIndex)));
             }
         }
         else
         {
             pUtf16 = new unsigned short[2 * unTextLen + 1];
             if (!pUtf16)
-                return NULL;
+                return nullptr;
 
             unsigned short* pCur = pUtf16;
             memset(pUtf16, 0x00, sizeof(unsigned short) * (2 * unTextLen + 1));
 
             for (unsigned int lIndex = 0; lIndex < unTextLen; lIndex++)
             {
-                unsigned int unUnicode = wsUnicodeText.at(lIndex);
+                unsigned int unUnicode = static_cast<unsigned int>(static_cast<unsigned long>(wsUnicodeText.at(lIndex)));
                 if (unUnicode < 0x10000)
                 {
                     *pCur = unUnicode;
@@ -391,7 +396,7 @@ namespace NSStringExt
             if (!unLen)
             {
                 delete[] pUtf16;
-                return NULL;
+                return nullptr;
             }
         }
 
@@ -432,7 +437,7 @@ namespace NSStringExt
         inline unsigned int DecodeSurrogateChar(const unsigned int& nLeadingChar, const unsigned int& nTrailingChar)
         {
             if (nLeadingChar < 0xDC00 && nTrailingChar >= 0xDC00 && nTrailingChar <= 0xDFFF)
-                return 0x10000 + ((nLeadingChar & 0x3FF) << 10) | (nTrailingChar & 0x3FF);
+                return 0x10000 + (((nLeadingChar & 0x3FF) << 10) | (nTrailingChar & 0x3FF));
             else
                 return 0;
         }
@@ -449,7 +454,7 @@ namespace NSStringExt
 
     bool CStringUnicodeIterator::Check()
     {
-        return (m_internal->m_index < m_internal->m_str_len) ? true : false;
+        return m_internal->m_index < m_internal->m_str_len;
     }
 
     void CStringUnicodeIterator::Next()
@@ -479,18 +484,18 @@ namespace NSStringExt
 
         if (2 != sizeof(wchar_t))
         {
-            return (unsigned int)m_internal->m_str[m_internal->m_index];
+            return static_cast<unsigned int>(static_cast<unsigned long>(m_internal->m_str[m_internal->m_index]));
         }
         else
         {
-            unsigned int nCharCode = (unsigned int)m_internal->m_str[m_internal->m_index];
+            unsigned int nCharCode = static_cast<unsigned int>(static_cast<unsigned long>(m_internal->m_str[m_internal->m_index]));
             if (!m_internal->IsLeadingSurrogateChar(nCharCode))
                 return nCharCode;
 
             if (m_internal->m_index == (m_internal->m_str_len - 1))
                 return nCharCode;
 
-            unsigned int nTrailingChar = (unsigned int)m_internal->m_str[m_internal->m_index + 1];
+            unsigned int nTrailingChar = static_cast<unsigned int>(static_cast<unsigned long>(m_internal->m_str[m_internal->m_index + 1]));
             return m_internal->DecodeSurrogateChar(nCharCode, nTrailingChar);
         }
     }
