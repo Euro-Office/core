@@ -67,6 +67,7 @@ add_core_gtest(
             docx2odt_add_para_table_spacing.cpp
             docx2odt_section_header_and_footer.cpp
             math_bar.cpp
+            docx2odt_list_label_followed_by.cpp
             chart_title.cpp
             odt2docx_underline.cpp
             odt2docx_keep_next.cpp

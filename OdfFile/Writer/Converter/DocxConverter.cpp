@@ -4216,8 +4216,22 @@ void DocxConverter::convert(OOX::Numbering::CLvl *oox_num_lvl, OOX::Numbering::C
 	if (start_value > 1)
 		odt_context->styles_context()->lists_styles().set_start_number(start_value);
 //-------------------------------------------
-	if (oox_num_lvl->m_oSuffix.IsInit())
+	ComplexTypes::Word::CLevelSuffix *suffix = oox_num_lvl->m_oSuffix.GetPointer();
+	if ((lvl_over) && (lvl_over->m_oSuffix.IsInit()))
 	{
+		suffix = lvl_over->m_oSuffix.GetPointer();
+	}
+	// required by ODF; a level without w:suff is followed by a tab in Word
+	aligment_props->text_label_followed_by_ = L"listtab";
+	if ((suffix) && (suffix->m_oVal.IsInit()))
+	{
+		switch (suffix->m_oVal->GetValue())
+		{
+		case SimpleTypes::levelsuffixSpace:		aligment_props->text_label_followed_by_ = L"space";		break;
+		case SimpleTypes::levelsuffixNothing:	aligment_props->text_label_followed_by_ = L"nothing";	break;
+		default:
+			break;
+		}
 	}
 //-------------------------------------------
 	std::wstring lvl_text;
