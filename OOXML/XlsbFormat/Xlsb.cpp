@@ -68,7 +68,7 @@ void OOX::Spreadsheet::CXlsb::init()
 bool OOX::Spreadsheet::CXlsb::ReadBin(const CPath& oFilePath, XLS::BaseObject* objStream)
 {
     NSFile::CFileBinary oFile;
-    if (oFile.OpenFile(oFilePath.GetPath()) == false)
+    if (!oFile.OpenFile(oFilePath.GetPath()))
         return false;
 
     auto m_lStreamLen = (LONG)oFile.GetFileSize();
@@ -91,7 +91,7 @@ bool OOX::Spreadsheet::CXlsb::ReadBin(const CPath& oFilePath, XLS::BaseObject* o
 XLS::StreamCacheReaderPtr OOX::Spreadsheet::CXlsb::GetFileReader(const CPath& oFilePath, BYTE* &streamBuf)
 {
     NSFile::CFileBinary oFile;
-    if (oFile.OpenFile(oFilePath.GetPath()) == false)
+    if (!oFile.OpenFile(oFilePath.GetPath()))
         return nullptr;
 
     auto m_lStreamLen = (LONG)oFile.GetFileSize();
@@ -107,13 +107,13 @@ XLS::StreamCacheReaderPtr OOX::Spreadsheet::CXlsb::GetFileReader(const CPath& oF
 }
 XLS::StreamCacheWriterPtr OOX::Spreadsheet::CXlsb::GetFileWriter(const CPath& oFilePath)
 {
-    if (m_binaryWriter->CreateFileW(oFilePath.GetPath()) == false)
+    if (!m_binaryWriter->CreateFileW(oFilePath.GetPath()))
         return nullptr;
 
     XLS::StreamCacheWriterPtr writer(new XLS::BinaryStreamCacheWriter(m_binaryWriter, xls_global_info));
     return writer;
 }
-bool OOX::Spreadsheet::CXlsb::WriteSreamCache(XLS::StreamCacheWriterPtr writer)
+bool OOX::Spreadsheet::CXlsb::WriteSreamCache(XLS::StreamCacheWriterPtr /*writer*/)
 {
     auto writeSucced = m_binaryWriter->WriteFile(m_binaryWriter->GetBuffer(), (static_cast<NSBinPptxRW::CBinaryFileWriter*>(m_binaryWriter.get()))->GetPosition());
     if(writeSucced)
@@ -123,7 +123,7 @@ bool OOX::Spreadsheet::CXlsb::WriteSreamCache(XLS::StreamCacheWriterPtr writer)
 }
 bool OOX::Spreadsheet::CXlsb::WriteBin(const CPath& oDirPath, OOX::CContentTypes& oContentTypes)
 {
-    if (NULL == m_pWorkbook)
+    if (nullptr == m_pWorkbook)
         return false;
 
     m_bWriteToXlsb = true;
@@ -139,7 +139,7 @@ bool OOX::Spreadsheet::CXlsb::WriteBin(const CPath& oDirPath, OOX::CContentTypes
 }
 bool OOX::Spreadsheet::CXlsb::WriteBin(const CPath& oFilePath, XLS::BaseObject* objStream)
 {
-	if (m_binaryWriter->CreateFileW(oFilePath.GetPath()) == false)
+	if (!m_binaryWriter->CreateFileW(oFilePath.GetPath()))
 		return false;
 
 	XLS::StreamCacheWriterPtr writer(new XLS::BinaryStreamCacheWriter(m_binaryWriter, xls_global_info));
@@ -232,7 +232,8 @@ void OOX::Spreadsheet::CXlsb::PrepareHlinks()
 			{
 				if(!hlink->m_oLink.IsInit() && hlink->m_oRid.IsInit())
 				{
-					auto rel = static_cast<OOX::External*>(i->Find(hlink->m_oRid->GetValue()).GetPointer());
+					auto relFile = i->Find(hlink->m_oRid->GetValue());
+					auto rel = static_cast<OOX::External*>(relFile.GetPointer());
 					if(rel != nullptr)
 						hlink->m_oLink = rel->Uri().GetFilename();
 				}
@@ -288,7 +289,7 @@ void OOX::Spreadsheet::CXlsb::ReadSheetData()
 			continue;
 
         NSFile::CFileBinary oFile;
-        if (oFile.OpenFile(worksheet->GetReadPath().GetPath()) == false)
+        if (!oFile.OpenFile(worksheet->GetReadPath().GetPath()))
             continue;
 
         auto m_lStreamLen = (LONG)oFile.GetFileSize();
@@ -342,7 +343,7 @@ void OOX::Spreadsheet::CXlsb::WriteSheet(CWorksheet* worksheet)
     OOX::CPath oDefDir = worksheet->DefaultDirectory();
     OOX::CPath oName   = worksheet->DefaultFileName();
 
-    if (false == worksheet->m_sOutputFilename.empty())
+    if (!worksheet->m_sOutputFilename.empty())
         oName.SetName(worksheet->m_sOutputFilename, false);
 
     OOX::CSystemUtility::CreateDirectories(m_sPath);
@@ -468,7 +469,7 @@ void OOX::Spreadsheet::CXlsb::LinkTables()
         auto sheetName = xti.link;
         if(!m_pWorkbook || !m_pWorkbook->m_oSheets.IsInit())
             continue;
-        OOX::Spreadsheet::CSheet * bundle;
+        OOX::Spreadsheet::CSheet * bundle = nullptr;
         for(auto i:m_pWorkbook->m_oSheets->m_arrItems)
         {
             if(i->m_oName.IsInit() && i->m_oName.get() == sheetName)

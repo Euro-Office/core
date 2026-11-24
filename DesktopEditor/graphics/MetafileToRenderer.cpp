@@ -51,7 +51,7 @@ public:
 		pCache->SetStreams(m_pApplication->GetStreams());
 		m_pManager->SetOwnerCache(pCache);
 
-		m_pRenderer = NULL;
+		m_pRenderer = nullptr;
 	}
 	CMetafileFontPicker(NSFonts::IApplicationFonts* pFonts)
 	{
@@ -63,7 +63,7 @@ public:
 		pCache->SetStreams(m_pApplication->GetStreams());
 		m_pManager->SetOwnerCache(pCache);
 
-		m_pRenderer = NULL;
+		m_pRenderer = nullptr;
 	}
 	~CMetafileFontPicker()
 	{
@@ -143,7 +143,7 @@ public:
 IMetafileToRenderter::IMetafileToRenderter(IRenderer* pRenderer)
 {
 	m_pRenderer = pRenderer;
-	m_pPicker = NULL;
+	m_pPicker = nullptr;
 }
 IMetafileToRenderter::~IMetafileToRenderter()
 {
@@ -151,7 +151,7 @@ IMetafileToRenderter::~IMetafileToRenderter()
 	{
 		CMetafileFontPicker* pPicker = (CMetafileFontPicker*)m_pPicker;
 		RELEASEOBJECT(pPicker);
-		m_pPicker = NULL;
+		m_pPicker = nullptr;
 	}
 }
 
@@ -218,7 +218,7 @@ std::wstring IMetafileToRenderter::GetImagePath(const std::wstring& sPath)
 					oFrame.put_Stride(4 * nSize);
 					oFrame.put_IsRGBA(true);
 					oFrame.SaveFile(sTempFile, 4); // PNG
-					oFrame.put_Data(NULL);
+					oFrame.put_Data(nullptr);
 					sImagePath = sTempFile;
 				}
 			}
@@ -231,6 +231,8 @@ std::wstring IMetafileToRenderter::GetImagePath(const std::wstring& sPath)
 		}
 		catch (...)
 		{
+			// ignore errors while decoding the embedded image
+			(void)0;
 		}
 	}
 	else
@@ -305,7 +307,7 @@ void IMetafileToRenderter::SetLinearGradiant(const double& x0, const double& y0,
 	m_pRenderer->put_BrushLinearAngle(dAngle);
 }
 
-void IMetafileToRenderter::SetRadialGradiant(const double& dX0, const double& dY0, const double& dR0, const double& dX1, const double& dY1, const double& dR1)
+void IMetafileToRenderter::SetRadialGradiant(const double&  /*dX0*/, const double&  /*dY0*/, const double&  /*dR0*/, const double&  /*dX1*/, const double&  /*dY1*/, const double&  /*dR1*/)
 {
 	// TODO:
 	m_pRenderer->put_BrushType(/*c_BrushTypePathGradient2*/2007);
@@ -327,7 +329,7 @@ namespace NSOnlineOfficeBinToPdf
 	bool ConvertBufferToRenderer(BYTE* pBuffer, LONG lBufferLen, IMetafileToRenderter* pCorrector)
 	{
 		IRenderer* pRenderer = pCorrector->m_pRenderer;
-		CMetafileFontPicker* pPicker = NULL;
+		CMetafileFontPicker* pPicker = nullptr;
 		if (pCorrector->m_pPicker)
 		{
 			pPicker = (CMetafileFontPicker*)pCorrector->m_pPicker;
@@ -555,7 +557,7 @@ namespace NSOnlineOfficeBinToPdf
 						LONG lColorsCount = (LONG)oReader.ReadInt();
 						if (0 >= lColorsCount)
 						{
-							pRenderer->put_BrushGradientColors(NULL, NULL, 0);
+							pRenderer->put_BrushGradientColors(nullptr, nullptr, 0);
 						}
 						else
 						{
@@ -800,6 +802,8 @@ namespace NSOnlineOfficeBinToPdf
 				}
 				catch (...)
 				{
+					// ignore draw errors
+					(void)0;
 				}
 
 				break;
@@ -842,7 +846,7 @@ namespace NSOnlineOfficeBinToPdf
 				double y = oReader.ReadDouble();
 
 				unsigned int nCountUnicodes = (unsigned int)oReader.ReadInt();
-				unsigned int* pCodePoints = (0 != nCountUnicodes) ? new unsigned int[nCountUnicodes] : NULL;
+				unsigned int* pCodePoints = (0 != nCountUnicodes) ? new unsigned int[nCountUnicodes] : nullptr;
 				for (unsigned int nCodePointIndex = 0; nCodePointIndex < nCountUnicodes; ++nCodePointIndex)
 					pCodePoints[nCodePointIndex] = oReader.ReadInt();
 
@@ -886,39 +890,38 @@ namespace NSOnlineOfficeBinToPdf
 				// TODO: This command shouldn't be received
 				INT32 gradientType = oReader.ReadInt();
 
-				std::wstring sXml, sXmlStop;
 				if (0 == gradientType)	//	linearGradient
 				{
-					double x1 = oReader.ReadDouble();
-					double x2 = oReader.ReadDouble();
-					double y1 = oReader.ReadDouble();
-					double y2 = oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
 
 					int stops = oReader.ReadInt();
 
 					for (int i = 0; i < stops; ++i)
 					{
-						INT32 color    = static_cast<INT32>(oReader.ReadByte());
-						double opacity = static_cast<double>(static_cast<INT32>(oReader.ReadByte())) / 255.0;
-						double offset  = static_cast<double>(static_cast<INT32>(oReader.ReadByte())) / 255.0;
+						oReader.ReadByte();
+						oReader.ReadByte();
+						oReader.ReadByte();
 						oReader.Skip(6 * 4 - 3);
 					}
 				}
 				else if (1 == gradientType)
 				{
-					double cx = oReader.ReadDouble();
-					double cy = oReader.ReadDouble();
-					double r  = oReader.ReadDouble();
-					double fx = oReader.ReadDouble();
-					double fy = oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
 
 					int stops = oReader.ReadInt();
 
 					for (int i = 0; i < stops; ++i)
 					{
-						INT32 color    = static_cast<INT32>(oReader.ReadByte());
-						double opacity = static_cast<double>(static_cast<INT32>(oReader.ReadByte())) / 255.0;
-						double offset  = static_cast<double>(static_cast<INT32>(oReader.ReadByte())) / 255.0;
+						oReader.ReadByte();
+						oReader.ReadByte();
+						oReader.ReadByte();
 						oReader.Skip(6 * 4 - 3);
 					}
 				}
@@ -927,9 +930,9 @@ namespace NSOnlineOfficeBinToPdf
 			case ctGradientFillXML:
 			{
 				// TODO: This command shouldn't be received
-				INT32 gradientType = oReader.ReadInt();
+				oReader.ReadInt();
 				int nLen = oReader.ReadInt();
-				std::wstring wsTempString = oReader.ReadString16(nLen);
+				oReader.ReadString16(nLen);
 				break;
 			}
 			case ctGradientStroke:
@@ -938,36 +941,36 @@ namespace NSOnlineOfficeBinToPdf
 				INT32 gradientType = oReader.ReadInt();
 				if (0 == gradientType)	//	linearGradient
 				{
-					double x1 = oReader.ReadDouble();
-					double x2 = oReader.ReadDouble();
-					double y1 = oReader.ReadDouble();
-					double y2 = oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
 
 					int stops = oReader.ReadInt();
 
 					for (int i = 0; i < stops; ++i)
 					{
-						INT32 color    = static_cast<INT32>(oReader.ReadByte());
-						double opacity = static_cast<double>(static_cast<INT32>(oReader.ReadByte())) / 255.0;
-						double offset  = static_cast<double>(static_cast<INT32>(oReader.ReadByte())) / 255.0;
+						oReader.ReadByte();
+						oReader.ReadByte();
+						oReader.ReadByte();
 						oReader.Skip(6 * 4 - 3);
 					}
 				}
 				else if (1 == gradientType)
 				{
-					double cx = oReader.ReadDouble();
-					double cy = oReader.ReadDouble();
-					double r  = oReader.ReadDouble();
-					double fx = oReader.ReadDouble();
-					double fy = oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
+					oReader.ReadDouble();
 
 					int stops = oReader.ReadInt();
 
 					for (int i = 0; i < stops; ++i)
 					{
-						INT32 color    = static_cast<INT32>(oReader.ReadByte());
-						double opacity = static_cast<double>(static_cast<INT32>(oReader.ReadByte())) / 255.0;
-						double offset  = static_cast<double>(static_cast<INT32>(oReader.ReadByte())) / 255.0;
+						oReader.ReadByte();
+						oReader.ReadByte();
+						oReader.ReadByte();
 						oReader.Skip(6 * 4 - 3);
 					}
 				}
@@ -976,9 +979,9 @@ namespace NSOnlineOfficeBinToPdf
 			case ctGradientStrokeXML:
 			{
 				// TODO: This command shouldn't be received
-				INT32 gradientType = oReader.ReadInt();
-				int nLen = (int)oReader.ReadInt();
-				std::wstring wsTempString = oReader.ReadString16(nLen);
+				oReader.ReadInt();
+				int nLen = oReader.ReadInt();
+				oReader.ReadString16(nLen);
 				break;
 			}
 			// additional commands. Due to version compatibility, we can't change the format.
@@ -1168,10 +1171,6 @@ namespace NSOnlineOfficeBinToPdf
 				break;
 			}
 			case ctBrushType:
-			{
-				oReader.SkipInt();
-				break;
-			}
 			case ctBrushColor1:
 			{
 				oReader.SkipInt();
@@ -1253,10 +1252,6 @@ namespace NSOnlineOfficeBinToPdf
 				break;
 			}
 			case ctBrushTextureMode:
-			{
-				oReader.Skip(1);
-				break;
-			}
 			case ctBrushTextureAlpha:
 			{
 				oReader.Skip(1);
@@ -1276,10 +1271,6 @@ namespace NSOnlineOfficeBinToPdf
 				break;
 			}
 			case ctPathCommandMoveTo:
-			{
-				oReader.SkipInt(2);
-				break;
-			}
 			case ctPathCommandLineTo:
 			{
 				oReader.SkipInt(2);
@@ -1291,18 +1282,11 @@ namespace NSOnlineOfficeBinToPdf
 				break;
 			}
 			case ctPathCommandClose:
-			{
-				break;
-			}
 			case ctPathCommandEnd:
 			{
 				break;
 			}
 			case ctPathCommandOffset:
-			{
-				oReader.SkipInt(2);
-				break;
-			}
 			case ctPathCommandScale:
 			{
 				oReader.SkipInt(2);
@@ -1327,10 +1311,6 @@ namespace NSOnlineOfficeBinToPdf
 				break;
 			}
 			case ctFontSize:
-			{
-				oReader.SkipInt();
-				break;
-			}
 			case ctFontStyle:
 			{
 				oReader.SkipInt();
@@ -1352,10 +1332,6 @@ namespace NSOnlineOfficeBinToPdf
 				break;
 			}
 			case ctBeginCommand:
-			{
-				oReader.SkipInt();
-				break;
-			}
 			case ctEndCommand:
 			{
 				oReader.SkipInt();

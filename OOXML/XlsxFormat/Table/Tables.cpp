@@ -122,13 +122,13 @@ namespace Spreadsheet
 		int nShowFirstColumn = 0;
 		int nShowLastColumn = 0;
 		int nShowRowStripes = 0;
-		if(m_oShowColumnStripes.IsInit() && true == m_oShowColumnStripes->ToBool())
+		if(m_oShowColumnStripes.IsInit() && m_oShowColumnStripes->ToBool())
 			nShowColumnStripes = 1;
-		if(m_oShowFirstColumn.IsInit() && true == m_oShowFirstColumn->ToBool())
+		if(m_oShowFirstColumn.IsInit() && m_oShowFirstColumn->ToBool())
 			nShowFirstColumn = 1;
-		if(m_oShowLastColumn.IsInit() && true == m_oShowLastColumn->ToBool())
+		if(m_oShowLastColumn.IsInit() && m_oShowLastColumn->ToBool())
 			nShowLastColumn = 1;
-		if(m_oShowRowStripes.IsInit() && true == m_oShowRowStripes->ToBool())
+		if(m_oShowRowStripes.IsInit() && m_oShowRowStripes->ToBool())
 			nShowRowStripes = 1;
 
 		writer.WriteString(L"<tableStyleInfo");
@@ -277,6 +277,7 @@ namespace Spreadsheet
 			{
 				denormalized = pReader->GetBool();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -305,7 +306,6 @@ namespace Spreadsheet
 	
 	void CTableColumn::toXML(NSStringUtils::CStringBuilder& writer) const
 	{
-        std::wstring sRoot;
 		writer.WriteString(L"<tableColumn");
 		WritingStringNullableAttrInt(L"id", m_oId, m_oId->GetValue());
 		WritingStringNullableAttrEncodeXmlString(L"name", m_oName, *m_oName);
@@ -447,9 +447,7 @@ namespace Spreadsheet
             ptr1->stName = m_oUniqueName.get();
         else
             ptr1->stName.setSize(0xFFFFFFFF);
-        if (m_oTotalsRowFunction == SimpleTypes::Spreadsheet::ETotalsRowFunction::totalrowfunctionNone)
-            ptr1->ilta = XLSB::ListTotalRowFunction::ILTA_NONE;
-        else if (m_oTotalsRowFunction == SimpleTypes::Spreadsheet::ETotalsRowFunction::totalrowfunctionAverage)
+        if (m_oTotalsRowFunction == SimpleTypes::Spreadsheet::ETotalsRowFunction::totalrowfunctionAverage)
             ptr1->ilta = XLSB::ListTotalRowFunction::ILTA_AVERAGE;
         else if (m_oTotalsRowFunction == SimpleTypes::Spreadsheet::ETotalsRowFunction::totalrowfunctionCount)
             ptr1->ilta = XLSB::ListTotalRowFunction::ILTA_COUNT;
@@ -553,6 +551,7 @@ namespace Spreadsheet
                     m_oTotalsRowFunction = SimpleTypes::Spreadsheet::ETotalsRowFunction::totalrowfunctionVar; break;
                 case XLSB::ListTotalRowFunction::ILTA_CUSTOM:
                     m_oTotalsRowFunction = SimpleTypes::Spreadsheet::ETotalsRowFunction::totalrowfunctionCustom; break;
+                default: break;
             }
         }
     }
@@ -702,7 +701,7 @@ xmlns:xr3=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision3\"")
 	}
 	void CTable::toXML2(NSStringUtils::CStringBuilder& writer, int nIndex)
 	{
-		if(false == m_oRef.IsInit() || false == m_oDisplayName.IsInit()) return;
+		if(!m_oRef.IsInit() || !m_oDisplayName.IsInit()) return;
 
         if(!m_oId.IsInit())
         {
@@ -1051,6 +1050,7 @@ xmlns:xr3=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision3\"")
                     m_oTableType = SimpleTypes::Spreadsheet::ETableType::typeXml; break;
                 case XLSB::ListType::LTEXTDATA:
                     m_oTableType = SimpleTypes::Spreadsheet::ETableType::typeQueryTable; break;
+                default: break;
             }
 
             if(ptr->nDxfAggBorder != 0xFFFFFFFF)
@@ -1267,7 +1267,7 @@ xmlns:xr3=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision3\"")
 	}
 	void CTableFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
-		if(false == m_oTable.IsInit()) return;
+		if(!m_oTable.IsInit()) return;
 
 		CXlsb* xlsb = dynamic_cast<CXlsb*>(File::m_pMainDocument);
 			if ((xlsb) && (xlsb->m_bWriteToXlsb))
@@ -1723,7 +1723,7 @@ xmlns:xr3=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision3\"")
 
 	void CQueryTable::toXML(NSStringUtils::CStringBuilder& writer) const
 	{
-		if(false == m_oName.IsInit()) return;
+		if(!m_oName.IsInit()) return;
 
 		writer.WriteString(L"<queryTable \
 xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" \
@@ -2019,7 +2019,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 	}
 	void CQueryTableFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
-		if(false == m_oQueryTable.IsInit()) return;
+		if(!m_oQueryTable.IsInit()) return;
 
 		CXlsb* xlsb = dynamic_cast<CXlsb*>(File::m_pMainDocument);
 		if ((xlsb) && (xlsb->m_bWriteToXlsb))
@@ -2102,6 +2102,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 				xmlDataType.Init();
 				xmlDataType->SetValueFromByte(pReader->GetUChar());
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -2175,6 +2176,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			{
 				id = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -2272,6 +2274,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			{
 				r = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -2375,11 +2378,11 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 	}
 	CTableSingleCellsFile::CTableSingleCellsFile(OOX::Document* pMain, const CPath& uri) : OOX::File(pMain)
 	{
-		read(uri.GetDirectory(), uri);
+		CTableSingleCellsFile::read(uri.GetDirectory(), uri);
 	}
 	CTableSingleCellsFile::CTableSingleCellsFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 	{
-		read(oRootPath, oPath);
+		CTableSingleCellsFile::read(oRootPath, oPath);
 	}
 	CTableSingleCellsFile::~CTableSingleCellsFile()
 	{
@@ -2389,7 +2392,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 		CPath oRootPath;
 		read(oRootPath, oFilePath);
 	}
-	void CTableSingleCellsFile::read(const CPath& oRootPath, const CPath& oFilePath)
+	void CTableSingleCellsFile::read(const CPath&  /*oRootPath*/, const CPath& oFilePath)
 	{
 		XmlUtils::CXmlLiteReader oReader;
 

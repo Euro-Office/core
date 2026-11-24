@@ -42,7 +42,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CHyperlink)
-			CHyperlink(OOX::Document *pMain = NULL);
+			CHyperlink(OOX::Document *pMain = nullptr);
 			virtual ~CHyperlink();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -76,7 +76,7 @@ namespace OOX
 		public:
             WritingElement_AdditionMethods(CHyperlinks)
             WritingElement_XlsbVectorConstructors(CHyperlinks)
-			CHyperlinks(OOX::Document *pMain = NULL);
+			CHyperlinks(OOX::Document *pMain = nullptr);
 			virtual ~CHyperlinks();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

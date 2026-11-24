@@ -26,6 +26,8 @@
 #include "ZipUtilsCP.h"
 #include "../../DesktopEditor/common/File.h"
 #include "../../DesktopEditor/common/Directory.h"
+
+#include <limits>
 #include <sstream>
 
 COfficeUtils::COfficeUtils(OnProgressCallback* fCallback)
@@ -291,7 +293,7 @@ void CDeflate::SetIn(BYTE* next_in, UINT avail_in, ULONG total_in)
 	m_internal->m_stream.next_in = next_in;
 	m_internal->m_stream.avail_in = avail_in;
 
-	if (-1 != total_in)
+	if (std::numeric_limits<ULONG>::max() != total_in)
 		m_internal->m_stream.total_in = total_in;
 }
 
@@ -300,7 +302,7 @@ void CDeflate::SetOut(BYTE* next_out, UINT avail_out, ULONG total_out)
 	m_internal->m_stream.next_out = next_out;
 	m_internal->m_stream.avail_out = avail_out;
 
-	if (-1 != total_out)
+	if (std::numeric_limits<ULONG>::max() != total_out)
 		m_internal->m_stream.total_out = total_out;
 }
 
@@ -356,7 +358,7 @@ void CInflate::SetIn(BYTE* next_in, UINT avail_in, ULONG total_in)
 	m_internal->m_stream.next_in = next_in;
 	m_internal->m_stream.avail_in = avail_in;
 
-	if (-1 != total_in)
+	if (std::numeric_limits<ULONG>::max() != total_in)
 		m_internal->m_stream.total_in = total_in;
 }
 
@@ -365,7 +367,7 @@ void CInflate::SetOut(BYTE* next_out, UINT avail_out, ULONG total_out)
 	m_internal->m_stream.next_out = next_out;
 	m_internal->m_stream.avail_out = avail_out;
 
-	if (-1 != total_out)
+	if (std::numeric_limits<ULONG>::max() != total_out)
 		m_internal->m_stream.total_out = total_out;
 }
 

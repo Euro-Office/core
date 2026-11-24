@@ -36,7 +36,7 @@ namespace MetaFile
 
 		if (!m_pDC)
 		{
-			if (NULL != m_pParser) m_pParser->SetError();
+			if (nullptr != m_pParser) m_pParser->SetError();
 			return;
 		}
 
@@ -81,7 +81,7 @@ namespace MetaFile
 		m_pDC = new CEmfDC(this);
 		if (!m_pDC)
 		{
-			if (NULL != m_pParser) m_pParser->SetError();
+			if (nullptr != m_pParser) m_pParser->SetError();
 			return;
 		}
 
@@ -95,14 +95,14 @@ namespace MetaFile
 	{
 		if (!m_pDC)
 		{
-			if (NULL != m_pParser) m_pParser->SetError();
+			if (nullptr != m_pParser) m_pParser->SetError();
 			return;
 		}
 
 		CEmfDC* pNewDC = m_pDC->Copy();
 		if (!pNewDC)
 		{
-			if (NULL != m_pParser) m_pParser->SetError();
+			if (nullptr != m_pParser) m_pParser->SetError();
 			return;
 		}
 
@@ -133,7 +133,7 @@ namespace MetaFile
 		{
 			if (m_mDCs.empty() || m_mDCs.begin()->first > nIndex)
 			{
-				if (NULL != m_pParser) m_pParser->SetError();
+				if (nullptr != m_pParser) m_pParser->SetError();
 				return;
 			}
 
@@ -154,7 +154,7 @@ namespace MetaFile
 				m_pDC = oFound->second;
 				m_mDCs.erase(oFound);
 			}
-			else if (NULL != m_pParser)
+			else if (nullptr != m_pParser)
 				m_pParser->SetError();
 		}
 	}
@@ -192,7 +192,7 @@ namespace MetaFile
 	{
 		// DEFAULT_PALETTE
 		if (ulIndex == 0x8000000F)
-			m_pDC->SetPalette(NULL);
+			m_pDC->SetPalette(nullptr);
 
 		CEmfObjectMap::const_iterator oPos = m_mObjects.find(ulIndex);
 		if (m_mObjects.end() != oPos)
@@ -288,9 +288,9 @@ namespace MetaFile
 	{
 		m_pPlayer   = pPlayer;
 		m_ulMapMode = MM_TEXT;
-		m_pBrush    = NULL;
-		m_pPen      = NULL;
-		m_pFont     = NULL;
+		m_pBrush    = nullptr;
+		m_pPen      = nullptr;
+		m_pFont     = nullptr;
 		m_oTransform.Init();
 		m_oInverseTransform.Init();
 		m_oTextColor.Set(0, 0, 0);
@@ -330,7 +330,7 @@ namespace MetaFile
 		m_oDefaultFont.oLogFontEx.oLogFont.nWeight = 400;
 		m_oDefaultFont.oLogFontEx.oLogFont.nWidth = 0;
 
-		m_oDefaultFont.oDesignVector.pValues = NULL;
+		m_oDefaultFont.oDesignVector.pValues = nullptr;
 		m_oDefaultFont.oDesignVector.unNumAxes = 0;
 	}
 	CEmfDC::~CEmfDC()
@@ -340,7 +340,7 @@ namespace MetaFile
 	{
 		CEmfDC* pNewDC = new CEmfDC(m_pPlayer);
 		if (!pNewDC)
-			return NULL;
+			return nullptr;
 
 		pNewDC->m_oClip.Copy(m_oClip);
 		pNewDC->m_ulMapMode      = m_ulMapMode;
@@ -427,6 +427,10 @@ namespace MetaFile
 				UpdatePixelMetrics();
 				break;
 			}
+			default:
+			{
+				break;
+			}
 		}
 
 		UpdateFinalTransform();
@@ -499,7 +503,7 @@ namespace MetaFile
 	void CEmfDC::RemoveBrush(IBrush* pBrush)
 	{
 		if (pBrush == m_pBrush)
-			m_pBrush = NULL;
+			m_pBrush = nullptr;
 	}
 	const IBrush* CEmfDC::GetBrush() const
 	{
@@ -512,11 +516,11 @@ namespace MetaFile
 	void CEmfDC::RemoveFont(IFont* pFont)
 	{
 		if (pFont == m_pFont)
-			m_pFont = NULL;
+			m_pFont = nullptr;
 	}
 	const IFont* CEmfDC::GetFont() const
 	{
-		return (NULL != m_pFont) ? m_pFont : &m_oDefaultFont;
+		return (nullptr != m_pFont) ? m_pFont : &m_oDefaultFont;
 	}
 	void CEmfDC::SetTextAlign(unsigned int ulAlign)
 	{
@@ -565,7 +569,7 @@ namespace MetaFile
 	void CEmfDC::RemovePen(IPen* pPen)
 	{
 		if (pPen == m_pPen)
-			m_pPen = NULL;
+			m_pPen = nullptr;
 	}
 	const IPen* CEmfDC::GetPen() const
 	{
@@ -759,7 +763,7 @@ namespace MetaFile
 	void CEmfDC::RemovePalette(CEmfLogPalette* pPalette)
 	{
 		if (m_pPalette == pPalette)
-			m_pPalette = NULL;
+			m_pPalette = nullptr;
 	}
 	const CEmfLogPalette* CEmfDC::GetPalette() const
 	{

@@ -66,14 +66,14 @@ namespace OOX
 	public:
 		struct _part_summary
 		{
-			OOX::CDocument		*document = NULL;					// Main/document.xml
-			OOX::CFontTable		*fontTable = NULL;					// Font table /fonttable.xml
-			OOX::CNumbering		*numbering = NULL;					// Numbering /numbering.xml
-			OOX::CStyles		*styles = NULL;						// Styles/styles.xml
-			OOX::CFootnotes		*footnotes = NULL;					// Footnotes /footnotes.xml
-			OOX::CEndnotes		*endnotes = NULL;					// Endnotes/endnotes.xml
-			OOX::CSettings		*settings = NULL;					// Settings/settings.xml
-			OOX::CComments		*comments = NULL;					// Comments/comments.xml
+			OOX::CDocument		*document = nullptr;					// Main/document.xml
+			OOX::CFontTable		*fontTable = nullptr;					// Font table /fonttable.xml
+			OOX::CNumbering		*numbering = nullptr;					// Numbering /numbering.xml
+			OOX::CStyles		*styles = nullptr;						// Styles/styles.xml
+			OOX::CFootnotes		*footnotes = nullptr;					// Footnotes /footnotes.xml
+			OOX::CEndnotes		*endnotes = nullptr;					// Endnotes/endnotes.xml
+			OOX::CSettings		*settings = nullptr;					// Settings/settings.xml
+			OOX::CComments		*comments = nullptr;					// Comments/comments.xml
 
 			void init();
 		};

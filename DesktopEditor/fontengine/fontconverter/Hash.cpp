@@ -56,13 +56,13 @@ namespace NSFontConverter
 		m_nBucketsCount = 7;
 		m_ppTable = (THashBucket **)MemUtilsMallocArray( m_nBucketsCount, sizeof(THashBucket *));
 		for ( int nHashIndex = 0; nHashIndex < m_nBucketsCount; ++nHashIndex )
-			m_ppTable[ nHashIndex ] = NULL;
+			m_ppTable[ nHashIndex ] = nullptr;
 		m_nLength = 0;
 	}
 
 	CHash::~CHash()
 	{
-		THashBucket *pBucket = NULL;
+		THashBucket *pBucket = nullptr;
 
 		for ( int nHashIndex = 0; nHashIndex < m_nBucketsCount; ++nHashIndex )
 		{
@@ -77,7 +77,7 @@ namespace NSFontConverter
 				delete pBucket;
 			}
 		}
-		MemUtilsFree( m_ppTable );
+		MemUtilsFree( (void *)m_ppTable );
 	}
 
 	void CHash::Add(StringExt *seKey, void *pValue)
@@ -110,10 +110,11 @@ namespace NSFontConverter
 
 	void CHash::Replace(StringExt *seKey, void *pValue)
 	{
-		THashBucket *pBucket = NULL;
+		THashBucket *pBucket = nullptr;
 		int nHashIndex = 0;
 
-		if ( ( pBucket = Find( seKey, &nHashIndex ) ) )
+		pBucket = Find( seKey, &nHashIndex );
+		if ( pBucket )
 		{
 			pBucket->uValue.p = pValue;
 			delete seKey;
@@ -124,10 +125,11 @@ namespace NSFontConverter
 
 	void CHash::Replace(StringExt *seKey, int nValue)
 	{
-		THashBucket *pBucket = NULL;
+		THashBucket *pBucket = nullptr;
 		int nHashIndex = 0;
 
-		if ( ( pBucket = Find( seKey, &nHashIndex ) ) )
+		pBucket = Find( seKey, &nHashIndex );
+		if ( pBucket )
 		{
 			pBucket->uValue.i = nValue;
 			delete seKey;
@@ -138,20 +140,22 @@ namespace NSFontConverter
 
 	void *CHash::Lookup(StringExt *seKey)
 	{
-		THashBucket *pBucket = NULL;
+		THashBucket *pBucket = nullptr;
 		int nHashIndex = 0;
 
-		if ( !( pBucket = Find( seKey, &nHashIndex ) ) )
-			return NULL;
+		pBucket = Find( seKey, &nHashIndex );
+		if ( !pBucket )
+			return nullptr;
 		return pBucket->uValue.p;
 	}
 
 	int CHash::LookupInt(StringExt *seKey)
 	{
-		THashBucket *pBucket = NULL;
+		THashBucket *pBucket = nullptr;
 		int nHashIndex = 0;
 
-		if ( !( pBucket = Find( seKey, &nHashIndex ) ) )
+		pBucket = Find( seKey, &nHashIndex );
+		if ( !pBucket )
 			return 0;
 
 		return pBucket->uValue.i;
@@ -159,20 +163,22 @@ namespace NSFontConverter
 
 	void *CHash::Lookup(char *sKey)
 	{
-		THashBucket *pBucket = NULL;
+		THashBucket *pBucket = nullptr;
 		int nHashIndex = 0;
 
-		if ( !( pBucket = Find( sKey, &nHashIndex ) ) )
-			return NULL;
+		pBucket = Find( sKey, &nHashIndex );
+		if ( !pBucket )
+			return nullptr;
 		return pBucket->uValue.p;
 	}
 
 	int CHash::LookupInt(char *sKey)
 	{
-		THashBucket *pBucket = NULL;
+		THashBucket *pBucket = nullptr;
 		int nHashIndex = 0;
 
-		if ( !( pBucket = Find( sKey, &nHashIndex ) ) )
+		pBucket = Find( sKey, &nHashIndex );
+		if ( !pBucket )
 			return 0;
 
 		return pBucket->uValue.i;
@@ -184,8 +190,9 @@ namespace NSFontConverter
 		THashBucket **ppBucket;
 		int nHashIndex = 0;
 
-		if ( !( pBucket = Find( seKey, &nHashIndex ) ) )
-			return NULL;
+		pBucket = Find( seKey, &nHashIndex );
+		if ( !pBucket )
+			return nullptr;
 
 		ppBucket = &m_ppTable[ nHashIndex ];
 		while ( *ppBucket != pBucket )
@@ -206,7 +213,8 @@ namespace NSFontConverter
 		THashBucket **ppBucket;
 		int nHashIndex = 0;
 
-		if ( !( pBucket = Find( seKey, &nHashIndex) ) )
+		pBucket = Find( seKey, &nHashIndex);
+		if ( !pBucket )
 			return 0;
 
 		ppBucket = &m_ppTable[ nHashIndex ];
@@ -229,8 +237,9 @@ namespace NSFontConverter
 		THashBucket **ppBucket;
 		int nHashIndex = 0;
 
-		if ( !( pBucket = Find( sKey, &nHashIndex ) ) )
-			return NULL;
+		pBucket = Find( sKey, &nHashIndex );
+		if ( !pBucket )
+			return nullptr;
 		ppBucket = &m_ppTable[ nHashIndex ];
 		while ( *ppBucket != pBucket )
 			ppBucket = &((*ppBucket)->pNext);
@@ -252,7 +261,8 @@ namespace NSFontConverter
 		THashBucket **ppBucket;
 		int nHashIndex = 0;
 
-		if ( !( pBucket = Find( sKey, &nHashIndex ) ) )
+		pBucket = Find( sKey, &nHashIndex );
+		if ( !pBucket )
 			return 0;
 
 		ppBucket = &m_ppTable[ nHashIndex ];
@@ -273,7 +283,7 @@ namespace NSFontConverter
 	{
 		*ppIter = new THashIter;
 		(*ppIter)->nHashIndex = -1;
-		(*ppIter)->pBucket = NULL;
+		(*ppIter)->pBucket = nullptr;
 	}
 
 	bool CHash::GetNext(THashIter **ppIter, StringExt **pseKey, void **ppValue)
@@ -289,7 +299,7 @@ namespace NSFontConverter
 			if (++(*ppIter)->nHashIndex == m_nBucketsCount)
 			{
 				delete *ppIter;
-				*ppIter = NULL;
+				*ppIter = nullptr;
 				return false;
 			}
 			(*ppIter)->pBucket = m_ppTable[(*ppIter)->nHashIndex];
@@ -312,7 +322,7 @@ namespace NSFontConverter
 			if (++(*ppIter)->nHashIndex == m_nBucketsCount)
 			{
 				delete *ppIter;
-				*ppIter = NULL;
+				*ppIter = nullptr;
 				return false;
 			}
 			(*ppIter)->pBucket = m_ppTable[(*ppIter)->nHashIndex ];
@@ -325,7 +335,7 @@ namespace NSFontConverter
 	void CHash::DeleteIter(THashIter **ppIter)
 	{
 		delete *ppIter;
-		*ppIter = NULL;
+		*ppIter = nullptr;
 	}
 
 	void CHash::Expand()
@@ -337,7 +347,7 @@ namespace NSFontConverter
 		m_nBucketsCount = 2 * m_nBucketsCount + 1;
 		m_ppTable = (THashBucket **)MemUtilsMallocArray( m_nBucketsCount, sizeof(THashBucket *) );
 		for ( nHashIndex = 0; nHashIndex < m_nBucketsCount; ++nHashIndex )
-			m_ppTable[ nHashIndex ] = NULL;
+			m_ppTable[ nHashIndex ] = nullptr;
 
 		for (int nIndex = 0; nIndex < nOldSize; ++nIndex )
 		{
@@ -350,7 +360,7 @@ namespace NSFontConverter
 				m_ppTable[ nHashIndex ] = pBucket;
 			}
 		}
-		MemUtilsFree( ppOldTab );
+		MemUtilsFree( (void *)ppOldTab );
 	}
 
 	THashBucket *CHash::Find(StringExt *seKey, int *pnHashIndex)
@@ -363,7 +373,7 @@ namespace NSFontConverter
 			if ( !pBucket->seKey->Compare( seKey ) )
 				return pBucket;
 		}
-		return NULL;
+		return nullptr;
 	}
 	THashBucket *CHash::Find(char       *sKey, int *pnHashIndex)
 	{
@@ -375,7 +385,7 @@ namespace NSFontConverter
 			if ( !pBucket->seKey->Compare( sKey ) )
 				return pBucket;
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	int CHash::Hash(StringExt *seKey)

@@ -57,6 +57,8 @@
 #include "../../MsBinaryFile/XlsFile/Format/Logic/WorkbookStreamObject.h"
 #include "../../MsBinaryFile/XlsFile/Format/Logic/GlobalsSubstream.h"
 #include "../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/PIVOTCACHE.h"
+#include <algorithm>
+#include <set>
 
 #include <iomanip>
 
@@ -91,17 +93,17 @@ void OOX::Spreadsheet::CXlsx::init()
 {
     m_bSpreadsheets		= true;
 
-    m_pApp				= NULL;
-    m_pCore				= NULL;
+    m_pApp				= nullptr;
+    m_pCore				= nullptr;
 
-    m_pWorkbook			= NULL;
-    m_pSharedStrings	= NULL;
-    m_pStyles			= NULL;
-    m_pCalcChain		= NULL;
-    m_pVbaProject		= NULL;
-    m_pJsaProject		= NULL;
-    m_pWorkbookComments = NULL;
-    m_pXlsbWriter       = NULL;
+    m_pWorkbook			= nullptr;
+    m_pSharedStrings	= nullptr;
+    m_pStyles			= nullptr;
+    m_pCalcChain		= nullptr;
+    m_pVbaProject		= nullptr;
+    m_pJsaProject		= nullptr;
+    m_pWorkbookComments = nullptr;
+    m_pXlsbWriter       = nullptr;
     m_nLastReadRow      = 0;
     m_nLastReadCol      = -1;
     m_bNeedCalcChain    = true;
@@ -150,7 +152,7 @@ bool OOX::Spreadsheet::CXlsx::Read(const CPath& oFilePath)
 }
 bool OOX::Spreadsheet::CXlsx::WriteNative(const CPath& oDirPath, OOX::CContentTypes &oContentTypes)
 {
-    if (NULL == m_pWorkbook)
+    if (nullptr == m_pWorkbook)
 		return false;
 
 	IFileContainer::Write(oDirPath / L"", OOX::CPath(_T("")), oContentTypes);
@@ -162,11 +164,11 @@ bool OOX::Spreadsheet::CXlsx::Write(const CPath& oDirPath, OOX::CContentTypes &o
 {
     PrepareToWrite();
   
-	if(NULL == m_pWorkbook ||  m_arWorksheets.empty ())
+	if(nullptr == m_pWorkbook ||  m_arWorksheets.empty ())
         return false;
 
 //CApp
-	if(NULL == m_pApp)
+	if(nullptr == m_pApp)
 	{
 		OOX::CApp* pApp = new OOX::CApp(this);
 		pApp->SetDefaults();
@@ -175,7 +177,7 @@ bool OOX::Spreadsheet::CXlsx::Write(const CPath& oDirPath, OOX::CContentTypes &o
 	}
 
 //CCore
-	if(NULL == m_pCore)
+	if(nullptr == m_pCore)
 	{
 		OOX::CCore* pCore = new OOX::CCore(this);
 		pCore->SetDefaults();
@@ -195,30 +197,47 @@ bool OOX::Spreadsheet::CXlsx::Write(const CPath& oDirPath, OOX::CContentTypes &o
 bool OOX::Spreadsheet::CXlsx::WriteXLS(const CPath& oFilePath)
 {
 	PrepareToWrite();
-	if(NULL == m_pWorkbook ||  m_arWorksheets.empty ())
+	if(nullptr == m_pWorkbook ||  m_arWorksheets.empty ())
 		return false;
+	// Both lists are made once here; the globals (CWorkbook::toXLS), the sheet substreams and the cache streams are
+	// all written from them, so they always agree.
+	// The sheets in tab order, paired by r:id.
+	const auto sheets = m_pWorkbook->GetSheetsForXLS();
+	// with no <sheet> that resolves there is no sheet data at all: report an error, not a workbook of empty tabs
+	if(std::none_of(sheets.begin(), sheets.end(), [](const CWorkbook::SheetForXLS& sheet) { return sheet.second != nullptr; }))
+		return false;
+	// The pivot caches that are written, in the order of their cache streams.
+	const auto pivotCaches = m_pWorkbook->GetPivotCachesForXLS();
 	auto workbookStream = new XLS::WorkbookStreamObject;
 	auto workbookPtr = XLS::BaseObjectPtr(workbookStream);
 	XlsWriter writer;
 	writer.globalInfoPtr.reset(new XLS::GlobalWorkbookInfo(XLS::WorkbookStreamObject::DefaultCodePage, nullptr));
-	// add pivot cache ids to global inf and fix 0 ids
-	if(m_pWorkbook->m_oPivotCaches.IsInit() && !m_pWorkbook->m_oPivotCaches->m_arrItems.empty())
+	// A pivot view refers to its cache by stream id (cacheId + 1, see CWorkbookPivotCache::toXLS) until SxView
+	// replaces it with the cache's index through this map. Only the views of these caches are written.
+	std::set<unsigned int> pivotCacheIds;
+	for(size_t index = 0; index < pivotCaches.size(); ++index)
 	{
-		auto cacheNum = 0;
-		for(auto cacheHeader : m_pWorkbook->m_oPivotCaches->m_arrItems)
-		{
-			if(!cacheHeader->m_oCacheId.IsInit())
-				continue;
-			cacheHeader->m_oCacheId = cacheHeader->m_oCacheId->GetValue() + 1;
-			writer.globalInfoPtr->mapPivotCacheIndex.emplace(cacheHeader->m_oCacheId->GetValue(), cacheNum);
-			cacheNum++;
-		}
+		const unsigned int cacheId = pivotCaches[index].first->m_oCacheId->GetValue();
+		pivotCacheIds.insert(cacheId);
+		writer.globalInfoPtr->mapPivotCacheIndex.emplace(cacheId + 1, static_cast<int>(index));
 	}
-	workbookStream->m_GlobalsSubstream = m_pWorkbook->toXLS();
+	workbookStream->m_GlobalsSubstream = m_pWorkbook->toXLS(sheets, pivotCaches);
 	auto CastedGlobalsStram = static_cast<XLS::GlobalsSubstream*>(workbookStream->m_GlobalsSubstream.get());
 	CastedGlobalsStram->global_info_ = writer.globalInfoPtr;
-	for(auto i : m_arWorksheets)
-		workbookStream->m_arWorksheetSubstream.push_back(i->toXLS());
+	for(const auto& sheet : sheets)
+	{
+		XLS::BaseObjectPtr sheetBin;
+		if(sheet.second)
+			sheetBin = sheet.second->toXLS(pivotCacheIds);
+		else
+		{
+			// a <sheet> whose r:id resolves to no sheet part: written as an empty worksheet so that it keeps its
+			// place (see CWorkbook::GetSheetsForXLS). Not attached to this document, so it is not added to m_arWorksheets.
+			CWorksheet emptySheet(nullptr);
+			sheetBin = emptySheet.toXLS(pivotCacheIds);
+		}
+		workbookStream->m_arWorksheetSubstream.push_back(sheetBin);
+	}
 	CastedGlobalsStram->m_arSUPBOOK.push_back(m_pWorkbook->WriteXtiRefsXLS());
 	if(m_pSharedStrings != nullptr)
 		m_pSharedStrings->toXLS(workbookStream->m_GlobalsSubstream);
@@ -265,21 +284,13 @@ bool OOX::Spreadsheet::CXlsx::WriteXLS(const CPath& oFilePath)
 	writer.Open(oFilePath.GetPath());
 	writer.WriteWorkbook(workbookPtr);
 
-	if(m_pWorkbook->m_oPivotCaches.IsInit() && !m_pWorkbook->m_oPivotCaches->m_arrItems.empty())
+	if(!pivotCaches.empty())
 	{
-		for(auto cacheHeader : m_pWorkbook->m_oPivotCaches->m_arrItems)
+		for(const auto& cache : pivotCaches)
 		{
-			if(!cacheHeader->m_oCacheId.IsInit() || !cacheHeader->m_oRid.IsInit() ||  !m_pWorkbook->IsExist(cacheHeader->m_oRid->GetValue()))
-				continue;
-			auto cacheFilePtr = m_pWorkbook->Find(cacheHeader->m_oRid->GetValue());
-			// r:id may point to a part of another type; EnsureDefinition writes to the object, so check before using it
-			auto CachePtr = dynamic_cast<CPivotCacheDefinitionFile*>(cacheFilePtr.GetPointer());
-			if (!CachePtr)
-				continue;
-			CachePtr->EnsureDefinition();
-			if (!CachePtr->m_oPivotCashDefinition.IsInit())
-				continue;
-			auto XLSBinCache = CachePtr->m_oPivotCashDefinition->toXLS(cacheHeader->m_oCacheId->GetValue());
+			auto CachePtr = cache.second;
+			const unsigned int streamId = cache.first->m_oCacheId->GetValue() + 1;
+			auto XLSBinCache = CachePtr->m_oPivotCashDefinition->toXLS(streamId);
 			auto castedCache = static_cast<XLS::PIVOTCACHE*>(XLSBinCache.get());
 			auto cacheRecordsPtr = CachePtr->Find(OOX::SpreadsheetBin::FileTypes::PivotCacheRecordsBin);
 			if(!(cacheRecordsPtr->type() == OOX::FileTypes::Unknown))
@@ -301,13 +312,12 @@ bool OOX::Spreadsheet::CXlsx::WriteXLS(const CPath& oFilePath)
 			}
 
 
-			if(CachePtr->m_oPivotCashDefinition.IsInit())
-				writer.WritePivotCache(XLSBinCache, cacheHeader->m_oCacheId->GetValue());
+			writer.WritePivotCache(XLSBinCache, streamId);
 		}
 	}
 	return true;
 }
-bool OOX::Spreadsheet::CXlsx::WriteWorkbook(const CPath& oDirPath)
+bool OOX::Spreadsheet::CXlsx::WriteWorkbook(const CPath&  /*oDirPath*/)
 {
 //Theme
 	if (m_pTheme.IsInit())
@@ -352,7 +362,7 @@ void OOX::Spreadsheet::CXlsx::CreateWorkbook ()
 {
 	if(bDeleteWorkbook)
 		RELEASEOBJECT(m_pWorkbook);
-	m_pWorkbook = new CWorkbook(NULL);
+	m_pWorkbook = new CWorkbook(nullptr);
 	bDeleteWorkbook = true;
 }
 
@@ -360,7 +370,7 @@ void OOX::Spreadsheet::CXlsx::CreateSharedStrings ()
 {
 	if(bDeleteSharedStrings)
 		RELEASEOBJECT(m_pSharedStrings);
-	m_pSharedStrings = new CSharedStrings(NULL);
+	m_pSharedStrings = new CSharedStrings(nullptr);
 	bDeleteSharedStrings = true;
 }
 
@@ -368,7 +378,7 @@ void OOX::Spreadsheet::CXlsx::CreateStyles ()
 {
 	if(bDeleteStyles)
 		RELEASEOBJECT(m_pStyles);
-	m_pStyles = new CStyles(NULL);
+	m_pStyles = new CStyles(nullptr);
 	bDeleteStyles = true;
 }
 bool OOX::Spreadsheet::CXlsx::hasPivot()
@@ -460,7 +470,7 @@ void OOX::Spreadsheet::CXlsx::PrepareWorkbook()
 	if( m_pStyles )
 	{
 		//Fonts
-		if(false == m_pStyles->m_oFonts.IsInit())
+		if(!m_pStyles->m_oFonts.IsInit())
 			m_pStyles->m_oFonts.Init();
 		
 		if(m_pStyles->m_oFonts->m_arrItems.empty())
@@ -468,12 +478,12 @@ void OOX::Spreadsheet::CXlsx::PrepareWorkbook()
 		
 		OOX::Spreadsheet::CFont* pFont = m_pStyles->m_oFonts->m_arrItems.front();
 		
-		if(false == pFont->m_oRFont.IsInit())
+		if(!pFont->m_oRFont.IsInit())
 		{
 			pFont->m_oRFont.Init();
 			pFont->m_oRFont->m_sVal = _T("Calibri");
 
-			if(false == pFont->m_oScheme.IsInit())
+			if(!pFont->m_oScheme.IsInit())
 			{
 				pFont->m_oScheme.Init();
 				pFont->m_oScheme->m_oFontScheme.Init();
@@ -481,57 +491,57 @@ void OOX::Spreadsheet::CXlsx::PrepareWorkbook()
 			}
 		}
 
-		if(false == pFont->m_oSz.IsInit() || false == pFont->m_oSz->m_oVal.IsInit())
+		if(!pFont->m_oSz.IsInit() || !pFont->m_oSz->m_oVal.IsInit())
 		{
 			pFont->m_oSz.Init();
 			pFont->m_oSz->m_oVal.Init();
 			pFont->m_oSz->m_oVal->SetValue(11.0);
 		}
 		//Fills
-		if(false == m_pStyles->m_oFills.IsInit())
+		if(!m_pStyles->m_oFills.IsInit())
 			m_pStyles->m_oFills.Init();
 		
 		if(m_pStyles->m_oFills->m_arrItems.empty())
 			m_pStyles->m_oFills->m_arrItems.push_back(new OOX::Spreadsheet::CFill());
 
 		OOX::Spreadsheet::CFill* pFill = m_pStyles->m_oFills->m_arrItems.front();
-		if(false == pFill->m_oGradientFill.IsInit())
+		if(!pFill->m_oGradientFill.IsInit())
 		{
-			if(false == pFill->m_oPatternFill.IsInit())
+			if(!pFill->m_oPatternFill.IsInit())
 				pFill->m_oPatternFill.Init();
-			if(false == pFill->m_oPatternFill->m_oPatternType.IsInit())
+			if(!pFill->m_oPatternFill->m_oPatternType.IsInit())
 				pFill->m_oPatternFill->m_oPatternType.Init();
 			pFill->m_oPatternFill->m_oPatternType->SetValue(SimpleTypes::Spreadsheet::patterntypeNone);
 		}
-		if(false == m_pStyles->m_oBorders.IsInit())
+		if(!m_pStyles->m_oBorders.IsInit())
 			m_pStyles->m_oBorders.Init();
 		if(m_pStyles->m_oBorders->m_arrItems.size() == 0)
 			m_pStyles->m_oBorders->m_arrItems.push_back(new OOX::Spreadsheet::CBorder());
 
 		//Xfs
-		if(false == m_pStyles->m_oCellXfs.IsInit())
+		if(!m_pStyles->m_oCellXfs.IsInit())
 			m_pStyles->m_oCellXfs.Init();
 		
 		if(m_pStyles->m_oCellXfs->m_arrItems.empty())
 			m_pStyles->m_oCellXfs->m_arrItems.push_back(new OOX::Spreadsheet::CXfs());
 
 		OOX::Spreadsheet::CXfs* pXfs = m_pStyles->m_oCellXfs->m_arrItems.front();
-		if(false == pXfs->m_oBorderId.IsInit())
+		if(!pXfs->m_oBorderId.IsInit())
 		{
 			pXfs->m_oBorderId.Init();
 			pXfs->m_oBorderId->SetValue(0);
 		}
-		if(false == pXfs->m_oFillId.IsInit())
+		if(!pXfs->m_oFillId.IsInit())
 		{
 			pXfs->m_oFillId.Init();
 			pXfs->m_oFillId->SetValue(0);
 		}
-		if(false == pXfs->m_oFontId.IsInit())
+		if(!pXfs->m_oFontId.IsInit())
 		{
 			pXfs->m_oFontId.Init();
 			pXfs->m_oFontId->SetValue(0);
 		}
-		if(false == pXfs->m_oNumFmtId.IsInit())
+		if(!pXfs->m_oNumFmtId.IsInit())
 		{
 			pXfs->m_oNumFmtId.Init();
 			pXfs->m_oNumFmtId->SetValue(0);
@@ -573,7 +583,7 @@ void OOX::Spreadsheet::CXlsx::PrepareWorksheet(CWorksheet* pWorksheet)
 						if(!m_pSharedStrings) CreateSharedStrings();
 						
 						OOX::Spreadsheet::CSi* pSi = pCell->m_oRichText.GetPointerEmptyNullable();
-						if(NULL != pSi)
+						if(nullptr != pSi)
 						{
 							int nIndex = m_pSharedStrings->AddSi(pSi);
 							//change the cell value

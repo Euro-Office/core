@@ -8,10 +8,10 @@ namespace MetaFile
 		m_wsXmlFilePath(wsFilePath){}
 
 		CEmfInterpretatorXml::CEmfInterpretatorXml(const CEmfInterpretatorXml &oInterpretator)
-				: m_pOutputXml(NULL),
+				: m_pOutputXml(nullptr),
 				m_wsXmlFilePath(oInterpretator.m_wsXmlFilePath)
 		{
-				if (NULL == oInterpretator.m_pOutputXml)
+				if (nullptr == oInterpretator.m_pOutputXml)
 						return;
 
 				if (oInterpretator.m_pOutputXml->IsWriter())
@@ -22,7 +22,7 @@ namespace MetaFile
 
 	CEmfInterpretatorXml::~CEmfInterpretatorXml()
 	{
-		if (NULL != m_pOutputXml)
+		if (nullptr != m_pOutputXml)
 			delete m_pOutputXml;
 	}
 
@@ -155,7 +155,7 @@ namespace MetaFile
 
 	void CEmfInterpretatorXml::HANDLE_EMR_CREATEBRUSHINDIRECT(const unsigned int &unBrushIndex, const CEmfLogBrushEx *pBrush)
 	{
-		if (NULL == pBrush)
+		if (nullptr == pBrush)
 			return;
 
 		m_pOutputXml->WriteNodeBegin(L"EMR_CREATEBRUSHINDIRECT");
@@ -180,7 +180,7 @@ namespace MetaFile
 
 	void CEmfInterpretatorXml::HANDLE_EMR_EXTCREATEFONTINDIRECTW(const unsigned int &unIndex, CEmfLogFont *oLogFont)
 	{
-		if (NULL == oLogFont)
+		if (nullptr == oLogFont)
 			return;
 
 		m_pOutputXml->WriteNodeBegin(L"EMR_EXTCREATEFONTINDIRECTW");
@@ -219,7 +219,7 @@ namespace MetaFile
 
 	void CEmfInterpretatorXml::HANDLE_EMR_EXTCREATEPEN(const unsigned int &unPenIndex, CEmfLogPen *pPen, const std::vector<unsigned int>& arUnused)
 	{
-		if (NULL == pPen || arUnused.size() < 2)
+		if (nullptr == pPen || arUnused.size() < 2)
 			return;
 
 		m_pOutputXml->WriteNodeBegin(L"EMR_EXTCREATEPEN");
@@ -242,7 +242,7 @@ namespace MetaFile
 	void CEmfInterpretatorXml::HANDLE_EMR_CREATEPEN(const unsigned int &unPenIndex, const unsigned int &unWidthX,
 													const CEmfLogPen *pPen)
 	{
-		if (NULL == pPen)
+		if (nullptr == pPen)
 			return;
 
 		m_pOutputXml->WriteNodeBegin(L"EMR_CREATEPEN");
@@ -470,7 +470,7 @@ namespace MetaFile
 
 	void CEmfInterpretatorXml::HANDLE_EMR_CREATEPALETTE(const unsigned int &unPaletteIndex, const CEmfLogPalette *oEmfLogPalette)
 	{
-		if (NULL == oEmfLogPalette)
+		if (nullptr == oEmfLogPalette)
 			return;
 
 		m_pOutputXml->WriteNodeBegin(L"EMR_CREATEPALETTE");
@@ -756,7 +756,7 @@ namespace MetaFile
 
 	void CEmfInterpretatorXml::Begin()
 	{
-		if (NULL == m_pOutputXml)
+		if (nullptr == m_pOutputXml)
 			return;
 
 		m_pOutputXml->WriteString(L"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
@@ -765,7 +765,7 @@ namespace MetaFile
 
 	void CEmfInterpretatorXml::End()
 	{
-		if (NULL == m_pOutputXml)
+		if (nullptr == m_pOutputXml)
 			return;
 
 		m_pOutputXml->WriteNodeEnd(L"EMF");
@@ -816,7 +816,7 @@ namespace MetaFile
 	void CEmfInterpretatorXml::Save_EMR_POLYDRAW_BASE(const TRectL &oBounds, T *arPoints,
 													  const unsigned int &unCount, const unsigned char *pAbTypes)
 	{
-		if (NULL == arPoints || NULL == pAbTypes)
+		if (nullptr == arPoints || nullptr == pAbTypes)
 			return;
 
 		std::wstring wsRecordName;

@@ -45,11 +45,11 @@ namespace MetaFile
 	}
 
 	CWmfBrush::CWmfBrush() 
-		: ushBrushStyle(BS_SOLID), oColor(255, 255, 255), ushBrushHatch(HS_HORIZONTAL), pDibBuffer(NULL), unDibWidth(0), unDibHeigth(0)
+		: ushBrushStyle(BS_SOLID), oColor(255, 255, 255), ushBrushHatch(HS_HORIZONTAL), pDibBuffer(nullptr), unDibWidth(0), unDibHeigth(0)
 	{}
 
 	CWmfBrush::CWmfBrush(const TWmfLogBrush& oBrush)
-		: ushBrushStyle(oBrush.ushBrushStyle), oColor(oBrush.oColor), ushBrushHatch(oBrush.ushBrushHatch), pDibBuffer(NULL), unDibWidth(0), unDibHeigth(0)
+		: ushBrushStyle(oBrush.ushBrushStyle), oColor(oBrush.oColor), ushBrushHatch(oBrush.ushBrushHatch), pDibBuffer(nullptr), unDibWidth(0), unDibHeigth(0)
 	{}
 
 	CWmfBrush::~CWmfBrush()
@@ -88,7 +88,7 @@ namespace MetaFile
 			ushBrushStyle    = BS_DIBPATTERN;
 			wsDibPatternPath = wsTempFileName;
 
-			BYTE* pNewBuffer = NULL;
+			BYTE* pNewBuffer = nullptr;
 			int nNewSize = 0;
 
 			oBgraFrame.Encode(pNewBuffer, nNewSize, _CXIMAGE_FORMAT_PNG);
@@ -98,7 +98,7 @@ namespace MetaFile
 			unDibHeigth = oBgraFrame.get_Height();
 		}
 
-		oBgraFrame.put_Data(NULL);
+		oBgraFrame.put_Data(nullptr);
 #endif
 	}
 
@@ -229,7 +229,7 @@ namespace MetaFile
 		return (int)shOrientation;
 	}
 
-	CWmfPalette::CWmfPalette() : ushNumberOfEntries(0), pPaletteEntries(NULL)
+	CWmfPalette::CWmfPalette() : ushNumberOfEntries(0), pPaletteEntries(nullptr)
 	{}
 
 	CWmfPalette::~CWmfPalette()
@@ -285,21 +285,21 @@ namespace MetaFile
 
 	void CWmfPen::GetDashData(double *&arDatas, unsigned int &unSize) const
 	{
-		arDatas = NULL;
+		arDatas = nullptr;
 		unSize  = 0;
 	}
 
 	const ILineCap* CWmfPen::GetStartLineCap() const
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	const ILineCap* CWmfPen::GetEndLineCap() const
 	{
-		return NULL;
+		return nullptr;
 	}
 
-	CWmfRegion::CWmfRegion() : pScans(NULL)
+	CWmfRegion::CWmfRegion() : pScans(nullptr)
 	{}
 
 	CWmfRegion::~CWmfRegion()
