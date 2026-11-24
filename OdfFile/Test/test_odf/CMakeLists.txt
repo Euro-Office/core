@@ -75,6 +75,7 @@ add_core_gtest(
             odt2docx_page_style_after_table.cpp
             odt2docx_contextual_spacing.cpp
             odt2docx_header_footer_spacing.cpp
+            ods2xlsx_percentage_text.cpp
             odt2docx_links.cpp
             odp2pptx_line_height.cpp
             xlsx2ods_row_optimal_height.cpp

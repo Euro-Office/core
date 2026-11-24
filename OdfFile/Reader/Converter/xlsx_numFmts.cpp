@@ -143,12 +143,12 @@ unsigned int xlsx_num_fmts::Impl::add_or_find(std::wstring format_code, char for
 		}
 		else if (format_code_type == odf_types::office_value_type::Percentage)
 		{
-			if (std::wstring::npos != format_code.find(L"0.00%"))
+			if (format_code == L"0.00%")
 			{
 				format_code.clear();
 				id = 10;
 			}
-			else if (std::wstring::npos != format_code.find(L"0%"))
+			else if (format_code == L"0%")
 			{
 				format_code.clear();
 				id = 9;
