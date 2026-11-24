@@ -100,7 +100,6 @@ namespace NSBinPptxRW
 			if (cur_pos == len || cur_pos == start_pos)
 				return;
 
-			std::string __str_ppty((char*)(pBuffer + start_pos), cur_pos - start_pos);
 			start_pos = cur_pos + 1;
 
 			cur_pos = start_pos;
@@ -110,7 +109,7 @@ namespace NSBinPptxRW
 			if (cur_pos == len || cur_pos == start_pos)
 				return;
 
-			std::string __str_version((char*)(pBuffer + start_pos), cur_pos - start_pos);
+			std::string str_version((char*)(pBuffer + start_pos), cur_pos - start_pos);
 			start_pos = cur_pos + 1;
 
 			cur_pos = start_pos;
@@ -120,23 +119,23 @@ namespace NSBinPptxRW
 			if (cur_pos == len || cur_pos == start_pos)
 				return;
 
-			std::string __str_decode_len_ansi((char*)(pBuffer + start_pos), cur_pos - start_pos);
-			std::wstring  __str_decode_len = std::wstring(__str_decode_len_ansi.begin(), __str_decode_len_ansi.end());
+			std::string str_decode_len_ansi((char*)(pBuffer + start_pos), cur_pos - start_pos);
+			std::wstring  str_decode_len = std::wstring(str_decode_len_ansi.begin(), str_decode_len_ansi.end());
 			start_pos = cur_pos + 1;
 
 			pBuffer += start_pos;
 			len -= start_pos;
-			int dstLenTemp = XmlUtils::GetInteger(__str_decode_len);
+			int dstLenTemp = XmlUtils::GetInteger(str_decode_len);
 			//int dstLenTemp = Base64DecodeGetRequiredLength(len);
 
 			int nVersion = 1;
-			if (__str_version.length() > 1)
+			if (str_version.length() > 1)
 			{
-				nVersion = std::stoi(__str_version.substr(1).c_str());
+				nVersion = std::stoi(str_version.substr(1).c_str());
 			}
 			bool bIsNoBase64 = nVersion == g_nFormatVersionNoBase64;
 
-			BYTE* pDstBuffer = NULL;
+			BYTE* pDstBuffer = nullptr;
 			int dstLen = 0;
 			if (!bIsNoBase64)
 			{
@@ -160,7 +159,7 @@ namespace NSBinPptxRW
 			{
 				BYTE _type = 0;
 
-				if (false == m_oReader.GetUCharWithResult(&_type))
+				if (!m_oReader.GetUCharWithResult(&_type))
 					break;
 
 				if (0 == _type)
@@ -237,7 +236,7 @@ namespace NSBinPptxRW
 				LONG _count = m_oReader.GetLong();
 				for (LONG i = 0; i < _count; ++i)
 				{
-					BYTE _master_type = m_oReader.GetUChar(); // must be 0
+					m_oReader.GetUChar(); // must be 0; the call advances the stream
 					ReadMasterInfo(i);
 				}
 			}
@@ -252,7 +251,7 @@ namespace NSBinPptxRW
 
 					if (index >= 0 && index < (int)m_arSlideLayouts_Master.size())
 					{
-						m_arSlideLayouts_Master[index] = (LONG)i;
+						m_arSlideLayouts_Master[index] = i;
 					}
 				}
 			}
@@ -408,6 +407,8 @@ namespace NSBinPptxRW
 					}
 					catch (...)
 					{
+						/* malformed record: keep whatever was parsed so far */
+						(void)0;
 					}
 
 					std::wstring strMasterXml = L"theme" + std::to_wstring(i + 1) + L".xml";
@@ -437,7 +438,7 @@ namespace NSBinPptxRW
 				m_oReader.Seek(pPair->second);
 				m_oReader.Skip(4);
 
-				LONG __nCountLayouts = 0;
+				LONG nCountLayouts = 0;
 
 				for (LONG i = 0; i < nCountMasters; ++i)
 				{
@@ -452,6 +453,8 @@ namespace NSBinPptxRW
 					}
 					catch (...)
 					{
+						/* malformed record: keep whatever was parsed so far */
+						(void)0;
 					}
 
 					std::vector<PPTX::Logic::XmlId>& arrLays = m_arSlideMasters[i].sldLayoutIdLst;
@@ -460,12 +463,12 @@ namespace NSBinPptxRW
 					{
 						arrLays.push_back(PPTX::Logic::XmlId(L"p:sldLayoutId"));
 
-						std::wstring sId = std::to_wstring((_UINT64)(0x80000000 + __nCountLayouts + j + 1));
+						std::wstring sId = std::to_wstring((_UINT64)(0x80000000 + nCountLayouts + j + 1));
 
 						arrLays[j].id = sId;
 						arrLays[j].rid = (size_t)(j + 1);
 					}
-					__nCountLayouts += (LONG)(lLayouts + 1);
+					nCountLayouts += (LONG)(lLayouts + 1);
 
 					m_oReader.m_pRels->CloseRels();
 
@@ -508,6 +511,8 @@ namespace NSBinPptxRW
 					}
 					catch (...)
 					{
+						/* malformed record: keep whatever was parsed so far */
+						(void)0;
 					}
 					m_oReader.m_pRels->CloseRels();
 
@@ -561,6 +566,8 @@ namespace NSBinPptxRW
 						}
 						catch (...)
 						{
+							/* malformed record: keep whatever was parsed so far */
+							(void)0;
 						}
 
 						m_oReader.m_pRels->CloseRels();
@@ -608,6 +615,8 @@ namespace NSBinPptxRW
 						}
 						catch (...)
 						{
+							/* malformed record: keep whatever was parsed so far */
+							(void)0;
 						}
 						m_oReader.m_pRels->CloseRels();
 
@@ -659,6 +668,8 @@ namespace NSBinPptxRW
 						}
 						catch (...)
 						{
+							/* malformed record: keep whatever was parsed so far */
+							(void)0;
 						}
 						m_oReader.m_pRels->CloseRels();
 
@@ -708,6 +719,8 @@ namespace NSBinPptxRW
 					}
 					catch (...)
 					{
+						/* malformed record: keep whatever was parsed so far */
+						(void)0;
 					}
 
 					if (m_arSlides[i].comments.is_init())
@@ -765,6 +778,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 				SetRequiredDefaultsApp();
 			}
@@ -780,6 +795,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 				SetRequiredDefaultsCore();
 			}
@@ -795,6 +812,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 			}
 			else
@@ -812,6 +831,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 			}
 			else
@@ -829,6 +850,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 			}
 			if (m_oTableStyles.Styles.empty())
@@ -879,6 +902,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 			}
 			if (m_oCustomProperties.IsInit())
@@ -904,7 +929,7 @@ namespace NSBinPptxRW
 
 				for (int i = 0; i < nCountCustoms; ++i)
 				{
-					smart_ptr<OOX::CCustomXML> pCustomXml = new OOX::CCustomXML(NULL, false);
+					smart_ptr<OOX::CCustomXML> pCustomXml = new OOX::CCustomXML(nullptr, false);
 
 					pCustomXml->fromPPTY(&m_oReader);
 
@@ -938,6 +963,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 				m_oPresentation.sldMasterIdLst.clear();
 				LONG nCountLayouts = 0;
@@ -1143,11 +1170,11 @@ namespace NSBinPptxRW
 					}
 					case 1:
 					{
-						std::string strMaster64 = m_oReader.GetString2A();
+						m_oReader.GetString2A(); // value unused: the call still advances the stream
 						break;
 					}
-					default:
-						break;
+				default:
+					break;
 				}
 			}
 
@@ -1172,11 +1199,11 @@ namespace NSBinPptxRW
 						}
 						case 1:
 						{
-							std::string strLayout64 = m_oReader.GetString2A();
+							m_oReader.GetString2A(); // value unused: the call still advances the stream
 							break;
 						}
-						default:
-							break;
+					default:
+						break;
 					}
 				}
 			}
@@ -1185,7 +1212,7 @@ namespace NSBinPptxRW
 		}
 		void CPPTXWriter::SetRequiredDefaultsApp()
 		{
-			m_oApp.m_sAppVersion.reset(NULL);
+			m_oApp.m_sAppVersion.reset(nullptr);
 			std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
 			if (sApplication.empty())
 				sApplication = NSSystemUtils::gc_EnvApplicationNameDefault;

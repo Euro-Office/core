@@ -232,9 +232,9 @@ namespace MathEquation
 
             protected:
                 int nCount;
-                int nRows;
+                int nRows = 0;
                 std::stack<int> m_aBaseStack;
-                bool bOpenNode;
+                bool bOpenNode = false;
                 bool bPile;
                 bool bEqArrayStart;
                 int nBlockNum;

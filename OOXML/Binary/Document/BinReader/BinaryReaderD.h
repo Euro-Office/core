@@ -64,8 +64,8 @@ class Binary_HdrFtrTableReader : public Binary_CommonReader
 {
 	Writers::FileWriter&	m_oFileWriter;
 
-	int						nCurType;
-	int						nCurHeaderType;
+	int						nCurType = 0;
+	int						nCurHeaderType = 0;
 public:
 	Writers::HeaderFooterWriter& m_oHeaderFooterWriter;
 	

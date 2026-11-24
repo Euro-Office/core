@@ -28,7 +28,7 @@ namespace MetaFile
 {
 	void CEmfParserBase::ImageProcessing(const TEmfAlphaBlend &oTEmfAlphaBlend)
 	{
-		BYTE* pBgraBuffer = NULL;
+		BYTE* pBgraBuffer = nullptr;
 		unsigned int unWidth, unHeight;
 
 		if (ReadImage(oTEmfAlphaBlend.unOffBmiSrc, oTEmfAlphaBlend.unCbBmiSrc,
@@ -74,7 +74,7 @@ namespace MetaFile
 
 	void CEmfParserBase::ImageProcessing(const TEmfStretchDIBITS &oTEmfStretchDIBITS)
 	{
-		BYTE* pBgraBuffer = NULL;
+		BYTE* pBgraBuffer = nullptr;
 		unsigned int ulWidth, ulHeight;
 
 		if (ReadImage(oTEmfStretchDIBITS.unOffBmiSrc, oTEmfStretchDIBITS.unCbBmiSrc,
@@ -97,7 +97,7 @@ namespace MetaFile
 
 	void CEmfParserBase::ImageProcessing(const TEmfBitBlt &oTEmfBitBlt)
 	{
-		BYTE* pBgraBuffer = NULL;
+		BYTE* pBgraBuffer = nullptr;
 		unsigned int ulWidth, ulHeight;
 
 		// sizeof can't be used, because we use double in the TEmfBitBlt structure, and read it as 4 bytes
@@ -168,7 +168,7 @@ namespace MetaFile
 
 	void CEmfParserBase::ImageProcessing(const TEmfSetDiBitsToDevice &oTEmfSetDiBitsToDevice)
 	{
-		BYTE* pBgraBuffer = NULL;
+		BYTE* pBgraBuffer = nullptr;
 		unsigned int ulWidth, ulHeight;
 		if (ReadImage(oTEmfSetDiBitsToDevice.unOffBmiSrc, oTEmfSetDiBitsToDevice.unCbBmiSrc,
 					  oTEmfSetDiBitsToDevice.unOffBitsSrc, oTEmfSetDiBitsToDevice.unCbBitsSrc,
@@ -187,7 +187,7 @@ namespace MetaFile
 
 	void CEmfParserBase::ImageProcessing(const TEmfStretchBLT &oTEmfStretchBLT)
 	{
-		BYTE* pBgraBuffer = NULL;
+		BYTE* pBgraBuffer = nullptr;
 		unsigned int ulWidth, ulHeight;
 
 		unsigned int unSkip = 108; // sizeof(TEmfStretchBLT) + 8 doesn't count correctly, because of TXForm, there is a double, but in Emf they are 4 bytes each
@@ -216,7 +216,7 @@ namespace MetaFile
 
 	void CEmfParserBase::ImageProcessing(const TEmfDibPatternBrush &oTEmfDibPatternBrush, unsigned int ulBrushIndex)
 	{
-		BYTE* pBgraBuffer = NULL;
+		BYTE* pBgraBuffer = nullptr;
 		unsigned int ulWidth, ulHeight;
 
 		if (ReadImage(oTEmfDibPatternBrush.unOffBmi, oTEmfDibPatternBrush.unCbBmi,
@@ -234,7 +234,7 @@ namespace MetaFile
 
 	void CEmfParserBase::DrawImage(int nX, int nY, int nW, int nH, BYTE *pImageBuffer, unsigned int unImageW, unsigned int unImageH, unsigned int unBlendMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			double dX, dY, dR, dB;
 			TranslatePoint(nX, nY, dX, dY);
@@ -256,7 +256,7 @@ namespace MetaFile
 
 	void CEmfParserBase::UpdateOutputDC()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->UpdateDC();
 	}
 
@@ -427,7 +427,7 @@ namespace MetaFile
 			double dX, dY;
 			TranslatePoint(nX, nY, dX, dY);
 
-			double* pdDx = NULL;
+			double* pdDx = nullptr;
 			if (pnDx)
 			{
 				pdDx = new double[unCharsCount];
@@ -461,9 +461,9 @@ namespace MetaFile
 			return SetError();
 
 		const IFont* pFont = GetFont();
-		std::wstring wsText = ConvertToUnicode(oText.pOutputString, oText.unChars, (NULL != pFont) ? pFont->GetCharSet() : DEFAULT_CHARSET);
+		std::wstring wsText = ConvertToUnicode(oText.pOutputString, oText.unChars, (nullptr != pFont) ? pFont->GetCharSet() : DEFAULT_CHARSET);
 
-		int* pDx = NULL;
+		int* pDx = nullptr;
 		if (oText.pOutputDx && oText.unChars == wsText.length())
 		{
 			pDx = new int[oText.unChars];
@@ -494,7 +494,7 @@ namespace MetaFile
 		std::wstring wsText = NSStringExt::CConverter::GetUnicodeFromUTF16((unsigned short*)oText.pOutputString, oText.unChars);
 
 		unsigned int unLen = 0;
-		int* pDx = NULL;
+		int* pDx = nullptr;
 		if (oText.pOutputDx && oText.unChars && oText.unChars == wsText.length())
 		{
 			// Here we emulate Utf16 to Utf32 conversion to get the pDx array correctly
@@ -503,7 +503,6 @@ namespace MetaFile
 
 			unsigned short* pUtf16 = (unsigned short*)oText.pOutputString;
 			wchar_t wLeading, wTrailing;
-			unsigned int unCode;
 			unsigned int unPos = 0;
 			while (unPos < oText.unChars)
 			{
@@ -519,7 +518,6 @@ namespace MetaFile
 				}
 				else
 				{
-					unCode = (wLeading & 0x3FF) << 10;
 					wTrailing = pUtf16[unPos++];
 					if (wTrailing < 0xDC00 || wTrailing > 0xDFFF)
 					{
@@ -562,7 +560,7 @@ namespace MetaFile
 	}
 
 	CEmfParserBase::CEmfParserBase()
-		: m_oPlayer(this), m_pPath(NULL), m_pInterpretator(NULL), m_bEof(false)
+		: m_oPlayer(this), m_pPath(nullptr), m_pInterpretator(nullptr), m_bEof(false)
 	{
 		m_pDC = m_oPlayer.GetDC();
 	}
@@ -609,7 +607,7 @@ namespace MetaFile
 		const IFont* pFont = m_pDC->GetFont();
 
 		if (!pFont)
-			return NULL;
+			return nullptr;
 
 		return pFont;
 	}
@@ -705,7 +703,7 @@ namespace MetaFile
 
 	const IRegion *CEmfParserBase::GetRegion() const
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	unsigned int CEmfParserBase::GetArcDirection() const
@@ -730,15 +728,15 @@ namespace MetaFile
 
 	void CEmfParserBase::SetInterpretator(IOutputDevice *pOutput)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			delete m_pInterpretator;
 
 		m_pInterpretator = new CEmfInterpretatorRender(pOutput);
 	}
 
-	void CEmfParserBase::SetInterpretator(const wchar_t *wsFilePath, InterpretatorType oInterpretatorType, unsigned int unWidth, unsigned int unHeight)
+	void CEmfParserBase::SetInterpretator(const wchar_t *wsFilePath, InterpretatorType oInterpretatorType, unsigned int  /*unWidth*/, unsigned int  /*unHeight*/)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			delete m_pInterpretator;
 
 		if (oInterpretatorType == InterpretatorType::Emf)
@@ -782,7 +780,7 @@ namespace MetaFile
 
 	TXForm CEmfParserBase::CalculateCurrentTransform() const
 	{
-		if (NULL == m_pParent)
+		if (nullptr == m_pParent)
 			return m_pDC->GetTransform();
 
 		TXForm oTransform{m_pParent->CalculateCurrentTransform()};
@@ -837,7 +835,7 @@ namespace MetaFile
 		UpdateOutputDC();
 	}
 
-	void CEmfParserBase::HANDLE_EMR_HEADER(TEmfHeader &oTEmfHeader)
+	void CEmfParserBase::HANDLE_EMR_HEADER(TEmfHeader & /*oTEmfHeader*/)
 	{
 		if (ENHMETA_SIGNATURE != m_oHeader.ulSignature || 0x00010000 != m_oHeader.ulVersion)
 			return SetError();
@@ -870,7 +868,7 @@ namespace MetaFile
 		m_pDC->SetWindowExtents(m_oHeader.oDevice);
 		m_pDC->SetViewportExtents(m_oHeader.oDevice);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			m_pInterpretator->Begin();
 			m_pInterpretator->HANDLE_EMR_HEADER(m_oHeader);
@@ -879,7 +877,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_ALPHABLEND(TEmfAlphaBlend &oTEmfAlphaBlend)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_ALPHABLEND(oTEmfAlphaBlend, m_oStream);
 
 		ImageProcessing(oTEmfAlphaBlend);
@@ -887,7 +885,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_STRETCHDIBITS(TEmfStretchDIBITS &oTEmfStretchDIBITS)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_STRETCHDIBITS(oTEmfStretchDIBITS, m_oStream);
 
 		ImageProcessing(oTEmfStretchDIBITS);
@@ -895,7 +893,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_BITBLT(TEmfBitBlt &oTEmfBitBlt)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_BITBLT(oTEmfBitBlt, m_oStream);
 
 		ImageProcessing(oTEmfBitBlt);
@@ -903,7 +901,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETDIBITSTODEVICE(TEmfSetDiBitsToDevice &oTEmfSetDiBitsToDevice)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETDIBITSTODEVICE(oTEmfSetDiBitsToDevice, m_oStream);
 
 		ImageProcessing(oTEmfSetDiBitsToDevice);
@@ -911,7 +909,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_STRETCHBLT(TEmfStretchBLT &oTEmfStretchBLT)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_STRETCHBLT(oTEmfStretchBLT, m_oStream);
 
 		ImageProcessing(oTEmfStretchBLT);
@@ -919,7 +917,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_EOF()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			m_pInterpretator->HANDLE_EMR_EOF();
 			m_pInterpretator->End();
@@ -930,7 +928,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SAVEDC()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SAVEDC();
 
 		SaveDC();
@@ -938,7 +936,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_RESTOREDC(int &nIndexDC)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_RESTOREDC(nIndexDC);
 
 		RestoreDC(nIndexDC);
@@ -946,7 +944,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_MODIFYWORLDTRANSFORM(TXForm &oXForm, unsigned int &unMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_MODIFYWORLDTRANSFORM(oXForm, unMode);
 
 		m_pDC->MultiplyTransform(oXForm, unMode);
@@ -955,7 +953,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETWORLDTRANSFORM(TXForm &oXForm)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETWORLDTRANSFORM(oXForm);
 
 		m_pDC->MultiplyTransform(oXForm, MWT_SET);
@@ -964,7 +962,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_CREATEBRUSHINDIRECT(unsigned int &unBrushIndex, CEmfLogBrushEx *pBrush)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_CREATEBRUSHINDIRECT(unBrushIndex, pBrush);
 
 		m_oPlayer.RegisterObject(unBrushIndex, (CEmfObjectBase*)pBrush);
@@ -972,7 +970,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETTEXTCOLOR(TRGBA &oColor)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETTEXTCOLOR(oColor);
 
 		m_pDC->SetTextColor(oColor);
@@ -981,7 +979,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SELECTOBJECT(unsigned int &unObjectIndex)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SELECTOBJECT(unObjectIndex);
 
 		m_oPlayer.SelectObject(unObjectIndex);
@@ -990,7 +988,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_EXTCREATEFONTINDIRECTW(unsigned int &unIndex, CEmfLogFont *oLogFont)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_EXTCREATEFONTINDIRECTW(unIndex, oLogFont);
 
 		m_oPlayer.RegisterObject(unIndex, (CEmfObjectBase*)oLogFont);
@@ -998,7 +996,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETTEXTALIGN(unsigned int &unAlign)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETTEXTALIGN(unAlign);
 
 		m_pDC->SetTextAlign(unAlign);
@@ -1007,7 +1005,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETBKMODE(unsigned int &unBgMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETBKMODE(unBgMode);
 
 		m_pDC->SetBgMode(unBgMode);
@@ -1016,7 +1014,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_DELETEOBJECT(unsigned int &unObjectIndex)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_DELETEOBJECT(unObjectIndex);
 
 		m_oPlayer.DeleteObject(unObjectIndex);
@@ -1025,7 +1023,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETMITERLIMIT(unsigned int &unMeterLimit)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETMITERLIMIT(unMeterLimit);
 
 		m_pDC->SetMiterLimit(unMeterLimit);
@@ -1034,7 +1032,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_EXTCREATEPEN(unsigned int &unPenIndex, CEmfLogPen *pPen, const std::vector<unsigned int>& arUnused)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_EXTCREATEPEN(unPenIndex, pPen, arUnused);
 
 		m_oPlayer.RegisterObject(unPenIndex, (CEmfObjectBase*)pPen);
@@ -1042,7 +1040,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_CREATEPEN(unsigned int &unPenIndex, unsigned int &unWidthX, CEmfLogPen *pPen)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_CREATEPEN(unPenIndex, unWidthX, pPen);
 
 		pPen->unWidth = unWidthX;
@@ -1052,7 +1050,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETPOLYFILLMODE(unsigned int &unFillMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETPOLYFILLMODE(unFillMode);
 
 		m_pDC->SetFillMode(unFillMode);
@@ -1064,7 +1062,7 @@ namespace MetaFile
 		if (m_pPath)
 			delete m_pPath;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_BEGINPATH();
 
 		m_pPath = new CPath();
@@ -1080,14 +1078,14 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_ENDPATH()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_ENDPATH();
 		// Do nothing
 	}
 
 	void CEmfParserBase::HANDLE_EMR_CLOSEFIGURE()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_CLOSEFIGURE();
 
 		if (m_pPath)
@@ -1099,7 +1097,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_FLATTENPATH()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_FLATTENPATH();
 		// Do nothing
 	}
@@ -1107,25 +1105,25 @@ namespace MetaFile
 	void CEmfParserBase::HANDLE_EMR_WIDENPATH()
 	{
 		// TODO: implement
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_WIDENPATH();
 	}
 
 	void CEmfParserBase::HANDLE_EMR_ABORTPATH()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_ABORTPATH();
 
 		if (m_pPath)
 		{
 			delete m_pPath;
-			m_pPath = NULL;
+			m_pPath = nullptr;
 		}
 	}
 
 	void CEmfParserBase::HANDLE_EMR_MOVETOEX(TPointL &oPoint)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_MOVETOEX(oPoint);
 
 		MoveTo(oPoint);
@@ -1133,7 +1131,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETARCDIRECTION(unsigned int &unDirection)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETARCDIRECTION(unDirection);
 
 		m_pDC->SetArcDirection(unDirection);
@@ -1142,7 +1140,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_FILLPATH(TRectL &oBounds)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_FILLPATH(oBounds);
 
 		if (m_pPath)
@@ -1155,7 +1153,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETMAPMODE(unsigned int &unMapMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETMAPMODE(unMapMode);
 
 		m_pDC->SetMapMode(unMapMode);
@@ -1163,7 +1161,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETWINDOWORGEX(TPointL &oOrigin)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETWINDOWORGEX(oOrigin);
 
 		m_pDC->SetWindowOrigin(oOrigin);
@@ -1172,7 +1170,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETWINDOWEXTEX(TSizeL &oExtent)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETWINDOWEXTEX(oExtent);
 
 		if (MM_ISOTROPIC != m_pDC->GetMapMode() && MM_ANISOTROPIC != m_pDC->GetMapMode())
@@ -1184,7 +1182,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SCALEWINDOWEXTEX(int nXNum, int nXDenom, int nYNum, int nYDenom)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SCALEWINDOWEXTEX(nXNum, nXDenom, nYNum, nYDenom);
 
 		if (MM_ISOTROPIC != m_pDC->GetMapMode() && MM_ANISOTROPIC != m_pDC->GetMapMode())
@@ -1196,7 +1194,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETVIEWPORTORGEX(TPointL &oOrigin)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETVIEWPORTORGEX(oOrigin);
 
 		m_pDC->SetViewportOrigin(oOrigin);
@@ -1205,7 +1203,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETVIEWPORTEXTEX(TSizeL &oExtent)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETVIEWPORTEXTEX(oExtent);
 
 		if (MM_ISOTROPIC != m_pDC->GetMapMode() && MM_ANISOTROPIC != m_pDC->GetMapMode())
@@ -1217,7 +1215,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SCALEVIEWPORTEXTEX(int nXNum, int nXDenom, int nYNum, int nYDenom)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SCALEVIEWPORTEXTEX(nXNum, nXDenom, nYNum, nYDenom);
 
 		if (MM_ISOTROPIC != m_pDC->GetMapMode() && MM_ANISOTROPIC != m_pDC->GetMapMode())
@@ -1229,7 +1227,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETSTRETCHBLTMODE(unsigned int &unStretchMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETSTRETCHBLTMODE(unStretchMode);
 
 		m_pDC->SetStretchMode(unStretchMode);
@@ -1237,13 +1235,13 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETICMMODE(unsigned int &unICMMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETICMMODE(unICMMode);
 	}
 
 	void CEmfParserBase::HANDLE_EMR_CREATEDIBPATTERNBRUSHPT(unsigned int &unBrushIndex, TEmfDibPatternBrush &oDibBrush)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_CREATEDIBPATTERNBRUSHPT(unBrushIndex, oDibBrush, m_oStream);
 
 		ImageProcessing(oDibBrush, unBrushIndex);
@@ -1251,7 +1249,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_CREATEMONOBRUSH(unsigned int &unBrushIndex, TEmfDibPatternBrush &oDibBrush)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_CREATEMONOBRUSH(unBrushIndex, oDibBrush, m_oStream);
 
 		ImageProcessing(oDibBrush, unBrushIndex);
@@ -1259,10 +1257,10 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SELECTCLIPPATH(unsigned int &unRegionMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SELECTCLIPPATH(unRegionMode);
 		
-		if (NULL != m_pPath)
+		if (nullptr != m_pPath)
 		{
 			TEmfXForm oTransform{m_pDC->GetFinalTransform(GM_ADVANCED)};
 			oTransform.Dx -= GetDCBounds().Left;
@@ -1276,7 +1274,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETBKCOLOR(TRGBA &oColor)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETBKCOLOR(oColor);
 
 		m_pDC->SetBgColor(oColor);
@@ -1321,7 +1319,7 @@ namespace MetaFile
 		m_pDC->GetClip()->Exclude(oClipRect, oBB);
 		UpdateOutputDC();
 		
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_EXCLUDECLIPRECT(oClip);
 	}
 
@@ -1331,7 +1329,7 @@ namespace MetaFile
 		// impossible with the current renderer interface.
 		m_pDC->GetClip()->Reset();
 		
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_EXTSELECTCLIPRGN(unRgnDataSize, unRegionMode, m_oStream);
 		
 		m_oStream.Skip(m_ulRecordSize - 8);
@@ -1341,7 +1339,7 @@ namespace MetaFile
 	{
 		m_pDC->GetClip()->Reset();
 		
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETMETARGN();
 		
 		UpdateOutputDC();
@@ -1349,7 +1347,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETROP2(unsigned int &unRop2Mode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETROP2(unRop2Mode);
 
 		m_pDC->SetRop2Mode(unRop2Mode);
@@ -1358,7 +1356,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_CREATEPALETTE(unsigned int &unPaletteIndex, CEmfLogPalette *oEmfLogPalette)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_CREATEPALETTE(unPaletteIndex, oEmfLogPalette);
 
 		m_oPlayer.RegisterObject(unPaletteIndex, (CEmfObjectBase*)oEmfLogPalette);
@@ -1366,7 +1364,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SELECTPALETTE(unsigned int &unPaletteIndex)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SELECTPALETTE(unPaletteIndex);
 
 		m_oPlayer.SelectPalette(unPaletteIndex);
@@ -1375,7 +1373,7 @@ namespace MetaFile
 	void CEmfParserBase::HANDLE_EMR_REALIZEPALETTE()
 	{
 		// TODO: Implement
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_REALIZEPALETTE();
 	}
 
@@ -1387,27 +1385,27 @@ namespace MetaFile
 
 		m_pDC->GetClip()->Intersect(oClipRect);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_INTERSECTCLIPRECT(oClip);
 	}
 
 	void CEmfParserBase::HANDLE_EMR_SETLAYOUT(unsigned int &unLayoutMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETLAYOUT(unLayoutMode);
 		// TODO: implement
 	}
 
 	void CEmfParserBase::HANDLE_EMR_SETBRUSHORGEX(TPointL &oOrigin)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETBRUSHORGEX(oOrigin);
 		// TODO: implement
 	}
 
 	void CEmfParserBase::HANDLE_EMR_ANGLEARC(TPointL &oCenter, unsigned int &unRadius, double &dStartAngle, double &dSweepAngle)
 	{
-		if (NULL != m_pInterpretator && (NULL == m_pPath || Svg != m_pInterpretator->GetType()))
+		if (nullptr != m_pInterpretator && (nullptr == m_pPath || Svg != m_pInterpretator->GetType()))
 			m_pInterpretator->HANDLE_EMR_ANGLEARC(oCenter, unRadius, dStartAngle, dSweepAngle);
 
 		ArcTo(oCenter.X - unRadius, oCenter.Y - unRadius, oCenter.X + unRadius, oCenter.Y + unRadius, dStartAngle, dSweepAngle);
@@ -1416,7 +1414,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_ARC(TRectL &oBox, TPointL &oStart, TPointL &oEnd)
 	{
-		if (NULL != m_pInterpretator && (NULL == m_pPath || Svg != m_pInterpretator->GetType()))
+		if (nullptr != m_pInterpretator && (nullptr == m_pPath || Svg != m_pInterpretator->GetType()))
 			m_pInterpretator->HANDLE_EMR_ARC(oBox, oStart, oEnd);
 
 		double dStartAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oStart.X, oStart.Y);
@@ -1443,7 +1441,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_ARCTO(TRectL &oBox, TPointL &oStart, TPointL &oEnd)
 	{
-		if (NULL != m_pInterpretator && (NULL == m_pPath || Svg != m_pInterpretator->GetType()))
+		if (nullptr != m_pInterpretator && (nullptr == m_pPath || Svg != m_pInterpretator->GetType()))
 			m_pInterpretator->HANDLE_EMR_ARCTO(oBox, oStart, oEnd);
 
 		double dStartAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oStart.X, oStart.Y);
@@ -1457,7 +1455,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_CHORD(TRectL &oBox, TPointL &oStart, TPointL &oEnd)
 	{
-		if (NULL != m_pInterpretator && (NULL == m_pPath || Svg != m_pInterpretator->GetType()))
+		if (nullptr != m_pInterpretator && (nullptr == m_pPath || Svg != m_pInterpretator->GetType()))
 			m_pInterpretator->HANDLE_EMR_CHORD(oBox, oStart, oEnd);
 
 		double dStartAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oStart.X, oStart.Y);
@@ -1473,7 +1471,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_ELLIPSE(TRectL &oBox)
 	{
-		if (NULL != m_pInterpretator && (NULL == m_pPath || Svg != m_pInterpretator->GetType()))
+		if (nullptr != m_pInterpretator && (nullptr == m_pPath || Svg != m_pInterpretator->GetType()))
 			m_pInterpretator->HANDLE_EMR_ELLIPSE(oBox);
 
 		oBox.Update(IsViewportFlippedX(),	IsViewportFlippedY()); // If the width is negative, it won't be drawn
@@ -1488,7 +1486,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_EXTTEXTOUTA(TEmfExtTextoutA &oTEmfExtTextoutA)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_EXTTEXTOUTA(oTEmfExtTextoutA);
 
 		if (oTEmfExtTextoutA.oEmrText.unChars > 0)
@@ -1497,7 +1495,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_EXTTEXTOUTW(TEmfExtTextoutW &oTEmfExtTextoutW)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_EXTTEXTOUTW(oTEmfExtTextoutW);
 
 		if (oTEmfExtTextoutW.oEmrText.unChars > 0)
@@ -1509,7 +1507,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_LINETO(TPointL &oPoint)
 	{
-		if (NULL != m_pInterpretator && (NULL == m_pPath || Svg != m_pInterpretator->GetType()))
+		if (nullptr != m_pInterpretator && (nullptr == m_pPath || Svg != m_pInterpretator->GetType()))
 			m_pInterpretator->HANDLE_EMR_LINETO(oPoint);
 
 		LineTo(oPoint);
@@ -1517,7 +1515,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_PIE(TRectL &oBox, TPointL &oStart, TPointL &oEnd)
 	{
-		if (NULL != m_pInterpretator && (NULL == m_pPath || Svg != m_pInterpretator->GetType()))
+		if (nullptr != m_pInterpretator && (nullptr == m_pPath || Svg != m_pInterpretator->GetType()))
 			m_pInterpretator->HANDLE_EMR_PIE(oBox, oStart, oEnd);
 
 		const int nCenterX = (oBox.Left + oBox.Right) / 2;
@@ -1539,7 +1537,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_RECTANGLE(TRectL &oBox)
 	{
-		if (NULL != m_pInterpretator && (NULL == m_pPath || Svg != m_pInterpretator->GetType()))
+		if (nullptr != m_pInterpretator && (nullptr == m_pPath || Svg != m_pInterpretator->GetType()))
 			m_pInterpretator->HANDLE_EMR_RECTANGLE(oBox);
 
 		if (AD_COUNTERCLOCKWISE == m_pDC->GetArcDirection())
@@ -1562,7 +1560,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_ROUNDRECT(TRectL &oBox, TSizeL &oCorner)
 	{
-		if (NULL != m_pInterpretator && (NULL == m_pPath || Svg != m_pInterpretator->GetType()))
+		if (nullptr != m_pInterpretator && (nullptr == m_pPath || Svg != m_pInterpretator->GetType()))
 			m_pInterpretator->HANDLE_EMR_ROUNDRECT(oBox, oCorner);
 
 		int lBoxW = oBox.Right - oBox.Left;
@@ -1602,7 +1600,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SETPIXELV(TPointL &oPoint, TRGBA &oColor)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETPIXELV(oPoint, oColor);
 
 		// Making the brush color
@@ -1617,7 +1615,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_SMALLTEXTOUT(TEmfSmallTextout &oText)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SMALLTEXTOUT(oText);
 
 		// Convert oText to TEmfEmrText
@@ -1630,7 +1628,7 @@ namespace MetaFile
 		oEmrText.pOutputString = oText.pTextString;
 		oEmrText.oReference.X  = oText.nX;
 		oEmrText.oReference.Y  = oText.nY;
-		oEmrText.pOutputDx     = NULL;
+		oEmrText.pOutputDx     = nullptr;
 
 		// The write format isn't documented properly, there are a few bytes left at the end, it isn't clear why.
 		unsigned int unSize = oText.GetSize();
@@ -1643,12 +1641,12 @@ namespace MetaFile
 
 		// Since we simply copied a reference to the string, and didn't copy the line itself, we reset it here, because
 		// that the structure's destructor frees memory.
-		oEmrText.pOutputString = NULL;
+		oEmrText.pOutputString = nullptr;
 	}
 
 	void CEmfParserBase::HANDLE_EMR_STROKEANDFILLPATH(TRectL &oBounds)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_STROKEANDFILLPATH(oBounds);
 
 		if (m_pInterpretator && m_pPath)
@@ -1661,7 +1659,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_STROKEPATH(TRectL &oBounds)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_STROKEPATH(oBounds);
 
 		if (m_pInterpretator && m_pPath)
@@ -1674,7 +1672,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_GRADIENTFILL(const std::vector<TTriVertex> &arVertex, const std::vector<std::pair<int, int> > &arIndexes, unsigned int unFillMode)
 	{
-		if (3 > arVertex.size() || arVertex.size() > 4 || INT_MIN == arVertex[0].nX || INT_MIN == arVertex[0].nY || NULL == m_pInterpretator ||
+		if (3 > arVertex.size() || arVertex.size() > 4 || INT_MIN == arVertex[0].nX || INT_MIN == arVertex[0].nY || nullptr == m_pInterpretator ||
 		    0 == (arVertex[1].nX - arVertex[0].nX))
 			return;
 
@@ -1722,7 +1720,7 @@ namespace MetaFile
 		ClosePath();
 		DrawPath(false, true);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_GRADIENTFILL(arVertex, arIndexes, unFillMode);
 
 		m_pDC->RemoveBrush(&oBrush);
@@ -1731,7 +1729,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_UNKNOWN(const unsigned int& unRecordSize)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			m_oStream.SeekBack(8);
 			m_pInterpretator->HANDLE_EMR_UNKNOWN(m_oStream);
@@ -1753,7 +1751,7 @@ namespace MetaFile
 		ClosePath();
 		m_oPlayer.SelectObject(unIhBrush);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_FILLRGN(oBounds, unIhBrush, oRegionDataHeader, arRects);
 
 		DrawPath(false, true);
@@ -1761,7 +1759,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_PAINTRGN(const TRectL &oBounds, const TRegionDataHeader &oRegionDataHeader, const std::vector<TRectL> &arRects)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_PAINTRGN(oBounds, oRegionDataHeader, arRects);
 
 		for (const TRectL &oRect : arRects)
@@ -1778,7 +1776,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_FRAMERGN(const TRectL &oBounds, unsigned int unIhBrush, int nWidth, int nHeight, const TRegionDataHeader &oRegionDataHeader, const std::vector<TRectL> &arRects)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_FRAMERGN(oBounds, unIhBrush, nWidth, nHeight, oRegionDataHeader, arRects);
 
 		//TODO: implement

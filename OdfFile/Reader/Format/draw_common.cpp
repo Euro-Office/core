@@ -598,13 +598,25 @@ void Compute_GraphicFill(const common_draw_fill_attlist & props, const office_el
 				break;
 			}
 		}
-		if (props.draw_fill_image_width_ && props.draw_fill_image_height_)
+		// The fill mode in effect, from style:repeat or from the background image (a draw:fill-image without
+		// style:repeat is a tile; bStretch is then still the default true). A stretched bitmap fills the whole area
+		// whatever size is given (as in LibreOffice): the size would become insets that shrink the picture, down to
+		// nothing for a size of 0, or blow it up past the area. For a bitmap drawn once (no-repeat), a size of 0
+		// means the bitmap's own size, the same as no size at all, not a size of 0 %.
+		const bool bStretched = fill.bitmap->bStretch && !fill.bitmap->bTile;
+		const bool bOnce = !fill.bitmap->bStretch && !fill.bitmap->bTile;
+		if (props.draw_fill_image_width_ && props.draw_fill_image_height_ && !bStretched)
 		{
 			if (props.draw_fill_image_width_->get_type() == odf_types::length_or_percent::Percent &&
 				props.draw_fill_image_height_->get_type() == odf_types::length_or_percent::Percent)
 			{
-				fill.bitmap->sx = props.draw_fill_image_width_->get_percent().get_value();
-				fill.bitmap->sy = props.draw_fill_image_height_->get_percent().get_value();
+				const double width_percent = props.draw_fill_image_width_->get_percent().get_value();
+				const double height_percent = props.draw_fill_image_height_->get_percent().get_value();
+				if (!bOnce || (width_percent > 0 && height_percent > 0))
+				{
+					fill.bitmap->sx = width_percent;
+					fill.bitmap->sy = height_percent;
+				}
 
 				if ( !props.style_repeat_ && props.draw_fill_image_width_->get_percent().get_value() > 99.9 &&
 					props.draw_fill_image_height_->get_percent().get_value() > 99.9 &&
@@ -617,8 +629,14 @@ void Compute_GraphicFill(const common_draw_fill_attlist & props, const office_el
 			}
 			else
 			{
-				fill.bitmap->sx_pt = props.draw_fill_image_width_->get_length().get_value_unit(length::pt);
-				fill.bitmap->sy_pt = props.draw_fill_image_height_->get_length().get_value_unit(length::pt);
+				const double width_pt = props.draw_fill_image_width_->get_length().get_value_unit(length::pt);
+				const double height_pt = props.draw_fill_image_height_->get_length().get_value_unit(length::pt);
+				// Tiles keep a size of 0: the editor draws tile scale 0 at the bitmap's size, and it is saved back as 0.
+				if (!bOnce || (width_pt > 0 && height_pt > 0))
+				{
+					fill.bitmap->sx_pt = width_pt;
+					fill.bitmap->sy_pt = height_pt;
+				}
 			}
 		}
 	}
