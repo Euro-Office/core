@@ -4,7 +4,7 @@
 JSSmart<CJSValue> CNativeControlEmbed::SetFilePath(JSSmart<CJSValue> path)
 {
 	m_pInternal->SetFilePath(path->toStringW());
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CNativeControlEmbed::GetFilePath()
@@ -15,7 +15,7 @@ JSSmart<CJSValue> CNativeControlEmbed::GetFilePath()
 JSSmart<CJSValue> CNativeControlEmbed::SetFileId(JSSmart<CJSValue> fileId)
 {
 	m_pInternal->SetFileId(fileId->toStringW());
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CNativeControlEmbed::GetFileId()
@@ -96,7 +96,7 @@ JSSmart<CJSValue> CNativeControlEmbed::CheckNextChange()
 JSSmart<CJSValue> CNativeControlEmbed::GetCountChanges()
 {
 	int nCount = 0;
-	if (m_pInternal->m_pChanges != NULL)
+	if (m_pInternal->m_pChanges != nullptr)
 	{
 		nCount = (int)m_pInternal->m_pChanges->size();
 	}
@@ -108,7 +108,7 @@ JSSmart<CJSValue> CNativeControlEmbed::GetChangesFile(JSSmart<CJSValue> index)
 {
 	int nIndex = index->toInt32();
 	std::wstring strFile = L"";
-	if (m_pInternal->m_pChanges != NULL)
+	if (m_pInternal->m_pChanges != nullptr)
 		strFile = (*m_pInternal->m_pChanges)[nIndex];
 	return CJSContext::createString(strFile);
 }
@@ -133,31 +133,31 @@ JSSmart<CJSValue> CNativeControlEmbed::Save_End(JSSmart<CJSValue> pos, JSSmart<C
 	std::string sHeader = pos->toStringA();
 	int _len = len->toInt32();
 	m_pInternal->Save_End(sHeader, _len);
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CNativeControlEmbed::AddImageInChanges(JSSmart<CJSValue> img)
 {
 	std::wstring sImage = img->toStringW();
 	if (sImage.empty())
-		return NULL;
+		return nullptr;
 
 	std::map<std::wstring, bool>::const_iterator iter = m_pInternal->m_mapImagesInChanges.find(sImage);
 	if (iter == m_pInternal->m_mapImagesInChanges.end())
 		m_pInternal->m_mapImagesInChanges.insert(std::pair<std::wstring, bool>(sImage, true));
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CNativeControlEmbed::ConsoleLog(JSSmart<CJSValue> message)
 {
 	m_pInternal->ConsoleLog(message->toStringA());
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CNativeControlEmbed::SaveChanges(JSSmart<CJSValue> sParam, JSSmart<CJSValue> nDeleteIndex, JSSmart<CJSValue> nCount)
 {
 	m_pInternal->DumpChanges(sParam->toStringA(), nDeleteIndex->toInt32(), nCount->toInt32());
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CNativeControlEmbed::ZipOpen(JSSmart<CJSValue> name)
@@ -197,7 +197,7 @@ JSSmart<CJSValue> CNativeControlEmbed::ZipFileAsString(JSSmart<CJSValue> name)
 	if (m_pInternal->m_oZipWorker.m_sTmpFolder.empty())
 		return CJSContext::createUndefined();
 
-	BYTE* pData = NULL;
+	BYTE* pData = nullptr;
 	DWORD len = 0;
 	m_pInternal->m_oZipWorker.GetFileData(name->toStringW(), pData, len);
 	return  CJSContext::createString((char*)pData, len);
@@ -214,7 +214,7 @@ JSSmart<CJSValue> CNativeControlEmbed::ZipFileAsBinary(JSSmart<CJSValue> name)
 JSSmart<CJSValue> CNativeControlEmbed::ZipClose()
 {
 	m_pInternal->m_oZipWorker.Close();
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CNativeControlEmbed::GetImageUrl(JSSmart<CJSValue> sUrl)
@@ -238,7 +238,7 @@ JSSmart<CJSValue> CNativeControlEmbed::GetImagesPath()
 #include "./../../raster/BgraFrame.h"
 JSSmart<CJSValue> CNativeControlEmbed::GetImageOriginalSize(JSSmart<CJSValue> sUrl)
 {
-	IMetafileToRenderter oRenderer(NULL);
+	IMetafileToRenderter oRenderer(nullptr);
 	oRenderer.SetMediaDirectory(NSDirectory::GetFolderPath(m_pInternal->m_strImagesDirectory));
 	std::wstring sPath = oRenderer.GetImagePath(sUrl->toStringW());
 	CBgraFrame oFrame;

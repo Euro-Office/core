@@ -40,7 +40,7 @@ namespace NSJSBase
 #ifdef V8_VERSION_89_PLUS
 
 #else
-			// In older version of V8 there is an eror "Either url or urlRegex must be specified." on trying to set a breakpoint in CDT.
+			// In older version of V8 there is an error "Either url or urlRegex must be specified." on trying to set a breakpoint in CDT.
 			// So we have to specify it explicitly before "lineNumber" param
 			else if (sMethod == "Debugger.setBreakpointByUrl" && sMessage.find("\"url") == sMessage.npos)
 			{

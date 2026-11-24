@@ -4,7 +4,7 @@
 namespace Aggplus
 {
 	CGraphicsLayer::CGraphicsLayer(BYTE *pBuffer, bool bExternalBuffer)
-		: m_pBuffer(pBuffer), m_bExternalBuffer(NULL != pBuffer && bExternalBuffer)
+		: m_pBuffer(pBuffer), m_bExternalBuffer(nullptr != pBuffer && bExternalBuffer)
 	{
 		SetDefaultSettings();
 	}
@@ -16,7 +16,7 @@ namespace Aggplus
 
 	bool CGraphicsLayer::Empty() const
 	{
-		return NULL == m_pBuffer;
+		return nullptr == m_pBuffer;
 	}
 	
 	BYTE *CGraphicsLayer::GetBuffer()
@@ -34,7 +34,7 @@ namespace Aggplus
 		if (bDeleteData && !m_bExternalBuffer)
 			RELEASEARRAYOBJECTS(m_pBuffer);
 
-		m_pBuffer = NULL;
+		m_pBuffer = nullptr;
 	}
 
 	void CGraphicsLayer::SetSettings(const TGraphicsLayerSettings &oSettings)

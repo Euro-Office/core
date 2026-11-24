@@ -48,10 +48,10 @@ namespace NSProcessEnv
 
 		void Load(XmlUtils::CXmlNode& node)
 		{
-			std::vector<XmlUtils::CXmlNode> childs;
-			if (node.GetChilds(childs))
+			std::vector<XmlUtils::CXmlNode> children;
+			if (node.GetChilds(children))
 			{
-				for (std::vector<XmlUtils::CXmlNode>::iterator iter = childs.begin(); iter != childs.end(); iter++)
+				for (std::vector<XmlUtils::CXmlNode>::iterator iter = children.begin(); iter != children.end(); iter++)
 				{
 					m_props.insert(std::make_pair(iter->GetNameA(), iter->GetTextA()));
 				}
@@ -90,7 +90,7 @@ namespace NSProcessEnv
 		inline bool IsPresent(const char* key)
 		{
 			std::map<std::string, std::string>::const_iterator iter = m_props.find(std::string(key));
-			return (iter == m_props.end()) ? false : true;
+			return iter != m_props.end();
 		}
 
 		inline bool GetBoolValue(const char* key)

@@ -408,7 +408,7 @@ namespace Aggplus
 
 	CBrushTexture::CBrushTexture() : CBrush(BrushTypeTextureFill)											
 	{
-		m_pImage = NULL;
+		m_pImage = nullptr;
 		m_bReleaseImage = FALSE;
 		Alpha = 255;
         m_bUseBounds = false;
