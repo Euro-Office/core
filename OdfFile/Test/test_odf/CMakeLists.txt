@@ -60,6 +60,7 @@ add_core_gtest(
             odt2docx_fields.cpp
             chart_series_name.cpp
             xlsx2ods_sheet_background.cpp
+            docx2odt_style_parent_cycle.cpp
             xlsx2ods_header_footer_codes.cpp
             docx2odt_page_background.cpp
             docx2odt_section_footers.cpp
