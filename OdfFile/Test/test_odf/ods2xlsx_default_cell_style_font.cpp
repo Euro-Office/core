@@ -20,6 +20,15 @@ namespace
 		return dir.empty() ? std::wstring() : read_part(dir, L"xl/styles.xml");
 	}
 
+	// The default cell style names Liberation Sans, the Default cell style overrides it with Arial.
+	// Liberation Sans is also the writer's fallback name, so only Arial shows that font 0 comes
+	// from the Default cell style.
+	std::wstring arial_default_styles_xml()
+	{
+		static const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/tdf99627.ods");
+		return dir.empty() ? std::wstring() : read_part(dir, L"xl/styles.xml");
+	}
+
 	// The text from the first `open` up to the next `close` after it (without `close`).
 	std::wstring between(const std::wstring& xml, const std::wstring& open, const std::wstring& close)
 	{
@@ -44,10 +53,14 @@ TEST(OdsToXlsxDefaultCellStyleFont, FirstCellStyleFormatNamesFontZero)
 // Control: font 0 is the Default cell style's font.
 TEST(OdsToXlsxDefaultCellStyleFont, FontZeroIsTheDefaultStyleFont)
 {
-	const std::wstring styles = styles_xml();
+	const std::wstring styles = arial_default_styles_xml();
 	ASSERT_FALSE(styles.empty()) << "ODS -> XLSX conversion failed";
 
 	const std::wstring font = between(between(styles, L"<fonts", L"</fonts>"), L"<font>", L"</font>");
 	ASSERT_FALSE(font.empty()) << styles;
-	EXPECT_NE(font.find(L"<name val=\"Liberation Sans\"/>"), std::wstring::npos) << font;
+	EXPECT_NE(font.find(L"<name val=\"Arial\"/>"), std::wstring::npos) << font;
+
+	const std::wstring xf = between(between(styles, L"<cellStyleXfs", L"</cellStyleXfs>"), L"<xf ", L">");
+	ASSERT_FALSE(xf.empty()) << styles;
+	EXPECT_NE(xf.find(L"fontId=\"0\""), std::wstring::npos) << xf;
 }
