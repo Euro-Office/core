@@ -114,6 +114,7 @@ namespace Settings
 				case 'v':
 					if      ( L"w:vendorID"   == wsName ) m_sVendorID   = oReader.GetText();
 					break;
+				default: break;
 				}
 
 			}
@@ -187,6 +188,7 @@ namespace Settings
 				case 'n':
 					if      ( L"w:name"    == wsName ) m_sName    = oReader.GetText();
 					break;
+				default: break;
 				}
 
 			}
@@ -210,7 +212,7 @@ namespace Settings
 		for ( unsigned int nIndex = 0; nIndex < m_arrAutoCaption.size(); nIndex++ )
 		{
 			if (m_arrAutoCaption[nIndex] ) delete m_arrAutoCaption[nIndex];
-			m_arrAutoCaption[nIndex] = NULL;
+			m_arrAutoCaption[nIndex] = nullptr;
 		}
 		m_arrAutoCaption.clear();
 	}
@@ -335,6 +337,7 @@ namespace Settings
 				case 's':
 					if      ( L"w:sep"     == wsName ) m_oSep     = oReader.GetText();
 					break;
+				default: break;
 				}
 
 			}
@@ -358,7 +361,7 @@ namespace Settings
 		for ( unsigned int nIndex = 0; nIndex < m_arrCaption.size(); nIndex++ )
 		{
 			if ( m_arrCaption[nIndex] ) delete m_arrCaption[nIndex];
-			m_arrCaption[nIndex] = NULL;
+			m_arrCaption[nIndex] = nullptr;
 		}
 		m_arrCaption.clear();
 	}
@@ -459,6 +462,7 @@ namespace Settings
 				case 'v':
 					if      ( L"w:val" == wsName ) m_oVal = oReader.GetText();
 					break;
+				default: break;
 				}
 
 			}
@@ -536,6 +540,7 @@ namespace Settings
 				case 'v':
 					if      ( L"w:val"  == wsName ) m_sVal  = oReader.GetText();
 					break;
+				default: break;
 				}
 
 			}
@@ -568,7 +573,7 @@ namespace Settings
 		for ( unsigned int nIndex = 0; nIndex < m_arrCompatSettings.size(); nIndex++ )
 		{
 			if ( m_arrCompatSettings[nIndex] ) delete m_arrCompatSettings[nIndex];
-			m_arrCompatSettings[nIndex] = NULL;
+			m_arrCompatSettings[nIndex] = nullptr;
 		}
 		m_arrCompatSettings.clear();
 	}
@@ -935,14 +940,13 @@ namespace Settings
 					if      ( L"w:formatting"    == wsName ) m_oFormatting    = oReader.GetText();
 					break;
 				case 'h':
-					if      ( L"w:hashValue"     == wsName ) m_sHashValue     = oReader.GetText();
-					else if (L"w:hash" == wsName) m_sHashValue = oReader.GetText();
+					if ( L"w:hashValue"     == wsName || L"w:hash" == wsName ) m_sHashValue     = oReader.GetText();
 					break;
 				case 's':
-					if      ( L"w:saltValue"     == wsName ) m_sSaltValue     = oReader.GetText();
-					else if (L"w:salt"			 == wsName)	m_sSaltValue	= oReader.GetText();
+					if ( L"w:saltValue"     == wsName || L"w:salt"			 == wsName ) m_sSaltValue     = oReader.GetText();
 					else if ( L"w:spinCount"     == wsName ) m_oSpinCount     = oReader.GetText();
 					break;
+				default: break;
 				}
 
 			}
@@ -1005,6 +1009,7 @@ namespace Settings
 					case 'v':
 						if      ( L"w:val" == wsName ) m_oVal = oReader.GetText();
 						break;
+					default: break;
 					}
 
 				}
@@ -1071,6 +1076,7 @@ namespace Settings
 					case 'v':
 						if      ( L"w:val"  == wsName ) m_sVal  = oReader.GetText();
 						break;
+					default: break;
 					}
 
 				}
@@ -1094,7 +1100,7 @@ namespace Settings
 		for ( unsigned int nIndex = 0; nIndex < m_arrDocVar.size(); nIndex++ )
 		{
 			if ( m_arrDocVar[nIndex] ) delete m_arrDocVar[nIndex];
-			m_arrDocVar[nIndex] = NULL;
+			m_arrDocVar[nIndex] = nullptr;
 		}
 		m_arrDocVar.clear();
 	}
@@ -1210,6 +1216,7 @@ namespace Settings
 					case 'v':
 						if      ( L"w:val"  == wsName ) m_sVal  = oReader.GetText();
 						break;
+					default: break;
 					}
 
 				}
@@ -1281,6 +1288,7 @@ namespace Settings
 					case 's':
 						if      ( L"w:spelling" == wsName ) m_oSpelling = oReader.GetText();
 						break;
+					default: break;
 					}
 
 				}
@@ -1361,6 +1369,7 @@ namespace Settings
 				case 'w':
 					if      ( L"w:w"         == wsName ) m_oW        = oReader.GetText();
 					break;
+				default: break;
 				}
 
 			}
@@ -1445,6 +1454,7 @@ namespace Settings
 				case 'm':
 					if      ( L"w:markup" == wsName ) m_oMarkup = oReader.GetText();
 					break;
+				default: break;
 				}
 			}
 
@@ -1467,7 +1477,7 @@ namespace Settings
 		for ( unsigned int nIndex = 0; nIndex < m_arrRsid.size(); nIndex++ )
 		{
 			if ( m_arrRsid[nIndex] ) delete m_arrRsid[nIndex];
-			m_arrRsid[nIndex] = NULL;
+			m_arrRsid[nIndex] = nullptr;
 		}
 		m_arrRsid.clear();
 	}
@@ -1563,8 +1573,7 @@ namespace Settings
 		{
 			WritingElement_ReadAttributes_Start(oReader)
 				WritingElement_ReadAttributes_Read_if		(oReader, L"w:solutionID",	m_sSolutionID)
-				WritingElement_ReadAttributes_Read_else_if	(oReader, L"r:id",			m_rId)
-				WritingElement_ReadAttributes_Read_else_if	(oReader, L"relationships:id", m_rId)
+				else if ( L"r:id" == wsName || L"relationships:id" == wsName ) m_rId = oReader.GetText();
 			WritingElement_ReadAttributes_End(oReader)
 		}
 
@@ -1733,6 +1742,7 @@ namespace Settings
 				case 'v':
 					if      ( L"w:visibleStyles" == wsName ) m_oVisibleStyles = oReader.GetText();
 					break;
+				default: break;
 				}
 
 			}
@@ -1837,17 +1847,16 @@ namespace Settings
 					else if	( L"w:cryptSpinCount"		== wsName ) m_oSpinCount			= oReader.GetText();
 					break;
 				case 'h':
-					if      ( L"w:hashValue"	== wsName ) m_sHashValue     = oReader.GetText();
-					else if	( L"w:hash"			== wsName ) m_sHashValue     = oReader.GetText();
+					if ( L"w:hashValue"	== wsName || L"w:hash"			== wsName ) m_sHashValue     = oReader.GetText();
 					break;
 				case 'r':
 					if      ( L"w:recommended"   == wsName ) m_oRecommended   = oReader.GetText();
 					break;
 				case 's':
-					if      ( L"w:saltValue"	== wsName ) m_sSaltValue     = oReader.GetText();
-					else if ( L"w:salt"			== wsName ) m_sSaltValue     = oReader.GetText();
+					if ( L"w:saltValue"	== wsName || L"w:salt"			== wsName ) m_sSaltValue     = oReader.GetText();
 					else if ( L"w:spinCount"	== wsName ) m_oSpinCount     = oReader.GetText();
 					break;
+				default: break;
 				}
 			}
 
@@ -1917,6 +1926,7 @@ namespace Settings
 					case 'v':
 						if      ( L"w:val"     == wsName ) m_oVal     = oReader.GetText();
 						break;
+					default: break;
 					}
 
 				}
@@ -1942,7 +1952,7 @@ namespace Settings
 		for ( unsigned int nIndex = 0; nIndex < m_arrEndnote.size(); nIndex++ )
 		{
 			if ( m_arrEndnote[nIndex] ) delete m_arrEndnote[nIndex];
-			m_arrEndnote[nIndex] = NULL;
+			m_arrEndnote[nIndex] = nullptr;
 		}
 		m_arrEndnote.clear();
 	}
@@ -2047,7 +2057,7 @@ namespace Settings
 		for ( unsigned int nIndex = 0; nIndex < m_arrFootnote.size(); nIndex++ )
 		{
 			if ( m_arrFootnote[nIndex] ) delete m_arrFootnote[nIndex];
-			m_arrFootnote[nIndex] = NULL;
+			m_arrFootnote[nIndex] = nullptr;
 		}
 		m_arrFootnote.clear();
 	}
@@ -2211,7 +2221,7 @@ namespace Settings
 		for ( unsigned int nIndex = 0; nIndex < m_arrSchema.size(); nIndex++ )
 		{
 			if ( m_arrSchema[nIndex] ) delete m_arrSchema[nIndex];
-			m_arrSchema[nIndex] = NULL;
+			m_arrSchema[nIndex] = nullptr;
 		}
 		m_arrSchema.clear();
 	}
@@ -2270,7 +2280,7 @@ namespace Settings
 	CShapeDefaults::~CShapeDefaults()
 	{
 	}
-	void CShapeDefaults::fromXML(XmlUtils::CXmlNode& oNode)
+	void CShapeDefaults::fromXML(XmlUtils::CXmlNode& /*oNode*/)
 	{
 		m_eType = et_Unknown;
 		// TO DO: Implement CShapeDefaults::fromXML(XmlUtils::CXmlNode& oNode)
@@ -2295,7 +2305,7 @@ namespace Settings
 		{
 			sName = oReader.GetName();
 
-			WritingElement* pItem = NULL;
+			WritingElement* pItem = nullptr;
 
 			wchar_t wChar0 = sName[0];
 			if ( 'o' == wChar0 )
@@ -2384,6 +2394,7 @@ namespace Settings
 						AssignPtrXmlContent(pItem, OOX::VmlOffice::CStrokeChild, oReader)
 
 					break;
+				default: break;
 				}
 			}
 
@@ -2447,22 +2458,22 @@ namespace Settings
 			else						docx->m_oMain.settings = this;
 		}
 
-		read( oPath );
+		CSettings::read( oPath );
 	}
-	CSettings::CSettings(XmlUtils::CXmlNode& oNode) : File(NULL), WritingElement(NULL)
+	CSettings::CSettings(XmlUtils::CXmlNode& oNode) : File(nullptr), WritingElement(nullptr)
 	{
-		fromXML( oNode );
+		CSettings::fromXML( oNode );
 	}
-	CSettings::CSettings(XmlUtils::CXmlLiteReader& oReader) : File(NULL), WritingElement(NULL)
+	CSettings::CSettings(XmlUtils::CXmlLiteReader& oReader) : File(nullptr), WritingElement(nullptr)
 	{
-		fromXML( oReader );
+		CSettings::fromXML( oReader );
 	}
 	CSettings::~CSettings()
 	{
 		for ( unsigned int nIndex = 0; nIndex < m_arrSmartTagType.size(); nIndex++ )
 		{
 			if ( m_arrSmartTagType[nIndex] )delete m_arrSmartTagType[nIndex];
-			m_arrSmartTagType[nIndex] = NULL;
+			m_arrSmartTagType[nIndex] = nullptr;
 		}
 
 		m_arrSmartTagType.clear();
@@ -2693,6 +2704,7 @@ namespace Settings
 				case 'z':
 					if      ( L"w:zoom"                       == sName ) m_oZoom                       = oReader;
 					break;
+				default: break;
 				}
 			}
 			else if ( 's' == wChar0 )

@@ -45,7 +45,7 @@ namespace XLSB
 
     void SXDI14::readFields(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
         record >> FRTheader >> df >> isxvd >> flags;
 
         fUniqueClient = GETBIT(flags, 0);

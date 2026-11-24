@@ -50,7 +50,7 @@ namespace OOX
 		}
 		void CDefinedName::toXML(NSStringUtils::CStringBuilder& writer) const
 		{
-			if (false == m_oRef.IsInit() && false == m_oName.IsInit()) return;
+			if (!m_oRef.IsInit() && !m_oName.IsInit()) return;
 
 			writer.WriteString(L"<definedName");
 			WritingStringNullableAttrEncodeXmlString(L"name", m_oName, *m_oName);

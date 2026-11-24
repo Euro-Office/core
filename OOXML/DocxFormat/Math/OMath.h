@@ -36,7 +36,7 @@ namespace OOX
 		class CMathArgNodes : public WritingElementWithChilds<>
 		{
 		public:
-			CMathArgNodes(OOX::Document *pMain = NULL);			
+			CMathArgNodes(OOX::Document *pMain = nullptr);			
 			virtual ~CMathArgNodes();
 
 			const CMathArgNodes &operator =(const XmlUtils::CXmlNode& oNode);

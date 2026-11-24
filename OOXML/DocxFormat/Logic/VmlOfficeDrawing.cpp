@@ -41,7 +41,7 @@ namespace OOX
 		CStrokeChild::~CStrokeChild()
 		{
 		}
-		void CStrokeChild::fromXML(XmlUtils::CXmlNode& oNode)
+		void CStrokeChild::fromXML(XmlUtils::CXmlNode& /*oNode*/)
 		{
 			m_eType = et_Unknown;
 			// TO DO: Implement CStrokeChild::fromXML(XmlUtils::CXmlNode& oNode)
@@ -324,7 +324,7 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrColors.size(); nIndex++ )
 			{
 				if ( m_arrColors[nIndex] ) delete m_arrColors[nIndex];
-				m_arrColors[nIndex] = NULL;
+				m_arrColors[nIndex] = nullptr;
 			}
 			m_arrColors.clear();
 		}
@@ -502,7 +502,7 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrRel.size(); nIndex++ )
 			{
 				if ( m_arrRel[nIndex] ) delete m_arrRel[nIndex];
-				m_arrRel[nIndex] = NULL;
+				m_arrRel[nIndex] = nullptr;
 			}
 			m_arrRel.clear();
 		}
@@ -699,8 +699,6 @@ namespace OOX
 			int nCurDepth = oReader.GetDepth();
 			while ( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-				std::wstring sName = oReader.GetName();
-
 				// TO DO: Make reading OOMML and Wc3MathML formulas
 			}
 		}
@@ -862,7 +860,7 @@ namespace OOX
 
 				m_oBackDepth.SetValue( 36 );
 				m_oBrightness.SetValue( 0.3 );
-				m_oDiffusity.SetValue( (double)1.0 );
+				m_oDiffusity.SetValue( 1.0 );
 				m_oEdge.SetValue( 1 );
 				m_oForeDepth.SetValue( 0 );
 				m_oLightLevel.SetValue( 0.6 );
@@ -1157,7 +1155,7 @@ namespace OOX
 				sResult += L"cropping=\"" + m_oCropping.ToString() + L"\" ";
 
 			if ( SimpleTypes::booleanFalse != m_oVerticies.GetValue() )
-				sResult += L"verticies=\"" + m_oVerticies.ToString() + L"\" ";
+				sResult += L"verticies=\"" + m_oVerticies.ToString() + L"\" "; // codespell:ignore
 
 			if ( SimpleTypes::booleanFalse != m_oAdjustHandles.GetValue() )
 				sResult += L"adjusthandles=\"" + m_oAdjustHandles.ToString() + L"\" ";
@@ -1193,7 +1191,7 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"shapetype",     m_oShapeType )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"text",          m_oText )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"ungrouping",    m_oUnGrouping )
-				WritingElement_ReadAttributes_Read_else_if( oReader, L"verticies",     m_oVerticies )
+				WritingElement_ReadAttributes_Read_else_if( oReader, L"verticies",     m_oVerticies ) // codespell:ignore
 				WritingElement_ReadAttributes_End( oReader )
 			}
 
@@ -1252,7 +1250,7 @@ namespace OOX
 			XmlMacroReadAttributeBase( oNode, L"Type", m_oType );
 			XmlMacroReadAttributeBase( oNode, L"UpdateMode", m_oUpdateMode );
 
-			if (false == m_oId.IsInit())
+			if (!m_oId.IsInit())
 			{
 				XmlMacroReadAttributeBase( oNode, L"relationships:id", m_oId );
 			}
@@ -1262,7 +1260,7 @@ namespace OOX
 		{
 			ReadAttributes( oReader );
 
-			if (false == oReader.IsEmptyNode())
+			if (!oReader.IsEmptyNode())
 			{
 				int nCurDepth = oReader.GetDepth();
 				while (oReader.ReadNextSiblingNode(nCurDepth))
@@ -1278,7 +1276,7 @@ namespace OOX
 			}
 			
 			OOX::CDocxFlat* docx_flat = dynamic_cast<OOX::CDocxFlat*>(m_pMainDocument);
-			if (docx_flat && false == m_oId.IsInit() && m_sObjectId.IsInit())
+			if (docx_flat && !m_oId.IsInit() && m_sObjectId.IsInit())
 			{
 				std::map<std::wstring, NSCommon::smart_ptr<OOX::File>>::iterator pFind = docx_flat->m_mapOleData.find(*m_sObjectId);
 
@@ -1324,18 +1322,14 @@ namespace OOX
 		void COLEObject::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
 				WritingElement_ReadAttributes_Start( oReader )
-					WritingElement_ReadAttributes_Read_if     ( oReader, L"DrawAspect", m_oDrawAspect )
-					WritingElement_ReadAttributes_Read_else_if( oReader, L"r:id",       m_oId )
-					WritingElement_ReadAttributes_Read_else_if( oReader, L"relationships:id", m_oId )
+					if ( L"DrawAspect" == wsName || L"w:drawAspect" == wsName ) m_oDrawAspect = oReader.GetText();
+					else if ( L"r:id" == wsName || L"relationships:id" == wsName ) m_oId = oReader.GetText();
 					WritingElement_ReadAttributes_Read_else_if( oReader, L"ObjectID",   m_sObjectId )
-					WritingElement_ReadAttributes_Read_else_if( oReader, L"ProgID",     m_sProgId )
-					WritingElement_ReadAttributes_Read_else_if( oReader, L"ShapeID",    m_sShapeId )
+					else if ( L"ProgID" == wsName || L"w:progID" == wsName ) m_sProgId = oReader.GetText();
+					else if ( L"ShapeID" == wsName || L"w:shapeID" == wsName ) m_sShapeId = oReader.GetText();
 					WritingElement_ReadAttributes_Read_else_if( oReader, L"Type",       m_oType )
 					WritingElement_ReadAttributes_Read_else_if( oReader, L"UpdateMode", m_oUpdateMode )
 				//w:objectEmbed
-					WritingElement_ReadAttributes_Read_else_if(oReader, L"w:drawAspect", m_oDrawAspect)
-					WritingElement_ReadAttributes_Read_else_if(oReader, L"w:progID",	m_sProgId)
-					WritingElement_ReadAttributes_Read_else_if(oReader, L"w:shapeID",	m_sShapeId)
 					WritingElement_ReadAttributes_Read_else_if(oReader, L"w:fieldCodes", m_oFieldCodes2)
 				WritingElement_ReadAttributes_End( oReader )
 			}
@@ -1398,7 +1392,7 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrProxy.size(); nIndex++ )
 			{
 				if ( m_arrProxy[nIndex] ) delete m_arrProxy[nIndex];
-				m_arrProxy[nIndex] = NULL;
+				m_arrProxy[nIndex] = nullptr;
 			}
 			m_arrProxy.clear();
 		}
@@ -1472,7 +1466,7 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrEntry.size(); nIndex++ )
 			{
 				if ( m_arrEntry[nIndex] ) delete m_arrEntry[nIndex];
-				m_arrEntry[nIndex] = NULL;
+				m_arrEntry[nIndex] = nullptr;
 			}
 			m_arrEntry.clear();
 		}
@@ -1541,7 +1535,7 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrR.size(); nIndex++ )
 			{
 				if ( m_arrR[nIndex] ) delete m_arrR[nIndex];
-				m_arrR[nIndex] = NULL;
+				m_arrR[nIndex] = nullptr;
 			}
 			m_arrR.clear();
 		}
@@ -1681,7 +1675,7 @@ namespace OOX
 			XmlMacroReadAttributeBase(oNode, L"v:ext", m_oExt);
 			XmlMacroReadAttributeBase(oNode, L"id", m_oId);
 			XmlMacroReadAttributeBase(oNode, L"issignatureline", m_oIsSignatureLine);
-			XmlMacroReadAttributeBase(oNode, L"provid", m_oProvId);
+			XmlMacroReadAttributeBase(oNode, L"provid", m_oProvId); // codespell:ignore
 			XmlMacroReadAttributeBase(oNode, L"showsigndate", m_oShowSignDate);
 			XmlMacroReadAttributeBase(oNode, L"o:signinginstructions", m_sSigningInstructions);
 			XmlMacroReadAttributeBase(oNode, L"signinginstructionsset", m_oSigningInstructionsSet);
@@ -1707,7 +1701,7 @@ namespace OOX
 				sResult += L"issignatureline=\"" + m_oIsSignatureLine->ToString2(SimpleTypes::onofftostringT) + L"\" ";
 
 			ComplexTypes_WriteAttribute ( L"id=\"",     m_oId );
-			ComplexTypes_WriteAttribute ( L"provid=\"", m_oProvId );
+			ComplexTypes_WriteAttribute ( L"provid=\"", m_oProvId ); // codespell:ignore
 
 			if ( m_oSigningInstructionsSet.IsInit() )
 				sResult += L"signinginstructionsset=\"" + m_oSigningInstructionsSet->ToString2(SimpleTypes::onofftostringT) + L"\" ";
@@ -1871,7 +1865,7 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"v:ext",                  m_oExt )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"id",                     m_oId )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"issignatureline",        m_oIsSignatureLine )
-				WritingElement_ReadAttributes_Read_else_if( oReader, L"provid",                 m_oProvId )
+				WritingElement_ReadAttributes_Read_else_if( oReader, L"provid",                 m_oProvId ) // codespell:ignore
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"showsigndate",           m_oShowSignDate )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"o:signinginstructions",  m_sSigningInstructions )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"signinginstructionsset", m_oSigningInstructionsSet )

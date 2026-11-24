@@ -330,8 +330,8 @@ namespace OOX
 	}
 	CChartDrawing::CChartDrawing(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 	{
-		m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-		read( oRootPath, oPath );
+		m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+		CChartDrawing::read( oRootPath, oPath );
 	}
 	CChartDrawing::~CChartDrawing()
 	{
@@ -376,7 +376,7 @@ namespace OOX
 			{
 				sName = XmlUtils::GetNameNoNS(oReader.GetName());
 
-				CSizeAnchor *pItem = NULL;
+				CSizeAnchor *pItem = nullptr;
 
 				if ( L"relSizeAnchor" == sName )
 				{

@@ -570,6 +570,7 @@ std::wstring oox2odf_converter::Impl::convert_formula(const std::wstring & expr)
         workstr,    
 		boost::wregex(L"('.*?')|(\".*?\")"),
 		&oox2odf_converter::Impl::convert_scobci, boost::match_default | boost::format_all);
+	res1 = oox2odf_function_names(res1, &oox_replace_tmp);
 	
 	std::wstring res = boost::regex_replace(
 		res1,
@@ -616,6 +617,7 @@ std::wstring oox2odf_converter::Impl::convert_conditional_formula(const std::wst
         workstr,
 		boost::wregex(L"('.*?')|(\".*?\")"),
 		&oox2odf_converter::Impl::convert_scobci, boost::match_default | boost::format_all);
+	res1 = oox2odf_function_names(res1, &oox_replace_tmp);
 	
 	std::wstring res = boost::regex_replace(
 		res1,

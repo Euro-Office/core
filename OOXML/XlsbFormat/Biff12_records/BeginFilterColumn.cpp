@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginFilterColumn::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> dwCol >> flags;
 
         fHideArrow = GETBIT(flags, 0);

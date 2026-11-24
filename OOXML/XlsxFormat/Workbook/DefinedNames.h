@@ -43,7 +43,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CDefinedName)
-			CDefinedName(OOX::Document *pMain = NULL);
+			CDefinedName(OOX::Document *pMain = nullptr);
 			virtual ~CDefinedName();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -87,7 +87,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CDefinedNames)
             WritingElement_XlsbVectorConstructors(CDefinedNames)
-			CDefinedNames(OOX::Document *pMain = NULL);
+			CDefinedNames(OOX::Document *pMain = nullptr);
 			virtual ~CDefinedNames();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

@@ -200,9 +200,8 @@ namespace ComplexTypes
 		void CHeight::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
 			WritingElement_ReadAttributes_Start( oReader )
-			WritingElement_ReadAttributes_Read_if ( oReader, L"w:hRule", m_oHRule )
+			if ( L"w:hRule" == wsName || L"w:h-rule" == wsName ) m_oHRule = oReader.GetText();
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:val", m_oVal )
-			WritingElement_ReadAttributes_Read_else_if(oReader, L"w:h-rule", m_oHRule)
 			WritingElement_ReadAttributes_End( oReader )
 		}
 
@@ -544,19 +543,19 @@ namespace ComplexTypes
 		}
 		void CTblPPr::PrepareAfterRead()
 		{
-			if(false == m_oHorzAnchor.IsInit())
+			if(!m_oHorzAnchor.IsInit())
 			{
 				m_oHorzAnchor.Init();
 				m_oHorzAnchor->SetValue(SimpleTypes::hanchorText);
 			}
-			if(false == m_oVertAnchor.IsInit())
+			if(!m_oVertAnchor.IsInit())
 			{
 				m_oVertAnchor.Init();
 				m_oVertAnchor->SetValue(SimpleTypes::vanchorMargin);
 			}
-			if(false == m_oTblpXSpec.IsInit())
+			if(!m_oTblpXSpec.IsInit())
 			{
-				if(false == m_oTblpX.IsInit())
+				if(!m_oTblpX.IsInit())
 				{
 					m_oTblpX.Init();
 					m_oTblpX->FromTwips(0);
@@ -567,35 +566,36 @@ namespace ComplexTypes
 				switch(m_oTblpX->ToTwips())
 				{
 					case 0:
-						m_oTblpX.reset(NULL);
+						m_oTblpX.reset(nullptr);
 						m_oTblpXSpec.Init();
 						m_oTblpXSpec->SetValue(SimpleTypes::xalignLeft);
 					break;
 					case -4:
-						m_oTblpX.reset(NULL);
+						m_oTblpX.reset(nullptr);
 						m_oTblpXSpec.Init();
 						m_oTblpXSpec->SetValue(SimpleTypes::xalignCenter);
 					break;
 					case -8:
-						m_oTblpX.reset(NULL);
+						m_oTblpX.reset(nullptr);
 						m_oTblpXSpec.Init();
 						m_oTblpXSpec->SetValue(SimpleTypes::xalignRight);
 					break;
 					case -12:
-						m_oTblpX.reset(NULL);
+						m_oTblpX.reset(nullptr);
 						m_oTblpXSpec.Init();
 						m_oTblpXSpec->SetValue(SimpleTypes::xalignInside);
 					break;
 					case -16:
-						m_oTblpX.reset(NULL);
+						m_oTblpX.reset(nullptr);
 						m_oTblpXSpec.Init();
 						m_oTblpXSpec->SetValue(SimpleTypes::xalignOutside);
 					break;
+					default: break;
 				}
 			}
-			if(false == m_oTblpYSpec.IsInit())
+			if(!m_oTblpYSpec.IsInit())
 			{
-				if(false == m_oTblpY.IsInit())
+				if(!m_oTblpY.IsInit())
 				{
 					m_oTblpY.Init();
 					m_oTblpY->FromTwips(0);
@@ -610,30 +610,31 @@ namespace ComplexTypes
 						m_oVertAnchor->SetValue(SimpleTypes::vanchorText);
 					break;
 					case -4:
-						m_oTblpY.reset(NULL);
+						m_oTblpY.reset(nullptr);
 						m_oTblpYSpec.Init();
 						m_oTblpYSpec->SetValue(SimpleTypes::yalignTop);
 					break;
 					case -8:
-						m_oTblpY.reset(NULL);
+						m_oTblpY.reset(nullptr);
 						m_oTblpYSpec.Init();
 						m_oTblpYSpec->SetValue(SimpleTypes::yalignCenter);
 					break;
 					case -12:
-						m_oTblpY.reset(NULL);
+						m_oTblpY.reset(nullptr);
 						m_oTblpYSpec.Init();
 						m_oTblpYSpec->SetValue(SimpleTypes::yalignBottom);
 					break;
 					case -16:
-						m_oTblpY.reset(NULL);
+						m_oTblpY.reset(nullptr);
 						m_oTblpYSpec.Init();
 						m_oTblpYSpec->SetValue(SimpleTypes::yalignInside);
 					break;
 					case -20:
-						m_oTblpY.reset(NULL);
+						m_oTblpY.reset(nullptr);
 						m_oTblpYSpec.Init();
 						m_oTblpYSpec->SetValue(SimpleTypes::yalignOutside);
 					break;
+					default: break;
 				}
 			}
 		}
@@ -751,20 +752,16 @@ namespace OOX
 				std::wstring sName = oReader.GetName();
 				if ( L"w:bottom" == sName )
 					m_oBottom = oReader;
-				else if ( L"w:end" == sName )
+				else if ( L"w:end" == sName || L"w:right" == sName )
 					m_oEnd = oReader;
 				else if ( L"w:insideH" == sName )
 					m_oInsideH = oReader;
 				else if ( L"w:insideV" == sName )
 					m_oInsideV = oReader;
-				else if ( L"w:start" == sName )
+				else if ( L"w:start" == sName || L"w:left" == sName )
 					m_oStart = oReader;
 				else if ( L"w:top" == sName )
 					m_oTop = oReader;
-				else if ( L"w:right" == sName )
-					m_oEnd = oReader;
-				else if ( L"w:left" == sName )
-					m_oStart = oReader;
 			}
 		}
 		std::wstring CTblBorders::toXML() const
@@ -875,16 +872,12 @@ namespace OOX
 				std::wstring sName = oReader.GetName();
 				if ( L"w:bottom" == sName )
 					m_oBottom = oReader;
-				else if ( L"w:end" == sName )
+				else if ( L"w:end" == sName || L"w:right" == sName )
 					m_oEnd = oReader;
-				else if ( L"w:start" == sName )
+				else if ( L"w:start" == sName || L"w:left" == sName )
 					m_oStart = oReader;
 				else if ( L"w:top" == sName )
 					m_oTop = oReader;
-				else if ( L"w:right" == sName )
-					m_oEnd = oReader;
-				else if ( L"w:left" == sName )
-					m_oStart = oReader;
 			}
 		}
 		std::wstring CTblCellMar::toXML() const
@@ -1049,7 +1042,7 @@ namespace OOX
 		// TableProperty
 		//--------------------------------------------------------------------------------
 
-		CTableProperty::CTableProperty(OOX::Document *pMain)
+		CTableProperty::CTableProperty(OOX::Document * /*pMain*/)
 		{
 			m_bTblPrChange = false;
 		}		
@@ -1445,7 +1438,7 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrHeaders.size(); nIndex++ )
 			{
 				if ( m_arrHeaders[nIndex] ) delete m_arrHeaders[nIndex];
-				m_arrHeaders[nIndex] = NULL;
+				m_arrHeaders[nIndex] = nullptr;
 			}
 			m_arrHeaders.clear();
 		}
@@ -1554,15 +1547,13 @@ namespace OOX
 				std::wstring sName = oReader.GetName();
 
 				if      ( L"w:bottom"  == sName ) m_oBottom = oReader;
-				else if ( L"w:end"     == sName ) m_oEnd = oReader;
+				else if ( L"w:end"     == sName || (!m_oEnd.IsInit()   && L"w:right" == sName) ) m_oEnd = oReader;
 				else if ( L"w:insideH" == sName ) m_oInsideH = oReader;
 				else if ( L"w:insideV" == sName ) m_oInsideV = oReader;
-				else if ( L"w:start"   == sName ) m_oStart = oReader;
+				else if ( L"w:start"   == sName || (!m_oStart.IsInit() && L"w:left"  == sName) ) m_oStart = oReader;
 				else if ( L"w:tl2br"   == sName ) m_oTL2BR = oReader;
 				else if ( L"w:top"     == sName ) m_oTop = oReader;
 				else if ( L"w:tr2bl"   == sName ) m_oTR2BL = oReader;
-				else if ( !m_oEnd.IsInit()   && L"w:right" == sName ) m_oEnd = oReader;
-				else if ( !m_oStart.IsInit() && L"w:left"  == sName ) m_oStart = oReader;
 			}
 		}
 		std::wstring CTcBorders::toXML() const
@@ -1642,11 +1633,9 @@ namespace OOX
 				std::wstring sName = oReader.GetName();
 
 				if      ( L"w:bottom"  == sName ) m_oBottom = oReader;
-				else if ( L"w:end"     == sName ) m_oEnd = oReader;
-				else if ( L"w:start"   == sName ) m_oStart = oReader;
+				else if ( L"w:end"     == sName || (!m_oEnd.IsInit()   && L"w:right" == sName) ) m_oEnd = oReader;
+				else if ( L"w:start"   == sName || (!m_oStart.IsInit() && L"w:left"  == sName) ) m_oStart = oReader;
 				else if ( L"w:top"     == sName ) m_oTop = oReader;
-				else if ( !m_oEnd.IsInit()   && L"w:right" == sName ) m_oEnd = oReader;
-				else if ( !m_oStart.IsInit() && L"w:left"  == sName ) m_oStart = oReader;
 			}
 		}
 		std::wstring CTcMar::toXML() const

@@ -2203,13 +2203,13 @@ void header_footer_impl::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_con
 				}
 				else
 				{
-					CP_SERIALIZE_TEXT(content_[i], true);
+					text::xlsx_serialize_header_footer_text(_Wostream, p->paragraph_.content_[j]);
 				}
 			}
 		}
 		else
 		{
-			CP_SERIALIZE_TEXT(content_[i], true);
+			text::xlsx_serialize_header_footer_text(_Wostream, content_[i]);
 		}
 	}
 }

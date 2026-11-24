@@ -89,12 +89,12 @@ namespace OOX
 					if(xlsx->m_bNeedCalcChain)
 					{
 						xlsx->m_pCalcChain = this;
-						read( oRootPath, oPath );
+						CCalcChain::read( oRootPath, oPath );
 					}
 				}
 				else
 				{
-					read( oRootPath, oPath );
+					CCalcChain::read( oRootPath, oPath );
 				}
 			}
 			CCalcChain::~CCalcChain()

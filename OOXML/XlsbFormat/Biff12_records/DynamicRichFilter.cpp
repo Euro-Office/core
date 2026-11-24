@@ -45,7 +45,7 @@ namespace XLSB
 
     void DynamicRichFilter::readFields(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
         record >> cft >> flags >> xNumValue >> xNumValueMax >> key;
 
         fApplied = GETBIT(flags, 0);

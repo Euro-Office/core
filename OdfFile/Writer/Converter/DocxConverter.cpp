@@ -1108,6 +1108,11 @@ void DocxConverter::convert(OOX::Logic::CRun *oox_run)//wordprocessing 22.1.2.87
 						if (need_restart_para)
 							odt_context->add_paragraph_break(type);
 					}
+					else if (pBr->m_oType.GetValue() == SimpleTypes::brtypeTextWrapping)
+					{
+						// a line break after text in the same run belongs where it is, not before the next paragraph
+						odt_context->text_context()->set_type_break(type, pBr->m_oClear.GetValue());
+					}
 					else
 					{
 						if( !odt_context->pendingBreakType ) // for bug when we have text and after conversion we have early break column (check bug 73365)
@@ -1654,7 +1659,7 @@ void DocxConverter::convert(OOX::Logic::CParagraphProperty	*oox_paragraph_pr,
 			//nullable<SimpleTypes::CDecimalNumber<>    > m_oBeforeLines;
 	}
 	if (oox_paragraph_pr->m_oContextualSpacing.IsInit())
-		paragraph_properties->style_contextual_spacing_ = true;
+		paragraph_properties->style_contextual_spacing_ = oox_paragraph_pr->m_oContextualSpacing->m_oVal.ToBool();
 
 	if (oox_paragraph_pr->m_oInd.IsInit())
 	{
@@ -3685,6 +3690,16 @@ void DocxConverter::convert_settings()
 	if (!odt_context) return;
 
 	OOX::CSettings *settings = docx_document ? docx_document->m_oMain.settings : (docx_flat_document ? docx_flat_document->m_pSettings.GetPointer() : NULL);
+
+	// w:doNotUseHTMLParagraphAutoSpacing is ODF's AddParaTableSpacing: on, the spacing below a paragraph and the
+	// spacing above the next one add up; off (Word's default), only the larger one counts. Write it either way,
+	// also for a document without settings, because an ODF document without the setting uses the sum.
+	const bool bAddParaTableSpacing = settings && settings->m_oCompat.IsInit()
+		&& settings->m_oCompat->m_oDoNotUseHTMLParagraphAutoSpacing.IsInit()
+		&& settings->m_oCompat->m_oDoNotUseHTMLParagraphAutoSpacing->m_oVal.ToBool();
+	odt_context->settings_context()->add_config_content_item(L"AddParaTableSpacing", L"boolean",
+		bAddParaTableSpacing ? L"true" : L"false");
+
 	if (!settings) return;
 
 	if (settings->m_oWriteProtection.IsInit())
