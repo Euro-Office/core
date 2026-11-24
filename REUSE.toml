@@ -62,6 +62,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/content_control_checkbox_12pt.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_checkbox_no_styles.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_short_value_newline.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/outline_levels_from_styles.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_text_12pt.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_text_no_styles.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_value_newline.docx",
