@@ -34,9 +34,9 @@ class CLEStream
 {
 public :
 	
-	CLEStream(StreamBase *pStream) : pBuffer(NULL)
+	CLEStream(StreamBase *pStream) : pBuffer(nullptr)
 	{
-		if (NULL == pStream)
+		if (nullptr == pStream)
 			return;
 
 		unsigned int unFileSize = pStream->size();
@@ -53,7 +53,7 @@ public :
 
 	~CLEStream()
 	{
-		if (NULL != pBuffer)
+		if (nullptr != pBuffer)
 			delete pBuffer;
 	}
 
@@ -113,18 +113,12 @@ public :
 
 	bool IsValid() const
 	{
-		if (NULL == pBuffer)
-			return false;
-
-		return true;
+		return nullptr != pBuffer;
 	}
 
 	bool IsEof() const
 	{
-		if (pCur >= pEnd)
-			return true;
-
-		return false;
+		return pCur >= pEnd;
 	}
 
 

@@ -33,7 +33,7 @@ namespace XmlUtils
 		NSStringUtils::CStringBuilder m_str;
 	};
 
-	CXmlWriter::CXmlWriter() : impl_(NULL)
+	CXmlWriter::CXmlWriter() : impl_(nullptr)
 	{
 		impl_ = std::make_shared<CXmlWriter::Impl>();
 	}

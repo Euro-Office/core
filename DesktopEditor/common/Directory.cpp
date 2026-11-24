@@ -67,7 +67,7 @@ namespace NSDirectory
 	static bool _mkdir (const char *dir)
 	{
 		char tmp[MAX_PATH];
-		char *p = NULL;
+		char *p = nullptr;
 		size_t len;
 		bool res = true;
 
@@ -120,14 +120,15 @@ namespace NSDirectory
 #endif
 
 #ifdef __linux__
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(strDirectory.c_str(), strDirectory.length(), pUtf8, lLen, false);
 		DIR *dp;
 		struct dirent *dirp;
-		if((dp  = opendir((char*)pUtf8)) != NULL)
+		dp = opendir((char*)pUtf8);
+		if(dp != nullptr)
 		{
-			while ((dirp = readdir(dp)) != NULL)
+			while ((dirp = readdir(dp)) != nullptr)
 			{
 				int nType = 0;
 				if(DT_REG == dirp->d_type)
@@ -235,14 +236,15 @@ namespace NSDirectory
 		} while( FindNextFileW( hRes, &oFD ) );
 		FindClose( hRes );
 #elif __linux__
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(strDirectory.c_str(), strDirectory.length(), pUtf8, lLen, false);
 		DIR *dp;
 		struct dirent *dirp;
-		if((dp  = opendir((char*)pUtf8)) != NULL)
+		dp = opendir((char*)pUtf8);
+		if(dp != nullptr)
 		{
-			while ((dirp = readdir(dp)) != NULL)
+			while ((dirp = readdir(dp)) != nullptr)
 			{
 				bool bIsDir = false;
 				if (DT_DIR == dirp->d_type)
@@ -299,7 +301,7 @@ namespace NSDirectory
 		DWORD dwAttrib = ::GetFileAttributesW(strDirectory.c_str());
 		return (dwAttrib != INVALID_FILE_ATTRIBUTES && 0 != (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
 #elif __linux__
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(strDirectory.c_str(), strDirectory.length(), pUtf8, lLen, false);
 		bool bRes = is_directory_exist((char*)pUtf8);
@@ -318,12 +320,12 @@ namespace NSDirectory
 	}
 	bool CreateDirectory(const std::wstring& strDirectory)
 	{
-		if (Exists(strDirectory) == true)  return true;
+		if (Exists(strDirectory))  return true;
 
 #if defined(_WIN32) || defined (_WIN64)
 		return FALSE != ::CreateDirectoryW(strDirectory.c_str(), NULL);
 #else
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(strDirectory.c_str(), strDirectory.length(), pUtf8, lLen, false);
 		struct stat st;
@@ -337,7 +339,7 @@ namespace NSDirectory
 	}
 	bool CreateDirectories(const std::wstring& strDirectory)
 	{
-		if (Exists(strDirectory) == true)  return true;
+		if (Exists(strDirectory))  return true;
 
 #if defined(_WIN32) || defined (_WIN64)
 		DWORD dwAttrib = ::GetFileAttributesW(strDirectory.c_str());
@@ -398,14 +400,15 @@ namespace NSDirectory
 #endif
 
 #ifdef __linux__
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(strSrc.c_str(), strSrc.length(), pUtf8, lLen, false);
 		DIR *dp;
 		struct dirent *dirp;
-		if((dp  = opendir((char*)pUtf8)) != NULL)
+		dp = opendir((char*)pUtf8);
+		if(dp != nullptr)
 		{
-			while ((dirp = readdir(dp)) != NULL)
+			while ((dirp = readdir(dp)) != nullptr)
 			{
 				int nType = 0;
 				if(DT_REG == dirp->d_type)
@@ -495,13 +498,13 @@ namespace NSDirectory
 #if defined(_WIN32) || defined (_WIN64)
 		if (deleteRoot) RemoveDirectoryW(strDirectory.c_str());
 #elif __linux__
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		LONG lLen = 0;
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(strDirectory.c_str(), strDirectory.length(), pUtf8, lLen, false);
 		rmdir((char*)pUtf8);
 		delete [] pUtf8;
 
-		if (deleteRoot == false)CreateDirectory(strDirectory);
+		if (!deleteRoot)CreateDirectory(strDirectory);
 #elif MAC
 		BYTE* pUtf8 = NULL;
 		LONG lLen = 0;
@@ -550,7 +553,7 @@ namespace NSDirectory
 		pcTemplate += (wchar_t *) str_uuid;
 		RpcStringFreeW (&str_uuid);
 
-		int attemps = 10;
+		int attempts = 10;
 		while (!CreateDirectory(pcTemplate))
 		{
 			UuidCreate (&uuid);
@@ -558,9 +561,9 @@ namespace NSDirectory
 			pcTemplate = strFolderPathRoot + FILE_SEPARATOR_STR;
 			pcTemplate += (wchar_t *) str_uuid;
 			RpcStringFreeW (&str_uuid);
-			attemps--;
+			attempts--;
 
-			if (0 == attemps)
+			if (0 == attempts)
 			{
 				pcTemplate = L"";
 				break;
@@ -570,7 +573,7 @@ namespace NSDirectory
 #else
 		std::string pcTemplate = U_TO_UTF8(strFolderPathRoot) + "/ascXXXXXX";
 		char *pcRes = mkdtemp(const_cast <char *> (pcTemplate.c_str()));
-		if (NULL == pcRes)
+		if (nullptr == pcRes)
 			return L"";
 
 		std::string sRes = pcRes;

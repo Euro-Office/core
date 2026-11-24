@@ -32,7 +32,7 @@ namespace NSFontCutter
 		m_pApplicationFonts = NSFonts::NSApplication::Create();
 		m_strFontsDir = _T("");
 
-		m_pFontManager = NULL;
+		m_pFontManager = nullptr;
 		m_bIsEmbeddedFonts = false;
 	}
 	CFontDstManager::~CFontDstManager()
@@ -80,7 +80,7 @@ namespace NSFontCutter
 		//oFontSelectFormat.
 		NSFonts::CFontInfo* pFontInfo = m_pFontManager->GetFontInfoByParams(oFontSelectFormat);
 		std::wstring sRes = _T("Arial");
-		if(NULL != pFontInfo)
+		if(nullptr != pFontInfo)
 		{
 			sRes = std::wstring(pFontInfo->m_wsFontName.c_str());
 
@@ -144,7 +144,7 @@ HRESULT COfficeFontPicker::CheckFont(const std::wstring& bsFontName)
 
 HRESULT COfficeFontPicker::PickFont(LONG lParamType, const std::wstring& bsParams, std::wstring* pDstName)
 {
-	if (NULL == pDstName)
+	if (nullptr == pDstName)
 		return S_FALSE;
 
 	if (0 == lParamType)
@@ -169,10 +169,10 @@ NSFontCutter::CEmbeddedFontsManager* COfficeFontPicker::GetNativeCutter()
 
 HRESULT COfficeFontPicker::GetBinaryData(LONG lType, BYTE** ppyArray, size_t& szCount)
 {
-	if (NULL == ppyArray)
+	if (nullptr == ppyArray)
 		return S_FALSE;
 
-	*ppyArray = NULL;
+	*ppyArray = nullptr;
 	if (FONT_PICKER_BINARYDATA_SAVEEMBEDDED == lType)
 	{
 		NSBinPptxRW::CBinaryFileWriter oWriter;
