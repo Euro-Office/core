@@ -189,7 +189,7 @@ void paragraph::drop_cap_text_docx_convert(office_element_ptr first_text_element
 
 namespace {
 // A text:meta / text:meta-field that holds nothing but empty metas: it writes nothing. (A span is never empty here:
-// a styled span writes a run even without text.)
+// span::docx_convert always writes a run, even without text.)
 bool meta_is_empty(const office_element_ptr & element)
 {
 	meta* m = dynamic_cast<meta*>(element.get());
@@ -240,7 +240,7 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 			{
 				if (span* inner_span = dynamic_cast<span*>((*first_content)[0].get()))
 				{
-					first_span_in_paragraph = inner_span; // its style gives the drop cap size, as for a span first
+					first_span_in_paragraph = inner_span; // when the paragraph style has no font size, the size comes from this span, as for a span first
 					first_content = &inner_span->content_;
 				}
 				else if (meta* inner_meta = dynamic_cast<meta*>((*first_content)[0].get()))

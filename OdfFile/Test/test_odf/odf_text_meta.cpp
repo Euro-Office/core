@@ -207,6 +207,7 @@ TEST(OdfTextMeta, OdtDropCapTakesItsLetterFromASpanInAMeta)
 {
     const std::wstring xml = part(L"text_meta_drop_cap_nested.odt", L"word/document.xml");
     ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_TRUE(is_well_formed(xml));
     const std::wstring paragraph = element_with_text(xml, L"w:p", L"w:t", L"D");
     EXPECT_NE(paragraph.find(L"w:dropCap=\"drop\""), std::wstring::npos) << xml;
     EXPECT_FALSE(element_with_text(xml, L"w:p", L"w:t", L"uis aute irure.").empty()) << xml;
@@ -214,4 +215,13 @@ TEST(OdfTextMeta, OdtDropCapTakesItsLetterFromASpanInAMeta)
     EXPECT_NE(run.find(L"<w:b/>"), std::wstring::npos) << run;
     for (const auto& r : elements(xml, L"w:r"))
         EXPECT_EQ(r.find(L"<w:pPr"), std::wstring::npos) << r;
+}
+
+// Each text of the two drop-cap paragraphs is written once: the drop cap letter in its own paragraph, the rest in the next.
+TEST(OdfTextMeta, OdtDropCapFromNestedMetasWritesEachTextOnce)
+{
+    const std::wstring xml = part(L"text_meta_drop_cap_nested.odt", L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    const std::vector<std::wstring> expected = {L"N", L"isi ut aliquip.", L"D", L"uis aute irure.", L"After."};
+    EXPECT_EQ(texts(xml, L"w:p", L"w:t"), expected) << xml;
 }
