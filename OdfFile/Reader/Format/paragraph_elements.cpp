@@ -1403,6 +1403,14 @@ void text_date::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_c
 {
 	_Wostream << L"&amp;D";
 }
+void text_date::xlsx_convert(oox::xlsx_conversion_context & Context)
+{
+	// SpreadsheetML cell and comment text has no fields: keep the date as stored in the document.
+	if (text_)
+	{
+		text_->xlsx_convert(Context);
+	}
+}
 void text_date::pptx_convert(oox::pptx_conversion_context & Context)
 {
     Context.get_text_context().start_field(oox::date, style_data_style_name_.get_value_or(L""));
@@ -1811,6 +1819,14 @@ void sheet_name::docx_convert(oox::docx_conversion_context & Context)
 void sheet_name::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context)
 {
 	_Wostream << L"&amp;A";
+}
+void sheet_name::xlsx_convert(oox::xlsx_conversion_context & Context)
+{
+	// SpreadsheetML cell and comment text has no fields: keep the sheet name as stored in the document.
+	if (text_)
+	{
+		text_->xlsx_convert(Context);
+	}
 }
 //------------------------------------------------------------------------------------------------------------
 const wchar_t * author_name::ns = L"text";

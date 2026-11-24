@@ -799,6 +799,7 @@ public:
 	CPDOCCORE_OFFICE_DOCUMENT_IMPL_NAME_FUNCS_; 
 
 	virtual void docx_convert(oox::docx_conversion_context & Context);
+	virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
 	virtual void pptx_convert(oox::pptx_conversion_context & Context);
 
  	virtual void xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context);
@@ -1172,6 +1173,7 @@ public:
 	CPDOCCORE_OFFICE_DOCUMENT_IMPL_NAME_FUNCS_; 
 
 	virtual void docx_convert(oox::docx_conversion_context & Context);
+	virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
  	
 	virtual void xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context);
 private:
