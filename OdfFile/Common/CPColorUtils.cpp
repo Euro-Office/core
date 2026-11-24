@@ -115,7 +115,9 @@ bool HEXStringToRGB(std::wstring const & str, int &r, int &g, int &b)
         }
     }
     catch(...)
-    {     
+    {
+        // Malformed hex input.
+        return false;
     }
     return false;
 }
