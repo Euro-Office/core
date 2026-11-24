@@ -68,3 +68,22 @@ TEST(OdtToDocxPageBackground, TransparentColourWithoutFillWritesNoBackground)
     ASSERT_FALSE(document.empty()) << "word/document.xml is missing";
     EXPECT_EQ(document.find(L"<w:background"), std::wstring::npos) << document.substr(0, 2000);
 }
+
+// A transparent colour with a gradient fill keeps the gradient, as LibreOffice shows it. VML draws a
+// gradient from fillcolor to color2, so fillcolor must be the gradient's first colour (red here), not
+// the white that stands in for the transparent page colour.
+TEST(OdtToDocxPageBackground, TransparentColourWithGradientStartsWithGradientColour)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/page_background_transparent_gradient.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    const std::wstring document = read_part(dir, L"word/document.xml");
+    ASSERT_FALSE(document.empty()) << "word/document.xml is missing";
+
+    const size_t background = document.find(L"<w:background");
+    ASSERT_NE(background, std::wstring::npos) << document.substr(0, 2000);
+    const std::wstring xml = document.substr(background);
+    EXPECT_EQ(attribute_of(xml, L"<v:background", L"fillcolor"), L"#FF0000") << xml.substr(0, 1000);
+    EXPECT_EQ(attribute_of(xml, L"<v:fill", L"color2"), L"#0000FF") << xml.substr(0, 1000);
+    EXPECT_EQ(attribute_of(xml, L"<v:fill", L"type"), L"gradient") << xml.substr(0, 1000);
+}
