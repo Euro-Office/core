@@ -50,6 +50,18 @@ public:
 	}
 };
 
+// The series of the chart refer to the sheet "A & B": the formulas in the
+// chart part must be XML-escaped, a raw "&" makes the part invalid
+TEST(ODS2XLSX, ChartSeriesReferenceWithAmpersand)
+{
+	ASSERT_EQ(S_OK, convert_single(L"ExampleFiles/chart_series_ampersand.ods"));
+
+	const std::string sChart = read_package_file(L"ExampleFiles/chart_series_ampersand.ods-tmp.xlsx", L"xl/charts/chart1.xml");
+	ASSERT_FALSE(sChart.empty());
+	EXPECT_NE(std::string::npos, sChart.find("A &amp; B"));
+	EXPECT_EQ(std::string::npos, sChart.find("A & B"));
+}
+
 // TestEnv::SetUp() converts ExampleFiles/motion.odp to
 // ExampleFiles/motion.odp-tmp.pptx via ConvertODF2OOXml() before any test
 // runs (gtest runs global environments first). Nothing verified that
