@@ -386,6 +386,12 @@ else()
     get_filename_component(NLOHMANN_JSON_INSTALL_DIR_ABS "${NLOHMANN_JSON_INSTALL_DIR}" ABSOLUTE)
     list( APPEND CMAKE_PREFIX_PATH "${NLOHMANN_JSON_INSTALL_DIR_ABS}" )
 
+    # On Android the NDK toolchain sets CMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY, so
+    # find_dependency() inside sioxxConfig.cmake won't search CMAKE_PREFIX_PATH.
+    if( ANDROID )
+        list( APPEND CMAKE_FIND_ROOT_PATH "${NLOHMANN_JSON_INSTALL_DIR_ABS}" "${OPENSSL_INSTALL_DIR_ABS}" )
+    endif()
+
     # Setup sioxx
     set(SIOXX_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/sioxx")
     get_filename_component(SIOXX_INSTALL_DIR_ABS "${SIOXX_INSTALL_DIR}" ABSOLUTE)
