@@ -274,6 +274,106 @@ office_element_ptr text::create(const std::wstring & Text)
 {
     return boost::make_shared<text>(Text);
 }
+office_element_ptr text::create_in_paragraph(const std::wstring & Text)
+{
+    boost::shared_ptr<text> elm = boost::make_shared<text>();
+    elm->text_.reserve(Text.length());
+    for (size_t i = 0; i < Text.length(); i++)
+    {
+        if (Text[i] < 0x20 && Text[i] != L'\t' && Text[i] != L'\n' && Text[i] != L'\r') continue;
+        elm->text_ += Text[i];
+    }
+    return elm;
+}
+
+static void process_white_space(std::wstring & value, bool collapse, bool & ignore)
+{
+    std::wstring result;
+    result.reserve(value.length());
+    for (size_t j = 0; j < value.length(); j++)
+    {
+        const wchar_t c = value[j];
+        if (c == L' ' || c == L'\t' || c == L'\n' || c == L'\r')
+        {
+            if (!collapse)
+            {
+                if (c == L' ') result += c;
+            }
+            else
+            {
+                if (!ignore) result += L' ';
+                ignore = true;
+            }
+        }
+        else
+        {
+            result += c;
+            ignore = false;
+        }
+    }
+    value = result;
+}
+
+void process_white_space(office_element_ptr_array & content, bool collapse, bool & ignore)
+{
+    for (size_t i = 0; i < content.size(); i++)
+    {
+        if (!content[i]) continue;
+
+        switch (content[i]->get_type())
+        {
+        case typeTextText:
+            if (text * t = dynamic_cast<text*>(content[i].get()))
+                process_white_space(t->text_, collapse, ignore);
+            break;
+        case typeTextSequence:
+            // the paragraph moved the text in front of the field into the field
+            if (sequence * q = dynamic_cast<sequence*>(content[i].get()))
+            {
+                if (q->template_)
+                    process_white_space(*q->template_, collapse, ignore);
+            }
+            ignore = false;
+            break;
+        case typeTextSpan:
+            if (span * s = dynamic_cast<span*>(content[i].get()))
+                process_white_space(s->content_, collapse, ignore);
+            break;
+        case typeTextA:
+            if (a * l = dynamic_cast<a*>(content[i].get()))
+                process_white_space(l->content_, collapse, ignore);
+            break;
+        // marks: white space after them still follows the white space before them
+        case typeTextBookmark:
+        case typeTextBookmarkStart:
+        case typeTextBookmarkEnd:
+        case typeTextReferenceMark:
+        case typeTextReferenceMarkStart:
+        case typeTextReferenceMarkEnd:
+        case typeTextTocMark:
+        case typeTextTocMarkStart:
+        case typeTextTocMarkEnd:
+        case typeTextUserIndexMark:
+        case typeTextUserIndexMarkStart:
+        case typeTextUserIndexMarkEnd:
+        case typeTextAlphabeticalIndexMark:
+        case typeTextAlphabeticalIndexMarkStart:
+        case typeTextAlphabeticalIndexMarkEnd:
+        case typeTextChange:
+        case typeTextChangeStart:
+        case typeTextChangeEnd:
+        case typeFieldFieldmark:
+        case typeFieldFieldmarkStart:
+        case typeFieldFieldmarkEnd:
+        case typeDrawA:
+            break;
+        // text:s, text:tab, text:line-break, fields, frames, notes, ...
+        default:
+            ignore = false;
+            break;
+        }
+    }
+}
 
 //------------------------------------------------------------------------------------------------------------
 const wchar_t * s::ns = L"text";
@@ -601,12 +701,12 @@ void span::add_child_element( xml::sax * Reader, const std::wstring & Ns, const 
 
 void span::add_text(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text);
+    office_element_ptr elm = text::create_in_paragraph(Text);
     content_.push_back( elm );
 }
 void span::add_space(const std::wstring & Text) 
 {
-    office_element_ptr elm = text::create(Text);
+    office_element_ptr elm = text::create_in_paragraph(Text);
     content_.push_back( elm );
 }
 void span::docx_convert(oox::docx_conversion_context & Context)
@@ -728,6 +828,77 @@ void span::pptx_convert(oox::pptx_conversion_context & Context)
 	Context.get_text_context().get_styles_context().end_process_style();
 }
 //------------------------------------------------------------------------------------------------------------
+const wchar_t * meta::ns = L"text";
+const wchar_t * meta::name = L"meta";
+
+std::wostream & meta::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        content_[i]->text_to_stream(_Wostream, bXmlEncode);
+    }
+    return _Wostream;
+}
+
+void meta::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)
+{
+    CP_CREATE_ELEMENT(content_);
+}
+
+void meta::add_text(const std::wstring & Text)
+{
+    office_element_ptr elm = text::create(Text);
+    content_.push_back( elm );
+}
+
+void meta::add_space(const std::wstring & Text)
+{
+    office_element_ptr elm = text::create(Text);
+    content_.push_back( elm );
+}
+
+void meta::docx_convert(oox::docx_conversion_context & Context)
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        content_[i]->docx_convert(Context);
+    }
+}
+
+void meta::xlsx_convert(oox::xlsx_conversion_context & Context)
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        content_[i]->xlsx_convert(Context);
+    }
+}
+
+void meta::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context)
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        if (text *t = dynamic_cast<text*>(content_[i].get()))
+        {
+            t->text_to_stream(_Wostream, true);
+        }
+        else if (paragraph_content_element *element = dynamic_cast<paragraph_content_element*>(content_[i].get()))
+        {
+            element->xlsx_serialize(_Wostream, Context);
+        }
+    }
+}
+
+void meta::pptx_convert(oox::pptx_conversion_context & Context)
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        content_[i]->pptx_convert(Context);
+    }
+}
+//------------------------------------------------------------------------------------------------------------
+const wchar_t * meta_field::ns = L"text";
+const wchar_t * meta_field::name = L"meta-field";
+//------------------------------------------------------------------------------------------------------------
 const wchar_t * a::ns = L"text";
 const wchar_t * a::name = L"a";
 
@@ -757,12 +928,12 @@ void a::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std
 
 void a::add_text(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text) ;
+    office_element_ptr elm = text::create_in_paragraph(Text);
     content_.push_back( elm );
 }
 void a::add_space(const std::wstring & Text) 
 {
-    office_element_ptr elm = text::create(Text);
+    office_element_ptr elm = text::create_in_paragraph(Text);
     content_.push_back( elm );
 }
 void a::docx_convert(oox::docx_conversion_context & Context)
@@ -1061,6 +1232,20 @@ std::wostream & ruby::text_to_stream(std::wostream & _Wostream, bool bXmlEncode)
         text_ruby_text_->text_to_stream(_Wostream, bXmlEncode);
 
     return _Wostream;
+}
+
+void ruby::xlsx_convert(oox::xlsx_conversion_context & Context)
+{
+    // A cell has no ruby: keep the base text and drop the annotation, as LibreOffice Calc does.
+    if (text_ruby_base_)
+        text_ruby_base_->xlsx_convert(Context);
+}
+
+void ruby::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context)
+{
+    // Page headers and footers have no ruby either: write the base text only.
+    if (text_ruby_base_)
+        text_ruby_base_->text_to_stream(_Wostream, true);
 }
 
 void ruby::add_attributes( const xml::attributes_wc_ptr & Attributes )
@@ -1402,6 +1587,14 @@ void text_date::docx_convert(oox::docx_conversion_context & Context)
 void text_date::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context)
 {
 	_Wostream << L"&amp;D";
+}
+void text_date::xlsx_convert(oox::xlsx_conversion_context & Context)
+{
+	// SpreadsheetML cell and comment text has no fields: keep the date as stored in the document.
+	if (text_)
+	{
+		text_->xlsx_convert(Context);
+	}
 }
 void text_date::pptx_convert(oox::pptx_conversion_context & Context)
 {
@@ -1811,6 +2004,14 @@ void sheet_name::docx_convert(oox::docx_conversion_context & Context)
 void sheet_name::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context)
 {
 	_Wostream << L"&amp;A";
+}
+void sheet_name::xlsx_convert(oox::xlsx_conversion_context & Context)
+{
+	// SpreadsheetML cell and comment text has no fields: keep the sheet name as stored in the document.
+	if (text_)
+	{
+		text_->xlsx_convert(Context);
+	}
 }
 //------------------------------------------------------------------------------------------------------------
 const wchar_t * author_name::ns = L"text";

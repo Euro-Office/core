@@ -835,8 +835,6 @@ public:
 	
 	std::wstring  dump_settings_document();
 	std::wstring  dump_settings_app();
-	std::wstring  dump_settings_core();
-	std::wstring  dump_settings_custom();
 
  	bool next_dump_page_properties_;
 	bool next_dump_section_;

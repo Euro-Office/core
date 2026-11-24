@@ -49,7 +49,7 @@ bool read_doc_element::read_sax( xml::sax * Reader )
 	//	add_text(value);
 	//}
 
-    xml::NodeType nodeType = Reader->nodeType();
+    xml::NodeType nodeType;
 	
 	if (Reader->isEmptyElement())
 	{
@@ -77,7 +77,7 @@ bool read_doc_element::read_sax( xml::sax * Reader )
 			case xml::typeWhitespace:
 			{
 				const std::wstring value = Reader->value();
-				if (false == value.empty())
+				if (!value.empty())
 				{
 					add_space(value);
 				}
@@ -87,7 +87,7 @@ bool read_doc_element::read_sax( xml::sax * Reader )
 			case xml::typeText:
 			{
 				const std::wstring value = Reader->value();
-				if (false == value.empty())
+				if (!value.empty())
 				{
 					add_text(value);
 				}
