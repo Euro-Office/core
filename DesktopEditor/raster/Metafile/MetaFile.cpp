@@ -42,7 +42,7 @@ namespace MetaFile
 
 	CMetaFile::CMetaFile(NSFonts::IApplicationFonts *pAppFonts) : MetaFile::IMetaFile(pAppFonts)
 	{
-		m_pFontManager = NULL;
+		m_pFontManager = nullptr;
 		m_pAppFonts = pAppFonts;
 		// Creating a font manager with its own cache
 		if (pAppFonts)
@@ -75,7 +75,7 @@ namespace MetaFile
 
 	CMetaFile::~CMetaFile()
 	{
-		Close();
+		CMetaFile::Close();
 		RELEASEINTERFACE(m_pFontManager);
 	}
 
@@ -101,7 +101,7 @@ namespace MetaFile
 #ifdef METAFILE_SUPPORT_WMF_EMF
 	void CMetaFile::ConvertToXml(const wchar_t *wsFilePath)
 	{
-		if (NULL == wsFilePath)
+		if (nullptr == wsFilePath)
 			return;
 
 		m_oEmfFile.SetOutputDevice(wsFilePath, InterpretatorType::XML);
@@ -110,10 +110,10 @@ namespace MetaFile
 
 	void CMetaFile::ConvertToXmlAndRaster(const wchar_t *wsXmlFilePath, const wchar_t *wsOutFilePath, unsigned int unFileType, int nWidth, int nHeight)
 	{
-		if (NULL == wsXmlFilePath || NULL == wsOutFilePath)
+		if (nullptr == wsXmlFilePath || nullptr == wsOutFilePath)
 			return;
 
-		m_oEmfFile.SetOutputDevice(NULL, wsXmlFilePath);
+		m_oEmfFile.SetOutputDevice(nullptr, wsXmlFilePath);
 
 		NSGraphics::IGraphicsRenderer* pGrRenderer = NSGraphics::Create();
 
@@ -141,7 +141,7 @@ namespace MetaFile
 		double dWidth  = 25.4 * nWidth / 96;
 		double dHeight = 25.4 * nHeight / 96;
 
-		BYTE* pBgraData = new(std::nothrow) BYTE[nWidth * nHeight * 4];
+		BYTE* pBgraData = new(std::nothrow) BYTE[static_cast<size_t>(nWidth) * nHeight * 4];
 		if (!pBgraData)
 			return;
 
@@ -173,7 +173,7 @@ namespace MetaFile
 
 	bool CMetaFile::DrawOnRenderer(const wchar_t *wsXmlFilePath, IRenderer *pRenderer, double dX, double dY, double dWidth, double dHeight)
 	{
-		if (NULL == wsXmlFilePath || NULL == pRenderer)
+		if (nullptr == wsXmlFilePath || nullptr == pRenderer)
 			return false;
 
 		pRenderer->BeginCommand(c_nImageType);
@@ -244,7 +244,7 @@ namespace MetaFile
 	#endif
 
 	#ifdef METAFILE_SUPPORT_WMF_EMF_XML
-		if (m_oEmfFile.OpenFromXmlFile(wsFilePath) == true)
+		if (m_oEmfFile.OpenFromXmlFile(wsFilePath))
 		{
 			m_oEmfFile.Scan();
 
@@ -305,7 +305,7 @@ namespace MetaFile
 
 	#ifdef METAFILE_SUPPORT_WMF_EMF
 		// First, try to open the file as Wmf
-		if (m_oWmfFile.OpenFromWmfFile(wsFilePath) == true)
+		if (m_oWmfFile.OpenFromWmfFile(wsFilePath))
 		{
 			m_oWmfFile.Scan();
 
@@ -317,7 +317,7 @@ namespace MetaFile
 			m_oWmfFile.Close();
 		}
 		// This isn't WMF
-		if (m_oEmfFile.OpenFromEmfFile(wsFilePath) == true)
+		if (m_oEmfFile.OpenFromEmfFile(wsFilePath))
 		{
 			m_oEmfFile.Scan();
 
@@ -346,7 +346,7 @@ namespace MetaFile
 	#endif
 		// This isn't svm
 	#ifdef METAFILE_SUPPORT_SVG
-		if (m_oSvgFile.OpenFromFile(wsFilePath) == true)
+		if (m_oSvgFile.OpenFromFile(wsFilePath))
 		{
 			m_lType = c_lMetaSvg;
 			return true;
@@ -359,7 +359,7 @@ namespace MetaFile
 
 	bool CMetaFile::LoadFromBuffer(BYTE *pBuffer, unsigned int unSize)
 	{
-		if (NULL == pBuffer || 0 == unSize)
+		if (nullptr == pBuffer || 0 == unSize)
 			return false;
 
 		// TODO: Now, when loading each new image, we recreate
@@ -393,7 +393,7 @@ namespace MetaFile
 
 	#ifdef METAFILE_SUPPORT_WMF_EMF
 		// First, try to open the file as Wmf
-		if (m_oWmfFile.ReadFromBuffer(pBuffer, unSize) == true)
+		if (m_oWmfFile.ReadFromBuffer(pBuffer, unSize))
 		{
 			m_oWmfFile.Scan();
 
@@ -405,7 +405,7 @@ namespace MetaFile
 			m_oWmfFile.Close();
 		}
 		// This isn't WMF
-		if (m_oEmfFile.ReadFromBuffer(pBuffer, unSize) == true)
+		if (m_oEmfFile.ReadFromBuffer(pBuffer, unSize))
 		{
 			m_oEmfFile.Scan();
 
@@ -434,7 +434,7 @@ namespace MetaFile
 	#endif
 		// This isn't svm
 	#ifdef METAFILE_SUPPORT_SVG
-		if (m_oSvgFile.ReadFromBuffer(pBuffer, unSize) == true)
+		if (m_oSvgFile.ReadFromBuffer(pBuffer, unSize))
 		{
 			m_lType = c_lMetaSvg;
 			return true;
@@ -459,7 +459,7 @@ namespace MetaFile
 
 		m_oSvgFile.SetFontManager(m_pFontManager);
 
-		if (m_oSvgFile.ReadFromWString(data) == true)
+		if (m_oSvgFile.ReadFromWString(data))
 		{
 			m_lType = c_lMetaSvg;
 			return true;
@@ -477,7 +477,7 @@ namespace MetaFile
 
 	bool CMetaFile::DrawOnRenderer(IRenderer* pRenderer, double dX, double dY, double dWidth, double dHeight)
 	{
-		if (NULL == pRenderer)
+		if (nullptr == pRenderer)
 			return false;
 
 		pRenderer->BeginCommand(c_nImageType);
@@ -636,7 +636,7 @@ namespace MetaFile
 		double dWidth  = 25.4 * nWidth / 96;
 		double dHeight = 25.4 * nHeight / 96;
 
-		BYTE* pBgraData = (BYTE*)malloc(nWidth * nHeight * 4);
+		BYTE* pBgraData = (BYTE*)malloc(static_cast<size_t>(nWidth) * nHeight * 4);
 		if (!pBgraData)
 		{
 			double dKoef = 2000.0 / (nWidth > nHeight ? nWidth : nHeight);
@@ -647,7 +647,7 @@ namespace MetaFile
 			dWidth  = 25.4 * nWidth / 96;
 			dHeight = 25.4 * nHeight / 96;
 
-			pBgraData = (BYTE*)malloc(nWidth * nHeight * 4);
+			pBgraData = (BYTE*)malloc(static_cast<size_t>(nWidth) * nHeight * 4);
 		}
 
 		if (!pBgraData)
@@ -674,7 +674,7 @@ namespace MetaFile
 		DrawOnRenderer(pGrRenderer, 0, 0, dWidth, dHeight);
 
 		oFrame.SaveFile(wsOutFilePath, unFileType);
-		oFrame.put_Data(NULL);
+		oFrame.put_Data(nullptr);
 		RELEASEINTERFACE(pFontManager);
 		RELEASEINTERFACE(pGrRenderer);
 
