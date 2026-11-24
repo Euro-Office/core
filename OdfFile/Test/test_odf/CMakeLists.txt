@@ -55,26 +55,33 @@ add_core_gtest(
             xlsx2ods_date_cells.cpp
             xlsx2ods_inline_strings.cpp
             xlsx2ods_print_area.cpp
+            docx2odt_outline_level.cpp
             xlsx2ods_header_footer.cpp
             odt2docx_fields.cpp
             chart_series_name.cpp
             xlsx2ods_sheet_background.cpp
+            docx2odt_style_parent_cycle.cpp
             xlsx2ods_header_footer_codes.cpp
             docx2odt_page_background.cpp
             docx2odt_section_footers.cpp
             docx2odt_add_para_table_spacing.cpp
+            docx2odt_section_header_and_footer.cpp
             math_bar.cpp
+            docx2odt_list_label_followed_by.cpp
             chart_title.cpp
             odt2docx_underline.cpp
             odt2docx_keep_next.cpp
+            odt2docx_page_style_after_table.cpp
             odt2docx_contextual_spacing.cpp
             odt2docx_header_footer_spacing.cpp
             odt2docx_links.cpp
             odp2pptx_line_height.cpp
+            xlsx2ods_row_optimal_height.cpp
             odt2docx_header_footer_not_inherited.cpp
             odp2pptx_transition_without_subtype.cpp
             odt2docx_default_tab_stop.cpp
             odt2docx_add_para_table_spacing.cpp
+            ods2xlsx_cell_text_fields.cpp
             enhanced_path_quadratic_bezier.cpp
             pptx2odp_bullet_size.cpp
             xlsx2ods_page_margins.cpp
@@ -83,6 +90,8 @@ add_core_gtest(
             odt2docx_meta_template.cpp
             xlsx2ods_row_padding.cpp
             chart_subtitle.cpp
+            xlsx2ods_empty_cells.cpp
+            odf_text_meta.cpp
             math_property_values.cpp
             pptx2odp_table_styles.cpp
             docx2odt_header_footer_margins.cpp
@@ -111,7 +120,7 @@ add_core_gtest(
             odt2docx_character_style_based_on.cpp
             docx2odt_style_based_on.cpp
             odf_bitmap_fill_size.cpp
-            odf_text_meta.cpp
+            xlsx2ods_fit_to_pages.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
