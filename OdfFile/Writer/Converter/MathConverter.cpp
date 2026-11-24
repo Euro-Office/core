@@ -487,14 +487,9 @@ namespace Oox2Odf
 		if (!oox_box) return;
 		returnValues val = convert(oox_box->m_oBoxPr.GetPointer());
 
-		if (val.auxFlag)
-		{
-			//annotation() += L"\"";
-			convert(oox_box->m_oElement.GetPointer());
-			//annotation() += L"\"";
-		}
-		else
-			convert(oox_box->m_oElement.GetPointer());
+		//annotation() += L"\"";
+		convert(oox_box->m_oElement.GetPointer());
+		//annotation() += L"\"";
 		if (val.colorFlag)
 		{
 			CLOSE_MATH_TAG;
@@ -529,10 +524,8 @@ namespace Oox2Odf
 		if (!oox_op_emu) return false;
 		if (!oox_op_emu->m_val.IsInit()) return false;
 
-		if (oox_op_emu->m_val->ToBool())// == L"true") ||(oox_op_emu->m_val == L"1"))
-			return true;
-		else
-			return false;
+		// == L"true") ||(oox_op_emu->m_val == L"1"))
+		return oox_op_emu->m_val->ToBool();
 	}
 
 	void OoxConverter::convert(OOX::Logic::CDiff *oox_diff)
@@ -618,7 +611,7 @@ namespace Oox2Odf
 	std::wstring OoxConverter::convert(OOX::Logic::CBegChr * oox_beg_chr)
 	{
 		if (!oox_beg_chr) return L"(";
-		if (false == oox_beg_chr->m_val.IsInit())  return L"(";
+		if (!oox_beg_chr->m_val.IsInit())  return L"(";
 
 		std::wstring s_val = oox_beg_chr->m_val->GetValue();
 
@@ -630,7 +623,7 @@ namespace Oox2Odf
 	std::wstring OoxConverter::convert(OOX::Logic::CEndChr * oox_end_chr)
 	{
 		if (!oox_end_chr) return L")";
-		if (false == oox_end_chr->m_val.IsInit())  return L")";
+		if (!oox_end_chr->m_val.IsInit())  return L")";
 
 		std::wstring s_val = oox_end_chr->m_val->GetValue();
 
@@ -995,8 +988,7 @@ namespace Oox2Odf
 		if (!oox_pos) return false;
 		if (!oox_pos->m_val.IsInit()) return false;
 
-		if (oox_pos->m_val->ToString() == L"top") return true;
-		else return false;
+		return oox_pos->m_val->ToString() == L"top";
 	}
 
 	void OoxConverter::convert(OOX::Logic::CVertJc *oox_vert_jc)
@@ -1303,10 +1295,6 @@ namespace Oox2Odf
 				convert(pSym);
 			}break;
 			case OOX::et_w_tab:
-			{
-				OOX::Logic::CTab* pTab = dynamic_cast<OOX::Logic::CTab*>(oox_mrun->m_arrItems[i]);
-			}break;
-
 			case OOX::et_w_separator:
 			case OOX::et_w_continuationSeparator:
 			{
@@ -1683,7 +1671,7 @@ std::wstring str1, str2;
 	returnValues OoxConverter::convert(OOX::Logic::CRadPr *oox_rad_pr)
 	{
 		returnValues result;
-		if (!oox_rad_pr) result.auxFlag = false;
+		if (!oox_rad_pr) return result;
 
 		result.auxFlag = convert(oox_rad_pr->m_oDegHide.GetPointer());
 		result.colorFlag = convert(oox_rad_pr->m_oCtrlPr.GetPointer()).colorFlag;

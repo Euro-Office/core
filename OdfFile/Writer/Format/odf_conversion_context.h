@@ -39,6 +39,8 @@
 
 #include "mediaitems.h"
 
+#include "../../DataTypes/officevaluetype.h"
+
 namespace NSFonts
 {
     class IApplicationFonts;
@@ -123,7 +125,8 @@ public:
 	
 	void add_meta(const std::wstring & ns, const std::wstring & name, const std::wstring & content);
 	void add_meta(const office_element_ptr &elm);
-	void add_meta_user_define(const std::wstring& name, const std::wstring& content);
+	void add_meta_user_define(const std::wstring& name, const std::wstring& content,
+		odf_types::office_value_type::type value_type = odf_types::office_value_type::String);
 	
 	virtual odf_style_context_ptr	styles_context();
 	virtual void					set_styles_context(odf_style_context_ptr styles_context);

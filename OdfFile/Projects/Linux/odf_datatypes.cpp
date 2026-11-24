@@ -23,6 +23,8 @@
  *
  */
 
+// Amalgamation translation unit: each .cpp below is intentionally included.
+// NOLINTBEGIN(bugprone-suspicious-include)
 #include "../../DataTypes/anchortype.cpp"
 #include "../../DataTypes/animation_attlists.cpp"
 #include "../../DataTypes/backgroundcolor.cpp"
@@ -149,3 +151,4 @@
 #include "../../DataTypes/referenceformat.cpp"
 #include "../../DataTypes/color_mode.cpp"
 #include "../../DataTypes/chartaxistype.cpp"
+// NOLINTEND(bugprone-suspicious-include)

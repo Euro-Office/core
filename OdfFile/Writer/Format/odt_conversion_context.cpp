@@ -451,7 +451,7 @@ void odt_conversion_context::end_alphabetical_index()
 	create_element(L"text", L"alphabetical-index-source", elm, this);
 	
 	text_context()->start_element(elm);
-	//tempalte
+	//template
 	text_context()->end_element();
 	text_context()->end_element();
 }
