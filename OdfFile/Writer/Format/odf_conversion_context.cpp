@@ -50,22 +50,22 @@ namespace odf_writer {
 
 	namespace utils
 	{
-		void calculate_size_font_symbols(_font_metrix & metrix, NSFonts::IApplicationFonts *appFonts)
+		void calculate_size_font_symbols(_font_metrix & metric, NSFonts::IApplicationFonts *appFonts)
 		{
-			std::pair<float, float> appr = _graphics_utils_::calculate_size_symbol_asc(metrix.font_name, metrix.font_size, metrix.italic, metrix.bold, appFonts);
+			std::pair<float, float> appr = _graphics_utils_::calculate_size_symbol_asc(metric.font_name, metric.font_size, metric.italic, metric.bold, appFonts);
 
 			if (appr.first < 0.01 || appr.second < 0.01)
 			{				
-				appr = _graphics_utils_::calculate_size_symbol_win(metrix.font_name, metrix.font_size, false/*metrix.italic*/, false/*metrix.bold*/);
+				appr = _graphics_utils_::calculate_size_symbol_win(metric.font_name, metric.font_size, false/*metric.italic*/, false/*metric.bold*/);
 				appr.first = 
 				appr.first = ((int)(appr.first + 0.5) + 2 * (int)appr.first) / 3.;
 			}
 
 			if (appr.first > 0)
 			{
-				metrix.approx_symbol_width = (int)appr.first;
-				metrix.approx_symbol_height = (int)appr.second;
-				metrix.IsCalc = true;
+				metric.approx_symbol_width = (int)appr.first;
+				metric.approx_symbol_height = (int)appr.second;
+				metric.IsCalc = true;
 			}
 
 		}
@@ -521,7 +521,8 @@ void odf_conversion_context::add_meta(const office_element_ptr& elm)
 	if (!elm) return;
 	objects_[current_object_]->meta.push_back(elm);
 }
-void odf_conversion_context::add_meta_user_define(const std::wstring& name, const std::wstring& content)
+void odf_conversion_context::add_meta_user_define(const std::wstring& name, const std::wstring& content,
+	odf_types::office_value_type::type value_type)
 {
 	office_element_ptr elm;
 	create_element(L"meta", L"user-defined", elm, this, true);
@@ -531,7 +532,7 @@ void odf_conversion_context::add_meta_user_define(const std::wstring& name, cons
 	{
 		meta_user->meta_name_ = name;
 		meta_user->content_ = content;
-		meta_user->meta_value_type_ = odf_types::office_value_type::String;
+		meta_user->meta_value_type_ = odf_types::office_value_type(value_type);
 
 		add_meta(elm);
 	}

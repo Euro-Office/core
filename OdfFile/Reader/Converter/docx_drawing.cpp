@@ -49,11 +49,11 @@ void serialize_wrap_top_bottom(std::wostream & strm,  _docx_drawing const & val)
 	}
 }
 
-static double convert_symbol_size(double val, double metrix, bool add_padding)
+static double convert_symbol_size(double val, double metric, bool add_padding)
 {
-	val = ((int)((val * metrix + 5) / metrix * 256)) / 256.;
+	val = ((int)((val * metric + 5) / metric * 256)) / 256.;
 
-	double pixels = (int)(((256. * val + ((int)(128. / metrix))) / 256.) * metrix); //in pixels
+	double pixels = (int)(((256. * val + ((int)(128. / metric))) / 256.) * metric); //in pixels
 
 	return pixels * 0.75; //* 9525. * 72.0 / (360000.0 * 2.54);
 }

@@ -23,6 +23,7 @@ endif()
 add_core_gtest(
     NAME    fontengine_test
     SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/thumbnail_alpha_test.cpp
     LIBS    kernel graphics UnicodeConverter
     GTEST_MAIN
 )

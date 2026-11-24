@@ -70,35 +70,35 @@ style_position style_position::parse(const std::wstring & Str)
     std::wstring tmp = Str;
     boost::algorithm::to_lower(tmp);
     boost::algorithm::trim(tmp);
-    std::vector< std::wstring > splitted;
-    boost::algorithm::split(splitted, tmp, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
+    std::vector< std::wstring > split;
+    boost::algorithm::split(split, tmp, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
 
     type pos[2] = {Center, Center};
     int vertIndex = -1, horIndex = -1;
 
-    for (size_t i = 0; i < (std::min)((size_t)2, splitted.size()); ++i)
+    for (size_t i = 0; i < (std::min)((size_t)2, split.size()); ++i)
     {
-        if (splitted[i] == L"top" && -1 == vertIndex)
+        if (split[i] == L"top" && -1 == vertIndex)
         {
             pos[1] = Top;
             vertIndex = (int)i;
         }
-        else if (splitted[i] == L"bottom" && -1 == vertIndex)
+        else if (split[i] == L"bottom" && -1 == vertIndex)
         {
             pos[1] = Bottom;
             vertIndex = (int)i;
         }
-        else if (splitted[i] == L"left" && -1 == horIndex)
+        else if (split[i] == L"left" && -1 == horIndex)
         {
             pos[0] = Left;
             horIndex = (int)i;
         }
-        else if (splitted[i] == L"right" && -1 == horIndex)
+        else if (split[i] == L"right" && -1 == horIndex)
         {
             pos[0] = Right;
             horIndex = (int)i;
         }
-        else if (splitted[i] == L"center")
+        else if (split[i] == L"center")
         {}
         else
         {

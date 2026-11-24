@@ -30,6 +30,8 @@
 #include <xml/xmlchar.h>
 #include <xml/utils.h>
 
+#include <vector>
+
 #include "../../Common/CPColorUtils.h"
 
 #include "serialize_elements.h"
@@ -507,6 +509,80 @@ void number_number::oox_convert(oox::num_format_context & Context)
         number_decimal_places_);
 }
 
+namespace
+{
+// Literal text of a percentage style goes into the XLSX format code as it is only where it is a
+// "%" sign or made of characters that Excel shows without quotes (spaces and $-+/():!^&'~{}<>=).
+// Any other run is quoted, so that its letters are not read as format tokens:
+// "Rendite " 0.00 "%" must give "Rendite "0.00%, not Rendite 0.00% (d and e are date tokens).
+// The text arrives XML-encoded (text_to_stream): an entity counts as the one character it stands
+// for and is written out unchanged; a quote inside quoted text is written as "\"" (close the
+// quote, an escaped quote, open again).
+std::wstring quote_percentage_text(const std::wstring & text)
+{
+	struct token
+	{
+		wchar_t c;          // the character the token stands for
+		std::wstring xml;   // how it is written
+	};
+	std::wstring result;
+	std::vector<token> run;
+	auto flush = [&]()
+	{
+		if (run.empty())
+			return;
+		bool plain = true;
+		for (const token & t : run)
+		{
+			if (std::wstring(L" \u00A0\u202F$-+/():!^&'~{}<>=").find(t.c) == std::wstring::npos)
+				plain = false;
+		}
+		if (!plain)
+			result += L'"';
+		for (const token & t : run)
+		{
+			if (!plain && t.c == L'"')
+				result += L"\"\\" + t.xml + L"\"";
+			else
+				result += t.xml;
+		}
+		if (!plain)
+			result += L'"';
+		run.clear();
+	};
+	for (size_t i = 0; i < text.size(); ++i)
+	{
+		token t{text[i], std::wstring(1, text[i])};
+		if (text[i] == L'&')
+		{
+			static const std::pair<const wchar_t *, wchar_t> entities[] = {
+				{L"&quot;", L'"'}, {L"&apos;", L'\''}, {L"&lt;", L'<'}, {L"&gt;", L'>'}, {L"&amp;", L'&'}};
+			for (const auto & e : entities)
+			{
+				const std::wstring name(e.first);
+				if (text.compare(i, name.size(), name) == 0)
+				{
+					t = token{e.second, name};
+					i += name.size() - 1;
+					break;
+				}
+			}
+		}
+		if (t.c == L'%')
+		{
+			flush();
+			result += t.xml;
+		}
+		else
+		{
+			run.push_back(t);
+		}
+	}
+	flush();
+	return result;
+}
+}
+
 void number_text::oox_convert(oox::num_format_context & Context)
 {
 	std::wstringstream strm;
@@ -518,10 +594,13 @@ void number_text::oox_convert(oox::num_format_context & Context)
 
 	std::wstring text_ = strm.str();
 
-	if (odf_types::office_value_type::Date == Context.type() || 
+	if (odf_types::office_value_type::Percentage == Context.type())
+	{
+		text_ = quote_percentage_text(text_);
+	}
+	else if (odf_types::office_value_type::Date == Context.type() ||
 		odf_types::office_value_type::Time == Context.type() ||
-		odf_types::office_value_type::Currency == Context.type() || 
-		odf_types::office_value_type::Percentage == Context.type())
+		odf_types::office_value_type::Currency == Context.type())
 	{
 	}
 	else

@@ -23,6 +23,7 @@
  *
  */
 #include "ApplicationFontsWorker.h"
+#include "FontThumbnailAlpha.h"
 
 #include <cmath>
 #include <map>
@@ -1508,7 +1509,7 @@ public:
 			oFrame.SaveFile(strThumbnailPath, 4);
 
 			LONG lBinarySize = lWidthPix * lHeightPix;
-			BYTE* pBinaryFormat = new BYTE[lBinarySize + 12];
+			BYTE* pBinaryFormat = new BYTE[NSFontThumbnail::GetEncodedAlphaMaxSize(lBinarySize) + 12];
 
 			pBinaryFormat[0] = 0xFF & (lWidthPix >> 24);
 			pBinaryFormat[1] = 0xFF & (lWidthPix >> 16);
@@ -1523,37 +1524,7 @@ public:
 			pBinaryFormat[10] = 0xFF & (nCountFonts >> 8);
 			pBinaryFormat[11] = 0xFF & (nCountFonts >> 0);
 
-			BYTE* pBinaryFormatCur = pBinaryFormat + 12;
-			BYTE* pImageDataAlpha = pImageData + 3;
-			LONG nIndexCur = 0;
-			while (nIndexCur < lBinarySize)
-			{
-				*pBinaryFormatCur++ = *pImageDataAlpha;
-
-				if (0 != *pImageDataAlpha)
-				{
-					++nIndexCur;
-					pImageDataAlpha += 4;
-				}
-				else
-				{
-					LONG nIndexCur0 = nIndexCur;
-					LONG nIndexCurLimit = nIndexCur0 + 255;
-					if (nIndexCurLimit > lBinarySize)
-						nIndexCurLimit = lBinarySize;
-
-					while (nIndexCur < nIndexCurLimit)
-					{
-						++nIndexCur;
-						pImageDataAlpha += 4;
-
-						if (0 != *pImageDataAlpha)
-							break;
-					}
-
-					*pBinaryFormatCur++ = nIndexCur - nIndexCur0;
-				}
-			}
+			BYTE* pBinaryFormatCur = NSFontThumbnail::EncodeAlpha(pImageData, lBinarySize, pBinaryFormat + 12);
 
 #if 0
 			BYTE* pPixelsValues = new BYTE[4 * lWidthPix * lHeightPix];
