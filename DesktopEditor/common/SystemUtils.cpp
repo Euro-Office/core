@@ -169,9 +169,13 @@ namespace NSSystemUtils
 
 	std::wstring GetBuildBranding()
 	{
-		std::string sBrandingA = "ONLYOFFICE";
-#ifdef BUILD_BRANDING_NAME
-		sBrandingA = BUILD_BRANDING_NAME;
+#if defined(BUILD_BRANDING_NAME)
+		std::string sBrandingA = BUILD_BRANDING_NAME;
+#elif defined(_LINUX) && !defined(_MAC)
+		// next to the desktop editors' own data in ~/.local/share/euro-office
+		std::string sBrandingA = "euro-office";
+#else
+		std::string sBrandingA = "Euro-Office";
 #endif
 
 		return UTF8_TO_U(sBrandingA);
