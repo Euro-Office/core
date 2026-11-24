@@ -63,7 +63,8 @@ xmlns:w16cid=\"http://schemas.microsoft.com/office/word/2016/wordml/cid\" \
 xmlns:w16=\"http://schemas.microsoft.com/office/word/2018/wordml\" \
 xmlns:w16sdtdh=\"http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash\" \
 xmlns:w16se=\"http://schemas.microsoft.com/office/word/2015/wordml/symex\" \
-mc:Ignorable=\"w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14\">"));
+xmlns:eo=\"http://schemas.euro-office.com/office/word/2024/wordml\" \
+mc:Ignorable=\"w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14 eo\">"));
 
 			oFile.WriteStringUTF8(m_oBackground.GetData());
 
@@ -102,7 +103,8 @@ xmlns:w16cid=\"http://schemas.microsoft.com/office/word/2016/wordml/cid\" \
 xmlns:w16=\"http://schemas.microsoft.com/office/word/2018/wordml\" \
 xmlns:w16sdtdh=\"http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash\" \
 xmlns:w16se=\"http://schemas.microsoft.com/office/word/2015/wordml/symex\" \
-mc:Ignorable=\"w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14\">"));
+xmlns:eo=\"http://schemas.euro-office.com/office/word/2024/wordml\" \
+mc:Ignorable=\"w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14 eo\">"));
 
 			oFile.WriteStringUTF8(m_oBackground.GetData());
 

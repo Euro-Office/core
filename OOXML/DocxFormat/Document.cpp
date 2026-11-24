@@ -114,17 +114,26 @@ namespace OOX
 
 			if (m_oDrawing.IsInit())
 			{
+				if (m_bFirstPageOnly)
+					sResult += L"eo:firstPageOnly=\"1\" ";
 				sResult += L">";
 				sResult += m_oDrawing->toXML();
 				sResult += L"</w:background>";
 			}
 			else if (m_oBackground.IsInit())
 			{//the presence of the Color attribute is required
+				if (m_bFirstPageOnly)
+					sResult += L"eo:firstPageOnly=\"1\" ";
+				sResult += L">";
 				sResult += m_oBackground->toXML();
 				sResult += L"</w:background>";
 			}
 			else
+			{
+				if (m_bFirstPageOnly)
+					sResult += L"eo:firstPageOnly=\"1\" ";
 				sResult += L"/>";
+			}
 
 			return sResult;
 		}
@@ -135,6 +144,11 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"w:themeColor", m_oThemeColor)
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"w:themeShade", m_oThemeShade)
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"w:themeTint", m_oThemeTint)
+				else if (L"eo:firstPageOnly" == wsName)
+				{
+					std::wstring val = oReader.GetText();
+					m_bFirstPageOnly = (val == L"1" || val == L"true" || val == L"on");
+				}
 			WritingElement_ReadAttributes_End(oReader)
 		}
 //------------------------------------------------------------------------------------------------------------------------------------------------
@@ -540,7 +554,8 @@ xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" \
 xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" \
 xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" \
 xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" \
-mc:Ignorable=\"w14 w15 wp14\">";
+xmlns:eo=\"http://schemas.euro-office.com/office/word/2024/wordml\" \
+mc:Ignorable=\"w14 w15 wp14 eo\">";
 
 		if ( m_oBackground.IsInit() )
 			sXml += m_oBackground->toXML();
