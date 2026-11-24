@@ -245,6 +245,7 @@ ods_table_state::ods_table_state(odf_conversion_context * Context, office_elemen
 
 	current_table_row_ = 0;
 	current_table_column_ = 0;
+	current_covered_cols_ = 0;
 
 	current_level_.push_back(office_table_);
 
@@ -524,10 +525,11 @@ void ods_table_state::add_row(office_element_ptr & elm, _UINT32 repeated, office
     current_table_row_		+= repeated;
 	current_covered_cols_	= 0;
 
+	// the element may stand for several rows (a gap of default rows): count all of them
 	for (size_t i = 0; i < current_covered_rows_.size(); ++i)
 	{
-		current_covered_rows_[i].count_rows--;
-		if (current_covered_rows_[i].count_rows <= 0)
+		current_covered_rows_[i].count_rows -= (_INT32)(std::min)(repeated, (_UINT32)0x7FFFFFFF);
+		if (current_covered_rows_[i].count_rows < 0) // 0: this is the last row of the merged range
 		{
 			current_covered_rows_.erase(current_covered_rows_.begin() + i);
 			i--;
@@ -564,7 +566,7 @@ void ods_table_state::add_row_repeated()
 	for (size_t i = 0; i < current_covered_rows_.size(); ++i)
 	{
 		current_covered_rows_[i].count_rows--;
-		if (current_covered_rows_[i].count_rows <= 0)
+		if (current_covered_rows_[i].count_rows < 0) // 0: this is the last row of the merged range
 		{
 			current_covered_rows_.erase(current_covered_rows_.begin() + i);
 			i--;
@@ -654,6 +656,46 @@ _INT32 ods_table_state::is_row_validation(_INT32 row, _INT32 & repeate_row)
 		}
 	}
 	return -1;
+}
+// Rows [row, row + count) without a comment, data validation, hyperlink, merged cell or row break, and not
+// reached by a cell merged across rows above them: one row element repeated writes them all.
+bool ods_table_state::is_rows_plain(_INT32 row, _INT32 count)
+{
+	if (count < 1 || row < 0 || row > 0x7FFFFFFF - count) return false;
+
+	if (is_row_comment(row, count) >= 0) return false;
+
+	_INT32 repeated = count;
+	if (is_row_validation(row, repeated) >= 0) return false;
+
+	for (size_t i = 0; i < hyperlinks_.size(); i++)
+	{
+		if (hyperlinks_[i].row >= row && hyperlinks_[i].row < row + count) return false;
+	}
+	for (size_t i = 0; i < row_breaks_.size(); i++)
+	{
+		if (row_breaks_[i] >= row && row_breaks_[i] < row + count) return false;
+	}
+	std::map<_INT32, std::map<_INT32, _spanned_info>>::iterator pFindRow = map_merged_cells.lower_bound(row);
+	if (pFindRow != map_merged_cells.end() && pFindRow->first < row + count) return false;
+
+	// count_rows = rows still covered below the current row; add_row of the first row drops the entries at 0
+	for (size_t i = 0; i < current_covered_rows_.size(); i++)
+	{
+		if (current_covered_rows_[i].count_rows > 0) return false;
+	}
+	return true;
+}
+// The number of rows below the current row that a range merged across rows still covers (the nearest end), 0 if none.
+_INT32 ods_table_state::get_covered_rows_ahead()
+{
+	_INT32 result = 0;
+	for (size_t i = 0; i < current_covered_rows_.size(); i++)
+	{
+		if (current_covered_rows_[i].count_rows > 0 && (result == 0 || current_covered_rows_[i].count_rows < result))
+			result = current_covered_rows_[i].count_rows;
+	}
+	return result;
 }
 _INT32 ods_table_state::is_cell_comment(_INT32 col, _INT32 row, _UINT32 repeate_col)
 {
@@ -1031,11 +1073,13 @@ bool ods_table_state::isCoveredCell(_INT32 col, _INT32 repeated_cols)
 {
 	if (current_covered_cols_ > 0) return true;
 
+	// col is 1-based (from the cell reference), start_col is 0-based (the column before the merged cell)
+	const _INT32 col0 = col - 1;
 	for (size_t i = 0; i < current_covered_rows_.size(); i++)
 	{
-		if (current_covered_rows_[i].start_col <= col && col < current_covered_rows_[i].start_col + current_covered_rows_[i].count_cols)
+		if (current_covered_rows_[i].start_col <= col0 && col0 < current_covered_rows_[i].start_col + current_covered_rows_[i].count_cols)
 		{
-			current_covered_cols_ = current_covered_rows_[i].count_cols - (col - current_covered_rows_[i].start_col);
+			current_covered_cols_ = current_covered_rows_[i].count_cols - (col0 - current_covered_rows_[i].start_col);
 			return true;
 		}
 	}
@@ -1568,7 +1612,7 @@ void ods_table_state::end_cell()
 	}
 }
 
-void ods_table_state::add_default_cell(_INT32 repeated)
+void ods_table_state::add_default_cell(_INT32 repeated, const std::wstring & style_name)
 {
 	if (repeated < 1) return;
 
@@ -1578,9 +1622,9 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 		//divide by 3 - before, with a comment, after;
 		_INT32 c = current_table_column_;
 
-		add_default_cell(comments_[comment_idx].col - c - 1);
-		add_default_cell(1);
-		add_default_cell(repeated + c - comments_[comment_idx].col);
+		add_default_cell(comments_[comment_idx].col - c - 1, style_name);
+		add_default_cell(1, style_name);
+		add_default_cell(repeated + c - comments_[comment_idx].col, style_name);
 
 		return;
 	}
@@ -1599,9 +1643,9 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 					//divide by 3 - before, with spanned, after;
 					_INT32 c = current_table_column_;
 
-					add_default_cell(it->first - c - 1);
-					add_default_cell(1);
-					add_default_cell(repeated + c - current_table_column_);
+					add_default_cell(it->first - c - 1, style_name);
+					add_default_cell(1, style_name);
+					add_default_cell(repeated + c - current_table_column_, style_name);
 
 					return;
 				}
@@ -1624,15 +1668,26 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 		//divide by 3 - before, with validation, after;
 		_INT32 c = current_table_column_;
 
-		add_default_cell(ref.col_start - c - 1);
-		add_default_cell(repeated_validation);
-		add_default_cell(repeated + c - current_table_column_);
+		add_default_cell(ref.col_start - c - 1, style_name);
+		add_default_cell(repeated_validation, style_name);
+		add_default_cell(repeated + c - current_table_column_, style_name);
 
 		return;
 	}
 //-----------------------------------------------------------------------------------------
-	bool bCovered = false;
-	if (!bSpanned)
+	// Columns still covered by a cell merged across columns of this row (isSpannedCell sets the count):
+	// these cells are covered, and the next cell after them is not.
+	if (!bSpanned && current_covered_cols_ > 0 && repeated > current_covered_cols_)
+	{
+		_INT32 covered = current_covered_cols_;
+
+		add_default_cell(covered, style_name);
+		add_default_cell(repeated - covered, style_name);
+
+		return;
+	}
+	bool bCovered = !bSpanned && current_covered_cols_ > 0;
+	if (!bSpanned && !bCovered)
 	{
 		for (size_t i = 0; i < current_covered_rows_.size(); i++)
 		{
@@ -1651,14 +1706,18 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 
 				if (split != current_table_column_ && split != current_table_column_ + repeated)
 				{
-					add_default_cell(split - c);
-					add_default_cell(repeated + c - split);
+					add_default_cell(split - c, style_name);
+					add_default_cell(repeated + c - split, style_name);
 					return;
 				}
 			}
 		}		
 	}
 //-----------------------------------------------------------------------------------------
+	// A given style (empty cells of one style folded together by the XLSX reader) is written as it is,
+	// even where it equals the column default: the run may span columns with other defaults.
+	const std::wstring & cell_style_name = style_name.empty() ? row_default_cell_style_name_ : style_name;
+
 	office_element_ptr default_cell_elm;
 	if (bCovered)
 	{
@@ -1704,15 +1763,15 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 	{
 		cell->attlist_.table_number_columns_repeated_ = repeated;
 
-		if (!row_default_cell_style_name_.empty())
-			cell->attlist_.table_style_name_ = row_default_cell_style_name_;
+		if (!cell_style_name.empty())
+			cell->attlist_.table_style_name_ = cell_style_name;
 	}
 	if (covered_cell)
 	{
 		covered_cell->attlist_.table_number_columns_repeated_ = repeated;
 
-		if (!row_default_cell_style_name_.empty())
-			covered_cell->attlist_.table_style_name_ = row_default_cell_style_name_;
+		if (!cell_style_name.empty())
+			covered_cell->attlist_.table_style_name_ = cell_style_name;
 
 		current_covered_cols_ -= repeated;
 	}
