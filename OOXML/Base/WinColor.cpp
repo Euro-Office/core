@@ -43,12 +43,12 @@ unsigned int GetSysColor(const int nIndex)
 	case COLOR_ACTIVEBORDER: nValue = 0xb4b4b4; break;
 	case COLOR_ACTIVECAPTION: nValue = 0xd1b499; break;
 	case COLOR_APPWORKSPACE: nValue = 0xababab; break;
-	case COLOR_BACKGROUND: nValue = 0x0; break;
+	case COLOR_BACKGROUND:
 		// case COLOR_BTNFACE: nValue = 0xf0f0f0; break; // is COLOR_3DFACE
 		// case COLOR_BTNHIGHLIGHT: nValue = 0xffffff; break; // is COLOR_3DHIGHLIGHT
 		// case COLOR_BTNHILIGHT: nValue = 0xffffff; break; // is COLOR_3DHIGHLIGHT
 		// case COLOR_BTNSHADOW: nValue = 0xa0a0a0; break; // is COLOR_3DSHADOW
-	case COLOR_BTNTEXT: nValue = 0x0; break;
+	case COLOR_BTNTEXT:
 	case COLOR_CAPTIONTEXT: nValue = 0x0; break;
 		// case COLOR_DESKTOP: nValue = 0x0; break; // is COLOR_BACKGROUND
 	case COLOR_GRADIENTACTIVECAPTION: nValue = 0xead1b9; break;
@@ -69,7 +69,7 @@ unsigned int GetSysColor(const int nIndex)
 	case COLOR_SCROLLBAR: nValue = 0xc8c8c8; break;
 	case COLOR_WINDOW: nValue = 0xffffff; break;
 	case COLOR_WINDOWFRAME: nValue = 0x646464; break;
-	case COLOR_WINDOWTEXT: nValue = 0x0; break;
+	case COLOR_WINDOWTEXT:
 	default: nValue = 0x0; break;
 	} // switch (nIndex)
 	//***************** GetSysColor values end *****************

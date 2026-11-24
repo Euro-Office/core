@@ -39,7 +39,7 @@ namespace OOX
 		class CBdo : public WritingElementWithChilds<>
 		{
 		public:
-			CBdo(OOX::Document *pMain = NULL);			
+			CBdo(OOX::Document *pMain = nullptr);			
 			virtual ~CBdo();
 
 			const CBdo &operator =(const XmlUtils::CXmlNode& oNode);
@@ -58,7 +58,7 @@ namespace OOX
 			// Attributes
 			SimpleTypes::CDirection m_oVal;
 
-			// Childs
+			// Children
 		};
 	} // namespace Logic
 } // namespace OOX

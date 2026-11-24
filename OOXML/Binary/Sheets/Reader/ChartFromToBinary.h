@@ -92,14 +92,14 @@ namespace BinXlsxRW
 {
 	struct SaveParams
 	{
-		SaveParams(const std::wstring& _sDrawingsPath, const std::wstring& _sEmbeddingsPath, const std::wstring& _sThemePath, OOX::CContentTypes *pContentTypes, CSVWriter* pCSVWriter = NULL, bool bMacro = false);
+		SaveParams(const std::wstring& _sDrawingsPath, const std::wstring& _sEmbeddingsPath, const std::wstring& _sThemePath, OOX::CContentTypes *pContentTypes, CSVWriter* pCSVWriter = nullptr, bool bMacro = false);
 
 		smart_ptr<PPTX::Theme>			pTheme;
 		std::wstring					sThemePath;
 		std::wstring					sDrawingsPath;
 		std::wstring					sEmbeddingsPath;
-		OOX::CContentTypes*				pContentTypes = NULL;
-		CSVWriter*						pCSVWriter = NULL;
+		OOX::CContentTypes*				pContentTypes = nullptr;
+		CSVWriter*						pCSVWriter = nullptr;
 		bool							bMacroEnabled = false;
 	};
 

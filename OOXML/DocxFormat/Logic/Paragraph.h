@@ -43,7 +43,7 @@ namespace OOX
 		class CParagraph : public WritingElementWithChilds<>
 		{
 		public:
-			CParagraph(OOX::Document *pMain = NULL, WritingElement *parent = NULL);
+			CParagraph(OOX::Document *pMain = nullptr, WritingElement *parent = nullptr);
 			virtual ~CParagraph();
 
 			const CParagraph &operator =(const XmlUtils::CXmlNode& oNode);
@@ -72,7 +72,7 @@ namespace OOX
 
 			CParagraphProperty *m_oParagraphProperty; // a copy of what is in m_arrItems... - for quick access/analysis
 			// In theory, need to do it like in Drawing::Paragraph - that is, the only subobjects should be taken out separately
-			WritingElement *m_oParent = NULL;
+			WritingElement *m_oParent = nullptr;
 		};
 	} // namespace Logic
 } // namespace OOX

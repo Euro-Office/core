@@ -108,6 +108,7 @@ void CSlicers::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			break;
 		switch (_at)
 		{
+	default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -361,6 +362,7 @@ void CSlicer::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oRowHeight = pReader->GetULong();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)

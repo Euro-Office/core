@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginPivotTableUISettings::readFields(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
         record >> FRTheader >> flags >> stPpmConnectionName;
 
         fRelNeededHidden = GETBIT(flags, 2);

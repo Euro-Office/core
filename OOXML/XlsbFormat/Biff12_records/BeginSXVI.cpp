@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginSXVI::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
 
         record >> itmtype >> flags >> iCache;
 

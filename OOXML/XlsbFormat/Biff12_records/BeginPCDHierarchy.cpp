@@ -45,8 +45,8 @@ namespace XLSB
 
     void BeginPCDHierarchy::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags1;
-        BYTE    flags2;
+        _UINT16 flags1 = 0;
+        BYTE    flags2 = 0;
 
         record >> flags1 >> cLevels >> isetParent >> iconSet >> flags2 >> wAttributeMemberValueType;
 

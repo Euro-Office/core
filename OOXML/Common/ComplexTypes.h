@@ -45,37 +45,37 @@ namespace ComplexTypes
 		return *this;\
 	}
 #define ComplexTypes_WriteAttribute_( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString + oValue->ToString() + L"\"";\
+		sResult += (sStartString) + (oValue)->ToString() + L"\"";\
 	}
 #define ComplexTypes_WriteAttribute2_( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString + oValue.get2() + L"\"";\
+		sResult += (sStartString) + (oValue).get2() + L"\"";\
 	}
 //---------------------------------------------------------------------------------------------
 #define ComplexTypes_WriteAttribute( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString + oValue->ToString() + L"\" ";\
+		sResult += (sStartString) + (oValue)->ToString() + L"\" ";\
 	}
 
 #define ComplexTypes_WriteAttribute2( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString + oValue.get2() + L"\" ";\
+		sResult += (sStartString) + (oValue).get2() + L"\" ";\
 	}
 #define ComplexTypes_WriteAttribute3( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString + (*oValue) + L"\" ";\
+		sResult += (sStartString) + (*(oValue)) + L"\" ";\
 	}
 #define ComplexTypes_WriteAttribute2Encode( sStartString, oValue ) \
-	if ( oValue.IsInit() )\
+	if ( (oValue).IsInit() )\
 	{\
-		sResult += sStartString;\
-		sResult += XmlUtils::EncodeXmlString(oValue.get2());\
+		sResult += (sStartString);\
+		sResult += XmlUtils::EncodeXmlString((oValue).get2());\
 		sResult += L"\" ";\
 	}
 

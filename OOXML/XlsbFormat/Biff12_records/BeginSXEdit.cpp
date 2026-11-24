@@ -68,6 +68,9 @@ namespace XLSB
             case SXET::SXET_ERROR:
                 record >> err;
                 break;
+
+            default:
+                break;
         }
     }
 
@@ -95,6 +98,9 @@ namespace XLSB
 
 		case SXET::SXET_ERROR:
 			record << err;
+			break;
+
+		default:
 			break;
 		}
 	}

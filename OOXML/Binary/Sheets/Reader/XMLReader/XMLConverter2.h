@@ -92,9 +92,9 @@ private:
         const _UINT32 &rowNumber);
 
     /// @brief filling the attributes of child nodes with parent ones if the parent node doesn't appear as a separate line
-    /// @param childs child nodes whose attributes need to be filled with parent ones
+    /// @param children child nodes whose attributes need to be filled with parent ones
     /// @param inheritersCount number of nodes to which the parent's attributes will be distributed
-    void moveParentAttributes(const std::shared_ptr<XmlNode> parent, const std::set<std::shared_ptr<XmlNode>>childs, const _UINT32 inheritersCount);
+    void moveParentAttributes(const std::shared_ptr<XmlNode> parent, const std::set<std::shared_ptr<XmlNode>>children, const _UINT32 inheritersCount);
 
     /// @brief pointer to the reader that read the xml data
     XmlUtils::CXmlLiteReader *reader_;

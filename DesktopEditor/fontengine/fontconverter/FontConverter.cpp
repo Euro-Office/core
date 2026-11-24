@@ -34,11 +34,11 @@
 
 bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned int* pSymbols, int nCount, std::wstring sNameW, long nFlag)
 {
-	FT_Library pLibrary = NULL;
+	FT_Library pLibrary = nullptr;
 	if ( FT_Init_FreeType( &pLibrary ) )
 		return false;
 
-	FT_Face pFace = NULL;
+	FT_Face pFace = nullptr;
 
 	NSFile::CFileBinary oFileBinary;
 	if (!oFileBinary.OpenFile(sFontIn))
@@ -51,12 +51,13 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 
 	FT_Open_Args oOpenArgs;
 	oOpenArgs.flags = FT_OPEN_MEMORY;
-	oOpenArgs.memory_base = (BYTE*)pBaseAddress;
+	oOpenArgs.memory_base = pBaseAddress;
 	oOpenArgs.memory_size = nFileSize;
 
-	NSFontConverter::CFontFileTrueType* pTTF = NSFontConverter::CFontFileTrueType::LoadFromFile( sFontIn.c_str() );
+	NSFontConverter::CFontFileTrueType::LoadFromFile( sFontIn.c_str() );
 	FT_Error oerrr;
-	if ( oerrr = FT_Open_Face( pLibrary, &oOpenArgs, 0, &pFace ) )
+	oerrr = FT_Open_Face( pLibrary, &oOpenArgs, 0, &pFace );
+	if ( oerrr )
 	{
 		FT_Done_FreeType( pLibrary );
 		RELEASEARRAYOBJECTS(pBaseAddress);
@@ -81,7 +82,7 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 		if ( "CFF" == sFontFormat || "Type 1" == sFontFormat )
 		{
 			NSFontConverter::TCharBuffer oCFF;
-			NSFontConverter::CFontFileType1C *pT1C = NULL;
+			NSFontConverter::CFontFileType1C *pT1C = nullptr;
 			if ( "Type 1" == sFontFormat )
 			{
 				// First, convert Type1 to CFF
@@ -109,13 +110,13 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 
 			delete pT1C;
 		}
-		else if ( "TrueType" == sFontFormat && ( pSymbols != NULL || !sNameW.empty() ) )
+		else if ( "TrueType" == sFontFormat && ( pSymbols != nullptr || !sNameW.empty() ) )
 		{
 			NSFontConverter::CFontFileTrueType* pTTF = NSFontConverter::CFontFileTrueType::LoadFromFile( sFontIn.c_str() );
 			if ( pTTF )
 			{
 				std::string sName = U_TO_UTF8(sNameW);
-				unsigned char *pUseGlyfs = NULL;
+				unsigned char *pUseGlyfs = nullptr;
 				long lGlyfsCount = pFace->num_glyphs;
 
 				if ( pSymbols )
@@ -183,11 +184,12 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 								pUseGlyfs[nGID] = 1;
 						}
 					}
+					delete[] pGIDs;
 				}
 
 				NSFile::CFileBinary oWriteFile;
 				oWriteFile.CreateFileW(sFontOut);
-				pTTF->WriteTTF( &NSFontConverter::FileWrite, oWriteFile.GetFileNative(), sName.c_str(), NULL, pUseGlyfs, lGlyfsCount );
+				pTTF->WriteTTF( &NSFontConverter::FileWrite, oWriteFile.GetFileNative(), sName.c_str(), nullptr, pUseGlyfs, lGlyfsCount );
 				oWriteFile.CloseFile();
 			}
 			else
@@ -216,11 +218,11 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 {
 	// the function was simply copied and slightly modified. it's all due to lack of time.
 
-	FT_Library pLibrary = NULL;
+	FT_Library pLibrary = nullptr;
 	if ( FT_Init_FreeType( &pLibrary ) )
 		return false;
 
-	FT_Face pFace = NULL;
+	FT_Face pFace = nullptr;
 
 	NSFile::CFileBinary oFileBinary;
 	if (!oFileBinary.OpenFile(sFontIn))
@@ -233,12 +235,13 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 
 	FT_Open_Args oOpenArgs;
 	oOpenArgs.flags = FT_OPEN_MEMORY;
-	oOpenArgs.memory_base = (BYTE*)pBaseAddress;
-	oOpenArgs.memory_size = (FT_Long)nFileSize;
+	oOpenArgs.memory_base = pBaseAddress;
+	oOpenArgs.memory_size = nFileSize;
 
-	NSFontConverter::CFontFileTrueType* pTTF = NSFontConverter::CFontFileTrueType::LoadFromFile( sFontIn.c_str() );
+	NSFontConverter::CFontFileTrueType::LoadFromFile( sFontIn.c_str() );
 	FT_Error oerrr;
-	if ( oerrr = FT_Open_Face( pLibrary, &oOpenArgs, lFaceIndex, &pFace ) )
+	oerrr = FT_Open_Face( pLibrary, &oOpenArgs, lFaceIndex, &pFace );
+	if ( oerrr )
 	{
 		FT_Done_FreeType( pLibrary );
 		RELEASEARRAYOBJECTS(pBaseAddress);
@@ -258,7 +261,7 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 
 	bool bIsGids = (NSFontConverter::c_lFlagsGids & nFlag);
 
-	NSFontConverter::TCharBuffer* pCharBuffer = NULL;
+	NSFontConverter::TCharBuffer* pCharBuffer = nullptr;
 
 	if ( bNeedConvert )
 	{
@@ -266,7 +269,7 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 		if ( "CFF" == sFontFormat || "Type 1" == sFontFormat )
 		{
 			NSFontConverter::TCharBuffer oCFF;
-			NSFontConverter::CFontFileType1C *pT1C = NULL;
+			NSFontConverter::CFontFileType1C *pT1C = nullptr;
 			if ( "Type 1" == sFontFormat )
 			{
 				// First, convert Type1 to CFF
@@ -291,19 +294,19 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 
 			delete pT1C;
 		}
-		else if ( "TrueType" == sFontFormat && ( pSymbols != NULL || !sNameW.empty() ) )
+		else if ( "TrueType" == sFontFormat && ( pSymbols != nullptr || !sNameW.empty() ) )
 		{
 			NSFontConverter::CFontFileTrueType* pTTF = NSFontConverter::CFontFileTrueType::LoadFromFile( sFontIn.c_str() );
 			if ( pTTF )
 			{
 				std::string sName = U_TO_UTF8(sNameW);
-				unsigned char *pUseGlyfs = NULL;
+				unsigned char *pUseGlyfs = nullptr;
 				long lGlyfsCount = pFace->num_glyphs;
 
 				if ( pSymbols )
 				{
 					// First, build the list of required GIDs
-					unsigned int* pUnicode = (unsigned int*)pSymbols;
+					unsigned int* pUnicode = pSymbols;
 					unsigned short* pGIDs = new unsigned short[nCount];
 					int nCMapIndex = 0;
 
@@ -365,9 +368,10 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 								pUseGlyfs[nGID] = 1;
 						}
 					}
+					delete[] pGIDs;
 				}
 
-				pTTF->WriteTTF( &NSFontConverter::CharBufferWrite, pCharBuffer, sName.c_str(), NULL, pUseGlyfs, lGlyfsCount );
+				pTTF->WriteTTF( &NSFontConverter::CharBufferWrite, pCharBuffer, sName.c_str(), nullptr, pUseGlyfs, lGlyfsCount );
 			}
 		}
 
