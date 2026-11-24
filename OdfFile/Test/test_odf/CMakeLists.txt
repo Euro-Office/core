@@ -93,6 +93,7 @@ add_core_gtest(
             xlsx2ods_row_padding.cpp
             chart_subtitle.cpp
             xlsx2ods_empty_cells.cpp
+            odf_text_meta.cpp
             math_property_values.cpp
             pptx2odp_table_styles.cpp
             docx2odt_header_footer_margins.cpp

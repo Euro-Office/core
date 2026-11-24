@@ -468,6 +468,61 @@ private:
 
 CP_REGISTER_OFFICE_ELEMENT2(span);
 //-------------------------------------------------------------------------------------------------------------------
+// text:meta
+//-------------------------------------------------------------------------------------------------------------------
+// Inline text with RDF metadata attached. Neither OOXML nor the editor keeps the metadata, so the element only
+// passes its content through.
+class meta : public paragraph_content_element
+{
+public:
+    static const wchar_t * ns;
+    static const wchar_t * name;
+    static const xml::NodeType xml_type = xml::typeElement;
+    static const ElementType type = typeTextMeta;
+
+    CPDOCCORE_DEFINE_VISITABLE();
+    CPDOCCORE_OFFICE_DOCUMENT_IMPL_NAME_FUNCS_;
+
+    virtual void docx_convert(oox::docx_conversion_context & Context);
+    virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
+    virtual void pptx_convert(oox::pptx_conversion_context & Context);
+
+    virtual void xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context);
+
+    virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
+
+    meta() {}
+
+    office_element_ptr_array content_;
+
+private:
+    virtual void add_attributes( const xml::attributes_wc_ptr & Attributes ) {}
+    virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
+    virtual void add_text(const std::wstring & Text);
+    virtual void add_space(const std::wstring & Text);
+};
+
+CP_REGISTER_OFFICE_ELEMENT2(meta);
+//-------------------------------------------------------------------------------------------------------------------
+// text:meta-field
+//-------------------------------------------------------------------------------------------------------------------
+// A field whose current value is its text content (with RDF metadata); the value is kept as plain text.
+class meta_field : public meta
+{
+public:
+    static const wchar_t * ns;
+    static const wchar_t * name;
+    static const xml::NodeType xml_type = xml::typeElement;
+    static const ElementType type = typeTextMetaField;
+
+    CPDOCCORE_DEFINE_VISITABLE();
+    CPDOCCORE_OFFICE_DOCUMENT_IMPL_NAME_FUNCS_;
+
+    meta_field() {}
+};
+
+CP_REGISTER_OFFICE_ELEMENT2(meta_field);
+//-------------------------------------------------------------------------------------------------------------------
 // text:a
 //-------------------------------------------------------------------------------------------------------------------
 class a : public paragraph_content_element
