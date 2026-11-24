@@ -57,6 +57,8 @@
 #include "../../MsBinaryFile/XlsFile/Format/Logic/WorkbookStreamObject.h"
 #include "../../MsBinaryFile/XlsFile/Format/Logic/GlobalsSubstream.h"
 #include "../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/PIVOTCACHE.h"
+#include <algorithm>
+#include <set>
 
 #include <iomanip>
 
@@ -197,28 +199,45 @@ bool OOX::Spreadsheet::CXlsx::WriteXLS(const CPath& oFilePath)
 	PrepareToWrite();
 	if(nullptr == m_pWorkbook ||  m_arWorksheets.empty ())
 		return false;
+	// Both lists are made once here; the globals (CWorkbook::toXLS), the sheet substreams and the cache streams are
+	// all written from them, so they always agree.
+	// The sheets in tab order, paired by r:id.
+	const auto sheets = m_pWorkbook->GetSheetsForXLS();
+	// with no <sheet> that resolves there is no sheet data at all: report an error, not a workbook of empty tabs
+	if(std::none_of(sheets.begin(), sheets.end(), [](const CWorkbook::SheetForXLS& sheet) { return sheet.second != nullptr; }))
+		return false;
+	// The pivot caches that are written, in the order of their cache streams.
+	const auto pivotCaches = m_pWorkbook->GetPivotCachesForXLS();
 	auto workbookStream = new XLS::WorkbookStreamObject;
 	auto workbookPtr = XLS::BaseObjectPtr(workbookStream);
 	XlsWriter writer;
 	writer.globalInfoPtr.reset(new XLS::GlobalWorkbookInfo(XLS::WorkbookStreamObject::DefaultCodePage, nullptr));
-	// add pivot cache ids to global inf and fix 0 ids
-	if(m_pWorkbook->m_oPivotCaches.IsInit() && !m_pWorkbook->m_oPivotCaches->m_arrItems.empty())
+	// A pivot view refers to its cache by stream id (cacheId + 1, see CWorkbookPivotCache::toXLS) until SxView
+	// replaces it with the cache's index through this map. Only the views of these caches are written.
+	std::set<unsigned int> pivotCacheIds;
+	for(size_t index = 0; index < pivotCaches.size(); ++index)
 	{
-		auto cacheNum = 0;
-		for(auto cacheHeader : m_pWorkbook->m_oPivotCaches->m_arrItems)
-		{
-			if(!cacheHeader->m_oCacheId.IsInit())
-				continue;
-			cacheHeader->m_oCacheId = cacheHeader->m_oCacheId->GetValue() + 1;
-			writer.globalInfoPtr->mapPivotCacheIndex.emplace(cacheHeader->m_oCacheId->GetValue(), cacheNum);
-			cacheNum++;
-		}
+		const unsigned int cacheId = pivotCaches[index].first->m_oCacheId->GetValue();
+		pivotCacheIds.insert(cacheId);
+		writer.globalInfoPtr->mapPivotCacheIndex.emplace(cacheId + 1, static_cast<int>(index));
 	}
-	workbookStream->m_GlobalsSubstream = m_pWorkbook->toXLS();
+	workbookStream->m_GlobalsSubstream = m_pWorkbook->toXLS(sheets, pivotCaches);
 	auto CastedGlobalsStram = static_cast<XLS::GlobalsSubstream*>(workbookStream->m_GlobalsSubstream.get());
 	CastedGlobalsStram->global_info_ = writer.globalInfoPtr;
-	for(auto i : m_arWorksheets)
-		workbookStream->m_arWorksheetSubstream.push_back(i->toXLS());
+	for(const auto& sheet : sheets)
+	{
+		XLS::BaseObjectPtr sheetBin;
+		if(sheet.second)
+			sheetBin = sheet.second->toXLS(pivotCacheIds);
+		else
+		{
+			// a <sheet> whose r:id resolves to no sheet part: written as an empty worksheet so that it keeps its
+			// place (see CWorkbook::GetSheetsForXLS). Not attached to this document, so it is not added to m_arWorksheets.
+			CWorksheet emptySheet(nullptr);
+			sheetBin = emptySheet.toXLS(pivotCacheIds);
+		}
+		workbookStream->m_arWorksheetSubstream.push_back(sheetBin);
+	}
 	CastedGlobalsStram->m_arSUPBOOK.push_back(m_pWorkbook->WriteXtiRefsXLS());
 	if(m_pSharedStrings != nullptr)
 		m_pSharedStrings->toXLS(workbookStream->m_GlobalsSubstream);
@@ -265,21 +284,13 @@ bool OOX::Spreadsheet::CXlsx::WriteXLS(const CPath& oFilePath)
 	writer.Open(oFilePath.GetPath());
 	writer.WriteWorkbook(workbookPtr);
 
-	if(m_pWorkbook->m_oPivotCaches.IsInit() && !m_pWorkbook->m_oPivotCaches->m_arrItems.empty())
+	if(!pivotCaches.empty())
 	{
-		for(auto cacheHeader : m_pWorkbook->m_oPivotCaches->m_arrItems)
+		for(const auto& cache : pivotCaches)
 		{
-			if(!cacheHeader->m_oCacheId.IsInit() || !cacheHeader->m_oRid.IsInit() ||  !m_pWorkbook->IsExist(cacheHeader->m_oRid->GetValue()))
-				continue;
-			auto cacheFilePtr = m_pWorkbook->Find(cacheHeader->m_oRid->GetValue());
-			// r:id may point to a part of another type; EnsureDefinition writes to the object, so check before using it
-			auto CachePtr = dynamic_cast<CPivotCacheDefinitionFile*>(cacheFilePtr.GetPointer());
-			if (!CachePtr)
-				continue;
-			CachePtr->EnsureDefinition();
-			if (!CachePtr->m_oPivotCashDefinition.IsInit())
-				continue;
-			auto XLSBinCache = CachePtr->m_oPivotCashDefinition->toXLS(cacheHeader->m_oCacheId->GetValue());
+			auto CachePtr = cache.second;
+			const unsigned int streamId = cache.first->m_oCacheId->GetValue() + 1;
+			auto XLSBinCache = CachePtr->m_oPivotCashDefinition->toXLS(streamId);
 			auto castedCache = static_cast<XLS::PIVOTCACHE*>(XLSBinCache.get());
 			auto cacheRecordsPtr = CachePtr->Find(OOX::SpreadsheetBin::FileTypes::PivotCacheRecordsBin);
 			if(!(cacheRecordsPtr->type() == OOX::FileTypes::Unknown))
@@ -301,8 +312,7 @@ bool OOX::Spreadsheet::CXlsx::WriteXLS(const CPath& oFilePath)
 			}
 
 
-			if(CachePtr->m_oPivotCashDefinition.IsInit())
-				writer.WritePivotCache(XLSBinCache, cacheHeader->m_oCacheId->GetValue());
+			writer.WritePivotCache(XLSBinCache, streamId);
 		}
 	}
 	return true;

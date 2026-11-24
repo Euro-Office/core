@@ -367,7 +367,7 @@ namespace OOX
 			}
 
 		}
-		XLS::BaseObjectPtr CWorksheet::toXLS()
+		XLS::BaseObjectPtr CWorksheet::toXLS(const std::set<unsigned int>& pivotCacheIds)
 		{
 			if(m_bIsChartSheet)
 			{
@@ -384,10 +384,11 @@ namespace OOX
 					chartSheetPtr->m_arWINDOW = m_oSheetViews->toXLS();
 				if(m_oDrawing.IsInit() && m_oDrawing->m_oId.IsInit())
 				{
-					RId drawingId = m_oDrawing->m_oId->GetValue();
-					auto castedDrawing = Get<OOX::File>(drawingId);
-					auto drawingPtr = static_cast<OOX::Spreadsheet::CDrawing*>(castedDrawing.GetPointer());
-					drawingPtr->toXLSChart(objPtr);
+					// null if the r:id has no relationship or points at a part that is not a drawing;
+					// the chart sheet is then written without a chart
+					auto drawing = Get<OOX::Spreadsheet::CDrawing>(RId(m_oDrawing->m_oId->GetValue()));
+					if(drawing.IsInit())
+						drawing->toXLSChart(objPtr);
 				}
 				return objPtr;
 
@@ -451,11 +452,12 @@ namespace OOX
 
 			if(m_oDrawing.IsInit() && m_oDrawing->m_oId.IsInit())
 			{
-
 				RId drawingId = m_oDrawing->m_oId->GetValue();
-				auto castedDrawing = Get<OOX::File>(drawingId);
-				auto drawingPtr = static_cast<OOX::Spreadsheet::CDrawing*>(castedDrawing.GetPointer());
-				if(drawingPtr->IsChart())
+				// null if the r:id has no relationship or points at a part that is not a drawing;
+				// the sheet is then written without its drawing
+				auto drawing = Get<OOX::Spreadsheet::CDrawing>(drawingId);
+				auto drawingPtr = drawing.GetPointer();
+				if(drawingPtr && drawingPtr->IsChart())
 				{
 					auto Objects = new XLS::OBJECTS(false);
 					auto objectsPtr =  XLS::BaseObjectPtr(Objects);
@@ -521,8 +523,10 @@ namespace OOX
 				{
 					auto tempPivot = static_cast<CPivotTableFile*>(file.GetPointer());
 					tempPivot->EnsureDefinition();
-					if(tempPivot->m_oPivotTableDefinition.IsInit())
-						worksheetPtr->m_arPIVOTVIEW.push_back(tempPivot->m_oPivotTableDefinition->toXLS());
+					// a view whose cache is not written would point at a cache stream that does not exist
+					const auto& definition = tempPivot->m_oPivotTableDefinition;
+					if(definition.IsInit() && definition->m_oCacheId.IsInit() && pivotCacheIds.count(definition->m_oCacheId->GetValue()))
+						worksheetPtr->m_arPIVOTVIEW.push_back(definition->toXLS());
 				}
 			}
 			return sheetPtr;

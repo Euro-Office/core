@@ -72,16 +72,11 @@ std::wstring CImagesWorker::GetImage(const std::wstring& sUrl)
 		return GetImageLocal(sUrlFile);
 
 	bool bIsNeedDownload = false;
-	if (true)
 	{
-		if (sUrlFile.find(L"www.") != std::wstring::npos)
-			bIsNeedDownload = true;
-		else if (sUrlFile.find(L"http://") != std::wstring::npos)
-			bIsNeedDownload = true;
-		else if (sUrlFile.find(L"ftp://") != std::wstring::npos)
-			bIsNeedDownload = true;
-		else if (sUrlFile.find(L"https://") != std::wstring::npos)
-			bIsNeedDownload = true;
+		bIsNeedDownload = sUrlFile.find(L"www.") != std::wstring::npos ||
+			sUrlFile.find(L"http://") != std::wstring::npos ||
+			sUrlFile.find(L"ftp://") != std::wstring::npos ||
+			sUrlFile.find(L"https://") != std::wstring::npos;
 	}
 
 	if (bIsNeedDownload)

@@ -68,7 +68,7 @@ namespace OOX
 		CBorder::~CBorder()
 		{
 		}
-		void CBorder::fromXML(XmlUtils::CXmlNode& oNode)
+		void CBorder::fromXML(XmlUtils::CXmlNode& /*oNode*/)
 		{
 			m_eType = et_Unknown;
 			// TO DO: Implement CBorder::fromXML(XmlUtils::CXmlNode& oNode)

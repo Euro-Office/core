@@ -38,7 +38,8 @@ namespace SVG
 		m_oXmlNode.m_wsName = oReader.GetNameW();
 	}
 
-	CObject::CObject(const CObject& oObject)
+	// The reference counter is deliberately not copied: a copy is a fresh object.
+	CObject::CObject(const CObject& oObject) // NOLINT(bugprone-copy-constructor-init)
 		: m_oXmlNode(oObject.m_oXmlNode), m_oTransformation(oObject.m_oTransformation)
 	{}
 
@@ -109,7 +110,7 @@ namespace SVG
 			m_oTransformation.m_oMask.SetValue(L"", ushLevel, false);
 	}
 
-	void CObject::SetDisplay(const std::map<std::wstring, std::wstring> &mAttributes, unsigned short ushLevel, bool bHardMode)
+	void CObject::SetDisplay(const std::map<std::wstring, std::wstring> &mAttributes, unsigned short  /*ushLevel*/, bool  /*bHardMode*/)
 	{
 		std::wstring wsDisplay, wsVisibility;
 
@@ -119,10 +120,7 @@ namespace SVG
 		if (mAttributes.end() != mAttributes.find(L"visibility"))
 			wsVisibility = mAttributes.at(L"visibility");
 
-		if (L"none" == wsDisplay || L"hidden" == wsVisibility || L"collapse" == wsVisibility)
-			m_oTransformation.m_bDraw = false;
-		else
-			m_oTransformation.m_bDraw = true;
+		m_oTransformation.m_bDraw = !(L"none" == wsDisplay || L"hidden" == wsVisibility || L"collapse" == wsVisibility);
 	}
 
 	void CObject::SetOpacity(const std::map<std::wstring, std::wstring> &mAttributes, unsigned short ushLevel, bool bHardMode)
@@ -133,7 +131,7 @@ namespace SVG
 
 	bool CObject::ApplyTransform(IRenderer *pRenderer, const NSCSS::NSProperties::CTransform *pTransform, Aggplus::CMatrix& oOldMatrix) const
 	{
-		if (NULL == pRenderer || NULL == pTransform)
+		if (nullptr == pRenderer || nullptr == pTransform)
 			return false;
 
 		double dM11, dM12, dM21, dM22, dRx, dRy;
@@ -153,7 +151,7 @@ namespace SVG
 
 	bool CObject::ApplyClip(IRenderer *pRenderer, const TClip *pClip, const CSvgFile *pFile, const TBounds &oBounds) const
 	{
-		if (NULL == pRenderer || NULL == pClip || NULL == pFile || pClip->m_oHref.Empty() || NSCSS::NSProperties::EColorType::ColorUrl != pClip->m_oHref.GetType())
+		if (nullptr == pRenderer || nullptr == pClip || nullptr == pFile || pClip->m_oHref.Empty() || NSCSS::NSProperties::EColorType::ColorUrl != pClip->m_oHref.GetType())
 			return false;
 
 		if (pClip->m_oRule == L"evenodd")
@@ -169,7 +167,7 @@ namespace SVG
 
 	bool CObject::ApplyMask(IRenderer *pRenderer, const NSCSS::NSProperties::CColor *pMask, const CSvgFile *pFile, const TBounds &oBounds) const
 	{
-		if (NULL == pRenderer || NULL == pMask || NULL == pFile || NSCSS::NSProperties::EColorType::ColorUrl != pMask->GetType())
+		if (nullptr == pRenderer || nullptr == pMask || nullptr == pFile || NSCSS::NSProperties::EColorType::ColorUrl != pMask->GetType())
 			return false;
 
 		return ApplyDef(pRenderer, pFile, pMask->ToWString(), oBounds);
@@ -177,12 +175,12 @@ namespace SVG
 
 	bool CObject::ApplyDef(IRenderer *pRenderer, const CSvgFile *pFile, const std::wstring &wsUrl, const TBounds &oBounds) const
 	{
-		if (NULL == pRenderer || NULL == pFile || wsUrl.empty())
+		if (nullptr == pRenderer || nullptr == pFile || wsUrl.empty())
 			return false;
 
 		CAppliedObject *pDefObject = dynamic_cast<CAppliedObject*>(pFile->GetMarkedObject(wsUrl));
 
-		if (NULL == pDefObject)
+		if (nullptr == pDefObject)
 			return false;
 
 		return pDefObject->Apply(pRenderer, pFile, oBounds);
@@ -236,7 +234,7 @@ namespace SVG
 
 	std::vector<NSCSS::CNode> CRenderedObject::GetFullPath() const
 	{
-		if (NULL == m_pParent)
+		if (nullptr == m_pParent)
 			return {m_oXmlNode};
 
 		std::vector<NSCSS::CNode> arObjects = m_pParent->GetFullPath();
@@ -282,7 +280,7 @@ namespace SVG
 
 	bool CRenderedObject::StartPath(IRenderer *pRenderer, const CSvgFile *pFile, Aggplus::CMatrix& oOldTransform, CommandeMode oMode) const
 	{
-		if (NULL == pRenderer || !m_oTransformation.m_bDraw || Equals(0., m_oTransformation.m_oOpacity.ToDouble()))
+		if (nullptr == pRenderer || !m_oTransformation.m_bDraw || Equals(0., m_oTransformation.m_oOpacity.ToDouble()))
 			return false;
 
 		const TBounds oBounds{GetBounds()};
@@ -320,7 +318,7 @@ namespace SVG
 
 		int nPathType = 0;
 
-		if (NULL == pOtherStyles)
+		if (nullptr == pOtherStyles)
 			ApplyStyle(pRenderer, &m_oStyles, pFile, nPathType, pContextObject);
 		else
 		{
@@ -358,7 +356,10 @@ namespace SVG
 
 	bool CRenderedObject::ApplyStroke(IRenderer *pRenderer, const TStroke *pStroke, bool bUseDefault, const CRenderedObject* pContextObject) const
 	{
-		if (NULL == pRenderer || NULL == pStroke || pStroke->m_oColor.None() || (!bUseDefault && ((pStroke->m_oWidth.Empty() || pStroke->m_oWidth.Zero()) && pStroke->m_oColor.Empty())))
+		if (nullptr == pRenderer)
+			return false;
+
+		if (nullptr == pStroke || pStroke->m_oColor.None() || (!bUseDefault && ((pStroke->m_oWidth.Empty() || pStroke->m_oWidth.Zero()) && pStroke->m_oColor.Empty())))
 		{
 			pRenderer->put_PenSize(0);
 			return false;
@@ -369,9 +370,9 @@ namespace SVG
 		if (Equals(0., dStrokeWidth))
 			dStrokeWidth = 1.;
 
-		if (NSCSS::NSProperties::EColorType::ColorContextFill == pStroke->m_oColor.GetType() && NULL != pContextObject)
+		if (NSCSS::NSProperties::EColorType::ColorContextFill == pStroke->m_oColor.GetType() && nullptr != pContextObject)
 			pRenderer->put_PenColor(pContextObject->m_oStyles.m_oFill.ToInt());
-		else if (NSCSS::NSProperties::EColorType::ColorContextStroke == pStroke->m_oColor.GetType() && NULL != pContextObject)
+		else if (NSCSS::NSProperties::EColorType::ColorContextStroke == pStroke->m_oColor.GetType() && nullptr != pContextObject)
 			pRenderer->put_PenColor(pContextObject->m_oStyles.m_oStroke.m_oColor.ToInt());
 		else
 			pRenderer->put_PenColor((pStroke->m_oColor.Empty() || NSCSS::NSProperties::EColorType::ColorNone == pStroke->m_oColor.GetType()) ? 0 : pStroke->m_oColor.ToInt());
@@ -401,7 +402,10 @@ namespace SVG
 
 	bool CRenderedObject::ApplyFill(IRenderer *pRenderer, const NSCSS::NSProperties::CColor *pFill, const CSvgFile *pFile, bool bUseDefault, const CRenderedObject* pContextObject) const
 	{
-		if (NULL == pRenderer || NULL == pFill || pFill->None() || (!bUseDefault && pFill->Empty()))
+		if (nullptr == pRenderer)
+			return false;
+
+		if (nullptr == pFill || pFill->None() || (!bUseDefault && pFill->Empty()))
 		{
 			pRenderer->put_BrushType(c_BrushTypeNoFill);
 			return false;
@@ -425,12 +429,12 @@ namespace SVG
 					return false;
 			}
 		}
-		else if (NSCSS::NSProperties::EColorType::ColorContextFill == pFill->GetType() && NULL != pContextObject)
+		else if (NSCSS::NSProperties::EColorType::ColorContextFill == pFill->GetType() && nullptr != pContextObject)
 		{
 			if (!ApplyFill(pRenderer, &pContextObject->m_oStyles.m_oFill, pFile, bUseDefault, pContextObject))
 				return false;
 		}
-		else if (NSCSS::NSProperties::EColorType::ColorContextStroke == pFill->GetType() && NULL != pContextObject)
+		else if (NSCSS::NSProperties::EColorType::ColorContextStroke == pFill->GetType() && nullptr != pContextObject)
 		{
 			if (!ApplyFill(pRenderer, &pContextObject->m_oStyles.m_oStroke.m_oColor, pFile, bUseDefault, pContextObject))
 				return false;
@@ -448,7 +452,7 @@ namespace SVG
 
 	bool CRenderedObject::ApplyOpacity(IRenderer *pRenderer, const NSCSS::NSProperties::CDigit *pOpacity) const
 	{
-		if (NULL == pRenderer || NULL == pOpacity)
+		if (nullptr == pRenderer || nullptr == pOpacity)
 			return false;
 
 		return false;

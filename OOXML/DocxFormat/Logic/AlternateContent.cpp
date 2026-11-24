@@ -43,14 +43,14 @@ namespace OOX
 			{
 				if ( m_arrChoiceItems[nIndex] )
 					delete m_arrChoiceItems[nIndex];
-				m_arrChoiceItems[nIndex] = NULL;
+				m_arrChoiceItems[nIndex] = nullptr;
 			}
 			m_arrChoiceItems.clear();
 			for (unsigned int nIndex = 0; nIndex < m_arrFallbackItems.size(); nIndex++ )
 			{
 				if ( m_arrFallbackItems[nIndex] )
 					delete m_arrFallbackItems[nIndex];
-				m_arrFallbackItems[nIndex] = NULL;
+				m_arrFallbackItems[nIndex] = nullptr;
 			}
 			m_arrFallbackItems.clear();
 		}

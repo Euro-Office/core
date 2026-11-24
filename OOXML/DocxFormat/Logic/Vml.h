@@ -53,7 +53,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CVmlCommonElements)
 
-			CVmlCommonElements(OOX::Document *pMain = NULL);
+			CVmlCommonElements(OOX::Document *pMain = nullptr);
 			virtual ~CVmlCommonElements();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -145,7 +145,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CArc)
 
-			CArc(OOX::Document *pMain = NULL);
+			CArc(OOX::Document *pMain = nullptr);
 			virtual ~CArc();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -170,7 +170,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CCurve)
 
-			CCurve(OOX::Document *pMain = NULL);
+			CCurve(OOX::Document *pMain = nullptr);
 			virtual ~CCurve();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -222,7 +222,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CFill)
 
-			CFill(OOX::Document *pMain = NULL);
+			CFill(OOX::Document *pMain = nullptr);
 			virtual ~CFill();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -282,7 +282,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CBackground)
 
-			CBackground(OOX::Document *pMain = NULL);
+			CBackground(OOX::Document *pMain = nullptr);
 			virtual ~CBackground();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -307,7 +307,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CFormulas)
 
-			CFormulas(OOX::Document *pMain = NULL);
+			CFormulas(OOX::Document *pMain = nullptr);
 			virtual ~CFormulas();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -317,7 +317,7 @@ namespace OOX
 			virtual EElementType getType() const;
 
 		public:
-			// Childs
+			// Children
 		};
 
 		//--------------------------------------------------------------------------------
@@ -362,7 +362,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CHandles)
 
-			CHandles(OOX::Document *pMain = NULL);
+			CHandles(OOX::Document *pMain = nullptr);
 			virtual ~CHandles();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -372,7 +372,7 @@ namespace OOX
 			virtual EElementType getType() const;
 
 		public:
-			// Childs
+			// Children
 		};
 
 		//--------------------------------------------------------------------------------
@@ -383,7 +383,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CImage)
 
-			CImage(OOX::Document *pMain = NULL);
+			CImage(OOX::Document *pMain = nullptr);
 			virtual ~CImage();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -416,7 +416,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CImageData)
 
-			CImageData(OOX::Document *pMain = NULL);
+			CImageData(OOX::Document *pMain = nullptr);
 			virtual ~CImageData();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -463,7 +463,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CLine)
 
-			CLine(OOX::Document *pMain = NULL);
+			CLine(OOX::Document *pMain = nullptr);
 			virtual ~CLine();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -489,7 +489,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(COval)
 
-			COval(OOX::Document *pMain = NULL);
+			COval(OOX::Document *pMain = nullptr);
 			virtual ~COval();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -507,7 +507,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CPath)
 
-			CPath(OOX::Document *pMain = NULL);
+			CPath(OOX::Document *pMain = nullptr);
 			virtual ~CPath();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -545,7 +545,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CPolyLine)
 
-			CPolyLine(OOX::Document *pMain = NULL);
+			CPolyLine(OOX::Document *pMain = nullptr);
 			virtual ~CPolyLine();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -570,7 +570,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CRect)
 
-			CRect(OOX::Document *pMain = NULL);
+			CRect(OOX::Document *pMain = nullptr);
 			virtual ~CRect();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -589,7 +589,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CRoundRect)
 
-			CRoundRect(OOX::Document *pMain = NULL);
+			CRoundRect(OOX::Document *pMain = nullptr);
 			virtual ~CRoundRect();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -613,7 +613,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CShadow)
 
-			CShadow(OOX::Document *pMain = NULL);
+			CShadow(OOX::Document *pMain = nullptr);
 			virtual ~CShadow();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -647,7 +647,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CShapeType)
 
-			CShapeType(OOX::Document *pMain = NULL);
+			CShapeType(OOX::Document *pMain = nullptr);
 			virtual ~CShapeType();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -674,7 +674,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CShape)
 
-			CShape(OOX::Document *pMain = NULL);
+			CShape(OOX::Document *pMain = nullptr);
 			virtual ~CShape();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -705,7 +705,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CClientData)
 
-			CClientData(OOX::Document *pMain = NULL);
+			CClientData(OOX::Document *pMain = nullptr);
 			virtual ~CClientData();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -802,7 +802,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CStroke)
 
-			CStroke(OOX::Document *pMain = NULL);
+			CStroke(OOX::Document *pMain = nullptr);
 			virtual ~CStroke();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -860,7 +860,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CTextbox)
 
-			CTextbox(OOX::Document *pMain = NULL);
+			CTextbox(OOX::Document *pMain = nullptr);
 			virtual ~CTextbox();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -891,7 +891,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CTextPath)
 
-			CTextPath(OOX::Document *pMain = NULL);
+			CTextPath(OOX::Document *pMain = nullptr);
 			virtual ~CTextPath();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -924,7 +924,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CGroup);
 			
-			CGroup(OOX::Document *pMain = NULL);
+			CGroup(OOX::Document *pMain = nullptr);
 			virtual ~CGroup();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -960,7 +960,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CShapeDefaults)
 
-			CShapeDefaults(OOX::Document *pMain = NULL);
+			CShapeDefaults(OOX::Document *pMain = nullptr);
 			virtual ~CShapeDefaults();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);

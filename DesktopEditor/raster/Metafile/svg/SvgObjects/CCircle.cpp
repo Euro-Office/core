@@ -8,7 +8,7 @@ namespace SVG
 		: CRenderedObject(oReader, pParent)
 	{
 		START_READ_ATTRIBUTES(oReader)
-			SetAttribute(sAttributeName, oReader);
+			CCircle::SetAttribute(sAttributeName, oReader);
 		END_READ_ATTRIBUTES(oReader)
 	}
 
@@ -39,7 +39,7 @@ namespace SVG
 		if (!StartPath(pRenderer, pFile, oOldTransform, oMode))
 			return false;
 
-		TBounds oBounds = (NULL != m_pParent) ? m_pParent->GetBounds() : TBounds{0., 0., 0., 0.};
+		TBounds oBounds = (nullptr != m_pParent) ? m_pParent->GetBounds() : TBounds{0., 0., 0., 0.};
 
 		double dX = m_oCx.ToDouble(NSCSS::Pixel, oBounds.m_dRight  - oBounds.m_dLeft);
 		double dY = m_oCy.ToDouble(NSCSS::Pixel, oBounds.m_dBottom - oBounds.m_dTop);

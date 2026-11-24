@@ -139,6 +139,13 @@ namespace NExtractTools
 			// Save to file (from temp dir)
 			oCXlsxSerializer.setIsNoBase64(params.getIsNoBase64());
 			oCXlsxSerializer.setFontDir(params.getFontPath());
+			// The editor prints workbooks from OpenDocument spreadsheets by the OpenDocument rules
+			if (params.m_nFormatFrom && (AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS == *params.m_nFormatFrom ||
+				AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS_FLAT == *params.m_nFormatFrom ||
+				AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS == *params.m_nFormatFrom))
+			{
+				oCXlsxSerializer.setSourceFileType(*params.m_nFormatFrom);
+			}
 
 			nRes = oCXlsxSerializer.saveToFile(sTo, sFrom, convertParams.m_bTempIsXmlOptions ? params.getXmlOptionsFrom() : L"");
 		}
