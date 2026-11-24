@@ -51,7 +51,7 @@ namespace NSHtmlRenderer
 	public:
 		CHTMLRendererText_Private()
 		{
-			m_pTempUnicodes = NULL;
+			m_pTempUnicodes = nullptr;
 			m_nTempUnicodesLen = 0;
 			m_nTempUnicodesAlloc = 0;
 
@@ -79,7 +79,7 @@ namespace NSHtmlRenderer
 			{
 				for (int nIndex = 0; nIndex < nLen; ++nIndex)
 				{
-					int code = (int)pWchars[nIndex];
+					int code = static_cast<int>(static_cast<unsigned short>(pWchars[nIndex]));
 					if (code >= 0xD800 && code <= 0xDFFF && (nIndex + 1) < nLen)
 					{
 						++nIndex;
@@ -91,7 +91,7 @@ namespace NSHtmlRenderer
 			else
 			{
 				for (int nIndex = 0; nIndex < nLen; ++nIndex)
-					m_pTempUnicodes[m_nTempUnicodesLen++] = (int)pWchars[nIndex];
+					m_pTempUnicodes[m_nTempUnicodesLen++] = static_cast<int>(static_cast<unsigned int>(pWchars[nIndex]));
 			}
 		}
 		void WriteText(const int* pUnicodes, const int* pGids, const int& nCount, const double& x, const double& y)
@@ -197,55 +197,55 @@ namespace NSHtmlRenderer
 	}
 
 	// pen --------------------------------------------------------------------------------------
-	HRESULT CHTMLRendererText::get_PenColor(LONG* lColor) { return S_OK; }
-	HRESULT CHTMLRendererText::put_PenColor(const LONG& lColor) { return S_OK; }
-	HRESULT CHTMLRendererText::get_PenAlpha(LONG* lAlpha) { return S_OK; }
-	HRESULT CHTMLRendererText::put_PenAlpha(const LONG& lAlpha) { return S_OK; }
-	HRESULT CHTMLRendererText::get_PenSize(double* dSize) { return S_OK; }
-	HRESULT CHTMLRendererText::put_PenSize(const double& dSize) { return S_OK; }
-	HRESULT CHTMLRendererText::get_PenDashStyle(BYTE* val) { return S_OK; }
-	HRESULT CHTMLRendererText::put_PenDashStyle(const BYTE& val) { return S_OK; }
-	HRESULT CHTMLRendererText::get_PenLineStartCap(BYTE* val) { return S_OK; }
-	HRESULT CHTMLRendererText::put_PenLineStartCap(const BYTE& val) { return S_OK; }
-	HRESULT CHTMLRendererText::get_PenLineEndCap(BYTE* val) { return S_OK; }
-	HRESULT CHTMLRendererText::put_PenLineEndCap(const BYTE& val) { return S_OK; }
-	HRESULT CHTMLRendererText::get_PenLineJoin(BYTE* val) { return S_OK; }
-	HRESULT CHTMLRendererText::put_PenLineJoin(const BYTE& val) { return S_OK; }
-	HRESULT CHTMLRendererText::get_PenDashOffset(double* dOffset) { return S_OK; }
-	HRESULT CHTMLRendererText::put_PenDashOffset(const double& dOffset) { return S_OK; }
-	HRESULT CHTMLRendererText::get_PenAlign(LONG* lAlign) { return S_OK; }
-	HRESULT CHTMLRendererText::put_PenAlign(const LONG& lAlign) { return S_OK; }
-	HRESULT CHTMLRendererText::get_PenMiterLimit(double* dOffset) { return S_OK; }
-	HRESULT CHTMLRendererText::put_PenMiterLimit(const double& dOffset) { return S_OK; }
-	HRESULT CHTMLRendererText::PenDashPattern(double* pPattern, LONG lCount) { return S_OK; }
+	HRESULT CHTMLRendererText::get_PenColor(LONG*  /*lColor*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_PenColor(const LONG&  /*lColor*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_PenAlpha(LONG*  /*lAlpha*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_PenAlpha(const LONG&  /*lAlpha*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_PenSize(double*  /*dSize*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_PenSize(const double&  /*dSize*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_PenDashStyle(BYTE*  /*val*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_PenDashStyle(const BYTE&  /*val*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_PenLineStartCap(BYTE*  /*val*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_PenLineStartCap(const BYTE&  /*val*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_PenLineEndCap(BYTE*  /*val*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_PenLineEndCap(const BYTE&  /*val*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_PenLineJoin(BYTE*  /*val*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_PenLineJoin(const BYTE&  /*val*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_PenDashOffset(double*  /*dOffset*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_PenDashOffset(const double&  /*dOffset*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_PenAlign(LONG*  /*lAlign*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_PenAlign(const LONG&  /*lAlign*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_PenMiterLimit(double*  /*dOffset*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_PenMiterLimit(const double&  /*dOffset*/) { return S_OK; }
+	HRESULT CHTMLRendererText::PenDashPattern(double*  /*pPattern*/, LONG  /*lCount*/) { return S_OK; }
 
-	HRESULT CHTMLRendererText::get_BrushTextureImage(Aggplus::CImage** pImage) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushTextureImage(Aggplus::CImage* pImage) { return S_OK; }
-	HRESULT CHTMLRendererText::get_BrushTransform(Aggplus::CMatrix& oMatrix) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushTransform(const Aggplus::CMatrix& oMatrix) { return S_OK; }
+	HRESULT CHTMLRendererText::get_BrushTextureImage(Aggplus::CImage**  /*pImage*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushTextureImage(Aggplus::CImage*  /*pImage*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_BrushTransform(Aggplus::CMatrix&  /*oMatrix*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushTransform(const Aggplus::CMatrix&  /*oMatrix*/) { return S_OK; }
 
 	// brush ------------------------------------------------------------------------------------
-	HRESULT CHTMLRendererText::get_BrushType(LONG* lType) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushType(const LONG& lType) { return S_OK; }
-	HRESULT CHTMLRendererText::get_BrushColor1(LONG* lColor) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushColor1(const LONG& lColor) { return S_OK; }
-	HRESULT CHTMLRendererText::get_BrushAlpha1(LONG* lAlpha) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushAlpha1(const LONG& lAlpha) { return S_OK; }
-	HRESULT CHTMLRendererText::get_BrushColor2(LONG* lColor) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushColor2(const LONG& lColor) { return S_OK; }
-	HRESULT CHTMLRendererText::get_BrushAlpha2(LONG* lAlpha) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushAlpha2(const LONG& lAlpha) { return S_OK; }
-	HRESULT CHTMLRendererText::get_BrushTexturePath(std::wstring* bsPath) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushTexturePath(const std::wstring& bsPath) { return S_OK; }
-	HRESULT CHTMLRendererText::get_BrushTextureMode(LONG* lMode) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushTextureMode(const LONG& lMode) { return S_OK; }
-	HRESULT CHTMLRendererText::get_BrushTextureAlpha(LONG* lTxAlpha) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushTextureAlpha(const LONG& lTxAlpha) { return S_OK; }
-	HRESULT CHTMLRendererText::get_BrushLinearAngle(double* dAngle) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushLinearAngle(const double& dAngle) { return S_OK; }
-	HRESULT CHTMLRendererText::BrushRect(const INT& val, const double& left, const double& top, const double& width, const double& height) { return S_OK; }
-	HRESULT CHTMLRendererText::BrushBounds(const double& left, const double& top, const double& width, const double& height) { return S_OK; }
-	HRESULT CHTMLRendererText::put_BrushGradientColors(LONG* lColors, double* pPositions, LONG nCount) { return S_OK; }
+	HRESULT CHTMLRendererText::get_BrushType(LONG*  /*lType*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushType(const LONG&  /*lType*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_BrushColor1(LONG*  /*lColor*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushColor1(const LONG&  /*lColor*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_BrushAlpha1(LONG*  /*lAlpha*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushAlpha1(const LONG&  /*lAlpha*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_BrushColor2(LONG*  /*lColor*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushColor2(const LONG&  /*lColor*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_BrushAlpha2(LONG*  /*lAlpha*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushAlpha2(const LONG&  /*lAlpha*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_BrushTexturePath(std::wstring*  /*bsPath*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushTexturePath(const std::wstring&  /*bsPath*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_BrushTextureMode(LONG*  /*lMode*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushTextureMode(const LONG&  /*lMode*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_BrushTextureAlpha(LONG*  /*lTxAlpha*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushTextureAlpha(const LONG&  /*lTxAlpha*/) { return S_OK; }
+	HRESULT CHTMLRendererText::get_BrushLinearAngle(double*  /*dAngle*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushLinearAngle(const double&  /*dAngle*/) { return S_OK; }
+	HRESULT CHTMLRendererText::BrushRect(const INT&  /*val*/, const double&  /*left*/, const double&  /*top*/, const double&  /*width*/, const double&  /*height*/) { return S_OK; }
+	HRESULT CHTMLRendererText::BrushBounds(const double&  /*left*/, const double&  /*top*/, const double&  /*width*/, const double&  /*height*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_BrushGradientColors(LONG*  /*lColors*/, double*  /*pPositions*/, LONG  /*nCount*/) { return S_OK; }
 
 	// font -------------------------------------------------------------------------------------
 	HRESULT CHTMLRendererText::get_FontName(std::wstring* bsName)
@@ -320,19 +320,19 @@ namespace NSHtmlRenderer
 	}
 
 	//-------- Functions for text output --------------------------------------------------------
-	HRESULT CHTMLRendererText::CommandDrawTextCHAR(const LONG& c, const double& x, const double& y, const double& w, const double& h)
+	HRESULT CHTMLRendererText::CommandDrawTextCHAR(const LONG& c, const double& x, const double& y, const double&  /*w*/, const double&  /*h*/)
 	{
 		int _c = (int)c;
-		m_pInternal->WriteText(&_c, NULL, 1, x, y);
+		m_pInternal->WriteText(&_c, nullptr, 1, x, y);
 		return S_OK;
 	}
-	HRESULT CHTMLRendererText::CommandDrawText(const std::wstring& bsText, const double& x, const double& y, const double& w, const double& h)
+	HRESULT CHTMLRendererText::CommandDrawText(const std::wstring& bsText, const double& x, const double& y, const double&  /*w*/, const double&  /*h*/)
 	{
 		m_pInternal->GetUnicodes(bsText);
-		m_pInternal->WriteText(m_pInternal->m_pTempUnicodes, NULL, m_pInternal->m_nTempUnicodesLen, x, y);
+		m_pInternal->WriteText(m_pInternal->m_pTempUnicodes, nullptr, m_pInternal->m_nTempUnicodesLen, x, y);
 		return S_OK;
 	}
-	HRESULT CHTMLRendererText::CommandDrawTextExCHAR(const LONG& c, const LONG& gid, const double& x, const double& y, const double& w, const double& h)
+	HRESULT CHTMLRendererText::CommandDrawTextExCHAR(const LONG& c, const LONG& gid, const double& x, const double& y, const double&  /*w*/, const double&  /*h*/)
 	{
 		int _c = (int)c;
 		int _g = (int)gid;
@@ -340,7 +340,7 @@ namespace NSHtmlRenderer
 		m_pInternal->WriteText(&_c, &_g, 1, x, y);
 		return S_OK;
 	}
-	HRESULT CHTMLRendererText::CommandDrawTextEx(const std::wstring& bsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& x, const double& y, const double& w, const double& h)
+	HRESULT CHTMLRendererText::CommandDrawTextEx(const std::wstring& bsUnicodeText, const unsigned int* pGids, const unsigned int  /*nGidsCount*/, const double& x, const double& y, const double&  /*w*/, const double&  /*h*/)
 	{
 		m_pInternal->GetUnicodes(bsUnicodeText);
 		m_pInternal->WriteText(m_pInternal->m_pTempUnicodes, (const int*)pGids, m_pInternal->m_nTempUnicodesLen, x, y);
@@ -348,30 +348,30 @@ namespace NSHtmlRenderer
 	}
 
 	//-------- Markers for commands ---------------------------------------------------------------
-	HRESULT CHTMLRendererText::BeginCommand(const DWORD& lType) { return S_OK; }
-	HRESULT CHTMLRendererText::EndCommand(const DWORD& lType) { return S_OK; }
+	HRESULT CHTMLRendererText::BeginCommand(const DWORD&  /*lType*/) { return S_OK; }
+	HRESULT CHTMLRendererText::EndCommand(const DWORD&  /*lType*/) { return S_OK; }
 
 	//-------- Functions for working with Graphics Path -----------------------------------------------
-	HRESULT CHTMLRendererText::PathCommandMoveTo(const double& x, const double& y) { return S_OK; }
-	HRESULT CHTMLRendererText::PathCommandLineTo(const double& x, const double& y) { return S_OK; }
-	HRESULT CHTMLRendererText::PathCommandLinesTo(double* points, const int& count) { return S_OK; }
-	HRESULT CHTMLRendererText::PathCommandCurveTo(const double& x1, const double& y1, const double& x2, const double& y2, const double& x3, const double& y3) { return S_OK; }
-	HRESULT CHTMLRendererText::PathCommandCurvesTo(double* points, const int& count) { return S_OK; }
-	HRESULT CHTMLRendererText::PathCommandArcTo(const double& x, const double& y, const double& w, const double& h, const double& startAngle, const double& sweepAngle) { return S_OK; }
+	HRESULT CHTMLRendererText::PathCommandMoveTo(const double&  /*x*/, const double&  /*y*/) { return S_OK; }
+	HRESULT CHTMLRendererText::PathCommandLineTo(const double&  /*x*/, const double&  /*y*/) { return S_OK; }
+	HRESULT CHTMLRendererText::PathCommandLinesTo(double*  /*points*/, const int&  /*count*/) { return S_OK; }
+	HRESULT CHTMLRendererText::PathCommandCurveTo(const double&  /*x1*/, const double&  /*y1*/, const double&  /*x2*/, const double&  /*y2*/, const double&  /*x3*/, const double&  /*y3*/) { return S_OK; }
+	HRESULT CHTMLRendererText::PathCommandCurvesTo(double*  /*points*/, const int&  /*count*/) { return S_OK; }
+	HRESULT CHTMLRendererText::PathCommandArcTo(const double&  /*x*/, const double&  /*y*/, const double&  /*w*/, const double&  /*h*/, const double&  /*startAngle*/, const double&  /*sweepAngle*/) { return S_OK; }
 	HRESULT CHTMLRendererText::PathCommandClose() { return S_OK; }
 	HRESULT CHTMLRendererText::PathCommandEnd() { return S_OK; }
-	HRESULT CHTMLRendererText::DrawPath(const LONG& nType) { return S_OK; }
+	HRESULT CHTMLRendererText::DrawPath(const LONG&  /*nType*/) { return S_OK; }
 	HRESULT CHTMLRendererText::PathCommandStart() { return S_OK; }
-	HRESULT CHTMLRendererText::PathCommandGetCurrentPoint(double* x, double* y) { return S_OK; }
-	HRESULT CHTMLRendererText::PathCommandTextCHAR(const LONG& c, const double& x, const double& y, const double& w, const double& h) { return S_OK; }
-	HRESULT CHTMLRendererText::PathCommandText(const std::wstring& bsText, const double& x, const double& y, const double& w, const double& h) { return S_OK; }
-	HRESULT CHTMLRendererText::PathCommandTextExCHAR(const LONG& c, const LONG& gid, const double& x, const double& y, const double& w, const double& h) { return S_OK; }
-	HRESULT CHTMLRendererText::PathCommandTextEx(const std::wstring& bsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& x, const double& y, const double& w, const double& h) { return S_OK; }
+	HRESULT CHTMLRendererText::PathCommandGetCurrentPoint(double*  /*x*/, double*  /*y*/) { return S_OK; }
+	HRESULT CHTMLRendererText::PathCommandTextCHAR(const LONG&  /*c*/, const double&  /*x*/, const double&  /*y*/, const double&  /*w*/, const double&  /*h*/) { return S_OK; }
+	HRESULT CHTMLRendererText::PathCommandText(const std::wstring&  /*bsText*/, const double&  /*x*/, const double&  /*y*/, const double&  /*w*/, const double&  /*h*/) { return S_OK; }
+	HRESULT CHTMLRendererText::PathCommandTextExCHAR(const LONG&  /*c*/, const LONG&  /*gid*/, const double&  /*x*/, const double&  /*y*/, const double&  /*w*/, const double&  /*h*/) { return S_OK; }
+	HRESULT CHTMLRendererText::PathCommandTextEx(const std::wstring&  /*bsUnicodeText*/, const unsigned int*  /*pGids*/, const unsigned int  /*nGidsCount*/, const double&  /*x*/, const double&  /*y*/, const double&  /*w*/, const double&  /*h*/) { return S_OK; }
 
 	//-------- Functions for displaying images ------------------------------------------------------------------
-	HRESULT CHTMLRendererText::DrawImage(IGrObject* pImage, const double& x, const double& y, const double& w, const double& h) { return S_OK; }
+	HRESULT CHTMLRendererText::DrawImage(IGrObject*  /*pImage*/, const double&  /*x*/, const double&  /*y*/, const double&  /*w*/, const double&  /*h*/) { return S_OK; }
 
-	HRESULT CHTMLRendererText::DrawImageFromFile(const std::wstring& sPath, const double& x, const double& y, const double& w, const double& h, const BYTE& lAlpha) { return S_OK; }
+	HRESULT CHTMLRendererText::DrawImageFromFile(const std::wstring&  /*sPath*/, const double&  /*x*/, const double&  /*y*/, const double&  /*w*/, const double&  /*h*/, const BYTE&  /*lAlpha*/) { return S_OK; }
 
 	// transform --------------------------------------------------------------------------------
 	HRESULT CHTMLRendererText::SetTransform(const double& m1, const double& m2, const double& m3, const double& m4, const double& m5, const double& m6)
@@ -396,11 +396,11 @@ namespace NSHtmlRenderer
 	}
 
 	// -----------------------------------------------------------------------------------------
-	HRESULT CHTMLRendererText::get_ClipMode(LONG* plMode) { return S_OK; }
-	HRESULT CHTMLRendererText::put_ClipMode(const LONG& lMode) { return S_OK; }
+	HRESULT CHTMLRendererText::get_ClipMode(LONG*  /*plMode*/) { return S_OK; }
+	HRESULT CHTMLRendererText::put_ClipMode(const LONG&  /*lMode*/) { return S_OK; }
 
 	// additiaonal params ----------------------------------------------------------------------
-	HRESULT CHTMLRendererText::CommandLong(const LONG& lType, const LONG& lCommand) { return S_OK; }
-	HRESULT CHTMLRendererText::CommandDouble(const LONG& lType, const double& dCommand) { return S_OK; }
-	HRESULT CHTMLRendererText::CommandString(const LONG& lType, const std::wstring& sCommand) { return S_OK; }
+	HRESULT CHTMLRendererText::CommandLong(const LONG&  /*lType*/, const LONG&  /*lCommand*/) { return S_OK; }
+	HRESULT CHTMLRendererText::CommandDouble(const LONG&  /*lType*/, const double&  /*dCommand*/) { return S_OK; }
+	HRESULT CHTMLRendererText::CommandString(const LONG&  /*lType*/, const std::wstring&  /*sCommand*/) { return S_OK; }
 }

@@ -169,7 +169,7 @@ namespace Jpeg2000
 
 	bool CJ2kFile::Open(CBgraFrame* pFrame, const std::wstring& wsSrcPath, const std::wstring& wsXmlOptions, bool isBGRA)
 	{
-		Image *pImage = NULL;
+		Image *pImage = nullptr;
 
 		DecoderParams oParameters;
 
@@ -187,16 +187,16 @@ namespace Jpeg2000
 
 		bool bOpenResult = false;
 		if (!bOpenResult && type == 1)
-			bOpenResult = (NULL != (pImage = Jp2ToImage(wsSrcPath, &oParameters)));
+			bOpenResult = (nullptr != (pImage = Jp2ToImage(wsSrcPath, &oParameters)));
 
 		if (!bOpenResult && type == 2)
-			bOpenResult = (NULL != (pImage = J2kToImage(wsSrcPath, &oParameters)));
+			bOpenResult = (nullptr != (pImage = J2kToImage(wsSrcPath, &oParameters)));
 
 		if (!bOpenResult && type == 3)
-			bOpenResult = (NULL != (pImage = Mj2ToImage(wsSrcPath, &oParameters)));
+			bOpenResult = (nullptr != (pImage = Mj2ToImage(wsSrcPath, &oParameters)));
 
 		if (!bOpenResult && type == 4)
-			bOpenResult = (NULL != (pImage = JptToImage(wsSrcPath, &oParameters)));
+			bOpenResult = (nullptr != (pImage = JptToImage(wsSrcPath, &oParameters)));
 
 		if (!bOpenResult)
 		{
@@ -211,7 +211,7 @@ namespace Jpeg2000
 	}
 	bool CJ2kFile::Open(CBgraFrame* pFrame, BYTE* pBuffer, int nSize,      const std::wstring& wsXmlOptions, bool isBGRA)
 	{
-		Image *pImage = NULL;
+		Image *pImage = nullptr;
 
 		DecoderParams oParameters;
 
@@ -224,16 +224,16 @@ namespace Jpeg2000
 
 		bool bOpenResult = false;
 		if (!bOpenResult && type == 1)
-			bOpenResult = (NULL != (pImage = Jp2ToImage(pBuffer, nSize, &oParameters)));
+			bOpenResult = (nullptr != (pImage = Jp2ToImage(pBuffer, nSize, &oParameters)));
 
 		if (!bOpenResult && type == 2)
-			bOpenResult = (NULL != (pImage = J2kToImage(pBuffer, nSize, &oParameters)));
+			bOpenResult = (nullptr != (pImage = J2kToImage(pBuffer, nSize, &oParameters)));
 
 		if (!bOpenResult && type == 3)
-			bOpenResult = (NULL != (pImage = Mj2ToImage(pBuffer, nSize, &oParameters)));
+			bOpenResult = (nullptr != (pImage = Mj2ToImage(pBuffer, nSize, &oParameters)));
 
 		if (!bOpenResult && type == 4)
-			bOpenResult = (NULL != (pImage = JptToImage(pBuffer, nSize, &oParameters)));
+			bOpenResult = (nullptr != (pImage = JptToImage(pBuffer, nSize, &oParameters)));
 
 		if (!bOpenResult)
 		{
@@ -248,7 +248,7 @@ namespace Jpeg2000
 	}
 	bool CJ2kFile::Open(BYTE** ppData, int& nComponentsCount, int& nWidth, int& nHeight, const std::wstring& wsSrcPath, const std::wstring& wsXmlOptions)
 	{
-		Image *pImage = NULL;
+		Image *pImage = nullptr;
 
 		DecoderParams oParameters;
 
@@ -261,23 +261,21 @@ namespace Jpeg2000
 		if (!oFile.OpenFile(wsSrcPath))
 			return false;
 
-		DWORD nFileSize = oFile.GetFileSize();
-
 		int type = check_j2000_type(oFile.GetFileNative());
 		oFile.CloseFile();
 
 		bool bOpenResult = false;
 		if (!bOpenResult && type == 1)
-			bOpenResult = (NULL != (pImage = Jp2ToImage(wsSrcPath, &oParameters)));
+			bOpenResult = (nullptr != (pImage = Jp2ToImage(wsSrcPath, &oParameters)));
 
 		if (!bOpenResult && type == 2)
-			bOpenResult = (NULL != (pImage = J2kToImage(wsSrcPath, &oParameters)));
+			bOpenResult = (nullptr != (pImage = J2kToImage(wsSrcPath, &oParameters)));
 
 		if (!bOpenResult && type == 3)
-			bOpenResult = (NULL != (pImage = Mj2ToImage(wsSrcPath, &oParameters)));
+			bOpenResult = (nullptr != (pImage = Mj2ToImage(wsSrcPath, &oParameters)));
 
 		if (!bOpenResult && type == 4)
-			bOpenResult = (NULL != (pImage = JptToImage(wsSrcPath, &oParameters)));
+			bOpenResult = (nullptr != (pImage = JptToImage(wsSrcPath, &oParameters)));
 
 		if (!bOpenResult)
 		{
@@ -303,7 +301,6 @@ namespace Jpeg2000
 		}
 
 		unsigned char* pBufferPtr = (unsigned char*)(*ppData);
-		long nCreatedBufferSize = nBufferSize;
 
 		nComponentsCount = pImage->nCsiz;
 
@@ -355,7 +352,7 @@ namespace Jpeg2000
 
 		// TODO: Add ability to record alpha channel
 		ImageComponentParams aComponentParams[3]; // For now, let there be a maximum of three components (RGB)
-		Image *pImage = NULL;
+		Image *pImage = nullptr;
 		int nComponentsCount = oParameters.nComponentsCount;
 
 		memset(&aComponentParams[0], 0, sizeof(ImageComponentParams));
@@ -425,7 +422,7 @@ namespace Jpeg2000
 		return bRes;
 	}
 
-	void CJ2kFile::ApplyDecoderOptions(void *pParametersV, const std::wstring& sXml)
+	void CJ2kFile::ApplyDecoderOptions(void *pParametersV, const std::wstring&  /*sXml*/)
 	{
 		DecoderParams* pParameters = (DecoderParams*)pParametersV;
 		memset(pParameters, 0, sizeof(DecoderParams));
@@ -471,9 +468,9 @@ namespace Jpeg2000
 		//	}
 		//}
 	}
-	long CJ2kFile::ApplyEncoderOptions(void *pParametersV, const std::wstring& sXml)
+	long CJ2kFile::ApplyEncoderOptions(void *pParametersV, const std::wstring&  /*sXml*/)
 	{
-		EncoderParams* pParameters = (EncoderParams*)pParameters;
+		EncoderParams* pParameters = (EncoderParams*)pParametersV;
 		int nFormat = 0; // J2k
 		// First, set the standard parameter values
 		memset(pParameters, 0, sizeof(EncoderParams));
