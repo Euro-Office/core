@@ -236,7 +236,10 @@ namespace BinXlsxRW
 		XmlMap = 30,
 		RdRichValue = 31,
 		RdRichValueStructure = 32,
-		RdRichValueTypes = 33
+		RdRichValueTypes = 33,
+		// Euro-Office extension: kept far above the ids above so that a record added later in the
+		// same sequence cannot take it
+		SourceFileType = 100
 	};}
 	namespace c_oSerWorkbookProtection {enum c_oSerWorkbookProtection{
 		AlgorithmName = 0,

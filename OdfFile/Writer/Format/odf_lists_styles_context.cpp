@@ -477,10 +477,12 @@ void odf_lists_styles_context::set_numeric_format(std::wstring val)
 			}
 			style_number_->text_list_level_style_number_attr_.text_display_levels_ = level;
 
-			s = s.substr(0,r1);
+			// the suffix is the text after the last placeholder ("%1.%2)" -> ")")
+			s = s.substr(s.rfind(L"%"));
 		}
 		
-		boost::wregex r(L"(\\%[0-9]+)(\\S+)");
+		// keep whitespace in the suffix ("%1. " -> ". "), as LibreOffice does
+		boost::wregex r(L"(\\%[0-9]+)(.+)");
 		boost::match_results<std::wstring::const_iterator> res;
 		if ( boost::regex_match(s, res, r))
 		{
