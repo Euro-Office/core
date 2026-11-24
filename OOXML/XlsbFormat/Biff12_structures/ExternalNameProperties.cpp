@@ -36,7 +36,7 @@ namespace XLSB
 
     ExternalNameProperties::ExternalNameProperties(XLS::CFRecord& record)
     {
-        load(record);
+        ExternalNameProperties::load(record);
     }
 
     ExternalNameProperties::~ExternalNameProperties()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void ExternalNameProperties::load(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
 
         record >> flags >> iSheet;
 

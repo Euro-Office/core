@@ -28,9 +28,11 @@
 
 namespace SimpleTypes
 {
+// NOLINTBEGIN(bugprone-macro-parentheses): the class name is used in declarations
 #define SimpleTypes_DefaultString(Class)																		\
 	Class(const std::wstring &sValue) { FromString(sValue); }													\
 	Class& operator=(const std::wstring& sValue) { FromString(sValue); return *this; }
+// NOLINTEND(bugprone-macro-parentheses)
 
 #define SimpleTypes_Default(Class)																				\
 	bool operator==(const Class& oOther) const { return (this->m_eValue == oOther.m_eValue) ? true : false; }	\
@@ -44,6 +46,7 @@ namespace SimpleTypes
 	bool operator==(const Class& oOther) const { return (this->m_sValue == oOther.m_sValue) ? true : false; }	\
 	SimpleTypes_DefaultString(Class)
 
+// NOLINTBEGIN(bugprone-macro-parentheses): the class/type names are used in declarations
 #define DEFINE_SIMPLE_TYPE_BASE(Class, Type, Default)															\
 	class Class                                                                                                 \
 	{                                                                                                           \
@@ -60,6 +63,7 @@ namespace SimpleTypes
 		std::wstring ToString() const;                                                                          \
 	public:                                                                                                     \
 		Type m_eValue;
+// NOLINTEND(bugprone-macro-parentheses)
 
 #define DEFINE_SIMPLE_TYPE_START(Class, Type, Default)															\
 	DEFINE_SIMPLE_TYPE_BASE(Class, Type, Default)                                                               \

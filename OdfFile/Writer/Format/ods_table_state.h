@@ -500,6 +500,7 @@ public:
 
 	_INT32 dimension_columns;
 	_INT32 dimension_row;
+	_INT32 columns_count = 0;
 
 	double defaut_column_width_sym_ = 0;
 	double defaut_column_width_;

@@ -36,7 +36,7 @@ namespace XLSB
 
     ACProductVersion::ACProductVersion(XLS::CFRecord& record)
     {
-        load(record);
+        ACProductVersion::load(record);
     }
 
     ACProductVersion::~ACProductVersion()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void ACProductVersion::load(XLS::CFRecord& record)
     {
-		_UINT16 flags;
+		_UINT16 flags = 0;
 
         record >> fileVersion >> flags;
 

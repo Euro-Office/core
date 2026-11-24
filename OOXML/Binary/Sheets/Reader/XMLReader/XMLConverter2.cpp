@@ -33,7 +33,7 @@ XMLConverter::XMLConverter(XmlUtils::CXmlLiteReader &reader, std::shared_ptr<Xml
     reader_{&reader},
     nodeTree_{xmlStruct},
     colNames_{&nameController},
-    nodePointer_{*nodeTree_->childs.begin()},
+    nodePointer_{*nodeTree_->children.begin()},
     listableColumns_{&repeatebleValues}
 {
     parents_.push_back(xmlStruct);
@@ -120,7 +120,7 @@ void XMLConverter::ConvertXml(XLSXTableController &table)
 void XMLConverter::openNode()
 {
     auto nodename = reader_->GetName();
-    for(auto i = parents_.back()->childs.begin(); i != parents_.back()->childs.end(); i++)
+    for(auto i = parents_.back()->children.begin(); i != parents_.back()->children.end(); i++)
     {
         if((*i)->name == nodename)
         {
@@ -215,7 +215,7 @@ void XMLConverter::closeNode()
             openednodes_.erase(key); // Removing an element with a specified key
         }
 
-        if((!nodePointer_->ValueColumnName.empty() || !nodePointer_->childs.empty()) && closedNode)
+        if((!nodePointer_->ValueColumnName.empty() || !nodePointer_->children.empty()) && closedNode)
         {
             writingRows_.push_back(nodePointer_);
             for(auto i = listableColumns_->begin(); i != listableColumns_->end(); i++)
@@ -284,13 +284,13 @@ void XMLConverter::fillAttribures(XLSXTableController &table, std::shared_ptr<Xm
     }
 }
 
-void XMLConverter::moveParentAttributes(const std::shared_ptr<XmlNode> parent, const std::set<std::shared_ptr<XmlNode>>childs, const _UINT32 inheritersCount)
+void XMLConverter::moveParentAttributes(const std::shared_ptr<XmlNode> parent, const std::set<std::shared_ptr<XmlNode>>children, const _UINT32 inheritersCount)
 {
     std::unordered_set<std::wstring> nodeColumns{};
     std::unordered_set<std::wstring> excludedColumns{};
     uint32_t dataEndPos = writingRows_.size() -1;
 
-    for(auto i:childs)
+    for(auto i:children)
     {
         if(!i->attributes.empty())
         {

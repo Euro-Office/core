@@ -92,10 +92,10 @@ namespace NSJSBase {
 	BYTE* CJSDataBuffer::Copy()
 	{
 		if (0 == Len)
-			return NULL;
+			return nullptr;
 		BYTE* pMem = new BYTE[Len];
 		if (!pMem)
-			return NULL;
+			return nullptr;
 
 		memcpy(pMem, Data, Len);
 		return pMem;
@@ -103,7 +103,7 @@ namespace NSJSBase {
 
 	CJSDataBuffer::CJSDataBuffer()
 	{
-		Data = NULL;
+		Data = nullptr;
 		Len = 0;
 		IsExternalize = false;
 	}
@@ -113,11 +113,11 @@ namespace NSJSBase {
 		if (Data)
 		{
 			NSAllocator::Free(Data, Len);
-			Data = NULL;
+			Data = nullptr;
 		}
 	}
 
-	CJSTypedArray::CJSTypedArray(BYTE* data, int count)
+	CJSTypedArray::CJSTypedArray(BYTE*  /*data*/, int  /*count*/)
 	{
 	}
 

@@ -109,9 +109,7 @@ namespace OOX
 			auto ptr = static_cast<XLSB::Fill*>(obj.get());
 			if(m_oPatternType.IsInit())
 			{
-				if (m_oPatternType == SimpleTypes::Spreadsheet::EPatternType::patterntypeNone)
-					ptr->fls = 0x00;
-				else if (m_oPatternType == SimpleTypes::Spreadsheet::EPatternType::patterntypeSolid)
+				if (m_oPatternType == SimpleTypes::Spreadsheet::EPatternType::patterntypeSolid)
 					ptr->fls = 0x01;
 				else if (m_oPatternType == SimpleTypes::Spreadsheet::EPatternType::patterntypeMediumGray)
 					ptr->fls = 0x02;
@@ -222,6 +220,7 @@ namespace OOX
 							m_oPatternType = SimpleTypes::Spreadsheet::EPatternType::patterntypeGray125; break;
 						case 0x12:
 							m_oPatternType = SimpleTypes::Spreadsheet::EPatternType::patterntypeGray0625; break;
+						default: break;
 					}
 
 					m_oBgColor.Init();
@@ -500,7 +499,7 @@ namespace OOX
 			m_oPatternFill  = obj;
 			m_oGradientFill = obj;
 
-			if ((m_oGradientFill.IsInit()) && (false == m_oGradientFill->m_oType.IsInit()))
+			if ((m_oGradientFill.IsInit()) && (!m_oGradientFill->m_oType.IsInit()))
 				m_oGradientFill.reset();
 		}
 		XLS::BaseObjectPtr CFill::toBin()
@@ -547,7 +546,7 @@ namespace OOX
 					WritingElement_ReadAttributes_Read_else_if( oReader, _T("ss:Color"), sColor )
 				WritingElement_ReadAttributes_End( oReader )
 
-				if (sColor.IsInit() == false && sPattern.IsInit() == false && sPatternColor.IsInit() == false) return;
+				if (!sColor.IsInit() && !sPattern.IsInit() && !sPatternColor.IsInit()) return;
 
 				m_oPatternFill.Init();
 				if (sColor.IsInit())

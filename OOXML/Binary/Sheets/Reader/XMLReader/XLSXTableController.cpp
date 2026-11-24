@@ -53,7 +53,7 @@ void XLSXTableController::FormBook()
     /// @todo make sure the block is executed only once
     if(1)
     {
-        auto pWorksheet = new OOX::Spreadsheet::CWorksheet(NULL);
+        auto pWorksheet = new OOX::Spreadsheet::CWorksheet(nullptr);
         pWorksheet->m_oSheetData.Init();
         for(int i = 1; i< tableRows_.size(); i++)
         {
@@ -67,7 +67,6 @@ void XLSXTableController::FormBook()
 void XLSXTableController::AddCell(const std::wstring &sText, INT nRow, INT nCol)
 {
 
-    size_t length = sText.length();
     // Don't write empty words
     if (sText.empty() || (sText[0] == L'\0'))
     {

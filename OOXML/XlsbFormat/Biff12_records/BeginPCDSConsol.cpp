@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginPCDSConsol::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flag;
+        _UINT16 flag = 0;
 
         record >> flag;
 

@@ -36,7 +36,7 @@ namespace XLSB
 
     ECTwFldInfoData::ECTwFldInfoData(XLS::CFRecord& record)
     {
-        load(record);
+        ECTwFldInfoData::load(record);
     }
 
     ECTwFldInfoData::~ECTwFldInfoData()

@@ -46,7 +46,7 @@ namespace XLSB
     void BeginUserCsView::readFields(XLS::CFRecord& record)
     {
         _GUID_          guid_;
-        _UINT32         flags;
+        _UINT32         flags = 0;
 
         record >> guid_ >> iTabId >> dwScale >> flags;
 

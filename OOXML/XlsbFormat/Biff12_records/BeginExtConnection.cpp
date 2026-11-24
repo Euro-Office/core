@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginExtConnection::readFields(XLS::CFRecord& record)
     {
-        _UINT32 flags;
+        _UINT32 flags = 0;
 
         record >> bVerRefreshed >> bVerRefreshableMin >> pc;
 

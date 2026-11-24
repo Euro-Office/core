@@ -84,7 +84,7 @@ namespace Spreadsheet
 			pWriter->StartRecord(0);
 			BinXlsxRW::BinaryStyleTableWriter oBinaryStyleTableWriter(*pWriter, &pWriter->m_pCommon->m_pNativePicker->m_oEmbeddedFonts);
 			DocWrapper::FontProcessor oFontProcessor;
-			OOX::Spreadsheet::CIndexedColors* pIndexedColors = NULL;
+			OOX::Spreadsheet::CIndexedColors* pIndexedColors = nullptr;
 			
 			CXlsx* xlsx = dynamic_cast<CXlsx*>(m_pMainDocument);			
 			if (xlsx && xlsx->m_pStyles && xlsx->m_pStyles->m_oColors.IsInit() && xlsx->m_pStyles->m_oColors->m_oIndexedColors.IsInit())
@@ -124,6 +124,7 @@ namespace Spreadsheet
 				m_oId = pReader->GetString2();
 				break;
 			}
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -133,7 +134,7 @@ namespace Spreadsheet
 			{
 			case 0:
 			{
-				OOX::Spreadsheet::CStyles oStyles(NULL);
+				OOX::Spreadsheet::CStyles oStyles(nullptr);
 				BinXlsxRW::BinaryStyleTableReader style_reader(*pReader, oStyles);
 				m_oDxf.Init();
 				style_reader.ReadDxfExternal(m_oDxf.GetPointer());
@@ -147,7 +148,7 @@ namespace Spreadsheet
 //			}
 			case 2:
 			{
-				BinXlsxRW::BinaryTableReader table_reader(*pReader, NULL);
+				BinXlsxRW::BinaryTableReader table_reader(*pReader, nullptr);
 				m_oSortCondition.Init();
 				table_reader.ReadSortConditionExternal(m_oSortCondition.GetPointer());
 				break;
@@ -236,6 +237,7 @@ namespace Spreadsheet
 				m_oCaseSensitive = pReader->GetBool();
 				break;
 			}
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -325,7 +327,7 @@ namespace Spreadsheet
 			pWriter->StartRecord(0);
 			BinXlsxRW::BinaryStyleTableWriter oBinaryStyleTableWriter(*pWriter, &pWriter->m_pCommon->m_pNativePicker->m_oEmbeddedFonts);
 			DocWrapper::FontProcessor oFontProcessor;
-			OOX::Spreadsheet::CIndexedColors* pIndexedColors = NULL;
+			OOX::Spreadsheet::CIndexedColors* pIndexedColors = nullptr;
 			
 			CXlsx* xlsx = dynamic_cast<CXlsx*>(m_pMainDocument);
 			if (xlsx && xlsx->m_pStyles && xlsx->m_pStyles->m_oColors.IsInit() && xlsx->m_pStyles->m_oColors->m_oIndexedColors.IsInit())
@@ -370,6 +372,7 @@ namespace Spreadsheet
 				m_oId = pReader->GetString2();
 				break;
 			}
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -379,7 +382,7 @@ namespace Spreadsheet
 			{
 			case 0:
 			{
-				OOX::Spreadsheet::CStyles oStyles(NULL);
+				OOX::Spreadsheet::CStyles oStyles(nullptr);
 				BinXlsxRW::BinaryStyleTableReader style_reader(*pReader, oStyles);
 				m_oDxf.Init();
 				style_reader.ReadDxfExternal(m_oDxf.GetPointer());
@@ -388,7 +391,7 @@ namespace Spreadsheet
 			case 1:
 			{
 				pReader->Skip(4);
-				BinXlsxRW::BinaryTableReader table_reader(*pReader, NULL);
+				BinXlsxRW::BinaryTableReader table_reader(*pReader, nullptr);
 				ULONG _c = pReader->GetULong();
 				for (ULONG i = 0; i < _c; ++i)
 				{
@@ -500,6 +503,7 @@ namespace Spreadsheet
 				m_oTableId = pReader->GetULong();
 				break;
 			}
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -611,6 +615,7 @@ namespace Spreadsheet
 				m_oId = pReader->GetString2();
 				break;
 			}
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -741,7 +746,7 @@ namespace Spreadsheet
 	CNamedSheetViewFile::CNamedSheetViewFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 	{
 		m_bSpreadsheets = true;
-		read( oRootPath, oPath );
+		CNamedSheetViewFile::read( oRootPath, oPath );
 	}
 	void CNamedSheetViewFile::read(const CPath& oPath)
 	{

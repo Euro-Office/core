@@ -273,7 +273,7 @@ namespace OOX
 			CQueryTableFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 			{
 				m_bSpreadsheets = true;
-				read( oRootPath, oPath );
+				CQueryTableFile::read( oRootPath, oPath );
 			}
 			virtual ~CQueryTableFile()
 			{
