@@ -50,6 +50,7 @@ namespace BinXlsxRW {
 		NSBinPptxRW::CDrawingConverter* m_pExternalDrawingConverter;
 		bool m_bIsNoBase64;
 		bool m_bIsMacro;
+		int m_nSourceFileType;
 	public:
 		CXlsxSerializer();
 		~CXlsxSerializer();
@@ -64,6 +65,8 @@ namespace BinXlsxRW {
         void setEmbeddedFontsDir(const std::wstring& sEmbeddedFontsDir);
 		void setDrawingConverter(NSBinPptxRW::CDrawingConverter* pDrawingConverter);
 		void setIsNoBase64		(bool val);
+		// File type (AVS_OFFICESTUDIO_FILE_*) the workbook is converted from, stored in the binary file
+		void setSourceFileType	(int nFileType);
 		
 		void setMacroEnabled	(bool val);
 		bool getMacroEnabled	();

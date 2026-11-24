@@ -202,6 +202,9 @@ namespace BinXlsxRW
 		OOX::Spreadsheet::CXlsxFlat *m_pXlsxFlat;
 	public:
 		BinaryWorkbookTableWriter(NSBinPptxRW::CBinaryFileWriter &oCBufferedStream, OOX::Document *pDocument);
+
+		// File type (AVS_OFFICESTUDIO_FILE_*) the workbook was converted from; 0 = not written
+		int m_nSourceFileType;
 		
 		void Write(OOX::Spreadsheet::CWorkbook& workbook);
 		void WriteWorkbook(OOX::Spreadsheet::CWorkbook& workbook);
@@ -458,6 +461,7 @@ namespace BinXlsxRW
 		int GetMainTableSize();
 
 		int m_nLastFilePosOffset;
+		int m_nSourceFileType;
 	private:
 		int WriteTableStart(BYTE type, int nStartPos = -1);
 		void WriteTableEnd(int nCurPos);
