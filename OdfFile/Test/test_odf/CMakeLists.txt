@@ -100,6 +100,9 @@ add_core_gtest(
             pptx2odp_table_styles.cpp
             docx2odt_header_footer_margins.cpp
             entrance.cpp
+            ooxml2odf_custom_props.cpp
+            odf2ooxml_doc_props.cpp
+            ooxml2odf_doc_props.cpp
             motion.cpp
             audio.cpp
             interactions.cpp
