@@ -62,6 +62,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/content_control_checkbox_12pt.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_checkbox_no_styles.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_short_value_newline.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/outline_levels_from_styles.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_text_12pt.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_text_no_styles.docx",
     "OdfFile/Test/test_odf/ExampleFiles/content_control_value_newline.docx",
@@ -71,11 +72,25 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/cell_inline_strings.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_date.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_datetime.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_first_header.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_header_footer.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/style_parent_cycle_character.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/style_parent_cycle_paragraph.docx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_no_header_footer.xlsx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/row_format_all_columns.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/row_format_default_columns.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/row_format_columns_past_last.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/row_format_columns_start_past_last.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/row_format_columns_malformed.xlsx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
@@ -94,10 +109,12 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 [[annotations]]
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/field_bookmark_ref_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/row_custom_format_height.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/field_drop_down_ampersand.odt",
     "OdfFile/Test/test_odf/ExampleFiles/field_expression_ampersand.odt",
     "OdfFile/Test/test_odf/ExampleFiles/field_sequence_ref_ampersand.odt",
     "OdfFile/Test/test_odf/ExampleFiles/field_text_input_ampersand.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/cell_text_fields.ods",
     "OdfFile/Test/test_odf/ExampleFiles/field_variable_input_ampersand.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
@@ -123,9 +140,23 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/column_break_after_text.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/line_break_after_text.docx",
     "OdfFile/Test/test_odf/ExampleFiles/page_background_image_no_page_size.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/page_break_after_text.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers_duplicate.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_after_header_only.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_continuous.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_inherited.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_no_page_start.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_orientation.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_page_break.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_same_page.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_title_page.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_title_page_later.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_tracked_change.docx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_background_no_page_setup.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_background_with_margins.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_header_colour_not_hex.xlsx",
@@ -157,6 +188,7 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/header_footer_not_inherited.odt",
     "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_centered.odt",
     "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_drop_cap.odt",
     "OdfFile/Test/test_odf/ExampleFiles/keep_with_next_drop_cap_unaligned.odt",
@@ -176,7 +208,29 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_false.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_loext_false.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_loext_true.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_missing.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_on.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_true.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_val_0.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_val_1.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/contextual_spacing_val_false.docx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OdfFile/Test/test_odf/ExampleFiles/hyperlink_target_frame.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/list_multilevel_suffix.docx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
@@ -195,6 +249,20 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/default_tab_stop_1251cm.odt",
     "OdfFile/Test/test_odf/ExampleFiles/default_tab_stop_2cm.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/add_para_table_spacing_false.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/add_para_table_spacing_invalid_value.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/add_para_table_spacing_missing.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/add_para_table_spacing_other_setting.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/add_para_table_spacing_true.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/paragraph_spacing_compat_flag.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/paragraph_spacing_no_compat_flag.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/paragraph_spacing_no_settings_part.docx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
@@ -233,6 +301,11 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/page_style_after_table.odt"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/meta_generator_ampersand.odt",
     "OdfFile/Test/test_odf/ExampleFiles/meta_template_ampersand.odt",
@@ -262,7 +335,26 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/sheet_header_footer_ampersand.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/sheet_header_footer_ampersand_fallback.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = "OdfFile/Test/test_odf/ExampleFiles/sheet_fit_to_page.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OOXML/test/ExampleFiles/ods2bin/plain.ods",
+    "OOXML/test/ExampleFiles/ods2bin/plain.fods",
+    "OOXML/test/ExampleFiles/ods2bin/plain.ots",
+]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
@@ -294,6 +386,11 @@ SPDX-FileCopyrightText = "The LibreOffice contributors"
 SPDX-License-Identifier = "MPL-2.0"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/sheet_optimal_row_height.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = "OdfFile/Test/test_odf/ExampleFiles/section_columns.odt"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
@@ -302,13 +399,20 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/chapter_fields.odt",
     "OdfFile/Test/test_odf/ExampleFiles/database_display_fields.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/note_body_whitespace.odt",
     "OdfFile/Test/test_odf/ExampleFiles/styleref_fields.docx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/bitmap_fill_size.odp"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = [
+    "OOXML/test/ExampleFiles/activex_groupname/groupname.docx",
     "OOXML/test/ExampleFiles/docx2odt/vml_margin.docx",
     "OOXML/test/ExampleFiles/xlsx2bin/checkbox.xlsx",
     "OOXML/test/ExampleFiles/xlsx2bin/richvalue-fallback.xlsx",
@@ -321,4 +425,13 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 [[annotations]]
 path = "Common/js/stringserialize.js"
 SPDX-FileCopyrightText = "2010-2024 Ascensio System SIA"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_edge.xlsx",
+    "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_rules.xlsx",
+    "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_x14.xlsx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

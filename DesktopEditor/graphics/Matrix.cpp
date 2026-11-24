@@ -253,6 +253,9 @@ namespace Aggplus
 
 	const CMatrix& CMatrix::operator=(const CMatrix& Src)
 	{
+		if (this == &Src)
+			return *this;
+
         m_internal->m_agg_mtx = Src.m_internal->m_agg_mtx;
         return *this;
 	}

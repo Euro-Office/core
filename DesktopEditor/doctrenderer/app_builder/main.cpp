@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 			oBuilder.ExecuteCommand(L"checkL");
 
 			char* sSdkVer = oBuilder.GetVersion();
-			if (NULL != sSdkVer)
+			if (nullptr != sSdkVer)
 			{
 				std::string sSdkVerStd(sSdkVer);
 				std::cout << "sdk version: " << sSdkVerStd << std::endl;
@@ -179,7 +179,6 @@ int main(int argc, char *argv[])
 #endif
 
 	bool bResult = true;
-	if (true)
 	{
 		NSDoctRenderer::CDocBuilder oBuilder;
 
