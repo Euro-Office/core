@@ -23,6 +23,7 @@
  *
  */
 #include "ApplicationFontsWorker.h"
+#include "FontThumbnailAlpha.h"
 
 #include <cmath>
 #include <map>
@@ -1508,9 +1509,7 @@ public:
 			oFrame.SaveFile(strThumbnailPath, 4);
 
 			LONG lBinarySize = lWidthPix * lHeightPix;
-			// A run of transparent pixels takes two bytes, so a single
-			// transparent pixel between opaque ones can use two bytes per pixel.
-			BYTE* pBinaryFormat = new BYTE[2 * lBinarySize + 12];
+			BYTE* pBinaryFormat = new BYTE[NSFontThumbnail::GetEncodedAlphaMaxSize(lBinarySize) + 12];
 
 			pBinaryFormat[0] = 0xFF & (lWidthPix >> 24);
 			pBinaryFormat[1] = 0xFF & (lWidthPix >> 16);
@@ -1525,38 +1524,7 @@ public:
 			pBinaryFormat[10] = 0xFF & (nCountFonts >> 8);
 			pBinaryFormat[11] = 0xFF & (nCountFonts >> 0);
 
-			BYTE* pBinaryFormatCur = pBinaryFormat + 12;
-			BYTE* pImageDataAlpha = pImageData + 3;
-			LONG nIndexCur = 0;
-			while (nIndexCur < lBinarySize)
-			{
-				*pBinaryFormatCur++ = *pImageDataAlpha;
-
-				if (0 != *pImageDataAlpha)
-				{
-					++nIndexCur;
-					pImageDataAlpha += 4;
-				}
-				else
-				{
-					LONG nIndexCur0 = nIndexCur;
-					LONG nIndexCurLimit = nIndexCur0 + 255;
-					if (nIndexCurLimit > lBinarySize)
-						nIndexCurLimit = lBinarySize;
-
-					while (nIndexCur < nIndexCurLimit)
-					{
-						++nIndexCur;
-						pImageDataAlpha += 4;
-
-						// Don't read the pixel past the end of the image.
-						if (nIndexCur >= nIndexCurLimit || 0 != *pImageDataAlpha)
-							break;
-					}
-
-					*pBinaryFormatCur++ = nIndexCur - nIndexCur0;
-				}
-			}
+			BYTE* pBinaryFormatCur = NSFontThumbnail::EncodeAlpha(pImageData, lBinarySize, pBinaryFormat + 12);
 
 #if 0
 			BYTE* pPixelsValues = new BYTE[4 * lWidthPix * lHeightPix];
