@@ -31,11 +31,11 @@
 namespace BinXlsxRW {
 
 #define READ_TABLE_DEF(res, fReadFunction, arg) {\
-		res = m_oBufferedStream.Peek(4) == false ? c_oSerConstants::ErrorStream : c_oSerConstants::ReadOk;\
-		if (c_oSerConstants::ReadOk == res) {\
+		(res) = m_oBufferedStream.Peek(4) == false ? c_oSerConstants::ErrorStream : c_oSerConstants::ReadOk;\
+		if (c_oSerConstants::ReadOk == (res)) {\
 			long readtabledefLen = m_oBufferedStream.GetLong();\
-			res = m_oBufferedStream.Peek(readtabledefLen) == false ? c_oSerConstants::ErrorStream : c_oSerConstants::ReadOk;\
-			if (c_oSerConstants::ReadOk == res) {\
+			(res) = m_oBufferedStream.Peek(readtabledefLen) == false ? c_oSerConstants::ErrorStream : c_oSerConstants::ReadOk;\
+			if (c_oSerConstants::ReadOk == (res)) {\
 				READ1_DEF(readtabledefLen, res, fReadFunction, arg);\
 			}\
 		}\
@@ -44,25 +44,25 @@ namespace BinXlsxRW {
 #define READ1_DEF(stLen, res, fReadFunction, arg) {\
 	long read1defCurPos = 0;\
 	long read1defstart_pos = m_oBufferedStream.GetPos();\
-	while(read1defCurPos < (long)stLen)\
+	while(read1defCurPos < (long)(stLen))\
 	{\
 		BYTE read1defType = 0;\
 		if (false == m_oBufferedStream.GetUCharWithResult(&read1defType))\
 			break;\
 		ULONG read1defLength = m_oBufferedStream.GetULong();\
-		if (read1defLength + read1defCurPos > (ULONG)stLen)\
+		if (read1defLength + read1defCurPos > (ULONG)(stLen))\
 		{\
-			m_oBufferedStream.Seek(read1defstart_pos + stLen);\
-			res = c_oSerConstants::ReadOk;\
+			m_oBufferedStream.Seek(read1defstart_pos + (stLen));\
+			(res) = c_oSerConstants::ReadOk;\
 			break;\
 		}\
-		res = fReadFunction(read1defType, read1defLength, arg);\
-		if(res == c_oSerConstants::ReadUnknown)\
+		(res) = fReadFunction(read1defType, read1defLength, arg);\
+		if((res) == c_oSerConstants::ReadUnknown)\
 		{\
 			m_oBufferedStream.GetPointer(read1defLength);\
-			res = c_oSerConstants::ReadOk;\
+			(res) = c_oSerConstants::ReadOk;\
 		}\
-		else if(res != c_oSerConstants::ReadOk)\
+		else if((res) != c_oSerConstants::ReadOk)\
 			break;\
 		read1defCurPos += read1defLength + 5;\
 	}\
@@ -70,7 +70,7 @@ namespace BinXlsxRW {
 
 #define READ2_DEF_SPREADSHEET(stLen, res, fReadFunction, arg) {\
 	long read2defCurPos = 0;\
-	while(read2defCurPos < stLen)\
+	while(read2defCurPos < (stLen))\
 	{\
 		BYTE read2defType = 0;\
 		if (false == m_oBufferedStream.GetUCharWithResult(&read2defType))\
@@ -90,16 +90,16 @@ namespace BinXlsxRW {
 			read2defRealLen = m_oBufferedStream.GetLong();\
 			read2defCurPosShift += 4;\
 			break;\
-		default:res = c_oSerConstants::ErrorUnknown;break;\
+		default:(res) = c_oSerConstants::ErrorUnknown;break;\
 		}\
-		if(res == c_oSerConstants::ReadOk)\
-			res = fReadFunction(read2defType, read2defRealLen, arg);\
-		if(res == c_oSerConstants::ReadUnknown)\
+		if((res) == c_oSerConstants::ReadOk)\
+			(res) = fReadFunction(read2defType, read2defRealLen, arg);\
+		if((res) == c_oSerConstants::ReadUnknown)\
 		{\
 			m_oBufferedStream.GetPointer(read2defRealLen);\
-			res = c_oSerConstants::ReadOk;\
+			(res) = c_oSerConstants::ReadOk;\
 		}\
-		else if(res != c_oSerConstants::ReadOk)\
+		else if((res) != c_oSerConstants::ReadOk)\
 			break;\
 		read2defCurPos += read2defRealLen + read2defCurPosShift;\
 	}\

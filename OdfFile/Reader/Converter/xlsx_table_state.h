@@ -27,6 +27,8 @@
 #include <vector>
 #include <map>
 
+#include <functional>
+
 #include "xlsx_row_spanned.h"
 #include "xlsx_merge_cells.h"
 #include "xlsx_table_metrics.h"
@@ -167,6 +169,10 @@ public:
 	std::wstring default_column_cell_style	(unsigned int column) const;
 	// true if the columns first .. end - 1 (those of the table) have the same default cell style
 	bool same_default_column_cell_style		(unsigned int first, unsigned int end) const;
+	// true if a column first .. end - 1 has a default cell style for which padded is true; padded must give the same
+	// answer for a style all through the table (it is asked once per column, the first time)
+	bool padded_default_column_cell_style	(unsigned int first, unsigned int end,
+											 const std::function<bool(const std::wstring&)> & padded) const;
 
 	void start_table_row_group(bool collapsed);
 	void end_table_row_group();
@@ -259,6 +265,8 @@ private:
     std::wstring						cell_style_;
     std::vector<std::wstring>			column_default_cell_style_name_;
 	mutable std::vector<size_t>			column_default_cell_style_end_; // per column: the next one with another default cell style
+	// per column (and one past the last): the next column with a padded default cell style, or the column count
+	mutable std::vector<size_t>			padded_default_column_next_;
     std::wstring						row_default_cell_style_name_;
    
 	int									current_table_column_;

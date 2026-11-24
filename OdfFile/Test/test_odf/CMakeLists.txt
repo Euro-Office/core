@@ -50,34 +50,53 @@ add_core_gtest(
             number_styles.cpp
             conversion_helpers.cpp
             docx2odt_content_controls.cpp
+            docx2odt_contextual_spacing.cpp
             docx2odt_header_drawing_anchor.cpp
             xlsx2ods_date_cells.cpp
+            xlsx2ods_inline_strings.cpp
             xlsx2ods_print_area.cpp
             xlsx2ods_autofilter.cpp
             xlsx2ods_sort.cpp
+            docx2odt_outline_level.cpp
             xlsx2ods_header_footer.cpp
             odt2docx_fields.cpp
             chart_series_name.cpp
             xlsx2ods_sheet_background.cpp
+            docx2odt_style_parent_cycle.cpp
             xlsx2ods_header_footer_codes.cpp
+            docx2odt_deletion_paragraphs.cpp
             docx2odt_page_background.cpp
             docx2odt_section_footers.cpp
+            docx2odt_add_para_table_spacing.cpp
+            docx2odt_section_header_and_footer.cpp
             math_bar.cpp
+            docx2odt_list_label_followed_by.cpp
             chart_title.cpp
             odt2docx_underline.cpp
             odt2docx_keep_next.cpp
+            odt2docx_page_style_after_table.cpp
+            odt2docx_contextual_spacing.cpp
             odt2docx_header_footer_spacing.cpp
+            ods2xlsx_percentage_text.cpp
             odt2docx_links.cpp
             odp2pptx_line_height.cpp
+            xlsx2ods_row_optimal_height.cpp
+            odt2docx_header_footer_not_inherited.cpp
             odp2pptx_transition_without_subtype.cpp
             odt2docx_default_tab_stop.cpp
+            odt2docx_add_para_table_spacing.cpp
+            ods2xlsx_cell_text_fields.cpp
             enhanced_path_quadratic_bezier.cpp
             pptx2odp_bullet_size.cpp
             xlsx2ods_page_margins.cpp
             chart_vary_colors.cpp
             odt2docx_first_body_element.cpp
+            odt2docx_page_background_tile.cpp
             odt2docx_meta_template.cpp
+            xlsx2ods_row_padding.cpp
             chart_subtitle.cpp
+            xlsx2ods_empty_cells.cpp
+            odf_text_meta.cpp
             math_property_values.cpp
             pptx2odp_table_styles.cpp
             docx2odt_header_footer_margins.cpp
@@ -87,8 +106,12 @@ add_core_gtest(
             interactions.cpp
             xlsx2ods_table_print_titles.cpp
             ods2xlsx_trailing_cell_style.cpp
+            ods2xlsx_header_footer_ampersand.cpp
             ods2xlsx_fit_to_page.cpp
             ods2xlsx_page_margins.cpp
+            odt2docx_heading_spaces.cpp
+            odf2ooxml_white_space.cpp
+            docx2odt_white_space.cpp
             ods2xlsx_hidden_header_footer.cpp
             ods2xlsx_font_size_column_width.cpp
             ods2xlsx_database_range.cpp
@@ -96,14 +119,21 @@ add_core_gtest(
             ods2xlsx_unnamed_database_range.cpp
             ods2xlsx_autofilter_groups.cpp
             xlsx2ods_sort_sheet_names.cpp
+            docx2odt_list_number_suffix.cpp
             odt2docx_section_columns.cpp
             odt2docx_chapter_field.cpp
             odt2docx_database_display.cpp
+            odt2docx_note_body_whitespace.cpp
             ods2xlsx_fill_character.cpp
+            ods2xlsx_cell_ruby.cpp
             ods_formula_function_names.cpp
+            ods2xlsx_optimal_row_height.cpp
             odf_font_family.cpp
+            docx2odt_line_break_after_text.cpp
             odt2docx_character_style_based_on.cpp
             docx2odt_style_based_on.cpp
+            odf_bitmap_fill_size.cpp
+            xlsx2ods_fit_to_pages.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )

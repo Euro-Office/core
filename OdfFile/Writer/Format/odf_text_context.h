@@ -161,6 +161,7 @@ public:
 	odf_conversion_context	*odf_context_;
 private:
 	bool					keep_next_paragraph_;
+	bool					prev_char_is_space_;	// a single space written next must be text:s (ODF white space)
 
 	_CP_OPT(odf_types::fo_break) need_break_; 
 

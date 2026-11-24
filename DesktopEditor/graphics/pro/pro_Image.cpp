@@ -58,7 +58,7 @@ namespace NSImages
     public:
         CPixJbig2_private()
         {
-            m_pix = NULL;
+            m_pix = nullptr;
         }
     };
 
@@ -75,7 +75,7 @@ namespace NSImages
     bool CPixJbig2::Create(int width, int height, int depth)
     {
         m_internal->m_pix = pixCreate(width, height, depth);
-        return (m_internal->m_pix) ? true : false;
+        return (m_internal->m_pix) != nullptr;
     }
 
     void CPixJbig2::SetPixel(int x, int y, int val)
@@ -86,7 +86,7 @@ namespace NSImages
     void CPixJbig2::Destroy()
     {
         pixDestroy(&m_internal->m_pix);
-        m_internal->m_pix = NULL;
+        m_internal->m_pix = nullptr;
     }
 
     void* CPixJbig2::native()
@@ -102,7 +102,7 @@ namespace NSImages
     public:
         CJbig2Context_private()
         {
-            m_context = NULL;
+            m_context = nullptr;
         }
         ~CJbig2Context_private()
         {
@@ -121,7 +121,7 @@ namespace NSImages
 
     bool CJbig2Context::IsInit()
     {
-        return (m_internal->m_context != NULL) ? true : false;
+        return m_internal->m_context != nullptr;
     }
 
     void CJbig2Context::Init(float thresh, float weight, int xres, int yres, bool full_headers, int refine_level)
@@ -150,7 +150,7 @@ namespace NSImages
             return;
 
         jbig2_destroy(m_internal->m_context);
-        m_internal->m_context = NULL;
+        m_internal->m_context = nullptr;
     }
 }
 

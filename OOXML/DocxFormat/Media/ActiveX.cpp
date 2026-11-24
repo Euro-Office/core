@@ -29,9 +29,9 @@
 #include "../../../MsBinaryFile/DocFile/MemoryStream.h"
 #include "../../../MsBinaryFile/Common/Vba/Records.h"
 
-#define	GetB(nRGB) ((unsigned char )nRGB)
-#define	GetG(nRGB) ((unsigned char )(nRGB>>8))
-#define	GetR(nRGB) ((unsigned char )(nRGB>>16))
+#define	GetB(nRGB) ((unsigned char )(nRGB))
+#define	GetG(nRGB) ((unsigned char )((nRGB)>>8))
+#define	GetR(nRGB) ((unsigned char )((nRGB)>>16))
 
 namespace OOX
 {
@@ -47,7 +47,7 @@ namespace OOX
 			MatchRequired = GETBIT(flag, 12);
 			Alignment = GETBIT(flag, 13);
 			Editable = GETBIT(flag, 14);
-			unsigned char IMEMode = GETBITS(flag, 15, 18);
+			IMEMode = GETBITS(flag, 15, 18);
 			DragBehavior = GETBIT(flag, 19);
 			EnterKeyBehavior = GETBIT(flag, 20);
 			EnterFieldBehavior = GETBIT(flag, 21);
@@ -245,7 +245,8 @@ namespace OOX
 			fMouseIcon = GETBIT(mask, 27);
 			fPicture = GETBIT(mask, 28);
 			fAccelerator = GETBIT(mask, 29);
-			fGroupName = GETBIT(mask, 32);
+			// bit 32 of a 64-bit mask: GETBIT shifts an int, so it cannot reach it
+			fGroupName = ((mask >> 32) & 1) != 0;
 		}
 		MorphDataPropMask & operator = (_UINT32 flag)
 		{
@@ -285,14 +286,14 @@ namespace OOX
 
 	ActiveX_xml::~ActiveX_xml()
 	{
-		ClearItems();
+		ActiveX_xml::ClearItems();
 	}
 	void ActiveX_xml::ClearItems()
 	{
 		for (size_t nIndex = 0; nIndex < m_arrOcxPr.size(); ++nIndex)
 		{
 			if (m_arrOcxPr[nIndex]) delete m_arrOcxPr[nIndex];
-			m_arrOcxPr[nIndex] = NULL;
+			m_arrOcxPr[nIndex] = nullptr;
 		}
 		m_arrOcxPr.clear();
 	}
@@ -309,7 +310,7 @@ namespace OOX
 			pWriter->WriteRecord2(4, dynamic_cast<OOX::WritingElement*>(m_arrOcxPr[i]));
 		}
 
-		if (false == m_oObjectBinData.empty())
+		if (!m_oObjectBinData.empty())
 		{
 			pWriter->StartRecord(5);
 			pWriter->WriteBYTEArray(m_oObjectBinData.data(), m_oObjectBinData.size());
@@ -357,7 +358,7 @@ namespace OOX
 		}
 		pReader->Seek(end);
 //-----------------------------------------------------
-		if (false == m_oObjectBinData.empty())
+		if (!m_oObjectBinData.empty())
 		{
 			smart_ptr<ActiveX_bin> activeX_bin(new ActiveX_bin(File::m_pMainDocument));
 
@@ -373,8 +374,7 @@ namespace OOX
 		WritingElement_ReadAttributes_Start(oReader)
 			WritingElement_ReadAttributes_Read_if		(oReader, L"ax:classid"		, m_oClassId)
 			WritingElement_ReadAttributes_Read_else_if	(oReader, L"ax:persistence"	, m_oPersistence)
-			WritingElement_ReadAttributes_Read_else_if	(oReader, L"r:id"			, m_oId)
-			WritingElement_ReadAttributes_Read_else_if	(oReader, L"relationships:id", m_oId)
+			else if ( L"r:id" == wsName || L"relationships:id" == wsName ) m_oId = oReader.GetText();
 			WritingElement_ReadAttributes_Read_else_if	(oReader, L"ax:license"		, m_oLicense)
 		WritingElement_ReadAttributes_End(oReader)
 	}
@@ -429,14 +429,14 @@ namespace OOX
 	{
 		NSFile::CFileBinary file;
 
-		if (false == m_oClassId.IsInit()) return;
-		if (false == file.OpenFile(oPath.GetPath())) return;
+		if (!m_oClassId.IsInit()) return;
+		if (!file.OpenFile(oPath.GetPath())) return;
 
 		DWORD size_stream = file.GetFileSize();
 
 		m_oObjectBinData.resize(size_stream);
 
-		if (false == m_oObjectBinData.empty())
+		if (!m_oObjectBinData.empty())
 		{
 			file.ReadFile(m_oObjectBinData.data(), size_stream, size_stream);
 
@@ -531,7 +531,6 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		else if (class_id == L"{8BD21D50-EC42-11CE-9E0D-00AA006002F3}")	return new ActiveXObjectMorphData(SimpleTypes::Spreadsheet::objectRadio);
 		else if (class_id == L"{978C9E23-D4B0-11CE-BF2D-00AA003F40D0}")	return new ActiveXObjectLabel();
 		else if (class_id == L"{8BD21D20-EC42-11CE-9E0D-00AA006002F3}")	return new ActiveXObjectMorphData(SimpleTypes::Spreadsheet::objectList);
-		else if (class_id == L"{DFD181E0-5E2F-11CE-A449-00AA004A803D}")	return new ActiveXObjectScroll();
 		else if (class_id == L"{79176FB0-B7F2-11CE-97EF-00AA006D2776}")	return new ActiveXObjectSpin();
 		else if (class_id == L"{8BD21D10-EC42-11CE-9E0D-00AA006002F3}")	return new ActiveXObjectMorphData(SimpleTypes::Spreadsheet::objectEditBox);
 	//	else if (class_id == L"{EAE50EB0-4A62-11CE-BED6-00AA00611080}") return new ActiveXObjectTabStrip();
@@ -585,10 +584,10 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 	{
 		if (!stream) return;	
 		
-		unsigned char Version = stream->ReadByte();
-		short sCharset = stream->ReadInt16();
+		stream->ReadByte();
+		stream->ReadInt16();
 		unsigned char bFlags = stream->ReadByte();
-		short sWeight = stream->ReadInt16();
+		stream->ReadInt16();
 		m_oFontHeight = stream->ReadUInt32();		
 		unsigned char bFaceLen = stream->ReadByte();
 
@@ -609,15 +608,13 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 	{
 		if (!stream) return;
 
-		_UINT32 sizeFontName = 0, nFontWeight = 0;
+		_UINT32 sizeFontName = 0;
 		bool bCaptionCompressed, bGroupNameCompressed, bValueCompressed, bFontNameCompressed;
 
-		int nFontCharSet = 0, nFontPitch = 0, nFontFamily = 0, nParagraphAlign = 0;
+		stream->ReadByte();
+		stream->ReadByte();
 
-		unsigned char MinorVersionText = stream->ReadByte();
-		unsigned char MajorVersionText = stream->ReadByte();
-
-		unsigned short cbTextProps = stream->ReadUInt16();
+		stream->ReadUInt16();
 
 		VBA::TextPropsPropMask PropMask(stream->ReadUInt32());
 
@@ -625,7 +622,6 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		if (PropMask.fFontEffects)
 		{
 			_UINT32 nFontEffects = stream->ReadUInt32();
-			bool bEnabled = !GETBIT(nFontEffects, 13);
 			m_oFontBold = GETBIT(nFontEffects, 0);
 			m_oFontItalic = GETBIT(nFontEffects, 1);
 			m_oFontUnderline = GETBIT(nFontEffects, 3);
@@ -634,19 +630,17 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		}
 		if (PropMask.fFontHeight) m_oFontHeight = stream->ReadUInt32() / 20; //twips to pt
 
-		if (PropMask.fFontCharSet) nFontCharSet = stream->ReadByte();
+		if (PropMask.fFontCharSet) stream->ReadByte();
 		if (PropMask.fFontPitchAndFamily)
 		{
-			_UINT32 nFontPitchAndFamily = stream->ReadByte();
-			nFontPitch = GETBITS(nFontPitchAndFamily, 0, 3);
-			nFontFamily = GETBITS(nFontPitchAndFamily, 4, 7);
+			stream->ReadByte();
 		}
-		if (PropMask.fParagraphAlign) nParagraphAlign = stream->ReadByte();
+		if (PropMask.fParagraphAlign) stream->ReadByte();
 
 		size_t size_test = GETBITS(sizeFontName, 0, 30);
 		if (PropMask.fFontWeight && (stream->GetPosition() + size_test + 4 <= stream->GetSize()) )
 		{
-			nFontWeight = stream->ReadUInt16();
+			stream->ReadUInt16();
 		}
 		if (sizeFontName > 0)
 		{
@@ -658,10 +652,10 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 	{
 		if (!stream) return 0;
 
-		unsigned char MinorVersionText = stream->ReadByte();
-		unsigned char MajorVersionText = stream->ReadByte();
+		stream->ReadByte();
+		stream->ReadByte();
 
-		unsigned short cbColumnInfo = stream->ReadUInt16();
+		stream->ReadUInt16();
 
 		_UINT32 flag = stream->ReadUInt32();
 
@@ -796,10 +790,10 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 	{
 		MemoryStream mem_stream(pData, size, false);
 		
-		unsigned char MinorVersion = mem_stream.ReadByte();
-		unsigned char MajorVersion = mem_stream.ReadByte();
+		mem_stream.ReadByte();
+		mem_stream.ReadByte();
 
-		unsigned short cbScrollBar = mem_stream.ReadUInt16();
+		mem_stream.ReadUInt16();
 
 		_UINT32 PropMask = mem_stream.ReadUInt32();
 
@@ -873,10 +867,10 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 	{
 		MemoryStream mem_stream(pData, size, false);
 
-		unsigned char MinorVersion = mem_stream.ReadByte();
-		unsigned char MajorVersion = mem_stream.ReadByte();
+		mem_stream.ReadByte();
+		mem_stream.ReadByte();
 
-		unsigned short cbSpin = mem_stream.ReadUInt16();
+		mem_stream.ReadUInt16();
 
 		_UINT32 PropMask = mem_stream.ReadUInt32();
 
@@ -942,10 +936,10 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 	{
 		MemoryStream mem_stream(pData, size, false);
 
-		unsigned char MinorVersion = mem_stream.ReadByte();
-		unsigned char MajorVersion = mem_stream.ReadByte();
+		mem_stream.ReadByte();
+		mem_stream.ReadByte();
 
-		unsigned short cbButton = mem_stream.ReadUInt16();
+		mem_stream.ReadUInt16();
 
 		_UINT32 PropMask = mem_stream.ReadUInt32();
 
@@ -958,15 +952,12 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		bool fMousePointer			= GETBIT(PropMask, 6);
 		bool fPicture				= GETBIT(PropMask, 7);
 		bool fAccelerator			= GETBIT(PropMask, 8);
-		bool fTakeFocusOnClick		= GETBIT(PropMask, 9);
 		bool fMouseIcon				= GETBIT(PropMask, 10);
 
 		m_oLockText = true;
 
 		bool bCaptionCompressed = false;
 		_UINT32 sizeCaption = 0;
-		int size_picture = 0, pos_picture = 0;
-
 		if (fForeColor)				m_oForeColor = mem_stream.ReadUInt32();
 		if (fBackColor)				m_oBackColor = mem_stream.ReadUInt32();
 		if (fVariousPropertyBits)
@@ -978,7 +969,7 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 			m_oMultiLine = vars.MultiLine;
 		}
 		if (fCaption)			sizeCaption = mem_stream.ReadUInt32();
-		if (fPicturePosition)	pos_picture = mem_stream.ReadUInt32();
+		if (fPicturePosition) mem_stream.ReadUInt32();
 		if (fMousePointer) /*MousePointer =*/ mem_stream.ReadByte();
  		if (fPicture) mem_stream.ReadUInt16(); //0 or 0xffff
  		if (fAccelerator) /*m_oAccelerator = */mem_stream.ReadUInt16();
@@ -994,7 +985,6 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 			m_oWidth = mem_stream.ReadUInt32();
 			m_oHeight = mem_stream.ReadUInt32();
 		}
-		int stream_size = mem_stream.GetSize() - mem_stream.GetPosition(); 
 
 		if (fMouseIcon)
 		{
@@ -1013,10 +1003,10 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 	{
 		MemoryStream mem_stream(pData, size, false);
 
-		unsigned char MinorVersion = mem_stream.ReadByte();
-		unsigned char MajorVersion = mem_stream.ReadByte();
+		mem_stream.ReadByte();
+		mem_stream.ReadByte();
 
-		unsigned short cbImage = mem_stream.ReadUInt16();
+		mem_stream.ReadUInt16();
 
 		ImagePropMask PropMask(mem_stream.ReadUInt32());
 
@@ -1051,9 +1041,9 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		}
 		if (PropMask.fPicture)
 		{
-			_GUID_ guid = readGUID(&mem_stream);
+			readGUID(&mem_stream);
 
-			int Preamble = mem_stream.ReadUInt32(); //MUST 0x0000746C
+			mem_stream.ReadUInt32(); //MUST 0x0000746C
 
 			nImageSize = mem_stream.ReadUInt32();
 			pImageData = boost::shared_array<unsigned char>(mem_stream.ReadBytes(nImageSize, true));
@@ -1078,16 +1068,14 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 	{
 		MemoryStream mem_stream(pData, size, false);
 
-		unsigned char MinorVersion = mem_stream.ReadByte();
-		unsigned char MajorVersion = mem_stream.ReadByte();
+		mem_stream.ReadByte();
+		mem_stream.ReadByte();
 
-		unsigned short cbLabel = mem_stream.ReadUInt16();
+		mem_stream.ReadUInt16();
 
 		LabelPropMask PropMask(mem_stream.ReadUInt32());
 
 		_UINT32 sizeCaption = 0;
-		int size_picture = 0, pos_picture = 0;
-
 		if (PropMask.fForeColor)				m_oForeColor = mem_stream.ReadUInt32();
 		if (PropMask.fBackColor)				m_oBackColor = mem_stream.ReadUInt32();
 		if (PropMask.fVariousPropertyBits)
@@ -1099,7 +1087,7 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 			m_oMultiLine = vars.MultiLine;
 		}
 		if (PropMask.fCaption) sizeCaption = mem_stream.ReadUInt32();
-		if (PropMask.fPicturePosition) pos_picture = mem_stream.ReadUInt32();
+		if (PropMask.fPicturePosition) mem_stream.ReadUInt32();
 		if (PropMask.fMousePointer) /*MousePointer =*/ mem_stream.ReadByte();
 
 		if (PropMask.fBorderColor)
@@ -1139,10 +1127,10 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 	{
 		MemoryStream mem_stream(pData, size, false);
 
-		unsigned char MinorVersion = mem_stream.ReadByte();
-		unsigned char MajorVersion = mem_stream.ReadByte();
+		mem_stream.ReadByte();
+		mem_stream.ReadByte();
 
-		unsigned short cb = mem_stream.ReadUInt16();
+		mem_stream.ReadUInt16();
 //-------------------------------------------------------------------------------
 		_UINT32 flag = mem_stream.ReadUInt32();
 		VBA::FormPropMask propMask(flag);
@@ -1178,7 +1166,7 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		}
 		if (propMask.fMouseIcon)
 		{
-			_UINT16 MouseIcon = mem_stream.ReadUInt16();
+			mem_stream.ReadUInt16();
 		}
 		if (propMask.fCycle) m_oCycle = mem_stream.ReadUInt16();
 		if (propMask.fSpecialEffect) m_oSpecialEffect = mem_stream.ReadByte();
@@ -1196,11 +1184,11 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		}
 		if (propMask.fFont)
 		{
-			_UINT16 Font = mem_stream.ReadUInt16();
+			mem_stream.ReadUInt16();
 		}
 		if (propMask.fPicture)
 		{
-			_UINT16 Picture = mem_stream.ReadUInt16();
+			mem_stream.ReadUInt16();
 		}
 		if (propMask.fZoom)
 		{
@@ -1273,10 +1261,10 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 	{
 		MemoryStream mem_stream(pData, size, false);
 
-		unsigned char MinorVersion = mem_stream.ReadByte();
-		unsigned char MajorVersion = mem_stream.ReadByte();
+		mem_stream.ReadByte();
+		mem_stream.ReadByte();
 
-		unsigned short cb = mem_stream.ReadUInt16();
+		mem_stream.ReadUInt16();
 
 //-------------------------------------------------------------------------------
 		TabStripPropMask propMask(mem_stream.ReadUInt32());
@@ -1285,7 +1273,7 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		if (propMask.fBackColor) m_oBackColor = mem_stream.ReadUInt32();
 		if (propMask.fForeColor) m_oForeColor = mem_stream.ReadUInt32();
 		
-		_UINT32 ItemsSize = 0, TipStringsSize = 0, TagsSize = 0, AcceleratorsSize = 0, NamesSize = 0, TabsAllocated = 0;
+		_UINT32 ItemsSize = 0, TipStringsSize = 0, TagsSize = 0, AcceleratorsSize = 0, NamesSize = 0;
 
 		if (propMask.fItems)
 		{
@@ -1324,7 +1312,7 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		}
 
 		if (propMask.fTabsAllocated)
-			TabsAllocated = mem_stream.ReadUInt32();
+			mem_stream.ReadUInt32();
 		
 		if (propMask.fTags)
 			TagsSize = mem_stream.ReadUInt32();
@@ -1421,16 +1409,15 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 //CheckBox, ComboBox, ListBox, OptionButton, TextBox, and ToggleButton
 		MemoryStream mem_stream(pData, size, false);
 		
-		unsigned char MinorVersion = mem_stream.ReadByte();
-		unsigned char MajorVersion = mem_stream.ReadByte();
+		mem_stream.ReadByte();
+		mem_stream.ReadByte();
 
-		unsigned short cb = mem_stream.ReadUInt16(), cColumnInfo = 0, ColumnCount = 0;
+		unsigned short cb = mem_stream.ReadUInt16(), cColumnInfo = 0;
 
 		if (cb > size) return;
 
 		MorphDataPropMask PropMask(mem_stream.ReadUInt64());
 //MorphData-DataBlock
-		int MaxLength = 0;
 		if (PropMask.fVariousPropertyBits)
 		{
 			_UINT32 flag = mem_stream.ReadUInt32();
@@ -1441,13 +1428,13 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		}
 		if (PropMask.fForeColor) m_oForeColor = mem_stream.ReadUInt32();
 		if (PropMask.fBackColor) m_oBackColor = mem_stream.ReadUInt32();
-		if (PropMask.fMaxLength) MaxLength = mem_stream.ReadUInt32();
+		if (PropMask.fMaxLength) mem_stream.ReadUInt32();
 
 		if (PropMask.fBorderStyle) m_oBorderStyle = mem_stream.ReadByte();
 		if (PropMask.fScrollBars) m_oScrollBarsType = mem_stream.ReadByte();
 		if (PropMask.fDisplayStyle)
 		{
-			if (false == m_oObjectType.IsInit()) m_oObjectType.Init();
+			if (!m_oObjectType.IsInit()) m_oObjectType.Init();
 
 			int nDisplayStyle = mem_stream.ReadByte(); 
 
@@ -1460,32 +1447,31 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 				case 0x05: m_oObjectType->SetValue(SimpleTypes::Spreadsheet::objectRadio); break;
 				case 0x06: m_oObjectType->SetValue(SimpleTypes::Spreadsheet::objectToggleButton); break;
 				case 0x07: m_oObjectType->SetValue(SimpleTypes::Spreadsheet::objectList); break;
+				default: break;
 			}
 		}
 //----------------------------------------------------------------------------
-		_UINT32 PasswordChar = 0, m_oListWidth = 0, BoundColumn = 0, TextColumn = 0, m_oMousePointer = 0;
-		_UINT32 MatchEntry = 0, ListStyle = 0, ShowDropButtonWhen = 0, DropButtonStyle = 0, pos_picture = 0, m_oEffect = 0, m_oAccelerator = 0;
 		
-		if (PropMask.fMousePointer) m_oMousePointer = mem_stream.ReadByte();
+		if (PropMask.fMousePointer) mem_stream.ReadByte();
 		if (PropMask.fPasswordChar)
 		{
 			m_oPasswordEdit = true;
-			PasswordChar = mem_stream.ReadUInt16(); 
+			mem_stream.ReadUInt16();
 		}
 		if (PropMask.fListWidth)
 		{
 			mem_stream.Align(4);
-			m_oListWidth = mem_stream.ReadUInt32();
+			mem_stream.ReadUInt32();
 		}
-		if (PropMask.fBoundColumn)	BoundColumn = mem_stream.ReadUInt16();
-		if (PropMask.fTextColumn)	TextColumn = mem_stream.ReadUInt16(); 
-		if (PropMask.fColumnCount)	ColumnCount = mem_stream.ReadUInt16(); 
-		if (PropMask.fListRows)	m_oListRows = mem_stream.ReadUInt16();
-		if (PropMask.fcColumnInfo) cColumnInfo = mem_stream.ReadUInt16(); 
-		if (PropMask.fMatchEntry) MatchEntry = mem_stream.ReadByte(); 
-		if (PropMask.fListStyle) ListStyle = mem_stream.ReadByte(); 
-		if (PropMask.fShowDropButtonWhen) ShowDropButtonWhen = mem_stream.ReadByte(); 
-		if (PropMask.fDropButtonStyle) DropButtonStyle = mem_stream.ReadByte(); 
+		if (PropMask.fBoundColumn) mem_stream.ReadUInt16();
+		if (PropMask.fTextColumn) mem_stream.ReadUInt16();
+		if (PropMask.fColumnCount) mem_stream.ReadUInt16();
+		if (PropMask.fListRows) m_oListRows = mem_stream.ReadUInt16();
+		if (PropMask.fcColumnInfo) cColumnInfo = mem_stream.ReadUInt16();
+		if (PropMask.fMatchEntry) mem_stream.ReadByte();
+		if (PropMask.fListStyle) mem_stream.ReadByte();
+		if (PropMask.fShowDropButtonWhen) mem_stream.ReadByte();
+		if (PropMask.fDropButtonStyle) mem_stream.ReadByte();
 		if (PropMask.fMultiSelect) m_oSelType = (SimpleTypes::Spreadsheet::ESelType) mem_stream.ReadByte();
 
 		_UINT32 sizeCaption = 0, sizeGroupName = 0, sizeValue = 0;
@@ -1502,7 +1488,7 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		}
 		if (PropMask.fPicturePosition)
 		{
-			pos_picture = mem_stream.ReadUInt32();
+			mem_stream.ReadUInt32();
 		}
 		if (PropMask.fBorderColor)
 		{
@@ -1512,19 +1498,19 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		if (PropMask.fSpecialEffect)
 		{
 			mem_stream.Align(4);
-			m_oEffect = mem_stream.ReadUInt32(); // fmSpecialEffect
+			mem_stream.ReadUInt32(); // fmSpecialEffect
 		}		
 		if (PropMask.fMouseIcon)
 		{
-			_UINT16 MouseIcon = mem_stream.ReadUInt16(); //0 or 0xFFFF
+			mem_stream.ReadUInt16(); //0 or 0xFFFF
 		}
 		if (PropMask.fPicture)
 		{
-			_UINT16 Picture = mem_stream.ReadUInt16();//0 or 0xFFFF
+			mem_stream.ReadUInt16();//0 or 0xFFFF
 		}
 		if (PropMask.fAccelerator)
 		{
-			m_oAccelerator = mem_stream.ReadUInt16();
+			mem_stream.ReadUInt16();
 		}
 		mem_stream.Align(4);
 		if (PropMask.fGroupName) sizeGroupName = mem_stream.ReadUInt32();
@@ -1544,12 +1530,12 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 			m_oCaption = readString(&mem_stream, sizeCaption);
 		}
 		std::wstring oGroupName;
-		if (sizeGroupName > 0 && sizeGroupName < 0xfff0)
+		// readString masks off bit 31 (the compression flag), so any non-zero size is a string
+		if (sizeGroupName > 0)
 		{
 			oGroupName = readString(&mem_stream, sizeGroupName);
 		}
 //MorphData-StreamData
-		int stream_size = mem_stream.GetSize() - mem_stream.GetPosition();
 
 		if (PropMask.fMouseIcon)
 		{

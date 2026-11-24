@@ -118,7 +118,7 @@ namespace MathEquation
 			if (itFind != m_mFonts.end())			
 				return &(itFind->second);
 
-			return NULL;
+			return nullptr;
 		}
 
 	protected:

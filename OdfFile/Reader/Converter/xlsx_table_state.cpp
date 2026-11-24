@@ -559,6 +559,27 @@ bool xlsx_table_state::same_default_column_cell_style(unsigned int first, unsign
 	return (end < count ? end : count) <= column_default_cell_style_end_[first];
 }
 
+bool xlsx_table_state::padded_default_column_cell_style(unsigned int first, unsigned int end,
+	const std::function<bool(const std::wstring&)> & padded) const
+{
+	const size_t count = column_default_cell_style_name_.size();
+
+	// computed once per table, so that a check per cell is cheap
+	if (padded_default_column_next_.size() != count + 1)
+	{
+		padded_default_column_next_.assign(count + 1, count);
+		for (size_t i = count; i > 0; i--)
+		{
+			padded_default_column_next_[i - 1] = padded(column_default_cell_style_name_[i - 1])
+				? i - 1 : padded_default_column_next_[i];
+		}
+	}
+	if (first < count && padded_default_column_next_[first] < end)
+		return true;
+	// columns past the declared ones have no default cell style of their own
+	return end > count && first < end && padded(std::wstring());
+}
+
 void xlsx_table_state::end_row()
 {
 	in_cell = false;

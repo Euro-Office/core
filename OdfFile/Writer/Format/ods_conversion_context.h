@@ -48,6 +48,7 @@ public:
 
 	void set_tables_structure_lock(bool val);
 	void set_repeat_at_lasts(bool val);
+	bool get_repeat_at_lasts() const { return repeat_at_lasts_; }
 
 	void start_sheet();
         void set_sheet_dimension(const std::wstring & ref);
@@ -63,9 +64,10 @@ public:
 
 		void start_cell(std::wstring & ref, int xfd_style);
 		void end_cell();
+		void add_repeated_cells(int repeated, int xfd_style);
 
 		void add_row_repeated();
-		void add_default_row(int repeated);
+		void add_default_row(int repeated, bool check_last = true);
 	void end_rows();
 
 	void start_cell_text();

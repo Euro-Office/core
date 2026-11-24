@@ -72,10 +72,10 @@ namespace OOX
 							
 					XmlUtils::CXmlLiteReader oSubReader;//we need xml and the objects themselves
 					
-					if (oSubReader.FromString(strXml) == false) continue;						
+					if (!oSubReader.FromString(strXml)) continue;						
 					oSubReader.ReadNextNode();
 
-					OOX::WritingElement *pItem = NULL;
+					OOX::WritingElement *pItem = nullptr;
 
 					int nStylesDepth1 = oSubReader.GetDepth();
 					while ( oSubReader.ReadNextSiblingNode( nStylesDepth1 ) )//
@@ -161,8 +161,10 @@ namespace OOX
 										AssignPtrXmlContent(pItem, OOX::Vml::CShapeType, oSubReader)
 									}
 									break;
+								default: break;
 								}								
 							}break;
+								default: break;
 						}
 					}	
 
@@ -206,7 +208,6 @@ namespace OOX
 							}
 							elementContent.clear();
                             bReadyElement   = false;
-                            bComment        = false;
 						}
 						else
 						{
@@ -246,7 +247,7 @@ namespace OOX
 		}
 
 
-		if (false == m_sFileContent.empty())
+		if (!m_sFileContent.empty())
 		{
 			// elements like <br> without </br>
 			// test_vml4.xlsx
@@ -274,7 +275,7 @@ namespace OOX
 	{
 		if ((!m_mapComments || m_mapComments->empty()) && m_arObjectXml.empty() && m_arControlXml.empty())
 		{
-			if (false == m_sFileContent.empty())
+			if (!m_sFileContent.empty())
 			{
 				NSFile::CFileBinary::SaveToFile(oPath.GetPath(), m_sFileContent);
 				oContent.AddDefault(oPath.GetExtention(false));
@@ -296,13 +297,13 @@ xmlns:x=\"urn:schemas-microsoft-com:office:excel\">");
 			sXml.WriteString(m_arObjectXml[i]);
 		}
 		
-		if (false == m_arControlXml.empty() || ((NULL != m_mapComments) && (false == m_mapComments->empty())))
+		if (!m_arControlXml.empty() || ((nullptr != m_mapComments) && (!m_mapComments->empty())))
 		{
 			int data = (int)((m_lObjectIdVML + 4096) / 1024);
 			sXml.WriteString(L"<o:shapelayout v:ext=\"edit\"><o:idmap v:ext=\"edit\" data=\"" + std::to_wstring(data) + L"\"/></o:shapelayout>");
 		}
 		
-		if (false == m_arControlXml.empty())
+		if (!m_arControlXml.empty())
 		{
 
 			sXml.WriteString(L"<v:shapetype id=\"_x0000_t201\" coordsize=\"21600,21600\" o:spt=\"201\"");
@@ -317,7 +318,7 @@ xmlns:x=\"urn:schemas-microsoft-com:office:excel\">");
 		}
 		
 		long nIndex = 4096 + m_lObjectIdVML;
-		if ((NULL != m_mapComments) && (false == m_mapComments->empty()))
+		if ((nullptr != m_mapComments) && (!m_mapComments->empty()))
 		{				
 			sXml.WriteString(L"<v:shapetype id=\"_x0000_t202\" coordsize=\"21600,21600\" o:spt=\"202\"");
 			sXml.WriteString(L" path=\"m,l,21600r21600,l21600,xe\">");
@@ -350,10 +351,10 @@ xmlns:x=\"urn:schemas-microsoft-com:office:excel\">");
 				}
 				std::wstring sClientData = L"<x:ClientData ObjectType=\"Note\">";
 
-				if(comment->m_bMove.IsInit() && true == comment->m_bMove.get())
+				if(comment->m_bMove.IsInit() && comment->m_bMove.get())
 					sClientData += L"<x:MoveWithCells/>";
 
-				if(comment->m_bSize.IsInit() && true == comment->m_bSize.get())
+				if(comment->m_bSize.IsInit() && comment->m_bSize.get())
 					sClientData += L"<x:SizeWithCells/>";
 
 				if( comment->m_nLeft.IsInit()   && comment->m_nLeftOffset.IsInit()  &&

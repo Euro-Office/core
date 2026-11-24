@@ -45,7 +45,7 @@ namespace OOX
 	{
 	public:
 		WritingElement_AdditionMethods(CFtnEdn)
-		CFtnEdn(OOX::Document *pMain = NULL);
+		CFtnEdn(OOX::Document *pMain = nullptr);
 		virtual ~CFtnEdn();
 
 		virtual void ClearItems();
