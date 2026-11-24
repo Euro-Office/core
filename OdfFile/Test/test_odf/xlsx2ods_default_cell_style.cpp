@@ -48,7 +48,7 @@ namespace
 }
 
 // The first cell style format has no fontId: the Default cell style takes the
-// workbook's first font (Calibri 11pt), as LibreOffice does.
+// workbook's first font (Calibri 11pt), as Excel does.
 TEST(XlsxToOds, DefaultCellStyleWithoutFontUsesFirstFont)
 {
 	const std::wstring style = converted_default_cell_style(L"ExampleFiles/default_cell_style_without_font.xlsx");

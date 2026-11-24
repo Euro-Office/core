@@ -2904,8 +2904,8 @@ void XlsxConverter::convert(OOX::Spreadsheet::CXfs * xfc_style, int oox_id, bool
 
 	// The cell style that uses the first cell style format (named "Default" in
 	// x2t's own XLSX, usually "Normal" in Excel files) is also the columns' default
-	// cell style. Without a fontId it falls back to the workbook's first font, as
-	// LibreOffice does; otherwise that style has no font at all.
+	// cell style. Excel reads a missing fontId as the workbook's first font (font 0);
+	// do the same, otherwise that style has no font at all.
 	if (root && oox_id == 0 && font_id < 0)
 		font_id = 0;
 		
