@@ -640,7 +640,7 @@ bool CFormFieldInfo::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetaf
 			pPr->AddComboBoxItem(pReader->ReadString());
 		}
 
-		int nSelectedIndex = pReader->ReadInt();
+		pReader->ReadInt();
 
 		if (nFlags & (1 << 22))
 			pPr->SetTextValue(pReader->ReadString());

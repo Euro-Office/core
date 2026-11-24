@@ -264,7 +264,7 @@ namespace OOX
 		class CTblPrChange : public WritingElement
 		{
 		public:
-			CTblPrChange(OOX::Document *pMain = NULL);			
+			CTblPrChange(OOX::Document *pMain = nullptr);			
 			virtual ~CTblPrChange();
 
 			const CTblPrChange& operator = (const XmlUtils::CXmlNode &oNode);
@@ -295,7 +295,7 @@ namespace OOX
 		class CTableProperty : public WritingElement
 		{
 		public:
-			CTableProperty(OOX::Document *pMain = NULL);			
+			CTableProperty(OOX::Document *pMain = nullptr);			
 			virtual ~CTableProperty();
 
 			const CTableProperty& operator=(const XmlUtils::CXmlNode &oNode);
@@ -392,7 +392,7 @@ namespace OOX
 		class CTrPrChange : public WritingElement
 		{
 		public:
-			CTrPrChange(OOX::Document *pMain = NULL);			
+			CTrPrChange(OOX::Document *pMain = nullptr);			
 			virtual ~CTrPrChange();
 
 			const CTrPrChange& operator = (const XmlUtils::CXmlNode &oNode);
@@ -415,7 +415,7 @@ namespace OOX
 			nullable<SimpleTypes::CDecimalNumber>	m_oId;
 			nullable<std::wstring>					m_sUserId;
 
-			// Childs
+			// Children
 			nullable<CTableRowProperties>           m_pTrPr;
 		};
 
@@ -425,7 +425,7 @@ namespace OOX
 		class CTableRowProperties : public WritingElement
 		{
 		public:
-			CTableRowProperties(OOX::Document *pMain = NULL);			
+			CTableRowProperties(OOX::Document *pMain = nullptr);			
 			virtual ~CTableRowProperties();
 
 			const CTableRowProperties& operator =(const XmlUtils::CXmlNode &oNode);
@@ -571,7 +571,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CHeaders)
 
-			CHeaders(OOX::Document *pMain = NULL);
+			CHeaders(OOX::Document *pMain = nullptr);
 			virtual ~CHeaders();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -673,7 +673,7 @@ namespace OOX
 		class CTcPrChange : public WritingElement
 		{
 		public:
-			CTcPrChange(OOX::Document *pMain = NULL);			
+			CTcPrChange(OOX::Document *pMain = nullptr);			
 			virtual ~CTcPrChange();
 
 			const CTcPrChange& operator = (const XmlUtils::CXmlNode &oNode);
@@ -702,7 +702,7 @@ namespace OOX
 		class CTableCellProperties : public WritingElement
 		{
 		public: 
-			CTableCellProperties(OOX::Document *pMain = NULL);			
+			CTableCellProperties(OOX::Document *pMain = nullptr);			
 			virtual ~CTableCellProperties();
 
 			const CTableCellProperties& operator =(const XmlUtils::CXmlNode &oNode);

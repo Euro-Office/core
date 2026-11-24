@@ -62,6 +62,9 @@ namespace XLSB
                 record >> contentsOLE;
                 break;
             }
+
+            default:
+                break;
         }
     }
 
@@ -84,6 +87,9 @@ namespace XLSB
 				record << contentsOLE;
 				break;
 			}
+
+			default:
+				break;
 		}
 	}
 

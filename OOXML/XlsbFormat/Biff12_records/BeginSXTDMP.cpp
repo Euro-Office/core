@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginSXTDMP::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
 
         record >> cchLevelUnq >> ichPropName >> cchPropName >> isxtl >> isxvd >> flags >> irstProperty;
 

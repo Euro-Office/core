@@ -36,7 +36,7 @@ namespace XLSB
 
     PCDIAddlInfo::PCDIAddlInfo(XLS::CFRecord& record)
     {
-        load(record);
+        PCDIAddlInfo::load(record);
     }
 
     PCDIAddlInfo::~PCDIAddlInfo()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void PCDIAddlInfo::load(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         _INT32  value;
         record >> flags;
 

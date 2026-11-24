@@ -101,8 +101,8 @@ namespace MetaFile
 
 	CEmfPlusPen::CEmfPlusPen()
 		: unStyle(PS_SOLID | PS_GEOMETRIC | PS_STARTCAP_FLAT | PS_ENDCAP_FLAT | PS_JOIN_MITER), dWidth(1), oColor(0, 0, 0),
-		  pBrush(NULL), dMiterLimit(0), dDashOffset(0),
-		  pDataDash(NULL), unSizeDash(0), pLineStartCapData(NULL), pLineEndCapData(NULL) 
+		  pBrush(nullptr), dMiterLimit(0), dDashOffset(0),
+		  pDataDash(nullptr), unSizeDash(0), pLineStartCapData(nullptr), pLineEndCapData(nullptr) 
 	{}
 
 	CEmfPlusPen::~CEmfPlusPen()
@@ -125,7 +125,7 @@ namespace MetaFile
 
 	int CEmfPlusPen::GetColor() const
 	{
-		if (NULL != pBrush)
+		if (nullptr != pBrush)
 			return pBrush->GetColor();
 
 		return METAFILE_RGBA(oColor.chRed, oColor.chGreen, oColor.chBlue, 0);
@@ -146,7 +146,7 @@ namespace MetaFile
 
 	unsigned int CEmfPlusPen::GetAlpha() const
 	{
-		if (NULL != pBrush)
+		if (nullptr != pBrush)
 			return pBrush->oColor.chAlpha;
 
 		return 0xff;
@@ -243,7 +243,7 @@ namespace MetaFile
 	}
 
 	CEmfPlusBuffer::CEmfPlusBuffer()
-		: m_pBuffer(NULL), m_ulPosition(0), m_ulFullSize(0)
+		: m_pBuffer(nullptr), m_ulPosition(0), m_ulFullSize(0)
 	{}
 
 	CEmfPlusBuffer::~CEmfPlusBuffer()
@@ -271,9 +271,12 @@ namespace MetaFile
 
 	void CEmfPlusBuffer::AddData(BYTE *pData, unsigned int unSize)
 	{
-		if (NULL == m_pBuffer && 0 == m_ulFullSize && 0 < unSize)
+		if (nullptr == m_pBuffer && 0 == m_ulFullSize && 0 < unSize)
 			SetSize(unSize);
 		else if (0 == m_ulFullSize)
+			return;
+
+		if (nullptr == m_pBuffer)
 			return;
 
 		if (unSize + m_ulPosition > m_ulFullSize)
@@ -433,7 +436,7 @@ namespace MetaFile
 		return EmfPLusRegionNodeTypeEmpty;
 	}
 
-	CEmfPlusRegionNodePath::CEmfPlusRegionNodePath() : pPath(NULL)
+	CEmfPlusRegionNodePath::CEmfPlusRegionNodePath() : pPath(nullptr)
 	{}
 
 	CEmfPlusRegionNodePath::~CEmfPlusRegionNodePath()
@@ -448,7 +451,7 @@ namespace MetaFile
 
 	bool CEmfPlusRegionNodePath::Empty() const
 	{
-		return (NULL == pPath);
+		return (nullptr == pPath);
 	}
 
 	CEmfPlusPath *CEmfPlusRegionNodePath::GetPath() const
@@ -456,7 +459,7 @@ namespace MetaFile
 		return pPath;
 	}
 
-	CEmfPlusRegionNodeRectF::CEmfPlusRegionNodeRectF() : pRect(NULL)
+	CEmfPlusRegionNodeRectF::CEmfPlusRegionNodeRectF() : pRect(nullptr)
 	{}
 
 	CEmfPlusRegionNodeRectF::~CEmfPlusRegionNodeRectF()
@@ -471,7 +474,7 @@ namespace MetaFile
 
 	bool CEmfPlusRegionNodeRectF::Empty() const
 	{
-		return NULL == pRect;
+		return nullptr == pRect;
 	}
 
 	TEmfPlusRectF *CEmfPlusRegionNodeRectF::GetRect() const
@@ -479,7 +482,7 @@ namespace MetaFile
 		return pRect;
 	}
 
-	CEmfPlusRegionNodeChild::CEmfPlusRegionNodeChild() : pLeft(NULL), pRigth(NULL)
+	CEmfPlusRegionNodeChild::CEmfPlusRegionNodeChild() : pLeft(nullptr), pRigth(nullptr)
 	{}
 
 	CEmfPlusRegionNodeChild::~CEmfPlusRegionNodeChild()
@@ -525,7 +528,7 @@ namespace MetaFile
 			{
 				case EmfPLusRegionNodeTypeEmpty:
 				{
-					if (NULL != pOutRect)
+					if (nullptr != pOutRect)
 					{
 						CPath oPath;
 

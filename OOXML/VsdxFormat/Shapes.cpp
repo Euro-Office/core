@@ -168,7 +168,7 @@ namespace OOX
 					}
 				}
 				std::wstring image_name_new;
-				if (false == image_path.GetPath().empty())
+				if (!image_path.GetPath().empty())
 				{
 					//TODO check correct path inside container
 					image_name_new = image_path.GetFilename();
@@ -227,14 +227,14 @@ namespace OOX
 							std::wstring strSaveItem = out.GetPath() + FILE_SEPARATOR_STR + image_name_new + L".png";
 
 							CBgraFrame oFrame;
-							if (true == oFrame.OpenFile(image_path.GetPath().c_str()))
+							if (oFrame.OpenFile(image_path.GetPath().c_str()))
 							{
 								oFrame.SaveFile(strSaveItem, 4); // png
 							}
 						}
 					}
 				}
-				if (false == ole_path.GetPath().empty())
+				if (!ole_path.GetPath().empty())
 				{
 					if (image_name_new.empty())
 					{
@@ -305,6 +305,7 @@ namespace OOX
 				{
 					CompressionLevel = pReader->GetDoubleReal();
 				}break;
+				default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -330,7 +331,7 @@ namespace OOX
 			}
 			pReader->Seek(_end_rec);
 
-			if (ole_filename.empty() == false)
+			if (!ole_filename.empty())
 			{
 				int idOle = pReader->m_nCountEmbedded++; //TODO -> countEmbeddedObjects
 				int idImage = pReader->m_nCountImage++; 
@@ -343,7 +344,7 @@ namespace OOX
 				NSFile::CFileBinary::Copy(srcMedia + ole_filename, pReader->m_pRels->m_pManager->GetDstEmbed() + FILE_SEPARATOR_STR + ole_filename_dst);
 				NSFile::CFileBinary::Copy(srcMedia + image_filename, pReader->m_pRels->m_pManager->GetDstMedia() + FILE_SEPARATOR_STR + image_filename_dst);
 
-				OleObject* pOle = new OleObject(NULL, false, false);
+				OleObject* pOle = new OleObject(nullptr, false, false);
 				pOle->set_filename(pReader->m_pRels->m_pManager->GetDstEmbed() + FILE_SEPARATOR_STR + ole_filename_dst, false);
 				pOle->set_filename_cache(pReader->m_pRels->m_pManager->GetDstMedia() + FILE_SEPARATOR_STR + image_filename_dst);
 
@@ -360,9 +361,9 @@ namespace OOX
 					Rel->Rid->SetValue(pReader->GetRelsPtr()->Add(oFile).get());
 				}
 
-				if (image_filename_dst.empty() == false)
+				if (!image_filename_dst.empty())
 				{
-					Image* pImage = new Image(NULL, false);
+					Image* pImage = new Image(nullptr, false);
 					pImage->set_filename(pReader->m_pRels->m_pManager->GetDstMedia() + FILE_SEPARATOR_STR + image_filename_dst, false);
 
 					smart_ptr<OOX::File> oFileCache(pImage);
@@ -378,7 +379,7 @@ namespace OOX
 
 				NSFile::CFileBinary::Copy(srcMedia + image_filename, pReader->m_pRels->m_pManager->GetDstMedia() + FILE_SEPARATOR_STR + image_filename_dst);
 
-				Image* pImage = new Image(NULL, false);
+				Image* pImage = new Image(nullptr, false);
 				pImage->set_filename(pReader->m_pRels->m_pManager->GetDstMedia() + FILE_SEPARATOR_STR + image_filename_dst, false);
 
 				smart_ptr<OOX::File> oFile(pImage);
@@ -445,7 +446,7 @@ namespace OOX
 				{
 					std::wstring sName = oReader.GetName();
 
-					WritingElement* pItem = NULL;
+					WritingElement* pItem = nullptr;
 					if (L"cp" == sName)
 					{
 						pItem = new CText_cp();
@@ -566,6 +567,7 @@ namespace OOX
 				{
 					content = pReader->GetString2();
 				}break;
+				default: break;
 				}
 			}
 			pReader->Seek(_end_rec);
@@ -618,6 +620,7 @@ namespace OOX
 				{
 					content = pReader->GetString2();
 				}break;
+				default: break;
 				}
 			}
 			pReader->Seek(_end_rec);
@@ -670,6 +673,7 @@ namespace OOX
 				{
 					IX = pReader->GetULong();
 				}break;
+				default: break;
 				}
 			}
 			pReader->Seek(_end_rec);
@@ -719,6 +723,7 @@ namespace OOX
 				{
 					IX = pReader->GetULong();
 				}break;
+				default: break;
 				}
 			}
 			pReader->Seek(_end_rec);
@@ -768,6 +773,7 @@ namespace OOX
 				{
 					IX = pReader->GetULong();
 				}break;
+				default: break;
 				}
 			}
 			pReader->Seek(_end_rec);
@@ -805,7 +811,7 @@ namespace OOX
 			{
 				std::wstring sName = oReader.GetName();
 
-				WritingElement* pItem = NULL;
+				WritingElement* pItem = nullptr;
 				if (L"Cell" == sName)
 				{
 					pItem = new CCell();
@@ -874,6 +880,7 @@ namespace OOX
 				{
 					Del = pReader->GetBool();
 				}break;
+				default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -938,7 +945,7 @@ namespace OOX
 			{
 				std::wstring sName = oReader.GetName();
 
-				WritingElement* pItem = NULL;
+				WritingElement* pItem = nullptr;
 				if (L"Cell" == sName)
 				{
 					pItem = new CCell();
@@ -1002,6 +1009,7 @@ namespace OOX
 				{
 					Del = pReader->GetBool();
 				}break;
+				default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -1090,6 +1098,7 @@ namespace OOX
 				{
 					T = pReader->GetString2();
 				}break;
+				default: break;
 				}
 			}
 			pReader->Seek(_end_rec);
@@ -1166,7 +1175,7 @@ namespace OOX
 
 			pWriter->WriteRecord2(0, RefBy);
 			
-			if (false == content.empty())
+			if (!content.empty())
 			{
 				pWriter->StartRecord(1);
 				pWriter->WriteString(content);
@@ -1204,6 +1213,7 @@ namespace OOX
 				{
 					V = pReader->GetString2A();
 				}break;
+				default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -1242,7 +1252,7 @@ namespace OOX
 			if (RefBy.IsInit())
 				RefBy->toXmlWriter(pWriter);
 
-			if (false == content.empty())
+			if (!content.empty())
 			{
 				pWriter->WriteStringXML(content);
 			}
@@ -1299,6 +1309,7 @@ namespace OOX
 					{
 						N = pReader->GetString2A();
 					}break;
+				default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -1366,7 +1377,7 @@ namespace OOX
 			{
 				std::wstring sName = oReader.GetName();
 
-				WritingElement* pItem = NULL;
+				WritingElement* pItem = nullptr;
 				if (L"Cell" == sName)
 				{
 					pItem = new CCell();
@@ -1500,6 +1511,7 @@ namespace OOX
 				{
 					TextStyle = pReader->GetULong();
 				}break;
+				default: break;
 				}
 			}
 			while (pReader->GetPos() < _end_rec)
@@ -1696,6 +1708,7 @@ namespace OOX
 				{
 					ToPart = pReader->GetLong();
 				}break;
+				default: break;
 				}
 			}
 			pReader->Seek(_end_rec);

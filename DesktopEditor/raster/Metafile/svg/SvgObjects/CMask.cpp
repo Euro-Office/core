@@ -6,9 +6,9 @@ namespace SVG
 		: CClipPath(oReader)
 	{}
 
-	bool CMask::Apply(IRenderer *pRenderer, const CSvgFile *pFile, const TBounds &oObjectBounds)
+	bool CMask::Apply(IRenderer *pRenderer, const CSvgFile *pFile, const TBounds & /*oObjectBounds*/)
 	{
-		if (NULL == pRenderer || NULL == pFile)
+		if (nullptr == pRenderer || nullptr == pFile)
 			return false;
 
 		pRenderer->BeginCommand(c_nMaskType);

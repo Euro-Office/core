@@ -217,7 +217,7 @@ namespace MetaFile
 
 	void CPath::DrawOn(IOutputDevice *pOutput, bool bStroke, bool bFill, int nClipMode) const
 	{
-		if (NULL == pOutput)
+		if (nullptr == pOutput)
 			return;
 
 		if (-1 == nClipMode && (bStroke || bFill))
@@ -324,7 +324,7 @@ namespace MetaFile
 
 	bool CPath::AddCommand(CPathCommandBase *pCommand)
 	{
-		if (NULL == pCommand)
+		if (nullptr == pCommand)
 			return false;
 		
 		if (PATH_COMMAND_MOVETO == pCommand->GetType() && !m_arCommands.empty() && PATH_COMMAND_MOVETO == m_arCommands.back()->GetType())

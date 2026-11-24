@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginPCDSRange::readFields(XLS::CFRecord& record)
     {
-        BYTE flags1, flags2, flags3;
+        BYTE flags1 = 0, flags2 = 0, flags3 = 0;
         record >> flags1 >> flags2 >> flags3;
 
         fName               = GETBIT(flags1, 0);

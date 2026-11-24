@@ -22,7 +22,7 @@ JSSmart<CJSValue> CBuilderDocumentEmbed::GetFolder()
 JSSmart<CJSValue> CBuilderDocumentEmbed::Close()
 {
 	_CloseFile();
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CBuilderDocumentEmbed::GetImageMap()

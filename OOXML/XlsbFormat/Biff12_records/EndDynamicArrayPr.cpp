@@ -45,7 +45,7 @@ namespace XLSB
 
     void EndDynamicArrayPr::readFields(XLS::CFRecord& record)
     {
-        char value;
+        char value = 0;
         record >> value;
         fDynamic = value;
         record >> value;

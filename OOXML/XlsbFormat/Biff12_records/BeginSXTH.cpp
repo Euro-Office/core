@@ -45,8 +45,8 @@ namespace XLSB
 
     void BeginSXTH::readFields(XLS::CFRecord& record)
     {
-        _UINT32 flags1;
-        _UINT16 flags2;
+        _UINT32 flags1 = 0;
+        _UINT16 flags2 = 0;
         record >> flags1 >> flags2;
 
         fOutlineMode                = GETBIT(flags1, 0);
