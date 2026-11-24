@@ -142,6 +142,24 @@ TEST(OdtToDocxRuby, ParagraphWithOnlyRubyKeepsItsText)
     EXPECT_TRUE(has_paragraph(xml, L"上")) << xml;
 }
 
+TEST(OdtToDocxRuby, RubyInsideFormattedSpanKeepsSpanFormatting)
+{
+    const std::wstring xml = part(L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_TRUE(has_paragraph(xml, L"Bold: 南 end")) << xml;
+    const std::wstring run = element_with(xml, L"w:r", L">南</w:t>");
+    ASSERT_FALSE(run.empty()) << xml;
+    EXPECT_NE(run.find(L"<w:b/>"), std::wstring::npos) << run;
+}
+
+TEST(OdtToDocxRuby, HyperlinkInsideBaseIsKept)
+{
+    const std::wstring xml = part(L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_TRUE(has_paragraph(xml, L"Base link: 北 end")) << xml;
+    EXPECT_FALSE(element_with(xml, L"w:hyperlink", L">北</w:t>").empty()) << xml;
+}
+
 // <text:span>春</text:span> <text:span>夏</text:span> in a ruby base: the space between the spans is text too.
 TEST(OdtToDocxRuby, SpaceBetweenSpansInBaseIsKept)
 {
@@ -150,14 +168,15 @@ TEST(OdtToDocxRuby, SpaceBetweenSpansInBaseIsKept)
     EXPECT_TRUE(has_paragraph(xml, L"Space: 春 夏 end")) << xml;
 }
 
+// No two annotations share a character and no annotation occurs in the base or body text, so a failure names the
+// ruby whose annotation leaked.
 TEST(OdtToDocxRuby, AnnotationIsDropped)
 {
     const std::wstring xml = part(L"word/document.xml");
     ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
-    EXPECT_EQ(xml.find(L"とうきょう"), std::wstring::npos) << xml;
-    EXPECT_EQ(xml.find(L"かんじ"), std::wstring::npos) << xml;
-    EXPECT_EQ(xml.find(L"shang"), std::wstring::npos) << xml;
-    EXPECT_EQ(xml.find(L"じ"), std::wstring::npos) << xml;
+    for (const std::wstring annotation : {L"とうきょう", L"かんじ", L"shang", L"あざ", L"みなみ", L"ぺい", L"ハルナツ",
+                                          L"ジショ", L"ユキグニ", L"オオサカ", L"コウベ", L"さっぽろ"})
+        EXPECT_EQ(xml.find(annotation), std::wstring::npos) << "annotation " << annotation << " is in\n" << xml;
 }
 
 // The entry of an alphabetical index mark around a ruby is the base text, without the annotation.
