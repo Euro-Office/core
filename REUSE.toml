@@ -432,6 +432,11 @@ SPDX-FileCopyrightText = "2010-2024 Ascensio System SIA"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/xlsx_fit_to_pages.xlsx"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = [
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_edge.xlsx",
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_rules.xlsx",
