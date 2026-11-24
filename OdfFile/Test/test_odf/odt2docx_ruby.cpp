@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 // ODT -> DOCX conversion of text:ruby: the base text is written as normal runs and the annotation is
-// dropped, in the body and in page headers. Before, both were lost. A drop cap can
-// start with a ruby.
+// dropped, in the body and in page headers. Before, both were lost. The plain text of a ruby (alphabetical
+// index entries, links to headings) is the base only, and a drop cap can start with a ruby.
 
 #include "gtest/gtest.h"
 #include "common.h"
@@ -150,6 +150,32 @@ TEST(OdtToDocxRuby, AnnotationIsDropped)
     EXPECT_EQ(xml.find(L"かんじ"), std::wstring::npos) << xml;
     EXPECT_EQ(xml.find(L"shang"), std::wstring::npos) << xml;
     EXPECT_EQ(xml.find(L"じ"), std::wstring::npos) << xml;
+}
+
+// The entry of an alphabetical index mark around a ruby is the base text, without the annotation.
+TEST(OdtToDocxRuby, IndexEntryHoldsBaseTextOnly)
+{
+    const std::wstring xml = part(L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_NE(xml.find(L"XE \"辞書\""), std::wstring::npos) << xml;
+    EXPECT_TRUE(has_paragraph(xml, L"Index: 辞書 end")) << xml;
+}
+
+// A "#雪国|outline" link finds the heading by its text: the heading's ruby counts with its base text only, so the
+// heading gets the bookmark the link points to.
+TEST(OdtToDocxRuby, LinkToHeadingWithRubyFindsTheHeading)
+{
+    const std::wstring xml = part(L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    const std::wstring link = element_with(xml, L"w:hyperlink", L">雪国</w:t>");
+    ASSERT_FALSE(link.empty()) << xml;
+    const std::wstring anchor_attr = L"w:anchor=\"";
+    const size_t anchor = link.find(anchor_attr);
+    ASSERT_NE(anchor, std::wstring::npos) << link;
+    const size_t anchor_end = link.find(L'"', anchor + anchor_attr.size());
+    const std::wstring name = link.substr(anchor + anchor_attr.size(), anchor_end - anchor - anchor_attr.size());
+    ASSERT_FALSE(name.empty()) << link;
+    EXPECT_NE(xml.find(L"w:name=\"" + name + L"\""), std::wstring::npos) << "no bookmark " << name << " in\n" << xml;
 }
 
 // A drop cap paragraph that starts with a ruby takes its letter from the ruby base (also through a span inside the

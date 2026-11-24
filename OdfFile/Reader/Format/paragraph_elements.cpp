@@ -1038,13 +1038,12 @@ void ruby::docx_convert(oox::docx_conversion_context & Context)
         text_ruby_base_->docx_convert(Context);
 }
 
+// The plain text is the base only, as in docx_convert: it feeds alphabetical index entries (XE) and the matching of
+// "#...|outline" links to headings, where the annotation would add text that is not in the document.
 std::wostream & ruby::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
 {
     if (text_ruby_base_)
         text_ruby_base_->text_to_stream(_Wostream, bXmlEncode);
-
-    if (text_ruby_text_)
-        text_ruby_text_->text_to_stream(_Wostream, bXmlEncode);
 
     return _Wostream;
 }
