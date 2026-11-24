@@ -142,6 +142,7 @@ namespace OOX
 					case 3:
 						m_oAlignment = SimpleTypes::Spreadsheet::phoneticalignmentDistributed;
 						break;
+					default: break;
 				}
 
 				switch(ptr->phType)
@@ -158,6 +159,7 @@ namespace OOX
 					case 3:
 						m_oType = SimpleTypes::Spreadsheet::phonetictypeNoConversion;
 						break;
+					default: break;
 				}
 
 				m_oFontId = ptr->ifnt;

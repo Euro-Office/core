@@ -37,7 +37,7 @@
 
 namespace OOX
 {
-	void VbaData::read(const CPath& oRootPath, const CPath& oPath)
+	void VbaData::read(const CPath& /*oRootPath*/, const CPath& oPath)
 	{
 		m_oReadPath = oPath;
 
@@ -89,7 +89,7 @@ namespace OOX
 				xlsx->m_pVbaProject = this;
 			}
 		}
-		read( oRootPath, filename );
+		VbaProject::read( oRootPath, filename );
 	}
 	void VbaProject::read(const CPath& oRootPath, const CPath& oPath)
 	{
@@ -115,7 +115,7 @@ namespace OOX
 		CVbaReader vbaReader(m_filename.GetPath(), L"");
 		std::wstring sXml = vbaReader.convert();
 
-		if (false == sXml.empty())
+		if (!sXml.empty())
 		{
 			pWriter->StartRecord(0);
 			pWriter->WriteStringW2(sXml);
@@ -170,17 +170,17 @@ namespace OOX
 			{
 				case 0:
 				{
-					_INT32 _len = pReader->GetRecordSize();
+					pReader->GetRecordSize(); // record length; only the stream advance matters
 					sXml = pReader->GetString2();
 				}break;
 				case 1:
 				{
 					smart_ptr<OOX::VbaData> oVbaData = new OOX::VbaData(File::m_pMainDocument);
 					
-					_INT32 _len = pReader->GetRecordSize();
+					pReader->GetRecordSize(); // record length; only the stream advance matters
 					oVbaData->m_sXml = pReader->GetString2();
 
-					if (false == oVbaData->m_sXml.empty())
+					if (!oVbaData->m_sXml.empty())
 					{
 						oVbaData->m_bDocument = m_bDocument;
 						smart_ptr<OOX::File> oFile = oVbaData.smart_dynamic_cast<OOX::File>();

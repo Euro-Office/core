@@ -171,15 +171,15 @@ namespace NSBase64
 		// walk the source buffer
 		// each four character sequence is converted to 3 bytes
 		// CRLFs and =, and any characters not in the encoding table
-		// are skiped
+		// are skipped
 
-		if (szSrc == NULL || pnDestLen == NULL)
+		if (szSrc == nullptr || pnDestLen == nullptr)
 			return FALSE;
 		
 		const T* szSrcEnd = szSrc + nSrcLen;
 		int nWritten = 0;
 		
-		INT bOverflow = (pbDest == NULL) ? TRUE : FALSE;
+		INT bOverflow = (pbDest == nullptr) ? TRUE : FALSE;
 		
 		while (szSrc < szSrcEnd &&(*szSrc) != 0)
 		{
@@ -309,13 +309,16 @@ namespace NSBase32
 
 	bool Decode(unsigned char* in, int inLen, unsigned char* out)
 	{
-		for (size_t i = 0, j = 0; (i + 8) <= inLen; i += 8, j += 5)
+        if( inLen < 0 )
+        { return false; }
+
+		for (size_t i = 0, j = 0; (i + 8) <= static_cast<size_t>(inLen); i += 8, j += 5)
 		{
 			int n = decode_sequence(&in[i], &out[j]);
 			if (n == -2)
-				return false;
+            { return false; }
 			if (n < 5)
-				break;
+            { break; }
 		}
 		return true;
 	}

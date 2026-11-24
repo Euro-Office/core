@@ -92,6 +92,7 @@ const bool PIVOTLI::saveContent(BinProcessor& proc)
         memcpy(continueRecord.m_pData, CopyData, continueRecord.m_iDataSize);
         proc.mandatory(continueRecord);
     }
+    return true;
 }
 
 int PIVOTLI::serialize(std::wostream & strm)

@@ -30,8 +30,7 @@ namespace Draw
 {
 	EForeignType CForeignType::FromString(const std::wstring& sValue)
 	{
-		if (L"Bitmap" == sValue) this->m_eValue = typeBitmap;
-		else if (L"EnhMetaFile" == sValue) this->m_eValue = typeEnhMetaFile;
+		if (L"EnhMetaFile" == sValue) this->m_eValue = typeEnhMetaFile;
 		else if (L"Ink" == sValue) this->m_eValue = typeInk;
 		else if (L"Object" == sValue) this->m_eValue = typeObject;
 		else this->m_eValue = typeBitmap;
@@ -52,8 +51,7 @@ namespace Draw
 	}
 	ECompressionType CCompressionType::FromString(const std::wstring& sValue)
 	{
-		if (L"JPEG" == sValue || L"JPG" == sValue) this->m_eValue = typeJPEG;
-		else if (L"DIB" == sValue) this->m_eValue = typeDIB;
+		if (L"DIB" == sValue) this->m_eValue = typeDIB;
 		else if (L"PNG" == sValue) this->m_eValue = typePNG;
 		else if (L"TIFF" == sValue) this->m_eValue = typeTIFF;
 		else if (L"GIF" == sValue) this->m_eValue = typeGIF;
@@ -96,8 +94,7 @@ namespace Draw
 	}
 	EContainerType CContainerType::FromString(const std::wstring& sValue)
 	{
-		if (L"Page" == sValue) this->m_eValue = typeContainerPage;
-		else if (L"Sheet" == sValue) this->m_eValue = typeContainerSheet;
+		if (L"Sheet" == sValue) this->m_eValue = typeContainerSheet;
 		else if (L"Master" == sValue) this->m_eValue = typeContainerMaster;
 		else this->m_eValue = typeContainerPage;
 
@@ -118,7 +115,6 @@ namespace Draw
 	EWindowType CWindowType::FromString(const std::wstring& sValue)
 	{
 		if (L"Drawing" == sValue) this->m_eValue = EWindowType::typeDrawing;
-		else if (L"Sheet" == sValue) this->m_eValue = EWindowType::typeSheet;
 		else if (L"Stencil" == sValue) this->m_eValue = EWindowType::typeStencil;
 		else  this->m_eValue = EWindowType::typeSheet;
 

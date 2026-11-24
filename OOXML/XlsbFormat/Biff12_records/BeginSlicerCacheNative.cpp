@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginSlicerCacheNative::readFields(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
         record.skipNunBytes(4); // reserved
 
         record >> dwcacheId >> flags;

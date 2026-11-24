@@ -27,7 +27,7 @@
 #include "./Graphics.h"
 
 CBgraFrame* GetFrame(IOfficeDrawingFile* pFile, int nPageIndex, int nRasterW, int nRasterH, bool bIsFlip, bool bIsSwapRGB,
-                     NSFonts::IFontManager* pFonts = NULL, int nBackgroundColor = 0xFFFFFF, bool bIsDarkMode = false, int nBackgroundOpacity = 0xFF)
+                     NSFonts::IFontManager* pFonts = nullptr, int nBackgroundColor = 0xFFFFFF, bool bIsDarkMode = false, int nBackgroundOpacity = 0xFF)
 {
     NSFonts::IFontManager *pFontManager = pFonts;
 
@@ -35,7 +35,7 @@ CBgraFrame* GetFrame(IOfficeDrawingFile* pFile, int nPageIndex, int nRasterW, in
     {
         NSFonts::IApplicationFonts* pApplicationFonts = pFile->GetFonts();
         if (!pApplicationFonts)
-            return NULL;
+            return nullptr;
 
         pFontManager = pApplicationFonts->GenerateFontManager();
         NSFonts::IFontsCache* pFontCache = NSFonts::NSFontCache::Create();
@@ -57,17 +57,17 @@ CBgraFrame* GetFrame(IOfficeDrawingFile* pFile, int nPageIndex, int nRasterW, in
     int nWidth  = (nRasterW > 0) ? nRasterW : ((int)dWidth  * 96 / dPageDpiX);
     int nHeight = (nRasterH > 0) ? nRasterH : ((int)dHeight * 96 / dPageDpiY);
 
-	BYTE* pBgraData = new(std::nothrow) BYTE[nWidth * nHeight * 4];
+	BYTE* pBgraData = new(std::nothrow) BYTE[static_cast<size_t>(nWidth) * nHeight * 4];
     if (!pBgraData)
     {
         RELEASEINTERFACE(pFontManager);
         RELEASEOBJECT(pRenderer);
-        return NULL;
+        return nullptr;
     }
 
     if (0xFFFFFF == nBackgroundColor)
     {
-        memset(pBgraData, 0xff, nWidth * nHeight * 4);
+        memset(pBgraData, 0xff, static_cast<size_t>(nWidth) * nHeight * 4);
     }
     else
     {
@@ -115,7 +115,7 @@ unsigned char* IOfficeDrawingFile::ConvertToPixels(int nPageIndex, int nRasterW,
 {
     CBgraFrame* pFrame = GetFrame(this, nPageIndex, nRasterW, nRasterH, bIsFlip, true, pFonts, nBackgroundColor, bIsDarkMode, nBackgroundOpacity);
     if (!pFrame)
-        return NULL;
+        return nullptr;
 
     unsigned char* pData = pFrame->get_Data();
     pFrame->ClearNoAttack();

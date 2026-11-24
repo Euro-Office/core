@@ -44,7 +44,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CCol)
-			CCol(OOX::Document *pMain = NULL);
+			CCol(OOX::Document *pMain = nullptr);
 			virtual ~CCol();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -81,7 +81,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CCols)
             WritingElement_XlsbVectorConstructors(CCols)
-			CCols(OOX::Document *pMain = NULL);
+			CCols(OOX::Document *pMain = nullptr);
 			virtual ~CCols();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

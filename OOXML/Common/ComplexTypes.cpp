@@ -292,14 +292,12 @@ namespace Word
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:asciiTheme", m_oAsciiTheme)
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:cs", m_sCs)
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:cstheme", m_oCsTheme)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:eastAsia", m_sEastAsia)
+		else if ( L"w:eastAsia" == wsName || L"w:fareast" == wsName ) m_sEastAsia = oReader.GetText();
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:eastAsiaTheme", m_oEastAsiaTheme)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hAnsi", m_sHAnsi)
+		else if ( L"w:hAnsi" == wsName || L"w:h-ansi" == wsName ) m_sHAnsi = oReader.GetText();
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hAnsiTheme", m_oHAnsiTheme)
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hint", m_oHint)
 		//2003
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:h-ansi", m_sHAnsi)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:fareast", m_sEastAsia)
 		WritingElement_ReadAttributes_End(oReader)
 	}
 
@@ -1120,7 +1118,7 @@ namespace Word
 	void CRel::FromXML(XmlUtils::CXmlNode& oNode)
 	{
 		XmlMacroReadAttributeBase( oNode, L"r:id", m_oId );
-		if (false == m_oId.IsInit())
+		if (!m_oId.IsInit())
 		{
 			XmlMacroReadAttributeBase( oNode, L"relationships:id", m_oId );
 		}
@@ -2354,26 +2352,19 @@ namespace Word
 		WritingElement_ReadAttributes_Read_if(oReader, L"w:anchorLock", m_oAnchorLock)
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:dropCap", m_oDropCap)
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:h", m_oH)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hAnchor", m_oHAnchor)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hRule", m_oHRule)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hSpace", m_oHSpace)
+		else if ( L"w:hAnchor" == wsName || L"w:hanchor" == wsName ) m_oHAnchor = oReader.GetText();
+		else if ( L"w:hRule" == wsName || L"w:hrule" == wsName ) m_oHRule = oReader.GetText();
+		else if ( L"w:hSpace" == wsName || L"w:hspace" == wsName ) m_oHSpace = oReader.GetText();
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:lines", m_oLines)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:vAnchor", m_oVAnchor)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:vSpace", m_oVSpace)
+		else if ( L"w:vAnchor" == wsName || L"w:vanchor" == wsName ) m_oVAnchor = oReader.GetText();
+		else if ( L"w:vSpace" == wsName || L"w:vspace" == wsName ) m_oVSpace = oReader.GetText();
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:w", m_oW)
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:wrap", m_oWrap)
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:x", m_oX)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:xAlign", m_oXAlign)
+		else if ( L"w:xAlign" == wsName || L"w:x-align" == wsName ) m_oXAlign = oReader.GetText();
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:y", m_oY)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:yAlign", m_oYAlign)
+		else if ( L"w:yAlign" == wsName || L"w:y-align" == wsName ) m_oYAlign = oReader.GetText();
 //2003
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:x-align", m_oXAlign)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:y-align", m_oYAlign)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hanchor", m_oHAnchor)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:vanchor", m_oVAnchor)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hspace", m_oHSpace)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:vspace", m_oVSpace)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hrule", m_oHRule)
 
 		WritingElement_ReadAttributes_End(oReader)
 	}
@@ -2486,24 +2477,17 @@ namespace Word
 	void CInd::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 	{
 		WritingElement_ReadAttributes_Start(oReader)
-		WritingElement_ReadAttributes_Read_if(oReader, L"w:end", m_oEnd)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:endChars", m_oEndChars)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:firstLine", m_oFirstLine)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:firstLineChars", m_oFirstLineChars)
+		if ( L"w:end" == wsName || L"w:right" == wsName ) m_oEnd = oReader.GetText();
+		// w:right-charss is the historic spelling this reader accepted; the set of accepted
+		// attributes stays as it was
+		else if ( L"w:endChars" == wsName || L"w:rightChars" == wsName || L"w:right-charss" == wsName ) m_oEndChars = oReader.GetText();
+		else if ( L"w:firstLine" == wsName || L"w:first-line" == wsName ) m_oFirstLine = oReader.GetText();
+		else if ( L"w:firstLineChars" == wsName || L"w:first-line-chars" == wsName ) m_oFirstLineChars = oReader.GetText();
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hanging", m_oHanging)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hangingChars", m_oHangingChars)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:start", m_oStart)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:startChars", m_oStartChars)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:left", m_oStart)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:leftChars", m_oStartChars)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:right", m_oEnd)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:rightChars", m_oEndChars)
+		else if ( L"w:hangingChars" == wsName || L"w:hanging-chars" == wsName ) m_oHangingChars = oReader.GetText();
+		else if ( L"w:start" == wsName || L"w:left" == wsName ) m_oStart = oReader.GetText();
+		else if ( L"w:startChars" == wsName || L"w:leftChars" == wsName || L"w:left-chars" == wsName ) m_oStartChars = oReader.GetText();
 		//2003
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:first-line", m_oFirstLine)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:first-line-chars", m_oFirstLineChars)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:hanging-chars", m_oHangingChars)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:left-chars", m_oStartChars)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:right-charss", m_oEndChars)
 		WritingElement_ReadAttributes_End(oReader)
 	}
 
@@ -2613,15 +2597,13 @@ namespace Word
 	{
 		WritingElement_ReadAttributes_Start(oReader)
 		WritingElement_ReadAttributes_Read_if(oReader, L"w:after", m_oAfter)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:afterAutospacing", m_oAfterAutospacing)
+		else if ( L"w:afterAutospacing" == wsName || L"w:after-autospacing" == wsName ) m_oAfterAutospacing = oReader.GetText();
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:afterLines", m_oAfterLines)
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:before", m_oBefore)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:beforeAutospacing", m_oBeforeAutospacing)
+		else if ( L"w:beforeAutospacing" == wsName || L"w:before-autospacing" == wsName ) m_oBeforeAutospacing = oReader.GetText();
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:beforeLines", m_oBeforeLines)
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:line", m_oLine)
 		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:lineRule", m_oLineRule)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:before-autospacing", m_oBeforeAutospacing)
-		WritingElement_ReadAttributes_Read_else_if(oReader, L"w:after-autospacing", m_oAfterAutospacing)
 		WritingElement_ReadAttributes_End(oReader)
 	}
 

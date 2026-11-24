@@ -36,7 +36,7 @@ namespace XLSB
 
     GradientStop::GradientStop(XLS::CFRecord& record)
     {
-        load(record);
+        GradientStop::load(record);
     }
 
     GradientStop::~GradientStop()

@@ -48,7 +48,7 @@ namespace XLSB
 
     void WsFmtInfo::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> dxGCol >> cchDefColWidth >> miyDefRwHeight >> flags >> iOutLevelRw >> iOutLevelCol;
 
         fUnsynced	= GETBIT(flags, 0);
