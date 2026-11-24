@@ -348,14 +348,11 @@ void CTextAttributesEx::RecalcParagraphsPPT()
     }
     void CTextAttributesEx::ApplyRuler(CTheme* pTheme)
     {
-        if (!pTheme)
-            return;
-
         if (m_oRuler.tabsStops.size() > 0 || m_oRuler.DefaultTabSize.is_init())//presentacio1.ppt slide 2
         {
             for (long i = 0; i < 9 ;i++)
             {
-                if (!m_oStyles.m_pLevels[i].is_init())
+                if (pTheme && !m_oStyles.m_pLevels[i].is_init())
                 {
                     m_oStyles.m_pLevels[i] = pTheme->m_pStyles[0].m_pLevels[i];
                 }
