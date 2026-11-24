@@ -266,6 +266,7 @@ void PptxConverter::convert_styles()
 	//why?! for OpenOffice, insets/frames need a base style - without it, another type of geometry oO!!!
 	odp_context->styles_context()->create_style(L"Frame", odf_types::style_family::Graphic, false, true);		
 	
+	odp_context->styles_context()->last_state()->get_graphic_properties();
 	odf_writer::text_format_properties		* frame_text_properties		= odp_context->styles_context()->last_state()->get_text_properties();
 
 	if (frame_text_properties && text_properties)
