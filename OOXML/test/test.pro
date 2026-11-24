@@ -13,6 +13,7 @@ HEADERS += $$X2T_DIR/src/dylib/x2t.h
 SOURCES += $$X2T_DIR/src/dylib/x2t.cpp
 
 SOURCES += main.cpp\
+           activex_groupname.cpp\
            common.cpp\
            checkbox.cpp\
            richvalue.cpp\

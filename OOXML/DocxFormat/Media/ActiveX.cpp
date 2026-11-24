@@ -245,9 +245,8 @@ namespace OOX
 			fMouseIcon = GETBIT(mask, 27);
 			fPicture = GETBIT(mask, 28);
 			fAccelerator = GETBIT(mask, 29);
-			// TODO: the group name is bit 32 of the mask, but GETBIT shifts an int, so this
-			// was always false in GCC builds and the reader skipped the group name. Fix in its own PR.
-			fGroupName = false;
+			// bit 32 of a 64-bit mask: GETBIT shifts an int, so it cannot reach it
+			fGroupName = ((mask >> 32) & 1) != 0;
 		}
 		MorphDataPropMask & operator = (_UINT32 flag)
 		{
@@ -1531,7 +1530,8 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 			m_oCaption = readString(&mem_stream, sizeCaption);
 		}
 		std::wstring oGroupName;
-		if (sizeGroupName > 0 && sizeGroupName < 0xfff0)
+		// readString masks off bit 31 (the compression flag), so any non-zero size is a string
+		if (sizeGroupName > 0)
 		{
 			oGroupName = readString(&mem_stream, sizeGroupName);
 		}
