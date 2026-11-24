@@ -187,6 +187,15 @@ void paragraph::drop_cap_text_docx_convert(office_element_ptr first_text_element
 	if (textStyle == 1) Context.pop_text_properties();
 }
 
+namespace {
+bool ruby_has_base_content(const office_element_ptr & element)
+{
+	ruby* r = dynamic_cast<ruby*>(element.get());
+	const office_element_ptr_array* base = r ? r->base_content() : NULL;
+	return base && !base->empty();
+}
+}
+
 size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 {
 	if ( content_.empty()) return 0;
@@ -198,6 +207,10 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 		if (content_[index]->get_type() == typeTextText || 
 			content_[index]->get_type() == typeTextSpan)
 			break;
+		// a ruby writes its base text as runs, so one with base content stops the scan too: those runs must come after
+		// the drop cap paragraph properties. A ruby without base content writes nothing and the scan goes on.
+		if (content_[index]->get_type() == typeTextRuby && ruby_has_base_content(content_[index]))
+			break;
 		content_[index++]->docx_convert(Context); 
 	}
 
@@ -207,10 +220,28 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 	{
 		drop_cap_text_docx_convert(content_[index], Context);
 	}
-	else if (content_[index]->get_type() == typeTextSpan)
+	else
 	{
-		span* first_span_in_paragraph = dynamic_cast<span*>(content_[index].get());
-		
+		// a span or a ruby: the drop cap comes from the first text inside it, following the spans and ruby bases it
+		// starts with (<text:ruby><text:ruby-base><text:span>, <text:span><text:ruby>)
+		span* first_span_in_paragraph = NULL;
+		const office_element_ptr_array* first_content = NULL;
+		office_element_ptr first_element = content_[index];
+		while (first_element)
+		{
+			if (span* inner_span = dynamic_cast<span*>(first_element.get()))
+			{
+				// without a font size in the paragraph style, the drop cap size comes from this span
+				first_span_in_paragraph = inner_span;
+				first_content = &inner_span->content_;
+			}
+			else if (ruby* inner_ruby = dynamic_cast<ruby*>(first_element.get()))
+				first_content = inner_ruby->base_content();
+			else
+				break;
+			first_element = (first_content && !first_content->empty()) ? (*first_content)[0] : office_element_ptr();
+		}
+
 		if (Context.get_drop_cap_context().FontSize < 1)
 		{
 			style_instance * styleInst = NULL;
@@ -237,10 +268,9 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 			}
 		}
 		//Only the first elements are taken into account!!! there are different break-and cancel the drop_cap mode!!
-		if ((!first_span_in_paragraph->content_.empty()) &&
-			 (first_span_in_paragraph->content_[0]->get_type() == typeTextText))
+		if ((first_element) && (first_element->get_type() == typeTextText))
 		{
-			drop_cap_text_docx_convert(first_span_in_paragraph->content_[0], Context);
+			drop_cap_text_docx_convert(first_element, Context);
 		}
 	}
 	return index;

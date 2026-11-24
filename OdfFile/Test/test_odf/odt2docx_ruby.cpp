@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 // ODT -> DOCX conversion of text:ruby: the base text is written as normal runs and the annotation is
-// dropped, in the body and in page headers. Before, both were lost.
+// dropped, in the body and in page headers. Before, both were lost. A drop cap can
+// start with a ruby.
 
 #include "gtest/gtest.h"
 #include "common.h"
@@ -29,29 +30,41 @@ bool starts_tag(const std::wstring& xml, size_t pos, const std::wstring& tag)
     return xml.compare(pos, tag.size(), tag) == 0 && end < xml.size() && (xml[end] == L'>' || xml[end] == L' ');
 }
 
-// The text of every <w:p>, with its <w:t> parts joined. Fits this fixture only: no entity decoding and no
-// paragraphs nested in text boxes.
+// The elements <tag ...>...</tag>, in document order. Fits this fixture only: no nesting of tag.
+std::vector<std::wstring> elements(const std::wstring& xml, const std::wstring& tag)
+{
+    std::vector<std::wstring> items;
+    const std::wstring open = L"<" + tag, close = L"</" + tag + L">";
+    size_t pos = 0;
+    while ((pos = xml.find(open, pos)) != std::wstring::npos)
+    {
+        if (!starts_tag(xml, pos, open)) { pos += open.size(); continue; }
+        const size_t end = xml.find(close, pos);
+        if (end == std::wstring::npos) break;
+        items.push_back(xml.substr(pos, end + close.size() - pos));
+        pos = end;
+    }
+    return items;
+}
+
+// The text of a paragraph, with its <w:t> parts joined. No entity decoding, enough for this fixture.
+std::wstring paragraph_text(const std::wstring& paragraph)
+{
+    std::wstring text;
+    for (const auto& t : elements(paragraph, L"w:t"))
+    {
+        const size_t open_end = t.find(L'>');
+        text += t.substr(open_end + 1, t.size() - open_end - 1 - 6);
+    }
+    return text;
+}
+
+// The text of every <w:p>. No paragraphs nested in text boxes in this fixture.
 std::vector<std::wstring> paragraphs(const std::wstring& xml)
 {
     std::vector<std::wstring> items;
-    size_t pos = 0;
-    while ((pos = xml.find(L"<w:p", pos)) != std::wstring::npos)
-    {
-        if (!starts_tag(xml, pos, L"<w:p")) { pos += 4; continue; }
-        const size_t end = xml.find(L"</w:p>", pos);
-        if (end == std::wstring::npos) break;
-        std::wstring text;
-        for (size_t t = xml.find(L"<w:t", pos); t != std::wstring::npos && t < end; t = xml.find(L"<w:t", t + 4))
-        {
-            if (!starts_tag(xml, t, L"<w:t")) continue;
-            const size_t open_end = xml.find(L'>', t);
-            const size_t close = xml.find(L"</w:t>", open_end);
-            if (close == std::wstring::npos || close > end) break;
-            text += xml.substr(open_end + 1, close - open_end - 1);
-        }
-        items.push_back(text);
-        pos = end;
-    }
+    for (const auto& p : elements(xml, L"w:p"))
+        items.push_back(paragraph_text(p));
     return items;
 }
 
@@ -60,6 +73,14 @@ bool has_paragraph(const std::wstring& xml, const std::wstring& text)
     for (const auto& item : paragraphs(xml))
         if (item == text) return true;
     return false;
+}
+
+// The <w:p> element whose text is exactly text, or an empty string.
+std::wstring paragraph_with(const std::wstring& xml, const std::wstring& text)
+{
+    for (const auto& p : elements(xml, L"w:p"))
+        if (paragraph_text(p) == text) return p;
+    return std::wstring();
 }
 
 // The element <tag ...>...</tag> that holds the text, or an empty string.
@@ -74,6 +95,8 @@ std::wstring element_with(const std::wstring& xml, const std::wstring& tag, cons
         --open;
     }
     if (open == std::wstring::npos) return std::wstring();
+    // the element must still be open at the text, not closed before it
+    if (xml.find(L"</" + tag + L">", open) < at) return std::wstring();
     const size_t close = xml.find(L"</" + tag + L">", at);
     if (close == std::wstring::npos) return std::wstring();
     return xml.substr(open, close + tag.size() + 3 - open);
@@ -127,6 +150,35 @@ TEST(OdtToDocxRuby, AnnotationIsDropped)
     EXPECT_EQ(xml.find(L"かんじ"), std::wstring::npos) << xml;
     EXPECT_EQ(xml.find(L"shang"), std::wstring::npos) << xml;
     EXPECT_EQ(xml.find(L"じ"), std::wstring::npos) << xml;
+}
+
+// A drop cap paragraph that starts with a ruby takes its letter from the ruby base (also through a span inside the
+// base, or a span around the ruby) and splits the base text there. Before, the ruby's runs were written first and
+// the drop cap paragraph properties then ended up inside a run (<w:r>...<w:pPr>, invalid DOCX).
+TEST(OdtToDocxRuby, DropCapTakesItsLetterFromRubyBase)
+{
+    const std::wstring xml = part(L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    EXPECT_TRUE(is_well_formed(xml));
+    for (const std::wstring letter : {L"大", L"神", L"札"})
+    {
+        const std::wstring paragraph = paragraph_with(xml, letter);
+        ASSERT_FALSE(paragraph.empty()) << "no paragraph " << letter << " in\n" << xml;
+        EXPECT_NE(paragraph.find(L"w:dropCap=\"drop\""), std::wstring::npos) << paragraph;
+        // the paragraph properties come first in the paragraph, not inside a run
+        EXPECT_EQ(paragraph.find(L"<w:pPr>"), paragraph.find(L'>') + 1) << paragraph;
+    }
+    EXPECT_TRUE(has_paragraph(xml, L"阪 drop one")) << xml;
+    EXPECT_TRUE(has_paragraph(xml, L"戸 drop two")) << xml;
+    EXPECT_TRUE(has_paragraph(xml, L"幌 drop three")) << xml;
+}
+
+TEST(OdtToDocxRuby, DropCapParagraphPropertiesStayOutsideRuns)
+{
+    const std::wstring xml = part(L"word/document.xml");
+    ASSERT_FALSE(xml.empty()) << "ODT -> DOCX conversion failed";
+    for (const auto& run : elements(xml, L"w:r"))
+        EXPECT_EQ(run.find(L"<w:pPr"), std::wstring::npos) << run;
 }
 
 TEST(OdtToDocxRuby, ParagraphWithoutRubyUnchanged)

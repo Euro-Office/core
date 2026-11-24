@@ -1049,6 +1049,12 @@ std::wostream & ruby::text_to_stream(std::wostream & _Wostream, bool bXmlEncode)
     return _Wostream;
 }
 
+const office_element_ptr_array * ruby::base_content() const
+{
+    const ruby_base * base = dynamic_cast<const ruby_base *>(text_ruby_base_.get());
+    return base ? &base->content() : NULL;
+}
+
 void ruby::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     text_style_name_ = Attributes->get_val< std::wstring >(L"text:style-name").get_value_or(L"") ;
