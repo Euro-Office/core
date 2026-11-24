@@ -168,7 +168,7 @@ namespace NSFontConverter
 		if ( !pTTF->m_bSuccess )
 		{
 			delete pTTF;
-			return NULL;
+			return nullptr;
 		}
 		return pTTF;
 	}
@@ -178,14 +178,15 @@ namespace NSFontConverter
 		char *sBuffer;
 		int nLen = 0;
 
-		if ( !( sBuffer = CFontFileBase::ReadFile( wsFileName, &nLen ) ) )
-			return NULL;
+		sBuffer = CFontFileBase::ReadFile( wsFileName, &nLen );
+		if ( !sBuffer )
+			return nullptr;
 
 		CFontFileTrueType *pTTF = new CFontFileTrueType( sBuffer, nLen, true );
 		if ( !pTTF->m_bSuccess )
 		{
 			delete pTTF;
-			return NULL;
+			return nullptr;
 		}
 		return pTTF;
 	}
@@ -193,11 +194,11 @@ namespace NSFontConverter
 	CFontFileTrueType::CFontFileTrueType(char *sBuffer, int nLen, bool bFreeFileData):
 		CFontFileBase( sBuffer, nLen, bFreeFileData )
 	{
-		m_pTables = NULL;
+		m_pTables = nullptr;
 		m_nTablesCount = 0;
-		m_pCMaps = NULL;
+		m_pCMaps = nullptr;
 		m_nCMapsCount = 0;
-		m_pNameToGID = NULL;
+		m_pNameToGID = nullptr;
 		m_bSuccess = false;
 
 		Parse();
@@ -323,15 +324,16 @@ namespace NSFontConverter
 
 		*pnCIDs = 0;
 		if ( !m_bOpenTypeCFF )
-			return NULL;
+			return nullptr;
 
 		int nIndex = SeekTable("CFF ");
 
 		if ( !CheckRegion( m_pTables[nIndex].nOffset, m_pTables[nIndex].nLen ) )
-			return NULL;
+			return nullptr;
 
-		if ( !( pC1FF = CFontFileType1C::LoadFromBuffer( (char *)m_sFile + m_pTables[nIndex].nOffset, m_pTables[nIndex].nLen ) ) )
-			return NULL;
+		pC1FF = CFontFileType1C::LoadFromBuffer( (char *)m_sFile + m_pTables[nIndex].nOffset, m_pTables[nIndex].nLen );
+		if ( !pC1FF )
+			return nullptr;
 
 		unsigned short *pMap = pC1FF->GetCIDToGIDMap( pnCIDs );
 		delete pC1FF;
@@ -342,7 +344,8 @@ namespace NSFontConverter
 	{
 		int nIndex = -1;
 
-		if ( ( nIndex = SeekTable("OS/2" ) ) < 0)
+		nIndex = SeekTable("OS/2" );
+		if ( nIndex < 0 )
 			return 4;
 
 		bool bSuccess = true;
@@ -389,7 +392,7 @@ namespace NSFontConverter
 		// writing the contents of the font collection
 		ConvertEncoding( ppEncoding, pOutputFunc, pOutputStream );
 		ConvertCharStrings( ppEncoding, pCodeToGID, pOutputFunc, pOutputStream);
-		ConvertSfnts( pOutputFunc, pOutputStream, NULL, false );
+		ConvertSfnts( pOutputFunc, pOutputStream, nullptr, false );
 
 		// finished writing the library
 		(*pOutputFunc)( pOutputStream, "FontName currentdict end definefont pop\n", 40);
@@ -406,7 +409,8 @@ namespace NSFontConverter
 		if ( !CheckRegion( m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen ) )
 			return;
 
-		if ( !( pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen ) ) )
+		pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen );
+		if ( !pT1CFF )
 			return;
 
 		pT1CFF->ToType1( sPSName, ppNewEncoding, bASKII, pOutputFunc, pOutputStream);
@@ -535,7 +539,7 @@ namespace NSFontConverter
 		(*pOutputFunc)( pOutputStream, "  end readonly def\n", 19);
 
 		// write the guts of the dictionary
-		ConvertSfnts( pOutputFunc, pOutputStream, NULL, bNeedVerticalMetrics);
+		ConvertSfnts( pOutputFunc, pOutputStream, nullptr, bNeedVerticalMetrics);
 
 		// end the dictionary and define the font
 		(*pOutputFunc)( pOutputStream, "CIDFontName currentdict end /CIDFont defineresource pop\n", 56);
@@ -552,7 +556,8 @@ namespace NSFontConverter
 		if ( !CheckRegion(m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen) )
 			return;
 
-		if ( !( pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen) ) )
+		pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen);
+		if ( !pT1CFF )
 			return;
 
 		pT1CFF->ToCIDType0( sPSName, pOutputFunc, pOutputStream);
@@ -651,7 +656,8 @@ namespace NSFontConverter
 		if ( !CheckRegion( m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen ) )
 			return;
 
-		if ( !( pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen)) )
+		pT1CFF = CFontFileType1C::LoadFromBuffer((char *)m_sFile + m_pTables[nTableIndex].nOffset, m_pTables[nTableIndex].nLen);
+		if ( !pT1CFF )
 			return;
 
 		pT1CFF->ToType0(psName, outputFunc, outputStream);
@@ -678,7 +684,7 @@ namespace NSFontConverter
 			0, 0,			        // reserved
 			0, 0,                   // startCount[0]
 			0, 0,                   // idDelta[0]
-			0, 0                    // pad to a mulitple of four bytes
+			0, 0                    // pad to a multiple of four bytes
 		};
 
 		static char arrNameTab[8] =
@@ -754,13 +760,16 @@ namespace NSFontConverter
 		if ( m_bOpenTypeCFF )
 			return;
 
+		if ( m_nGlyphs < 0 )
+			return;
+
 		// Checking missing tables
 		bool bMissingCmap = (nCmapIndex = SeekTable("cmap")) < 0;
 		bool bMissingName = SeekTable("name") < 0;
 		bool bMissingPost = SeekTable("post") < 0;
 		bool bMissingOS2  = SeekTable("OS/2") < 0;
 
-		TrueTypeLoca *pLocaTable = (TrueTypeLoca *)malloc( (m_nGlyphs + 1) * sizeof(TrueTypeLoca) );
+		TrueTypeLoca *pLocaTable = (TrueTypeLoca *)malloc( static_cast<size_t>(m_nGlyphs + 1) * sizeof(TrueTypeLoca) );
 		bool bUnsortedLoca = false;
 		i = SeekTable("loca");
 		nPos = m_pTables[i].nOffset;
@@ -950,7 +959,7 @@ namespace NSFontConverter
 				arrNewNameTable[6 + i*12 + 11] = nNext & 0xff;
 				if (i+1 == 2)
 				{
-					memcpy( arrNewNameTable + 6 + 4*12 + nNext, "\0R\0e\0g\0u\0l\0a\0r", 14);
+					memcpy( arrNewNameTable + 6 + static_cast<ptrdiff_t>(4)*12 + nNext, "\0R\0e\0g\0u\0l\0a\0r", 14);
 					nNext += 14;
 				}
 				else
@@ -967,7 +976,7 @@ namespace NSFontConverter
 		else
 		{
 			nNewNameLen = 0;
-			arrNewNameTable = NULL;
+			arrNewNameTable = nullptr;
 		}
 
 		// Building a new table 'cmap'
@@ -1059,7 +1068,7 @@ namespace NSFontConverter
 		else
 		{
 			nNewCmapLen = 0;
-			arrNewCmapTable = NULL;
+			arrNewCmapTable = nullptr;
 		}
 
 		// Generate a new table 'hmtx' and update the table 'hhea'
@@ -1085,24 +1094,24 @@ namespace NSFontConverter
 				nAdvWidth = GetU16BE( nPos, &bSuccess);
 				nLeftSideBearing = GetU16BE( nPos + 2, &bSuccess);
 				nPos += 4;
-				arrNewHMTXTable[4*i    ] = nAdvWidth >> 8;
-				arrNewHMTXTable[4*i + 1] = nAdvWidth & 0xff;
-				arrNewHMTXTable[4*i + 2] = nLeftSideBearing >> 8;
-				arrNewHMTXTable[4*i + 3] = nLeftSideBearing & 0xff;
+				arrNewHMTXTable[static_cast<size_t>(4)*i    ] = nAdvWidth >> 8;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 1] = nAdvWidth & 0xff;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 2] = nLeftSideBearing >> 8;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 3] = nLeftSideBearing & 0xff;
 			}
 			for (; i < m_nGlyphs; ++i)
 			{
 				nLeftSideBearing = GetU16BE( nPos, &bSuccess);
 				nPos += 2;
-				arrNewHMTXTable[4*i    ] = nAdvWidth >> 8;
-				arrNewHMTXTable[4*i + 1] = nAdvWidth & 0xff;
-				arrNewHMTXTable[4*i + 2] = nLeftSideBearing >> 8;
-				arrNewHMTXTable[4*i + 3] = nLeftSideBearing & 0xff;
+				arrNewHMTXTable[static_cast<size_t>(4)*i    ] = nAdvWidth >> 8;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 1] = nAdvWidth & 0xff;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 2] = nLeftSideBearing >> 8;
+				arrNewHMTXTable[static_cast<size_t>(4)*i + 3] = nLeftSideBearing & 0xff;
 			}
 		}
 		else
 		{
-			arrNewHHEATable = arrNewHMTXTable = NULL;
+			arrNewHHEATable = arrNewHMTXTable = nullptr;
 			nNewHHEALen = nNewHMTXLen = 0;
 		}
 
@@ -1392,7 +1401,8 @@ namespace NSFontConverter
 									(*pOutputFunc)( pOutputStream, "\0", 1);
 								}
 							}
-							if ((k = pLocaTable[j].nLen & 3))
+							k = pLocaTable[j].nLen & 3;
+							if (k)
 							{
 								(*pOutputFunc)( pOutputStream, "\0\0\0\0", 4 - k);
 							}
@@ -1443,7 +1453,8 @@ namespace NSFontConverter
 		{
 			for (int nIndex = 0; nIndex < 256; ++nIndex )
 			{
-				if ( !( sName = ppEncoding[ nIndex ] ) )
+				sName = ppEncoding[ nIndex ];
+				if ( !sName )
 				{
 					sName = ".notdef";
 				}
@@ -1496,7 +1507,7 @@ namespace NSFontConverter
 				sprintf( sBuf, "c%02x", nIndex);
 				sName = sBuf;
 			}
-			if ( sName && strcmp( sName, ".notdef") )
+			if ( sName && 0 != strcmp( sName, ".notdef") )
 			{
 				nGlyphIndex = pnCodeToGID[nIndex];
 
@@ -1555,6 +1566,9 @@ namespace NSFontConverter
 		memcpy( pHeadData, m_sFile + nPos, 54 );
 		pHeadData[8] = pHeadData[9] = pHeadData[10] = pHeadData[11] = (unsigned char)0;
 
+		if ( m_nGlyphs < 0 )
+			return;
+
 		pLocaTable = (TrueTypeLoca *)MemUtilsMallocArray( m_nGlyphs + 1, sizeof(TrueTypeLoca) );
 		nCurTable = SeekTable("loca");
 		nPos = m_pTables[ nCurTable ].nOffset;
@@ -1594,15 +1608,15 @@ namespace NSFontConverter
 			nPos = pLocaTable[nIndex].nNewOffset;
 			if ( m_nLocaFormat )
 			{
-				pLocaData[ 4 * nIndex     ] = (unsigned char)( nPos >> 24);
-				pLocaData[ 4 * nIndex + 1 ] = (unsigned char)( nPos >> 16);
-				pLocaData[ 4 * nIndex + 2 ] = (unsigned char)( nPos >>  8);
-				pLocaData[ 4 * nIndex + 3 ] = (unsigned char) nPos;
+				pLocaData[ static_cast<size_t>(4) * nIndex     ] = (unsigned char)( nPos >> 24);
+				pLocaData[ static_cast<size_t>(4) * nIndex + 1 ] = (unsigned char)( nPos >> 16);
+				pLocaData[ static_cast<size_t>(4) * nIndex + 2 ] = (unsigned char)( nPos >>  8);
+				pLocaData[ static_cast<size_t>(4) * nIndex + 3 ] = (unsigned char) nPos;
 			}
 			else
 			{
-				pLocaData[ 2 * nIndex     ] = (unsigned char)( nPos >> 9);
-				pLocaData[ 2 * nIndex + 1 ] = (unsigned char)( nPos >> 1);
+				pLocaData[ static_cast<size_t>(2) * nIndex     ] = (unsigned char)( nPos >> 9);
+				pLocaData[ static_cast<size_t>(2) * nIndex + 1 ] = (unsigned char)( nPos >> 1);
 			}
 		}
 
@@ -1615,7 +1629,7 @@ namespace NSFontConverter
 				++nNewTables;
 			}
 		}
-		arrVmtxTable = NULL;
+		arrVmtxTable = nullptr;
 		int nAdvance = 0;
 		if ( bNeedVerticalMetrics )
 		{
@@ -1672,7 +1686,8 @@ namespace NSFontConverter
 			}
 			else
 			{
-				if ( ( nJ = SeekTable(t42Tables[nIndex].sTag ) ) >= 0 )
+				nJ = SeekTable(t42Tables[nIndex].sTag );
+				if ( nJ >= 0 )
 				{
 					nLength = m_pTables[nJ].nLen;
 					if ( CheckRegion( m_pTables[nJ].nOffset, nLength ) )
@@ -1810,9 +1825,11 @@ namespace NSFontConverter
 			{
 				// nLength == 0 means the table wasn't found and the error was already thrown
 				// during table construction
-				if ( ( nLength = arrNewTables[nIndex].nLen ) > 0 )
+				nLength = arrNewTables[nIndex].nLen;
+				if ( nLength > 0 )
 				{
-					if ( ( nJ = SeekTable( t42Tables[nIndex].sTag ) ) >= 0 && CheckRegion( m_pTables[nJ].nOffset, m_pTables[nJ].nLen ) )
+					nJ = SeekTable( t42Tables[nIndex].sTag );
+					if ( nJ >= 0 && CheckRegion( m_pTables[nJ].nOffset, m_pTables[nJ].nLen ) )
 					{
 						DumpString(m_sFile + m_pTables[nJ].nOffset, m_pTables[nJ].nLen, pOutputFunc, pOutputStream);
 					}
@@ -1894,6 +1911,10 @@ namespace NSFontConverter
 			case 1:
 				nWord |= (sData[nTemp]     & 0xff) << 24;
 				break;
+				default:
+				{
+					break;
+				}
 			}
 			nChecksum += nWord;
 		}
@@ -1958,7 +1979,8 @@ namespace NSFontConverter
 		}
 
 		// read CMaps tables
-		if ( ( nIndex = SeekTable("cmap") ) >= 0 )
+		nIndex = SeekTable("cmap");
+		if ( nIndex >= 0 )
 		{
 			nPos = m_pTables[nIndex].nOffset + 2;
 			m_nCMapsCount = GetU16BE( nPos, &m_bSuccess);
@@ -1979,7 +2001,6 @@ namespace NSFontConverter
 			{
 				m_pCMaps[nJ].nPlatform = GetU16BE( nPos, &m_bSuccess);
 				m_pCMaps[nJ].nEncoding = GetU16BE( nPos + 2, &m_bSuccess);
-				unsigned int nTemp = GetU32BE( nPos + 4, &m_bSuccess);
 				m_pCMaps[nJ].nOffset = m_pTables[nIndex].nOffset + GetU32BE( nPos + 4, &m_bSuccess);
 				nPos += 8;
 				m_pCMaps[nJ].nFormat = GetU16BE(m_pCMaps[nJ].nOffset, &m_bSuccess);
@@ -2043,7 +2064,8 @@ namespace NSFontConverter
 		bool bSuccess = true;
 		int nTemp, nJ, nCount = 0, nTempLen = 0;
 
-		if ( ( nTemp = SeekTable("post" ) ) < 0 )
+		nTemp = SeekTable("post" );
+		if ( nTemp < 0 )
 			return;
 
 		int nTablePos = m_pTables[ nTemp ].nOffset;
@@ -2122,7 +2144,7 @@ error:
 		if (m_pNameToGID)
 		{
 			delete m_pNameToGID;
-			m_pNameToGID = NULL;
+			m_pNameToGID = nullptr;
 		}
 	}
 

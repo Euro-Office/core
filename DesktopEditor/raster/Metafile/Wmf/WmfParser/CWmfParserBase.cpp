@@ -9,7 +9,7 @@
 namespace MetaFile
 {
 	CWmfParserBase::CWmfParserBase()
-		: m_oPlayer(this), m_oBoundingBox(0, 0, 1, 1), m_pInterpretator(NULL), m_bEof(false)
+		: m_oPlayer(this), m_oBoundingBox(0, 0, 1, 1), m_pInterpretator(nullptr), m_bEof(false)
 	{
 		m_pDC = m_oPlayer.GetDC();
 	}
@@ -161,18 +161,18 @@ namespace MetaFile
 	
 	const CPath *CWmfParserBase::GetPath() const
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	void CWmfParserBase::SetInterpretator(IOutputDevice *pOutput)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			delete m_pInterpretator;
 
 		m_pInterpretator = new CWmfInterpretatorRender(pOutput);
 	}
 
-	void CWmfParserBase::SetInterpretator(const wchar_t *wsFilePath, InterpretatorType oInterpretatorType, unsigned int unWidth, unsigned int unHeight)
+	void CWmfParserBase::SetInterpretator(const wchar_t * /*wsFilePath*/, InterpretatorType  /*oInterpretatorType*/, unsigned int  /*unWidth*/, unsigned int  /*unHeight*/)
 	{
 		RELEASEOBJECT(m_pInterpretator);
 
@@ -201,7 +201,7 @@ namespace MetaFile
 		}
 	}
 
-	void CWmfParserBase::SetInterpretator(IOutputDevice *pOutput, const wchar_t *wsFilePath)
+	void CWmfParserBase::SetInterpretator(IOutputDevice * /*pOutput*/, const wchar_t * /*wsFilePath*/)
 	{
 		RELEASEOBJECT(m_pInterpretator);
 	}
@@ -278,7 +278,7 @@ namespace MetaFile
 
 	void CWmfParserBase::MoveTo(short shX, short shY)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			double dX, dY;
 			TranslatePoint(shX, shY, dX, dY);
@@ -294,7 +294,7 @@ namespace MetaFile
 
 	void CWmfParserBase::MoveToD(double dX, double dY)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->MoveTo(dX, dY);
 		else
 			RegisterPoint(static_cast<short>(dX), static_cast<short>(dY));
@@ -304,7 +304,7 @@ namespace MetaFile
 
 	void CWmfParserBase::LineTo(short shX, short shY)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			double dX, dY;
 			TranslatePoint(shX, shY, dX, dY);
@@ -321,7 +321,7 @@ namespace MetaFile
 	{
 		// Here we don't recalculate the current point, because when calling this function it isn't always needed (for example, an ellipse).
 		// The current point is updated at the level at which this function was called.
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			double dL, dT, dR, dB;
 			TranslatePoint(shL, shT, dL, dT);
@@ -338,13 +338,13 @@ namespace MetaFile
 
 	void CWmfParserBase::ClosePath()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->ClosePath();
 	}
 
 	void CWmfParserBase::DrawPath(bool bStroke, bool bFill)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			int lType = (bStroke ? 1 : 0) + (bFill ? 2 : 0);
 			m_pInterpretator->DrawPath(lType);
@@ -364,15 +364,15 @@ namespace MetaFile
 		}
 
 		const IFont* pFont = GetFont();
-		std::wstring wsText = ConvertToUnicode(pString, (long)unCharsCount, (NULL != pFont) ? pFont->GetCharSet() : DEFAULT_CHARSET);
+		std::wstring wsText = ConvertToUnicode(pString, (long)unCharsCount, (nullptr != pFont) ? pFont->GetCharSet() : DEFAULT_CHARSET);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			double dX, dY;
 			TranslatePoint(nX, nY, dX, dY);
 
-			double* pdDx = NULL;
-			if (NULL != pDx && unCharsCount == wsText.length())
+			double* pdDx = nullptr;
+			if (nullptr != pDx && unCharsCount == wsText.length())
 			{
 				pdDx = new double[unCharsCount];
 				if (pdDx)
@@ -431,37 +431,25 @@ namespace MetaFile
 					double dFDescent = pFontFile ? (dFontHeight * pFontFile->GetDescender() / pFontFile->Units_Per_Em()) : 0;
 					double dFAscent  = dFHeight - std::abs(dFDescent);
 
-					if (NULL != pDx && unCharsCount > 1)
+					if (nullptr != pDx && unCharsCount > 1)
 					{
-						// Then add up all pDx except the last symbol, counting the last one separately
-						double dTempTextW = 0;
-						for (unsigned int unCharIndex = 0; unCharIndex < unCharsCount - 1; unCharIndex++)
-						{
-							dTempTextW += pDx[unCharIndex];
-						}
-
+						// Then use only the last symbol, counting it separately
 						std::wstring wsTempText;
 						wsTempText += wsText.at(wsText.length() - 1);
 						//wsTempText += wsText.at(unCharsCount - 1);
 
 						pFontManager->LoadString1(wsTempText, 0, 0);
-						TBBox oBox = pFontManager->MeasureString2();
-						dTempTextW += (oBox.fMaxX - oBox.fMinX);
-
-						fW = (float)dTempTextW;
 					}
 					else
 					{
 						pFontManager->LoadString1(wsText, 0, 0);
-						TBBox oBox = pFontManager->MeasureString2();
-						fL = static_cast<float>(oBox.fMinX);
-						fW = static_cast<float>(oBox.fMaxX - oBox.fMinX);
 					}
+					pFontManager->MeasureString2();
 
 					pFontManager->LoadString1(wsText, 0, 0);
 					TBBox oBox = pFontManager->MeasureString2();
-					fL = (float)(oBox.fMinX);
-					fW = (float)(oBox.fMaxX - oBox.fMinX);
+					fL = oBox.fMinX;
+					fW = (oBox.fMaxX - oBox.fMinX);
 
 					fT = (float)-dFAscent;
 					fH = (float)dFHeight;
@@ -540,7 +528,7 @@ namespace MetaFile
 
 					float fL = 0, fT = 0, fW = 0, fH = 0;
 
-					if (NULL != pDx && unCharsCount > 1)
+					if (nullptr != pDx && unCharsCount > 1)
 					{
 						// Then add up all pDx except the last symbol, counting the last one separately
 						double dTempTextW = 0;
@@ -629,7 +617,7 @@ namespace MetaFile
 			}
 		}
 
-		if (NULL != pDx)
+		if (nullptr != pDx)
 		{
 			int nTextW = 0;
 			for (unsigned int unCharIndex = 0; unCharIndex < unCharsCount; unCharIndex++)
@@ -679,9 +667,9 @@ namespace MetaFile
 
 	void CWmfParserBase::DrawImage(const TRectL& oDestRect, const TRectL& oSrcRect, unsigned int unColorUsage, unsigned int unRasterOperation)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
-			BYTE* pBgra = NULL;
+			BYTE* pBgra = nullptr;
 			unsigned int unWidth, unHeight, unColorUsed;
 
 			if (ReadImage(unColorUsage, &pBgra, &unWidth, &unHeight, unColorUsed))
@@ -706,7 +694,7 @@ namespace MetaFile
 
 					BYTE* pNewBuffer = ClipBuffer(pBgra, unWidth, unHeight, oClip);
 
-					if (NULL != pNewBuffer)
+					if (nullptr != pNewBuffer)
 					{
 						m_pInterpretator->DrawBitmap(dX, dY, dX1 - dX, dY1 - dY, pNewBuffer, std::abs(oClip.Right - oClip.Left), std::abs(oClip.Bottom - oClip.Top), unBlendMode);
 						delete[] pNewBuffer;
@@ -734,10 +722,10 @@ namespace MetaFile
 
 	BYTE *CWmfParserBase::ClipBuffer(BYTE *pBuffer, unsigned int unWidth, unsigned int unHeight, TRectL &oNewRect)
 	{
-		if (NULL == pBuffer ||
+		if (nullptr == pBuffer ||
 		    oNewRect.Left < 0 || oNewRect.Right  < 0 ||
 		    oNewRect.Top  < 0 || oNewRect.Bottom < 0)
-			return NULL;
+			return nullptr;
 
 		if (unHeight < static_cast<unsigned int>(std::abs(oNewRect.Bottom - oNewRect.Top)))
 			oNewRect.Bottom = oNewRect.Top + unHeight;
@@ -747,7 +735,7 @@ namespace MetaFile
 
 		if (unHeight == (oNewRect.Bottom - oNewRect.Top) &&
 		    unWidth  == (oNewRect.Right  - oNewRect.Left))
-			return NULL;
+			return nullptr;
 
 		ULONG nBeginX, nBeginY, nEndX, nEndY;
 
@@ -760,7 +748,7 @@ namespace MetaFile
 		int nWidth = nEndX - nBeginX;
 		int nHeight = nEndY - nBeginY;
 
-		BYTE* pNewBuffer = new BYTE[nWidth * nHeight * 4];
+		BYTE* pNewBuffer = new BYTE[static_cast<size_t>(nWidth) * nHeight * 4];
 
 		ULONG ulPos = 0;
 
@@ -768,10 +756,10 @@ namespace MetaFile
 		{
 			for (ULONG ulPosX = nBeginX * 4; ulPosX < nEndX * 4; ulPosX += 4)
 			{
-				pNewBuffer[ulPos + 0]   = (BYTE)pBuffer[ulPosY * unWidth + ulPosX + 0];
-				pNewBuffer[ulPos + 1]   = (BYTE)pBuffer[ulPosY * unWidth + ulPosX + 1];
-				pNewBuffer[ulPos + 2]   = (BYTE)pBuffer[ulPosY * unWidth + ulPosX + 2];
-				pNewBuffer[ulPos + 3]   = (BYTE)pBuffer[ulPosY * unWidth + ulPosX + 3];
+				pNewBuffer[ulPos + 0]   = pBuffer[ulPosY * unWidth + ulPosX + 0];
+				pNewBuffer[ulPos + 1]   = pBuffer[ulPosY * unWidth + ulPosX + 1];
+				pNewBuffer[ulPos + 2]   = pBuffer[ulPosY * unWidth + ulPosX + 2];
+				pNewBuffer[ulPos + 3]   = pBuffer[ulPosY * unWidth + ulPosX + 3];
 				ulPos += 4;
 			}
 		}
@@ -781,13 +769,13 @@ namespace MetaFile
 
 	void CWmfParserBase::UpdateOutputDC()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->UpdateDC();
 	}
 
 	void CWmfParserBase::HANDLE_META_HEADER()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_HEADER(m_oPlaceable, m_oHeader);
 
 		if (0x0001 != m_oHeader.ushType && 0x0002 != m_oHeader.ushType)
@@ -801,7 +789,7 @@ namespace MetaFile
 
 		m_pDC->SetMapMode(MM_ANISOTROPIC);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			UpdateDCRect();
 
@@ -819,20 +807,20 @@ namespace MetaFile
 
 		// If we don't have Output specified, then we assume that the metafile is being scanned.
 		// During scanning we register all points and calculate BoundingBox
-		if (NULL == m_pInterpretator)
+		if (nullptr == m_pInterpretator)
 			m_bFirstPoint = true;
 
 	}
 
 	void CWmfParserBase::HANDLE_META_BITBLT(const TWmfBitBlt &oWmfBitBlt, CDataStream &oDataStream)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_BITBLT(oWmfBitBlt, oDataStream);
 	}
 
 	void CWmfParserBase::HANDLE_META_DIBBITBLT(const TWmfBitBlt &oWmfBitBlt, CDataStream &oDataStream)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_DIBBITBLT(oWmfBitBlt, oDataStream);
 
 		unsigned int unRecordSizeDword = m_unRecordSize >> 1;
@@ -860,7 +848,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_DIBSTRETCHBLT(const TWmfStretchBlt &oWmfStretchBlt, CDataStream &oDataStream)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_DIBSTRETCHBLT(oWmfStretchBlt, oDataStream);
 
 		unsigned int unRecordSizeDWORD = m_unRecordSize >> 1;
@@ -880,7 +868,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETDIBTODEV(const TWmfSetDibToDev &oWmfSetDibToDev, CDataStream &oDataStream)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETDIBTODEV(oWmfSetDibToDev, oDataStream);
 
 		TRectL oDestRect(oWmfSetDibToDev.ushXDest, oWmfSetDibToDev.ushYDest, oWmfSetDibToDev.ushXDest + oWmfSetDibToDev.ushWidth, oWmfSetDibToDev.ushYDest + oWmfSetDibToDev.ushHeight);
@@ -891,13 +879,13 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_STRETCHBLT(const TWmfStretchBlt &oWmfStretchBlt, CDataStream &oDataStream)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_STRETCHBLT(oWmfStretchBlt, oDataStream);
 	}
 
 	void CWmfParserBase::HANDLE_META_STRETCHDIB(const TWmfStretchDib &oWmfStretchDib, CDataStream &oDataStream)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_STRETCHDIB(oWmfStretchDib, oDataStream);
 
 		TRectL oDestRect(oWmfStretchDib.shXDst, oWmfStretchDib.shYDst, oWmfStretchDib.shXDst + oWmfStretchDib.shDestWidth, oWmfStretchDib.shYDst + oWmfStretchDib.shDestHeight);
@@ -908,7 +896,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_EOF()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_EOF();
 
 		m_bEof = true;
@@ -916,7 +904,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_ARC(short shYEndArc, short shXEndArc, short shYStartArc, short shXStartArc, short shBottom, short shRight, short shTop, short shLeft)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_ARC(shYEndArc, shXEndArc, shYStartArc, shXStartArc, shBottom, shRight, shTop, shLeft);
 
 		double dXC = (shRight + shLeft) / 2.;
@@ -946,7 +934,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_CHORD(short shYEndArc, short shXEndArc, short shYStartArc, short shXStartArc, short shBottom, short shRight, short shTop, short shLeft)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_CHORD(shYEndArc, shXEndArc, shYStartArc, shXStartArc, shBottom, shRight, shTop, shLeft);
 
 		double dStartAngle = GetEllipseAngle((int)shLeft, (int)shTop, (int)shRight, (int)shBottom, (int)shXStartArc, (int)shYStartArc);
@@ -962,7 +950,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_ELLIPSE(short shBottom, short shRight, short shTop, short shLeft)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_ELLIPSE(shBottom, shRight, shTop, shLeft);
 
 		ArcTo(shLeft, shTop, shRight, shBottom, 0, 360);
@@ -972,7 +960,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_EXTTEXTOUT(short shY, short shX, short shStringLength, unsigned short ushFwOptions, const TRectS &oRectangle, unsigned char *pString, short *pDx)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_EXTTEXTOUT(shY, shX, shStringLength, ushFwOptions, oRectangle, pString, pDx);
 
 		DrawText(pString, shStringLength, shX, shY, pDx);
@@ -982,12 +970,12 @@ namespace MetaFile
 	{
 		m_oPlayer.SelectObject(ushRegionIndex);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_FILLREGION(ushRegionIndex, ushBrushIndex);
 
 		const CWmfRegion *pRegion = m_pDC->GetRegion();
 
-		if (NULL != pRegion)
+		if (nullptr != pRegion)
 		{
 			for (unsigned int unScanIndex = 0; unScanIndex < pRegion->shScanCount; ++unScanIndex)
 			{
@@ -1010,14 +998,14 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_FRAMEREGION(unsigned short ushRegionIndex, unsigned short ushBrushIndex, short shHeight, short shWidth)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_FRAMEREGION(ushRegionIndex, ushBrushIndex, shHeight, shWidth);
 
 		m_oPlayer.SelectObject(ushRegionIndex);
 
 		const CWmfRegion *pRegion = m_pDC->GetRegion();
 
-		if (NULL != pRegion)
+		if (nullptr != pRegion)
 		{
 			for (unsigned int unScanIndex = 0; unScanIndex < pRegion->shScanCount; ++unScanIndex)
 			{
@@ -1040,7 +1028,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_INVERTREGION(unsigned short ushRegionIndex)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_INVERTREGION(ushRegionIndex);
 
 		//TODO::implement
@@ -1048,7 +1036,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_LINETO(short shY, short shX)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_LINETO(shY, shX);
 
 		LineTo(shX, shY);
@@ -1057,14 +1045,14 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_PAINTREGION(unsigned short ushRegionIndex)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_PAINTREGION(ushRegionIndex);
 
 		m_oPlayer.SelectObject(ushRegionIndex);
 
 		const CWmfRegion *pRegion = m_pDC->GetRegion();
 
-		if (NULL != pRegion)
+		if (nullptr != pRegion)
 		{
 			for (unsigned int unScanIndex = 0; unScanIndex < pRegion->shScanCount; ++unScanIndex)
 			{
@@ -1087,7 +1075,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_PATBLT(unsigned int unRasterOperation, short shH, short shW, short shY, short shX)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_PATBLT(unRasterOperation, shH, shW, shY, shX);
 
 		// TODO: Use raster operation unRasterOperation
@@ -1102,7 +1090,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_PIE(short shXRadial1, short shYRadial1, short shXRadial2, short shYRadial2, short shB, short shR, short shT, short shL)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_PIE(shXRadial1, shYRadial1, shXRadial2, shYRadial2, shB, shR, shT, shL);
 
 		short shCenterX = (shL + shR) / 2;
@@ -1126,7 +1114,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_POLYLINE(const std::vector<TPointS> &arPoints)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_POLYLINE(arPoints);
 
 		if (arPoints.empty())
@@ -1134,15 +1122,15 @@ namespace MetaFile
 
 		MoveTo(arPoints[0].X, arPoints[0].Y);
 
-		for (short shIndex = 1; shIndex < arPoints.size(); shIndex++)
-			LineTo(arPoints[shIndex].X, arPoints[shIndex].Y);
+		for (size_t unIndex = 1; unIndex < arPoints.size(); unIndex++)
+			LineTo(arPoints[unIndex].X, arPoints[unIndex].Y);
 
 		DrawPath(true, false);
 	}
 
 	void CWmfParserBase::HANDLE_META_POLYGON(const std::vector<TPointS> &arPoints)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_POLYGON(arPoints);
 
 		if (arPoints.empty())
@@ -1150,8 +1138,8 @@ namespace MetaFile
 
 		MoveTo(arPoints[0].X, arPoints[0].Y);
 
-		for (short shIndex = 1; shIndex < arPoints.size(); shIndex++)
-			LineTo(arPoints[shIndex].X, arPoints[shIndex].Y);
+		for (size_t unIndex = 1; unIndex < arPoints.size(); unIndex++)
+			LineTo(arPoints[unIndex].X, arPoints[unIndex].Y);
 
 		ClosePath();
 		DrawPath(true, true);
@@ -1159,7 +1147,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_POLYPOLYGON(const std::vector<std::vector<TPointS> > &arPolygons)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_POLYPOLYGON(arPolygons);
 
 		if (arPolygons.empty())
@@ -1183,7 +1171,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_RECTANGLE(short shB, short shR, short shT, short shL)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_RECTANGLE(shB, shR, shT, shL);
 
 		MoveTo(shL, shT);
@@ -1198,7 +1186,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_ROUNDRECT(short shH, short shW, short shB, short shR, short shT, short shL)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_ROUNDRECT(shH, shW, shB, shR, shT, shL);
 
 		MoveTo(shL + shW, shT);
@@ -1222,7 +1210,7 @@ namespace MetaFile
 		pBgraBuffer[2] = oColor.r;
 		pBgraBuffer[3] = 0xff;
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			m_pInterpretator->HANDLE_META_SETPIXEL(oColor, shY, shX);
 			m_pInterpretator->DrawBitmap(shX, shY, 1, 1, pBgraBuffer, 1, 1, BLEND_MODE_DEFAULT);
@@ -1231,15 +1219,15 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_TEXTOUT(short shStringLength, unsigned char *pString, short shY, short shX)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_TEXTOUT(shStringLength, pString, shX, shY);
 
-		DrawText(pString, shStringLength, shX, shY, NULL);
+		DrawText(pString, shStringLength, shX, shY, nullptr);
 	}
 
 	void CWmfParserBase::HANDLE_META_CREATEBRUSHINDIRECT(TWmfLogBrush &oBrush)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_CREATEBRUSHINDIRECT(oBrush);
 
 		CWmfBrush* pBrush = new CWmfBrush(oBrush);
@@ -1257,7 +1245,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_CREATEFONTINDIRECT(CWmfFont &oFont)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_CREATEFONTINDIRECT(oFont);
 
 		m_oPlayer.RegisterObject((CWmfObjectBase*)&oFont);
@@ -1265,7 +1253,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_CREATEPALETTE(CWmfPalette &oPalette)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_CREATEPALETTE(oPalette);
 
 		m_oPlayer.RegisterObject((CWmfObjectBase*)&oPalette);
@@ -1273,7 +1261,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_CREATEPATTERNBRUSH(CWmfBrush &oBrush, CDataStream &oDataStream)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_CREATEPATTERNBRUSH(oBrush, oDataStream);
 
 		m_oPlayer.RegisterObject((CWmfObjectBase*)&oBrush);
@@ -1281,7 +1269,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_CREATEPENINDIRECT(CWmfPen &oPen)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_CREATEPENINDIRECT(oPen);
 
 		m_oPlayer.RegisterObject((CWmfObjectBase*)&oPen);
@@ -1289,7 +1277,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_CREATEREGION(CWmfRegion &oRegion)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_CREATEREGION(oRegion);
 
 		m_oPlayer.RegisterObject((CWmfObjectBase*)&oRegion);
@@ -1297,7 +1285,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_DELETEOBJECT(unsigned short ushIndex)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_DELETEOBJECT(ushIndex);
 
 		m_oPlayer.DeleteObject(ushIndex);
@@ -1310,11 +1298,11 @@ namespace MetaFile
 		if (!pBrush)
 			return SetError();
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			m_pInterpretator->HANDLE_META_DIBCREATEPATTERNBRUSH(ushStyle, ushColorUsage, *pBrush, m_oStream);
 
-			BYTE* pBgra = NULL;
+			BYTE* pBgra = nullptr;
 			unsigned int unWidth = 0, unHeight = 0, unColorUsed = 0;
 			if (ReadImage(ushColorUsage, &pBgra, &unWidth, &unHeight, unColorUsed))
 			{
@@ -1327,7 +1315,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SELECTCLIPREGION(unsigned short ushIndex)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SELECTCLIPREGION(ushIndex);
 
 		// Here we simply reset the current clip. We don't add anything to the clip, i.e. implement regions with
@@ -1338,7 +1326,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SELECTOBJECT(unsigned short ushIndex)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SELECTOBJECT(ushIndex);
 
 		m_oPlayer.SelectObject(ushIndex);
@@ -1347,7 +1335,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SELECTPALETTE(unsigned short ushIndex)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SELECTPALETTE(ushIndex);
 
 		m_oPlayer.SelectPalette(ushIndex);
@@ -1394,7 +1382,7 @@ namespace MetaFile
 		m_pDC->GetClip()->Exclude(oClip, oBB);
 		UpdateOutputDC();
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			m_pInterpretator->HANDLE_META_EXCLUDECLIPRECT(shBottom, shRight, shTop, shLeft);
 			m_pInterpretator->ExcludeClip(oClip, oBB);
@@ -1408,7 +1396,7 @@ namespace MetaFile
 		TranslatePoint(shLeft, shTop, oClip.Left, oClip.Top);
 		TranslatePoint(shRight, shBottom, oClip.Right, oClip.Bottom);
 
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_INTERSECTCLIPRECT(shLeft, shTop, shRight, shBottom);
 
 		m_pDC->GetClip()->Intersect(oClip);
@@ -1417,7 +1405,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_MOVETO(short shX, short shY)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_MOVETO(shX, shY);
 
 		MoveTo(shX, shY);
@@ -1425,7 +1413,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_OFFSETCLIPRGN(short shOffsetX, short shOffsetY)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_MOVETO(shOffsetX, shOffsetY);
 
 		// TODO: Implement
@@ -1434,7 +1422,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_OFFSETVIEWPORTORG(short shXOffset, short shYOffset)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_OFFSETVIEWPORTORG(shXOffset, shYOffset);
 
 		m_pDC->SetViewportOff(shXOffset, shYOffset);
@@ -1443,13 +1431,13 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_OFFSETWINDOWORG(short shXOffset, short shYOffset)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_OFFSETWINDOWORG(shXOffset, shYOffset);
 
 		m_pDC->SetWindowOff(shXOffset, shYOffset);
 		UpdateOutputDC();
 
-		if (NULL == m_pInterpretator)
+		if (nullptr == m_pInterpretator)
 		{
 			const TWmfWindow& oWindow{m_pDC->GetWindow()};
 			RegisterPoint(oWindow.x            , oWindow.y            );
@@ -1459,7 +1447,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_RESTOREDC()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_RESTOREDC();
 
 		m_pDC = m_oPlayer.RestoreDC();
@@ -1468,7 +1456,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SAVEDC()
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SAVEDC();
 
 		m_pDC = m_oPlayer.SaveDC();
@@ -1477,7 +1465,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SCALEVIEWPORTEXT(short yDenom, short yNum, short xDenom, short xNum)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SCALEVIEWPORTEXT(yDenom, yNum, xDenom, xNum);
 
 		if (MM_ISOTROPIC != m_pDC->GetMapMode() && MM_ANISOTROPIC != m_pDC->GetMapMode())
@@ -1489,7 +1477,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SCALEWINDOWEXT(short yDenom, short yNum, short xDenom, short xNum)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SCALEWINDOWEXT(yDenom, yNum, xDenom, xNum);
 
 		if (MM_ISOTROPIC != m_pDC->GetMapMode() && MM_ANISOTROPIC != m_pDC->GetMapMode())
@@ -1501,7 +1489,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETBKCOLOR(TRGBA &oColor)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETBKCOLOR(oColor);
 
 		m_pDC->SetTextBgColor(oColor);
@@ -1510,7 +1498,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETBKMODE(unsigned short ushMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETBKMODE(ushMode);
 
 		m_pDC->SetTextBgMode(ushMode);
@@ -1519,7 +1507,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETLAYOUT(unsigned short ushLayout)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETLAYOUT(ushLayout);
 
 		m_pDC->SetLayout(ushLayout);
@@ -1528,7 +1516,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETMAPMODE(unsigned short ushMapMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETMAPMODE(ushMapMode);
 
 		m_pDC->SetMapMode(ushMapMode);
@@ -1537,7 +1525,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETPOLYFILLMODE(unsigned short ushMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETPOLYFILLMODE(ushMode);
 
 		m_pDC->SetPolyFillMode(ushMode);
@@ -1546,7 +1534,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETROP2(unsigned short ushMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETROP2(ushMode);
 
 		m_pDC->SetRop2Mode(ushMode);
@@ -1555,7 +1543,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETSTRETCHBLTMODE(unsigned short ushMode)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETSTRETCHBLTMODE(ushMode);
 
 		m_pDC->SetStretchBltMode(ushMode);
@@ -1564,7 +1552,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETTEXTALIGN(unsigned short ushTextAlign)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETTEXTALIGN(ushTextAlign);
 
 		m_pDC->SetTextAlign(ushTextAlign);
@@ -1573,7 +1561,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETTEXTCHAREXTRA(unsigned short ushCharSpacing)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETTEXTCHAREXTRA(ushCharSpacing);
 
 		m_pDC->SetCharSpacing(ushCharSpacing);
@@ -1582,7 +1570,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETTEXTCOLOR(TRGBA &oColor)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETTEXTCOLOR(oColor);
 
 		m_pDC->SetTextColor(oColor);
@@ -1591,7 +1579,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETTEXTJUSTIFICATION(unsigned short ushBreakCount, unsigned short ushBreakExtra)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETTEXTJUSTIFICATION(ushBreakCount, ushBreakExtra);
 
 		// TODO: Implement
@@ -1600,7 +1588,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETVIEWPORTEXT(short shX, short shY)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETVIEWPORTEXT(shX, shY);
 
 		if (MM_ISOTROPIC != m_pDC->GetMapMode() && MM_ANISOTROPIC != m_pDC->GetMapMode())
@@ -1612,7 +1600,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETVIEWPORTORG(short shX, short shY)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETVIEWPORTORG(shX, shY);
 
 		m_pDC->SetViewportOrg(shX, shY);
@@ -1621,7 +1609,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETWINDOWEXT(short shX, short shY)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETWINDOWEXT(shX, shY);
 
 		if (MM_ISOTROPIC != m_pDC->GetMapMode() && MM_ANISOTROPIC != m_pDC->GetMapMode())
@@ -1630,7 +1618,7 @@ namespace MetaFile
 		m_pDC->SetWindowExt(shX, shY);
 		UpdateOutputDC();
 
-		if (NULL == m_pInterpretator)
+		if (nullptr == m_pInterpretator)
 		{
 			const TWmfWindow& oWindow{m_pDC->GetWindow()};
 			RegisterPoint(oWindow.x + oWindow.w, oWindow.y + oWindow.h);
@@ -1639,13 +1627,13 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_SETWINDOWORG(short shX, short shY)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETWINDOWORG(shX, shY);
 
 		m_pDC->SetWindowOrg(shX, shY);
 		UpdateOutputDC();
 
-		if (NULL == m_pInterpretator)
+		if (nullptr == m_pInterpretator)
 		{
 			const TWmfWindow& oWindow{m_pDC->GetWindow()};
 			RegisterPoint(oWindow.x            , oWindow.y            );
@@ -1655,7 +1643,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_ESCAPE(unsigned short ushEscapeFunction, unsigned short ushByteCount)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 		{
 			m_pInterpretator->HANDLE_META_ESCAPE(ushEscapeFunction, ushByteCount);
 			PRINT_WMF_LOG("Escape function type: " << ushEscapeFunction << " size: " << ushByteCount);
@@ -1715,7 +1703,7 @@ namespace MetaFile
 					return;
 				}
 
-				if (NULL == m_pInterpretator)
+				if (nullptr == m_pInterpretator)
 				{
 					if (!IsPlaceable())
 						m_oBoundingBox = oEmfParser.GetDCBounds();
@@ -1770,7 +1758,7 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_UNKNOWN(CDataStream &oDataStream)
 	{
-		if (NULL != m_pInterpretator)
+		if (nullptr != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_UNKNOWN(oDataStream);
 	}
 }

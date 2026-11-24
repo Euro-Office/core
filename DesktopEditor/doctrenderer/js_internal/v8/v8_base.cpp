@@ -24,7 +24,7 @@ namespace NSJSBase
 	public:
 		CCacheDataScript(const std::wstring& sPath)
 		{
-			Data = NULL;
+			Data = nullptr;
 			Length = 0;
 
 			Path = sPath;
@@ -66,7 +66,7 @@ namespace NSJSBase
 			if (NSFile::CFileBinary::Exists(Path))
 			{
 				// load cache from file
-				BYTE* _data = NULL;
+				BYTE* _data = nullptr;
 				DWORD _data_length = 0;
 				if (NSFile::CFileBinary::ReadAllBytes(Path, &_data, _data_length))
 				{
@@ -155,7 +155,7 @@ namespace NSJSBase
 
 		bool IsInit()
 		{
-			return Data != NULL && Length > 0;
+			return Data != nullptr && Length > 0;
 		}
 	};
 
@@ -203,12 +203,12 @@ namespace NSJSBase
 
 	void CJSContext::Initialize(const std::wstring& snapshotPath)
 	{
-		if (m_internal->m_isolate == NULL)
+		if (m_internal->m_isolate == nullptr)
 		{
 #ifdef V8_SUPPORT_SNAPSHOTS
 			if (!snapshotPath.empty())
 			{
-				BYTE* data = NULL;
+				BYTE* data = nullptr;
 				DWORD dataLength = 0;
 				if (NSFile::CFileBinary::ReadAllBytes(snapshotPath, &data, dataLength))
 				{
@@ -251,12 +251,12 @@ namespace NSJSBase
 			CJSEmbedObjectPrivate::DestroyAll(isolate);
 		}
 		isolate->Dispose();
-		m_internal->m_isolate = NULL;
+		m_internal->m_isolate = nullptr;
 	}
 
 	bool CJSContext::isSnapshotUsed()
 	{
-		return m_internal->m_startup_data.data != NULL;
+		return m_internal->m_startup_data.data != nullptr;
 	}
 
 	JSSmart<CJSObject> CJSContext::GetGlobal()
@@ -580,7 +580,7 @@ namespace NSJSBase
 			return "";
 
 		v8::String::Utf8Value data(V8IsolateFirstArg result.ToLocalChecked());
-		return std::string((char*)(*data), data.length());
+		return std::string(*data, data.length());
 	}
 
 	void CJSContext::MoveToThread(ASC_THREAD_ID* id)
@@ -641,7 +641,7 @@ namespace NSJSBase
 	};
 
 	// this function is called when method from embedded object is called
-	void _Call(const v8::FunctionCallbackInfo<v8::Value>& args)
+	void CallWrapper(const v8::FunctionCallbackInfo<v8::Value>& args)
 	{
 		CJSEmbedObject* _this = (CJSEmbedObject*)unwrap_native(args.This());
 		CJSFunctionArgumentsV8 _args(&args, 0);
@@ -664,7 +664,7 @@ namespace NSJSBase
 		for (int i = 0, len = arNames.size(); i < len; ++i)
 		{
 			// associate all methods with corresponding Call() index
-			result->Set(CreateV8String(isolate, arNames[i].c_str()), v8::FunctionTemplate::New(isolate, _Call, v8::Integer::New(isolate, i)));
+			result->Set(CreateV8String(isolate, arNames[i].c_str()), v8::FunctionTemplate::New(isolate, CallWrapper, v8::Integer::New(isolate, i)));
 		}
 
 		return handle_scope.Escape(result);
@@ -683,8 +683,8 @@ namespace NSJSBase
 
 		std::string sName;
 		v8::String::Utf8Value data(V8IsolateFirstArg args[0]);
-		if (NULL != *data)
-			sName = std::string((char*)*data, data.length());
+		if (nullptr != *data)
+			sName = std::string(*data, data.length());
 
 		CEmbedObjectRegistrator& oRegistrator = CEmbedObjectRegistrator::getInstance();
 		CEmbedObjectRegistrator::store_t::iterator itFound = oRegistrator.m_infos.find(sName);
@@ -696,7 +696,7 @@ namespace NSJSBase
 
 		CEmbedObjectRegistrator::CEmdedClassInfo& oInfo = itFound->second;
 
-		if (oInfo.m_bIsCreationAllowed == false)
+		if (!oInfo.m_bIsCreationAllowed)
 		{
 			args.GetReturnValue().Set(v8::Undefined(isolate));
 			return;

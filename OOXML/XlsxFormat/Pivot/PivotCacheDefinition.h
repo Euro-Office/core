@@ -615,7 +615,8 @@ namespace OOX
             void readBin(const CPath& oPath);
 			XLS::BaseObjectPtr WriteBin() const;
 			// Builds m_oPivotCashDefinition from m_pData on first use, for parts read from XML.
-			// Parts filled by setData (Editor.bin) keep only the raw bytes and are written as is
+			// For XLSX output a part that was never parsed is written as is; for XLSB output (WriteBin) the
+			// definition is always parsed and encoded again.
 			void EnsureDefinition() const;
 			virtual void read(const CPath& oRootPath, const CPath& oPath);
 			virtual void write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const;

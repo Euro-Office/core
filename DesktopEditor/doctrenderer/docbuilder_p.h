@@ -428,7 +428,7 @@ public:
 
 public:
 
-	static void _LOGGING_ERROR_(const std::wstring& strType, const std::wstring& strError);
+	static void LoggingError(const std::wstring& strType, const std::wstring& strError);
 
 	bool ExecuteCommand(const std::wstring& command, NSDoctRenderer::CDocBuilderValue* retValue = NULL, const bool& isEnterContext = true);
 
@@ -962,7 +962,7 @@ namespace NSDoctRenderer
 			m_nFileType = -1;
 
 			std::wstring sErrorLog = L"open file error (" + std::to_wstring(nReturnCode) + L")";
-			CV8RealTimeWorker::_LOGGING_ERROR_(L"error: ", sErrorLog);
+			CV8RealTimeWorker::LoggingError(L"error: ", sErrorLog);
 			return nReturnCode;
 		}
 
@@ -1014,7 +1014,7 @@ namespace NSDoctRenderer
 
 			if (-1 == m_nFileType)
 			{
-				CV8RealTimeWorker::_LOGGING_ERROR_(L"error (save)", L"file not opened!");
+				CV8RealTimeWorker::LoggingError(L"error (save)", L"file not opened!");
 				return 1;
 			}
 
@@ -1249,7 +1249,7 @@ namespace NSDoctRenderer
 				return 0;
 
 			std::wstring sErrorLog = L"save file error (" + std::to_wstring(nReturnCode) + L")";
-			CV8RealTimeWorker::_LOGGING_ERROR_(L"error: ", sErrorLog);
+			CV8RealTimeWorker::LoggingError(L"error: ", sErrorLog);
 			return nReturnCode;
 		}
 

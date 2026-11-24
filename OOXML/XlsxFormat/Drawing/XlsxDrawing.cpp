@@ -270,10 +270,10 @@ namespace OOX
 
 			for(auto anchor : m_arrItems)
 			{
-				if(anchor->m_oElement.IsInit())
+				// only a graphic frame can hold a chart; a shape or picture next to it is not written
+				if(anchor->m_oElement.IsInit() && anchor->m_oElement->is<PPTX::Logic::GraphicFrame>())
 				{
-					auto anchorElem = anchor->m_oElement->GetElem();
-					auto graphicFrame =  static_cast<PPTX::Logic::GraphicFrame*>(anchorElem.GetPointer());
+					auto graphicFrame = &anchor->m_oElement->as<PPTX::Logic::GraphicFrame>();
 					{
 
 						auto chartRect = new XLS::Chart;
@@ -283,15 +283,18 @@ namespace OOX
 							chartRect->y.dVal = anchor->m_oPos->m_oY->GetValue();
 						if(anchor->m_oExt.IsInit() && anchor->m_oExt->m_oCx.IsInit())
 							chartRect->dx.dVal = anchor->m_oExt->m_oCx->GetValue();
-						if(anchor->m_oExt.IsInit() && anchor->m_oExt->m_oCy->GetValue())
+						if(anchor->m_oExt.IsInit() && anchor->m_oExt->m_oCy.IsInit())
 							chartRect->dy.dVal = anchor->m_oExt->m_oCy->GetValue();
 						ChartFormatsPtr->m_ChartRect = XLS::BaseObjectPtr(chartRect);
 					}
 					if(graphicFrame->chartRec.IsInit() && graphicFrame->chartRec->id_data.IsInit())
 					{
 						auto chartRid = graphicFrame->chartRec->id_data.get();
-						auto castedChart = Get<OOX::File>(chartRid);
-						auto ChartFile = static_cast<OOX::Spreadsheet::CChartFile*>(castedChart.GetPointer());
+						// null if the r:id has no relationship or points at a part that is not a chart
+						auto chart = Get<OOX::Spreadsheet::CChartFile>(chartRid);
+						auto ChartFile = chart.GetPointer();
+						if(!ChartFile)
+							continue;
 						if(ChartFile->m_oChartSpace.m_spPr.IsInit())
 						{
 							ChartFormatsPtr->m_FRAME = ChartFile->m_oChartSpace.m_spPr->toXLSFrame();
@@ -401,7 +404,27 @@ namespace OOX
 								}
 							}
 						}
-						if(ChartFile->m_oChartSpace.m_chart->m_title != nullptr && ChartFile->m_oChartSpace.m_chart->m_title->m_tx != nullptr)
+						// the title text is rich text or, for a title linked to a cell, the cell's cached value
+						std::wstring titleText;
+						bool hasTitleText = false;
+						if(ChartFile->m_oChartSpace.m_chart != nullptr && ChartFile->m_oChartSpace.m_chart->m_title != nullptr
+							&& ChartFile->m_oChartSpace.m_chart->m_title->m_tx != nullptr)
+						{
+							auto tx = ChartFile->m_oChartSpace.m_chart->m_title->m_tx;
+							if(tx->m_oRich.IsInit())
+							{
+								titleText = tx->m_oRich->GetText();
+								hasTitleText = true;
+							}
+							else if(tx->m_strRef != nullptr && tx->m_strRef->m_strCache != nullptr
+								&& !tx->m_strRef->m_strCache->m_pt.empty() && tx->m_strRef->m_strCache->m_pt.front() != nullptr
+								&& tx->m_strRef->m_strCache->m_pt.front()->m_v.IsInit())
+							{
+								titleText = tx->m_strRef->m_strCache->m_pt.front()->m_v.get();
+								hasTitleText = true;
+							}
+						}
+						if(hasTitleText)
 						{
 							auto labelUnion = new XLS::ATTACHEDLABEL;
 							auto textRecord = new XLS::Text;
@@ -415,7 +438,7 @@ namespace OOX
 							auto objLink = new XLS::ObjectLink;
 							objLink->wLinkObj = 1;
 							auto seriesText = new XLS::SeriesText;
-							seriesText->stText = ChartFile->m_oChartSpace.m_chart->m_title->m_tx->m_oRich->GetText();
+							seriesText->stText = titleText;
 							auto aiUnion = new XLS::AI;
 							auto brai = new XLS::BRAI;
 							brai->rt = 1;

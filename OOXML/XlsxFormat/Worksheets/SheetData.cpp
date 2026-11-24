@@ -4690,7 +4690,7 @@ namespace OOX
         }
         bool CRow::compressCell(CCell* pCell)
         {
-            if(!pCell->m_oValue.IsInit() && !pCell->m_oFormula.IsInit() && !m_arrItems.empty())
+            if(!pCell->m_oValue.IsInit() && !pCell->m_oRichText.IsInit() && !pCell->m_oFormula.IsInit() && !m_arrItems.empty())
             {
                 auto prevCell = m_arrItems.back();
                 if(!prevCell->m_oRepeated.IsInit())
@@ -4698,7 +4698,7 @@ namespace OOX
                     prevCell->m_oRepeated = 1;
                 }
 
-                if(!prevCell->m_oValue.IsInit())
+                if(!prevCell->m_oValue.IsInit() && !prevCell->m_oRichText.IsInit() && !prevCell->m_oFormula.IsInit())
                 {
                     if((!prevCell->m_oCol.IsInit()&& !pCell->m_oCol.IsInit())
                         ||(prevCell->m_oCol.IsInit()&& pCell->m_oCol.IsInit() && (prevCell->m_oCol.get() + prevCell->m_oRepeated.get()) == pCell->m_oCol.get()))

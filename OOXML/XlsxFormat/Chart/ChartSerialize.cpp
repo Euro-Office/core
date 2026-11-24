@@ -8363,7 +8363,8 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 						dataFormat->yi = i->m_idx.get();
 
 				}
-				if(m_spPr.IsInit())
+				// the data point's own shape properties; a point that only sets a marker has none
+				if(i->m_spPr.IsInit())
 				{
 					if(i->m_spPr->ln.IsInit())
 						SeriesStyle->m_LineFormat = i->m_spPr->ln->toXLS();

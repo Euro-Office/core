@@ -4,7 +4,7 @@
 
 JSSmart<CJSValue> WasmMemoryToJS(BYTE* pWasmData)
 {
-	if (NULL == pWasmData)
+	if (nullptr == pWasmData)
 		return CJSContext::createNull();
 
 	int nLen = 0;
@@ -17,7 +17,7 @@ JSSmart<CJSValue> WasmMemoryToJS(BYTE* pWasmData)
 
 CDrawingFileEmbed::CDrawingFileEmbed()
 {
-	m_pFile = NULL;
+	m_pFile = nullptr;
 }
 CDrawingFileEmbed::~CDrawingFileEmbed()
 {
@@ -27,7 +27,7 @@ CDrawingFileEmbed::~CDrawingFileEmbed()
 JSSmart<CJSValue> CDrawingFileEmbed::OpenFile(JSSmart<CJSValue> sFile, JSSmart<CJSValue> sPassword)
 {
 	std::wstring wsPassword = sPassword->isString() ? sPassword->toStringW() : L"";
-	bool bResult = m_pFile->OpenFile(sFile->toStringW(), sPassword->isString() ? wsPassword.c_str() : NULL);
+	bool bResult = m_pFile->OpenFile(sFile->toStringW(), sPassword->isString() ? wsPassword.c_str() : nullptr);
 	return CJSContext::createBool(bResult);
 }
 JSSmart<CJSValue> CDrawingFileEmbed::CloseFile()
@@ -56,7 +56,7 @@ JSSmart<CJSValue> CDrawingFileEmbed::GetPixmap(JSSmart<CJSValue> nPageIndex, JSS
 	int nH = nRasterH->toInt32();
 	BYTE* pData = m_pFile->GetPixmap(nPageIndex->toInt32(), nW, nH, nBackgroundColor->toInt32());
 
-	if (NULL == pData)
+	if (nullptr == pData)
 		return CJSContext::createNull();
 
 	return NSJSBase::CJSContext::createUint8Array(pData, 4 * nW * nH, true);
@@ -65,23 +65,23 @@ JSSmart<CJSValue> CDrawingFileEmbed::GetPixmap(JSSmart<CJSValue> nPageIndex, JSS
 JSSmart<CJSValue> CDrawingFileEmbed::DestroyPixmap(JSSmart<CJSValue> typedArray)
 {
 	if (!typedArray->isTypedArray())
-		return NULL;
+		return nullptr;
 
 	CBgraFrame oFrame;
 	oFrame.put_Data(typedArray->toTypedArray()->getData().Data);
 	// free on destructor
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CDrawingFileEmbed::GetFontBinary(JSSmart<CJSValue> Id)
 {
 	if (0 != m_pFile->GetType())
-		return NULL;
+		return nullptr;
 
 	std::wstring sName = Id->toStringW();
 	std::wstring sFile = m_pFile->GetFontBinaryNative(sName);
 	if (sFile.empty())
-		return NULL;
+		return nullptr;
 
 	return CJSContext::createUint8Array(sFile);
 }
@@ -168,12 +168,12 @@ JSSmart<CJSValue> CDrawingFileEmbed::GetImageBase64(JSSmart<CJSValue> rId)
 JSSmart<CJSValue> CDrawingFileEmbed::FreeWasmData(JSSmart<CJSValue> typedArray)
 {
 	if (!typedArray->isTypedArray())
-		return NULL;
+		return nullptr;
 	BYTE* data = typedArray->toTypedArray()->getData().Data;
 	typedArray->toTypedArray()->Detach();
 	data -= 4; // sizeof int (length in NSWasm::Data)
 	free(data);
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CDrawingFileEmbed::SplitPages(JSSmart<CJSValue> arrPageIndexes, JSSmart<CJSValue> data)
@@ -184,7 +184,7 @@ JSSmart<CJSValue> CDrawingFileEmbed::SplitPages(JSSmart<CJSValue> arrPageIndexes
 		changes = data->toTypedArray()->getData();
 
 	int nCountPages = arrPages->getCount();
-	int* pPages = NULL;
+	int* pPages = nullptr;
 	if (0 < nCountPages)
 		pPages = new int[nCountPages];
 
@@ -226,7 +226,7 @@ JSSmart<CJSValue> CDrawingFileEmbed::RedactPage(JSSmart<CJSValue> nPageIndex, JS
 
 		JSSmart<CJSArray> arrBox = arrRedactBox->toArray();
 		int nCountBox = arrBox->getCount();
-		double* pBox = NULL;
+		double* pBox = nullptr;
 		if (0 < nCountBox)
 			pBox = new double[nCountBox];
 
@@ -255,7 +255,7 @@ JSSmart<CJSValue> CDrawingFileEmbed::UndoRedact()
 JSSmart<CJSValue> CDrawingFileEmbed::CheckOwnerPassword(JSSmart<CJSValue> sPassword)
 {
 	std::wstring wsPassword = sPassword->isString() ? sPassword->toStringW() : L"";
-	bool bResult = m_pFile->CheckOwnerPassword(sPassword->isString() ? wsPassword.c_str() : NULL);
+	bool bResult = m_pFile->CheckOwnerPassword(sPassword->isString() ? wsPassword.c_str() : nullptr);
 	return CJSContext::createBool(bResult);
 }
 JSSmart<CJSValue> CDrawingFileEmbed::CheckPerm(JSSmart<CJSValue> nPerm)
