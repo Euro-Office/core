@@ -37,3 +37,19 @@ namespace _graphics_utils_
 	std::pair<double, double> calculate_size_symbol_win(std::wstring name, double size, bool italic, bool bold, std::wstring test_str = L"");
 	std::pair<double, double> calculate_size_symbol_asc(std::wstring name, double size, bool italic, bool bold , NSFonts::IApplicationFonts *appFonts);
 };
+
+// Values of document properties, shared by the ODF reader (docProps/core.xml and custom.xml) and the ODF
+// writer (meta.xml).
+namespace _doc_props_utils_
+{
+	// An xsd:date or xsd:dateTime value as W3CDTF: YYYY-MM-DDThh:mm:ss, without the fraction, and with the
+	// value's own time zone or "Z" when it has none (the wall-clock time, as LibreOffice writes it). Empty
+	// when the value is no valid date (a day the month does not have, a time out of range, text after it) or
+	// its year is outside 1601..9999 (Office reports such a core.xml as corrupt).
+	std::wstring w3cdtf_date(const std::wstring & value);
+
+	// The shortest text that reads back as the same number, with '.' as the decimal point. As in
+	// LibreOffice, whole numbers below 2^53 and numbers with a decimal exponent from -14 to 14 are written
+	// without an exponent (2000, not 2e+03). Empty for a number that is not finite.
+	std::wstring shortest_number(double value);
+}
