@@ -8,6 +8,24 @@ include(${CORE_ROOT_DIR}/common.cmake)
 
 set(X2T_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
 
+if(EMSCRIPTEN)
+    # Formats left out of the WebAssembly link to keep x2t.wasm small
+    # (see X2tConverter/build/wasm/README.md). Their converter functions stay
+    # compiled in; the executable links with -sERROR_ON_UNDEFINED_SYMBOLS=0 so
+    # a conversion that reaches one of them fails at run time instead.
+    set(X2T_WASM_SKIPPED_LIBS
+        Fb2File
+        XpsFile
+        OFDFile
+        DjVuFile
+        DocxRenderer
+        IWorkFile
+        HWPFile
+    )
+else()
+    set(X2T_WASM_SKIPPED_LIBS)
+endif()
+
 if(NOT TARGET CryptoPPLib)
     add_subdirectory(${CORE_ROOT_DIR}/Common/3dParty/cryptopp/project CryptoPPLib)
 endif()
@@ -72,7 +90,7 @@ if(NOT TARGET kernel_network)
     add_subdirectory(${CORE_ROOT_DIR}/Common/Network kernel_network)
 endif()
 
-if(NOT TARGET Fb2File)
+if(NOT TARGET Fb2File AND NOT "Fb2File" IN_LIST X2T_WASM_SKIPPED_LIBS)
     add_subdirectory(${CORE_ROOT_DIR}/Fb2File Fb2File)
 endif()
 
@@ -88,19 +106,19 @@ if(NOT TARGET EpubFile)
     add_subdirectory(${CORE_ROOT_DIR}/EpubFile/cmake EpubFile)
 endif()
 
-if(NOT TARGET XpsFile)
+if(NOT TARGET XpsFile AND NOT "XpsFile" IN_LIST X2T_WASM_SKIPPED_LIBS)
     add_subdirectory(${CORE_ROOT_DIR}/XpsFile XpsFile)
 endif()
 
-if(NOT TARGET OFDFile)
+if(NOT TARGET OFDFile AND NOT "OFDFile" IN_LIST X2T_WASM_SKIPPED_LIBS)
     add_subdirectory(${CORE_ROOT_DIR}/OFDFile OFDFile)
 endif()
 
-if(NOT TARGET DjVuFile)
+if(NOT TARGET DjVuFile AND NOT "DjVuFile" IN_LIST X2T_WASM_SKIPPED_LIBS)
     add_subdirectory(${CORE_ROOT_DIR}/DjVuFile DjVuFile)
 endif()
 
-if(NOT TARGET DocxRenderer)
+if(NOT TARGET DocxRenderer AND NOT "DocxRenderer" IN_LIST X2T_WASM_SKIPPED_LIBS)
     add_subdirectory(${CORE_ROOT_DIR}/DocxRenderer DocxRenderer)
 endif()
 
@@ -108,11 +126,11 @@ if(NOT TARGET doctrenderer)
     add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/doctrenderer doctrenderer)
 endif()
 
-if(NOT TARGET IWorkFile)
+if(NOT TARGET IWorkFile AND NOT "IWorkFile" IN_LIST X2T_WASM_SKIPPED_LIBS)
     add_subdirectory(${CORE_ROOT_DIR}/Apple IWorkFile)
 endif()
 
-if(NOT TARGET HWPFile)
+if(NOT TARGET HWPFile AND NOT "HWPFile" IN_LIST X2T_WASM_SKIPPED_LIBS)
     add_subdirectory(${CORE_ROOT_DIR}/HwpFile HWPFile)
 endif()
 
@@ -226,7 +244,7 @@ target_link_libraries(x2tlib PRIVATE
 )
 
 # dynamic libs
-target_link_libraries(x2tlib PUBLIC
+set(X2T_DYNAMIC_LIBS
     graphics
     kernel
     UnicodeConverter
@@ -244,6 +262,16 @@ target_link_libraries(x2tlib PUBLIC
     HWPFile
     StarMathConverter
     ooxmlsignature
+)
+if(X2T_WASM_SKIPPED_LIBS)
+    list(REMOVE_ITEM X2T_DYNAMIC_LIBS ${X2T_WASM_SKIPPED_LIBS})
+    if("Fb2File" IN_LIST X2T_WASM_SKIPPED_LIBS)
+        target_compile_definitions(x2tlib PRIVATE X2T_NO_FB2)
+    endif()
+endif()
+
+target_link_libraries(x2tlib PUBLIC
+    ${X2T_DYNAMIC_LIBS}
 
     Boost::system
     Boost::filesystem
