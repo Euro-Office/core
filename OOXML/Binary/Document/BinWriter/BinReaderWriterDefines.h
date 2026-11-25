@@ -891,7 +891,8 @@ extern int g_nCurFormatVersion;
 		DrawingGridVerticalOrigin = 27,
 		DrawingGridVerticalSpacing = 28,
 		DisplayHorizontalDrawingGridEvery = 29,
-		DisplayVerticalDrawingGridEvery = 30
+		DisplayVerticalDrawingGridEvery = 30,
+		RevisionViewInsDel = 31
 	};}
 	namespace c_oSer_MathPrType{enum c_oSer_SettingsType
 	{

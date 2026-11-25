@@ -1013,6 +1013,17 @@ std::wstring  docx_conversion_context::dump_settings_document()
 			{
 				CP_XML_NODE(L"w:mirrorMargins");
 			}
+			// ODF ShowRedlineChanges false (ooo:view-settings): the document is shown without the
+			// markup of its tracked insertions and deletions = Word's w:revisionView w:insDel="0"
+			// (CT_Settings order: after w:mirrorMargins, before w:defaultTabStop).
+			_CP_OPT(std::wstring) showRedlineChanges = root()->odf_context().Settings().find_view_by_name(L"ShowRedlineChanges", -1);
+			if (showRedlineChanges && *showRedlineChanges == L"false")
+			{
+				CP_XML_NODE(L"w:revisionView")
+				{
+					CP_XML_ATTR(L"w:insDel", L"0");
+				}
+			}
 
 			_CP_OPT(double) tabDistance = root()->odf_context().Settings().get_tab_distance();
 
