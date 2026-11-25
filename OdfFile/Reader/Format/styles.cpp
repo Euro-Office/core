@@ -1448,18 +1448,22 @@ void style_page_layout_properties::add_child_element( xml::sax * Reader, const s
 
 bool style_page_layout_properties::docx_background_serialize(std::wostream & strm, oox::docx_conversion_context & Context, oox::_oox_fill & fill, int id)
 {
-	if (attlist_.common_background_color_attlist_.fo_background_color_ && 
-		attlist_.common_background_color_attlist_.fo_background_color_->get_type() == background_color::Transparent)
-		return true; //??
-    //transparent background
-	
+	const bool transparent = attlist_.common_background_color_attlist_.fo_background_color_ &&
+		attlist_.common_background_color_attlist_.fo_background_color_->get_type() == background_color::Transparent;
+
+	// A transparent colour without a fill means no page background. A transparent colour with a fill
+	// keeps the fill: LibreOffice writes a page picture with a transparent colour, as draw:fill="bitmap"
+	// (current versions) or style:background-image (older versions).
+	if (transparent && fill.type <= 0)
+		return true;
+
 	CP_XML_WRITER(strm)
 	{
 		CP_XML_NODE(L"w:background")
 		{
 			std::wstring color = L"ffffff";
-			
-			if (attlist_.common_background_color_attlist_.fo_background_color_)
+
+			if (attlist_.common_background_color_attlist_.fo_background_color_ && !transparent)
 				color = attlist_.common_background_color_attlist_.fo_background_color_->get_color().get_hex_value();
 			
 			CP_XML_ATTR(L"w:color", color);

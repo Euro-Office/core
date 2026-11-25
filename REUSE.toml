@@ -9,7 +9,7 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
-path = "OdfFile/Test/test_odf/ExampleFiles/ruby_base_text.odt"
+path = "OdfFile/Test/test_odf/ExampleFiles/symbol_bullets.odt"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
@@ -365,6 +365,14 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_image.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OdfFile/Test/test_odf/ExampleFiles/chart_empty_subtitle.ods",
     "OdfFile/Test/test_odf/ExampleFiles/chart_subtitle_without_y.ods",
 ]
@@ -458,6 +466,11 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/number_styles_auto_data_style.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = [
     "OOXML/test/ExampleFiles/activex_groupname/groupname.docx",
     "OOXML/test/ExampleFiles/docx2odt/vml_margin.docx",
@@ -494,5 +507,10 @@ path = [
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_rules.xlsx",
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_x14.xlsx",
 ]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/ruby_base_text.odt"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

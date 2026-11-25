@@ -894,6 +894,18 @@ void odf_document::Impl::parse_styles(office_element *element)
 
                 context_->listStyleContainer().add_list_style(listStyle);
             }
+            // data styles: LibreOffice may write a data style that a content.xml cell style uses only here.
+            // Added first, so a data style of the same name in office:styles or in content.xml replaces it.
+            for (size_t i = 0; i < automaticStyles->styles_.number_styles_.size(); i++)
+            {
+                office_element_ptr & elm = automaticStyles->styles_.number_styles_[i];
+
+                const number_style_base * style = dynamic_cast<const number_style_base *>(elm.get());
+                if (!style)
+                    continue;
+
+                context_->numberStyles().add(style->get_style_name(), elm);
+            }
         }
         while(0); 
 

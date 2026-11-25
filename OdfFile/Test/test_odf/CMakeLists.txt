@@ -106,6 +106,7 @@ add_core_gtest(
             audio.cpp
             interactions.cpp
             xlsx2ods_table_print_titles.cpp
+            odt2docx_page_background_transparent.cpp
             ods2xlsx_trailing_cell_style.cpp
             ods2xlsx_header_footer_ampersand.cpp
             ods2xlsx_fit_to_page.cpp
@@ -118,6 +119,7 @@ add_core_gtest(
             ods2xlsx_database_range.cpp
             docx2odt_list_number_suffix.cpp
             odt2docx_section_columns.cpp
+            odt2docx_symbol_bullets.cpp
             odt2docx_chapter_field.cpp
             odt2docx_database_display.cpp
             odt2docx_note_body_whitespace.cpp
@@ -134,6 +136,7 @@ add_core_gtest(
             docx2odt_style_based_on.cpp
             odf_bitmap_fill_size.cpp
             xlsx2ods_fit_to_pages.cpp
+            ods2xlsx_styles_auto_data_style.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
