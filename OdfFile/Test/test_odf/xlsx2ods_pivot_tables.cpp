@@ -3,7 +3,8 @@
 
 // XLSX -> ODS: pivot tables become table:data-pilot-table elements with their
 // source range, place and fields. The fixture has a sheet "Data" (A1:D9: Year,
-// Region, Product, Revenue) and a sheet "Pivot Sheet" with two pivot tables on
+// Region, Product, Revenue; text in shared strings, as Excel writes it) and a
+// sheet "Pivot Sheet" with two pivot tables on
 // one pivot cache, plus one on a cache in another workbook:
 //   RevenueByRegion  location A5:E9, page field Year (2026 selected), row
 //                    field Region, column field Product (item Plums hidden),
