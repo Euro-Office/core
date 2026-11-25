@@ -54,7 +54,7 @@ namespace DocFileFormat
 		RELEASEARRAYOBJECTS(rgfc);
 		RELEASEARRAYOBJECTS(rgbx);
 
-		if (grppapx != NULL)
+		if (grppapx != nullptr)
 		{
 			for (unsigned int i = 0; i < grppapxSize; i++)
 			{
@@ -68,7 +68,7 @@ namespace DocFileFormat
 	/*========================================================================================================*/
 
 	FormattedDiskPagePAPX::FormattedDiskPagePAPX(POLE::Stream* wordStream, int offset, POLE::Stream* dataStream, int nWordVersion, bool fComplex) :
-		FormattedDiskPage(), rgbx(NULL), grppapxSize(0), grppapx(NULL)
+		FormattedDiskPage(), rgbx(nullptr), grppapxSize(0), grppapx(nullptr)
 	{
 		Type = Paragraph;
 		WordStream = wordStream;
@@ -77,7 +77,7 @@ namespace DocFileFormat
 		//the page is zeroed first: an offset past the end of the stream makes the
 		//read return nothing at all, and the parser must not go on to interpret
 		//uninitialised heap as offsets and lengths
-		unsigned char* bytes = NULL;
+		unsigned char* bytes = nullptr;
 		bytes = new unsigned char[FKP_SIZE];
 		memset(bytes, 0, FKP_SIZE);
 
@@ -134,7 +134,7 @@ namespace DocFileFormat
 
 		for (unsigned int i = 0; i < grppapxSize; i++)
 		{
-			grppapx[i] = NULL;
+			grppapx[i] = nullptr;
 		}
 
 		j = 4 * (crun + 1);
@@ -318,7 +318,7 @@ namespace DocFileFormat
 		std::vector<int>* cpList = new std::vector<int>();
 		std::vector<FormattedDiskPagePAPX*>* fkps = FormattedDiskPagePAPX::GetAllPAPXFKPs(fib, wordStream, tableStream, dataStream);
 		unsigned int i = 0;
-		FormattedDiskPagePAPX* fkp = NULL;
+		FormattedDiskPagePAPX* fkp = nullptr;
 
 		for (size_t i = 0; i < fkps->size(); ++i)
 		{
@@ -389,11 +389,11 @@ namespace DocFileFormat
 
 	ParagraphPropertyExceptions* FormattedDiskPagePAPX::GetFirstPapx( const std::vector<FormattedDiskPagePAPX*>* fkps )
 	{
-		if ( ( fkps == NULL ) || fkps->empty() ) return NULL;
+		if ( ( fkps == nullptr ) || fkps->empty() ) return nullptr;
 
 		//a page that was skipped or read short has no runs at all
 		const FormattedDiskPagePAPX* fkp = fkps->front();
-		if ( ( fkp == NULL ) || ( fkp->grppapxSize == 0 ) ) return NULL;
+		if ( ( fkp == nullptr ) || ( fkp->grppapxSize == 0 ) ) return nullptr;
 
 		return fkp->grppapx[0];
 	}

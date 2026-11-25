@@ -40,7 +40,7 @@ namespace NSNetwork
 			CSession_private()
 			{
 			}
-			~CSession_private()
+			virtual ~CSession_private()
 			{
 			}
 

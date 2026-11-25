@@ -61,14 +61,21 @@ namespace DocFileFormat
 				val = GETBIT(fChar, 9); grpprl->push_back(SinglePropertyModifier(sprmOldCFSpec,		1, &val));
 
 				bool fsIco		=  GETBIT(fChar, 10);
+				(void)fsIco;
 				bool fsFtc		=  GETBIT(fChar, 11);
+				(void)fsFtc;
 				bool fsHps		=  GETBIT(fChar, 12);
+				(void)fsHps;
 				bool fsKul		=  GETBIT(fChar, 13);
+				(void)fsKul;
 				bool fsPos		=  GETBIT(fChar, 14);
+				(void)fsPos;
 				bool fsSpace	=  GETBIT(fChar, 15);
+				(void)fsSpace;
 
 				if (pos + 2 > size) return;
 				int fff = oStream.ReadUInt16();	pos += 2;//?????
+				(void)fff;
 
 				if (pos + 2 > size) return;
 				unsigned short	ftc		= oStream.ReadUInt16();	pos += 2;		// Font Code
@@ -90,10 +97,13 @@ namespace DocFileFormat
 				unsigned short  fText	= oStream.ReadUInt16();	pos += 2;
 
 				unsigned short qpsSpace = GETBITS(fText, 0, 5);
+				(void)qpsSpace;
 				unsigned char wSpare2 = GETBITS(fText, 6, 7);
+				(void)wSpare2;
 				unsigned char ico = GETBITS(fText, 8, 11);
 				unsigned char kul = GETBITS(fText, 12, 14);
 				bool fSysVanish = GETBIT(fChar, 15);
+				(void)fSysVanish;
 
 				grpprl->push_back(SinglePropertyModifier(sprmOldCKul,	1, &kul));
 				grpprl->push_back(SinglePropertyModifier(sprmOldCIco,	1, &ico));
@@ -105,9 +115,11 @@ namespace DocFileFormat
 
 				if (pos + 1 > size) return;
 				unsigned char	fnPic	= oStream.ReadByte();	pos += 1;
+				(void)fnPic;
 
 				if (pos + 2 > size) return;
-				unsigned short  hpsLargeChp	= oStream.ReadUInt16();	pos += 2;// ??? type
+				unsigned short  hpsLargeChp	= oStream.ReadUInt16();	// ??? type
+				(void)hpsLargeChp;
 			}
 			else if (nWordVersion == 2)
 			{
@@ -135,16 +147,27 @@ namespace DocFileFormat
 				if (pos + 2 > size) return;
 				unsigned short  fChar2 = oStream.ReadUInt16();	pos += 2;
 				bool fsIco = GETBIT(fChar2, 0);
+				(void)fsIco;
 				bool fsFtc = GETBIT(fChar2, 1);
+				(void)fsFtc;
 				bool fsHps = GETBIT(fChar2, 2);
+				(void)fsHps;
 				bool fsKul = GETBIT(fChar2, 3);
+				(void)fsKul;
 				bool fsPos = GETBIT(fChar2, 4);
+				(void)fsPos;
 				bool fsSpace = GETBIT(fChar2, 5);
+				(void)fsSpace;
 				bool fsLid = GETBIT(fChar2, 6);
+				(void)fsLid;
 				bool fsIcoBi = GETBIT(fChar2, 7);
+				(void)fsIcoBi;
 				bool fsFtcBi = GETBIT(fChar2, 8);
+				(void)fsFtcBi;
 				bool fsHpsBi = GETBIT(fChar2, 9);
+				(void)fsHpsBi;
 				bool fsLidBi = GETBIT(fChar2, 10);
+				(void)fsLidBi;
 
 				if (pos + 2 > size) return;
 				unsigned short	ftc		= oStream.ReadUInt16();	pos += 2;		// Font Code
@@ -166,10 +189,13 @@ namespace DocFileFormat
 				unsigned short  fText	= oStream.ReadUInt16();	pos += 2;
 
 				unsigned short qpsSpace = GETBITS(fText, 0, 5);
+				(void)qpsSpace;
 				unsigned char wSpare2 = GETBITS(fText, 6, 7);
+				(void)wSpare2;
 				unsigned char ico = GETBITS(fText, 8, 11);
 				unsigned char kul = GETBITS(fText, 12, 14);
 				bool fSysVanish = GETBIT(fChar, 15);
+				(void)fSysVanish;
 
 				grpprl->push_back(SinglePropertyModifier(sprmOldCKul,	1, &kul));
 				grpprl->push_back(SinglePropertyModifier(sprmOldCIco,	1, &ico));
@@ -199,9 +225,11 @@ namespace DocFileFormat
 
 				if (pos + 1 > size) return;
 				unsigned char	fnPic	= oStream.ReadByte();	pos += 1;
+				(void)fnPic;
 
 				if (pos + 2 > size) return;
-				unsigned short  hpsLargeChp	= oStream.ReadUInt16();	pos += 2;// ??? type
+				unsigned short  hpsLargeChp	= oStream.ReadUInt16();	// ??? type
+				(void)hpsLargeChp;
 			}
 		}
 	}

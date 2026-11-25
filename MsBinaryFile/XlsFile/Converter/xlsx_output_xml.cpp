@@ -103,7 +103,7 @@ xlsx_xml_worksheet_ptr xlsx_xml_worksheet::create()
     return boost::make_shared<xlsx_xml_worksheet>();
 }
 
-xlsx_xml_worksheet::xlsx_xml_worksheet() : impl_(new xlsx_xml_worksheet::Impl()), type(1), id(0)
+xlsx_xml_worksheet::xlsx_xml_worksheet() : type(1), id(0), impl_(new xlsx_xml_worksheet::Impl())
 {
 }
 

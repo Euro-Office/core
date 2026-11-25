@@ -35,7 +35,7 @@ namespace DocFileFormat
       /// Index to style descriptor of the style from which the 
       /// paragraph inherits its paragraph and character properties
       unsigned short istd;
-      /// Creates a PAPX wich doesn't modify anything.
+      /// Creates a PAPX which doesn't modify anything.
       /// The grpprl list is empty
     
 	  ParagraphPropertyExceptions();

@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "./FileTransporter_private.h"
 #include "../include/FileTransporter.h"

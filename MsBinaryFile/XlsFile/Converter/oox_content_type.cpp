@@ -34,9 +34,9 @@ namespace oox {
 const wchar_t * default_content_type::ns = L"";
 const wchar_t * default_content_type::name = L"Default";
 
-::std::wostream & default_content_type::xml_to_stream(std::wostream & _Wostream) const
+::std::wostream & default_content_type::xml_to_stream(std::wostream & wostream_) const
 {
-    CP_XML_WRITER(_Wostream)
+    CP_XML_WRITER(wostream_)
     {
         CP_XML_NODE(L"Default")
         {
@@ -45,19 +45,19 @@ const wchar_t * default_content_type::name = L"Default";
         }    
     }
 
-    //_Wostream << L"<Default ";
+    //wostream_ << L"<Default ";
     //CP_XML_SERIALIZE_ATTR(L"Extension", extension());
     //CP_XML_SERIALIZE_ATTR(L"ContentType", content_type());
-    //_Wostream << L" />";
-    return _Wostream;
+    //wostream_ << L" />";
+    return wostream_;
 }
 
 const wchar_t * override_content_type::ns = L"";
 const wchar_t * override_content_type::name = L"Override";
 
-::std::wostream & override_content_type::xml_to_stream(::std::wostream & _Wostream) const
+::std::wostream & override_content_type::xml_to_stream(::std::wostream & wostream_) const
 {
-    CP_XML_WRITER(_Wostream)
+    CP_XML_WRITER(wostream_)
     {
         CP_XML_NODE(L"Override")
         {
@@ -66,19 +66,19 @@ const wchar_t * override_content_type::name = L"Override";
         }
     }
 
-    //_Wostream << L"<Override ";
+    //wostream_ << L"<Override ";
     //CP_XML_SERIALIZE_ATTR(L"PartName", part_name());
     //CP_XML_SERIALIZE_ATTR(L"ContentType", content_type());
-    //_Wostream << L" />";
-    return _Wostream;
+    //wostream_ << L" />";
+    return wostream_;
 }
 
 const wchar_t * content_type::ns = L"";
 const wchar_t * content_type::name = L"Types";
 
-::std::wostream & content_type::xml_to_stream(::std::wostream & _Wostream) const
+::std::wostream & content_type::xml_to_stream(::std::wostream & wostream_) const
 {
-    CP_XML_WRITER(_Wostream)
+    CP_XML_WRITER(wostream_)
     {
         CP_XML_NODE(L"Types")
         {
@@ -96,7 +96,7 @@ const wchar_t * content_type::name = L"Types";
             }            
         }
 	}
-    return _Wostream;
+    return wostream_;
 }
 
 }

@@ -78,9 +78,10 @@ namespace DocFileFormat
 	//Even Header
 			if (fib->m_nWordVersion == 2)
 			{
+				if (pos + 1 >= (int)tableSize) break;
 				if ( table[pos] == table[pos + 1] )
 				{
-					m_arCommonHeadersFooters.push_back( NULL );
+					m_arCommonHeadersFooters.push_back( nullptr );
 				}
 				else
 				{
@@ -92,9 +93,10 @@ namespace DocFileFormat
 			{
 				for (size_t j = 0; j < 6; j++)
 				{
+					if (pos + 1 >= (int)tableSize) break;
 					if ( table[pos] == table[pos + 1] )
 					{
-						arHeadersFooters[j]->push_back( NULL );
+						arHeadersFooters[j]->push_back( nullptr );
 					}
 					else
 					{

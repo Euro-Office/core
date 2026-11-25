@@ -87,7 +87,7 @@ public:
     void NormalizeString(std::wstring& strText);
 
     void RecalcParagraphsPPT();
-    void ApplyThemeStyle	(CTheme* pTheme = NULL);
+    void ApplyThemeStyle	(CTheme* pTheme = nullptr);
 
     void ApplyRuler			(CTheme* pTheme);
     void ApplyRuler			(CTextPFRun* pPar, WORD lIndentLevel);

@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "PptFormula.h"
 
@@ -234,12 +233,15 @@ namespace NSGuidesVML
 
 	CFormulasManager::CFormulasManager() : m_bCalc(false)
 	{
-		m_pAdjustments	= NULL;
+		m_pAdjustments	= nullptr;
 		m_lShapeWidth	= ShapeSizeVML;
 		m_lShapeHeight	= ShapeSizeVML;
 	}
 	CFormulasManager& CFormulasManager::operator =(const CFormulasManager& oSrc)
 	{
+		if (this == &oSrc)
+			return *this;
+
 		m_bCalc			= oSrc.m_bCalc;
 		m_pAdjustments	= oSrc.m_pAdjustments;
 		m_lShapeWidth	= oSrc.m_lShapeWidth;
@@ -261,7 +263,7 @@ namespace NSGuidesVML
 	void CFormulasManager::Clear()
 	{
 		m_bCalc			= false;
-		m_pAdjustments	= NULL;
+		m_pAdjustments	= nullptr;
 		m_lShapeWidth	= ShapeSizeVML;
 		m_lShapeHeight	= ShapeSizeVML;
 
@@ -298,7 +300,7 @@ namespace NSGuidesVML
 	{
 		for (size_t index = 0; index < m_arFormulas.size(); ++index)
 		{
-			LONG lResult = m_arFormulas[index].Calculate(this);
+			m_arFormulas[index].Calculate(this);
 		}
 
 		//m_pAdjustments = NULL;

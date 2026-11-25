@@ -74,22 +74,22 @@ text_emphasize text_emphasize::parse(const std::wstring & Str)
     std::wstring tmp = Str;
     boost::algorithm::to_lower(tmp);
     boost::algorithm::trim(tmp);
-    std::vector< std::wstring > splitted;
-    boost::algorithm::split(splitted, tmp, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
+    std::vector< std::wstring > split;
+    boost::algorithm::split(split, tmp, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
 
     text_emphasize::type type1_;
    
-    if (splitted.size() > 0)
+    if (split.size() > 0)
     {
-        if (splitted[0] == L"none")
+        if (split[0] == L"none")
             type1_ = None;
-        else if (splitted[0] == L"accent")
+        else if (split[0] == L"accent")
             type1_ = Accent;
-        else if (splitted[0] == L"dot")
+        else if (split[0] == L"dot")
             type1_ = Dot;
-        else if (splitted[0] == L"circle")
+        else if (split[0] == L"circle")
             type1_ = Circle;
-        else if (splitted[0] == L"disc")
+        else if (split[0] == L"disc")
             type1_ = Disc;
         else
         {
@@ -98,11 +98,11 @@ text_emphasize text_emphasize::parse(const std::wstring & Str)
     }
 
     text_emphasize::type type2_ = None;
-    if (splitted.size() > 1)
+    if (split.size() > 1)
     {
-        if (splitted[1] == L"above")
+        if (split[1] == L"above")
             type2_ = Above;
-        else if (splitted[1] == L"below")
+        else if (split[1] == L"below")
             type2_ = Below;
         else
         {

@@ -33,12 +33,12 @@ namespace DocFileFormat
 		friend class SettingsMapping;  
 
 	private:
-		/// True if we're kerning punctation
+		/// True if we're kerning punctuation
 		bool fKerningPunct;
 		/// Kinsoku method of justification:
 		/// 0 = always expand
-		/// 1 = compress punctation
-		/// 2 = compress punctation and kana
+		/// 1 = compress punctuation
+		/// 2 = compress punctuation and kana
 		short iJustification;
 		/// Level of kinsoku:
 		/// 0 = level 1

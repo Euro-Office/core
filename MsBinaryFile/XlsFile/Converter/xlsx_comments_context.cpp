@@ -88,8 +88,8 @@ const std::vector<comment_elm> & xlsx_comments_context_handle::content() const
 class xlsx_comments_context::Impl
 {
 public:    
-    Impl(xlsx_comments_context_handle & handle) : xlsx_comments_(xlsx_comments::create()),
-        handle_(handle) , count_comments_(0)
+    Impl(xlsx_comments_context_handle & handle) : handle_(handle),
+        xlsx_comments_(xlsx_comments::create()), count_comments_(0)
     {} 
 
     xlsx_comments_context_handle &	handle_;

@@ -136,16 +136,16 @@ bool BinaryCodec_RCF::startBlock( size_t nCounter )
 	mhDigest.Raw(pnKeyData, DigestMD5::RTL_DIGEST_LENGTH_MD5 );
 
 	// initialize cipher with key data (for decoding)
-	CipherARCFOUR::rtlCipherError eResult = mhCipher.Init(CipherARCFOUR::rtl_Cipher_DirectionDecode, pnKeyData, DigestMD5::RTL_DIGEST_LENGTH_MD5, 0, 0 );
+	CipherARCFOUR::rtlCipherError eResult = mhCipher.Init(CipherARCFOUR::rtl_Cipher_DirectionDecode, pnKeyData, DigestMD5::RTL_DIGEST_LENGTH_MD5, nullptr, 0 );
 
-	// rrase key data array and leave
+	// erase key data array and leave
 	(void)memset( pnKeyData, 0, sizeof( pnKeyData ) );
 	return eResult == CipherARCFOUR::rtl_Cipher_E_None;
 }
 
 bool BinaryCodec_RCF::decode( unsigned char* pnDestData, const unsigned char* pnSrcData, size_t nBytes )
 {
-	return CipherARCFOUR::rtl_Cipher_E_None == mhCipher.Decode(pnSrcData, static_cast<size_t>(nBytes), pnDestData, static_cast<size_t>(nBytes));
+	return CipherARCFOUR::rtl_Cipher_E_None == mhCipher.Decode(pnSrcData, nBytes, pnDestData, nBytes);
 }
 
 

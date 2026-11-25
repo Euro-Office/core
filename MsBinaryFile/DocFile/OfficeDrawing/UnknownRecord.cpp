@@ -28,11 +28,11 @@
 namespace DocFileFormat
 { 
 	UnknownRecord::UnknownRecord():
-		Record(), _bytes(NULL), _size(0)
+		Record(), _bytes(nullptr), _size(0)
 	{
 	}
 	UnknownRecord::UnknownRecord( IBinaryReader* _reader, unsigned int size, unsigned int typeCode, unsigned int version, unsigned int instance ):
-		Record( _reader, size, typeCode, version, instance ), _bytes(NULL), _size(0)
+		Record( _reader, size, typeCode, version, instance ), _bytes(nullptr), _size(0)
 	{
 		this->_size = (unsigned int)( this->Reader->GetSize() - this->Reader->GetPosition() );
 
@@ -50,6 +50,11 @@ namespace DocFileFormat
 
 	Record* UnknownRecord::NewObject( IBinaryReader* _reader, unsigned int bodySize, unsigned int typeCode, unsigned int version, unsigned int instance )
 	{
-		return NULL;//new UnknownRecord( _reader, bodySize, typeCode, version, instance );
+		(void)_reader;
+		(void)bodySize;
+		(void)typeCode;
+		(void)version;
+		(void)instance;
+		return nullptr;//new UnknownRecord( _reader, bodySize, typeCode, version, instance );
 	}
 }
