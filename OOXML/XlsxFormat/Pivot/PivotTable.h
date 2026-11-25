@@ -928,8 +928,8 @@ namespace OOX
             nullable<CHierarchiesUsage>    		m_oColHierarchiesUsage;
             nullable<CHierarchiesUsage>    		m_oRowHierarchiesUsage;
 	//nullable<CPivotTableFilters>					m_oFilters;
-			// Not read: set when the table has label, value or date filters (<filters> or XLSB SXFILTERS), so that a
-			// converter that cannot keep them can skip the table.
+			// Not read: set when the XML has label, value or date filters (<filters>), so that a converter that cannot
+			// keep them can skip the table.
 			bool m_bHasFilters = false;
 	//nullable<CPivotChartFormats>					m_oChartFormats;
 	//nullable<Pivot Conditional Formats>			m_oConditionalFormats;

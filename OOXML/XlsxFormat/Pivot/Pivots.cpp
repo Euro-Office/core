@@ -973,9 +973,6 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
             if(ptr->m_SXPIS != nullptr)
                 m_oPageFields = ptr->m_SXPIS;
 
-            if(ptr->m_SXFILTERS != nullptr)
-                m_bHasFilters = true;
-
             if(ptr->m_SXTHS != nullptr)
                 m_oPivotHierarchies = ptr->m_SXTHS;
             if(ptr->m_ISXTHCOLS != nullptr)
