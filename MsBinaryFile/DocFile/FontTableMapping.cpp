@@ -50,6 +50,7 @@ namespace DocFileFormat
         m_pXmlWriter->WriteNodeEnd( L"", TRUE, FALSE );
 
 		int sz_fonts = table->Data.size();
+		(void)sz_fonts;
 		int users_fonts = 0;
 
 		for ( std::vector<ByteStructure*>::iterator iter = table->Data.begin(); iter != table->Data.end(); iter++ )

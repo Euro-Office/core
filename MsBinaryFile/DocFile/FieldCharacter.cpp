@@ -32,6 +32,7 @@ namespace DocFileFormat
 
 	ByteStructure*FieldCharacter:: ConstructObject (VirtualStreamReader* pReader, int length)
 	{
+		(void)length;
 		FieldCharacter* pFldChar = new FieldCharacter();
 		if (pFldChar)
 		{
@@ -47,6 +48,7 @@ namespace DocFileFormat
 
 	ByteStructure* ListNumCache::ConstructObject (VirtualStreamReader* pReader, int length)
 	{
+		(void)length;
 		ListNumCache* pList	= new ListNumCache();
 		if (pList)
 		{

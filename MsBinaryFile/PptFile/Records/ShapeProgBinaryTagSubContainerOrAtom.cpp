@@ -56,7 +56,7 @@ void CRecordPP11ShapeBinaryTagExtension::ReadFromStream(SRecordHeader &oHeader, 
     m_styleTextPropAtom.ReadFromStream(ReadHeader, pStream);
 }
 
-CRecordShapeProgBinaryTagSubContainerOrAtom::CRecordShapeProgBinaryTagSubContainerOrAtom() : m_pTagContainer(NULL), m_pTagName(NULL){}
+CRecordShapeProgBinaryTagSubContainerOrAtom::CRecordShapeProgBinaryTagSubContainerOrAtom() : m_pTagContainer(nullptr), m_pTagName(nullptr){}
 
 void CRecordShapeProgBinaryTagSubContainerOrAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStream)
 {

@@ -40,7 +40,7 @@ table_state::table_state(xlsx_conversion_context & Context) : drawing_context_(C
 
 table_state_ptr & xlsx_sheet_context::state()
 {
-	if (false == tables_state_.empty())
+	if (!tables_state_.empty())
 	{
 		return tables_state_.back();
 	}
@@ -143,10 +143,10 @@ std::wstring xlsx_sheet_context::add_hyperlink(std::wstring const & ref, std::ws
 	 if (state())
 		 state()->hyperlinks_.dump_rels(Rels);
 }
-void xlsx_sheet_context::serialize_hyperlinks(std::wostream & _Wostream)
+void xlsx_sheet_context::serialize_hyperlinks(std::wostream & wostream_)
 {
 	if (state())
-		state()->hyperlinks_.serialize(_Wostream);
+		state()->hyperlinks_.serialize(wostream_);
 }
 void xlsx_sheet_context::dump_rels_drawing(rels & Rels)
 {

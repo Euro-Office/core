@@ -24,7 +24,8 @@
  */
 #include "EncryptionHeader.h"
 
-#define GETBIT(from, num) ((from & (1 << num)) != 0)
+#undef GETBIT
+#define GETBIT(from, num) (((from) & (1 << (num))) != 0)
 
 namespace DocFileFormat
 {
@@ -43,6 +44,7 @@ namespace DocFileFormat
 		{
 			unsigned short vMajor = tStream.ReadUInt16();
 			unsigned short vMinor = tStream.ReadUInt16();
+			(void)vMinor;
 
 			if(0x0001 == vMajor) // RC4 encryption header structure
 			{// fib->m_FibBase.lKey == 52 
@@ -69,23 +71,29 @@ namespace DocFileFormat
 				crypt_data_aes.bAgile	= false;
 
 				unsigned short flags = tStream.ReadUInt32();
-				unsigned char *pDataRead = NULL;
+				unsigned char *pDataRead = nullptr;
 
 				bool fCryptoAPI				= GETBIT(flags, 1);
 				crypt_data_aes.fDocProps	= GETBIT(flags, 2);
 				bool fExternal				= GETBIT(flags, 3);
+				(void)fExternal;
 				bool fAES					= GETBIT(flags, 4);
 
 			//EncryptionHeader
 				int HeaderSize	= tStream.ReadUInt32();
+				(void)HeaderSize;
 				int Flags		= tStream.ReadUInt32();
+				(void)Flags;
 				int SizeExtra	= tStream.ReadUInt32();
+				(void)SizeExtra;
 				int AlgID		= tStream.ReadUInt32();
 				int AlgIDHash	= tStream.ReadUInt32();
 				int KeySize		= tStream.ReadUInt32();
 				int ProviderType= tStream.ReadUInt32();
 				int Reserved1	= tStream.ReadUInt32();
+				(void)Reserved1;
 				int Reserved2	= tStream.ReadUInt32();
+				(void)Reserved2;
 
 				int pos		= tStream.GetPosition();
 				int size	= tStream.GetSize();
@@ -127,14 +135,13 @@ namespace DocFileFormat
 					delete pDataRead;
 				}
 
-				pos = tStream.GetPosition();
-				
-			//------------------------------------------------------------------------------------------
+				//------------------------------------------------------------------------------------------
 				switch(AlgIDHash)
 				{
 					case 0x8003: crypt_data_aes.hashAlgorithm = CRYPT_METHOD::MD5;	break;
 					case 0x0000: 
 					case 0x8004: crypt_data_aes.hashAlgorithm = CRYPT_METHOD::SHA1;	break;
+					default: break;
 				}
 				crypt_data_aes.spinCount = 0;
 
@@ -162,6 +169,7 @@ namespace DocFileFormat
 					crypt_data_aes.cipherAlgorithm = CRYPT_METHOD::AES_ECB;
 					crypt_data_aes.keySize	= 256 /8;	
 					break;
+				default: break;
 				}
 
 				//switch(ProviderType)

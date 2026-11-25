@@ -49,7 +49,7 @@ public:
 	office_element_ptr			meta_template_;
 	office_element_ptr			meta_printed_by_;
 	office_element_ptr			meta_print_date_;
-	office_element_ptr			meta_keyword_;
+	office_element_ptr_array	meta_keyword_;
 	office_element_ptr			meta_initial_creator_;
 	office_element_ptr			meta_hyperlinkbehaviour_;
 	office_element_ptr			meta_editing_duration_;

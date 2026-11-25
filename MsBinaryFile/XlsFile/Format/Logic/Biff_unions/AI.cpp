@@ -86,8 +86,8 @@ bool AI::empty()
 	bool bEmpty = true;
 	if (brai)		
 	{
-		std::wstring forumla = brai->formula.getAssembledFormula();		
-		bEmpty = forumla.empty();
+		std::wstring formula = brai->formula.getAssembledFormula();		
+		bEmpty = formula.empty();
 	}
 	SeriesText * text = dynamic_cast<SeriesText *>(m_SeriesText.get());
 	if (text && bEmpty)
@@ -103,8 +103,8 @@ int AI::serialize(std::wostream & _stream)
 
 	if (brai)		
 	{
-		std::wstring forumla = brai->formula.getAssembledFormula();		
-		if (forumla.empty() == false)
+		std::wstring formula = brai->formula.getAssembledFormula();		
+		if (!formula.empty())
 		{
 			CP_XML_WRITER(_stream)    
 			{
@@ -114,7 +114,7 @@ int AI::serialize(std::wostream & _stream)
 					{
 						CP_XML_NODE(L"c:f")
 						{
-							CP_XML_STREAM() << forumla;
+							CP_XML_STREAM() << formula;
 						}
 					}
 				}
@@ -124,7 +124,7 @@ int AI::serialize(std::wostream & _stream)
 	}
 
 	SeriesText * text = dynamic_cast<SeriesText *>(m_SeriesText.get());
-	if ((text) && (text->stText.value().empty() == false))
+	if ((text) && (!text->stText.value().empty()))
 	{
 		CP_XML_WRITER(_stream)    
 		{

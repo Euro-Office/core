@@ -45,7 +45,7 @@ void Timing_2010::Convert(PPTX::Logic::Timing &timing, CExMedia *pExMedia, CRels
 
 
     auto* pTagExtAnim = slideAnim.pAnim_2010;
-    if (pTagExtAnim == nullptr || pTagExtAnim->m_haveExtTime == false)
+    if (pTagExtAnim == nullptr || !pTagExtAnim->m_haveExtTime)
         return;
 
     ConvertTnLst(timing, pTagExtAnim->m_pExtTimeNodeContainer);
@@ -70,7 +70,7 @@ void Timing_2010::ConvertBldLst(PPTX::Logic::Timing &timimg, CRecordBuildListCon
         auto* pSub = dynamic_cast<CRecordBuildListSubContainer*>(pDBC);
         if (pSub == nullptr)
             throw TimingExeption("Cannot read BuildListSubContainer");
-        if (IsCorrectAnimationSpId(pSub->buildAtom.m_nShapeIdRef) == false)
+        if (!IsCorrectAnimationSpId(pSub->buildAtom.m_nShapeIdRef))
             continue;
 
         FillBuildNodeBase(pSub, oBuildNodeBase);
@@ -95,6 +95,7 @@ void Timing_2010::InsertBldP(PPTX::Logic::BldLst &bldLst, PPTX::Logic::BuildNode
     try {
         spid = std::stoi(bldP.spid);
     } catch (...) {
+        (void)0;
     }
     if (IsCorrectAnimationSpId(spid))
         bldLst.list.push_back(bnb);
@@ -402,11 +403,8 @@ void Timing_2010::FillCBhvr(CRecordTimeBehaviorContainer *pBhvr, PPTX::Logic::CB
         switch (prop->m_oHeader.RecInstance)
         {
         case TL_TBPID_RuntimeContext:
-            break;
         case TL_TBPID_MotionPathEditRelative:
-            break;
         case TL_TBPID_ColorColorModel:
-            break;
         case TL_TBPID_ColorDirection:
             break;
         case TL_TBPID_Override:
@@ -417,13 +415,9 @@ void Timing_2010::FillCBhvr(CRecordTimeBehaviorContainer *pBhvr, PPTX::Logic::CB
             break;
         }
         case TL_TBPID_PathEditRotationAngle:
-            break;
         case TL_TBPID_PathEditRotationX:
-            break;
         case TL_TBPID_PathEditRotationY:
-            break;
         case TL_TBPID_PointsTypes:
-            break;
         case TL_TBPID_UnknownPropertyList:
         default:
             break;
@@ -479,6 +473,8 @@ void Timing_2010::FillTgtEl(PPTX::Logic::TgtEl &tgtEl, CRecordClientVisualElemen
         case 3: chartBA = L"ptInSeries"; break;
         case 4: chartBA = L"ptInCategory"; break;
         case 5: chartBA = L"gridLegend"; break;
+        default:
+            break;
         }
         tgtEl.spTgt->type->set(chartBA);
         if (clientVisualElement.m_oVisualShapeAtom.m_nData2)
@@ -532,6 +528,8 @@ void Timing_2010::FillAnim(CRecordTimeAnimateBehaviorContainer *pTimeAnimateBeha
         case 0: calcmode = L"discrete"; break;
         case 1: calcmode = L"lin"; break;
         case 2: calcmode = L"fmla"; break;
+        default:
+            break;
         }
         oAnim.calcmode = new PPTX::Limit::TLCalcMode;
         oAnim.calcmode = calcmode;
@@ -568,7 +566,7 @@ void Timing_2010::FillAnim(CRecordTimeAnimateBehaviorContainer *pTimeAnimateBeha
         oAnim.from = pTimeAnimateBehavior->m_oVarFrom.m_Value;
     }
 
-    //// Writing childs
+    //// Writing children
 
     if (!pTimeAnimateBehavior->m_oAnimateValueList.m_arrEntry.empty())
         oAnim.tavLst = new PPTX::Logic::TavLst;
@@ -640,7 +638,7 @@ void Timing_2010::FillCTnRecursive(CRecordExtTimeNodeContainer *pETNC, PPTX::Log
     cTNLevel--;
 }
 
-bool Timing_2010::CheckAnimation5Level(const CRecordExtTimeNodeContainer *pETNC, const PPTX::Logic::CTn &oCTn)
+bool Timing_2010::CheckAnimation5Level(const CRecordExtTimeNodeContainer *pETNC, const PPTX::Logic::CTn & /*oCTn*/)
 {
     auto anim_2010 = Intermediate::ParseExisting5Level_ETNC(pETNC);
     bool isSlideShape = CheckSlideSpid(anim_2010.spid);
@@ -661,7 +659,7 @@ bool Timing_2010::IsSlideSpId(_INT32 spid) const
     return slideAnim.realShapesIds.find(spid) != slideAnim.realShapesIds.end();
 }
 
-bool Timing_2010::CheckMainSeqSyncWithAnim95(_INT32 spid) const
+bool Timing_2010::CheckMainSeqSyncWithAnim95(_INT32  /*spid*/) const
 {
     if (!isMainSeq)
         return true;
@@ -682,7 +680,7 @@ void Timing_2010::InsertAnimationSpId(_INT32 spid)
 
 void Timing_2010::ConvertChildTnLst(CRecordExtTimeNodeContainer *pETNC, PPTX::Logic::CTn &oCTn)
 {
-    if (oCTn.childTnLst.IsInit() == false)
+    if (!oCTn.childTnLst.IsInit())
         oCTn.childTnLst = new PPTX::Logic::ChildTnLst;
 
     for (size_t i = 0; i < pETNC->m_arrRgExtTimeNodeChildren.size(); i++)
@@ -808,6 +806,8 @@ void Timing_2010::ConvertCTnSubTnLst(CRecordExtTimeNodeContainer *pETNC, PPTX::L
             break;
         }
 
+        default:
+            break;
         }
     }
 }
@@ -874,9 +874,6 @@ void Timing_2010::FillStCondLst(const std::vector<CRecordTimeConditionContainer 
 {
     for (const auto& pCond : timeCondCont)
     {
-        int target = -1;
-        if (pCond->m_oVisualElement.m_bVisualShapeAtom)
-            target = pCond->m_oVisualElement.m_oVisualShapeAtom.m_nObjectIdRef;
 
         PPTX::Logic::Cond cond;
         FillCond(pCond, cond);
@@ -899,7 +896,7 @@ void Timing_2010::FillSubTnLst(std::vector<CRecordSubEffectContainer *> &vecSEC,
             oSubTnLst.list.push_back(TNB);
 
             // Write endCondLst
-            if (pSEC->m_arrRgEndTimeCondition.empty() == false)
+            if (!pSEC->m_arrRgEndTimeCondition.empty())
             {
                 audio->cMediaNode.cTn.endCondLst = new PPTX::Logic::CondLst;
                 audio->cMediaNode.cTn.endCondLst->node_name = L"endCondLst";
@@ -908,7 +905,7 @@ void Timing_2010::FillSubTnLst(std::vector<CRecordSubEffectContainer *> &vecSEC,
                         audio->cMediaNode.cTn.endCondLst.get2());
 
             // Write stCondLst
-            if (pSEC->m_arrRgBeginTimeCondition.empty() == false)
+            if (!pSEC->m_arrRgBeginTimeCondition.empty())
             {
                 audio->cMediaNode.cTn.stCondLst = new PPTX::Logic::CondLst;
                 audio->cMediaNode.cTn.stCondLst->node_name = L"stCondLst";
@@ -1057,6 +1054,8 @@ void Timing_2010::FillCTnProps(CRecordTimePropertyList4TimeNodeContainer *pProp,
             case 4: presetClass = L"path";      break;
             case 5: presetClass = L"verb";      break;
             case 6: presetClass = L"mediacall"; break;
+            default:
+                break;
             }
             if (!presetClass.empty())
             {
@@ -1067,7 +1066,7 @@ void Timing_2010::FillCTnProps(CRecordTimePropertyList4TimeNodeContainer *pProp,
         }
         case TL_TPID_AfterEffect:
         {
-            oCTn.afterEffect = (bool)dynamic_cast<CRecordTimeAfterEffect*>(pRec)->m_Value;
+            oCTn.afterEffect = dynamic_cast<CRecordTimeAfterEffect*>(pRec)->m_Value;
             break;
         }
         case TL_TPID_SlideCount:		break;
@@ -1103,6 +1102,8 @@ void Timing_2010::FillCTnProps(CRecordTimePropertyList4TimeNodeContainer *pProp,
             case 7: nodeType = L"withGroup"; break;
             case 8: nodeType = L"afterGroup"; break;
             case 9: nodeType = L"tmRoot"; break;
+            default:
+                break;
             }
             if (!nodeType.empty())
             {
@@ -1114,15 +1115,12 @@ void Timing_2010::FillCTnProps(CRecordTimePropertyList4TimeNodeContainer *pProp,
         }
         case TL_TPID_PlaceholderNode:
         {
-            oCTn.nodePh = (bool)dynamic_cast<CRecordTimePlaceholderNode*>(pRec)->m_Value;
+            oCTn.nodePh = dynamic_cast<CRecordTimePlaceholderNode*>(pRec)->m_Value;
             break;
         }
         case TL_TPID_MediaVolume:
-            break;
         case TL_TPID_MediaMute:
-            break;
         case TL_TPID_ZoomToFullScreen:
-            break;
         default :
             break;
         }
@@ -1163,7 +1161,7 @@ void Timing_2010::FillCTnHeadArgs(CRecordExtTimeNodeContainer *pETNC, PPTX::Logi
     if (!pETNC->m_haveSequenceAtom)
     {
         // Write stCondLst
-        if (pETNC->m_arrRgBeginTimeCondition.empty() == false)
+        if (!pETNC->m_arrRgBeginTimeCondition.empty())
         {
             oCTn.stCondLst = new PPTX::Logic::CondLst;
             oCTn.stCondLst->node_name = L"stCondLst";
@@ -1177,7 +1175,7 @@ void Timing_2010::FillCTnHeadArgs(CRecordExtTimeNodeContainer *pETNC, PPTX::Logi
 
 
         // Write endCondLst
-        if (pETNC->m_arrRgEndTimeCondition.empty() == false)
+        if (!pETNC->m_arrRgEndTimeCondition.empty())
         {
             oCTn.endCondLst = new PPTX::Logic::CondLst;
             oCTn.endCondLst->node_name = L"endCondLst";
@@ -1239,7 +1237,7 @@ void Timing_2010::FillAnimClr(
 
     if (clrAtom.m_fFromPropertyUsed)
     {
-        oAnimClr.from = *new PPTX::Logic::UniColor;
+        oAnimClr.from = PPTX::Logic::UniColor();
         if (clrAtom.m_sColorFrom.model == 0)
         {
             auto pSrgb = new PPTX::Logic::SrgbClr;
@@ -1264,7 +1262,7 @@ void Timing_2010::FillAnimClr(
 
     if (clrAtom.m_fToPropertyUsed)
     {
-        oAnimClr.to = *new PPTX::Logic::UniColor;
+        oAnimClr.to = PPTX::Logic::UniColor();
         if (clrAtom.m_sColorTo.model == 0)
         {
             auto pSrgb = new PPTX::Logic::SrgbClr;
@@ -1444,7 +1442,7 @@ void Timing_2010::FillVideo(
                     (pETNC->m_pTimePropertyList->m_arrElements[4])->
                     m_Value;
         } catch (...) {
-
+            (void)0;
         }
     }
 

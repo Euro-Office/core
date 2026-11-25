@@ -35,8 +35,8 @@ namespace oox {
     
 
 xlsx_conversion_context::xlsx_conversion_context( package::xlsx_document * outputDocument)	: output_document_(outputDocument),
-	next_vml_file_id_				( 1 ),
 	sheet_context_					( *this ), 
+	next_vml_file_id_				( 1 ),
 	xlsx_drawing_context_handle_	( next_vml_file_id_, get_mediaitems())
 {
 }
@@ -374,7 +374,7 @@ void xlsx_conversion_context::end_document()
 
 			std::wstring str_bookViews = xlsx_workbook_views_.str();
 
-			if (false == str_bookViews.empty())
+			if (!str_bookViews.empty())
 			{
 				CP_XML_NODE(L"bookViews")
 				{
@@ -385,7 +385,7 @@ void xlsx_conversion_context::end_document()
             {
                 CP_XML_STREAM() << workbook_content.str();
             }
-			if (externals_.empty() == false)
+			if (!externals_.empty())
 			{
 				CP_XML_NODE(L"externalReferences")
 				{
@@ -428,8 +428,6 @@ void xlsx_conversion_context::end_document()
 					for (int i = 0; i < pivot_cache_count; i++)
 					{
 						std::wstring				rId		= L"pcId" + std::to_wstring(i+1);
-						static const std::wstring	sType	= L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/pivotCacheDefinition"; 
-						const std::wstring			sName	= std::wstring(L"../pivotCache/pivotCacheDefinition" + std::to_wstring(i + 1) + L".xml");
 						
 						package::pivot_cache_content_ptr content = package::pivot_cache_content::create();
 						

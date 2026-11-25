@@ -370,6 +370,16 @@ void docProps_files::write(const std::wstring & RootPath)
 
 	if (custom_) custom_->write(path);
 }
+void document::set_doc_props(const std::wstring & Core, const std::wstring & Custom)
+{
+	docProps_files_.set_core(simple_element::create(L"core.xml", Core));
+
+	if (Custom.empty()) return;
+
+	docProps_files_.set_custom(simple_element::create(L"custom.xml", Custom));
+	get_content_types_file().content()->add_override(L"/docProps/custom.xml", L"application/vnd.openxmlformats-officedocument.custom-properties+xml");
+	rels_files_.add(relationship(L"rCstmId", L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/custom-properties", L"docProps/custom.xml"));
+}
 //---------------------------------------------------------------------------------------------------
 media::media(mediaitems_ptr & _mediaitems, NSFonts::IApplicationFonts *pAppFonts) : mediaItems_(_mediaitems), appFonts_(pAppFonts)
 {    

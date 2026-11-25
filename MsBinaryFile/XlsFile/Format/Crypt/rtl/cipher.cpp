@@ -34,7 +34,9 @@ CipherARCFOUR::CipherARCFOUR()
 
 CipherARCFOUR::rtlCipherError CipherARCFOUR::Init(CipherARCFOUR::rtlCipherDirection Direction, const unsigned char *pKeyData, const size_t nKeyLen, const unsigned char *pArgData, const size_t nArgLen)
 {
-	if (pKeyData == NULL)
+	(void)pArgData;
+	(void)nArgLen;
+	if (pKeyData == nullptr)
 	{
 		return rtl_Cipher_E_Argument;
 	}
@@ -111,10 +113,10 @@ CipherARCFOUR::rtlCipherError CipherARCFOUR::Update(const unsigned char *pData, 
 	size_t k;
 
 	/* Check arguments. */
-	if ((pData == NULL) || (pBuffer == NULL))
+	if ((pData == nullptr) || (pBuffer == nullptr))
 		return rtl_Cipher_E_Argument;
 
-	if (!((0 < nDatLen) && (nDatLen <= nBufLen)))
+	if ((0 >= nDatLen) || (nDatLen > nBufLen))
 		return rtl_Cipher_E_BufferSize;
 
 	/* Update. */

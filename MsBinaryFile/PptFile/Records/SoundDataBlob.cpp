@@ -28,7 +28,7 @@ using namespace PPT;
 
 CRecordSoundDataBlob::CRecordSoundDataBlob()
 {
-    m_pData = NULL;
+    m_pData = nullptr;
     m_lSize = 0;
 }
 
@@ -56,13 +56,13 @@ void CRecordSoundDataBlob::ReleaseData()
 
 void CRecordSoundDataBlob::SaveToFile(std::wstring strFile)
 {
-    if ((NULL == m_pData) || (0 >= m_lSize))
+    if ((nullptr == m_pData) || (0 >= m_lSize))
         return;
 
     NSFile::CFileBinary oFile;
     oFile.CreateFileW(strFile);
 
-    oFile.WriteFile((BYTE*)m_pData, (DWORD)m_lSize);
+    oFile.WriteFile(m_pData, (DWORD)m_lSize);
     oFile.CloseFile();
 
     ReleaseData();

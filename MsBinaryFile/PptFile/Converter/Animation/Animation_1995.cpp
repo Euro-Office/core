@@ -365,6 +365,8 @@ void Animation_1995::ConvertFlyIn(PPTX::Logic::ChildTnLst& oParent, PPT::Interme
         presetSub = 6;
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -388,6 +390,8 @@ void Animation_1995::ConvertBlinds(PPTX::Logic::ChildTnLst& oParent, PPT::Interm
         presetSub = 10;
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -411,6 +415,8 @@ void Animation_1995::ConvertShape(PPTX::Logic::ChildTnLst& oParent, PPT::Interme
         presetSub = 16;
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -462,6 +468,8 @@ void Animation_1995::ConvertCrawlIn(PPTX::Logic::ChildTnLst& oParent, PPT::Inter
         presetSub = 1;
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -527,6 +535,8 @@ void Animation_1995::ConvertPeekIn(PPTX::Logic::ChildTnLst& oParent, PPT::Interm
         presetSub = 1;
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -550,6 +560,8 @@ void Animation_1995::ConvertRandomBars(PPTX::Logic::ChildTnLst& oParent, PPT::In
         presetSub = 5;
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -610,6 +622,8 @@ void Animation_1995::ConvertSplit(PPTX::Logic::ChildTnLst& oParent, PPT::Interme
         presetSub = 21;
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -676,6 +690,8 @@ void Animation_1995::ConvertStretch(PPTX::Logic::ChildTnLst& oParent, PPT::Inter
         presetSub = 1;
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -713,6 +729,8 @@ void Animation_1995::ConvertStrips(PPTX::Logic::ChildTnLst& oParent, PPT::Interm
         presetSub = 3;
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -761,6 +779,8 @@ void Animation_1995::ConvertWipe(PPTX::Logic::ChildTnLst& oParent, PPT::Intermed
         presetSub = 4;
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -785,8 +805,8 @@ void Animation_1995::ConvertBasicZoom(PPTX::Logic::ChildTnLst& oParent, PPT::Int
                  L"ppt_w", double(0), L"#ppt_w",
                  L"ppt_h", double(0), L"#ppt_h");
         PushAnim(oParent, pOldAnim, 500,
-                 L"ppt_x", double(0.5), L"#ppt_x",
-                 L"ppt_y", double(0.5), L"#ppt_y");
+                 L"ppt_x", 0.5, L"#ppt_x",
+                 L"ppt_y", 0.5, L"#ppt_y");
 
         presetSub = 528;
         break;
@@ -815,7 +835,7 @@ void Animation_1995::ConvertBasicZoom(PPTX::Logic::ChildTnLst& oParent, PPT::Int
                  L"ppt_w", L"(6*min(max(#ppt_w*#ppt_h,.3),1)-7.4)/-.7*#ppt_w", L"#ppt_w",
                  L"ppt_h", L"(6*min(max(#ppt_w*#ppt_h,.3),1)-7.4)/-.7*#ppt_h", L"#ppt_h");
         PushAnim(oParent, pOldAnim, 500,
-                 L"ppt_x", double(0.5), L"#ppt_x",
+                 L"ppt_x", 0.5, L"#ppt_x",
                  L"ppt_y", L"1+(6*min(max(#ppt_w*#ppt_h,.3),1)-7.4)/-.7*#ppt_h/2", L"#ppt_y");
 
         presetSub = 36;
@@ -830,6 +850,8 @@ void Animation_1995::ConvertBasicZoom(PPTX::Logic::ChildTnLst& oParent, PPT::Int
         presetSub = 288;
         break;
     }
+    default:
+        break;
     }
 }
 
@@ -851,7 +873,7 @@ void Animation_1995::ConvertRandomEffect(PPTX::Logic::ChildTnLst& oParent, PPT::
     oParent.list.push_back(childTimeNode);
 }
 
-void Animation_1995::PushAnim(PPTX::Logic::ChildTnLst& oParent, PPT::Intermediate::SOldAnimation *pOldAnim, int dur,
+void Animation_1995::PushAnim(PPTX::Logic::ChildTnLst& oParent, PPT::Intermediate::SOldAnimation *pOldAnim, int  /*dur*/,
                               std::wstring attrname1, PPT::Intermediate::SValue val1, PPT::Intermediate::SValue val2,
                               std::wstring attrname2, PPT::Intermediate::SValue val3, PPT::Intermediate::SValue val4, std::wstring fmla1, std::wstring fmla2)
 {
