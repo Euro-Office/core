@@ -8,6 +8,7 @@
 #include "common.h"
 
 #include <string>
+#include <utility>
 
 namespace
 {
@@ -140,15 +141,34 @@ TEST(DocxToOdt, TableStartingWithNestedTableGetsItsPageBreak)
 	EXPECT_FALSE(has_page_break(nested)) << nested;
 }
 
-// Table 5 starts its first cell with a floating nested table: it does not start the text of the cell, so table 5
-// gets no break and NESTFLOAT keeps its own.
-TEST(DocxToOdt, TableStartingWithFloatingTableGetsNoPageBreak)
+// Table 5 starts its first cell with a floating nested table whose first paragraph NESTFLOAT has w:pageBreakBefore.
+// LibreOffice puts that break on the paragraph the floating table is anchored to, the first paragraph of table 5, and
+// from there on table 5; NESTFLOAT loses it.
+TEST(DocxToOdt, TableStartingWithFloatingTableGetsItsPageBreak)
 {
 	const std::wstring content = convert_fixture();
 	ASSERT_FALSE(content.empty()) << "DOCX -> ODT conversion failed";
 
 	const std::wstring outer = table_style_after(content, L"BEFORE5");
 	ASSERT_FALSE(outer.empty()) << "table 5 has no style";
-	EXPECT_FALSE(has_page_break(outer)) << outer;
-	EXPECT_TRUE(has_page_break(paragraph_style(content, L"NESTFLOAT")));
+	EXPECT_TRUE(has_page_break(outer)) << outer;
+	EXPECT_FALSE(has_page_break(paragraph_style(content, L"NESTFLOAT")));
+}
+
+// Tables 6-8 start with a bookmark in the first cell (BM6), a bookmark before the first row (TBM7) and a content
+// control around the first paragraph (SDT8). None of them is content, so the paragraph after it starts the table and
+// its break goes on the table.
+TEST(DocxToOdt, TableStartingWithMarkerOrContentControlGetsItsPageBreak)
+{
+	const std::wstring content = convert_fixture();
+	ASSERT_FALSE(content.empty()) << "DOCX -> ODT conversion failed";
+
+	for (const auto& [before, first] : {std::pair<std::wstring, std::wstring>{L"BEFORE6", L"BM6"},
+		 {L"BEFORE7", L"TBM7"}, {L"BEFORE8", L"SDT8"}})
+	{
+		const std::wstring table = table_style_after(content, before);
+		ASSERT_FALSE(table.empty()) << "no table style after " << std::string(before.begin(), before.end());
+		EXPECT_TRUE(has_page_break(table)) << table;
+		EXPECT_FALSE(has_page_break(paragraph_style(content, first))) << std::string(first.begin(), first.end());
+	}
 }

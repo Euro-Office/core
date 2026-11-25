@@ -4786,20 +4786,53 @@ bool DocxConverter::in_table()
 {
 	return odt_context->table_context()->depth() > tables_around_hdr_ftr;
 }
-// First child of a table, row or cell that is not one of its property elements.
+// Range markers (bookmarks, permissions, comments, moves, proofing marks) hold no content of their own: a table, row or
+// cell that starts with one still starts with what follows it.
+static bool is_range_marker(OOX::EElementType type)
+{
+	switch (type)
+	{
+	case OOX::et_w_bookmarkStart: case OOX::et_w_bookmarkEnd:
+	case OOX::et_w_permStart: case OOX::et_w_permEnd:
+	case OOX::et_w_proofErr:
+	case OOX::et_w_commentRangeStart: case OOX::et_w_commentRangeEnd:
+	case OOX::et_w_moveFromRangeStart: case OOX::et_w_moveFromRangeEnd:
+	case OOX::et_w_moveToRangeStart: case OOX::et_w_moveToRangeEnd:
+	case OOX::et_w_customXmlDelRangeStart: case OOX::et_w_customXmlDelRangeEnd:
+	case OOX::et_w_customXmlInsRangeStart: case OOX::et_w_customXmlInsRangeEnd:
+	case OOX::et_w_customXmlMoveFromRangeStart: case OOX::et_w_customXmlMoveFromRangeEnd:
+	case OOX::et_w_customXmlMoveToRangeStart: case OOX::et_w_customXmlMoveToRangeEnd:
+		return true;
+	default:
+		return false;
+	}
+}
+// First child of a table, row or cell that is not one of its property elements or a range marker. A content control
+// (w:sdt) around rows, cells or paragraphs is looked into: its first content item is the first item.
 static OOX::WritingElement* first_content_item(const std::vector<OOX::WritingElement*>& items,
 	OOX::EElementType property_type, OOX::EElementType property_type_ex = OOX::et_Unknown)
 {
 	for (OOX::WritingElement* item : items)
 	{
-		if (item && item->getType() != property_type && item->getType() != property_type_ex)
-			return item;
+		if (item == nullptr) continue;
+		const OOX::EElementType type = item->getType();
+		if (type == property_type || type == property_type_ex || is_range_marker(type)) continue;
+		if (type == OOX::et_w_sdt)
+		{
+			OOX::Logic::CSdt* sdt = dynamic_cast<OOX::Logic::CSdt*>(item);
+			OOX::WritingElement* first = sdt && sdt->m_oSdtContent.IsInit()
+				? first_content_item(sdt->m_oSdtContent->m_arrItems, OOX::et_Unknown) : nullptr;
+			if (first == nullptr) continue; // an empty content control adds no content
+			return first;
+		}
+		return item;
 	}
 	return nullptr;
 }
 // w:pPr of the paragraph a table starts with (the first one of its first cell) if it has w:pageBreakBefore. When the
-// first cell starts with a nested table that is not floating, that table's first paragraph counts: LibreOffice moves
-// the break of such a nested table on to the outer table as well.
+// first cell starts with a nested table, that table's first paragraph counts: LibreOffice moves the break of such a
+// nested table on to the outer table as well, also for a floating one (its break goes to the anchor paragraph,
+// which is the first paragraph of the outer cell).
 static OOX::Logic::CParagraphProperty* first_cell_page_break_before(OOX::Logic::CTbl* oox_table)
 {
 	while (oox_table)
@@ -4814,8 +4847,6 @@ static OOX::Logic::CParagraphProperty* first_cell_page_break_before(OOX::Logic::
 		OOX::WritingElement* first = first_content_item(cell->m_arrItems, OOX::et_w_tcPr);
 		if (OOX::Logic::CTbl* nested = dynamic_cast<OOX::Logic::CTbl*>(first))
 		{
-			if (nested->m_oTableProperties && nested->m_oTableProperties->m_oTblpPr.IsInit())
-				return nullptr; // a floating table does not start the text of the cell
 			oox_table = nested;
 			continue;
 		}
