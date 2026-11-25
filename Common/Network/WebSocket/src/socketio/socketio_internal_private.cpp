@@ -88,6 +88,15 @@ namespace NSNetwork
                 { m_base->listener->onError(""); }
             });
 
+            // DNS, TCP and TLS failures arrive here; set_fail_listener only
+            // fires once reconnect attempts are exhausted.
+            m_socket->set_error_listener([this](const std::string& reason) {
+                CTemporaryCS oCS(&m_oCS_Events);
+                m_connecting_in_process = false;
+                if (!m_closing_in_progress)
+                { m_base->listener->onError(reason); }
+            });
+
             m_socket->set_reconnecting_listener([this]() {
                 CTemporaryCS oCS(&m_oCS_Events);
                 m_connecting_in_process = true;
@@ -128,7 +137,13 @@ namespace NSNetwork
             {
                 try
                 {
-                    m_ns_socket->emit("message", sioxx::json::parse(message_str));
+                    sioxx::json parsed = sioxx::json::parse(message_str);
+                    // sioxx unpacks a top-level array as separate emit() arguments;
+                    // wrap it so the receiver always gets a single payload.
+                    if (parsed.is_array())
+                    { m_ns_socket->emit("message", sioxx::json::array({std::move(parsed)})); }
+                    else
+                    { m_ns_socket->emit("message", std::move(parsed)); }
                     return;
                 }
                 catch (const sioxx::json::exception&) {}
@@ -154,6 +169,8 @@ namespace NSNetwork
 
         void CIOWebSocket_private_tls::setReconnectInfo(const int& attemtCount, const int& delay, const int& delayMax)
         {
+            // sioxx copies options into the client at connect() time, so these
+            // values only take effect on the next open() call.
             m_reconnect_attempts  = attemtCount;
             m_reconnect_delay     = std::chrono::milliseconds(delay);
             m_reconnect_delay_max = std::chrono::milliseconds(delayMax);

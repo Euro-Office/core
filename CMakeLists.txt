@@ -85,6 +85,7 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test/jbig2" pdf_jbig2_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DjVuFile/test" djvu_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/osign/test" osign_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/Common/Network/tests" kernel_network_socketio_url_test )
     endif()
 
 endif()

@@ -34,6 +34,13 @@ TEST(SplitUrl, NoPathFallsBackToSocketIoDefault)
     EXPECT_EQ(path, "/socket.io/");
 }
 
+TEST(SplitUrl, RootPathFallsBackToSocketIoDefault)
+{
+    auto [base, path] = split_url("https://example.com/");
+    EXPECT_EQ(base, "https://example.com");
+    EXPECT_EQ(path, "/socket.io/");
+}
+
 TEST(SplitUrl, NoSchemeReturnedAsBase)
 {
     auto [base, path] = split_url("notaurl");

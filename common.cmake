@@ -396,11 +396,6 @@ else()
     set(SIOXX_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/sioxx")
     get_filename_component(SIOXX_INSTALL_DIR_ABS "${SIOXX_INSTALL_DIR}" ABSOLUTE)
     list( APPEND CMAKE_PREFIX_PATH "${SIOXX_INSTALL_DIR_ABS}" )
-    if( MSVC )
-        set(SIOXX_LIB "${SIOXX_INSTALL_DIR_ABS}/lib/sioxx.lib")
-    else()
-        set(SIOXX_LIB "${SIOXX_INSTALL_DIR_ABS}/lib/libsioxx.a")
-    endif()
 
     # Setup zlib-ng
     set(ZLIBNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/zlib-ng")

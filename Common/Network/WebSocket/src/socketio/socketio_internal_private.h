@@ -31,6 +31,7 @@
 #include "socketio_internal.h"
 #include "url_utils.h"
 #include <chrono>
+#include <limits>
 #include <memory>
 #include <sioxx/sioxx.hpp>
 #include "DesktopEditor/graphics/TemporaryCS.h"
@@ -46,7 +47,7 @@ namespace NSNetwork
             std::shared_ptr<sioxx::socket> m_ns_socket;
             bool m_connecting_in_process{false};
             bool m_closing_in_progress{false};
-            int  m_reconnect_attempts{0};
+            int  m_reconnect_attempts{std::numeric_limits<int>::max()};
             std::chrono::milliseconds m_reconnect_delay{2000};
             std::chrono::milliseconds m_reconnect_delay_max{30000};
 

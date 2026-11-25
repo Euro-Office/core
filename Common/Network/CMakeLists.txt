@@ -118,10 +118,4 @@ endif()
 
 copy_artifacts_to_folder("kernel_network" "${EO_CORE_OUTPUT_DIR}")
 
-option(EO_BUILD_TESTS "Build unit tests" OFF)
-if(EO_BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(tests)
-endif()
-
 declare_victory( kernel_network )

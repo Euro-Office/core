@@ -36,7 +36,6 @@ subfolders = [
     'openssl-hash',
     'openssl',
     'qt',
-    'socketio',
     'nlohmann_json',
     'sioxx',
     'v8',

@@ -14,6 +14,7 @@ namespace NSNetwork
         // "http://host:8080/doc/"  → {"http://host:8080", "/doc/"}
         // "https://host/doc/"     → {"https://host",      "/doc/"}
         // "http://host"           → {"http://host",        "/socket.io/"}
+        // "http://host/"          → {"http://host",        "/socket.io/"}
         // "badurl"                → {"badurl",             "/socket.io/"}
         //
         // The path is used as the Engine.IO endpoint (client_options::engineio_path).
@@ -26,7 +27,10 @@ namespace NSNetwork
             const auto path_start = url.find('/', scheme_end + 3);
             if (path_start == std::string::npos)
             { return {url, "/socket.io/"}; }
-            return {url.substr(0, path_start), url.substr(path_start)};
+            const auto path = url.substr(path_start);
+            if (path == "/")
+            { return {url.substr(0, path_start), "/socket.io/"}; }
+            return {url.substr(0, path_start), path};
         }
     }
 }
