@@ -57,7 +57,7 @@ JSSmart<CJSValue> CBuilderEmbed::SetTmpFolder(JSSmart<CJSValue> path)
 {
 	std::wstring sPath = path->toStringW();
 	m_pBuilder->SetTmpFolder(sPath.c_str());
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CBuilderEmbed::SaveFile(JSSmart<CJSValue> type, JSSmart<CJSValue> path, JSSmart<CJSValue> params)
@@ -70,7 +70,7 @@ JSSmart<CJSValue> CBuilderEmbed::SaveFile(JSSmart<CJSValue> type, JSSmart<CJSVal
 
 	std::wstring sPath = path->toStringW();
 	std::wstring sParams = params->toStringW();
-	int ret = GetPrivate()->SaveFile(nFormat, sPath.c_str(), sParams.empty() ? NULL : sParams.c_str(), false);
+	int ret = GetPrivate()->SaveFile(nFormat, sPath.c_str(), sParams.empty() ? nullptr : sParams.c_str(), false);
 	return CJSContext::createInt(ret);
 }
 
@@ -78,7 +78,7 @@ JSSmart<CJSValue> CBuilderEmbed::CloseFile()
 {
 	std::cout << "Warning: use builderJS.CloseFile(); separately!";
 	m_pBuilder->GetPrivate()->CloseFile(false);
-	return NULL;
+	return nullptr;
 }
 
 JSSmart<CJSValue> CBuilderEmbed::OpenTmpFile(JSSmart<CJSValue> path, JSSmart<CJSValue> params)
