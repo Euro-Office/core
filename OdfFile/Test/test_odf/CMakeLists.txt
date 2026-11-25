@@ -121,6 +121,8 @@ add_core_gtest(
             odt2docx_chapter_field.cpp
             odt2docx_database_display.cpp
             odt2docx_note_body_whitespace.cpp
+            xlsx2ods_default_cell_style.cpp
+            ods2xlsx_default_cell_style_font.cpp
             ods2xlsx_fill_character.cpp
             ods2xlsx_cell_ruby.cpp
             ods_formula_function_names.cpp

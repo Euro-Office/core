@@ -477,6 +477,14 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/default_cell_style_with_font.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/default_cell_style_without_font.xlsx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_edge.xlsx",
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_rules.xlsx",
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_x14.xlsx",

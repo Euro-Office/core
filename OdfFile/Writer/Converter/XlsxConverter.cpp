@@ -2958,6 +2958,13 @@ void XlsxConverter::convert(OOX::Spreadsheet::CXfs * xfc_style, int oox_id, bool
 	int numFmt_id	= xfc_style->m_oNumFmtId.IsInit()	? xfc_style->m_oNumFmtId->GetValue(): -1; 
 	int font_id		= xfc_style->m_oFontId.IsInit()		? xfc_style->m_oFontId->GetValue()	: -1;
 	int border_id	= xfc_style->m_oBorderId.IsInit()	? xfc_style->m_oBorderId->GetValue(): -1;
+
+	// The cell style that uses the first cell style format (named "Default" in
+	// x2t's own XLSX, usually "Normal" in Excel files) is also the columns' default
+	// cell style. Excel reads a missing fontId as the workbook's first font (font 0);
+	// do the same, otherwise that style has no font at all.
+	if (root && oox_id == 0 && font_id < 0)
+		font_id = 0;
 		
 	ods_context->styles_context()->create_style(L"", odf_types::style_family::TableCell, automatic, root, oox_id); 
 	
