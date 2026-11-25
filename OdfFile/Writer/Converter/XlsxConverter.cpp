@@ -819,7 +819,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_t
 	}
 
 	// Not written yet, and a refresh would drop them: label, value and date filters, a sort order of a field on an axis,
-	// subtotals other than the automatic ones, and the "show values as" kinds kept in a data field's extension list
+	// custom subtotal functions, and the "show values as" kinds kept in a data field's extension list
 	// (x14:dataField pivotShowAs). Such a pivot table is not written; its cells keep their values.
 	if (oox_pivot_table->m_bHasFilters) return;
 	for (size_t i = 0; i < pivot_fields.size() && i < field_on_axis.size(); i++)
@@ -827,7 +827,6 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_t
 		const OOX::Spreadsheet::CPivotField *field = pivot_fields[i];
 		if (!field || !field_on_axis[i]) continue;
 		if (field->m_oSortType.IsInit() && field->m_oSortType->GetValue() != SimpleTypes::Spreadsheet::sortManual) return;
-		if (field->m_oDefaultSubtotal.IsInit() && !*field->m_oDefaultSubtotal) return;
 		for (const NSCommon::nullable_bool *subtotal : {&field->m_oSumSubtotal, &field->m_oCountASubtotal, &field->m_oAvgSubtotal,
 											  &field->m_oMaxSubtotal, &field->m_oMinSubtotal, &field->m_oProductSubtotal,
 											  &field->m_oCountSubtotal, &field->m_oStdDevSubtotal, &field->m_oStdDevPSubtotal,
@@ -979,13 +978,32 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_t
 			field->loext_ignore_selected_page_ = odf_types::Bool(true);
 		}
 
-		// Items hidden by a filter, or not the selected page: table:data-pilot-member with table:display="false".
 		OOX::Spreadsheet::CPivotField *pivot_field =
 			(!data_layout && !data_field && static_cast<size_t>(index) < pivot_fields.size()) ? pivot_fields[index] : NULL;
+		// Excel's automatic subtotals (defaultSubtotal, true unless written as "0") as table:function="auto", as LibreOffice
+		// imports them: without table:data-pilot-subtotals LibreOffice shows no subtotals after a refresh. Custom subtotal
+		// functions skip the whole table (see above).
+		odf_writer::office_element_ptr subtotals_elm;
+		if (pivot_field && (orientation == odf_types::table_orientation::row || orientation == odf_types::table_orientation::column) &&
+			(!pivot_field->m_oDefaultSubtotal.IsInit() || *pivot_field->m_oDefaultSubtotal))
+		{
+			odf_writer::office_element_ptr subtotal_elm;
+			odf_writer::create_element(L"table", L"data-pilot-subtotals", subtotals_elm, ods_context);
+			odf_writer::create_element(L"table", L"data-pilot-subtotal", subtotal_elm, ods_context);
+			odf_writer::table_data_pilot_subtotal *subtotal = dynamic_cast<odf_writer::table_data_pilot_subtotal*>(subtotal_elm.get());
+			if (subtotals_elm && subtotal)
+			{
+				subtotal->table_function_ = odf_types::table_function(odf_types::table_function::Auto);
+				subtotals_elm->add_child_element(subtotal_elm);
+			}
+			else
+				subtotals_elm.reset();
+		}
+		odf_writer::office_element_ptr members_elm;
+		// Items hidden by a filter, or not the selected page: table:data-pilot-member with table:display="false".
 		// With grouped items the item indexes point into the group items, not the shared items: no members.
 		if (pivot_field && pivot_field->m_oItems.IsInit() && !(cache_field && cache_field->m_oFieldGroup.IsInit()))
 		{
-			odf_writer::office_element_ptr members_elm;
 			for (OOX::Spreadsheet::CFieldItem *item : pivot_field->m_oItems->m_arrItems)
 			{
 				std::wstring name;
@@ -1006,15 +1024,16 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_t
 				member->table_show_details_ = odf_types::Bool(true);
 				members_elm->add_child_element(member_elm);
 			}
-			if (members_elm)
+		}
+		if (subtotals_elm || members_elm)
+		{
+			odf_writer::office_element_ptr level_elm;
+			odf_writer::create_element(L"table", L"data-pilot-level", level_elm, ods_context);
+			if (level_elm)
 			{
-				odf_writer::office_element_ptr level_elm;
-				odf_writer::create_element(L"table", L"data-pilot-level", level_elm, ods_context);
-				if (level_elm)
-				{
-					level_elm->add_child_element(members_elm);
-					field_elm->add_child_element(level_elm);
-				}
+				level_elm->add_child_element(subtotals_elm);
+				level_elm->add_child_element(members_elm);
+				field_elm->add_child_element(level_elm);
 			}
 		}
 		if (data_layout)

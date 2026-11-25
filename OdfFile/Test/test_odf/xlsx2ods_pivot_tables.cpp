@@ -401,18 +401,61 @@ TEST(XlsxToOds, PivotTableSourceIsATable)
 }
 
 // What the converter does not write yet would be dropped by a refresh: label,
-// value and date filters, the sort order of a field, subtotals other than the
-// automatic ones, and the "show values as" kinds that only the extension list
+// value and date filters, the sort order of a field, custom subtotal
+// functions, and the "show values as" kinds that only the extension list
 // holds. Such a pivot table is not written (its cells keep their values); the
 // defaults written out do not count.
 TEST(XlsxToOds, PivotTableUnwrittenOptionsSkipTheTable)
 {
 	ASSERT_TRUE(is_well_formed(review_content()));
-	for (const wchar_t* name : {L"Filtered", L"Sorted", L"NoSubtotals", L"CustomSubtotal", L"ShowAsExt"})
+	for (const wchar_t* name : {L"Filtered", L"Sorted", L"CustomSubtotal", L"ShowAsExt"})
 		EXPECT_TRUE(pilot_table(name, review_content()).empty()) << name << ": " << pilot_table(name, review_content());
 
 	const std::wstring table = pilot_table(L"SortManual", review_content());
 	ASSERT_FALSE(table.empty());
 	EXPECT_EQ(fields_of(table, L"Region", L"row").size(), 1u) << table;
 	EXPECT_EQ(fields_of(table, L"Product", L"row").size(), 1u) << table;
+}
+
+// Excel's automatic subtotals of a row or column field become
+// table:function="auto" (LibreOffice shows no subtotals without
+// table:data-pilot-subtotals); defaultSubtotal="0" writes none. Page, hidden
+// and data fields get none.
+TEST(XlsxToOds, PivotTableAutomaticSubtotals)
+{
+	const std::wstring automatic = L"<table:data-pilot-subtotals><table:data-pilot-subtotal table:function=\"auto\"/></table:data-pilot-subtotals>";
+
+	const std::wstring manual = pilot_table(L"SortManual", review_content());
+	ASSERT_FALSE(manual.empty());
+	for (const wchar_t* name : {L"Region", L"Product"})
+	{
+		const std::vector<Field> field = fields_of(manual, name, L"row");
+		ASSERT_EQ(field.size(), 1u) << manual;
+		EXPECT_NE(field[0].element.find(automatic), std::wstring::npos) << field[0].element;
+	}
+	const std::vector<Field> sum = fields_of(manual, L"Revenue", L"data");
+	ASSERT_EQ(sum.size(), 1u) << manual;
+	EXPECT_EQ(sum[0].element.find(L"data-pilot-subtotal"), std::wstring::npos) << sum[0].element;
+
+	const std::wstring none = pilot_table(L"NoSubtotals", review_content());
+	ASSERT_FALSE(none.empty());
+	const std::vector<Field> region = fields_of(none, L"Region", L"row");
+	ASSERT_EQ(region.size(), 1u) << none;
+	EXPECT_EQ(region[0].element.find(L"data-pilot-subtotal"), std::wstring::npos) << region[0].element;
+	const std::vector<Field> product = fields_of(none, L"Product", L"row");
+	ASSERT_EQ(product.size(), 1u) << none;
+	EXPECT_NE(product[0].element.find(automatic), std::wstring::npos) << product[0].element;
+
+	// Subtotals and hidden members share one table:data-pilot-level, subtotals first.
+	const std::wstring table = pilot_table(L"RevenueByRegion");
+	ASSERT_FALSE(table.empty());
+	const std::vector<Field> column = fields_of(table, L"Product", L"column");
+	ASSERT_EQ(column.size(), 1u) << table;
+	const size_t level = column[0].element.find(L"<table:data-pilot-level");
+	ASSERT_NE(level, std::wstring::npos) << column[0].element;
+	EXPECT_EQ(column[0].element.find(L"<table:data-pilot-level", level + 1), std::wstring::npos) << column[0].element;
+	EXPECT_LT(column[0].element.find(automatic), column[0].element.find(L"<table:data-pilot-members>")) << column[0].element;
+	const std::vector<Field> year = fields_of(table, L"Year", L"page");
+	ASSERT_EQ(year.size(), 1u) << table;
+	EXPECT_EQ(year[0].element.find(L"data-pilot-subtotal"), std::wstring::npos) << year[0].element;
 }
