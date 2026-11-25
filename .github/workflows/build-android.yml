@@ -23,6 +23,9 @@ jobs:
     # empty: third-party builds come from the remote cache, and ccache
     # (restored into, and saved from, ccache-seed) keeps the core objects.
     runs-on: self-hosted
+    # A cold build takes about 40 minutes, a hung one runs until the runner
+    # is shut down after 4 to 6 hours
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
@@ -96,7 +99,11 @@ jobs:
         ABI: ${{ matrix.abi }}
       run: |
         mkdir -p ccache-seed
-        docker buildx bake --progress=plain -f "$RUNNER_TEMP/core-android.hcl" core-android
+        # BuildKit sometimes hangs in "exporting to client directory" after a
+        # build from an empty ccache. A retry finds the build in the builder's
+        # cache and only exports again.
+        bake() { timeout "$1" docker buildx bake --progress=plain -f "$RUNNER_TEMP/core-android.hcl" core-android; }
+        bake 60m || { status=$?; [ "$status" -eq 124 ] || exit "$status"; echo "::warning::Build timed out, retrying once"; bake 20m; }
         # actions/cache only finds what was saved from the path it restores to
         rm -rf ccache-seed
         mv out/ccache ccache-seed
