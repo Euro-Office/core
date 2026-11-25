@@ -20,7 +20,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "2"
+    version = "3"
 )
 
 def fetch_and_patch():
@@ -199,7 +199,7 @@ def build_and_install():
                 "AR=ar",
                 "RANLIB=ranlib",
                 "CFLAGS=" + " ".join( [ "-O2" ] + nc.baseline_arch_flags() ),
-                "CXXFLAGS=" + " ".join( [ "-O2", "-static-libstdc++", "-static-libgcc", "-std=c++11" ] + nc.baseline_arch_flags() ),
+                "CXXFLAGS=" + " ".join( [ "-O2", "-std=c++11" ] + nc.baseline_arch_flags() ),
                 "LDFLAGS=-Wl,-rpath,$ORIGIN"
             ],
             "Configure",
