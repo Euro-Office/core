@@ -92,10 +92,10 @@ CFRecord::CFRecord(CFStreamPtr stream, GlobalWorkbookInfoPtr global_info)
 }
 // Create a record and read its data from the data stream
 CFRecord::CFRecord(NSFile::CFileBinary &file, GlobalWorkbookInfoPtr global_info)
-:	rdPtr(0),
+:	type_id_(rt_EOF),
 	size_(0),
-	data_(NULL),
-	type_id_(rt_EOF),
+	data_(nullptr),
+	rdPtr(0),
 	global_info_(global_info)
 {
 	file_ptr = file.GetFilePosition();
@@ -136,14 +136,14 @@ CFRecord::CFRecord(NSFile::CFileBinary &file, GlobalWorkbookInfoPtr global_info)
 }
 
 CFRecord::CFRecord(NSBinPptxRW::CBinaryFileReader &reader, GlobalWorkbookInfoPtr global_info)
-:	rdPtr(0),
+:	type_id_(rt_EOF),
     size_(0),
-    data_(NULL),
-	type_id_(rt_EOF),
+    data_(nullptr),
+    rdPtr(0),
 	global_info_(global_info)
 {
     file_ptr = reinterpret_cast<std::uintptr_t>(reader.GetPointer(0)) ;
-    BYTE lenght = 0;
+    BYTE length = 0;
     _UINT32 size = 0;
     if (reader.GetPos() + 2 < reader.GetSize())
     {
@@ -154,21 +154,21 @@ CFRecord::CFRecord(NSBinPptxRW::CBinaryFileReader &reader, GlobalWorkbookInfoPtr
         std::bitset<32> sizeBits(size);
 
         if(typeIdBits[7] != 0)
-            lenght += 2;
-        else lenght += 1;
+            length += 2;
+        else length += 1;
 
         if(sizeBits[23] == 1)
-            lenght += 4;
+            length += 4;
         else if(sizeBits[15] == 1)
-            lenght += 3;
+            length += 3;
         else if(sizeBits[7] == 1)
-            lenght += 2;
+            length += 2;
         else
-            lenght += 1;
+            length += 1;
     }
 
-    file_ptr += lenght;
-    sizeOfRecordTypeRecordLength = lenght;
+    file_ptr += length;
+    sizeOfRecordTypeRecordLength = length;
        /* auto lambdaDetectBusyByteCount = [] (int val) -> {
             for (int i = 0; i < 4; ++i)
             {
@@ -180,7 +180,7 @@ CFRecord::CFRecord(NSBinPptxRW::CBinaryFileReader &reader, GlobalWorkbookInfoPtr
                 }
             }
         };*/
-    if (reader.GetPos() + lenght + size_< reader.GetSize())
+    if (reader.GetPos() + length + size_< reader.GetSize())
     {
         size_ = size;
         data_ = new char[size_];
@@ -191,11 +191,11 @@ CFRecord::CFRecord(NSBinPptxRW::CBinaryFileReader &reader, GlobalWorkbookInfoPtr
 
 // Create an empty record
 CFRecord::CFRecord(CFRecordType::TypeId type_id, GlobalWorkbookInfoPtr global_info)
-:	type_id_(type_id),
+:	file_ptr(-1),
+	type_id_(type_id),
 	size_(0),
+	data_(nullptr),
 	rdPtr(0),
-	data_(NULL),
-	file_ptr(-1),
 	global_info_(global_info)
 {
 }
@@ -206,7 +206,7 @@ CFRecord::~CFRecord()
 	{
 		delete[] data_;
 	}
-	data_ = NULL;
+	data_ = nullptr;
 }
 bool CFRecord::isBOF()
 {
@@ -299,23 +299,19 @@ void CFRecord::appendRawData(const char* raw_data, const size_t size)
 	if (data_new)
 	{
 		delete[] data_new;
-		data_new = NULL;
+		data_new = nullptr;
 	}
 
 }
 
 void CFRecord::appendRawDataToStatic(const unsigned char *raw_data, const size_t size)
 {
-    if(MAX_RECORD_SIZE - rdPtr > size)
+    if((MAX_RECORD_SIZE - rdPtr > size) ||
+       (global_info_ && (global_info_.get()->Version == 0x0800) && (MAX_RECORD_SIZE_XLSB - rdPtr > size)))
     {
         memcpy(&intData[rdPtr], raw_data, size);
         rdPtr += size;
     }
-	else if(global_info_ && (global_info_.get()->Version == 0x0800) && (MAX_RECORD_SIZE_XLSB - rdPtr > size))
-	{
-		memcpy(&intData[rdPtr], raw_data, size);
-		rdPtr += size;
-	}
 
 }
 void CFRecord::appendRawDataToStatic(const wchar_t *raw_data, const size_t size)
@@ -389,10 +385,6 @@ const size_t CFRecord::getRdPtr() const
 
 const bool CFRecord::isEOF() const
 {
-	if(rdPtr > size_)
-	{
-		true;//throw;
-	}
 	return rdPtr >= size_;
 }
 
@@ -416,26 +408,18 @@ const bool CFRecord::checkFitWriteSafe(const size_t size) const
 // Generates an exception
 bool CFRecord::checkFitRead(const size_t size) const
 {
-	if(!checkFitReadSafe(size))
-	{
-		return false;// EXCEPT::RT::WrongBiffRecord("Wrong record size.", getTypeString());
-	}
-	return true;
+	return checkFitReadSafe(size);
 }
 
 bool CFRecord::checkFitWrite(const size_t size) const
 {
-    if(!checkFitWriteSafe(size))
-    {
-        return false;// EXCEPT::RT::WrongBiffRecord("Wrong record size.", getTypeString());
-    }
-    return true;
+	return checkFitWriteSafe(size);
 }
 
 void CFRecord::skipNunBytes(const size_t n)
 {
 	//ASSERT(data_); // This throws if we use skipNunBytes instead of reserveNunBytes
-	if (size_ == 0 && data_ == NULL)
+	if (size_ == 0 && data_ == nullptr)
 	{
 		if (checkFitWrite(n))
 		{
@@ -492,11 +476,13 @@ void CFRecord::save(CFStreamPtr& writer)
 
 CFRecord& CFRecord::operator >> (bool& val)
 {
+	(void)val;
 	throw;// EXCEPT::LE::WrongAPIUsage("This function may only be called by mistake.", __FUNCTION__);
 }
 
 CFRecord& CFRecord::operator << (bool& val)
 {
+	(void)val;
 	throw;// EXCEPT::LE::WrongAPIUsage("This function may only be called by mistake.", __FUNCTION__);
 }
 
@@ -508,7 +494,7 @@ CFRecord& operator>>(CFRecord & record, std::string & str)
     char symbol;
     do
     {
-        if (record.loadAnyData(symbol) == false) break;
+        if (!record.loadAnyData(symbol)) break;
         str += symbol;
     } while (symbol);
     return record;
@@ -521,7 +507,7 @@ CFRecord& operator>>(CFRecord & record, std::wstring & str)
     unsigned short symbol;
     do
     {
-        if (record.loadAnyData(symbol) == false) break;
+        if (!record.loadAnyData(symbol)) break;
         utf16.push_back(symbol);
     } while (symbol);
 

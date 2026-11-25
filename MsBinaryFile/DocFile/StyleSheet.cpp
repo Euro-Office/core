@@ -31,7 +31,7 @@ namespace DocFileFormat
 	{
 		RELEASEOBJECT (stshi);
 
-		if ( NULL != Styles )
+		if ( nullptr != Styles )
 		{
 			for ( std::vector<StyleSheetDescription*>::iterator iter = Styles->begin(); iter != Styles->end(); iter++ )
 			{
@@ -45,11 +45,12 @@ namespace DocFileFormat
 	/*========================================================================================================*/
 
 	/// Parses the streams to retrieve a StyleSheet.
-	StyleSheet::StyleSheet (FileInformationBlock* fib, POLE::Stream* tableStream, POLE::Stream* dataStream) : stshi(NULL), Styles(NULL)
+	StyleSheet::StyleSheet (FileInformationBlock* fib, POLE::Stream* tableStream, POLE::Stream* dataStream) : stshi(nullptr), Styles(nullptr)
 	{
 		VirtualStreamReader tableReader( tableStream, fib->m_FibWord97.fcStshf, fib->m_nWordVersion);
 
 		short cbStshi = fib->m_FibWord97.lcbStshf;
+		(void)cbStshi;
 		//unsigned char* test = tableReader.ReadBytes( cbStshi, true );
 
 		//create list of STDs
@@ -88,7 +89,7 @@ namespace DocFileFormat
 				}
 				else
 				{
-					Styles->push_back( NULL );
+					Styles->push_back( nullptr );
 				}
 			}
 		}

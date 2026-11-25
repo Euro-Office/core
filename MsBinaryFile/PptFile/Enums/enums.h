@@ -80,7 +80,7 @@ enum ColorModeEnum : BYTE
     CM_Color
 };
 
-// TODO add different tupes for enum
+// TODO add different types for enum
 enum ConditionEnum
 {
     TL_CT_None,

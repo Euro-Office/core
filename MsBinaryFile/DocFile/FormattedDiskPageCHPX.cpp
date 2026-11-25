@@ -42,7 +42,7 @@ namespace DocFileFormat
 		RELEASEARRAYOBJECTS(rgfc);
 		RELEASEARRAYOBJECTS(rgb);
 
-		if (grpchpx != NULL)
+		if (grpchpx != nullptr)
 		{
 			for (unsigned int i = 0; i < grpchpxSize; i++)
 			{
@@ -56,7 +56,7 @@ namespace DocFileFormat
 	/*========================================================================================================*/
 
 	FormattedDiskPageCHPX::FormattedDiskPageCHPX(POLE::Stream* wordStream, int offset, int nWordVersion) :
-		FormattedDiskPage(), rgb(NULL), grpchpxSize(0), grpchpx(NULL)
+		FormattedDiskPage(), rgb(nullptr), grpchpxSize(0), grpchpx(nullptr)
 	{
 		Type = Character;
 		WordStream = wordStream;
@@ -65,7 +65,7 @@ namespace DocFileFormat
 		//the page is zeroed first: an offset past the end of the stream makes the
 		//read return nothing at all, and the parser must not go on to interpret
 		//uninitialised heap as offsets and lengths
-		unsigned char* bytes = NULL;
+		unsigned char* bytes = nullptr;
 		bytes = new unsigned char[FKP_SIZE];
 		memset(bytes, 0, FKP_SIZE);
 
@@ -108,7 +108,7 @@ namespace DocFileFormat
 
 		j = 4 * (crun + 1);
 
-		unsigned char* chpx = NULL;
+		unsigned char* chpx = nullptr;
 
 		for (int i = 0; i < crun; i++)
 		{

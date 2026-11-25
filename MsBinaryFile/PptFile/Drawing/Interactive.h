@@ -68,6 +68,15 @@ public:
     CInteractiveInfo()
     {
         m_bPresent = false;
+        m_lType = 0;
+        m_lOleVerb = 0;
+        m_lJump = 0;
+        m_lHyperlinkType = 0;
+        m_bAnimated = false;
+        m_bStopSound = false;
+        m_bCustomShowReturn = false;
+        m_bVisited = false;
+        m_eActivation = click;
     }
 
     CInteractiveInfo& operator=(const CInteractiveInfo& oSrc)

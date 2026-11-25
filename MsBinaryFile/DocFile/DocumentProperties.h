@@ -56,8 +56,8 @@ namespace DocFileFormat
         // true when doc is a main doc for Print Merge Helper
 		bool fPMHMainDoc;
         // Default line suppression storage:
-        // 0 form letter line supression
-        // 1 no line supression
+        // 0 form letter line suppression
+        // 1 no line suppression
         // (no longer used)
 		short grfSuppression;
         // Footnote position code:
@@ -94,7 +94,7 @@ namespace DocFileFormat
 		bool fFormNoFields;
         // When true, Word will merge styles from its template
 		bool fLinkStyles;
-        // Whent true, Word will mark revisions as the document is edited
+        // When true, Word will mark revisions as the document is edited
 		bool fRevMarking;
         // When true, always make backup when document saved
 		bool fBackup;

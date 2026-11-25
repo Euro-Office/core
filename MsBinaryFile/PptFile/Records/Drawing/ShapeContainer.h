@@ -88,7 +88,7 @@ public:
 
     CElementPtr GetElement (bool inGroup, CExMedia* pMapIDs,
                             CTheme* pTheme, CLayout* pLayout,
-                            CSlideInfo* pThemeWrapper, CSlideInfo* pSlideWrapper, CSlide* pSlide = NULL);
+                            CSlideInfo* pThemeWrapper, CSlideInfo* pSlideWrapper, CSlide* pSlide = nullptr);
 
     ElementType GetTypeElem(eSPT eType);
     std::wstring GetFileName(std::wstring strFilePath);

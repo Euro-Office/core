@@ -32,9 +32,7 @@
 bool XlsWriter::Open(const std::wstring &fileName)
 {
 	xls_file = boost::shared_ptr<XLS::CompoundFile>(new XLS::CompoundFile(fileName, XLS::CompoundFile::cf_WriteMode));
-	if(xls_file->isError())
-		return false;
-	return true;
+	return !xls_file->isError();
 }
 bool XlsWriter::WriteWorkbook(XLS::BaseObjectPtr streamObject)
 {

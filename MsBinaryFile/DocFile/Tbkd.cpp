@@ -36,6 +36,7 @@ namespace DocFileFormat
 
 	ByteStructure* Tbkd::ConstructObject (VirtualStreamReader* reader, int length)
 	{
+		(void)length;
 		Tbkd* pTbkd				=	new Tbkd();
 
 		pTbkd->ipgd				=	reader->ReadInt16();
@@ -63,8 +64,9 @@ namespace DocFileFormat
 
 	ByteStructure* FTXBXS::ConstructObject (VirtualStreamReader* reader, int length)
 	{
+		(void)length;
 		FTXBXS* pFTXBXS	=	new FTXBXS();
-		if (!pFTXBXS) return NULL;
+		if (!pFTXBXS) return nullptr;
 
 		pFTXBXS->reusable01		=	reader->ReadInt32();
 		pFTXBXS->reusable02		=	reader->ReadInt32();

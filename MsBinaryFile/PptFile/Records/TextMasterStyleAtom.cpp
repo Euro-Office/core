@@ -98,7 +98,7 @@ void CRecordTextMasterStyleAtom::LoadLevel(LONG lLevel, POLE::Stream *pStream, b
     LONG lLevelOld = lLevel;
 
     if (bIsLevelPresent)
-        lLevel = StreamUtils::ReadSHORT(pStream);
+        StreamUtils::ReadSHORT(pStream);
 
     CTextPFRunRecord oPF;
     CTextCFRunRecord oCF;

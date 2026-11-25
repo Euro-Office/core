@@ -462,7 +462,7 @@ namespace DocFileFormat
     void PropertiesMapping::appendShading( XMLTools::XMLElement* parent, const ShadingDescriptor& desc )
 	{
 		std::wstring pattern = getShadingPattern( desc );
-        if ( ( parent != NULL ) && ( desc.shadingSpecialValue == shadingSpecialValueNormal ))
+        if ( ( parent != nullptr ) && ( desc.shadingSpecialValue == shadingSpecialValueNormal ))
 		{
             XMLTools::XMLElement shd( L"w:shd" );
 
@@ -652,9 +652,6 @@ namespace DocFileFormat
 			break;
 
 		case Percent_15:
-            pattern = L"pct15";
-			break;
-
 		case Percent_17_5:
             pattern = L"pct15";
 			break;
@@ -668,9 +665,6 @@ namespace DocFileFormat
 			break;
 
 		case Percent_32_5:
-            pattern = L"pct35";
-			break;
-
 		case Percent_35:
             pattern = L"pct35";
 			break;
@@ -684,9 +678,6 @@ namespace DocFileFormat
 			break;
 
 		case Percent_45:
-            pattern = L"pct45";
-			break;
-
 		case Percent_47_5:
             pattern = L"pct45";
 			break;
@@ -696,9 +687,6 @@ namespace DocFileFormat
 			break;
 
 		case Percent_55:
-            pattern = L"pct55";
-			break;
-
 		case Percent_57_5:
             pattern = L"pct55";
 			break;
@@ -708,9 +696,6 @@ namespace DocFileFormat
 			break;
 
 		case Percent_65:
-            pattern = L"pct65";
-			break;
-
 		case Percent_67_5:
             pattern = L"pct65";
 			break;
@@ -740,17 +725,11 @@ namespace DocFileFormat
 			break;
 
 		case Percent_95:
-            pattern = L"pct95";
-			break;
-
 		case Percent_97_5:
             pattern = L"pct95";
 			break;
 
 		case Nil:
-            pattern = L"nil";
-			break;
-
 		default:
             pattern = L"nil";
 			break;
@@ -781,7 +760,7 @@ namespace DocFileFormat
 
     void PropertiesMapping::addOrSetBorder( XMLTools::XMLElement* pBdr, const XMLTools::XMLElement* border )
 	{
-        if ( ( pBdr != NULL ) && ( border != NULL ))
+        if ( ( pBdr != nullptr ) && ( border != nullptr ))
 		{
 			//remove old border if it exist
             pBdr->RemoveChildByName( border->GetName());

@@ -38,7 +38,7 @@ namespace DocFileFormat
 	/*========================================================================================================*/
 
 	FontFamilyName::FontFamilyName():
-	fTrueType(false), ff(0), wWeight(0), chs(0), prq(0), panose(NULL), panoseSize(0)
+	fTrueType(false), ff(0), wWeight(0), chs(0), prq(0), panose(nullptr), panoseSize(0)
 	{
 	  this->fs.CodePageBitfield0 = 0;
 	  this->fs.CodePageBitfield1 = 0;

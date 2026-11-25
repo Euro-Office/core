@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "FormFieldData.h"
 #include "../../OOXML/Base/unicode_util.h"
@@ -50,6 +49,7 @@ std::wstring readXstz(VirtualStreamReader *reader, bool bWide)
 #endif
 		}
 		chTerm = reader->ReadUInt16();
+		(void)chTerm;
 	}
 	else
 	{
@@ -65,10 +65,12 @@ std::wstring readXstz(VirtualStreamReader *reader, bool bWide)
 };
 void FormFieldData::_HFD::read(VirtualStreamReader *reader, int size)
 {
+	(void)size;
 	if (!reader) return;
 }
 void FormFieldData::_FFData::read(VirtualStreamReader *reader, int size)
 {
+	(void)size;
 	if (!reader) return;
 
 	bExist = true;
@@ -78,13 +80,15 @@ void FormFieldData::_FFData::read(VirtualStreamReader *reader, int size)
 
 	if (0xff == reader->ReadByte())
 	{
-		version = 0xFFFFFFFF; //must be 0xFFFFFFFF
+		version = 0xFFFF; //must be 0xFFFFFFFF
+		(void)version;
 		reader->ReadBytes(3, false);
 	}
 	else
 	{
 		reader->ReadBytes(1, false);
 		version = 0;
+		(void)version;
 		bWide = false;
 	}
 
@@ -139,21 +143,9 @@ FormFieldData::FormFieldData( int type, const CharacterPropertyExceptions* chpx,
 		switch ( iter->OpCode)
 		{
 			case sprmCFSpec:
-			{
-			}
-			break;
 			case sprmCHps:
-			{
-			}
-			break;
 			case sprmCHpsBi:
-			{
-			}
-			break;
 			case sprmCCv:
-			{
-			}
-			break;
 			case sprmCFFldVanish:
 			{
 			}
@@ -164,11 +156,7 @@ FormFieldData::FormFieldData( int type, const CharacterPropertyExceptions* chpx,
 			}
 			break;
 			case sprmCRsidProp:
-			{
-			}break;
 			case sprmCFBold:
-			{
-			}break;
 			case sprmCIco:
 			{
 			}break;
@@ -192,6 +180,7 @@ FormFieldData::FormFieldData( int type, const CharacterPropertyExceptions* chpx,
 		VirtualStreamReader reader(stream, fc, nWordVersion);
 
 		int sz_stream = reader.GetSize();
+		(void)sz_stream;
 
 		int lcb = reader.ReadUInt32();
 		int cbHeader = reader.ReadUInt16();
