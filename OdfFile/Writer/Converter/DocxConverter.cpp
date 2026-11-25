@@ -4797,23 +4797,36 @@ static OOX::WritingElement* first_content_item(const std::vector<OOX::WritingEle
 	}
 	return nullptr;
 }
-// w:pPr of the paragraph a table starts with (the first one of its first cell) if it has w:pageBreakBefore.
+// w:pPr of the paragraph a table starts with (the first one of its first cell) if it has w:pageBreakBefore. When the
+// first cell starts with a nested table that is not floating, that table's first paragraph counts: LibreOffice moves
+// the break of such a nested table on to the outer table as well.
 static OOX::Logic::CParagraphProperty* first_cell_page_break_before(OOX::Logic::CTbl* oox_table)
 {
-	OOX::Logic::CTr* row = dynamic_cast<OOX::Logic::CTr*>(first_content_item(oox_table->m_arrItems, OOX::et_w_tblPr));
-	if (row == nullptr) return nullptr;
+	while (oox_table)
+	{
+		OOX::Logic::CTr* row = dynamic_cast<OOX::Logic::CTr*>(first_content_item(oox_table->m_arrItems, OOX::et_w_tblPr));
+		if (row == nullptr) return nullptr;
 
-	OOX::Logic::CTc* cell = dynamic_cast<OOX::Logic::CTc*>(
-		first_content_item(row->m_arrItems, OOX::et_w_trPr, OOX::et_w_tblPrEx));
-	if (cell == nullptr) return nullptr;
+		OOX::Logic::CTc* cell = dynamic_cast<OOX::Logic::CTc*>(
+			first_content_item(row->m_arrItems, OOX::et_w_trPr, OOX::et_w_tblPrEx));
+		if (cell == nullptr) return nullptr;
 
-	OOX::Logic::CParagraph* paragraph = dynamic_cast<OOX::Logic::CParagraph*>(
-		first_content_item(cell->m_arrItems, OOX::et_w_tcPr));
-	if (paragraph == nullptr || paragraph->m_oParagraphProperty == nullptr) return nullptr;
+		OOX::WritingElement* first = first_content_item(cell->m_arrItems, OOX::et_w_tcPr);
+		if (OOX::Logic::CTbl* nested = dynamic_cast<OOX::Logic::CTbl*>(first))
+		{
+			if (nested->m_oTableProperties && nested->m_oTableProperties->m_oTblpPr.IsInit())
+				return nullptr; // a floating table does not start the text of the cell
+			oox_table = nested;
+			continue;
+		}
+		OOX::Logic::CParagraph* paragraph = dynamic_cast<OOX::Logic::CParagraph*>(first);
+		if (paragraph == nullptr || paragraph->m_oParagraphProperty == nullptr) return nullptr;
 
-	OOX::Logic::CParagraphProperty* paragraph_pr = paragraph->m_oParagraphProperty;
-	if (paragraph_pr->m_oPageBreakBefore.IsInit() && paragraph_pr->m_oPageBreakBefore->m_oVal.ToBool())
-		return paragraph_pr;
+		OOX::Logic::CParagraphProperty* paragraph_pr = paragraph->m_oParagraphProperty;
+		if (paragraph_pr->m_oPageBreakBefore.IsInit() && paragraph_pr->m_oPageBreakBefore->m_oVal.ToBool())
+			return paragraph_pr;
+		return nullptr;
+	}
 	return nullptr;
 }
 

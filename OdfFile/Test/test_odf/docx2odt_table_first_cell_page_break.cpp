@@ -57,6 +57,24 @@ namespace
 		return style_element(content, attribute_before(content, L"<table:table ", L"table:style-name", text));
 	}
 
+	// Style of the first table after `text` (for a table whose first cell starts with a nested table).
+	std::wstring table_style_after(const std::wstring& content, const std::wstring& text)
+	{
+		const size_t at = content.find(text);
+		if (at == std::wstring::npos)
+			return L"";
+		const size_t table = content.find(L"<table:table ", at);
+		if (table == std::wstring::npos)
+			return L"";
+		const size_t end = content.find(L'>', table);
+		const std::wstring attribute = L"table:style-name=\"";
+		const size_t value = content.find(attribute, table);
+		if (value == std::wstring::npos || value > end)
+			return L"";
+		const size_t value_begin = value + attribute.size();
+		return style_element(content, content.substr(value_begin, content.find(L'"', value_begin) - value_begin));
+	}
+
 	// "" for a paragraph without a style.
 	std::wstring paragraph_style(const std::wstring& content, const std::wstring& text)
 	{
@@ -103,4 +121,34 @@ TEST(DocxToOdt, TableWithoutFirstCellPageBreakGetsNone)
 	EXPECT_FALSE(has_page_break(outer)) << outer;
 	EXPECT_FALSE(has_page_break(nested)) << nested;
 	EXPECT_TRUE(has_page_break(paragraph_style(content, L"NESTED")));
+}
+
+// Table 4 starts its first cell with a nested table whose first paragraph NESTFIRST has w:pageBreakBefore. That is
+// the first paragraph of table 4 as well, so the break goes on table 4 (as in LibreOffice), not on the nested table
+// and not on NESTFIRST.
+TEST(DocxToOdt, TableStartingWithNestedTableGetsItsPageBreak)
+{
+	const std::wstring content = convert_fixture();
+	ASSERT_FALSE(content.empty()) << "DOCX -> ODT conversion failed";
+
+	const std::wstring outer = table_style_after(content, L"BEFORE4");
+	const std::wstring nested = table_style(content, L"NESTFIRST");
+	ASSERT_FALSE(outer.empty() || nested.empty()) << "a table has no style";
+	EXPECT_NE(outer, nested);
+	EXPECT_TRUE(has_page_break(outer)) << outer;
+	EXPECT_FALSE(has_page_break(paragraph_style(content, L"NESTFIRST")));
+	EXPECT_FALSE(has_page_break(nested)) << nested;
+}
+
+// Table 5 starts its first cell with a floating nested table: it does not start the text of the cell, so table 5
+// gets no break and NESTFLOAT keeps its own.
+TEST(DocxToOdt, TableStartingWithFloatingTableGetsNoPageBreak)
+{
+	const std::wstring content = convert_fixture();
+	ASSERT_FALSE(content.empty()) << "DOCX -> ODT conversion failed";
+
+	const std::wstring outer = table_style_after(content, L"BEFORE5");
+	ASSERT_FALSE(outer.empty()) << "table 5 has no style";
+	EXPECT_FALSE(has_page_break(outer)) << outer;
+	EXPECT_TRUE(has_page_break(paragraph_style(content, L"NESTFLOAT")));
 }
