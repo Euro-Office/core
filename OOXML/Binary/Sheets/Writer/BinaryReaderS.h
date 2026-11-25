@@ -83,11 +83,11 @@ namespace BinXlsxRW
         PivotCachesTemp()
 		{
 			nId = -1;
-			pDefinitionData = NULL;
+			pDefinitionData = nullptr;
 			nDefinitionLength = 0;
-			pRecords = NULL;
+			pRecords = nullptr;
 			nCacheId = -1;
-			pTable = NULL;
+			pTable = nullptr;
 		}
 	};
 
@@ -200,7 +200,7 @@ namespace BinXlsxRW
         boost::unordered_map<long, NSCommon::smart_ptr<OOX::File>>	& m_mapPivotCacheDefinitions;
         const std::wstring											& m_sDestinationDir;
 		
-		NSBinPptxRW::CDrawingConverter *m_pOfficeDrawingConverter = NULL;
+		NSBinPptxRW::CDrawingConverter *m_pOfficeDrawingConverter = nullptr;
 		bool m_bMacroRead = false;
 	public:
         BinaryWorkbookTableReader(NSBinPptxRW::CBinaryFileReader& oBufferedStream, OOX::Spreadsheet::CWorkbook& oWorkbook, boost::unordered_map<long, NSCommon::smart_ptr<OOX::File>>& mapPivotCacheDefinitions, const std::wstring& sDestinationDir, NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter);
@@ -289,7 +289,7 @@ namespace BinXlsxRW
 		int ReadRichValueReservedKeyFlags(BYTE type, long length, void* poResult);
 
 //--------------------------------------------------------------------------------------------------		
-		OOX::Spreadsheet::CXlsb* m_pXlsb = NULL;
+		OOX::Spreadsheet::CXlsb* m_pXlsb = nullptr;
 	};
 	class BinaryCommentReader : public Binary_CommonReader
 	{
@@ -314,10 +314,10 @@ namespace BinXlsxRW
 	class BinaryWorksheetsTableReader : public Binary_CommonReader
 	{
 		Binary_CommonReader2				m_oBcr2;
-		NSFile::CStreamWriter*		m_pCurStreamWriter;
+		NSFile::CStreamWriter*		m_pCurStreamWriter = nullptr;
         XLS::StreamCacheWriterPtr		m_pCurStreamWriterBin;
 		NSBinPptxRW::CDrawingConverter*		m_pOfficeDrawingConverter;
-        OOX::Spreadsheet::CXlsb* m_pXlsb;
+        OOX::Spreadsheet::CXlsb* m_pXlsb = nullptr;
 
         OOX::Spreadsheet::CWorkbook&					m_oWorkbook;
         OOX::Spreadsheet::CSharedStrings*				m_pSharedStrings;

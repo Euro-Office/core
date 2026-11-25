@@ -515,7 +515,8 @@ namespace ZLibZipUtils
 
 		std::wstring filenameW = codepage_issue_fixFromOEM(filename_inzip);
 
-		//TODO is there a need to reduce everything to the bottom???
+		// TODO: on Windows, ZIP filenames are conventionally treated case-insensitively;
+		// consider using _wcsicmp under #ifdef _WIN32 if case-insensitive matching is needed.
 		return wcscmp(filename, filenameW.c_str()) == 0;
 	}
 
@@ -538,9 +539,12 @@ namespace ZLibZipUtils
 		if(UNZ_OK == unzOpenCurrentFile(unzip_file_handle))
 		{
 			int data_read_size = unzReadCurrentFile(unzip_file_handle, arr, array_size);
+            unzCloseCurrentFile(unzip_file_handle);
 
-			unzCloseCurrentFile(unzip_file_handle);
-			return data_read_size == array_size;
+            if(data_read_size < 0)
+            { return false; }
+
+			return static_cast<uInt>(data_read_size) == array_size;
 		}
 		return false;
 	}

@@ -181,6 +181,7 @@ void COlapSlicerCacheItem::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oNd = pReader->GetBool();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -253,6 +254,7 @@ void COlapSlicerCacheItemParent::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReade
 			m_oN = pReader->GetString2();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -371,6 +373,7 @@ void COlapSlicerCacheRange::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oStartItem = pReader->GetULong();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -484,6 +487,7 @@ void CTabularSlicerCacheItem::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oNd = pReader->GetBool();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -602,6 +606,7 @@ void COlapSlicerCacheSelection::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader
 			m_oN = pReader->GetString2();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -815,6 +820,7 @@ void COlapSlicerCacheLevelData::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader
 			m_oCrossFilter->SetValue((SimpleTypes::Spreadsheet::ESlicerCacheCrossFilter)pReader->GetUChar());
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -933,6 +939,7 @@ void CTabularSlicerCacheItems::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oCount = pReader->GetULong();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -1046,6 +1053,7 @@ void COlapSlicerCacheSelections::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReade
 			m_oCount = pReader->GetULong();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -1162,6 +1170,7 @@ void COlapSlicerCacheLevelsData::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReade
 			m_oCount = pReader->GetULong();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -1330,6 +1339,7 @@ void CTabularSlicerCache::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oCrossFilter->SetValue((SimpleTypes::Spreadsheet::ESlicerCacheCrossFilter)pReader->GetUChar());
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -1458,6 +1468,7 @@ void COlapSlicerCache::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oPivotCacheId = pReader->GetULong();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -1562,6 +1573,7 @@ void CSlicerCacheData::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			break;
 		switch (_at)
 		{
+	default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -1668,6 +1680,7 @@ void CSlicerCachePivotTable::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oName = pReader->GetString2();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)
@@ -1875,6 +1888,7 @@ void CSlicerCacheDefinition::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 			m_oSourceName = pReader->GetString2();
 			break;
 		}
+		default: break;
 		}
 	}
 	while (pReader->GetPos() < _end_rec)

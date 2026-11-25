@@ -35,6 +35,7 @@
 #include "style_text_properties.h"
 
 #include <iostream>
+#include <set>
 
 namespace cpdoccore {
 
@@ -432,11 +433,13 @@ office_element_ptr & odf_style_context::add_or_find(std::wstring name, style_fam
 void odf_style_context::calc_text_properties(std::wstring style_name, odf_types::style_family::type family, text_format_properties * result)
 {
     std::vector<text_format_properties*> textProps;
+	std::set<const style*> visited; // parent chains from the input can form a loop
 	
 	while (!style_name.empty())
     {
 		style *style_ = NULL;
 		if (!find_odf_style(style_name, family, style_) || !style_)break;
+		if (!visited.insert(style_).second)break;
 
        if (text_format_properties * textProp = style_->content_.add_get_style_text_properties())
 			textProps.push_back(textProp);
@@ -450,11 +453,13 @@ void odf_style_context::calc_text_properties(std::wstring style_name, odf_types:
 void odf_style_context::calc_paragraph_properties(std::wstring style_name, style_family::type family, paragraph_format_properties * result)
 {
     std::vector<paragraph_format_properties*> parProps;
+	std::set<const style*> visited; // parent chains from the input can form a loop
 	
 	while (!style_name.empty())
     {
 		style *style_ = NULL;
 		if (!find_odf_style(style_name, family, style_) || !style_)break;
+		if (!visited.insert(style_).second)break;
 
        if (paragraph_format_properties* parProp = style_->content_.add_get_style_paragraph_properties())
 			parProps.push_back(parProp);

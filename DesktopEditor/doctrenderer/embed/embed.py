@@ -82,7 +82,7 @@ def generateV8InternalCode(class_name, method_lists, header_file):
 		if method_list.ifdef:
 			code += "#ifdef " + method_list.ifdef + "\n"
 		for method in method_list.methods:
-			code += "	FUNCTION_WRAPPER_V8_" + str(len(method.args)) + "(_" + method.name + ", " + method.name + ")\n"
+			code += "	FUNCTION_WRAPPER_V8_" + str(len(method.args)) + "(" + method.name + "Wrapper, " + method.name + ")\n"
 		if method_list.ifdef:
 			code += "#endif\n"
 	code += "\n"
@@ -96,7 +96,7 @@ def generateV8InternalCode(class_name, method_lists, header_file):
 		if method_list.ifdef:
 			code += "#ifdef " + method_list.ifdef + "\n"
 		for method in method_list.methods:
-			code += "		NSV8Objects::Template_Set(result, \"" + method.name + "\",	_" + method.name + ");\n"
+			code += "		NSV8Objects::Template_Set(result, \"" + method.name + "\",	" + method.name + "Wrapper);\n"
 		if method_list.ifdef:
 			code += "#endif\n"
 	code += "\n"

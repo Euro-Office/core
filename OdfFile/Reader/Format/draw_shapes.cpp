@@ -891,23 +891,23 @@ bool draw_enhanced_geometry::oox_convert(std::vector<odf_reader::_property>& pro
 
 	if (attlist_.drawooo_sub_view_size_)
 	{
-		std::vector< std::wstring > splitted;
-		boost::algorithm::split(splitted, *attlist_.drawooo_sub_view_size_, boost::algorithm::is_any_of(L" "), boost::algorithm::token_compress_on);
+		std::vector< std::wstring > split;
+		boost::algorithm::split(split, *attlist_.drawooo_sub_view_size_, boost::algorithm::is_any_of(L" "), boost::algorithm::token_compress_on);
 
-		if (splitted.size() == 2)
+		if (split.size() == 2)
 		{
-			int w = boost::lexical_cast<int>(splitted[0]);
-			int h = boost::lexical_cast<int>(splitted[1]);
+			int w = boost::lexical_cast<int>(split[0]);
+			int h = boost::lexical_cast<int>(split[1]);
 
 			props.push_back(odf_reader::_property(L"custom_path_w", w));
 			props.push_back(odf_reader::_property(L"custom_path_h", h));
 		}
-		else if (splitted.size() == 4)
+		else if (split.size() == 4)
 		{///???? rect ???
-			int l = boost::lexical_cast<int>(splitted[0]);
-			int t = boost::lexical_cast<int>(splitted[1]);
-			int r = boost::lexical_cast<int>(splitted[2]);
-			int b = boost::lexical_cast<int>(splitted[3]);
+			int l = boost::lexical_cast<int>(split[0]);
+			int t = boost::lexical_cast<int>(split[1]);
+			int r = boost::lexical_cast<int>(split[2]);
+			int b = boost::lexical_cast<int>(split[3]);
 
 		}
 
@@ -924,16 +924,16 @@ bool draw_enhanced_geometry::oox_convert(std::vector<odf_reader::_property>& pro
 	}
 	else if (svg_viewbox_)
 	{
-		std::vector< std::wstring > splitted;
-		boost::algorithm::split(splitted, *svg_viewbox_, boost::algorithm::is_any_of(L" "), boost::algorithm::token_compress_on);
+		std::vector< std::wstring > split;
+		boost::algorithm::split(split, *svg_viewbox_, boost::algorithm::is_any_of(L" "), boost::algorithm::token_compress_on);
 
-		if (splitted.size() == 4)
+		if (split.size() == 4)
 		{
-			int w = boost::lexical_cast<int>(splitted[2]);
-			int h = boost::lexical_cast<int>(splitted[3]);
+			int w = boost::lexical_cast<int>(split[2]);
+			int h = boost::lexical_cast<int>(split[3]);
 
-			wsLeft = std::to_wstring(boost::lexical_cast<int>(splitted[0]));
-			wsTop =	std::to_wstring(boost::lexical_cast<int>(splitted[1]));
+			wsLeft = std::to_wstring(boost::lexical_cast<int>(split[0]));
+			wsTop =	std::to_wstring(boost::lexical_cast<int>(split[1]));
 			wsH = std::to_wstring(h);
 			wsW = std::to_wstring(w);
 

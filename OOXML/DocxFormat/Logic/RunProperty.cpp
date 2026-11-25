@@ -28,15 +28,15 @@
 
 #define FROM_XML_ELEM(oElem, oReader, pRun) \
 { \
-	oElem.Init(); \
+	(oElem).Init(); \
 	if(pRun) \
 	{ \
-		oElem->ReadAttributes(oReader); \
-		pRun->fromXMLElems(oReader); \
+		(oElem)->ReadAttributes(oReader); \
+		(pRun)->fromXMLElems(oReader); \
 	} \
 	else \
 	{ \
-		oElem->FromXML(oReader); \
+		(oElem)->FromXML(oReader); \
 	} \
 }
 
@@ -105,14 +105,14 @@ namespace OOX
 			m_pRunPr.Init();
 			m_pRunPr->m_bRPRChange = true;
 
-			fromXML( oNode );
+			CRPrChange::fromXML( oNode );
 		}
 		CRPrChange::CRPrChange(XmlUtils::CXmlLiteReader& oReader)
 		{
 			m_pRunPr.Init();
 			m_pRunPr->m_bRPRChange = true;
 
-			fromXML( oReader );
+			CRPrChange::fromXML( oReader );
 		}
 		CRPrChange::~CRPrChange()
 		{
@@ -144,7 +144,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( L"w:rPr" == sName )
 					m_pRunPr->fromXML( oReader );
@@ -207,7 +207,7 @@ namespace OOX
 
 		CRunProperty::CRunProperty()
 		{
-			m_pText = NULL;
+			m_pText = nullptr;
 			m_bRPRChange = false;
 		}
 		CRunProperty::~CRunProperty()
@@ -216,15 +216,15 @@ namespace OOX
 		}
 		CRunProperty::CRunProperty(const XmlUtils::CXmlNode &oNode)
 		{
-			m_pText = NULL;
+			m_pText = nullptr;
 			m_bRPRChange = false;
-			fromXML( (XmlUtils::CXmlNode &)oNode );
+			CRunProperty::fromXML( (XmlUtils::CXmlNode &)oNode );
 		}
 		CRunProperty::CRunProperty(const XmlUtils::CXmlLiteReader& oReader)
 		{
-			m_pText = NULL;
+			m_pText = nullptr;
 			m_bRPRChange = false;
-			fromXML( (XmlUtils::CXmlLiteReader&)oReader );
+			CRunProperty::fromXML( (XmlUtils::CXmlLiteReader&)oReader );
 		}
 		const CRunProperty& CRunProperty::operator=(const XmlUtils::CXmlNode &oNode)
 		{
@@ -238,7 +238,7 @@ namespace OOX
 		}
 		void CRunProperty::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
-			fromXML(oReader, NULL);
+			fromXML(oReader, nullptr);
 		}
 		void CRunProperty::fromXML(XmlUtils::CXmlLiteReader& oReader, CRun* pRun)
 		{
@@ -313,9 +313,7 @@ namespace OOX
 					m_oRPrChange = oReader;
 				// For some reason, the specification says pStyle, although according to the meaning, see the link in the
 				// the same specifications and, in the end, alphabetically there should be rStyle
-				else if ( L"w:rStyle" == sName )
-					m_oRStyle = oReader;
-				else if ( !m_oRStyle.IsInit() && L"w:pStyle" == sName )
+				else if ( L"w:rStyle" == sName || (!m_oRStyle.IsInit() && L"w:pStyle" == sName) )
 					m_oRStyle = oReader;
 				else if ( L"w:rtl" == sName )
 					FROM_XML_ELEM(m_oRtL, oReader, pRun)

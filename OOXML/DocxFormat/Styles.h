@@ -181,7 +181,7 @@ namespace OOX
 	{
 	public:
 
-		CStyle(OOX::Document *pMain = NULL);		
+		CStyle(OOX::Document *pMain = nullptr);		
 		virtual ~CStyle();
 
 		void ClearItems();

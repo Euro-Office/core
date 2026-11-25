@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginPCDSDTCSet::readFields(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
         record >> cTuples >> iRankMax >> ssoType >> flags;
 
         fQueryFailed      = GETBIT(flags, 0);

@@ -852,7 +852,11 @@ endif()
 option(EO_NO_WARNINGS "Compile without warnings" OFF)
 if(EO_NO_WARNINGS)
     # -w and /w don't touch the errors, so the flags that turn errors into
-    # warnings or off (-Wno-register for ISO C++17's register) stay
+    # warnings or off (-Wno-register for ISO C++17's register) stay.
+    # The other way round doesn't hold: on GCC and non-Apple clang, -w also
+    # cancels -Werror=<warning>, so such a guard silently does nothing here.
+    # A target that needs one must strip -w, see XlsFormatLib's CMakeLists.txt
+    # (#421).
     if(MSVC)
         # Else cl warns on every source that /w overrides /W4 and /W3
         list(FILTER COMMON_CXX_FLAGS EXCLUDE REGEX "^/W[0-4]$")
