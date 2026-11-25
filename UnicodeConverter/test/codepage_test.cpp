@@ -82,16 +82,17 @@ namespace
 
 TEST(UnicodeConverterCodePage, DecodesByCodePageNumber)
 {
-#if defined(_WIN32) || defined(_WIN64)
-	GTEST_SKIP() << "Windows decodes numeric code pages with MultiByteToWideChar";
-#else
 	for (const CodePageCase& c : Cases())
 	{
+#if defined(_WIN32) || defined(_WIN64)
+		// Windows decodes the other code pages with MultiByteToWideChar. UTF-16 and UTF-32 it cannot decode.
+		if (c.codePage != 1200 && c.codePage != 1201 && c.codePage != 12000 && c.codePage != 12001)
+			continue;
+#endif
 		NSUnicodeConverter::CUnicodeConverter converter;
 		const std::wstring result = converter.toUnicode(c.bytes.c_str(), (unsigned int)c.bytes.size(), c.codePage);
 		EXPECT_EQ(c.expected, result) << c.name << " (code page " << c.codePage << ")";
 	}
-#endif
 }
 
 TEST(UnicodeConverterCodePage, EmptyInputGivesEmptyString)

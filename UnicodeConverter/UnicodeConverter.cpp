@@ -362,12 +362,12 @@ namespace NSUnicodeConverter
 					iconv_close(ic);
 				}
 #endif
-#if !defined (_WIN32) && !defined (_WIN64)
 				if (ansi)
 				{
 					// ICU could not open this code page by number and the platform could not convert it
 					// (iconv does not know the name CP<n> for ISO-8859-x, KOI8, EUC, GB18030, UTF-8/16/32...,
-					// and macOS, Android and iOS have no iconv): open it by name instead, as RtfFile does
+					// macOS, Android and iOS have no iconv, and MultiByteToWideChar does not decode UTF-16 and
+					// UTF-32 for native applications): open it by name instead, as RtfFile does
 					std::map<int, std::string>::const_iterator pFind = mapEncodingsICU.find(nCodepage);
 					if (pFind != mapEncodingsICU.end())
 					{
@@ -376,7 +376,6 @@ namespace NSUnicodeConverter
 							return sByName;
 					}
 				}
-#endif
 			}
 			if (ansi)
 			{
