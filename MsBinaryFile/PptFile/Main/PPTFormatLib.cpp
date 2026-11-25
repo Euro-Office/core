@@ -51,11 +51,11 @@ _UINT32 COfficePPTFile::OpenFile(const std::wstring & sFileName, const std::wstr
 	CloseFile();
 	
     POLE::Storage *pStgFrom = new POLE::Storage(sFileName.c_str());
-	if (pStgFrom == NULL) return AVS_ERROR_FILEFORMAT;
+	if (pStgFrom == nullptr) return AVS_ERROR_FILEFORMAT;
 	
 	try
 	{
-		if (false == pStgFrom->open(false, false))
+		if (!pStgFrom->open(false, false))
 		{
 			return AVS_ERROR_FILEACCESS; //file access error or not compound file
 		}
@@ -71,14 +71,14 @@ _UINT32 COfficePPTFile::OpenFile(const std::wstring & sFileName, const std::wstr
 	pptReader->m_oDocumentInfo.m_strPassword = password;
 	pptReader->m_oDocumentInfo.m_bMacroEnabled = bMacro;
 		
-	if	(pptReader->IsPowerPoint() == false) 
+	if	(!pptReader->IsPowerPoint()) 
 	{ 
 		RELEASEOBJECT(pptReader);
-		m_pReader = NULL;
+		m_pReader = nullptr;
 		return AVS_ERROR_FILEFORMAT; 
 	} 
 
-	if (pptReader->ReadPersists() == false) 
+	if (!pptReader->ReadPersists()) 
 	{
 		if (pptReader->IsEncrypted())
 		{
@@ -101,7 +101,7 @@ bool COfficePPTFile::CloseFile()
 	m_Status = NULLMODE;
 
     PPT::CPPTFileReader* r = (PPT::CPPTFileReader*)m_pReader;	RELEASEOBJECT(r);
-	m_pReader = NULL;
+	m_pReader = nullptr;
 	return true;
 }
 

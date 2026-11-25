@@ -63,7 +63,7 @@ xlsx_document::xlsx_document()
     rels_file_ptr relFile = rels_file::create(L".rels");
    
 	relFile->get_rels().add(relationship(L"rId1", L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument", L"xl/workbook.xml"));
-    relFile->get_rels().add(relationship(L"rId2", L"http://schemas.openxmlformats.org/officedocument/2006/relationships/metadata/core-properties", L"docProps/core.xml"));
+    relFile->get_rels().add(relationship(L"rId2", L"http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties", L"docProps/core.xml"));
     relFile->get_rels().add(relationship(L"rId3", L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties", L"docProps/app.xml"));
    
 	get_rels_files().add_rel_file( relFile );

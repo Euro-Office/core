@@ -48,9 +48,11 @@ namespace DocFileFormat
 
 	// Parses the StreamReader to retrieve a ListData
 
-	ListData::ListData(VirtualStreamReader* reader, int length) : rglvl(NULL)
+	ListData::ListData(VirtualStreamReader* reader, int length) : rglvl(nullptr)
 	{
+		(void)length;
 		long startPos = reader->GetPosition();
+		(void)startPos;
 
 		lsid = reader->ReadInt32();
 		tplc = reader->ReadInt32();
@@ -273,6 +275,7 @@ namespace DocFileFormat
 
 	ByteStructure* OutlineListDescriptor::ConstructObject(VirtualStreamReader* reader, int length)
 	{
+		(void)length;
 		int sz = GetSize(reader->nWordVersion);
 
 		unsigned char *data = reader->ReadBytes(sz, true);

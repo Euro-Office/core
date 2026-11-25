@@ -32,28 +32,28 @@ namespace DocFileFormat
 	std::string DecodeBase64(const std::string & value)
 	{
 		int nLength = 0;
-		unsigned char *pData = NULL;
+		unsigned char *pData = nullptr;
 		std::string result;
 
 		NSFile::CBase64Converter::Decode(value.c_str(), value.length(), pData, nLength);
 		if (pData)
 		{
 			result = std::string((char*)pData, nLength);
-			delete []pData; pData = NULL;
+			delete []pData; pData = nullptr;
 		}
 		return result;
 	}
 	std::wstring EncodeBase64(const std::string & value)
 	{
 		int nLength = 0;
-		char *pData = NULL;
+		char *pData = nullptr;
 		std::string result;
 
 		NSFile::CBase64Converter::Encode((BYTE*)value.c_str(), value.length(), pData, nLength, NSBase64::B64_BASE64_FLAG_NOCRLF);
 		if (pData)
 		{
 			result = std::string(pData, nLength);
-			delete []pData; pData = NULL;
+			delete []pData; pData = nullptr;
 		}
 		return std::wstring(result.begin(), result.end());
 	}
@@ -79,7 +79,7 @@ namespace DocFileFormat
 			CRYPT::_ecmaWriteProtectData data;
 
 			WideString* passw = static_cast<WideString*>(_ctx->_doc->AssocNames->operator[]( 17 ));			
-			if (passw && false == passw->empty())
+			if (passw && !passw->empty())
 			{
 				CRYPT::ECMAWriteProtect protect;
 				protect.SetCryptData(data);
@@ -90,7 +90,7 @@ namespace DocFileFormat
 			}
 
 			m_oXmlWriter.WriteNodeBegin(L"w:writeProtection", TRUE);
-			if (false == data.saltValue.empty())
+			if (!data.saltValue.empty())
 			{
 				//m_oXmlWriter.WriteAttribute	( L"w:cryptProviderType", L"rsaAES");
 				//m_oXmlWriter.WriteAttribute	( L"w:cryptAlgorithmSid", 14); //sha-512
@@ -103,7 +103,7 @@ namespace DocFileFormat
 				m_oXmlWriter.WriteAttribute	( L"w:saltValue", EncodeBase64(data.saltValue));				
 			}
 			m_oXmlWriter.WriteNodeEnd( L"",  TRUE, TRUE );
-			if (false == data.saltValue.empty())
+			if (!data.saltValue.empty())
 			{
 				m_oXmlWriter.WriteNodeBegin(L"w:documentProtection", TRUE);
 					m_oXmlWriter.WriteAttribute(L"w:edit", L"readOnly");
@@ -186,7 +186,7 @@ namespace DocFileFormat
 		m_oXmlWriter.WriteNodeEnd( L"",  TRUE );
 
 		//drawing grid
-		if( dop->dogrid != NULL )
+		if( dop->dogrid != nullptr )
 		{
 			m_oXmlWriter.WriteNodeBegin( L"w:displayHorizontalDrawingGridEvery",  TRUE );
 			m_oXmlWriter.WriteAttribute( L"w:val",  FormatUtils::IntToWideString( dop->dogrid->dxGridDisplay ) );
@@ -196,7 +196,7 @@ namespace DocFileFormat
 			m_oXmlWriter.WriteAttribute( L"w:val",  FormatUtils::IntToWideString( dop->dogrid->dyGridDisplay ) );
 			m_oXmlWriter.WriteNodeEnd( L"",  TRUE );
 
-			if ( dop->dogrid->fFollowMargins == false )
+			if ( !dop->dogrid->fFollowMargins )
 			{
 				m_oXmlWriter.WriteNodeBegin( L"w:doNotUseMarginsForDrawingGridOrigin",  TRUE );
 				m_oXmlWriter.WriteNodeEnd( L"",  TRUE );
@@ -204,9 +204,9 @@ namespace DocFileFormat
 		}
 
 		//typography
-		if ( dop->doptypography != NULL )
+		if ( dop->doptypography != nullptr )
 		{
-			if ( dop->doptypography->fKerningPunct == false )
+			if ( !dop->doptypography->fKerningPunct )
 			{
 				m_oXmlWriter.WriteNodeBegin( L"w:noPunctuationKerning",  TRUE );
 				m_oXmlWriter.WriteNodeEnd( L"",  TRUE );
@@ -225,6 +225,7 @@ namespace DocFileFormat
                 case 2:
                     spacingValue = L"compressPunctuationAndJapaneseKana";
                     break;
+                default: break;
                 }
 
                 m_oXmlWriter.WriteAttribute(L"w:val", spacingValue);

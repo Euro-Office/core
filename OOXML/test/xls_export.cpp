@@ -28,6 +28,7 @@
 #include <fstream>
 #include <functional>
 #include <iterator>
+#include <regex>
 #include <set>
 #include <string>
 #include <utility>
@@ -463,4 +464,200 @@ TEST(XlsxToXls, SkippedCacheLeavesNoPivotView)
 	std::string workbook = WorkbookStream(ReadAll(xls));
 	EXPECT_EQ(CountRecords(workbook, kSXStreamID), 0) << "the skipped cache was written";
 	EXPECT_EQ(CountRecords(workbook, kSXView), 0) << "a pivot view of the skipped cache was written";
+}
+
+namespace
+{
+	const std::wstring kChartSheet = L"xl" FILE_SEPARATOR_STR L"chartsheets" FILE_SEPARATOR_STR L"sheet1.xml";
+	const std::wstring kChartSheetRels =
+		L"xl" FILE_SEPARATOR_STR L"chartsheets" FILE_SEPARATOR_STR L"_rels" FILE_SEPARATOR_STR L"sheet1.xml.rels";
+	const std::wstring kWorksheet = L"xl" FILE_SEPARATOR_STR L"worksheets" FILE_SEPARATOR_STR L"sheet1.xml";
+	const std::wstring kChartSheetDrawing = L"xl" FILE_SEPARATOR_STR L"drawings" FILE_SEPARATOR_STR L"drawing2.xml";
+	const std::wstring kChart = L"xl" FILE_SEPARATOR_STR L"charts" FILE_SEPARATOR_STR L"chart1.xml";
+
+	// simple2.xlsx: Лист1 has a drawing (rId1, a slicer frame; rId2 in its rels is a VML drawing), and the chart sheet
+	// "Диаграмма1" has drawing2.xml (rId1) with one anchor, a frame holding chart1.xml (rId1): a clustered bar chart
+	// with two series, the first on Лист1!$C$6:$C$8.
+	const std::string kChartSheetName = "\xD0\x94\xD0\xB8\xD0\xB0\xD0\xB3\xD1\x80\xD0\xB0\xD0\xBC\xD0\xBC\xD0\xB0" "1";
+
+	// A shape anchor for drawing2.xml.
+	const std::string kShapeAnchor =
+		"<xdr:absoluteAnchor><xdr:pos x=\"0\" y=\"0\"/><xdr:ext cx=\"100000\" cy=\"100000\"/>"
+		"<xdr:sp macro=\"\" textlink=\"\"><xdr:nvSpPr><xdr:cNvPr id=\"3\" name=\"Rect\"/><xdr:cNvSpPr/></xdr:nvSpPr>"
+		"<xdr:spPr><a:prstGeom prst=\"rect\"><a:avLst/></a:prstGeom></xdr:spPr></xdr:sp><xdr:clientData/>"
+		"</xdr:absoluteAnchor>";
+
+	// All chart parts of an unpacked read-back, one after the other.
+	std::string ReadBackCharts(const std::wstring& dir)
+	{
+		std::string charts;
+		std::filesystem::path chartDir = std::filesystem::path(dir) / "xl" / "charts";
+		if (!std::filesystem::is_directory(chartDir))
+			return charts;
+		for (const auto& entry : std::filesystem::directory_iterator(chartDir))
+		{
+			std::string name = entry.path().filename().string();
+			if (entry.is_regular_file() && name.rfind("chart", 0) == 0 && entry.path().extension() == ".xml")
+				charts += ReadAll(entry.path().wstring());
+		}
+		return charts;
+	}
+
+	// Whether the read-back holds simple2.xlsx's bar chart: x2t's XLS reader writes chart parts for an empty chart
+	// sheet too, so the chart is recognised by its series range, not by its part.
+	bool HasBarChart(const std::wstring& dir)
+	{
+		std::string charts = ReadBackCharts(dir);
+		return charts.find("<c:barChart>") != std::string::npos && charts.find("$C$6:$C$8") != std::string::npos;
+	}
+
+	std::vector<std::string> TabNames(const std::wstring& dir)
+	{
+		std::vector<std::string> names;
+		for (const auto& tab : ReadBackTabs(dir))
+			names.push_back(tab.first);
+		return names;
+	}
+
+	// simple2.xlsx edited by `pattern` -> `replacement` in `part`, exported and read back. All three tabs must come
+	// back in order, and the bar chart must come back exactly when `chartKept`.
+	void ExpectChartExport(const std::wstring& part, const std::string& pattern, const std::string& replacement,
+						   bool chartKept, std::wstring& dir)
+	{
+		std::wstring corrupt, xls;
+		ASSERT_TRUE(EditXlsxPart(ExampleFile(L"simple2.xlsx"), part, pattern, replacement, corrupt));
+		ASSERT_NO_FATAL_FAILURE(ExportAndReadBack(corrupt, xls, dir));
+		EXPECT_EQ(TabNames(dir), (std::vector<std::string>{kSheet + "1", kSheet + "2", kChartSheetName}));
+		EXPECT_EQ(HasBarChart(dir), chartKept) << (chartKept ? "the chart was lost" : "a chart that does not resolve was written");
+	}
+
+	void ExpectChartExport(const std::wstring& part, const std::string& pattern, const std::string& replacement,
+						   bool chartKept)
+	{
+		std::wstring dir;
+		ExpectChartExport(part, pattern, replacement, chartKept, dir);
+	}
+}
+
+// The unedited workbook: the chart sheet's chart comes back. The tests below rely on HasBarChart finding it.
+TEST(XlsxToXls, ChartSheet)
+{
+	std::wstring xls, dir;
+	ASSERT_NO_FATAL_FAILURE(ExportAndReadBack(ExampleFile(L"simple2.xlsx"), xls, dir));
+	EXPECT_EQ(TabNames(dir), (std::vector<std::string>{kSheet + "1", kSheet + "2", kChartSheetName}));
+	EXPECT_TRUE(HasBarChart(dir)) << "the chart sheet's chart was not written";
+}
+
+// A chart sheet <drawing> whose r:id resolves to no drawing part used to dereference a null (or wrongly typed)
+// pointer in CWorksheet::toXLS. The chart sheet is written without a chart, in its place. Three shapes: the r:id
+// points nowhere, the relationship is gone, and the relationship points at a part that is not a drawing.
+TEST(XlsxToXls, ChartSheetDrawingWithUnknownRelationshipId)
+{
+	ExpectChartExport(kChartSheet, "<drawing r:id=\"rId1\"/>", "<drawing r:id=\"rId99\"/>", false);
+}
+
+TEST(XlsxToXls, ChartSheetDrawingWithoutRelationship)
+{
+	ExpectChartExport(kChartSheetRels, "<Relationship Id=\"rId1\"[^>]*/>", "", false);
+}
+
+TEST(XlsxToXls, ChartSheetDrawingIsNotADrawing)
+{
+	ExpectChartExport(kChartSheetRels, "relationships/drawing\" Target=\"../drawings/drawing2.xml\"",
+					  "relationships/vmlDrawing\" Target=\"../drawings/vmlDrawing1.vml\"", false);
+}
+
+// The same for a worksheet <drawing>: the sheet is written without it, and the chart sheet's chart is not affected.
+TEST(XlsxToXls, WorksheetDrawingWithUnknownRelationshipId)
+{
+	ExpectChartExport(kWorksheet, "<drawing r:id=\"rId1\"/>", "<drawing r:id=\"rId99\"/>", true);
+}
+
+TEST(XlsxToXls, WorksheetDrawingIsNotADrawing)
+{
+	// rId2 is the sheet's VML drawing
+	ExpectChartExport(kWorksheet, "<drawing r:id=\"rId1\"/>", "<drawing r:id=\"rId2\"/>", true);
+}
+
+// A chart frame whose chart r:id resolves to no chart part used to dereference a null pointer in
+// CDrawing::toXLSChart. The chart sheet is written without the chart.
+TEST(XlsxToXls, ChartWithUnknownRelationshipId)
+{
+	ExpectChartExport(kChartSheetDrawing, "r:id=\"rId1\"", "r:id=\"rId99\"", false);
+}
+
+// A shape next to the chart on a chart sheet, before or after it, is valid. CDrawing::toXLSChart cast every anchor to
+// a graphic frame and crashed on the shape. The shape is not written; the chart is.
+TEST(XlsxToXls, ChartSheetWithShapeBeforeChart)
+{
+	ExpectChartExport(kChartSheetDrawing, "(<xdr:wsDr[^>]*>)", "$1" + kShapeAnchor, true);
+}
+
+TEST(XlsxToXls, ChartSheetWithShapeAfterChart)
+{
+	ExpectChartExport(kChartSheetDrawing, "</xdr:wsDr>", kShapeAnchor + "</xdr:wsDr>", true);
+}
+
+// A chart title linked to a cell (<c:strRef>) has no rich text; toXLSChart read the rich text and crashed. The title
+// is written with the cell's cached value, and without a cached value the chart is written without title text.
+TEST(XlsxToXls, ChartTitleLinkedToCell)
+{
+	std::wstring dir;
+	ASSERT_NO_FATAL_FAILURE(ExpectChartExport(kChart, "<c:title><c:overlay",
+											  "<c:title><c:tx><c:strRef><c:f>" + kSheet + "1!$$A$$1</c:f><c:strCache>"
+											  "<c:ptCount val=\"1\"/><c:pt idx=\"0\"><c:v>CachedTitle</c:v></c:pt>"
+											  "</c:strCache></c:strRef></c:tx><c:overlay",
+											  true, dir));
+	EXPECT_NE(ReadBackCharts(dir).find("CachedTitle"), std::string::npos) << "the title text was lost";
+
+	ExpectChartExport(kChart, "<c:title><c:overlay",
+					  "<c:title><c:tx><c:strRef><c:f>" + kSheet + "1!$$A$$1</c:f></c:strRef></c:tx><c:overlay", true);
+}
+
+// A rich text title still comes back with its text.
+TEST(XlsxToXls, ChartTitleRichText)
+{
+	std::wstring dir;
+	ASSERT_NO_FATAL_FAILURE(ExpectChartExport(kChart, "<c:title><c:overlay",
+											  "<c:title><c:tx><c:rich><a:bodyPr/><a:lstStyle/><a:p><a:r>"
+											  "<a:t>RichTitle</a:t></a:r></a:p></c:rich></c:tx><c:overlay",
+											  true, dir));
+	EXPECT_NE(ReadBackCharts(dir).find("RichTitle"), std::string::npos) << "the title text was lost";
+}
+
+// Two more broken chart parts toXLSChart dereferenced without a check: an anchor <xdr:ext> without cy, and a chart
+// part without <c:chart>. The first keeps its chart; the second has no chart to write.
+TEST(XlsxToXls, ChartAnchorWithoutHeight)
+{
+	ExpectChartExport(kChartSheetDrawing, "<xdr:ext cx=\"8667479\" cy=\"6290299\"/>", "<xdr:ext cx=\"8667479\"/>", true);
+}
+
+TEST(XlsxToXls, ChartWithoutChartElement)
+{
+	ExpectChartExport(kChart, "<c:chart>.*</c:chart>", "", false);
+}
+
+// A line series with a data point that only sets a marker (<c:dPt> without <c:spPr>) is valid. CT_LineSer::GetXLSFormat
+// checked the series' shape properties and then read the data point's, and crashed. The chart is written.
+TEST(XlsxToXls, LineChartDataPointWithoutShapeProperties)
+{
+	// simple2.xlsx's clustered bar chart as a line chart, each series with a marker-only data point
+	auto toLineChart = [](const std::string& xml)
+	{
+		std::string out = std::regex_replace(xml, std::regex("<c:barChart><c:barDir val=\"col\"/><c:grouping val=\"clustered\"/>"),
+											 "<c:lineChart><c:grouping val=\"standard\"/>");
+		out = std::regex_replace(out, std::regex("</c:barChart>"), "</c:lineChart>");
+		out = std::regex_replace(out, std::regex("<c:gapWidth [^>]*/>|<c:overlap [^>]*/>"), "");
+		out = std::regex_replace(out, std::regex("</c:spPr><c:invertIfNegative val=\"0\"/>"),
+								 "</c:spPr><c:dPt><c:idx val=\"1\"/><c:marker><c:symbol val=\"circle\"/></c:marker>"
+								 "<c:bubble3D val=\"0\"/></c:dPt>");
+		return out;
+	};
+	std::wstring edited, xls, dir;
+	ASSERT_TRUE(TransformXlsxPart(ExampleFile(L"simple2.xlsx"), kChart, toLineChart, edited));
+	ASSERT_NO_FATAL_FAILURE(ExportAndReadBack(edited, xls, dir));
+	EXPECT_EQ(TabNames(dir), (std::vector<std::string>{kSheet + "1", kSheet + "2", kChartSheetName}));
+	std::string charts = ReadBackCharts(dir);
+	EXPECT_NE(charts.find("<c:lineChart>"), std::string::npos) << "the line chart was not written";
+	EXPECT_NE(charts.find("$C$6:$C$8"), std::string::npos) << "the line chart's series was lost";
 }

@@ -115,7 +115,7 @@ public:
 	void convert(XLS::GlobalsSubstream			* elem);
 	void convert(XLS::MacroSheetSubstream		* chart);
 
-	void convert(XLS::FORMATTING				* formating);
+	void convert(XLS::FORMATTING				* formatting);
 	void convert(XLS::BACKGROUND 				* back);
 	void convert(XLS::SHAREDSTRINGS				* sharedstrings);
 	void convert(XLS::HLINK						* hlink);

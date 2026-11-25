@@ -304,7 +304,7 @@ namespace Global
 
 	typedef enum _BlipType
 	{
-		msoblipERROR = 0, // An error occured during loading 
+		msoblipERROR = 0, // An error occurred during loading 
 		msoblipUNKNOWN, // An unknown blip type 
 		msoblipEMF, // Windows Enhanced Metafile 
 		msoblipWMF, // Windows Metafile 

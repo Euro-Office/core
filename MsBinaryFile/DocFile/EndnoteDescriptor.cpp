@@ -27,13 +27,14 @@
 
 namespace DocFileFormat
 {
-	  EndnoteDescriptor::EndnoteDescriptor(): aEndIdx(0), bUsed(false) {}
+	  EndnoteDescriptor::EndnoteDescriptor(): bUsed(false), aEndIdx(0) {}
 
 	  EndnoteDescriptor::~EndnoteDescriptor()
 	  {
 	  }  
 	  ByteStructure* EndnoteDescriptor::ConstructObject( VirtualStreamReader* reader, int length )
       {
+      	(void)length;
         EndnoteDescriptor *newObject = new EndnoteDescriptor();
 
 		newObject->aEndIdx = reader->ReadInt16();

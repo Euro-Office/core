@@ -28,7 +28,7 @@
 namespace DocFileFormat
 {
 	CharacterPropertiesMapping::CharacterPropertiesMapping( XMLTools::CStringXmlWriter* writer, WordDocument* doc, RevisionData* rev, ParagraphPropertyExceptions* currentPapx, bool styleChpx, bool isRunStyleNeeded)
-		: PropertiesMapping( writer ), _isRunStyleNeeded(isRunStyleNeeded), _isOwnRPr(true), _isRTL(false)
+		: PropertiesMapping( writer ), _isRTL(false), _isRunStyleNeeded(isRunStyleNeeded), _isOwnRPr(true)
 	{
 		_doc			= doc;
         _rPr			= new XMLTools::XMLElement( L"w:rPr");
@@ -40,7 +40,7 @@ namespace DocFileFormat
 	}
 
     CharacterPropertiesMapping::CharacterPropertiesMapping( XMLTools::XMLElement* rPr, WordDocument* doc, RevisionData* rev, ParagraphPropertyExceptions* currentPapx, bool styleChpx, bool isRunStyleNeeded )
-		: PropertiesMapping( NULL ), _isRunStyleNeeded(isRunStyleNeeded), _isOwnRPr(false), _isRTL(false)   
+		: PropertiesMapping( nullptr ), _isRTL(false), _isRunStyleNeeded(isRunStyleNeeded), _isOwnRPr(false)   
 	{
 		_doc			= doc;
 		_rPr			= rPr;
@@ -67,7 +67,7 @@ namespace DocFileFormat
 		//convert the normal SPRMS
 		convertSprms( dynamic_cast<CharacterPropertyExceptions*>( chpx )->grpprl, _rPr );
 
-		// apend revision changes
+		// append revision changes
 		if ((_revisionData) && (_revisionData->Type == Changed))
 		{
             XMLTools::XMLElement rPrChange( L"w:rPrChange");
@@ -94,7 +94,7 @@ namespace DocFileFormat
 		}
 
 		//write properties
-		if ( ( m_pXmlWriter != NULL ) && ( ( _rPr->GetChildCount() > 0 ) || ( _rPr->GetAttributeCount() > 0 ) ) )
+		if ( ( m_pXmlWriter != nullptr ) && ( ( _rPr->GetChildCount() > 0 ) || ( _rPr->GetAttributeCount() > 0 ) ) )
 		{
 			m_pXmlWriter->WriteString( _rPr->GetXMLString());
 		}
@@ -467,8 +467,9 @@ namespace DocFileFormat
 							hint.SetValue(L"cs");
 							rFonts->AppendAttribute(hint);
 						}break;
-						case 0: break;	// default
-						case 0xFF:	break;	//No ST_Hint equivalent
+						case 0:					// default
+						case 0xFF:				//No ST_Hint equivalent
+						default: break;
 						}
 					}break;
 					case sprmCPbiIBullet:
@@ -487,6 +488,7 @@ namespace DocFileFormat
 					{
 						//used picture bullet
 						int val = FormatUtils::BytesToUInt16(iter->Arguments, 0, iter->argumentsSize);
+						(void)val;
 
 					}break;
 					case sprmCRsidProp:
@@ -502,13 +504,17 @@ namespace DocFileFormat
 						{
 						case 1:
 							nProperty = FormatUtils::BytesToUChar(iter->Arguments, 0, iter->argumentsSize);
+							(void)nProperty;
 							break;
 						case 2:
 							nProperty = FormatUtils::BytesToUInt16(iter->Arguments, 0, iter->argumentsSize);
+							(void)nProperty;
 							break;
 						case 4:
 							nProperty = FormatUtils::BytesToInt32(iter->Arguments, 0, iter->argumentsSize);
+							(void)nProperty;
 							break;
+						default: break;
 						}
 					}break;
 				}
@@ -516,7 +522,7 @@ namespace DocFileFormat
 		}
 		if (_doc->nWordVersion > 0)
 		{
-			if (false == m_sAsciiFont.empty())
+			if (!m_sAsciiFont.empty())
 			{
 				if (m_sEastAsiaFont.empty())
 				{
@@ -605,7 +611,7 @@ namespace DocFileFormat
 				{
 					styleId = _currentIstd;
 				}
-				else if( _currentPapx != NULL )
+				else if( _currentPapx != nullptr )
 				{
 					styleId = _currentPapx->istd;
 				}
@@ -650,7 +656,7 @@ namespace DocFileFormat
 		unsigned int istd = (unsigned int)istdStart;
 		bool goOn = true;
 
-		if ( ( styleSheet != NULL ) && ( styleSheet->Styles != NULL ) )
+		if ( ( styleSheet != nullptr ) && ( styleSheet->Styles != nullptr ) )
 		{
 			while ( goOn )
 			{
@@ -664,10 +670,10 @@ namespace DocFileFormat
 							break;
 						CharacterPropertyExceptions* baseChpx = style->chpx;
 
-						if ( baseChpx != NULL )
+						if ( baseChpx != nullptr )
 						{
 							hierarchy.push_back( baseChpx );
-							istd = (unsigned int)styleSheet->Styles->at( istd )->istdBase;
+							istd = styleSheet->Styles->at( istd )->istdBase;
 						}
 						else
 						{
@@ -722,14 +728,7 @@ namespace DocFileFormat
 		else if ( toggle == 129 )
 		{
 			//invert the current value
-			if ( currentValue )
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+			return !currentValue;
 		}
 		else if ( toggle == 128 )
 		{

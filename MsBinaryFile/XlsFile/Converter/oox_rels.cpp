@@ -44,9 +44,9 @@ relationship::relationship(const std::wstring & Id, int Type, const std::wstring
 	target_mode_= bExternal ? L"External" : L"" ;
 
 }
-::std::wostream & relationship::xml_to_stream(::std::wostream & _Wostream) const
+::std::wostream & relationship::xml_to_stream(::std::wostream & wostream_) const
 {
-    CP_XML_WRITER(_Wostream)
+    CP_XML_WRITER(wostream_)
     {
         CP_XML_NODE(L"Relationship")
         {
@@ -59,7 +59,7 @@ relationship::relationship(const std::wstring & Id, int Type, const std::wstring
         }    
     }
 
-    //_Wostream << L"<Relationship ";
+    //wostream_ << L"<Relationship ";
     //CP_XML_SERIALIZE_ATTR(L"Id", id());
     //CP_XML_SERIALIZE_ATTR(L"Type", type());
     //CP_XML_SERIALIZE_ATTR(L"Target", target());
@@ -69,16 +69,16 @@ relationship::relationship(const std::wstring & Id, int Type, const std::wstring
     //    CP_XML_SERIALIZE_ATTR(L"TargetMode", target_mode());
     //}
 
-    //_Wostream << L" />";
-    return _Wostream;
+    //wostream_ << L" />";
+    return wostream_;
 }
 
 const wchar_t * rels::ns = L"";
 const wchar_t * rels::name = L"Relationships";
 
-::std::wostream & rels::xml_to_stream(::std::wostream & _Wostream) const
+::std::wostream & rels::xml_to_stream(::std::wostream & wostream_) const
 {
-    CP_XML_WRITER(_Wostream)
+    CP_XML_WRITER(wostream_)
     {
         CP_XML_NODE(L"Relationships")
         {
@@ -90,7 +90,7 @@ const wchar_t * rels::name = L"Relationships";
             }
         } // "Relationships"
     }
-    return _Wostream;
+    return wostream_;
 }
 
 void rels::add(relationship const & r)

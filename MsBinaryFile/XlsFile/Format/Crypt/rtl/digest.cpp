@@ -41,24 +41,24 @@
 #define I(x,y,z) (((x) | (~(z))) ^ (y))
 
 #define R0(a,b,c,d,k,s,t) { \
-	a += ((k) + (t) + F((b), (c), (d))); \
-	a  = RTL_DIGEST_ROTL(a, s); \
-	a += b; }
+	(a) += (((k) + (t) + F((b), (c), (d)))); \
+	(a)  = RTL_DIGEST_ROTL((a), (s)); \
+	(a) += (b); }
 
 #define R1(a,b,c,d,k,s,t) { \
-	a += ((k) + (t) + G((b), (c), (d))); \
-	a  = RTL_DIGEST_ROTL(a, s); \
-	a += b; }
+	(a) += (((k) + (t) + G((b), (c), (d)))); \
+	(a)  = RTL_DIGEST_ROTL((a), (s)); \
+	(a) += (b); }
 
 #define R2(a,b,c,d,k,s,t) { \
-	a += ((k) + (t) + H((b), (c), (d))); \
-	a  = RTL_DIGEST_ROTL(a, s); \
-	a += b; }
+	(a) += (((k) + (t) + H((b), (c), (d)))); \
+	(a)  = RTL_DIGEST_ROTL((a), (s)); \
+	(a) += (b); }
 
 #define R3(a,b,c,d,k,s,t) { \
-	a += ((k) + (t) + I((b), (c), (d))); \
-	a  = RTL_DIGEST_ROTL(a, s); \
-	a += b; }
+	(a) += (((k) + (t) + I((b), (c), (d)))); \
+	(a)  = RTL_DIGEST_ROTL((a), (s)); \
+	(a) += (b); }
 
 
 DigestMD5::DigestMD5()
@@ -181,6 +181,7 @@ void DigestMD5::EndContext()
 		case 1: X[i] &= 0x000000ff; break;
 		case 2: X[i] &= 0x0000ffff; break;
 		case 3: X[i] &= 0x00ffffff; break;
+		default: break;
 	}
 
 	switch (m_context.m_nDatLen & 0x03)
@@ -189,6 +190,7 @@ void DigestMD5::EndContext()
 		case 1: X[i] |= ((unsigned int)(*(p++))) <<  8L;
 		case 2: X[i] |= ((unsigned int)(*(p++))) << 16L;
 		case 3: X[i] |= ((unsigned int)(*(p++))) << 24L;
+		default: break;
 	}
 
 	i += 1;
@@ -265,7 +267,7 @@ DigestMD5::rtlDigestError DigestMD5::Get(unsigned char *pBuffer, const unsigned 
 {
 	unsigned char *p = pBuffer;
 
-	if ((pBuffer == NULL))
+	if (pBuffer == nullptr)
 		return rtl_Digest_E_Argument;
 
 	if (!(RTL_DIGEST_LENGTH_MD5 <= nBufLen))
@@ -286,7 +288,7 @@ DigestMD5::rtlDigestError DigestMD5::Raw(unsigned char *pBuffer, const unsigned 
 {
 	unsigned char *p = pBuffer;
 
-	if (pBuffer == NULL)
+	if (pBuffer == nullptr)
 		return rtl_Digest_E_Argument;
 
 	if (!(RTL_DIGEST_LENGTH_MD5 <= nBufLen))

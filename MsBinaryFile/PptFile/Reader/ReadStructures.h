@@ -144,7 +144,7 @@ public:
 
 public:
     CMetaHeader();
-    void FromStream(POLE::Stream* pStream, CRYPT::ECMADecryptor *pDecryptor = NULL);
+    void FromStream(POLE::Stream* pStream, CRYPT::ECMADecryptor *pDecryptor = nullptr);
 
     void ToEMFHeader(Gdiplus::ENHMETAHEADER3* pHeader);
     void ToWMFHeader(Gdiplus::WmfPlaceableFileHeader* pHeader);

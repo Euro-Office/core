@@ -49,7 +49,7 @@ namespace DocFileFormat
         this->Formulas.push_back( std::wstring( _T( "prod @7 21600 pixelHeight" ) ) );
         this->Formulas.push_back( std::wstring( _T( "sum @10 21600 0" ) ) );*/
 
-        //pictures are not stroked or fileld by default
+        //pictures are not stroked or filled by default
         this->Filled = false;
         this->Stroked = false;
 
