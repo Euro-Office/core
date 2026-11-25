@@ -110,7 +110,7 @@ void odf_notes_context::start_note(office_element_ptr &elm, int oox_id, int type
 }
 void odf_notes_context::end_note()
 {
-	impl_->notes_.back().state = 2;//stoped
+	impl_->notes_.back().state = 2;//stopped
 }
 void odf_notes_context::start_note_content()
 {

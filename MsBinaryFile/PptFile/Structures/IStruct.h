@@ -32,6 +32,7 @@
 namespace PPT
 {
 struct IStruct {
+    virtual ~IStruct() = default;
     virtual void ReadFromStream (POLE::Stream* pStream) = 0;
 };
 }

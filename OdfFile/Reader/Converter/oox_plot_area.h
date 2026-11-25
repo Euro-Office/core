@@ -55,7 +55,7 @@ public:
 	void add_chart	(int type);
 	void add_axis	(odf_reader::chart::axis & content);
 
-	void set_no_local_table (bool val); //whithout embedded tables
+	void set_no_local_table (bool val); //without embedded tables
 	//void set_content_series	(odf_reader::chart::series & content);
 	void set_data_table(odf_reader::chart::simple & content);
 private:

@@ -30,7 +30,7 @@ namespace DocFileFormat
 	Shape::Shape():
 	Record(), spid(0), fGroup(false), fChild(false), fPatriarch(false), fDeleted(false), fOleShape(false),
 		fHaveMaster(false), fFlipH(false), fFlipV(false), fConnector(false), fHaveAnchor(false), fBackground(false),
-		fHaveSpt(false), shapeType(NULL)
+		fHaveSpt(false), shapeType(nullptr)
 	{
 	}
 	Shape::~Shape()
@@ -40,7 +40,7 @@ namespace DocFileFormat
 	Shape::Shape( IBinaryReader* _reader, unsigned int size, unsigned int typeCode, unsigned int version, unsigned int instance ):
 	Record( _reader, size, typeCode, version, instance ), spid(0), fGroup(false), fChild(false), fPatriarch(false), fDeleted(false), fOleShape(false),
 		fHaveMaster(false), fFlipH(false), fFlipV(false), fConnector(false), fHaveAnchor(false), fBackground(false),
-		fHaveSpt(false), shapeType(NULL)
+		fHaveSpt(false), shapeType(nullptr)
 	{
 		spid				=	Reader->ReadInt32();
 

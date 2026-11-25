@@ -67,7 +67,6 @@ void CRecordFontEntityAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Stream 
     Mem = StreamUtils::ReadBYTE(pStream);
     m_bEmbedSubsetted = ((Mem & 0x01) == 0x01);
 
-    Mem = 0;
     Mem = StreamUtils::ReadBYTE(pStream);
 
     m_bIsRaster = ((Mem & 0x01) == 0x01);

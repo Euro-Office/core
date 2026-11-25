@@ -64,7 +64,7 @@ public:
 
 	virtual const bool write(StreamCacheWriterPtr writer, BaseObject* parent) = 0; // Write self and children
 
-	virtual const std::string & getClassName() const = 0; // Must be overridden in every deriver. The return value must be a reference to a static variable inside the getter
+	virtual const std::string & getClassName() const = 0; // Must be overridden in every derived class. The return value must be a reference to a static variable inside the getter
 
 	void add_child (BaseObjectPtr e) {elements_.push_back(e);}
 	
@@ -93,7 +93,7 @@ typedef enum
 {
 	p_OPTIONAL = 0,
 	p_MANDATORY = 1
-} Presense;
+} Presence;
 
 typedef boost::shared_ptr<BaseObject> BaseObjectPtr;
 typedef std::list<BaseObjectPtr> BaseObjectPtrList;

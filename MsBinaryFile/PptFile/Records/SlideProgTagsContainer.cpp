@@ -51,7 +51,7 @@ void CRecordPP9SlideBinaryTagExtension::ReadFromStream(SRecordHeader &oHeader, P
 
     while ( lCurLen < m_oHeader.RecLen )
     {
-        if ( ReadHeader.ReadFromStream(pStream) == false)
+        if ( !ReadHeader.ReadFromStream(pStream))
             break;
 
         lCurLen += 8 + ReadHeader.RecLen;
@@ -110,7 +110,7 @@ void PPT::CRecordPP10SlideBinaryTagExtension::ReadFromStream(SRecordHeader &oHea
 
     while ( lCurLen < m_oHeader.RecLen )
     {
-        if ( ReadHeader.ReadFromStream(pStream) == false)
+        if ( !ReadHeader.ReadFromStream(pStream))
             break;
 
         lCurLen += 8 + ReadHeader.RecLen;
@@ -283,7 +283,7 @@ void PPT::CRecordSlideProgTagsContainer::ReadFromStream(SRecordHeader &oHeader, 
 
     while (lCurLen < (LONG)m_oHeader.RecLen)
     {
-        if ( ReadHeader.ReadFromStream(pStream) == false)
+        if ( !ReadHeader.ReadFromStream(pStream))
             break;
         lCurLen +=	8 + ReadHeader.RecLen;
         CRecordSlideProgBinaryTagSubContainerOrAtom* pRecord =

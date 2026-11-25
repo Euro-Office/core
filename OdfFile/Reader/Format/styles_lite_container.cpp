@@ -24,11 +24,18 @@
  */
 
 #include <vector>
+#include <algorithm>
+#include <cmath>
+#include <locale>
+#include <sstream>
 #include <boost/unordered_map.hpp>
 
 #include "styles_lite_container.h"
 #include "office_settings.h"
 #include "../../Common/xml/simple_xml_writer.h"
+#include "../../../DesktopEditor/common/SystemUtils.h"
+#include "../../Common/utils.h"
+#include "../../../OOXML/Base/Base.h"
 
 namespace cpdoccore { 
 
@@ -76,12 +83,57 @@ office_element_ptr styles_lite_container::find_by_style_name(const std::wstring 
         return office_element_ptr();
     }
 }
+
+namespace
+{
+	std::wstring trimmed(const std::wstring & value)
+	{
+		const size_t first = value.find_first_not_of(L" \t\r\n");
+		if (first == std::wstring::npos) return L"";
+		return value.substr(first, value.find_last_not_of(L" \t\r\n") - first + 1);
+	}
+
+	// An ODF float, percentage or currency value as vt:r8 text: the shortest text that reads back as the
+	// same number, with '.' as the decimal point. Empty when the value is no finite number.
+	std::wstring vt_r8_number(const std::wstring & odf_value)
+	{
+		const std::wstring s = trimmed(odf_value);
+		if (s.empty()) return L"";
+
+		std::wistringstream in(s);
+		in.imbue(std::locale::classic());
+		double value = 0;
+		if (!(in >> value) || !std::isfinite(value)) return L"";
+		in >> std::ws;
+		if (!in.eof()) return L"";
+		// A number too small for a double reads as 0: that is not the value the file holds.
+		if (value == 0 && s.substr(0, s.find_first_of(L"eE")).find_first_of(L"123456789") != std::wstring::npos)
+			return L"";
+
+		return _doc_props_utils_::shortest_number(value);
+	}
+
+	// An ODF boolean value as vt:bool text, empty when it is none.
+	std::wstring vt_bool(const std::wstring & odf_value)
+	{
+		const std::wstring s = trimmed(odf_value);
+		if (s == L"true" || s == L"1") return L"true";
+		if (s == L"false" || s == L"0") return L"false";
+		return L"";
+	}
+}
+
 class doc_props_container::Impl
 {
 public:
 	Impl() {}
 
-	std::map<std::wstring, std::wstring> map_user_defineds;
+	struct user_defined
+	{
+		std::wstring value;
+		_CP_OPT(odf_types::office_value_type) value_type;
+	};
+	std::map<std::wstring, user_defined> map_user_defineds;
 };
 
 doc_props_container::doc_props_container() : impl_(new doc_props_container::Impl())
@@ -91,15 +143,19 @@ doc_props_container::doc_props_container() : impl_(new doc_props_container::Impl
 doc_props_container::~doc_props_container()
 {
 }
-void doc_props_container::add_user_defined(const std::wstring & name, const std::wstring & value)
+void doc_props_container::add_user_defined(const std::wstring & name, const std::wstring & value,
+	_CP_OPT(odf_types::office_value_type) value_type)
 {
-	impl_->map_user_defineds.insert(std::make_pair(name, value));
+	Impl::user_defined property;
+	property.value = value;
+	property.value_type = value_type;
+	impl_->map_user_defineds.insert(std::make_pair(name, property));
 }
 std::wstring doc_props_container::get_user_defined(const std::wstring & name)
 {
-	std::map<std::wstring, std::wstring>::iterator pFind = impl_->map_user_defineds.find(name);
+	std::map<std::wstring, Impl::user_defined>::iterator pFind = impl_->map_user_defineds.find(name);
 
-	return pFind != impl_->map_user_defineds.end() ? pFind->second : L"";
+	return pFind != impl_->map_user_defineds.end() ? pFind->second.value : L"";
 }
 std::wstring doc_props_container::dump_user_defined()
 {
@@ -108,16 +164,161 @@ std::wstring doc_props_container::dump_user_defined()
 	CP_XML_WRITER(output)
 	{
 		int pid = 2;
-		for (std::map<std::wstring, std::wstring>::iterator it = impl_->map_user_defineds.begin(); it != impl_->map_user_defineds.end(); ++it)
+		for (std::map<std::wstring, Impl::user_defined>::iterator it = impl_->map_user_defineds.begin(); it != impl_->map_user_defineds.end(); ++it)
 		{
+			// Numbers, yes/no values and dates keep their type, as LibreOffice writes them. A time value
+			// (a duration), and any value that does not parse as its type, stays text.
+			std::wstring node = L"vt:lpwstr", value = it->second.value;
+			if (it->second.value_type)
+			{
+				std::wstring typed;
+				switch (it->second.value_type->get_type())
+				{
+				case odf_types::office_value_type::Float:
+				case odf_types::office_value_type::Percentage:
+				case odf_types::office_value_type::Currency:
+					typed = vt_r8_number(value);
+					if (!typed.empty()) node = L"vt:r8";
+					break;
+				case odf_types::office_value_type::Boolean:
+					typed = vt_bool(value);
+					if (!typed.empty()) node = L"vt:bool";
+					break;
+				case odf_types::office_value_type::Date:
+					typed = _doc_props_utils_::w3cdtf_date(value);
+					if (!typed.empty()) node = L"vt:filetime";
+					break;
+				default:
+					break;
+				}
+				if (!typed.empty()) value = typed;
+			}
 			CP_XML_NODE(L"property")
 			{
 				CP_XML_ATTR(L"fmtid", L"{D5CDD505-2E9C-101B-9397-08002B2CF9AE}");
 				CP_XML_ATTR(L"pid", pid++);
 				CP_XML_ATTR(L"name", XmlUtils::EncodeXmlString(it->first));
-				CP_XML_NODE(L"vt:lpwstr")
+				CP_XML_NODE(node)
 				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(it->second);
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(value);
+				}
+			}
+		}
+	}
+	return output.str();
+}
+
+std::wstring doc_props_container::dump_custom()
+{
+	std::wstring user_defined = dump_user_defined();
+	if (user_defined.empty()) return L"";
+
+	std::wstringstream output;
+	CP_XML_WRITER(output)
+	{
+		CP_XML_NODE(L"Properties")
+		{
+			CP_XML_ATTR(L"xmlns", L"http://schemas.openxmlformats.org/officeDocument/2006/custom-properties");
+			CP_XML_ATTR(L"xmlns:vt", L"http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes");
+
+			CP_XML_STREAM() << user_defined;
+		}
+	}
+	return output.str();
+}
+std::wstring doc_props_container::dump_core()
+{
+	std::wstringstream output;
+	
+	CP_XML_WRITER(output)
+	{
+		CP_XML_NODE(L"cp:coreProperties")
+		{
+			CP_XML_ATTR(L"xmlns:cp", L"http://schemas.openxmlformats.org/package/2006/metadata/core-properties");
+			CP_XML_ATTR(L"xmlns:xsi", L"http://www.w3.org/2001/XMLSchema-instance");
+			CP_XML_ATTR(L"xmlns:dc", L"http://purl.org/dc/elements/1.1/");
+			CP_XML_ATTR(L"xmlns:dcmitype", L"http://purl.org/dc/dcmitype/");
+			CP_XML_ATTR(L"xmlns:dcterms", L"http://purl.org/dc/terms/");
+			
+			const std::wstring created = _doc_props_utils_::w3cdtf_date(creation_date_);
+			if (!created.empty())
+			{
+				CP_XML_NODE(L"dcterms:created")
+				{
+					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
+					CP_XML_STREAM() << created;
+				}
+			}
+			const std::wstring modified = _doc_props_utils_::w3cdtf_date(dc_date_);
+			if (!modified.empty())
+			{
+				CP_XML_NODE(L"dcterms:modified")
+				{
+					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
+					CP_XML_STREAM() << modified;
+				}
+			}
+			// OOXML dc:creator is the author who created the document (ODF meta:initial-creator),
+			// cp:lastModifiedBy the one who saved it last (ODF dc:creator). Files without
+			// meta:initial-creator, such as the ones older versions of this converter wrote, keep
+			// dc:creator as the author too: otherwise the next save would lose the only name they have.
+			const std::wstring & author = initial_creator_.empty() ? dc_creator_ : initial_creator_;
+			if (!author.empty())
+			{
+				CP_XML_NODE(L"dc:creator")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(author);
+				}
+			}
+			if (!dc_title_.empty())
+			{
+				CP_XML_NODE(L"dc:title")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_title_);
+				}
+			}
+			if (!dc_subject_.empty())
+			{
+				CP_XML_NODE(L"dc:subject")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_subject_);
+				}
+			}
+			if (!dc_description_.empty())
+			{
+				CP_XML_NODE(L"dc:description")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_description_);
+				}
+			}
+			if (!dc_language_.empty())
+			{
+				CP_XML_NODE(L"dc:language")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_language_);
+				}
+			}
+			// Only a person who saved the document: the application name here would be saved back to ODF
+			// as the last author.
+			if (!dc_creator_.empty())
+			{
+				CP_XML_NODE(L"cp:lastModifiedBy")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(dc_creator_);
+				}
+			}
+			if (!keyword_.empty())
+			{
+				CP_XML_NODE(L"cp:keywords")
+				{
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(keyword_);
+				}
+			}
+			if (revision_)
+			{
+				CP_XML_NODE(L"cp:revision")
+				{
+					CP_XML_STREAM() << *revision_;
 				}
 			}
 		}

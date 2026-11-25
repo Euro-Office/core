@@ -155,7 +155,7 @@ const wchar_t * math_mprescripts::name = L"mprescripts";
 
 void math_mprescripts::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
-	//CP_CREATE_ELEMENT(content_); //TODO pich
+	//CP_CREATE_ELEMENT(content_); //TODO pick
 }
 
 void math_mprescripts::add_child_element(const office_element_ptr & child_element)

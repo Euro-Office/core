@@ -60,7 +60,7 @@ public:
     virtual void write(const std::wstring & RootPath) = 0;
 
 private:
-    document * document_;
+    document * document_ = nullptr;
 };
 
 inline element::~element()
@@ -75,7 +75,7 @@ public:
     content_type & get_content_type() { return content_type_; }
 	
 	bool add_or_find_default(const std::wstring & extension);
-	void set_media(external_items & _Mediaitems);
+	void set_media(external_items & mediaitems);
 
 protected:
     content_type content_type_;

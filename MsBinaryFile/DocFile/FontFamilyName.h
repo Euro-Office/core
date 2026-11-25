@@ -58,7 +58,7 @@ namespace DocFileFormat
       std::wstring xszAlt;		// Alternative name of the font
       unsigned char *panose;	// Panose
 	  unsigned int panoseSize;	// Panose size     
-      FontSignature fs;			// Font sinature
+      FontSignature fs;			// Font signature
 	  
 	  long searchTerminationZero( VirtualStreamReader *reader );
     public:
