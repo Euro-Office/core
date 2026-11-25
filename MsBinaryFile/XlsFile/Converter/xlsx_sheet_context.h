@@ -60,11 +60,11 @@ public:
 	table_state_ptr & state();
 
 	std::wstring	add_hyperlink(std::wstring const & ref, std::wstring const & target, std::wstring const & display, bool bExternal);
-	void			serialize_hyperlinks(std::wostream & _Wostream);
+	void			serialize_hyperlinks(std::wostream & wostream_);
 	void			dump_rels_hyperlinks(rels & Rels);
     
-	void			serialize_ole_objects(std::wostream & _Wostream);
-	void			serialize_controls(std::wostream & _Wostream);
+	void			serialize_ole_objects(std::wostream & wostream_);
+	void			serialize_controls(std::wostream & wostream_);
 	
 	void			dump_rels_drawing(rels & Rels);
 private:

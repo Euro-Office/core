@@ -42,7 +42,7 @@ Timing_1995::Timing_1995(const std::vector<Intermediate::SOldAnimation> &vecAIC)
 
 void Timing_1995::Convert(PPTX::Logic::Timing& timimg, CExMedia* pExMedia, CRelsGenerator* pRels)
 {
-    if (InitAndCheckVars(timimg, pExMedia, pRels) == false)
+    if (!InitAndCheckVars(timimg, pExMedia, pRels))
         return;
     ConvertBldLst();
     ConvertTnLst();

@@ -44,7 +44,7 @@ using namespace DocFileFormat;
 
 namespace DocFileFormat
 {
-	struct __BITMAPINFOHEADER
+	struct DocBitmapInfoHeader
 	{
 		_UINT32     biSize;
 		_INT32      biWidth;
@@ -59,7 +59,7 @@ namespace DocFileFormat
 		_UINT32     biClrImportant;
 	};
 
-	struct __BITMAPCOREHEADER
+	struct DocBitmapCoreHeader
 	{
 		_UINT32     bcSize;                 /* used to get to color table */
 		_UINT16     bcWidth;
@@ -73,12 +73,12 @@ namespace DocFileFormat
 
 		int offset = 0, biSizeImage = 0;
 
-		__BITMAPINFOHEADER* header = (__BITMAPINFOHEADER*)data;
+		DocBitmapInfoHeader* header = (DocBitmapInfoHeader*)data;
 		if (!header) return btWin32;
 
 		if (header->biWidth > 100000 || header->biHeight > 100000 || header->biSize != 40)
 		{
-			__BITMAPCOREHEADER* header_core = (__BITMAPCOREHEADER*)data;
+			DocBitmapCoreHeader* header_core = (DocBitmapCoreHeader*)data;
 
 			if (header_core->bcSize != 12)
 			{
@@ -88,8 +88,6 @@ namespace DocFileFormat
 			{
 				offset = 12; //sizeof(BITMAPCOREHEADER)		
 				int stride = (size - offset) / header_core->bcHeight;
-
-				biSizeImage = size - offset;
 
 				if (stride >= header_core->bcWidth && header_core->bcBitCount >= 24)
 				{
@@ -101,6 +99,7 @@ namespace DocFileFormat
 		{
 			offset = 40; //sizeof(BITMAPINFOHEADER)
 			int sz_bitmap = header->biHeight * header->biWidth * header->biBitCount / 8;
+			(void)sz_bitmap;
 
 			int stride = (size - offset) / header->biHeight;
 
@@ -128,9 +127,9 @@ namespace DocFileFormat
 		file.WriteFile((BYTE*)xmlString.c_str(), xmlString.size());
 		file.CloseFile();
 
-		COfficeUtils officeUtils(NULL);
+		COfficeUtils officeUtils(nullptr);
 
-		BYTE* utf8Data = NULL;
+		BYTE* utf8Data = nullptr;
 		ULONG utf8DataSize = 0;
 		if (S_OK != officeUtils.LoadFileFromArchive(sTempXmlFile, L"drs/shapexml.xml", &utf8Data, utf8DataSize))
 		{
@@ -152,9 +151,7 @@ namespace DocFileFormat
 		}
 		NSFile::CFileBinary::Remove(sTempXmlFile);
 
-		if (newXmlString.empty()) return false;
-
-		return true;
+		return !newXmlString.empty();
 	}
 	bool VMLPictureMapping::ParseEmbeddedEquation(std::pair<boost::shared_array<char>, size_t>& data, std::wstring& xmlString)
 	{
@@ -176,7 +173,7 @@ namespace DocFileFormat
 		file.CloseFile();
 
 		OOX::CPath path(sTempXmlFile);
-		OOX::CDocument docEmbedded(NULL, path, path);
+		OOX::CDocument docEmbedded(nullptr, path, path);
 
 		bool res = false;
 		for (std::vector<OOX::WritingElement*>::iterator it = docEmbedded.m_arrItems.begin(); it != docEmbedded.m_arrItems.end(); ++it)
@@ -230,7 +227,7 @@ namespace DocFileFormat
 	{
 		m_context = ctx;
 		m_isOlePreview = olePreview;
-		m_imageData = NULL;
+		m_imageData = nullptr;
 		m_nImageId = 0;
 		m_caller = caller;
 		m_isInlinePicture = isInlinePicture;
@@ -247,7 +244,7 @@ namespace DocFileFormat
 	{
 		std::wstring strXmlAttr;
 
-		if (NULL != pShape)
+		if (nullptr != pShape)
 		{
 			strXmlAttr += std::wstring(L"_x0000_i");
 			strXmlAttr += FormatUtils::IntToWideString(pShape->GetShapeID());
@@ -273,7 +270,7 @@ namespace DocFileFormat
 		std::vector<ODRAW::OfficeArtFOPTEPtr> options;
 
 		PictureFrameType type;
-		Shape* pShape = NULL;
+		Shape* pShape = nullptr;
 		if ((pict->shapeContainer || pict->blipStoreEntry) && pict->shapeContainer->Children.size() > 0)
 		{
 			pShape = static_cast<Shape*>(*(pict->shapeContainer->Children.begin()));
@@ -350,7 +347,7 @@ namespace DocFileFormat
 				{
 					ODRAW::OfficeArtCOLORREF bottomColor((_UINT32)iter->op);
 					m_context->_doc->CorrectColor(bottomColor, nColorRGBBase, 5);
-					if (false == bottomColor.sColorRGB.empty())
+					if (!bottomColor.sColorRGB.empty())
 						m_pXmlWriter->WriteAttribute(L"o:borderbottomcolor", L"#" + bottomColor.sColorRGB);
 				}
 				break;
@@ -359,7 +356,7 @@ namespace DocFileFormat
 				{
 					ODRAW::OfficeArtCOLORREF leftColor((_UINT32)iter->op);
 					m_context->_doc->CorrectColor(leftColor, nColorRGBBase, 5);
-					if (false == leftColor.sColorRGB.empty())
+					if (!leftColor.sColorRGB.empty())
 						m_pXmlWriter->WriteAttribute(L"o:borderleftcolor", L"#" + leftColor.sColorRGB);
 				}
 				break;
@@ -368,7 +365,7 @@ namespace DocFileFormat
 				{
 					ODRAW::OfficeArtCOLORREF rightColor((_UINT32)iter->op);
 					m_context->_doc->CorrectColor(rightColor, nColorRGBBase, 5);
-					if (false == rightColor.sColorRGB.empty())
+					if (!rightColor.sColorRGB.empty())
 						m_pXmlWriter->WriteAttribute(L"o:borderrightcolor", L"#" + rightColor.sColorRGB);
 				}
 				break;
@@ -377,7 +374,7 @@ namespace DocFileFormat
 				{
 					ODRAW::OfficeArtCOLORREF topColor((_UINT32)iter->op);
 					m_context->_doc->CorrectColor(topColor, nColorRGBBase, 5);
-					if (false == topColor.sColorRGB.empty())
+					if (!topColor.sColorRGB.empty())
 						m_pXmlWriter->WriteAttribute(L"o:bordertopcolor", L"#" + topColor.sColorRGB);
 				}
 				break;
@@ -453,7 +450,7 @@ namespace DocFileFormat
 			}break;
 			case ODRAW::posrelh:
 			{
-				if (false == m_inGroup)
+				if (!m_inGroup)
 					appendStyleProperty(strStyle, L"mso-position-horizontal-relative", VMLShapeMapping::mapHorizontalPositionRelative((PositionHorizontalRelative)iter->op));
 			}break;
 			case ODRAW::posv:
@@ -462,7 +459,7 @@ namespace DocFileFormat
 			}break;
 			case ODRAW::posrelv:
 			{
-				if (false == m_inGroup)
+				if (!m_inGroup)
 					appendStyleProperty(strStyle, L"mso-position-vertical-relative", VMLShapeMapping::mapVerticalPositionRelative((PositionVerticalRelative)iter->op));
 			}break;
 			case ODRAW::groupShapeBooleanProperties:
@@ -606,7 +603,7 @@ namespace DocFileFormat
 			m_nImageId = m_context->_docx->RegisterImage(m_caller, btWin32);
 			result = true;
 		}
-		else if ((pBlipEntry != NULL) && (pBlipEntry->Blip != NULL))
+		else if ((pBlipEntry != nullptr) && (pBlipEntry->Blip != nullptr))
 		{
 			switch (pBlipEntry->btWin32)
 			{
@@ -616,7 +613,7 @@ namespace DocFileFormat
 				MetafilePictBlip* metaBlip = static_cast<MetafilePictBlip*>(pBlipEntry->Blip);
 				if (metaBlip)
 				{//decompress inside MetafilePictBlip
-					unsigned char* newData = NULL;
+					unsigned char* newData = nullptr;
 					unsigned int newDataSize = metaBlip->oMetaFile.ToBuffer(newData);
 
 					boost::shared_array<unsigned char> arData(newData);
@@ -632,7 +629,7 @@ namespace DocFileFormat
 					std::wstring file_name = m_context->_doc->m_sTempFolder + FILE_SEPARATOR_STR + L"tmp_image";
 					pBlipEntry->btWin32 = ImageHelper::SaveImageToFileFromDIB(bitBlip->m_pvBits, bitBlip->pvBitsSize, file_name);
 
-					unsigned char* pData = NULL;
+					unsigned char* pData = nullptr;
 					DWORD nData = 0;
 					if (NSFile::CFileBinary::ReadAllBytes(file_name, &pData, nData))
 					{
@@ -647,7 +644,7 @@ namespace DocFileFormat
 				MetafilePictBlip* metaBlip = static_cast<MetafilePictBlip*>(pBlipEntry->Blip);
 				if (metaBlip)
 				{
-					unsigned char* newData = NULL;
+					unsigned char* newData = nullptr;
 					unsigned int newDataSize = metaBlip->oMetaFile.ToBuffer(newData);
 
 					CBgraFrame bgraFrame;
@@ -656,7 +653,7 @@ namespace DocFileFormat
 						std::wstring file_name = m_context->_doc->m_sTempFolder + FILE_SEPARATOR_STR + L"tmp_image";
 						bgraFrame.SaveFile(file_name, 4); // png
 
-						unsigned char* pData = NULL;
+						unsigned char* pData = nullptr;
 						DWORD nData = 0;
 						if (NSFile::CFileBinary::ReadAllBytes(file_name, &pData, nData))
 						{

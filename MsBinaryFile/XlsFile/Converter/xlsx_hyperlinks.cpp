@@ -84,11 +84,11 @@ public:
 
 		return r.id;
     }
-   void serialize(std::wostream & _Wostream) const
+   void serialize(std::wostream & wostream_) const
     {
 		if (records_.size() < 1) return;
 
-		CP_XML_WRITER(_Wostream)
+		CP_XML_WRITER(wostream_)
 		{       
             CP_XML_NODE(L"hyperlinks")
             {			

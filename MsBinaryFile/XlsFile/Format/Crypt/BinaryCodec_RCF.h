@@ -112,7 +112,7 @@ public:
 	this size.
 
 	@return
-	True = decoding was successful (no error occured).
+	True = decoding was successful (no error occurred).
 	*/
 	bool decode(unsigned char* pnDestData, const unsigned char* pnSrcData, size_t nBytes );
 
@@ -129,7 +129,7 @@ public:
 	Number of unsigned chars to be skipped (cipher "seeks" forward).
 
 	@return
-	True = skip was successful (no error occured).
+	True = skip was successful (no error occurred).
 	*/
 	bool skip( size_t nBytes );
 

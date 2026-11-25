@@ -36,7 +36,7 @@ namespace DocFileFormat
 		{
 			Record* groupChild = this->Children[i];
 
-			if ( groupChild != NULL )
+			if ( groupChild != nullptr )
 			{
 				if ( groupChild->TypeCode == 0xF003 )
 				{

@@ -101,11 +101,7 @@ namespace ODRAW
 
 		double fAngle = atan(dY / dX);
 		fAngle *= (180 / M_PI);
-		if (dX > 0 && dY > 0)
-		{
-			return fAngle;
-		}
-		else if (dX > 0 && dY < 0)
+		if ((dX > 0 && dY > 0) || (dX > 0 && dY < 0))
 		{
 			return fAngle;
 		}
@@ -208,7 +204,7 @@ namespace ODRAW
 		if ((0 == pGeomInfo.m_dLimoX) || (0 == pGeomInfo.m_dLimoY))
 			return;
 
-		double dAspect = (double)pGeomInfo.m_dLimoX / pGeomInfo.m_dLimoY;
+		double dAspect = pGeomInfo.m_dLimoX / pGeomInfo.m_dLimoY;
 		double lWidth  = (dAspect * pGeomInfo.m_dHeight);
 
 		if (lWidth < pGeomInfo.m_dWidth)
@@ -278,7 +274,6 @@ namespace ODRAW
 					oArray.push_back(arOld[i]);
 				}
 
-				nStart = nCount;
 				break;
 			}
 
@@ -290,7 +285,6 @@ namespace ODRAW
 				oArray.push_back(arOld[nStart + 2]);
 				oArray.push_back(arOld[nStart + 3]);
 
-				nStart += 4;
 				break;
 			}
 
@@ -639,7 +633,8 @@ namespace ODRAW
 
 						double dRadX = dKoefX * m_arPoints[nIndex - 1].x;
 						double dRadY = dKoefY * m_arPoints[nIndex - 1].y;
-						double dAng = (m_arPoints[nIndex].x + m_arPoints[nIndex].y) / pow2_16;
+						int nAngSum = (m_arPoints[nIndex].x + m_arPoints[nIndex].y) / pow2_16;
+						double dAng = nAngSum;
 						dAng *= (M_PI / pow2_16);
 
 						double dcos = cos(dAng);
@@ -649,8 +644,10 @@ namespace ODRAW
 						pGeomInfo.m_oCurPoint.dX = (dCx + rad * dcos);
 						pGeomInfo.m_oCurPoint.dY = (dCy + rad * dsin);
 
-						lX = m_arPoints[nIndex].x / pow2_16;
-						lY = m_arPoints[nIndex].y / pow2_16;
+						int nX = m_arPoints[nIndex].x / pow2_16;
+						int nY = m_arPoints[nIndex].y / pow2_16;
+						lX = nX;
+						lY = nY;
 					}
 
 					pRenderer->AddPoint(-lX, -lY/*GetSweepAngle(lX, lY)*/);
@@ -662,6 +659,8 @@ namespace ODRAW
 			};
 			break;
 		}
+		default:
+			break;
 		};
 
 	}
@@ -801,10 +800,18 @@ namespace ODRAW
 	}
 	std::wstring CPartPath::ToXml(CGeomShapeInfo& pGeomInfo, double dStartTime, double dEndTime, CPen& pPen, CBrush& pFore, NSBaseShape::ClassType ClassType)
 	{
+		(void)pGeomInfo;
+		(void)dStartTime;
+		(void)dEndTime;
+		(void)pPen;
+		(void)pFore;
+		(void)ClassType;
 		return _T("");
 	}
 	void CPartPath::ToRenderer(CGraphicPath* pRenderer, CGeomShapeInfo& pGeomInfo, double dStartTime, double dEndTime, CPen& pPen, CBrush& pFore, NSBaseShape::ClassType ClassType)
 	{
+		(void)dStartTime;
+		(void)dEndTime;
 		pRenderer->m_bStroke	= m_bStroke;
 		pRenderer->m_bFill		= m_bFill;
 

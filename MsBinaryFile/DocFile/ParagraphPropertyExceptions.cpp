@@ -227,7 +227,7 @@ namespace DocFileFormat
 		else 
 		{
 			istd = FormatUtils::BytesToUInt16( bytes, 0, size );
-			VirtualStreamReader *reader = NULL;
+			VirtualStreamReader *reader = nullptr;
 
 			//There is a SPRM that points to an offset in the data stream, 
 			//where a list of SPRM is saved.

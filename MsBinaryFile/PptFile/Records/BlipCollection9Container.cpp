@@ -38,7 +38,7 @@ void CRecordBlipCollection9Container::ReadFromStream(SRecordHeader &oHeader, POL
 
     while ( lCurLen < m_oHeader.RecLen )
     {
-        if ( ReadHeader.ReadFromStream(pStream) == false)
+        if ( !ReadHeader.ReadFromStream(pStream))
             break;
 
         lCurLen += 8 + ReadHeader.RecLen;

@@ -29,8 +29,9 @@ namespace DocFileFormat
 {
 
 
-	Spa::Spa() : spid(0), fHdr(0), bx(MARGIN), by(MARGIN), wr(0), wrk(0), 
-			xaLeft(0), yaTop(0), xaRight(0), yaBottom(0), 				
+	Spa::Spa() : spid(0),
+			xaLeft(0), yaTop(0), xaRight(0), yaBottom(0),
+			fHdr(0), bx(MARGIN), by(MARGIN), wr(0), wrk(0),
 			fRcaSimple(0), fBelowText(0), fAnchorLock(0), cTxbx(0)
 	{
 
@@ -41,7 +42,7 @@ namespace DocFileFormat
 		for (int i = 0 ; i < primitives.size(); i++)
 		{
 			if (primitives[i]) delete primitives[i];
-			primitives[i] = NULL;
+			primitives[i] = nullptr;
 		}
 	}
 
@@ -90,8 +91,9 @@ namespace DocFileFormat
 
 	ByteStructure* Spa::ConstructObject(VirtualStreamReader* reader, int length)
 	{
+		(void)length;
 		Spa* pSpa =	new Spa();  
-		if (!pSpa) return NULL;
+		if (!pSpa) return nullptr;
 		
 		if (reader->nWordVersion > 0)
 		{
@@ -103,11 +105,13 @@ namespace DocFileFormat
 			reader->Seek(fc, 0);
 
 			unsigned short dok = reader->ReadUInt16();			
+			(void)dok;
 			short cb = reader->ReadInt16();
 
 			pSpa->bx			=	(AnchorType)reader->ReadByte();
 			pSpa->by			=	(AnchorType)reader->ReadByte();
 			short height		=	reader->ReadInt16();
+			(void)height;
 			pSpa->fAnchorLock	=	reader->ReadUInt16();
 
 			int pos = 10; //fixed size

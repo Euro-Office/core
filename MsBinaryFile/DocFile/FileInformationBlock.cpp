@@ -51,10 +51,14 @@ namespace DocFileFormat
 			else
 			{
 				int	ccpSpare0				= reader.ReadInt32();
+				(void)ccpSpare0;
 				int	ccpSpare1				= reader.ReadInt32();
+				(void)ccpSpare1;
 				int	ccpSpare2				= reader.ReadInt32();
+				(void)ccpSpare2;
 			}
 			int	ccpSpare3					= reader.ReadInt32();
+			(void)ccpSpare3;
 
 			if (m_FibBase.nFib > Fib1985)
 			{
@@ -378,13 +382,16 @@ namespace DocFileFormat
 		if (m_FibBase.nFib > Fib1995 || m_FibBase.nFib == 0)
 		{
 			int reserv1			=	reader.ReadInt32();
+			(void)reserv1;
 			int reserv2			=	reader.ReadInt32();
+			(void)reserv2;
 
 			m_RgLw97.ccpText	=	reader.ReadInt32(); //76
 			m_RgLw97.ccpFtn		=	reader.ReadInt32(); //80
 			m_RgLw97.ccpHdr		=	reader.ReadInt32(); //84
 
 			int reserv3			=	reader.ReadInt32();
+			(void)reserv3;
 
 			m_RgLw97.ccpAtn		=	reader.ReadInt32(); //92
 			m_RgLw97.ccpEdn		=	reader.ReadInt32(); //96
@@ -392,16 +399,27 @@ namespace DocFileFormat
 			m_RgLw97.ccpHdrTxbx	=	reader.ReadInt32(); //104
 
 			int reserv4			=	reader.ReadInt32();
+			(void)reserv4;
 			int reserv5			=	reader.ReadInt32();
+			(void)reserv5;
 			int reserv6			=	reader.ReadInt32();
+			(void)reserv6;
 			int reserv7			=	reader.ReadInt32();
+			(void)reserv7;
 			int reserv8			=	reader.ReadInt32();
+			(void)reserv8;
 			int reserv9			=	reader.ReadInt32();
+			(void)reserv9;
 			int reserv10		=	reader.ReadInt32();
+			(void)reserv10;
 			int reserv11		=	reader.ReadInt32();
+			(void)reserv11;
 			int reserv12		=	reader.ReadInt32();
+			(void)reserv12;
 			int reserv13		=	reader.ReadInt32();
+			(void)reserv13;
 			int reserv14		=	reader.ReadInt32();
+			(void)reserv14;
 
 			cbRgFcLcb			=	reader.ReadUInt16(); //152
 
@@ -412,6 +430,7 @@ namespace DocFileFormat
 				case 0x0088:	m_FibBase.nFib = Fib2002; break;
 				case 0x00A4:	m_FibBase.nFib = Fib2003; break;
 				case 0x00B7:	m_FibBase.nFib = Fib2007; break;
+				default: break;
 			}
 
 			m_FibWord97.fcStshfOrig		= reader.ReadUInt32(); //154
@@ -904,18 +923,31 @@ namespace DocFileFormat
 		{
 		//read the RgW97
 			int reserv1		= reader.ReadUInt16();
+			(void)reserv1;
 			int reserv2		= reader.ReadUInt16();
+			(void)reserv2;
 			int reserv3		= reader.ReadUInt16();
+			(void)reserv3;
 			int reserv4		= reader.ReadUInt16();
+			(void)reserv4;
 			int reserv5		= reader.ReadUInt16();
+			(void)reserv5;
 			int reserv6		= reader.ReadUInt16();
+			(void)reserv6;
 			int reserv7		= reader.ReadUInt16();
+			(void)reserv7;
 			int reserv8		= reader.ReadUInt16();
+			(void)reserv8;
 			int reserv9		= reader.ReadUInt16();
+			(void)reserv9;
 			int reserv10	= reader.ReadUInt16();
+			(void)reserv10;
 			int reserv11	= reader.ReadUInt16();
+			(void)reserv11;
 			int reserv12	= reader.ReadUInt16();
+			(void)reserv12;
 			int reserv13	= reader.ReadUInt16();
+			(void)reserv13;
 
 			m_RgW97.lidFE = reader.ReadUInt16(); //60
 

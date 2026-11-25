@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "RegularContainer.h"
 
@@ -45,11 +44,11 @@ namespace DocFileFormat
 
 		while ( readSize < this->BodySize )
 		{
-			Record* child = NULL;
+			Record* child = nullptr;
 
 			child = RecordFactory::ReadRecord( this->Reader, idx );
 
-			if ( child != NULL )
+			if ( child != nullptr )
 			{
 				this->Children.push_back( child );
 				child->_ParentRecord = this;

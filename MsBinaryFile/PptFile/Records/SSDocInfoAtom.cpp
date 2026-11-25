@@ -61,5 +61,5 @@ void CRecordSSDocInfoAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *
     fLoopContinuously	= GETBIT(flags, 8);
     fHideScrollBar		= GETBIT(flags, 7);
 
-    unsigned short unused = StreamUtils::ReadWORD(pStream);
+    StreamUtils::ReadWORD(pStream);
 }

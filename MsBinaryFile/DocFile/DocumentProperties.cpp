@@ -37,7 +37,7 @@ namespace DocFileFormat
 		/*========================================================================================================*/
 		
 	WordDocumentProperties::WordDocumentProperties(FileInformationBlock* fib, POLE::Stream* tableStream) : 
-			doptypography(NULL), dogrid(NULL), asumyi(NULL)
+			doptypography(nullptr), dogrid(nullptr), asumyi(nullptr)
 	{
 		Initialize();
 		
@@ -46,7 +46,7 @@ namespace DocFileFormat
 //setDefaultCompatibilityOptions( fib->m_FibBase.nFib );
 
 		unsigned int size = fib->m_FibWord97.lcbDop;
-		unsigned char* bytes = NULL;
+		unsigned char* bytes = nullptr;
 
         try
         {
@@ -62,6 +62,7 @@ namespace DocFileFormat
 				fWindowControl	= GETBIT(flags1, 1);
 				Fpc				= GETBITS(flags1, 5, 6);
 				bool fWide		= GETBIT(flags1, 7);
+				(void)fWide;
 				
 				grpfIhdt		= tStream.ReadByte();
 				
@@ -70,9 +71,11 @@ namespace DocFileFormat
 				nFtn			= GETBITS(flags2, 1, 15);
 
 				unsigned char irmBar	= tStream.ReadByte();
+				(void)irmBar;
 
 				unsigned char flags3	= tStream.ReadByte();
 				unsigned char irmProps	= GETBITS(flags3, 0, 6);
+				(void)irmProps;
 				fRevMarking				= GETBIT(flags3, 7);
 				
 				unsigned short flags4 = tStream.ReadUInt16();
@@ -83,12 +86,14 @@ namespace DocFileFormat
 				fLockAtn		= GETBIT(flags4, 4);
 				fMirrorMargins	= GETBIT(flags4, 5);
 				bool fKeepFileFormat	= GETBIT(flags4, 6);
+				(void)fKeepFileFormat;
 				fDflttrueType	= GETBIT(flags4, 7);
 
 				fPagSuppressTopSpacing	= GETBIT(flags4, 8);
 				fMaybeRTLTables			= GETBIT(flags4, 9);
 
 				bool fSpares = tStream.ReadUInt16();
+				(void)fSpares;
 				dxaTab = tStream.ReadUInt16();
 
 				wSpare = tStream.ReadUInt16();//ftcDefaultBi
@@ -452,6 +457,7 @@ namespace DocFileFormat
 										fIgnoreMixedContent = GETBIT(flags, 7);
 										fShowPlaceholderText = GETBIT(flags, 8);
 										bool unused = GETBIT(flags, 9);
+										(void)unused;
 										fWord97Doc = GETBIT(flags, 10);
 										fStyleLockTheme = GETBIT(flags, 11);
 										fStyleLockQFSet = GETBIT(flags, 12);
@@ -480,7 +486,9 @@ namespace DocFileFormat
 
 											//4 bytes reserved
 											bool fRMTrackFormatting = FormatUtils::GetBitFromBytes((bytes + dop2007_offset + 4), 2, 0);
+											(void)fRMTrackFormatting;
 											bool fRMTrackMoves = FormatUtils::GetBitFromBytes((bytes + dop2007_offset + 4), 2, 1);
+											(void)fRMTrackMoves;
 											//dopMth  = 34 bytes from 624 = 658
 
 											if (size > 674/* && fib->m_FibNew.nFibNew > Fib2007*/)
@@ -500,6 +508,7 @@ namespace DocFileFormat
         }
         catch (/*Exception*/...)
         {
+            (void)0;
         }
 
 		RELEASEARRAYOBJECTS( bytes );
@@ -655,8 +664,8 @@ namespace DocFileFormat
       fNoLeading = false;
       fMWSmallCaps = false;
       adt = 0;
-      doptypography = NULL;
-      dogrid = NULL;
+      doptypography = nullptr;
+      dogrid = nullptr;
       lvl = 0;
       fGramAllDone = false;
       fGramAllClean = false;
@@ -670,7 +679,7 @@ namespace DocFileFormat
       fMinFontSizePag = false;
       fHaveVersions = false;
       fAutoVersion = false;
-      asumyi = NULL;
+      asumyi = nullptr;
       cChWS = 0;
       cChWSFtnEdn = 0;
       grfDocEvents = 0;

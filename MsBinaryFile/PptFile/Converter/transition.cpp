@@ -60,7 +60,7 @@ PPTX::Logic::Transition Transition::Convert()
 
 void Transition::ConvertClick()
 {
-    if (slideShowInfo.m_bManulClick == false)
+    if (!slideShowInfo.m_bManulClick)
         newTransition.advClick = false;
 }
 
@@ -109,6 +109,8 @@ void Transition::ConvertEffect()
         case 22: pTrBase->name = L"newsflash"; break;
         case 23: pTrBase->name = L"fade"; break;
         case 27: pTrBase->name = L"circle"; break;
+        default:
+            break;
         }
         newTransition.base.base.reset(pTrBase);
     }break;
@@ -124,6 +126,8 @@ void Transition::ConvertEffect()
         case 3:  pTrBase->name = L"checker"; break;
         case 8:  pTrBase->name = L"randomBar"; break;
         case 21: pTrBase->name = L"comb"; break;
+        default:
+            break;
         }
         pTrBase->dir = new PPTX::Limit::Orient;
         pTrBase->dir->SetBYTECode(oldTransition.m_nEffectDirection);
@@ -165,6 +169,8 @@ void Transition::ConvertEffect()
         case 5:	param_value = L"bl"; break;
         case 6:	param_value = L"tr"; break;
         case 7:	param_value = L"tl"; break;
+        default:
+            break;
         }
         pTrBase->dir->set(param_value);
         newTransition.base.base.reset(pTrBase);
@@ -181,6 +187,8 @@ void Transition::ConvertEffect()
         case 1:	param_value = L"lu"; break;
         case 2:	param_value = L"rd"; break;
         case 3:	param_value = L"ld"; break;
+        default:
+            break;
         }
         pTrBase->dir->set(param_value);
         newTransition.base.base.reset(pTrBase);
@@ -199,6 +207,8 @@ void Transition::ConvertEffect()
         case 1:	param_value = L"u"; break;
         case 2:	param_value = L"r"; break;
         case 3:	param_value = L"d"; break;
+        default:
+            break;
         }
         pTrBase->dir->set(param_value);
         newTransition.base.base.reset(pTrBase);
@@ -222,6 +232,8 @@ void Transition::ConvertEffect()
         case 1:	param_value2 = L"horz";	param_value = L"in";	break;
         case 2:	param_value2 = L"vert";	param_value = L"out";	break;
         case 3:	param_value2 = L"vert";	param_value = L"in";	break;
+        default:
+            break;
         }
         pTrBase->dir->set(param_value);
         pTrBase->orient->set(param_value2);
@@ -241,7 +253,7 @@ void Transition::ConvertEffect()
 
 void Transition::ConvertAudioEffect()
 {
-    if (HasAudio() == false) return;
+    if (!HasAudio()) return;
 
     InitSound();
     WriteAudioRId();
@@ -267,7 +279,7 @@ void Transition::InitSound()
 
 bool Transition::HasAudio() const
 {
-    return oldTransition.m_bAudioPresent == true && pRels != nullptr;
+    return oldTransition.m_bAudioPresent && pRels != nullptr;
 }
 
 void Transition::WriteSoundName()
