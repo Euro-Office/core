@@ -119,6 +119,7 @@ add_core_gtest(
             ods2xlsx_database_range.cpp
             docx2odt_list_number_suffix.cpp
             odt2docx_section_columns.cpp
+            odt2docx_symbol_bullets.cpp
             odt2docx_chapter_field.cpp
             odt2docx_database_display.cpp
             odt2docx_note_body_whitespace.cpp
