@@ -27,6 +27,8 @@
 
 #include <xml/simple_xml_writer.h>
 
+#include <cmath>
+
 namespace cpdoccore {
 namespace oox {
 
@@ -290,7 +292,12 @@ void vml_serialize_gradient_fill(std::wostream & strm, const _oox_fill & val)
 					CP_XML_ATTR(L"colors", colors_value.substr(0, colors_value.length() - 1));
 				}
 			}
-			double angle =/*360 - */val.gradient->angle/* * 180./3.14159265358979323846*/;
+			// gradient->angle is a DrawingML angle (clockwise from the left, 90 = top to bottom). A VML
+			// angle counts counterclockwise from the vertical, 0 = top to bottom here (focus 100%), so
+			// it is 90 minus the DrawingML angle, which is the ODF draw:angle again.
+			double angle = std::fmod(90. - val.gradient->angle, 360.);
+			if (angle < 0)
+				angle += 360.;
 			
 			CP_XML_ATTR(L"focus", L"100%");
 			switch(val.gradient->style)

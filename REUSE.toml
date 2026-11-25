@@ -363,6 +363,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent.odt",
     "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_image.odt",
     "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_gradient.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_gradient_angle.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
