@@ -41,6 +41,10 @@
 //                    pivotShowAs in the data field's extension list)
 //   SortManual       as NoSubtotals, but Region has sortType="manual" and
 //                    defaultSubtotal="1" (the defaults, written out)
+//   TopN             row field Region with a top 2 filter kept only in
+//                    autoShow="1" itemPageCount="2"
+//   PageSorted       page field Region with sortType="ascending" and
+//                    sumSubtotal="1", row field Product
 
 #include "gtest/gtest.h"
 
@@ -401,20 +405,26 @@ TEST(XlsxToOds, PivotTableSourceIsATable)
 }
 
 // What the converter does not write yet would be dropped by a refresh: label,
-// value and date filters, the sort order of a field, custom subtotal
-// functions, and the "show values as" kinds that only the extension list
-// holds. Such a pivot table is not written (its cells keep their values); the
-// defaults written out do not count.
+// value and date filters, and on a row or column field the sort order, a top
+// or bottom N filter or custom subtotal functions, and the "show values as"
+// kinds that only the extension list holds. Such a pivot table is not written
+// (its cells keep their values); the defaults written out, and these settings
+// on a page field, do not count.
 TEST(XlsxToOds, PivotTableUnwrittenOptionsSkipTheTable)
 {
 	ASSERT_TRUE(is_well_formed(review_content()));
-	for (const wchar_t* name : {L"Filtered", L"Sorted", L"CustomSubtotal", L"ShowAsExt"})
+	for (const wchar_t* name : {L"Filtered", L"Sorted", L"CustomSubtotal", L"ShowAsExt", L"TopN"})
 		EXPECT_TRUE(pilot_table(name, review_content()).empty()) << name << ": " << pilot_table(name, review_content());
 
 	const std::wstring table = pilot_table(L"SortManual", review_content());
 	ASSERT_FALSE(table.empty());
 	EXPECT_EQ(fields_of(table, L"Region", L"row").size(), 1u) << table;
 	EXPECT_EQ(fields_of(table, L"Product", L"row").size(), 1u) << table;
+
+	const std::wstring page = pilot_table(L"PageSorted", review_content());
+	ASSERT_FALSE(page.empty());
+	EXPECT_EQ(fields_of(page, L"Region", L"page").size(), 1u) << page;
+	EXPECT_EQ(fields_of(page, L"Product", L"row").size(), 1u) << page;
 }
 
 // Excel's automatic subtotals of a row or column field become
@@ -436,6 +446,9 @@ TEST(XlsxToOds, PivotTableAutomaticSubtotals)
 	const std::vector<Field> sum = fields_of(manual, L"Revenue", L"data");
 	ASSERT_EQ(sum.size(), 1u) << manual;
 	EXPECT_EQ(sum[0].element.find(L"data-pilot-subtotal"), std::wstring::npos) << sum[0].element;
+	const std::vector<Field> hidden = fields_of(manual, L"Year", L"hidden");
+	ASSERT_EQ(hidden.size(), 1u) << manual;
+	EXPECT_EQ(hidden[0].element.find(L"data-pilot-subtotal"), std::wstring::npos) << hidden[0].element;
 
 	const std::wstring none = pilot_table(L"NoSubtotals", review_content());
 	ASSERT_FALSE(none.empty());

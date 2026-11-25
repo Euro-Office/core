@@ -792,6 +792,7 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_t
 	// fields that get members count: fields on an axis and unused fields (written as hidden), not data-only fields.
 	// Which fields are on an axis or in the data area, collected once (not once per field).
 	std::vector<char> field_on_axis(cache_fields.size(), 0), field_in_data(cache_fields.size(), 0);
+	std::vector<char> field_on_row_or_column(cache_fields.size(), 0);
 	auto mark = [&](std::vector<char> &flags, int index)
 	{
 		if (index >= 0 && static_cast<size_t>(index) < flags.size()) flags[index] = 1;
@@ -799,12 +800,20 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_t
 	if (oox_pivot_table->m_oRowFields.IsInit())
 	{
 		for (OOX::Spreadsheet::CField *field : oox_pivot_table->m_oRowFields->m_arrItems)
-			if (field && field->m_oX.IsInit()) mark(field_on_axis, *field->m_oX);
+			if (field && field->m_oX.IsInit())
+			{
+				mark(field_on_axis, *field->m_oX);
+				mark(field_on_row_or_column, *field->m_oX);
+			}
 	}
 	if (oox_pivot_table->m_oColFields.IsInit())
 	{
 		for (OOX::Spreadsheet::CField *field : oox_pivot_table->m_oColFields->m_arrItems)
-			if (field && field->m_oX.IsInit()) mark(field_on_axis, *field->m_oX);
+			if (field && field->m_oX.IsInit())
+			{
+				mark(field_on_axis, *field->m_oX);
+				mark(field_on_row_or_column, *field->m_oX);
+			}
 	}
 	if (oox_pivot_table->m_oPageFields.IsInit())
 	{
@@ -818,14 +827,16 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_t
 				field_in_data[data_field->m_oFld->GetValue()] = 1;
 	}
 
-	// Not written yet, and a refresh would drop them: label, value and date filters, a sort order of a field on an axis,
-	// custom subtotal functions, and the "show values as" kinds kept in a data field's extension list
-	// (x14:dataField pivotShowAs). Such a pivot table is not written; its cells keep their values.
+	// Not written yet, and a refresh would drop them: label, value and date filters, and on a row or column field a sort
+	// order, a top or bottom N filter (autoShow) or custom subtotal functions, and the "show values as" kinds kept in a
+	// data field's extension list (x14:dataField pivotShowAs). Such a pivot table is not written; its cells keep their
+	// values. On a page field these settings change nothing that is shown.
 	if (oox_pivot_table->m_bHasFilters) return;
-	for (size_t i = 0; i < pivot_fields.size() && i < field_on_axis.size(); i++)
+	for (size_t i = 0; i < pivot_fields.size() && i < field_on_row_or_column.size(); i++)
 	{
 		const OOX::Spreadsheet::CPivotField *field = pivot_fields[i];
-		if (!field || !field_on_axis[i]) continue;
+		if (!field || !field_on_row_or_column[i]) continue;
+		if (field->m_oAutoShow.IsInit() && *field->m_oAutoShow) return;
 		if (field->m_oSortType.IsInit() && field->m_oSortType->GetValue() != SimpleTypes::Spreadsheet::sortManual) return;
 		for (const NSCommon::nullable_bool *subtotal : {&field->m_oSumSubtotal, &field->m_oCountASubtotal, &field->m_oAvgSubtotal,
 											  &field->m_oMaxSubtotal, &field->m_oMinSubtotal, &field->m_oProductSubtotal,
