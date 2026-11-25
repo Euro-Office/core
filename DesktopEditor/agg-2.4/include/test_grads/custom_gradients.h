@@ -1,3 +1,6 @@
+#ifdef __GNUC__
+#pragma GCC system_header
+#endif
 #include <algorithm>
 #include <time.h>
 #include "../../../graphics/AggPlusEnums.h"

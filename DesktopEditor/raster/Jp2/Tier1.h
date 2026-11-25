@@ -703,6 +703,7 @@ namespace Jpeg2000
 			nTemp = nHor;
 			nHor = nVer;
 			nVer = nTemp;
+			[[fallthrough]];
 			case 0:
 			case 1:
 			if (!nHor)

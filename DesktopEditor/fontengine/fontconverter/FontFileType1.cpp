@@ -181,9 +181,9 @@ namespace NSFontConverter
 		{
 			for (int nIndex = 0; nIndex < 256; ++nIndex )
 			{
-				MemUtilsFree( m_arrEncoding[nIndex] );
+				MemUtilsFree( const_cast<char*>(m_arrEncoding[nIndex]) );
 			}
-			MemUtilsFree((void *)m_arrEncoding);
+			MemUtilsFree( const_cast<char**>(m_arrEncoding) );
 		}
 	}
 
@@ -195,7 +195,7 @@ namespace NSFontConverter
 		return m_sName;
 	}
 
-	char **CFontFileType1::GetEncoding()
+	const char **CFontFileType1::GetEncoding()
 	{
 		if (!m_bParsed)
 			Parse();
@@ -203,7 +203,7 @@ namespace NSFontConverter
 		return m_arrEncoding;
 	}
 
-	void CFontFileType1::WriteEncoded(char **ppNewEncoding, FontFileOutputFunc pOutputFunc, void *pOutputStream)
+	void CFontFileType1::WriteEncoded(const char **ppNewEncoding, FontFileOutputFunc pOutputFunc, void *pOutputStream)
 	{
 		char sBuffer[512];
 		char *sLine, *sLine2, *sCurChar;
@@ -370,7 +370,7 @@ namespace NSFontConverter
 			}
 			else if (!m_arrEncoding && !strncmp( sLine, "/Encoding 256 array", 19))
 			{
-				m_arrEncoding = (char **)MemUtilsMallocArray(256, sizeof(char *));
+				m_arrEncoding = (const char **)MemUtilsMallocArray(256, sizeof(char *));
 				int nJ = 0;
 				for (nJ = 0; nJ < 256; ++nJ )
 				{
@@ -588,7 +588,7 @@ namespace NSFontConverter
 							else if ( L"/StdHW" == sToken )
 							{
 								// This contains an array with one value
-								double dTemp[1];
+								double dTemp[1] = {};
 
 								if ( ReadDoubleArray<1>( sEexec + nIndex + 2, nEexecLen - nIndex - 2, dTemp ) > 0 )
 								{
@@ -599,7 +599,7 @@ namespace NSFontConverter
 							else if ( L"/StdVW" == sToken )
 							{
 								// This contains an array with one value
-								double dTemp[1];
+								double dTemp[1] = {};
 								if ( ReadDoubleArray<1>( sEexec + nIndex + 2, nEexecLen - nIndex - 2, dTemp ) > 0 )
 								{
 									m_oPrivateDict.bHasStdHW = true;
@@ -835,7 +835,12 @@ namespace NSFontConverter
 				else if ( nValue <= 254 )
 					nValue = -( ( nValue - 251 ) * 256 ) - (int)( sString[++nIndex] ) - 108;
 				else
-					nValue = ( sString[++nIndex] & 0xff ) << 24 | ( sString[++nIndex] & 0xff ) << 16 | ( sString[++nIndex] & 0xff ) << 8 | ( sString[++nIndex] & 0xff ) << 0;
+				{
+					nValue  = ( sString[++nIndex] & 0xff ) << 24;
+					nValue |= ( sString[++nIndex] & 0xff ) << 16;
+					nValue |= ( sString[++nIndex] & 0xff ) << 8;
+					nValue |= ( sString[++nIndex] & 0xff );
+				}
 
 				sCharString.push_back( Type1CharstringItem( nValue, false ) );
 			}

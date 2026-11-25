@@ -125,7 +125,7 @@ namespace NSFontConverter
     // Type 1 and 1C font data
     //------------------------------------------------------------------------
 
-    static char *c_arrsFontFileType1StandardEncoding[256] =
+    static const char *c_arrsFontFileType1StandardEncoding[256] =
     {
         NULL,
         NULL,
@@ -385,7 +385,7 @@ namespace NSFontConverter
         NULL
     };
 
-    static char *c_arrsFontFileType1ExpertEncoding[256] =
+    static const char *c_arrsFontFileType1ExpertEncoding[256] =
     {
         NULL,
         NULL,
@@ -650,7 +650,7 @@ namespace NSFontConverter
     // Type 1C font data
     //------------------------------------------------------------------------
 
-    static char *c_arrsFontFileType1CStandardStrings[391] =
+    static const char *c_arrsFontFileType1CStandardStrings[391] =
     {
         ".notdef",
         "space",

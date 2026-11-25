@@ -706,10 +706,10 @@ namespace MetaFile
 				{
 					pEmfPlusBrush->arGradientColors.resize(nPositionCount);
 
-					for (unsigned int unIndex = 0; unIndex < nPositionCount; ++unIndex)
+					for (unsigned int unIndex = 0; unIndex < static_cast<unsigned int>(nPositionCount); ++unIndex)
 						m_oStream >> pEmfPlusBrush->arGradientColors[unIndex].second;
 
-					for (unsigned int unIndex = 0; unIndex < nPositionCount; ++unIndex)
+					for (unsigned int unIndex = 0; unIndex < static_cast<unsigned int>(nPositionCount); ++unIndex)
 						m_oStream >> pEmfPlusBrush->arGradientColors[unIndex].first;
 				}
 			}
@@ -3139,7 +3139,7 @@ namespace MetaFile
 
 		std::vector<T> arRects(shNumRects);
 
-		for (unsigned int unIndex = 0; unIndex < shNumRects; ++unIndex)
+		for (unsigned int unIndex = 0; unIndex < static_cast<unsigned int>(shNumRects); ++unIndex)
 		{
 			T oRect;
 			m_oStream >> arRects[unIndex];
@@ -3462,10 +3462,6 @@ namespace MetaFile
 	template<typename T>
 	TEmfPlusRectF CEmfPlusParser::GetConvertedRectangle(T oRectangle)
 	{
-		if (typeid (TEmfPlusRectF) == typeid (T))
-			return (TEmfPlusRectF&)oRectangle;
-		else if (typeid (TEmfPlusRect) == typeid (T))
-			return TEmfPlusRectF((TEmfPlusRect&)oRectangle);
-		else return TEmfPlusRectF();
+		return TEmfPlusRectF(oRectangle);
 	}
 }

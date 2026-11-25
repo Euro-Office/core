@@ -263,13 +263,11 @@ namespace Jpeg2000
 					pResolution->nPrecCountH = (nCeilTRY1 - nFloorTRY0) >> nPPy;
 
 					int nCBWidthExpn, nCBHeightExpn;
-					int nTLCodeBlockGlobalStartX, nTLCodeBlockGlobalStartY, nBRCodeBlockGlobalEndX, nBRCodeBlockGlobalEndY;
+					int nTLCodeBlockGlobalStartX, nTLCodeBlockGlobalStartY;
 					if (0 == nResolutionIndex)
 					{
 						nTLCodeBlockGlobalStartX = nFloorTRX0;
 						nTLCodeBlockGlobalStartY = nFloorTRY0;
-						nBRCodeBlockGlobalEndX = nCeilTRX1;
-						nBRCodeBlockGlobalEndY = nCeilTRY1;
 
 						nCBWidthExpn  = nPPx;
 						nCBHeightExpn = nPPy;
@@ -278,8 +276,6 @@ namespace Jpeg2000
 					{
 						nTLCodeBlockGlobalStartX = CeilDivPow2(nFloorTRX0, 1);
 						nTLCodeBlockGlobalStartY = CeilDivPow2(nFloorTRY0, 1);
-						nBRCodeBlockGlobalEndX = CeilDivPow2(nCeilTRX1, 1);
-						nBRCodeBlockGlobalEndY = CeilDivPow2(nCeilTRY1, 1);
 
 						nCBWidthExpn  = nPPx - 1;
 						nCBHeightExpn = nPPy - 1;
@@ -492,13 +488,11 @@ namespace Jpeg2000
 					pResolution->nPrecCountH = (nCeilTRY1 - nFloorTRY0) >> nPPy;
 
 					int nCBWidthExpn, nCBHeightExpn;
-					int nTLCodeBlockGlobalStartX, nTLCodeBlockGlobalStartY, nBRCodeBlockGlobalEndX, nBRCodeBlockGlobalEndY;
+					int nTLCodeBlockGlobalStartX, nTLCodeBlockGlobalStartY;
 					if (0 == nResolutionIndex)
 					{
 						nTLCodeBlockGlobalStartX = nFloorTRX0;
 						nTLCodeBlockGlobalStartY = nFloorTRY0;
-						nBRCodeBlockGlobalEndX = nCeilTRX1;
-						nBRCodeBlockGlobalEndY = nCeilTRY1;
 
 						nCBWidthExpn  = nPPx;
 						nCBHeightExpn = nPPy;
@@ -507,8 +501,6 @@ namespace Jpeg2000
 					{
 						nTLCodeBlockGlobalStartX = CeilDivPow2(nFloorTRX0, 1);
 						nTLCodeBlockGlobalStartY = CeilDivPow2(nFloorTRY0, 1);
-						nBRCodeBlockGlobalEndX = CeilDivPow2(nCeilTRX1, 1);
-						nBRCodeBlockGlobalEndY = CeilDivPow2(nCeilTRY1, 1);
 
 						nCBWidthExpn  = nPPx - 1;
 						nCBHeightExpn = nPPy - 1;
@@ -783,13 +775,11 @@ namespace Jpeg2000
 					pResolution->nPrecCountH = (pResolution->nY0 == pResolution->nY1) ? 0 : ((nCeilTRY1 - nFloorTRY0) >> nPPy);
 
 					int nCBWidthExpn, nCBHeightExpn;
-					int nTLCodeBlockGlobalStartX, nTLCodeBlockGlobalStartY, nBRCodeBlockGlobalEndX, nBRCodeBlockGlobalEndY;
+					int nTLCodeBlockGlobalStartX, nTLCodeBlockGlobalStartY;
 					if (0 == nResolutionIndex)
 					{
 						nTLCodeBlockGlobalStartX = nFlootTRX0;
 						nTLCodeBlockGlobalStartY = nFloorTRY0;
-						nBRCodeBlockGlobalEndX = nCeilTRX1;
-						nBRCodeBlockGlobalEndY = nCeilTRY1;
 
 						nCBWidthExpn  = nPPx;
 						nCBHeightExpn = nPPy;
@@ -798,8 +788,6 @@ namespace Jpeg2000
 					{
 						nTLCodeBlockGlobalStartX = CeilDivPow2(nFlootTRX0, 1);
 						nTLCodeBlockGlobalStartY = CeilDivPow2(nFloorTRY0, 1);
-						nBRCodeBlockGlobalEndX = CeilDivPow2(nCeilTRX1, 1);
-						nBRCodeBlockGlobalEndY = CeilDivPow2(nCeilTRY1, 1);
 
 						nCBWidthExpn  = nPPx - 1;
 						nCBHeightExpn = nPPy - 1;

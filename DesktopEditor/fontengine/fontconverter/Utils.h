@@ -190,7 +190,7 @@ namespace NSFontConverter
 
             if ( FT_ENCODING_UNICODE == pEncoding )
             {
-                if ( nCharIndex = FT_Get_Char_Index( pFace, lUnicode ) )
+                if ( (nCharIndex = FT_Get_Char_Index( pFace, lUnicode )) )
                 {
                     *pnCMapIndex = nIndex;
                     return nCharIndex;
@@ -206,7 +206,7 @@ namespace NSFontConverter
                 while ( gindex != 0 )
                 {
                     charcode = FT_Get_Next_Char( pFace, charcode, &gindex );
-                    if ( charcode == lUnicode )
+                    if ( charcode == static_cast<FT_ULong>(lUnicode) )
                     {
                         nCharIndex = gindex;
                         *pnCMapIndex = nIndex;
@@ -214,7 +214,7 @@ namespace NSFontConverter
                     }
                 }
 
-                if ( nCharIndex = FT_Get_Char_Index( pFace, lUnicode ) )
+                if ( (nCharIndex = FT_Get_Char_Index( pFace, lUnicode )) )
                 {
                     *pnCMapIndex = nIndex;
                 }

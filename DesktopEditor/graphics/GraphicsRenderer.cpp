@@ -49,11 +49,12 @@ static void LOGGING(char* buffer, ...)
 Aggplus::CBrush* CGraphicsRenderer::CreateBrush(NSStructures::CBrush* pBrush)
 {
 	if (nullptr == pBrush)
-		return nullptr;
+    { return nullptr; }
+
 
     bool bIsSwappedRGB = false;
     if (m_pRenderer && m_pRenderer->m_bSwapRGB)
-        bIsSwappedRGB = true;
+    { bIsSwappedRGB = true; }
 
 	LONG Type = pBrush->Type;
 	if ((0 == Type) || (c_BrushTypeSolid == Type))
@@ -129,7 +130,7 @@ Aggplus::CBrush* CGraphicsRenderer::CreateBrush(NSStructures::CBrush* pBrush)
 			pNew->SetBounds(pBrush->Bounds);
 		}
         if(!pNew)
-            return nullptr;
+        { return nullptr; }
         
         switch (Type)
         {
@@ -1251,11 +1252,12 @@ HRESULT CGraphicsRenderer::put_ClipMode(const LONG& lMode)
 HRESULT CGraphicsRenderer::CommandLong(const LONG& lType, const LONG& lCommand)
 {
     if (c_nDarkMode == lType && m_pRenderer)
-        m_pRenderer->m_bIsDarkMode = (1 == lCommand);
+    { m_pRenderer->m_bIsDarkMode = (1 == lCommand); }
+
 	if (c_nUseDictionaryFonts == lType && m_pFontManager)
-		m_pFontManager->SetUseCorrentFontByName(1 == lCommand);
+    { m_pFontManager->SetUseCorrentFontByName(1 == lCommand); }
 	if (c_nPenWidth0As1px == lType && m_pRenderer)
-		m_pRenderer->m_bIs0PenWidthAs1px = 1 == lCommand;
+    { m_pRenderer->m_bIs0PenWidthAs1px = 1 == lCommand; }
 
 	return S_OK;
 }

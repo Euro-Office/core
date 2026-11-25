@@ -784,6 +784,7 @@ namespace MetaFile
 					return;
 				}
 			}
+			[[fallthrough]];
 			case BS_PATTERN:
 			{
 				const std::wstring wsStyleId = CreatePatternStyle(pBrush);
@@ -794,6 +795,7 @@ namespace MetaFile
 					return;
 				}
 			}
+			[[fallthrough]];
 			case BS_LINEARGRADIENT:
 			case BS_RECTGRADIENT:
 			case BS_PATHGRADIENT:
@@ -808,6 +810,7 @@ namespace MetaFile
 					return;
 				}
 			}
+			[[fallthrough]];
 			default:
 				arAttributes.Add(L"fill", L"none");
 		}

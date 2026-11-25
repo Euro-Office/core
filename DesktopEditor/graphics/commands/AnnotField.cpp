@@ -512,8 +512,8 @@ bool CAnnotFieldInfo::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMeta
 
 CAnnotFieldInfo::CMarkupAnnotPr::~CMarkupAnnotPr()
 {
-	for (int i = 0; i < m_arrRC.size(); ++i)
-		RELEASEOBJECT(m_arrRC[i]);
+	for (size_t i = 0; i < m_arrRC.size(); ++i)
+    { RELEASEOBJECT(m_arrRC[i]); }
 }
 BYTE   CAnnotFieldInfo::CMarkupAnnotPr::GetRT()      const { return m_nRT; }
 int    CAnnotFieldInfo::CMarkupAnnotPr::GetFlag()    const { return m_nFlag; }
@@ -946,8 +946,8 @@ CAnnotFieldInfo::CWidgetAnnotPr::~CWidgetAnnotPr()
 	RELEASEOBJECT(m_pChoicePr);
 	RELEASEOBJECT(m_pSignaturePr);
 
-	for (int i = 0; i < m_arrAction.size(); ++i)
-		RELEASEOBJECT(m_arrAction[i]);
+	for (size_t i = 0; i < m_arrAction.size(); ++i)
+    { RELEASEOBJECT(m_arrAction[i]); }
 }
 
 CAnnotFieldInfo::CActionFieldPr::CActionFieldPr() : pNext(nullptr) {}
@@ -1188,7 +1188,7 @@ bool CAnnotFieldDelete::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMe
 CWidgetsInfo::CWidgetsInfo() : IAdvancedCommand(AdvancedCommandType::WidgetsInfo) {}
 CWidgetsInfo::~CWidgetsInfo()
 {
-	for (int i = 0; i < m_arrParents.size(); ++i)
+	for (size_t i = 0; i < m_arrParents.size(); ++i)
 		RELEASEOBJECT(m_arrParents[i]);
 }
 const std::vector< std::pair<int, int> >& CWidgetsInfo::GetCO() { return m_arrCO; }
@@ -1196,8 +1196,8 @@ const std::vector<std::wstring>& CWidgetsInfo::GetButtonImg() { return m_arrButt
 const std::vector<CWidgetsInfo::CParent*>& CWidgetsInfo::GetParents() { return m_arrParents; }
 void CWidgetsInfo::ChangeCO(int i, int nNum, int nGen)
 {
-	if (i < 0 || i > m_arrCO.size() - 1)
-		return;
+	if (i < 0 || m_arrCO.empty() || static_cast<size_t>(i) >= m_arrCO.size())
+    { return; }
 	m_arrCO[i] = std::make_pair(nNum, nGen);
 }
 bool CWidgetsInfo::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter* pCorrector)
@@ -1291,8 +1291,8 @@ bool CWidgetsInfo::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafil
 CRedact::CRedact() : IAdvancedCommand(AdvancedCommandType::Redact) {}
 CRedact::~CRedact()
 {
-	for (int i = 0; i < m_arrRedact.size(); ++i)
-		RELEASEOBJECT(m_arrRedact[i]);
+	for (size_t i = 0; i < m_arrRedact.size(); ++i)
+    { RELEASEOBJECT(m_arrRedact[i]); }
 }
 const std::vector<CRedact::SRedact*>& CRedact::GetRedact() { return m_arrRedact; }
 bool CRedact::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter*  /*pCorrector*/)

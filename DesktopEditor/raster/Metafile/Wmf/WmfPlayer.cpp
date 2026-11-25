@@ -44,7 +44,7 @@ namespace MetaFile
 	};
 	CWmfPlayer::~CWmfPlayer()
 	{
-		for (int nIndex = 0; nIndex < m_vDCStack.size(); nIndex++)
+		for (size_t nIndex = 0; nIndex < m_vDCStack.size(); nIndex++)
 		{
 			CWmfDC* pDC = m_vDCStack.at(nIndex);
 			delete pDC;
@@ -60,7 +60,7 @@ namespace MetaFile
 	}
 	void CWmfPlayer::Clear()
 	{
-		for (int nIndex = 0; nIndex < m_vDCStack.size(); nIndex++)
+		for (size_t nIndex = 0; nIndex < m_vDCStack.size(); nIndex++)
 		{
 			CWmfDC* pDC = m_vDCStack.at(nIndex);
 			delete pDC;
@@ -191,7 +191,7 @@ namespace MetaFile
 		{
 			CWmfObjectBase* pObject = oPos->second;
 
-			for (int nIndex = 0; nIndex < m_vDCStack.size(); nIndex++)
+			for (size_t nIndex = 0; nIndex < m_vDCStack.size(); nIndex++)
 			{
 				CWmfDC* pDC = m_vDCStack.at(nIndex);
 

@@ -511,7 +511,7 @@ public:
 
 	std::wstring SaveWebFonts(const std::map<std::wstring, LONG>& mapFontFiles)
 	{
-		int nCountFiles = (int)mapFontFiles.size();
+		size_t nCountFiles = mapFontFiles.size();
 		BYTE correct16[16] = {0xA0, 0x66, 0xD6, 0x20, 0x14, 0x96, 0x47, 0xfa, 0x95, 0x69, 0xB8, 0x50, 0xB0, 0x41, 0x49, 0x48};
 		int nCountIdSymbols = (nCountFiles >= 1000) ? 4 : 3;
 		BYTE encode[32];
@@ -801,7 +801,7 @@ public:
 			oWriterJS += L"window[\"__fonts_infos\"] = [\n";
 
 			std::map<std::wstring, int> mapFontIndexes;
-			for (int index = 0; index < nCountFonts; ++index)
+			for (int index = 0; index < static_cast<int>(nCountFonts); ++index)
 			{
 				std::map<std::wstring, CFontInfoJS>::iterator pPair = mapFonts.find(arrFonts[index]);
 				mapFontIndexes.insert(std::pair<std::wstring, int>(arrFonts[index], index));
@@ -833,7 +833,7 @@ public:
 				oWriterJS.AddCharNoCheck(',');
 				oWriterJS.AddIntNoCheck(pPair->second.m_lFaceIndexBI);
 
-				if (index != (nCountFonts - 1))
+				if (index != static_cast<int>(nCountFonts) - 1)
 					oWriterJS += (L"],\n");
 				else
 					oWriterJS += (L"]\n");
@@ -913,7 +913,7 @@ public:
 				// if the font is from mapFontsPriorityStandard, then the priority is from this map
 				// otherwise - the maximum size from the font style files (max(regular,italic,bold,bolditalic))
 				std::vector<CFontPriority> arrFontsPriority;
-				for (int index = 0; index < nCountFonts; ++index)
+				for (int index = 0; index < static_cast<int>(nCountFonts); ++index)
 				{
 					std::map<std::wstring, CFontInfoJS>::iterator pPair = mapFonts.find(arrFonts[index]);
 					CFontInfoJS& info = pPair->second;
@@ -993,7 +993,7 @@ public:
 				int nSumPriority = (int)(arrFontsPriority.size() + 1);
 
 				bool bIsSmallRangesDetect = true;
-				for (int index = 0; index < nCountFonts; ++index)
+				for (int index = 0; index < static_cast<int>(nCountFonts); ++index)
 				{
 					std::map<std::wstring, CFontInfoJS>::iterator pPair = mapFonts.find(arrFonts[index]);
 					CFontInfoJS& info = pPair->second;
@@ -1092,7 +1092,7 @@ public:
 				// Code points from U+1F000 default to emoji presentation: a color (COLR) font
 				// takes them over from higher ranked text fonts such as DejaVu Sans
 				// ponytail: fixed boundary, BMP emoji (U+2764 etc.) stay text; use Emoji_Presentation from emoji-data.txt if they need color too
-				for (int index = 0; index < nCountFonts; ++index)
+				for (int index = 0; index < static_cast<int>(nCountFonts); ++index)
 				{
 					CFontInfoJS& info = mapFonts.find(arrFonts[index])->second;
 					if (-1 == info.m_lIndexR || !HasColrTable(mapFontFiles2[info.m_lIndexR]))
@@ -1239,7 +1239,7 @@ public:
 		{
 			m_arFonts.clear();
 			m_arFonts.resize(nCountFonts);
-			for (int index = 0; index < nCountFonts; ++index)
+			for (int index = 0; index < static_cast<int>(nCountFonts); ++index)
 			{
 				std::map<std::wstring, CFontInfoJS>::iterator pPair = mapFonts.find(arrFonts[index]);
 
@@ -1413,7 +1413,7 @@ public:
 
 			bIsEA = arrEA[iX];
 
-			for (int index = 0; index < nCountFonts; ++index)
+			for (int index = 0; index < static_cast<int>(nCountFonts); ++index)
 			{
 				if (CheckBreak()) return;
 

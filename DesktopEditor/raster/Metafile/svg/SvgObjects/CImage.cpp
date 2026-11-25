@@ -71,7 +71,9 @@ namespace SVG
 			if (nullptr == pBuffer)
 				return false;
 
-			NSBase64::Base64Decode(wsImageData.c_str(), wsImageData.length(), pBuffer, &(int&)ulSize);
+			int nDecodeLen = static_cast<int>(ulSize);
+			NSBase64::Base64Decode(wsImageData.c_str(), wsImageData.length(), pBuffer, &nDecodeLen);
+			ulSize = static_cast<DWORD>(nDecodeLen);
 		}
 		#ifndef METAFILE_DISABLE_FILESYSTEM
 		else

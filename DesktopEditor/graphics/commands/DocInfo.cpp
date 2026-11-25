@@ -175,14 +175,14 @@ CHeadings::CHeading::CHeading()
 }
 CHeadings::CHeading::~CHeading()
 {
-	for (int i = 0; i < arrHeading.size(); ++i)
+	for (size_t i = 0; i < arrHeading.size(); ++i)
 		RELEASEOBJECT(arrHeading[i]);
 }
 
 CHeadings::CHeadings() : IAdvancedCommand(AdvancedCommandType::Headings) {}
 CHeadings::~CHeadings()
 {
-	for (int i = 0; i < m_arrHeading.size(); ++i)
+	for (size_t i = 0; i < m_arrHeading.size(); ++i)
 		RELEASEOBJECT(m_arrHeading[i]);
 }
 const std::vector<CHeadings::CHeading*>& CHeadings::GetHeading() { return m_arrHeading; }
@@ -193,19 +193,22 @@ bool CHeadings::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileTo
 	for (int i = 0; i < nHeadings; ++i)
 	{
 		int nLevel = pReader->ReadInt();
+		if (nLevel < 0)
+		{ break; }
+
 		CHeading* pHeading = new CHeading();
 		pHeading->nPage = pReader->ReadInt();
 		pHeading->dX = pReader->ReadDouble();
 		pHeading->dY = pReader->ReadDouble();
 		pHeading->wsTitle = pReader->ReadString();
 
-		while (arrParentStack.size() > nLevel)
-			arrParentStack.pop_back();
+		while (static_cast<ptrdiff_t>(arrParentStack.size()) > nLevel)
+        { arrParentStack.pop_back(); }
 
 		if (arrParentStack.empty())
-			m_arrHeading.push_back(pHeading);
+        { m_arrHeading.push_back(pHeading); }
 		else
-			arrParentStack.back()->arrHeading.push_back(pHeading);
+        { arrParentStack.back()->arrHeading.push_back(pHeading); }
 
 		arrParentStack.push_back(pHeading);
 	}

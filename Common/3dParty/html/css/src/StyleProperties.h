@@ -149,6 +149,9 @@ namespace NSCSS
 			return this->m_oValue.value() == oValue;
 		}
 
+		using CValueBase<boost::optional<T>>::operator=;
+		using CValueBase<boost::optional<T>>::operator+=;
+
 		virtual CValueOptional& operator=(const T& oValue)
 		{
 			this->m_oValue = oValue;
@@ -217,6 +220,7 @@ namespace NSCSS
 
 		CDigit operator*(double dValue) const;
 
+		using CValueOptional<double>::operator+=;
 		CDigit& operator+=(const CDigit& oDigit);
 		CDigit& operator-=(const CDigit& oDigit);
 		CDigit& operator+=(const double& dValue);
@@ -381,6 +385,7 @@ namespace NSCSS
 		void ApplyTranform(Aggplus::CMatrix& oMatrix, Aggplus::MatrixOrder order = Aggplus::MatrixOrderPrepend) const;
 
 		bool operator==(const CMatrix& oMatrix) const;
+		using CValueBase<MatrixValues>::operator+=;
 		CMatrix& operator+=(const CMatrix& oMatrix);
 		CMatrix& operator-=(const CMatrix& oMatrix);
 

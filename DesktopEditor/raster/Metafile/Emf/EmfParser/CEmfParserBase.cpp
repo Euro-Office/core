@@ -1632,9 +1632,9 @@ namespace MetaFile
 
 		// The write format isn't documented properly, there are a few bytes left at the end, it isn't clear why.
 		unsigned int unSize = oText.GetSize();
-		if (m_ulRecordSize - unSize > 0)
+		if (m_ulRecordSize > unSize)
 			m_oStream.Skip(m_ulRecordSize - unSize);
-		else if (m_ulRecordSize - unSize < 0)
+		else if (m_ulRecordSize < unSize)
 			m_oStream.SeekBack(unSize - m_ulRecordSize);
 
 		DrawTextW(oEmrText, oText.unIGraphicsMode);

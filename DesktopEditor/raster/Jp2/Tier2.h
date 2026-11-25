@@ -644,7 +644,6 @@ namespace Jpeg2000
 	{
 		unsigned char *pSrcPointer = pSrc;
 		int nShift = 0;
-		int nCount = 0;
 
 		Image *pImage = pTier2->pImage;
 		CodingParams *pCodingParams = pTier2->pCodingParams;
@@ -670,7 +669,6 @@ namespace Jpeg2000
 				}
 
                 pImage->pComponents[pPI[nIndexPI].nIndexComponent].nDecodedResCount = (nShift > 0) ? (std::max)(pPI[nIndexPI].nIndexResolution, pImage->pComponents[pPI[nIndexPI].nIndexComponent].nDecodedResCount) : pImage->pComponents[pPI[nIndexPI].nIndexComponent].nDecodedResCount;
-				nCount++;
 
 				if (nShift == -999)
 				{

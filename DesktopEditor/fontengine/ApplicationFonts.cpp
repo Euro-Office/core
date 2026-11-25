@@ -1348,9 +1348,9 @@ void CFontList::Add(FT_Library pLibrary, FT_Parameter* pParams, const std::wstri
 
 					error = FT_QNEW_ARRAY ( rec->string, rec->stringLength );
 					if ( !error )
-						error = FT_STREAM_SEEK( rec->stringOffset );
+						(void)FT_STREAM_SEEK( rec->stringOffset );
 					if ( !error )
-						error = FT_STREAM_READ( rec->string, rec->stringLength );
+						(void)FT_STREAM_READ( rec->string, rec->stringLength );
 					if ( error )
 					{
 						FT_FREE( rec->string );
@@ -1542,7 +1542,7 @@ void CFontList::CheckLoadFromSelectionBin(const std::wstring& strDirectory, BYTE
 		Add(pFontInfo);
 	}
 
-	if ((_pBuffer - pBuffer) < nLen)
+	if (static_cast<DWORD>(_pBuffer - pBuffer) < nLen)
 	{
 		InitializeRanges(_pBuffer);
 	}

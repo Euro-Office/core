@@ -249,7 +249,7 @@ namespace MetaFile
 
 	struct TEmfHeader
 	{
-		TEmfHeader() : ulSignature(0), ulVersion(0), ulRecords(0), ushObjects(0), ulSize(0), ulPalEntries(0), ulOffsetDescription(0),ulSizeDescription(0) {}
+		TEmfHeader() : ulSignature(0), ulVersion(0), ulSize(0), ulRecords(0), ushObjects(0), ulSizeDescription(0), ulOffsetDescription(0), ulPalEntries(0) {}
 		
 		TRectL         oBounds;
 		TRectL         oFrame;

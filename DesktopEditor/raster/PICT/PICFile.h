@@ -188,15 +188,17 @@ struct Image
 		}
 		else
 		{
-			m_pPixelData = (BYTE*)realloc(oldPixels, newSize);
-			if (NULL == m_pPixelData)
+			BYTE* newPixels = (BYTE*)realloc(oldPixels, newSize);
+			if (newPixels)
+			{
+				m_pPixelData = newPixels;
+			}
+			else
 			{
 				m_pPixelData = (BYTE*)malloc(newSize);
 				if (isCopy && oldPixels)
 					memcpy(m_pPixelData, oldPixels, oldSize);
-
-				if (oldPixels)
-					free(oldPixels);
+				free(oldPixels);
 			}
 		}
 	}

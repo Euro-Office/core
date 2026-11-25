@@ -101,9 +101,10 @@ bool CImageFileFormatChecker::isTiffFile(BYTE* pBuffer,DWORD dwBytes)
 	if (eFileType)
 		return false;
 
-	if ((dwBytes >=4) && ( (0x49 == pBuffer[0]) && (0x49 == pBuffer[1]) && (0x2A == pBuffer[2]) && (0x00 == pBuffer[3]) ) ||
+	if ((dwBytes >= 4) && (
+			( (0x49 == pBuffer[0]) && (0x49 == pBuffer[1]) && (0x2A == pBuffer[2]) && (0x00 == pBuffer[3]) ) ||
 			( (0x4D == pBuffer[0]) && (0x4D == pBuffer[1]) && (0x00 == pBuffer[2]) && (0x2A == pBuffer[3]) ) ||
-			( (0x49 == pBuffer[0]) && (0x49 == pBuffer[1]) && (0x2A == pBuffer[2]) && (0x00 == pBuffer[3]) ))
+			( (0x49 == pBuffer[0]) && (0x49 == pBuffer[1]) && (0x2A == pBuffer[2]) && (0x00 == pBuffer[3]) )))
 		return true;
 	
 	return false;
@@ -114,8 +115,9 @@ bool CImageFileFormatChecker::isWmfFile(BYTE* pBuffer,DWORD dwBytes)
 	if (eFileType)
 		return false;
 	
-	if ((dwBytes >=6) && ((0xD7 == pBuffer[0]) && (0xCD == pBuffer[1]) && (0xC6 == pBuffer[2]) && (0x9A == pBuffer[3])&& (0x00 == pBuffer[4]) && (0x00 == pBuffer[5]) ) ||
-			((0x01 == pBuffer[0]) && (0x00 == pBuffer[1]) && (0x09 == pBuffer[2]) && (0x00 == pBuffer[3]) && (0x00 == pBuffer[4]) && (0x03 == pBuffer[5]) ))
+	if ((dwBytes >= 6) && (
+			((0xD7 == pBuffer[0]) && (0xCD == pBuffer[1]) && (0xC6 == pBuffer[2]) && (0x9A == pBuffer[3]) && (0x00 == pBuffer[4]) && (0x00 == pBuffer[5])) ||
+			((0x01 == pBuffer[0]) && (0x00 == pBuffer[1]) && (0x09 == pBuffer[2]) && (0x00 == pBuffer[3]) && (0x00 == pBuffer[4]) && (0x03 == pBuffer[5]))))
 		return true;
 	
 	return false;

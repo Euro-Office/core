@@ -974,15 +974,7 @@ namespace Aggplus
 		if (&other == this)
 			return *this;
 
-		try
-		{
-			m_internal = new CGraphicsPath_private;
-		}
-		catch (...)
-		{
-			// allocation failure is propagated (terminates in this noexcept function)
-			throw;
-		}
+		m_internal = new CGraphicsPath_private;
 		m_internal->m_agg_ps	= other.m_internal->m_agg_ps;
 		m_internal->m_bEvenOdd	= other.m_internal->m_bEvenOdd;
 		m_internal->m_bIsMoveTo	= other.m_internal->m_bIsMoveTo;

@@ -800,16 +800,14 @@ namespace Jpeg2000
 
 	static void J2k_ReadCRG(J2kCodestream *pJ2k)
 	{
-		int nXcrg_i, nYcrg_i;
-
 		CReader *pStream = pJ2k->pStreamIO;
 		int nComponentsCount = pJ2k->pImage->nCsiz;
 
 		int nLen = pStream->Read(2); // Lcrg
 		for (int nIndex = 0; nIndex < nComponentsCount; nIndex++)
 		{
-			nXcrg_i = pStream->Read(2); // Xcrg_i
-			nYcrg_i = pStream->Read(2); // Ycrg_i
+			pStream->Read(2); // Xcrg_i
+			pStream->Read(2); // Ycrg_i
 		}
 	}
 

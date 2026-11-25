@@ -15,6 +15,9 @@
 
 #ifndef AGG_CONV_ADAPTOR_VCGEN_INCLUDED
 #define AGG_CONV_ADAPTOR_VCGEN_INCLUDED
+#ifdef __GNUC__
+#pragma GCC system_header
+#endif
 
 #include "agg_basics.h"
 

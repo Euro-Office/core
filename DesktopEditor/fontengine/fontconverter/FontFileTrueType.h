@@ -111,7 +111,7 @@ namespace NSFontConverter
 
     struct T42Table
     {
-        char *sTag;		 // 4-byte name
+        const char *sTag; // 4-byte name
         bool  bRequired; // Is TrueType required by the specification?
     };
 
@@ -206,7 +206,7 @@ namespace NSFontConverter
         // otherwise it will be left as binary data.  If <psName> is
         // non-NULL, it will be used as the PostScript font name.  (Only
         // useful for OpenType CFF fonts.)
-        void ToType1(char *sPSName, char **ppNewEncoding, bool bASKII, FontFileOutputFunc pOutputFunc, void *pOutputStream );
+        void ToType1(char *sPSName, const char **ppNewEncoding, bool bASKII, FontFileOutputFunc pOutputFunc, void *pOutputStream );
 
         // Convert to a Type 2 CIDFont, suitable for embedding in a
         // PostScript file.  <psName> will be used as the PostScript font
@@ -249,7 +249,7 @@ namespace NSFontConverter
         unsigned int ComputeTableChecksum(unsigned char *sData, int nLength);
         void Parse();
         void ReadPostTable();
-        int  SeekTable(char *sTag);
+        int  SeekTable(const char *sTag);
 
     private:
 

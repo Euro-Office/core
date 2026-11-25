@@ -27,6 +27,9 @@
 
 #ifndef AGG_COLOR_GRAY_INCLUDED
 #define AGG_COLOR_GRAY_INCLUDED
+#ifdef __GNUC__
+#pragma GCC system_header
+#endif
 
 #include "agg_basics.h"
 #include "agg_color_rgba.h"

@@ -157,9 +157,6 @@ namespace Jpeg2000
 	} DecoderParams;
 
 	// Common fields for JPEG-2000 compression and decompression
-	//EventManager *pEventManager;   /* Pointer to message handler (events) */\
-		//void         *pClientData;     /* */\
-
 #define CommonFields \
 	bool          bIsDecompressor; /* To find out compression or decompression */\
 	ECodecFormat  eCodecFormat;	   /* Selected codec */\
