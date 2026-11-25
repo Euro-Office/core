@@ -345,30 +345,30 @@ namespace formulasconvert {
 			boost::wregex(L"('.*?')|(\".*?\")"),
 			&convert_scobci, boost::match_default | boost::format_all);
 
-		std::vector< std::wstring > splitted;
+		std::vector< std::wstring > split;
 	    
-		boost::algorithm::split(splitted, workstr, boost::algorithm::is_any_of(L".:"), boost::algorithm::token_compress_on);
+		boost::algorithm::split(split, workstr, boost::algorithm::is_any_of(L".:"), boost::algorithm::token_compress_on);
 	  
 		bool res = false;
-		if (splitted.size() == 2)
+		if (split.size() == 2)
 		{
-			table		= splitted[0];	
-			ref_first	= splitted[1];
-			ref_last	= splitted[1];
+			table		= split[0];	
+			ref_first	= split[1];
+			ref_last	= split[1];
 			res = true;
 		}
-		if (splitted.size() == 3)
+		if (split.size() == 3)
 		{
-			table		= splitted[0];	
-			ref_first	= splitted[1];
-			ref_last	= splitted[2];
+			table		= split[0];	
+			ref_first	= split[1];
+			ref_last	= split[2];
 			res = true;
 		}
-		if (splitted.size() == 4)
+		if (split.size() == 4)
 		{
-			table		= splitted[0];	
-			ref_first	= splitted[1];
-			ref_last	= splitted[3];
+			table		= split[0];	
+			ref_first	= split[1];
+			ref_last	= split[3];
 			res = true;
 		}
 		replace_tmp_back( table );
@@ -381,7 +381,7 @@ namespace formulasconvert {
 	{
                 boost::wregex re(L"\\[(?:\\$)?([^\\.]+?){0,1}\\.([\\w^0-9\\$]+\\d+)(?::\\.([\\w^0-9]+\\d+)){0,1}\\]");
 		boost::wsmatch result;
-		bool b = boost::regex_search(expr, result, re);
+		boost::regex_search(expr, result, re);
 
 		size_t sz = result.size();
 		if (sz == 4 && !result[1].matched)
@@ -432,18 +432,14 @@ namespace formulasconvert {
 
 		if (sz < 6) return what[0].str();
 
-		std::wstring c0			= what[0].str(); 
 		std::wstring external	= sz == 7 ? what[1].matched ? what[1].str() : what[2].str() : what[1].str();
 		std::wstring sheet1		= sz == 7 ? what[3].str() : what[2].str();
 		std::wstring ref1		= sz == 7 ? what[4].str() : what[3].str();
-		std::wstring sheet2		= sz == 7 ? what[5].str() : what[4].str();
 		std::wstring ref2		= sz == 7 ? what[6].str() : what[5].str();
 		
 		XmlUtils::replace_all( sheet1, L"$", L"");
 
-		std::wstring result;
-
-		if (false == external.empty())
+		if (!external.empty())
 		{
 			replace_tmp_back(external);
 
@@ -487,7 +483,7 @@ namespace formulasconvert {
 
 			ref1 = oox::getCellAddress(col, row, true);
 
-			if (false == ref2.empty())
+			if (!ref2.empty())
 			{
 				oox::getCellAddressInv(ref2, col, row);
 				ref2 = oox::getCellAddress(col, row, true);
@@ -505,19 +501,14 @@ namespace formulasconvert {
 	}
 	std::wstring odf2oox_converter::Impl::replace_named_ref_formater_2(boost::wsmatch const & what)
 	{
-		const size_t sz = what.size();
+		//if (what.size() < 6) return what[0].str();
 
-		//if (sz < 6) return what[0].str();
-
-		std::wstring c0 = what[0].str();
 		std::wstring sheet1 = what[1].str();
 		std::wstring ref1 = what[2].str();
 		std::wstring ref2 = what[3].str();
 
 		XmlUtils::replace_all(sheet1, L"$", L"");
 		XmlUtils::replace_all(ref2, L":", L"");
-
-		std::wstring result;
 
 		if (std::wstring::npos != sheet1.find(L" "))
 		{
@@ -536,7 +527,7 @@ namespace formulasconvert {
 
 			ref1 = oox::getCellAddress(col, row, true);
 
-			if (false == ref2.empty())
+			if (!ref2.empty())
 			{
 				oox::getCellAddressInv(ref2, col, row);
 				ref2 = oox::getCellAddress(col, row, true);
@@ -854,7 +845,7 @@ namespace formulasconvert {
 
 		replace_tmp_back( workstr );
 
-		if (table_name_.empty() == false)
+		if (!table_name_.empty())
 		{
 			replace_tmp_back( table_name_ );
 		}
@@ -885,8 +876,7 @@ namespace formulasconvert {
 			replace_vertical(workstr);
 			workstr = odf2oox_function_names(workstr);
 
-			size_t res_find = 0;
-			if ((res_find = workstr.find(L"CONCATINATE")) != std::wstring::npos)
+			if (workstr.find(L"CONCATINATE") != std::wstring::npos)
 			{
 				//ranges can be partially specified
 				//TODO
@@ -894,7 +884,7 @@ namespace formulasconvert {
 			}
 			replace_tmp_back(workstr);
 
-			if (table_name_.empty() == false)
+			if (!table_name_.empty())
 			{
 				replace_tmp_back(table_name_);
  			}
