@@ -95,6 +95,12 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_header_footer.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/style_parent_cycle_character.docx",
     "OdfFile/Test/test_odf/ExampleFiles/style_parent_cycle_paragraph.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/flat_paragraph_style.xml",
+    "OdfFile/Test/test_odf/ExampleFiles/flat_picture_bullet.xml",
+    "OdfFile/Test/test_odf/ExampleFiles/flat_theme_color.xml",
+    "OdfFile/Test/test_odf/ExampleFiles/flat_theme_font.xml",
+    "OdfFile/Test/test_odf/ExampleFiles/no_styles_part_paragraph_style.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/no_theme_part_theme_color.docx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_no_header_footer.xlsx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"

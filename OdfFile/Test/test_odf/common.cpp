@@ -389,9 +389,11 @@ std::wstring convert_ooxml_to_odf_dir(const std::wstring& srcFileName)
 {
 	// Oox2Odf::Converter document types, as X2tConverter/src/lib/odf.h passes them.
 	std::wstring sType;
-	switch (COfficeFileFormatChecker(srcFileName).nFileType)
+	const int nFileType = COfficeFileFormatChecker(srcFileName).nFileType;
+	switch (nFileType)
 	{
 		case AVS_OFFICESTUDIO_FILE_DOCUMENT_DOCX:		sType = L"text"; break;
+		case AVS_OFFICESTUDIO_FILE_DOCUMENT_DOCX_FLAT:	sType = L"text"; break;
 		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX:	sType = L"spreadsheet"; break;
 		case AVS_OFFICESTUDIO_FILE_PRESENTATION_PPTX:	sType = L"presentation"; break;
 		default:										return L"";
@@ -408,14 +410,17 @@ std::wstring convert_ooxml_to_odf_dir(const std::wstring& srcFileName)
 	_CP_LOG << L"[info] " << srcFileName << std::endl;
 
 	bool bResult = false;
+	// A flat document is a single XML file: x2t (docxflat2odt) hands its path
+	// to the converter as it is, a package is unpacked first.
+	const bool bFlat = AVS_OFFICESTUDIO_FILE_DOCUMENT_DOCX_FLAT == nFileType;
 	COfficeUtils oCOfficeUtils(NULL);
-	if (S_OK == oCOfficeUtils.ExtractToDirectory(srcFileName, srcTempPath, NULL, 0))
+	if (bFlat || S_OK == oCOfficeUtils.ExtractToDirectory(srcFileName, srcTempPath, NULL, 0))
 	{
 		// x2t catches everything the writer throws and reports a failed
 		// conversion; do the same so a test sees an empty result.
 		try
 		{
-			Oox2Odf::Converter converter(srcTempPath, sType, L"", false, tempPath);
+			Oox2Odf::Converter converter(bFlat ? srcFileName : srcTempPath, sType, L"", false, tempPath);
 			bResult = converter.convert() && converter.write(dstDir, tempPath, L"", L"");
 		}
 		catch (...)

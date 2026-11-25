@@ -1562,11 +1562,13 @@ void DocxConverter::convert(OOX::Logic::CParagraphProperty	*oox_paragraph_pr,
 	{
 		std::wstring style_name = *oox_paragraph_pr->m_oPStyle->m_sVal;
 
-		std::map<std::wstring, size_t>::iterator pFind = docx_document->m_oMain.styles->m_mapStyleNames.find(style_name);
-		if (pFind != docx_document->m_oMain.styles->m_mapStyleNames.end())
+		// A flat document keeps its styles elsewhere, and a package may have no styles part.
+		OOX::CStyles* styles = docx_document ? docx_document->m_oMain.styles : (docx_flat_document ? docx_flat_document->m_pStyles.GetPointer() : nullptr);
+		std::map<std::wstring, size_t>::iterator pFind;
+		if (styles && (pFind = styles->m_mapStyleNames.find(style_name)) != styles->m_mapStyleNames.end())
 		{
-			if ((docx_document->m_oMain.styles->m_arrStyle[pFind->second]->m_oAutoRedefine.IsInit()) && 
-				(docx_document->m_oMain.styles->m_arrStyle[pFind->second]->m_oAutoRedefine->m_oVal.ToBool()))
+			if ((styles->m_arrStyle[pFind->second]->m_oAutoRedefine.IsInit()) && 
+				(styles->m_arrStyle[pFind->second]->m_oAutoRedefine->m_oVal.ToBool()))
 			{
 				reDefine = true;
 				if (oox_paragraph_pr->m_oRPr.IsInit())
@@ -3150,7 +3152,8 @@ void DocxConverter::convert(SimpleTypes::CTheme* oox_font_theme, _CP_OPT(std::ws
 {
 	if (oox_font_theme == nullptr) return;
 
-	if (docx_document->m_pTheme == nullptr) return;
+	PPTX::Theme* theme = oox_theme();
+	if (theme == nullptr) return;
 
 	std::wstring font;
 
@@ -3158,23 +3161,23 @@ void DocxConverter::convert(SimpleTypes::CTheme* oox_font_theme, _CP_OPT(std::ws
 	{
 	case SimpleTypes::themeMajorAscii:
 	case SimpleTypes::themeMajorHAnsi :
-		font = docx_document->m_pTheme->themeElements.fontScheme.majorFont.latin.typeface;
+		font = theme->themeElements.fontScheme.majorFont.latin.typeface;
 		break;
 	case SimpleTypes::themeMajorBidi:
-		font = docx_document->m_pTheme->themeElements.fontScheme.majorFont.cs.typeface;
+		font = theme->themeElements.fontScheme.majorFont.cs.typeface;
 		break;
 	case SimpleTypes::themeMajorEastAsia:
-		font = docx_document->m_pTheme->themeElements.fontScheme.majorFont.ea.typeface;
+		font = theme->themeElements.fontScheme.majorFont.ea.typeface;
 		break;
 	case SimpleTypes::themeMinorAscii:
 	case SimpleTypes::themeMinorHAnsi:
-		font = docx_document->m_pTheme->themeElements.fontScheme.minorFont.latin.typeface;
+		font = theme->themeElements.fontScheme.minorFont.latin.typeface;
 		break;
 	case SimpleTypes::themeMinorBidi:
-		font = docx_document->m_pTheme->themeElements.fontScheme.minorFont.cs.typeface;
+		font = theme->themeElements.fontScheme.minorFont.cs.typeface;
 		break;
 	case SimpleTypes::themeMinorEastAsia:
-		font = docx_document->m_pTheme->themeElements.fontScheme.minorFont.ea.typeface;
+		font = theme->themeElements.fontScheme.minorFont.ea.typeface;
 		break;
 	}
 	if (!font.empty()) odf_font_name = font;
@@ -3639,29 +3642,30 @@ void DocxConverter::convert(SimpleTypes::CHexColor			*color,
 				delete oRgbColor;
 		}
 	}
-	if (theme_color && result == false)
+	PPTX::Theme* theme = oox_theme();
+	if (theme_color && result == false && theme)
 	{
-		std::map<std::wstring, PPTX::Logic::UniColor>::iterator pFind = docx_document->m_pTheme->themeElements.clrScheme.Scheme.find(theme_color->ToString());
+		std::map<std::wstring, PPTX::Logic::UniColor>::iterator pFind = theme->themeElements.clrScheme.Scheme.find(theme_color->ToString());
 
-		if (pFind == docx_document->m_pTheme->themeElements.clrScheme.Scheme.end())
+		if (pFind == theme->themeElements.clrScheme.Scheme.end())
 		{
 			switch (theme_color->GetValue())
 			{
 			case SimpleTypes::themecolorBackground1:
-				pFind = docx_document->m_pTheme->themeElements.clrScheme.Scheme.find(L"lt1");
+				pFind = theme->themeElements.clrScheme.Scheme.find(L"lt1");
 				break;
 			case SimpleTypes::themecolorBackground2:
-				pFind = docx_document->m_pTheme->themeElements.clrScheme.Scheme.find(L"lt2");
+				pFind = theme->themeElements.clrScheme.Scheme.find(L"lt2");
 				break;
 			case SimpleTypes::themecolorText1:
-				pFind = docx_document->m_pTheme->themeElements.clrScheme.Scheme.find(L"dk1");
+				pFind = theme->themeElements.clrScheme.Scheme.find(L"dk1");
 				break;
 			case SimpleTypes::themecolorText2:
-				pFind = docx_document->m_pTheme->themeElements.clrScheme.Scheme.find(L"dk2");
+				pFind = theme->themeElements.clrScheme.Scheme.find(L"dk2");
 				break;
 			}
 		}
-		if (pFind != docx_document->m_pTheme->themeElements.clrScheme.Scheme.end())
+		if (pFind != theme->themeElements.clrScheme.Scheme.end())
 		{
 			DWORD argb = pFind->second.GetARGB();
 
@@ -4252,7 +4256,7 @@ void DocxConverter::convert(OOX::Numbering::CLvl *oox_num_lvl, OOX::Numbering::C
 	if (oox_num_lvl->m_oLvlPicBulletId.IsInit() && oox_num_lvl->m_oLvlPicBulletId->m_oVal.IsInit())
 	{
 		int id = *oox_num_lvl->m_oLvlPicBulletId->m_oVal;
-		OOX::CNumbering * lists_styles = docx_document->m_oMain.numbering;
+		OOX::CNumbering * lists_styles = docx_document ? docx_document->m_oMain.numbering : (docx_flat_document ? docx_flat_document->m_pNumbering.GetPointer() : nullptr);
 
 		for (size_t i = 0; (lists_styles) && (i < lists_styles->m_arrNumPicBullet.size()); i++)
 		{
