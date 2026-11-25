@@ -23,6 +23,8 @@
  *
  */
 
+// Amalgamation translation unit: each .cpp below is intentionally included.
+// NOLINTBEGIN(bugprone-suspicious-include)
 #include "../../Reader/Converter/ConvertOO2OOX.cpp"
 #include "../../Reader/Converter/conversionelement.cpp"
 #include "../../Reader/Converter/xlsx_conditionalFormatting.cpp"
@@ -100,3 +102,4 @@
 #include "../../Reader/Converter/xlsx_pivots_context.cpp"
 #include "../../Reader/Converter/xlsx_data_validation.cpp"
 #include "../../Reader/Converter/StarMath2OOXML/cooxml2odf.cpp"
+// NOLINTEND(bugprone-suspicious-include)

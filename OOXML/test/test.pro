@@ -13,12 +13,16 @@ HEADERS += $$X2T_DIR/src/dylib/x2t.h
 SOURCES += $$X2T_DIR/src/dylib/x2t.cpp
 
 SOURCES += main.cpp\
+           activex_groupname.cpp\
            common.cpp\
            checkbox.cpp\
            richvalue.cpp\
            conversion.cpp\
            editorbin_pivots.cpp\
+           parameter_type.cpp\
+           editorbin_source_file_type.cpp\
            vml_shape_size.cpp\
+           vml_fill_relationship_id.cpp\
            workbook_facts.cpp\
 
 HEADERS += common.h workbook_facts.h

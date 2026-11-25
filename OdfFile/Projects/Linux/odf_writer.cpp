@@ -23,6 +23,8 @@
  *
  */
 
+// Amalgamation translation unit: each .cpp below is intentionally included.
+// NOLINTBEGIN(bugprone-suspicious-include)
 #include "../../Writer/Format/office_document.cpp"
 #include "../../Writer/Format/office_forms.cpp"
 #include "../../Writer/Format/calcext_elements.cpp"
@@ -99,3 +101,4 @@
 #include "../../Writer/Format/math_limit_elements.cpp"
 #include "../../Writer/Format/math_table_elements.cpp"
 #include "../../Writer/Format/math_token_elements.cpp"
+// NOLINTEND(bugprone-suspicious-include)

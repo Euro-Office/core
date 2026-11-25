@@ -246,6 +246,8 @@ void xlsx_conversion_context::end_document()
         output_document_->get_xl_files().set_styles( package::simple_element::create(L"styles.xml", strm.str()) );
     }
 
+    output_document_->set_doc_props(root()->odf_context().DocProps().dump_core(), root()->odf_context().DocProps().dump_custom());
+
     {
         std::wstringstream strm_workbook;
 

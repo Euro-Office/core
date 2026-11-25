@@ -83,7 +83,7 @@ namespace BinVsdxRW
 		WriteItemWithLengthEnd(nCurPos);
 	}
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-BinaryFileWriter::BinaryFileWriter(DocWrapper::FontProcessor& oFontProcessor) : m_oBcw(NULL), m_oFontProcessor(oFontProcessor)
+BinaryFileWriter::BinaryFileWriter(DocWrapper::FontProcessor& oFontProcessor) : m_oBcw(nullptr), m_oFontProcessor(oFontProcessor)
 {
 	m_nRealTableCount = 0;
 }
@@ -120,8 +120,6 @@ _UINT32 BinaryFileWriter::Open(const std::wstring& sInputDir, const std::wstring
 	{
 		oBufferedStream.WriteStringUtf8(WriteFileHeader(0, g_nFormatVersionNoBase64));
 	}
-	int nHeaderLen = oBufferedStream.GetPosition();
-
 	WriteMainTableStart(oBufferedStream);
 	WriteContent(pVsdx, pOfficeDrawingConverter);
 	WriteMainTableEnd();
@@ -141,7 +139,7 @@ _UINT32 BinaryFileWriter::Open(const std::wstring& sInputDir, const std::wstring
 	{
 		int nBase64BufferLen = Base64::Base64EncodeGetRequiredLength(nBinBufferLen, Base64::B64_BASE64_FLAG_NOCRLF);
 		BYTE* pbBase64Buffer = new BYTE[nBase64BufferLen + 64];
-		if (true == Base64_1::Base64Encode(pbBinBuffer, nBinBufferLen, pbBase64Buffer, &nBase64BufferLen))
+		if (Base64_1::Base64Encode(pbBinBuffer, nBinBufferLen, pbBase64Buffer, &nBase64BufferLen))
 		{
 			NSFile::CFileBinary oFile;
 			oFile.CreateFileW(sFileDst);
@@ -162,7 +160,7 @@ _UINT32 BinaryFileWriter::Open(const std::wstring& sInputDir, const std::wstring
 	return result;
 }
 
-void BinaryFileWriter::WriteContent(OOX::Document *pDocument, NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter)
+void BinaryFileWriter::WriteContent(OOX::Document *pDocument, NSBinPptxRW::CDrawingConverter*  /*pOfficeDrawingConverter*/)
 {
 	OOX::Draw::CVsdx *pVsdx = dynamic_cast<OOX::Draw::CVsdx*>(pDocument);
 

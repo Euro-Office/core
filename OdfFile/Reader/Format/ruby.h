@@ -48,6 +48,7 @@ public:
 
     virtual void docx_convert(oox::docx_conversion_context & Context);
     virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
+    virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
     ruby_base() {}
 
     const office_element_ptr_array & content() const { return content_; }

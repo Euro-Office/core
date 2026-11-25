@@ -54,6 +54,14 @@ std::wostream & ruby_base::text_to_stream(std::wostream & _Wostream, bool bXmlEn
     return _Wostream;
 }
 
+void ruby_base::xlsx_convert(oox::xlsx_conversion_context & Context)
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        content_[i]->xlsx_convert(Context);
+    }
+}
+
 void ruby_base::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
 }

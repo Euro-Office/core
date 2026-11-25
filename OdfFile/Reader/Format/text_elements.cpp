@@ -25,6 +25,8 @@
 
 #include "text_elements.h"
 
+#include <cwchar>
+
 #include <xml/xmlchar.h>
 #include <xml/utils.h>
 
@@ -146,13 +148,40 @@ void paragraph::add_child_element( xml::sax * Reader, const std::wstring & Ns, c
 
 void paragraph::add_text(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text) ;
+    office_element_ptr elm = text::create_in_paragraph(Text) ;
 	content_.push_back( elm );
 }
 void paragraph::add_space(const std::wstring & Text)
 {
-    office_element_ptr elm = text::create(Text) ;
+    office_element_ptr elm = text::create_in_paragraph(Text) ;
 	content_.push_back( elm );
+}
+void paragraph::process_white_space(document_context * Context)
+{
+	// LibreOffice takes the text of spreadsheet cells and of charts as it is. Every other paragraph
+	// text follows the ODF white-space rules: Writer, Impress, Draw, headers and footers, and shapes
+	// and comments, also when they sit in a spreadsheet. The innermost of these containers decides.
+	bool collapse = true;
+	if (Context)
+	{
+		for (size_t i = Context->levels.size(); i > 0; i--)
+		{
+			const office_element * elm = Context->levels[i - 1];
+			if (!elm) continue;
+
+			const ElementType type = elm->get_type();
+			const wchar_t * ns = elm->get_ns();
+			if (type == typeOfficeAnnotation || (ns && std::wcscmp(ns, L"draw") == 0))
+				break;
+			if (type == typeOfficeChart || type == typeOfficeSpreadsheet)
+			{
+				collapse = false;
+				break;
+			}
+		}
+	}
+	bool ignore = true;
+	cpdoccore::odf_reader::text::process_white_space(content_, collapse, ignore);
 }
 const wchar_t * emptyParagraphContent = L"<w:pPr></w:pPr><w:r><w:rPr></w:rPr></w:r>";
 
@@ -194,6 +223,20 @@ bool ruby_has_base_content(const office_element_ptr & element)
 	const office_element_ptr_array* base = r ? r->base_content() : NULL;
 	return base && !base->empty();
 }
+
+// A text:meta / text:meta-field that holds nothing but empty metas: it writes nothing. (A span is never empty here:
+// span::docx_convert always writes a run, even without text.)
+bool meta_is_empty(const office_element_ptr & element)
+{
+	meta* m = dynamic_cast<meta*>(element.get());
+	if (!m) return false;
+
+	for (size_t i = 0; i < m->content_.size(); i++)
+	{
+		if (!meta_is_empty(m->content_[i])) return false;
+	}
+	return true;
+}
 }
 
 size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
@@ -204,14 +247,18 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 
 	while(index < content_.size()) // there may be track-change, ...
 	{
-		if (content_[index]->get_type() == typeTextText || 
-			content_[index]->get_type() == typeTextSpan)
+		const ElementType type = content_[index]->get_type();
+		if (type == typeTextText || type == typeTextSpan)
 			break;
 		// a ruby writes its base text as runs, so one with base content stops the scan too: those runs must come after
 		// the drop cap paragraph properties. A ruby without base content writes nothing and the scan goes on.
-		if (content_[index]->get_type() == typeTextRuby && ruby_has_base_content(content_[index]))
+		if (type == typeTextRuby && ruby_has_base_content(content_[index]))
 			break;
-		content_[index++]->docx_convert(Context); 
+		// a text:meta / text:meta-field with content stops the scan too: its runs must come after the drop cap paragraph
+		// properties. An empty one writes nothing and the scan goes on.
+		if ((type == typeTextMeta || type == typeTextMetaField) && !meta_is_empty(content_[index]))
+			break;
+		content_[index++]->docx_convert(Context);
 	}
 
 	if (index >= content_.size()) return index;
@@ -222,8 +269,9 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 	}
 	else
 	{
-		// a span or a ruby: the drop cap comes from the first text inside it, following the spans and ruby bases it
-		// starts with (<text:ruby><text:ruby-base><text:span>, <text:span><text:ruby>)
+		// a span, a ruby or a text:meta / text:meta-field: the drop cap comes from the first text inside it, following
+		// the spans, ruby bases and metas it starts with (<text:ruby><text:ruby-base><text:span>, <text:span><text:ruby>;
+		// LibreOffice writes formatted text in a meta as a span inside it)
 		span* first_span_in_paragraph = NULL;
 		const office_element_ptr_array* first_content = NULL;
 		office_element_ptr first_element = content_[index];
@@ -237,6 +285,8 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 			}
 			else if (ruby* inner_ruby = dynamic_cast<ruby*>(first_element.get()))
 				first_content = inner_ruby->base_content();
+			else if (meta* inner_meta = dynamic_cast<meta*>(first_element.get()))
+				first_content = &inner_meta->content_;
 			else
 				break;
 			first_element = (first_content && !first_content->empty()) ? (*first_content)[0] : office_element_ptr();
@@ -597,6 +647,15 @@ void h::add_text(const std::wstring & Text)
 {
     paragraph_.add_text(Text);
 }
+void h::add_space(const std::wstring & Text)
+{
+    paragraph_.add_space(Text);
+}
+void h::afterReadContent()
+{
+    paragraph_.process_white_space(getContext());
+    office_element::afterReadContent();
+}
 
 void h::docx_convert(oox::docx_conversion_context & Context) 
 {
@@ -660,6 +719,11 @@ void p::add_text(const std::wstring & Text)
 void p::add_space(const std::wstring & Text)
 {
     paragraph_.add_space(Text);
+}
+void p::afterReadContent()
+{
+    paragraph_.process_white_space(getContext());
+    office_element::afterReadContent();
 }
 
 void p::docx_convert(oox::docx_conversion_context & Context)
