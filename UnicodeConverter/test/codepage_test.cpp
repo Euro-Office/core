@@ -97,8 +97,10 @@ TEST(UnicodeConverterCodePage, DecodesByCodePageNumber)
 TEST(UnicodeConverterCodePage, EmptyInputGivesEmptyString)
 {
 	NSUnicodeConverter::CUnicodeConverter converter;
-	EXPECT_TRUE(converter.toUnicode("", 0, 1200).empty());
-	EXPECT_TRUE(converter.toUnicode("", 0, 28595).empty());
+	// a variable and not the literal 0, which is also a null pointer for the overloads that take a name
+	const unsigned int length = 0;
+	EXPECT_TRUE(converter.toUnicode("", length, 1200).empty());
+	EXPECT_TRUE(converter.toUnicode("", length, 28595).empty());
 }
 
 TEST(UnicodeConverterCodePage, FromUnicodeKeepsCharactersOutsideTheBmp)
