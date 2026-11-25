@@ -474,6 +474,7 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = [
     "OOXML/test/ExampleFiles/activex_groupname/groupname.docx",
     "OOXML/test/ExampleFiles/docx2odt/vml_margin.docx",
+    "OOXML/test/ExampleFiles/pivot_show_data_as/runTotal.xlsx",
     "OOXML/test/ExampleFiles/xlsx2bin/checkbox.xlsx",
     "OOXML/test/ExampleFiles/docx2bin/page_background_picture.docx",
     "OOXML/test/ExampleFiles/xlsx2bin/richvalue-fallback.xlsx",
