@@ -75,6 +75,7 @@ public:
 		// 1 [Symbol]
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Symbol", 1));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Wingdings", 1));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"StarSymbol", 1));
 		std::vector<std::wstring> ar1;
 		ar1.push_back(L"OpenSymbol");
 		m_listLikes.push_back(ar1);
