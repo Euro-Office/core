@@ -162,6 +162,7 @@ namespace Oox2Odf
     private:
 		bool current_bidi_set = false;
 		bool paragraph_page_break_before_ = false;	// w:pageBreakBefore of the paragraph that is converted
+		double paragraph_font_size_ = 0;			// pt, size of the paragraph's runs that set none (0 = unknown)
 		struct _section
 		{
             OOX::Logic::CSectionProperty *props = NULL;

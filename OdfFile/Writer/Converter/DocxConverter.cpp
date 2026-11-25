@@ -25,6 +25,8 @@
 #include "DocxConverter.h"
 #include "../../Common/utils.h"
 
+#include <cmath>
+
 #include "../../../OOXML/DocxFormat/Docx.h"
 #include "../../../OOXML/DocxFormat/DocxFlat.h"
 #include "../../../OOXML/DocxFormat/Document.h"
@@ -992,6 +994,11 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 	}
 
 //---------------------------------------------------------------------------------------------------------------------
+	// runs push their sizes onto current_font_size; a run without one has the size of the paragraph, not of the run
+	// before it (paragraphs in text boxes of a run nest)
+	const double outer_paragraph_font_size = paragraph_font_size_;
+	paragraph_font_size_ = current_font_size.empty() ? 0. : current_font_size.back();
+
 	for (size_t i = 0; i < oox_paragraph->m_arrItems.size(); ++i)
 	{
 		//those elements that are only for Paragraph are here - the rest are in the general heap
@@ -1000,12 +1007,13 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 			case OOX::et_w_pPr:
 			{
 				// Skip ..
-			}break;		
+			}break;
 			default:
 				convert(oox_paragraph->m_arrItems[i]);
 				break;
 		}
 	}
+	paragraph_font_size_ = outer_paragraph_font_size;
 //---------------------------------------------------------------------------------------------------------------------
 	if (odt_context->in_drop_cap())
 	{
@@ -1055,7 +1063,25 @@ void DocxConverter::convert(OOX::Logic::CRun *oox_run)//wordprocessing 22.1.2.87
 		odt_context->styles_context()->create_style(L"", odf_types::style_family::Text, true, false, -1);					
 		odf_writer::text_format_properties *text_properties = odt_context->styles_context()->last_state()->get_text_properties();
 
+		const size_t font_size_depth = current_font_size.size();
 		convert(oox_run->m_oRunProperty, text_properties);
+
+		// w:position raises or lowers the run by a length; ODF gives it in percent of the run's font size. As in
+		// LibreOffice, it replaces a w:vertAlign of the run and leaves the font size as it is, and 0 means none.
+		if (oox_run->m_oRunProperty->m_oPosition.IsInit() && oox_run->m_oRunProperty->m_oPosition->m_oVal.IsInit()
+			&& text_properties)
+		{
+			const double position_pt = oox_run->m_oRunProperty->m_oPosition->m_oVal->ToPoints();
+			const double font_size_pt = current_font_size.size() > font_size_depth ? current_font_size.back()
+				: paragraph_font_size_;	// the run's own size or that of its character style, else the paragraph's
+			if (position_pt != 0)
+			{
+				double percent = font_size_pt > 0 ? std::round(position_pt / font_size_pt * 100) : (position_pt > 0 ? 33 : -8);
+				percent = (std::max)(-13999., (std::min)(13999., percent));
+
+				text_properties->style_text_position_ = odf_types::text_position(percent, 100.);
+			}
+		}
 	}
 
 	odt_context->start_run(styled);
