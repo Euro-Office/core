@@ -56,10 +56,15 @@ def ensure_python_shim():
     # depot_tools and V8's build scripts call a bare "python3". On Rocky 9
     # that's the system 3.9, which current depot_tools rejects, so put the
     # interpreter running this script first on PATH under that name.
-    # Windows doesn't need this: depot_tools brings its own python3.bat there.
-    if nc.is_windows():
-        return
     nc.ensure_directory_exists( python_shim_path )
+    if nc.is_windows():
+        # gclient.bat runs vpython3, which with VPYTHON_BYPASS runs the first
+        # python3 on PATH; depot_tools' own python3.bat comes from the
+        # bootstrap DEPOT_TOOLS_UPDATE=0 turns off. That first python3 may be
+        # one gsutil refuses (it wants 3.9 to 3.13), as a uv-installed 3.14 is.
+        for name in ( "python3", "python" ):
+            ( python_shim_path / f"{ name }.bat" ).write_text( f'@"{ sys.executable }" %*\r\n' )
+        return
     for name in ( "python3", "python" ):
         link = python_shim_path / name
         link.unlink( missing_ok = True )
@@ -85,9 +90,7 @@ def ensure_windows_git_shim():
 
 def depot_env() -> dict:
     env = os.environ.copy()
-    path = [ str( depot_tools_path ) ]
-    if not nc.is_windows():
-        path.insert( 0, str( python_shim_path ) )
+    path = [ str( python_shim_path ), str( depot_tools_path ) ]
     env[ "PATH" ] = os.pathsep.join( path + [ env[ "PATH" ] ] )
     env[ "GCLIENT_SUPPRESS_GIT_VERSION_WARNING" ] = "1"
     env[ "DEPOT_TOOLS_WIN_TOOLCHAIN" ] = "0"
