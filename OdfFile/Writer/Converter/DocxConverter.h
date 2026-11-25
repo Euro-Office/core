@@ -162,6 +162,8 @@ namespace Oox2Odf
     private:
 		bool current_bidi_set = false;
 		bool paragraph_page_break_before_ = false;	// w:pageBreakBefore of the paragraph that is converted
+		// w:pPr of a first cell paragraph whose w:pageBreakBefore was written as fo:break-before of its table
+		OOX::Logic::CParagraphProperty *table_page_break_paragraph_pr_ = nullptr;
 		struct _section
 		{
             OOX::Logic::CSectionProperty *props = NULL;

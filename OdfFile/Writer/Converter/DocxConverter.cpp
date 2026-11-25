@@ -1766,7 +1766,8 @@ void DocxConverter::convert(OOX::Logic::CParagraphProperty	*oox_paragraph_pr,
 		if (oox_level >= 0 && oox_level <= 9)
 			paragraph_properties->outline_level_ = (oox_level == 9) ? 0 : oox_level + 1;
 	}
-	if (oox_paragraph_pr->m_oPageBreakBefore.IsInit() && oox_paragraph_pr->m_oPageBreakBefore->m_oVal.ToBool())
+	if (oox_paragraph_pr->m_oPageBreakBefore.IsInit() && oox_paragraph_pr->m_oPageBreakBefore->m_oVal.ToBool()
+		&& oox_paragraph_pr != table_page_break_paragraph_pr_) // else the break is already on the table
 	{
 		paragraph_properties->fo_break_before_ = odf_types::fo_break(odf_types::fo_break::Page);
 		odt_context->text_context()->set_type_break(1, 0); //page, clear_all
@@ -4785,6 +4786,36 @@ bool DocxConverter::in_table()
 {
 	return odt_context->table_context()->depth() > tables_around_hdr_ftr;
 }
+// First child of a table, row or cell that is not one of its property elements.
+static OOX::WritingElement* first_content_item(const std::vector<OOX::WritingElement*>& items,
+	OOX::EElementType property_type, OOX::EElementType property_type_ex = OOX::et_Unknown)
+{
+	for (OOX::WritingElement* item : items)
+	{
+		if (item && item->getType() != property_type && item->getType() != property_type_ex)
+			return item;
+	}
+	return nullptr;
+}
+// w:pPr of the paragraph a table starts with (the first one of its first cell) if it has w:pageBreakBefore.
+static OOX::Logic::CParagraphProperty* first_cell_page_break_before(OOX::Logic::CTbl* oox_table)
+{
+	OOX::Logic::CTr* row = dynamic_cast<OOX::Logic::CTr*>(first_content_item(oox_table->m_arrItems, OOX::et_w_tblPr));
+	if (row == nullptr) return nullptr;
+
+	OOX::Logic::CTc* cell = dynamic_cast<OOX::Logic::CTc*>(
+		first_content_item(row->m_arrItems, OOX::et_w_trPr, OOX::et_w_tblPrEx));
+	if (cell == nullptr) return nullptr;
+
+	OOX::Logic::CParagraph* paragraph = dynamic_cast<OOX::Logic::CParagraph*>(
+		first_content_item(cell->m_arrItems, OOX::et_w_tcPr));
+	if (paragraph == nullptr || paragraph->m_oParagraphProperty == nullptr) return nullptr;
+
+	OOX::Logic::CParagraphProperty* paragraph_pr = paragraph->m_oParagraphProperty;
+	if (paragraph_pr->m_oPageBreakBefore.IsInit() && paragraph_pr->m_oPageBreakBefore->m_oVal.ToBool())
+		return paragraph_pr;
+	return nullptr;
+}
 
 void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 {
@@ -4835,6 +4866,26 @@ void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 			{
 				//in_frame_anchor	= odf_types::anchor_type::Char;
 			}
+		}
+	}
+
+	// Word and LibreOffice start a table on a new page when its first paragraph has w:pageBreakBefore, but
+	// fo:break-before of a paragraph in a table cell has no effect: the break goes on the table, as LibreOffice
+	// does when it imports such a table. Nested and floating tables keep the old output.
+	bool table_page_break = false;
+	if (!in_frame && !in_table())
+	{
+		OOX::Logic::CParagraphProperty* paragraph_pr = first_cell_page_break_before(oox_table);
+		odf_writer::odf_style_state_ptr table_style =
+			odt_context->styles_context()->last_state(odf_types::style_family::Table);
+		odf_writer::style_table_properties* table_properties =
+			table_style ? table_style->get_table_properties() : nullptr;
+		if (paragraph_pr && table_properties)
+		{
+			table_properties->content_.common_break_attlist_.fo_break_before_ =
+				odf_types::fo_break(odf_types::fo_break::Page);
+			table_page_break_paragraph_pr_ = paragraph_pr;
+			table_page_break = true;
 		}
 	}
 
@@ -4979,6 +5030,9 @@ void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 				convert(oox_table->m_arrItems[i]);
 		}
 	}
+	if (table_page_break)
+		table_page_break_paragraph_pr_ = nullptr;
+
 	if (in_frame)
 	{
 		_CP_OPT(double) width = odt_context->table_context()->get_table_width();
