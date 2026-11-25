@@ -15,6 +15,9 @@
 
 #ifndef AGG_SCANLINE_BOOLEAN_ALGEBRA_INCLUDED
 #define AGG_SCANLINE_BOOLEAN_ALGEBRA_INCLUDED
+#ifdef __GNUC__
+#pragma GCC system_header
+#endif
 
 #include <stdlib.h>
 #include <math.h>
@@ -851,7 +854,7 @@ namespace agg
         unsigned num2 = sl2.num_spans();
 
         typename Scanline1::const_iterator span1;// = sl1.begin();
-        typename Scanline2::const_iterator span2;// = sl2.begin();
+        typename Scanline2::const_iterator span2 = sl2.begin();
 
         enum invalidation_e 
         { 

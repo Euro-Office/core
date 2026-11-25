@@ -155,7 +155,7 @@ namespace Aggplus
 		// Location
 		void DivideLocations();
 		void AddLocation(Curve curve1, Curve curve2, double t1, double t2, bool overlap = false, bool filter = true, bool bothEnds = false);
-		void InsertLocation(std::shared_ptr<Location> loc, bool overlap);
+		bool InsertLocation(std::shared_ptr<Location> loc, bool overlap);
 		bool AllOverlap() const noexcept;
 		bool AllInters(const std::vector<Segment>& segments) const noexcept;
 		bool IsOneCurvePath(int pathIndex) const noexcept;

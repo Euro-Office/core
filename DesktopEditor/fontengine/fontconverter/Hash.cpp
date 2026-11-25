@@ -161,7 +161,7 @@ namespace NSFontConverter
 		return pBucket->uValue.i;
 	}
 
-	void *CHash::Lookup(char *sKey)
+	void *CHash::Lookup(const char *sKey)
 	{
 		THashBucket *pBucket = nullptr;
 		int nHashIndex = 0;
@@ -172,7 +172,7 @@ namespace NSFontConverter
 		return pBucket->uValue.p;
 	}
 
-	int CHash::LookupInt(char *sKey)
+	int CHash::LookupInt(const char *sKey)
 	{
 		THashBucket *pBucket = nullptr;
 		int nHashIndex = 0;
@@ -231,7 +231,7 @@ namespace NSFontConverter
 		return nValue;
 	}
 
-	void *CHash::Remove(char *sKey)
+	void *CHash::Remove(const char *sKey)
 	{
 		THashBucket *pBucket;
 		THashBucket **ppBucket;
@@ -255,7 +255,7 @@ namespace NSFontConverter
 		return pValue;
 	}
 
-	int CHash::RemoveInt(char *sKey)
+	int CHash::RemoveInt(const char *sKey)
 	{
 		THashBucket *pBucket;
 		THashBucket **ppBucket;
@@ -375,7 +375,7 @@ namespace NSFontConverter
 		}
 		return nullptr;
 	}
-	THashBucket *CHash::Find(char       *sKey, int *pnHashIndex)
+	THashBucket *CHash::Find(const char *sKey, int *pnHashIndex)
 	{
 		THashBucket *pBucket;
 
@@ -400,9 +400,9 @@ namespace NSFontConverter
 		return (int)(nHash % m_nBucketsCount);
 	}
 
-	int CHash::Hash(char *sKey)
+	int CHash::Hash(const char *sKey)
 	{
-		char *sTemp;
+		const char *sTemp;
 		unsigned int nHash = 0;
 
 		for ( sTemp = sKey; *sTemp; ++sTemp )

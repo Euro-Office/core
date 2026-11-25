@@ -374,8 +374,8 @@ namespace agg
 	public:
 		my_span_path_gradient()
 			: m_state( StateInit ), 
-			m_factor(0),
 			m_center( 0, 0 ),
+			m_factor(0),
 			m_pSubColors( 0 ),
 			m_pPosSubColors( 0 ),
 			m_nCountSubColors( 0 )

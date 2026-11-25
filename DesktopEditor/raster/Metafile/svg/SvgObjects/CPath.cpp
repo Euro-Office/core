@@ -536,8 +536,8 @@ namespace SVG
 
 	IPathElement *CPath::operator[](int nIndex) const
 	{
-		if (m_arElements.empty() || (nIndex > 0 && nIndex >= m_arElements.size()) || (nIndex < 0 && -nIndex > m_arElements.size()))
-			return nullptr;
+		if (m_arElements.empty() || (nIndex > 0 && static_cast<size_t>(nIndex) >= m_arElements.size()) || (nIndex < 0 && static_cast<size_t>(-nIndex) > m_arElements.size()))
+        { return nullptr; }
 
 		return m_arElements[(nIndex >= 0) ? nIndex : m_arElements.size() + nIndex];
 	}
@@ -596,7 +596,7 @@ namespace SVG
 							if (nullptr != pBezierElement)
 								oNext = pBezierElement->m_oPoint2;
 						}
-						else if (unIndex < m_arElements.size() - 1 && EPathElement::Close != m_arElements[unIndex + 1]->GetType() && EPathElement::Move != m_arElements[unIndex + 1]->GetType())
+						else if (static_cast<size_t>(unIndex) < m_arElements.size() - 1 && EPathElement::Close != m_arElements[unIndex + 1]->GetType() && EPathElement::Move != m_arElements[unIndex + 1]->GetType())
 							oNext = m_arElements[unIndex + 1]->GetFirstPoint();
 
 						(*oExternalData.m_pPoints)[0].m_dAngle = CALCULATE_ANGLE(oCurent, oNext);

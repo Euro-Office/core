@@ -725,17 +725,17 @@ namespace MetaFile
 		if (nullptr == pBuffer ||
 		    oNewRect.Left < 0 || oNewRect.Right  < 0 ||
 		    oNewRect.Top  < 0 || oNewRect.Bottom < 0)
-			return nullptr;
+        { return nullptr; }
 
 		if (unHeight < static_cast<unsigned int>(std::abs(oNewRect.Bottom - oNewRect.Top)))
-			oNewRect.Bottom = oNewRect.Top + unHeight;
+        { oNewRect.Bottom = oNewRect.Top + unHeight; }
 
 		if (unWidth < static_cast<unsigned int>(std::abs(oNewRect.Right - oNewRect.Left)))
-			oNewRect.Right = oNewRect.Left + unWidth;
+        { oNewRect.Right = oNewRect.Left + unWidth; }
 
-		if (unHeight == (oNewRect.Bottom - oNewRect.Top) &&
-		    unWidth  == (oNewRect.Right  - oNewRect.Left))
-			return nullptr;
+		if (static_cast<int>(unHeight) == (oNewRect.Bottom - oNewRect.Top) &&
+		    static_cast<int>(unWidth)  == (oNewRect.Right  - oNewRect.Left))
+        { return nullptr; }
 
 		ULONG nBeginX, nBeginY, nEndX, nEndY;
 
@@ -977,7 +977,7 @@ namespace MetaFile
 
 		if (nullptr != pRegion)
 		{
-			for (unsigned int unScanIndex = 0; unScanIndex < pRegion->shScanCount; ++unScanIndex)
+			for (unsigned int unScanIndex = 0; unScanIndex < static_cast<unsigned int>(pRegion->shScanCount); ++unScanIndex)
 			{
 				TWmfScanObject *pScanObject = &pRegion->pScans[unScanIndex];
 
@@ -1007,7 +1007,7 @@ namespace MetaFile
 
 		if (nullptr != pRegion)
 		{
-			for (unsigned int unScanIndex = 0; unScanIndex < pRegion->shScanCount; ++unScanIndex)
+			for (unsigned int unScanIndex = 0; unScanIndex < static_cast<unsigned int>(pRegion->shScanCount); ++unScanIndex)
 			{
 				TWmfScanObject *pScanObject = &pRegion->pScans[unScanIndex];
 
@@ -1054,7 +1054,7 @@ namespace MetaFile
 
 		if (nullptr != pRegion)
 		{
-			for (unsigned int unScanIndex = 0; unScanIndex < pRegion->shScanCount; ++unScanIndex)
+			for (unsigned int unScanIndex = 0; unScanIndex < static_cast<unsigned int>(pRegion->shScanCount); ++unScanIndex)
 			{
 				TWmfScanObject *pScanObject = &pRegion->pScans[unScanIndex];
 
@@ -1123,7 +1123,8 @@ namespace MetaFile
 		MoveTo(arPoints[0].X, arPoints[0].Y);
 
 		for (size_t unIndex = 1; unIndex < arPoints.size(); unIndex++)
-			LineTo(arPoints[unIndex].X, arPoints[unIndex].Y);
+        { LineTo(arPoints[unIndex].X, arPoints[unIndex].Y); }
+
 
 		DrawPath(true, false);
 	}
@@ -1139,7 +1140,7 @@ namespace MetaFile
 		MoveTo(arPoints[0].X, arPoints[0].Y);
 
 		for (size_t unIndex = 1; unIndex < arPoints.size(); unIndex++)
-			LineTo(arPoints[unIndex].X, arPoints[unIndex].Y);
+        { LineTo(arPoints[unIndex].X, arPoints[unIndex].Y); }
 
 		ClosePath();
 		DrawPath(true, true);

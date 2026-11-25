@@ -167,7 +167,7 @@ namespace NSFontConverter
 
         // Return the encoding as an array of 256 names (some may be
         // NULL). Used only for 8-bit fonts.
-        char **GetEncoding();
+        const char **GetEncoding();
 
         unsigned short *GetCIDToGIDMap(int *arrCIDs);
 
@@ -177,7 +177,7 @@ namespace NSFontConverter
         // font.  If <ascii> is true the eexec section will be hex-encoded,
         // otherwise it will be left as binary data.  If <psName> is non-NULL,
         // it will be used as the PostScript font name.
-        void ToType1(char *sPSName, char **ppNewEncoding, bool bASKII, FontFileOutputFunc pOutputFunc, void *pOutputStream);
+        void ToType1(char *sPSName, const char **ppNewEncoding, bool bASKII, FontFileOutputFunc pOutputFunc, void *pOutputStream);
 
         // Convert to a Type 0 CIDFont, suitable for embedding in a
         // PostScript file.  <psName> will be used as the PostScript font
@@ -195,11 +195,11 @@ namespace NSFontConverter
     private:
 
         CFontFileType1C(char *sBuffer, int nLen, bool bFreeData);
-        void EexecConvertGlyph(Type1CEexecBuf *pEexecBuf, char *sGlyphName, int nOffset, int nBytes, Type1CIndex *pSubrIndex, Type1CPrivateDict *pDict);
+        void EexecConvertGlyph(Type1CEexecBuf *pEexecBuf, const char *sGlyphName, int nOffset, int nBytes, Type1CIndex *pSubrIndex, Type1CPrivateDict *pDict);
         void ConvertGlyph(int nOffset, int nBytes, StringExt *seCharBuffer, Type1CIndex *pSubrIndex, Type1CPrivateDict *pDict, bool bTop);
         void ConvertGlyphWidth(bool bUseOperation, StringExt *seCharBuffer, Type1CPrivateDict *pDict);
         void ConvertNum(double dValue, bool bIsFloat, StringExt *seCharBuffer);
-        void EexecWrite(Type1CEexecBuf *pEexecBuf, char *sBuffer);
+        void EexecWrite(Type1CEexecBuf *pEexecBuf, const char *sBuffer);
         void EexecWriteCharString(Type1CEexecBuf *pEexecBuf, unsigned char *sBuffer, int nLen);
         bool Parse();
         void ReadTopDict();
@@ -232,8 +232,10 @@ namespace NSFontConverter
             {
             case 3:
                 nWord |= (sData[nTemp + 2] & 0xff) <<  8;
+                [[fallthrough]];
             case 2:
                 nWord |= (sData[nTemp + 1] & 0xff) << 16;
+                [[fallthrough]];
             case 1:
                 nWord |= (sData[nTemp]     & 0xff) << 24;
                 break;
@@ -248,7 +250,7 @@ namespace NSFontConverter
     private:
 
         StringExt         *m_seName;
-        char             **m_arrEncoding;
+        const char       **m_arrEncoding;
 
         Type1CIndex        m_oNameIndex;
         Type1CIndex        m_oTopDictIndex;

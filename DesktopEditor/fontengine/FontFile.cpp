@@ -629,8 +629,8 @@ void CFontFile::UpdateStyles(const INT& bBold, const INT& bItalic)
 	std::string sStyle = GetStyleName();
 
 	// Check the original font style
-	INT bSrcBold   = (-1 != sStyle.find("Bold"));
-	INT bSrcItalic = (-1 != sStyle.find("Italic"));
+	INT bSrcBold   = (std::string::npos != sStyle.find("Bold"));
+	INT bSrcItalic = (std::string::npos != sStyle.find("Italic"));
 
 	if (!bBold) // Need a non-bold font
 	{
@@ -1055,7 +1055,7 @@ int CFontFile::GetUnicodeByGID(int gid)
 
 	while (gindex != 0)
 	{
-		if (gindex == gid)
+		if (gindex == static_cast<FT_UInt>(gid))
 		{
 			return charcode;
 		}

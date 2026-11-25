@@ -232,7 +232,6 @@ namespace Jpeg2000
 	//-------------------------------------------------------------------------------------------------------------------------------
 	bool ImageToJ2k(Image *pImage, const std::wstring& wsFilePath, EncoderParams* pEncoderParams)
 	{
-		int nCodeStreamLen = 0;
 		CReader *pStream = NULL;
 		CInfo *pCInfo = (CInfo*)Malloc(sizeof(CInfo));
 		if (!pCInfo)
@@ -272,7 +271,7 @@ namespace Jpeg2000
 			Free(pCInfo);
 			return false;
 		}
-		nCodeStreamLen =  pStream->Tell();
+		int nCodeStreamLen = pStream->Tell();
 
 		//if (!oFile.CreateFileW(wsFilePath))
 		//{

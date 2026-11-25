@@ -987,7 +987,7 @@ namespace MetaFile
 			}
 			else
 			{
-				pRegion->shScanCount = NULL;
+				pRegion->shScanCount = 0;
 			}
 
 

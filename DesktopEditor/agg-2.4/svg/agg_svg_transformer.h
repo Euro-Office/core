@@ -1,5 +1,8 @@
 ﻿#ifndef AGG_SVG_TRANSFORMER_INCLUDED
 #define AGG_SVG_TRANSFORMER_INCLUDED
+#ifdef __GNUC__
+#pragma GCC system_header
+#endif
 
 #include "agg_trans_affine.h"
 #include "agg_trans_viewport.h"

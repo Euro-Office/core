@@ -50,14 +50,14 @@ namespace NSFontConverter
       void Replace(StringExt *seKey, int   nValue);
 
       void *Lookup(StringExt *seKey);
-      void *Lookup(char *sKey);
+      void *Lookup(const char *sKey);
       int   LookupInt(StringExt *seKey);
-      int   LookupInt(char *sKey);
+      int   LookupInt(const char *sKey);
 
       void *Remove(StringExt *seKey);
-      void *Remove(char *seKey);
+      void *Remove(const char *seKey);
       int   RemoveInt(StringExt *seKey);
-      int   RemoveInt(char *sKey);
+      int   RemoveInt(const char *sKey);
 
       int GetLength()
       {
@@ -75,10 +75,10 @@ namespace NSFontConverter
 
       void Expand();
       THashBucket *Find(StringExt *seKey, int *pnHashIndex );
-      THashBucket *Find(char       *sKey, int *pnHashIndex );
+      THashBucket *Find(const char *sKey, int *pnHashIndex );
 
       int Hash(StringExt *seKey);
-      int Hash(char *sKey);
+      int Hash(const char *sKey);
 
     private:
 

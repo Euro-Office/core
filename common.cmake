@@ -187,6 +187,24 @@ if( EMSCRIPTEN )
         INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
     )
 
+    # Setup hyphen (WASM)
+    set(HYPHEN_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/hyphen")
+    get_filename_component(HYPHEN_INSTALL_DIR_ABS "${HYPHEN_INSTALL_DIR}" ABSOLUTE)
+    add_library(hyphen STATIC IMPORTED GLOBAL)
+    set_target_properties(hyphen PROPERTIES
+        IMPORTED_LOCATION "${HYPHEN_INSTALL_DIR_ABS}/lib/libhyphen.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${HYPHEN_INSTALL_DIR_ABS}/include"
+    )
+
+    # Setup harfbuzz (WASM)
+    set(HARFBUZZ_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz")
+    get_filename_component(HARFBUZZ_INSTALL_DIR_ABS "${HARFBUZZ_INSTALL_DIR}" ABSOLUTE)
+    add_library(harfbuzz STATIC IMPORTED GLOBAL)
+    set_target_properties(harfbuzz PROPERTIES
+        IMPORTED_LOCATION "${HARFBUZZ_INSTALL_DIR_ABS}/lib/libharfbuzz.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INSTALL_DIR_ABS}/include/harfbuzz"
+    )
+
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
@@ -604,6 +622,38 @@ else()
         )
     endif()
 
+    # Setup hyphen
+    set(HYPHEN_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/hyphen")
+    get_filename_component(HYPHEN_INSTALL_DIR_ABS "${HYPHEN_INSTALL_DIR}" ABSOLUTE)
+    add_library(hyphen STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set_target_properties(hyphen PROPERTIES
+            IMPORTED_LOCATION "${HYPHEN_INSTALL_DIR_ABS}/lib/hyphen.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${HYPHEN_INSTALL_DIR_ABS}/include"
+        )
+    else()
+        set_target_properties(hyphen PROPERTIES
+            IMPORTED_LOCATION "${HYPHEN_INSTALL_DIR_ABS}/lib/libhyphen.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${HYPHEN_INSTALL_DIR_ABS}/include"
+        )
+    endif()
+
+    # Setup harfbuzz
+    set(HARFBUZZ_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz")
+    get_filename_component(HARFBUZZ_INSTALL_DIR_ABS "${HARFBUZZ_INSTALL_DIR}" ABSOLUTE)
+    add_library(harfbuzz STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set_target_properties(harfbuzz PROPERTIES
+            IMPORTED_LOCATION "${HARFBUZZ_INSTALL_DIR_ABS}/lib/harfbuzz.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INSTALL_DIR_ABS}/include/harfbuzz"
+        )
+    else()
+        set_target_properties(harfbuzz PROPERTIES
+            IMPORTED_LOCATION "${HARFBUZZ_INSTALL_DIR_ABS}/lib/libharfbuzz.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INSTALL_DIR_ABS}/include/harfbuzz"
+        )
+    endif()
+
 endif()
 
 # Crypto++ is fetched as sources and compiled by core (Common/3dParty/cryptopp).
@@ -611,14 +661,22 @@ endif()
 set(CRYPTOPP_INCLUDE_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cryptopp")
 set(CRYPTOPP_SOURCES_DIR "${CRYPTOPP_INCLUDE_DIR}/cryptopp")
 
-# jbig2enc is compiled into the targets that use it (source-only dependency)
-set(JBIG2ENC_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/jbig2enc/src")
-set(JBIG2ENC_SOURCES
-    "${JBIG2ENC_SOURCES_DIR}/jbig2arith.cc"
-    "${JBIG2ENC_SOURCES_DIR}/jbig2comparator.cc"
-    "${JBIG2ENC_SOURCES_DIR}/jbig2enc.cc"
-    "${JBIG2ENC_SOURCES_DIR}/jbig2sym.cc"
-)
+set(JBIG2ENC_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/jbig2enc")
+get_filename_component(JBIG2ENC_INSTALL_DIR_ABS "${JBIG2ENC_INSTALL_DIR}" ABSOLUTE)
+add_library(libjbig2enc STATIC IMPORTED GLOBAL)
+if( MSVC )
+    set_target_properties(libjbig2enc PROPERTIES
+        IMPORTED_LOCATION "${JBIG2ENC_INSTALL_DIR_ABS}/lib/libjbig2enc.lib"
+        INTERFACE_INCLUDE_DIRECTORIES "${JBIG2ENC_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES leptonica
+    )
+else()
+    set_target_properties(libjbig2enc PROPERTIES
+        IMPORTED_LOCATION "${JBIG2ENC_INSTALL_DIR_ABS}/lib/liblibjbig2enc.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${JBIG2ENC_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES leptonica
+    )
+endif()
 
 # DjVuLibre's libdjvu is compiled into the targets that use it (source-only
 # dependency). It only builds with autotools, so DJVULIBRE_DEFINITIONS sets

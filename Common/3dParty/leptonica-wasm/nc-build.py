@@ -97,3 +97,4 @@ def build_all():
         build_and_install()
 
 nc.ensure_dep( build_all )
+nc.fix_cmake_and_pkgconfig_prefix()

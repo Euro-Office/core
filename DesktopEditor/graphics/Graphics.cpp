@@ -219,7 +219,9 @@ namespace Aggplus
 #ifdef _WINDOW_GDIPLUS_USE_
 		RELEASEOBJECT(m_pGraphics);
 		RELEASEOBJECT(m_pBitmap);
+#endif
 
+#ifdef _WINDOW_GDIPLUS_USE_
 		BYTE* pBuffer = pPixels;
 		if (0 > lStride)
 		{
@@ -2288,9 +2290,7 @@ namespace Aggplus
 		{
 			return FillGlyphSimple(nX, nY, lWidth, lHeight, pData, pBrush);
 		}
-		
-		typedef agg::scanline_u8_am<agg::alpha_mask_gray8> scanline_type;
-		
+
 		agg::scanline_storage_aa8 storage;
 		//PrepareScanlineStorage(&storage, nX, nY, pGlyph);
 

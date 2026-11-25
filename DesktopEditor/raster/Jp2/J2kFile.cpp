@@ -470,7 +470,7 @@ namespace Jpeg2000
 	}
 	long CJ2kFile::ApplyEncoderOptions(void *pParametersV, const std::wstring&  /*sXml*/)
 	{
-		EncoderParams* pParameters = (EncoderParams*)pParametersV;
+		EncoderParams* pParameters = static_cast<EncoderParams*>(pParametersV);
 		int nFormat = 0; // J2k
 		// First, set the standard parameter values
 		memset(pParameters, 0, sizeof(EncoderParams));

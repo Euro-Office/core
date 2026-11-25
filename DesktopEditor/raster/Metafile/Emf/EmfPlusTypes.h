@@ -151,13 +151,8 @@ namespace MetaFile
 
 		TEmfPlusRectF() : dX(0), dY(0), dWidth(0), dHeight(0){}
 
-		TEmfPlusRectF(const TEmfPlusRectF& oRectangle)
-		{
-			dX      = oRectangle.dX;
-			dY      = oRectangle.dY;
-			dWidth  = oRectangle.dWidth;
-			dHeight = oRectangle.dHeight;
-		}
+		TEmfPlusRectF(const TEmfPlusRectF&) = default;
+		TEmfPlusRectF& operator=(const TEmfPlusRectF&) = default;
 
 		TEmfPlusRectF(const TEmfPlusRect& oRectangle)
 		{

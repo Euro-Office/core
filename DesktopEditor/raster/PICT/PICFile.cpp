@@ -851,7 +851,7 @@ bool CPictFile::DecodeData()
 						if (tile_image.m_eStorageClass == PseudoClass)
 						{
 							unsigned char index;
-							if (*p < 0 || *p >= tile_image.m_nColors)
+							if (*p >= tile_image.m_nColors)
 								index = 0;
 							else
 								index = *p;
@@ -1098,7 +1098,7 @@ void CPictFile::SetImageAlpha(Image* img, const BYTE alpha)
 
 	img->m_eAlphaTrait = BlendPixelTrait;
 	img->m_pChannelMap[AlphaPixelChannel].traits = UpdatePixelTrait;
-	for (int y = 0; y < img->m_nHeight; y++)
+	for (size_t y = 0; y < img->m_nHeight; y++)
 	{
 		if (!status)
 			continue;
@@ -1110,7 +1110,7 @@ void CPictFile::SetImageAlpha(Image* img, const BYTE alpha)
 			status = false;
 			continue;
 		}
-		for (int x = 0; x < img->m_nWidth; x++)
+		for (size_t x = 0; x < img->m_nWidth; x++)
 		{
 			int write_mask;
 			if (img->m_pChannelMap[WriteMaskPixelChannel].traits == UndefinedPixelTrait)
@@ -1178,7 +1178,7 @@ BYTE* CPictFile::DecodeImage(const Image& img, size_t bytesPerLine, size_t bitsP
 		for (size_t y = 0; y < img.m_nHeight; y++)
 		{
 			BYTE*  q = pixels + y * (long long) width * 4;
-			int count = Read(bytesPerLine, scanline);
+			size_t count = Read(bytesPerLine, scanline);
 			if (count != bytesPerLine)
 			{
 				status = false;
@@ -1219,7 +1219,7 @@ BYTE* CPictFile::DecodeImage(const Image& img, size_t bytesPerLine, size_t bitsP
 			break;
 		}
 
-		int count = Read(scanline_length,scanline);
+		size_t count = Read(scanline_length,scanline);
 		if (count != scanline_length)
 		{
 			status = false;
@@ -1384,7 +1384,7 @@ void CPictFile::DrawPolygon(bool isFrame)
 		return;
 
 	double bary[2] = {0.0, 0.0};
-	for (int i = 0; i < points_count; i++)
+	for (size_t i = 0; i < points_count; i++)
 	{
 		const Aggplus::Point& pt = m_arLastPolygon[i];
 		bary[0] += double(pt.X);
@@ -1396,7 +1396,7 @@ void CPictFile::DrawPolygon(bool isFrame)
 
 	std::vector<Aggplus::PointF> B2Dpoly;
 	B2Dpoly.resize(points_count);
-	for (int i = 0; i < points_count; i++)
+	for (size_t i = 0; i < points_count; i++)
 	{
 		const Aggplus::Point& pt = m_arLastPolygon[i];
 		double x = (double(pt.X) < bary[0]) ? pt.X + deca1TL[0] : pt.X + deca1BR[0];
@@ -1408,7 +1408,7 @@ void CPictFile::DrawPolygon(bool isFrame)
 	m_pRenderer->BeginCommand(c_nPathType);
 	m_pRenderer->PathCommandMoveTo(B2Dpoly[0].X, B2Dpoly[0].Y);
 
-	for (int i = 1; i < points_count; i++)
+	for (size_t i = 1; i < points_count; i++)
 		m_pRenderer->PathCommandLineTo(B2Dpoly[i].X, B2Dpoly[i].Y);
 
 
@@ -1855,14 +1855,14 @@ void CPictFile::CompositeImage(const Image& composite,const long long& xOffset, 
 		if (!status)
 			continue;
 
-		if (y < yOffset)
+		if (static_cast<long long>(y) < yOffset)
 			continue;
-		if (y - yOffset >= source_image.m_nHeight)
+		if (static_cast<long long>(y) - yOffset >= static_cast<long long>(source_image.m_nHeight))
 			continue;
 
 		const BYTE* pixels = nullptr;
 		const BYTE* p = nullptr;
-		if (y >= yOffset && y - yOffset < source_image.m_nHeight)
+		if (static_cast<long long>(y) >= yOffset && static_cast<long long>(y) - yOffset < static_cast<long long>(source_image.m_nHeight))
 		{
 			p = GetPixels(source_image, 0, y - yOffset, source_image.m_nWidth,1);
 			if (!p)
@@ -1889,15 +1889,15 @@ void CPictFile::CompositeImage(const Image& composite,const long long& xOffset, 
 				Sa = 0.0,
 				Sc = 0.0;
 
-			if (x < xOffset)
+			if (static_cast<long long>(x) < xOffset)
 			{
 				q += 4;
 				continue;
 			}
-			if (x - xOffset >= source_image.m_nWidth)
+			if (static_cast<long long>(x) - xOffset >= static_cast<long long>(source_image.m_nWidth))
 				break;
 
-			if (!pixels || x < xOffset || x - xOffset >= source_image.m_nWidth)
+			if (!pixels || static_cast<long long>(x) < xOffset || static_cast<long long>(x) - xOffset >= static_cast<long long>(source_image.m_nWidth))
 			{
 				for (int i = 0; i < 4; i++)
 				{

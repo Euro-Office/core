@@ -81,83 +81,6 @@ set(SOURCES
     ${FREETYPE_SOURCES_DIR}/src/sdf/sdf.c
     ${FREETYPE_SOURCES_DIR}/src/svg/svg.c
     ${DESKTOP_ROOT}/graphics/GraphicsPath.cpp
-
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-aat-layout.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-aat-map.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-blob.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-buffer-serialize.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-buffer-verify.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-buffer.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-cairo-utils.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-cairo.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-common.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-coretext.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-directwrite.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-draw.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-face-builder.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-face.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-fallback-shape.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-font.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ft.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-gdi.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-glib.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-gobject-structs.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-graphite2.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-icu.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-map.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-number.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-cff1-table.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-cff2-table.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-color.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-face.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-font.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-layout.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-map.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-math.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-meta.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-metrics.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-name.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shape-fallback.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shape-normalize.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shape.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-arabic.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-default.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-hangul.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-hebrew.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-indic-table.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-indic.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-khmer.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-myanmar.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-syllabic.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-thai.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-use.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-vowel-constraints.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-tag.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-var.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-outline.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-paint-extents.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-paint.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-set.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-shape-plan.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-shape.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-shaper.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-static.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-style.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-cff-common.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-cff1.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-cff2.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-input.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-instancer-solver.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-plan.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-repacker.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ucd.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-unicode.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-uniscribe.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-wasm-api.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-wasm-shape.cc
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/graph/gsubgpos-context.cc
-
     ${CMAKE_CURRENT_SOURCE_DIR}/cpp/text.cpp
     ${DESKTOP_ROOT}/fontengine/ColrV1Renderer.cpp
 
@@ -266,10 +189,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${FREETYPE_SOURCES_DIR}/include/freetype
     ${FREETYPE_SOURCES_DIR}/include/freetype/internal
     ${DESKTOP_ROOT}/graphics/pro/js/wasm/src/lib
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/include
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hyphen/hyphen/c/include
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hyphen
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}
     ${CORE_ROOT}/OfficeUtils/src
     ${ZLIBNG_WASM_INCDIR}
@@ -290,13 +210,15 @@ target_link_directories(${PROJECT_NAME} PRIVATE
 # -------------------------------------------------
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    minizip # minizip-ng
-    z       # libz-ng
-    jpeg    # libjpeg-turbo
-    png     # libpng
-    tiff    # libtiff
-    webp    # libwebp
+    minizip   # minizip-ng
+    z         # libz-ng
+    jpeg      # libjpeg-turbo
+    png       # libpng
+    tiff      # libtiff
+    webp      # libwebp
     webpdemux
+    hyphen
+    harfbuzz
 )
 
 # -------------------------------------------------

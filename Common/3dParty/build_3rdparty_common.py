@@ -54,9 +54,17 @@ def init_for_dep(
     version : str = "", # Arbitrary version string. Integer numbers suggested.
                         # If a deps version/branch/tag/patch changes, bump this in the respective build script.
                         # This will force that dep to be rebuilt.
-    debugmode : bool = True
+    debugmode : bool = True,
+    deps : list | None = None,  # Names of other subfolders this dep requires to be built first.
 ):
     global dep_name, work_dir, install_dir, force_redo, debug_mode, dep_version, log_cleared
+
+    # Query mode: build_3rdparty.py calls us with "query-deps" to discover the
+    # dependency graph without running the actual build.
+    if len( sys.argv ) > 3 and sys.argv[ 3 ] == "query-deps":
+        for dep in ( deps or [] ):
+            print( dep )
+        sys.exit( 0 )
 
     dep_name = depname
     work_dir = workdir
@@ -567,6 +575,55 @@ def _remote_upload_needed():
     return not _backend().exists( _remote_file_path( LOCAL_GLIBC ) )
 
 
+def fix_cmake_and_pkgconfig_prefix():
+    """Replace a baked-in CI build prefix with the actual local install_dir.
+
+    Archives downloaded from the remote cache were built on a CI server whose
+    CMAKE_INSTALL_PREFIX differs from the local install_dir. CMake config files
+    and pkg-config .pc files embed that prefix as an absolute path. This
+    function detects the stale prefix from the first .pc file it finds and
+    rewrites every .cmake and .pc file under install_dir so that downstream
+    consumers using find_package() or pkg-config get the correct paths.
+
+    It is a no-op when the archive was built locally (prefix already matches)
+    or when no .pc file is present.
+    """
+    # Always use forward slashes: backslashes in cmake quoted strings are
+    # escape sequences (\a, \t, etc.) and would corrupt the patched file.
+    actual_prefix = install_dir.as_posix()
+
+    wrong_prefix = None
+    for pc_file in install_dir.rglob( "*.pc" ):
+        for line in pc_file.read_text().splitlines():
+            if line.startswith( "prefix=" ):
+                candidate = line[ len( "prefix=" ): ].strip()
+                if candidate != actual_prefix:
+                    wrong_prefix = candidate
+                break
+        if wrong_prefix:
+            break
+
+    if not wrong_prefix:
+        return
+
+    print( f"  [FIX] Patching install prefix in cmake/pkgconfig files" )
+    print( f"        {wrong_prefix}" )
+    print( f"     -> {actual_prefix}" )
+
+    def _patch( path: Path ):
+        try:
+            text = path.read_text()
+            if wrong_prefix in text:
+                path.write_text( text.replace( wrong_prefix, actual_prefix ) )
+        except ( UnicodeDecodeError, PermissionError ):
+            pass
+
+    for f in install_dir.rglob( "*.cmake" ):
+        _patch( f )
+    for f in install_dir.rglob( "*.pc" ):
+        _patch( f )
+
+
 def ensure_dep( build_fn, forceredo=None ):
     """
     Drop-in replacement for `if not install_dir_looks_ok(): build_fn()`.
@@ -597,7 +654,7 @@ def ensure_dep( build_fn, forceredo=None ):
 
     # 2. Build locally, then archive + upload for next time.
     build_fn()
-    if not install_dir_looks_ok():
+    if not ( install_dir / "ok_marker" ).exists():
         print( f"  [WARN]  { name }: build finished but no ok-marker was created" )
         return
     if USE_REMOTE_CACHE and not REMOTE_CACHE_READ_ONLY:

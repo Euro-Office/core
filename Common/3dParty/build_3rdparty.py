@@ -18,6 +18,7 @@ subfolders = [
     'brotli',
     'cef',
     'cryptopp',
+    'djvulibre',
     'freetype',
     'harfbuzz',
     'html',
@@ -25,35 +26,32 @@ subfolders = [
     'hyphen',
     'icu-wasm',
     'icu',
-    'libjpeg-turbo',
+    'jbig2enc',
+    'leptonica-wasm',
+    'leptonica',
+    'libaom',
+    'libde265',
+    'libheif',
     'libjpeg-turbo-wasm',
-    'libwebp',
+    'libjpeg-turbo',
+    'libpng-wasm',
+    'libpng',
+    'libtiff-wasm',
+    'libtiff',
     'libwebp-wasm',
-    'libxml2',
+    'libwebp',
     'libxml2-wasm',
+    'libxml2',
     'md',
+    'nlohmann_json',
     'openjpeg',
     'openssl-hash',
     'openssl',
     'qt',
-    'nlohmann_json',
     'sioxx',
     'v8',
-    'zlib-ng',
     'zlib-ng-wasm',
-    # Link against zlib-ng (libtiff also against libjpeg-turbo), so they come after it
-    'libpng',
-    'libpng-wasm',
-    'libtiff',
-    'libtiff-wasm',
-    'leptonica',
-    'leptonica-wasm',
-    'jbig2enc',
-    'djvulibre',
-    # The HEIF decoders, then libheif on top of them
-    'libde265',
-    'libaom',
-    'libheif',
+    'zlib-ng',
 ]
 
 known_targets = [ 'android-arm64', 'android-x64', 'wasm' ]
@@ -75,9 +73,12 @@ Usage: { script_path.name } [options] work_dir_abs install_dir_abs
     Options:
         --list        : Prints a list of known subfolders.
         --force-redo= : A list of subdirectories to re-do even if they are already done.
+                        Their transitive dependencies are also re-done.
         --only=       : Build only the specified comma-separated subfolders (skip all others).
+                        Their transitive dependencies are automatically included.
         --except=     : Build everything except the specified comma-separated subfolders.
                         Note: --only= and --except= are mutually exclusive.
+                        Error if a remaining subfolder depends on an excepted one.
         --target=     : Cross-compile for another platform: { ', '.join( known_targets ) }.
                         Android needs ANDROID_NDK_ROOT. wasm only names the remote-cache
                         folder (the *-wasm deps always build with Emscripten).
@@ -89,10 +90,11 @@ Usage: { script_path.name } [options] work_dir_abs install_dir_abs
         Build and install everything to these directories.
 
         { script_path.name } --force-redo=v8,icu $PWD/work $PWD/install
-        Build and install everything to these directories but delete and re-do v8 and icu.
+        Build and install everything to these directories but delete and re-do v8 and icu
+        and their transitive dependencies.
 
-        { script_path.name } --only=v8,icu $PWD/work $PWD/install
-        Build and install only v8 and icu.
+        { script_path.name } --only=jbig2enc $PWD/work $PWD/install
+        Build and install only jbig2enc (and its transitive dependencies like leptonica).
 
         { script_path.name } --except=v8,icu $PWD/work $PWD/install
         Build and install everything except v8 and icu.
@@ -155,7 +157,7 @@ for i in range( 1, argc ):
     elif sys.argv[ i ].startswith( "-" ):
         print( f"Unkown option { sys.argv[ i ] }" )
         sys.exit( 1 )
-    
+
     else:
         break
 
@@ -183,14 +185,81 @@ if only_subfolders and except_subfolders:
     print( "Error: --only= and --except= are mutually exclusive." )
     sys.exit( 1 )
 
-if only_subfolders:
-    subfolders = [ s for s in subfolders if s in only_subfolders ]
-elif except_subfolders:
-    subfolders = [ s for s in subfolders if s not in except_subfolders ]
+# --- Dependency discovery ---
+# Ask each known subfolder script for its declared deps (target-aware: EO_3RDPARTY_TARGET
+# is already set in the environment if --target= was given).
+deps_map : dict[ str, list[str] ] = {}
+for sf in subfolders:
+    sub_script = script_dir / sf / "nc-build.py"
+    if not sub_script.exists():
+        deps_map[ sf ] = []
+        continue
+    result = subprocess.run(
+        [ sys.executable, str( sub_script ),
+          str( work_dir / sf ), str( install_dir / sf ), "query-deps" ],
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        deps_map[ sf ] = []
+        continue
+    declared = [ line.strip() for line in result.stdout.splitlines() if line.strip() ]
+    for dep in declared:
+        if dep not in subfolders:
+            print( f"Error: '{sf}' declares dependency '{dep}' which is not a known subfolder." )
+            sys.exit( 1 )
+    deps_map[ sf ] = declared
 
+# --- Determine the requested build set and topological order ---
+# DFS-based topo sort: deps are visited before the node itself.
+# For --only=:   transitive deps are automatically pulled in.
+# For --except=: error if a required dep was excluded.
+except_set = set( except_subfolders )
+if only_subfolders:
+    requested = only_subfolders
+elif except_subfolders:
+    requested = [ s for s in subfolders if s not in except_set ]
+else:
+    requested = list( subfolders )
+
+ordered_subfolders : list[ str ] = []
+visited  : set[ str ] = set()
+visiting : set[ str ] = set()  # nodes on the current DFS path, for cycle detection
+
+def visit( sf: str ) -> None:
+    if sf in visited:
+        return
+    if sf in visiting:
+        print( f"Error: circular dependency detected involving '{sf}'" )
+        sys.exit( 1 )
+    visiting.add( sf )
+    for dep in deps_map.get( sf, [] ):
+        if dep in except_set:
+            print( f"Error: '{sf}' requires '{dep}', but '{dep}' is excluded via --except=" )
+            sys.exit( 1 )
+        visit( dep )
+    visiting.discard( sf )
+    visited.add( sf )
+    ordered_subfolders.append( sf )
+
+for sf in requested:
+    visit( sf )
+
+# --- Expand --force-redo to include transitive deps ---
+if force_redo_subfolders:
+    force_redo_set = set( force_redo_subfolders )
+    stack = list( force_redo_subfolders )
+    while stack:
+        sf = stack.pop()
+        for dep in deps_map.get( sf, [] ):
+            if dep not in force_redo_set:
+                force_redo_set.add( dep )
+                stack.append( dep )
+    force_redo_subfolders = list( force_redo_set )
+
+# --- Build ---
 total_time = nc.MeasurementObj( "Total" )
 
-for subfolder in subfolders:
+for subfolder in ordered_subfolders:
     force_redo = subfolder in force_redo_subfolders
     print(  "---------------------------------------------------------------------------" )
     print( f"Working on {subfolder}{ ' (redo forced)' if force_redo else '' }..." )
@@ -206,7 +275,7 @@ for subfolder in subfolders:
                 stdout=None,
                 stderr=None,
             )
-            
+
         except subprocess.CalledProcessError as e:
             print( f"  ❌ {subfolder} failed with code {e.returncode}" )
             print( f"  { time_meas.elapsed_string() }" )

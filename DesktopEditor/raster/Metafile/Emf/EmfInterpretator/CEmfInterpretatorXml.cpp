@@ -1,5 +1,4 @@
 #include "CEmfInterpretatorXml.h"
-#include <typeinfo>
 
 namespace MetaFile
 {
@@ -820,18 +819,11 @@ namespace MetaFile
 			return;
 
 		std::wstring wsRecordName;
-		unsigned int unRecordId;
 
-		if (typeid (T).name() == "TPointL")
-		{
+		if constexpr (std::is_same_v<T, TPointL>)
 			wsRecordName = L"EMR_POLYDRAW";
-			unRecordId = EMR_POLYDRAW;
-		}
-		else if(typeid (T).name() == "TPointS")
-		{
+		else if constexpr (std::is_same_v<T, TPointS>)
 			wsRecordName = L"EMR_POLYDRAW16";
-			unRecordId = EMR_POLYDRAW16;
-		}
 
 		m_pOutputXml->WriteNodeBegin(wsRecordName);
 		m_pOutputXml->WriteNode(L"Bounds",	    oBounds);

@@ -100,7 +100,6 @@ set(SOURCES
 
 
     ${DESKTOP_ROOT}/raster/JBig2/source/JBig2File.cpp
-    ${JBIG2ENC_SOURCES}
 
     ${DESKTOP_ROOT}/graphics/GraphicsRenderer.cpp
     ${DESKTOP_ROOT}/graphics/pro/pro_Graphics.cpp
@@ -605,11 +604,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash
     ${CORE_ROOT}/DocxRenderer
     ${CRYPTOPP_INCLUDE_DIR}
-    ${JBIG2ENC_SOURCES_DIR}
 )
-
-# jbig2enc reports its version through jbig2_version()
-set_source_files_properties(${JBIG2ENC_SOURCES} PROPERTIES COMPILE_DEFINITIONS "VERSION=\"0.32\"")
 
 # DjVuLibre's headers (e.g. GString.h) must not shadow xpdf's in other sources
 set(DJVU_SOURCES
@@ -638,7 +633,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     tiff
     webp
     webpdemux
-    leptonica
+    libjbig2enc
 )
 
 # -------------------------------------------------

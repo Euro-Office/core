@@ -55,8 +55,7 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 	oOpenArgs.memory_size = nFileSize;
 
 	NSFontConverter::CFontFileTrueType::LoadFromFile( sFontIn.c_str() );
-	FT_Error oerrr;
-	oerrr = FT_Open_Face( pLibrary, &oOpenArgs, 0, &pFace );
+	FT_Error oerrr = FT_Open_Face( pLibrary, &oOpenArgs, 0, &pFace );
 	if ( oerrr )
 	{
 		FT_Done_FreeType( pLibrary );
@@ -166,7 +165,7 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 							// If a given symbol is a composite (composite glyph), then we must take into account all its child symbols (subglyphs)
 							if ( bFound && 0 == FT_Load_Glyph( pFace, nGID, FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE ) )
 							{
-								for ( int nSubIndex = 0; nSubIndex < pFace->glyph->num_subglyphs; nSubIndex++ )
+								for ( FT_UInt nSubIndex = 0; nSubIndex < pFace->glyph->num_subglyphs; nSubIndex++ )
 								{
 									FT_Int       nSubGID;
 									FT_UInt      unFlags;
@@ -239,8 +238,7 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 	oOpenArgs.memory_size = nFileSize;
 
 	NSFontConverter::CFontFileTrueType::LoadFromFile( sFontIn.c_str() );
-	FT_Error oerrr;
-	oerrr = FT_Open_Face( pLibrary, &oOpenArgs, lFaceIndex, &pFace );
+	FT_Error oerrr = FT_Open_Face( pLibrary, &oOpenArgs, lFaceIndex, &pFace );
 	if ( oerrr )
 	{
 		FT_Done_FreeType( pLibrary );
@@ -350,7 +348,7 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 							// If a given symbol is a composite (composite glyph), then we must take into account all its child symbols (subglyphs)
 							if ( bFound && 0 == FT_Load_Glyph( pFace, nGID, FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE ) )
 							{
-								for ( int nSubIndex = 0; nSubIndex < pFace->glyph->num_subglyphs; nSubIndex++ )
+								for ( FT_UInt nSubIndex = 0; nSubIndex < pFace->glyph->num_subglyphs; nSubIndex++ )
 								{
 									FT_Int       nSubGID;
 									FT_UInt      unFlags;

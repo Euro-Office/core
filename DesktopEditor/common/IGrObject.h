@@ -74,6 +74,9 @@ public:
 		return m_lRef;
 	}
 
+#ifdef __GNUC__
+	[[gnu::noinline]]
+#endif
 	virtual ULONG Release()
 	{
 		ULONG ret = --m_lRef;

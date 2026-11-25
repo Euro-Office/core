@@ -172,7 +172,7 @@ namespace MetaFile
 		oLogFontEx.oLogFont.uchQuality        = 0x00;
 		oLogFontEx.oLogFont.uchPitchAndFamily = 0x00;
 
-		memset(oLogFontEx.oLogFont.ushFaceName, 0x00, 32);
+		memset(oLogFontEx.oLogFont.ushFaceName, 0x00, sizeof(oLogFontEx.oLogFont.ushFaceName));
 
 		oLogFontEx.oLogFont.ushFaceName[0] = 'A';
 		oLogFontEx.oLogFont.ushFaceName[1] = 'r';

@@ -31,9 +31,10 @@ namespace Aggplus
 {
 	////////////////////////////////////////////////////////////////////////////////////////
 
-	CImage::CImage() : m_dwWidth(0), m_dwHeight(0), 
-		m_nStride(0), m_pImgData(nullptr), 
-		m_bExternalBuffer(false), m_Status(WrongState)
+	CImage::CImage() : m_Status(WrongState),
+		m_dwWidth(0), m_dwHeight(0),
+		m_nStride(0), m_pImgData(nullptr),
+		m_bExternalBuffer(false)
 	{
 	}
 

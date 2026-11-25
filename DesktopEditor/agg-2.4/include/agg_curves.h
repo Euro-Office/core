@@ -16,6 +16,9 @@
 
 #ifndef AGG_CURVES_INCLUDED
 #define AGG_CURVES_INCLUDED
+#ifdef __GNUC__
+#pragma GCC system_header
+#endif
 
 #include "agg_array.h"
 

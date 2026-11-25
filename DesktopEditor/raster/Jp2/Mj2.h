@@ -1098,7 +1098,7 @@ namespace Jpeg2000
 		pTrack->nNumBr    = 0;
 		pTrack->unNumJp2x = 0;
 
-		for (int nIndex = 0; pStream->Tell() - oBox.nInitPos < oBox.nLength; nIndex++)
+		for (; pStream->Tell() - oBox.nInitPos < oBox.nLength;)
 		{
 			Mj2_Box oBox2;
 			Mj2_ReadBoxHeader(&oBox2, pStream);

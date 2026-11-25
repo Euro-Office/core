@@ -202,7 +202,7 @@ namespace NSFontConverter
                 return 0;
             }
             unsigned int nRes = 0;
-            for ( int nIndex = 0; nIndex < nSize; ++nIndex )
+            for ( unsigned int nIndex = 0; nIndex < nSize; ++nIndex )
                 nRes = (nRes << 8) + m_sFile[nPos + nIndex];
 
             return nRes;

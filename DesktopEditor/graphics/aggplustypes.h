@@ -207,18 +207,8 @@ public:
 
 		inline bool IsPositive() { return Width > 0 && Height > 0; }
 
-		RectF_T& operator=(const RectF_T& other)
-		{
-			if (this == &other)
-				return *this;
-
-			X = other.X;
-			Y = other.Y;
-			Width = other.Width;
-			Height = other.Height;
-
-			return *this;
-		};
+		RectF_T(const RectF_T&) = default;
+		RectF_T& operator=(const RectF_T&) = default;
 public:
 		T X, Y, Width, Height;
 };

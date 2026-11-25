@@ -20,6 +20,9 @@
 
 #ifndef AGG_BEZIER_ARC_INCLUDED
 #define AGG_BEZIER_ARC_INCLUDED
+#ifdef __GNUC__
+#pragma GCC system_header
+#endif
 
 #include "agg_conv_transform.h"
 

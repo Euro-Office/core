@@ -124,7 +124,7 @@ namespace SVG
 
 	void CTSpan::ReadChildrens(CSvgReader& oReader, CSvgFile* pSvgFile)
 	{
-		const int nDepth = oReader.GetDepth();
+		const unsigned int nDepth = oReader.GetDepth();
 		XmlUtils::XmlNodeType eNodeType = XmlUtils::XmlNodeType_EndElement;
 		while (oReader.Read(eNodeType) && oReader.GetDepth() >= nDepth && XmlUtils::XmlNodeType_EndElement != eNodeType)
 		{

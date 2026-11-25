@@ -84,8 +84,8 @@ namespace NSFontConverter
         //     t -- StringExt *
         //     w -- Spaces; the value argument specifies the number of spaces
         // To output curly braces, use {{ and }}.
-        static StringExt *Format (char *sFormat, ...);
-        static StringExt *FormatV(char *sFormat, va_list sArgList);
+        static StringExt *Format (const char *sFormat, ...);
+        static StringExt *FormatV(const char *sFormat, va_list sArgList);
 
         // Destructor.
         ~StringExt();
@@ -120,8 +120,8 @@ namespace NSFontConverter
         StringExt *Append(const char *sString, int nLength);
 
         // Add a formatted string.
-        StringExt *AppendFormat (char *sFormat, ...);
-        StringExt *AppendFormatV(char *sFormat, va_list sArgList);
+        StringExt *AppendFormat (const char *sFormat, ...);
+        StringExt *AppendFormatV(const char *sFormat, va_list sArgList);
 
         // Insert a character or string.
         StringExt *Insert(int nIndex, char nChar);

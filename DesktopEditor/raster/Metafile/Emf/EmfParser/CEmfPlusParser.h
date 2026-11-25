@@ -23,6 +23,12 @@ namespace MetaFile
 
 		EmfParserType   GetType()                                   const override;
 
+		using CEmfParserBase::GetBrush;
+		using CEmfParserBase::GetPen;
+		using CEmfParserBase::GetFont;
+		using CEmfParserBase::GetPath;
+		using CEmfParserBase::GetRegion;
+
 		void   SetStream(BYTE *pBytes, unsigned int unSize);
 		bool   GetBanEMFProcesses();
 	private:

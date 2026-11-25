@@ -171,6 +171,7 @@ namespace NSCSS
 			case Rem:        return m_oValue.value() * dPrevValue;
 			case None:       return m_oValue.value();
 		}
+		return 0.0;
 	}
 
 	template<typename Operation>

@@ -163,8 +163,8 @@ namespace MetaFile
 
 		std::vector<double> arDx(0);
 
-		if (nullptr != pDx && shStringLength == wsText.length())
-			arDx = std::vector<double>(pDx, pDx + wsText.length());
+		if (NULL != pDx && static_cast<size_t>(shStringLength) == wsText.length())
+        { arDx = std::vector<double>(pDx, pDx + wsText.length()); }
 
 		WriteText(wsText, TPointD(shX, shY), oRectangle, oScale, arDx);
 	}
@@ -178,7 +178,7 @@ namespace MetaFile
 
 		std::wstring wsValue;
 
-		for (unsigned int unScanIndex = 0; unScanIndex < pRegion->shScanCount; ++unScanIndex)
+		for (unsigned int unScanIndex = 0; unScanIndex < static_cast<unsigned int>(pRegion->shScanCount); ++unScanIndex)
 		{
 			TWmfScanObject *pScanObject = &pRegion->pScans[unScanIndex];
 

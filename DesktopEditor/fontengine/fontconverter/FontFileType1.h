@@ -182,9 +182,9 @@ namespace NSFontConverter
 
         char *GetName();
 
-        char **GetEncoding();
+        const char **GetEncoding();
 
-        void WriteEncoded(char **ppNewEncoding, FontFileOutputFunc pOutputFunc, void *pOutputStream);
+        void WriteEncoded(const char **ppNewEncoding, FontFileOutputFunc pOutputFunc, void *pOutputStream);
         void ToCFF(FontFileOutputFunc pOutputFunc, void *pOutputStream);
 
     private:
@@ -371,7 +371,7 @@ namespace NSFontConverter
     private:
 
         char                         *m_sName;
-        char                        **m_arrEncoding;
+        const char                  **m_arrEncoding;
         bool                          m_bParsed;
 
         Type1PrivateDict              m_oPrivateDict;
