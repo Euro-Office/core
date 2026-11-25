@@ -3716,7 +3716,8 @@ void DocxConverter::convert_settings()
 
 	if (!settings) return;
 
-	// w:revisionView w:insDel="0": shown without the markup of tracked insertions and deletions = ODF ShowRedlineChanges false.
+	// w:revisionView w:insDel="0": shown without the markup of tracked insertions and deletions
+	// = ODF ShowRedlineChanges false.
 	if (settings->m_oRevisionView.IsInit() && settings->m_oRevisionView->m_oInsDel.IsInit()
 		&& !*settings->m_oRevisionView->m_oInsDel)
 	{

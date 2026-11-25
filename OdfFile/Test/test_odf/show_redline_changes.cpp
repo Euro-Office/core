@@ -12,7 +12,6 @@
 
 namespace
 {
-const std::wstring kRevisionViewOff = L"<w:revisionView w:insDel=\"0\"/>";
 
 std::wstring docx_settings(const wchar_t* fixture)
 {
@@ -35,8 +34,14 @@ TEST(OdtToDocxShowRedlineChanges, FalseWritesRevisionViewInsDelOff)
 {
     const std::wstring settings = docx_settings(L"show_redline_changes_false.odt");
     ASSERT_FALSE(settings.empty()) << "ODT -> DOCX conversion failed or word/settings.xml is missing";
-    const size_t revisionView = settings.find(kRevisionViewOff);
+    const size_t revisionView = settings.find(L"<w:revisionView ");
     ASSERT_NE(revisionView, std::wstring::npos);
+    const size_t revisionViewEnd = settings.find(L"/>", revisionView);
+    ASSERT_NE(revisionViewEnd, std::wstring::npos);
+    // insDel and formatting off, as LibreOffice writes it: the document shows no change markup at all.
+    const std::wstring element = settings.substr(revisionView, revisionViewEnd - revisionView);
+    EXPECT_NE(element.find(L"w:insDel=\"0\""), std::wstring::npos);
+    EXPECT_NE(element.find(L"w:formatting=\"0\""), std::wstring::npos);
     // CT_Settings order: w:revisionView comes before w:defaultTabStop and w:compat.
     const size_t compat = settings.find(L"<w:compat");
     ASSERT_NE(compat, std::wstring::npos);

@@ -147,7 +147,8 @@ void odf_settings_context::add_common_views_property(const std::wstring &name, c
 	office_element_ptr prop = create_property(name, type, value);
 	common_views_content_.push_back(prop);
 }
-void odf_settings_context::add_view_settings_item(const std::wstring &name, const std::wstring &type, const std::wstring &value)
+void odf_settings_context::add_view_settings_item(const std::wstring &name, const std::wstring &type,
+	const std::wstring &value)
 {
 	if (name.empty() || type.empty()) return;
 
