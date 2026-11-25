@@ -776,16 +776,7 @@ void docx_conversion_context::end_document()
 	output_document_->get_word_files().set_notes(notes_context_);
 
 	output_document_->get_docProps_files().set_app(package::simple_element::create(L"app.xml", dump_settings_app()));
-	output_document_->get_docProps_files().set_core(package::simple_element::create(L"core.xml", dump_settings_core()));
-
-	std::wstring settings_custom = dump_settings_custom();
-	if (false == settings_custom.empty())
-	{
-		output_document_->get_docProps_files().set_custom(package::simple_element::create(L"custom.xml", settings_custom));
-		output_document_->get_content_types_file().content()->add_override(L"/docProps/custom.xml", L"application/vnd.openxmlformats-officedocument.custom-properties+xml");
-		output_document_->get_rels_files().add(
-	relationship(L"rCstmId", L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/custom-properties", L"docProps/custom.xml"));
-	}
+	output_document_->set_doc_props(odf_document_->odf_context().DocProps().dump_core(), odf_document_->odf_context().DocProps().dump_custom());
 
 	for (size_t i = 0; i < charts_.size(); i++)
     {
@@ -929,118 +920,6 @@ std::wstring  docx_conversion_context::dump_settings_app()
 				CP_XML_NODE(L"Paragraphs")
 				{
 					CP_XML_STREAM() << *odf_document_->odf_context().DocProps().paragraph_count_;
-				}
-			}
-		}
-	}
-	return output.str();
-}
-std::wstring  docx_conversion_context::dump_settings_custom()
-{
-	std::wstring user_defined = odf_document_->odf_context().DocProps().dump_user_defined();
-	if (user_defined.empty()) return L"";
-
-	std::wstringstream output;
-	CP_XML_WRITER(output)
-	{
-		CP_XML_NODE(L"Properties")
-		{
-			CP_XML_ATTR(L"xmlns", L"http://schemas.openxmlformats.org/officeDocument/2006/custom-properties");
-			CP_XML_ATTR(L"xmlns:vt", L"http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes");
-
-			CP_XML_STREAM() << user_defined;
-		}
-	}
-	return output.str();
-}
-std::wstring  docx_conversion_context::dump_settings_core()
-{
-	std::wstringstream output;
-	
-	CP_XML_WRITER(output)
-	{
-		CP_XML_NODE(L"cp:coreProperties")
-		{
-			CP_XML_ATTR(L"xmlns:cp", L"http://schemas.openxmlformats.org/package/2006/metadata/core-properties");
-			CP_XML_ATTR(L"xmlns:xsi", L"http://www.w3.org/2001/XMLSchema-instance");
-			CP_XML_ATTR(L"xmlns:dc", L"http://purl.org/dc/elements/1.1/");
-			CP_XML_ATTR(L"xmlns:dcmitype", L"http://purl.org/dc/dcmitype/");
-			CP_XML_ATTR(L"xmlns:dcterms", L"http://purl.org/dc/terms/");
-			
-			if (!odf_document_->odf_context().DocProps().creation_date_.empty())
-			{
-				CP_XML_NODE(L"dcterms:created")
-				{
-					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().creation_date_;
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_date_.empty())
-			{
-				CP_XML_NODE(L"dcterms:modified")
-				{
-					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().dc_date_;
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_creator_.empty())
-			{
-				CP_XML_NODE(L"dc:creator")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_creator_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_title_.empty())
-			{
-				CP_XML_NODE(L"dc:title")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_title_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_subject_.empty())
-			{
-				CP_XML_NODE(L"dc:subject")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_subject_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_description_.empty())
-			{
-				CP_XML_NODE(L"dc:description")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_description_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_language_.empty())
-			{
-				CP_XML_NODE(L"dc:language")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_language_);
-				}
-			}
-			CP_XML_NODE(L"cp:lastModifiedBy")
-			{
-				std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
-				if (sApplication.empty())
-					sApplication = NSSystemUtils::gc_EnvApplicationNameDefault;
-				CP_XML_STREAM() << sApplication;
-#if defined(INTVER)
-				std::string s = VALUE2STR(INTVER);
-				CP_XML_STREAM() << L"/" << std::wstring(s.begin(), s.end());
-#endif	
-			}
-			if (!odf_document_->odf_context().DocProps().keyword_.empty())
-			{
-				CP_XML_NODE(L"cp:keywords")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().keyword_);
-				}
-			}
-			if (odf_document_->odf_context().DocProps().revision_)
-			{
-				CP_XML_NODE(L"cp:revision")
-				{
-					CP_XML_STREAM() << *odf_document_->odf_context().DocProps().revision_;
 				}
 			}
 		}

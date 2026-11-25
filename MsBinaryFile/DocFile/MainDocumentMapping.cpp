@@ -91,7 +91,7 @@ namespace DocFileFormat
 					m_pXmlWriter->WriteAttribute ( L"w:color", L"FFFFFF");
 				m_pXmlWriter->WriteNodeEnd( L"",  TRUE, FALSE );
 				
-				VMLShapeMapping oVmlWriter (m_context, m_pXmlWriter, NULL, NULL,  _caller);
+				VMLShapeMapping oVmlWriter (m_context, m_pXmlWriter, nullptr, nullptr,  _caller);
 					pShape->Convert(&oVmlWriter);
 				m_pXmlWriter->WriteNodeEnd (L"w:background");
 			}
@@ -104,7 +104,7 @@ namespace DocFileFormat
 
 		int cp = 0;
 		int fc = 0;
-		ParagraphPropertyExceptions* papx = NULL;
+		ParagraphPropertyExceptions* papx = nullptr;
 
 		unsigned int index = 0;
 		const unsigned int PROGRESS_COUNT = 10;

@@ -197,7 +197,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,cryptopp,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff,libwebp,libde265,libaom,libheif,leptonica,jbig2enc,djvulibre"
+                "--only=apple,boost,brotli,cryptopp,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,nlohmann_json,sioxx,v8,zlib-ng,libpng,libtiff,libwebp,libde265,libaom,libheif,leptonica,jbig2enc,djvulibre"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -380,6 +380,22 @@ else()
         set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib64/libssl.a")
         set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a")
     endif()
+
+    # Setup nlohmann_json
+    set(NLOHMANN_JSON_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/nlohmann_json")
+    get_filename_component(NLOHMANN_JSON_INSTALL_DIR_ABS "${NLOHMANN_JSON_INSTALL_DIR}" ABSOLUTE)
+    list( APPEND CMAKE_PREFIX_PATH "${NLOHMANN_JSON_INSTALL_DIR_ABS}" )
+
+    # On Android the NDK toolchain sets CMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY, so
+    # find_dependency() inside sioxxConfig.cmake won't search CMAKE_PREFIX_PATH.
+    if( ANDROID )
+        list( APPEND CMAKE_FIND_ROOT_PATH "${NLOHMANN_JSON_INSTALL_DIR_ABS}" "${OPENSSL_INSTALL_DIR_ABS}" )
+    endif()
+
+    # Setup sioxx
+    set(SIOXX_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/sioxx")
+    get_filename_component(SIOXX_INSTALL_DIR_ABS "${SIOXX_INSTALL_DIR}" ABSOLUTE)
+    list( APPEND CMAKE_PREFIX_PATH "${SIOXX_INSTALL_DIR_ABS}" )
 
     # Setup zlib-ng
     set(ZLIBNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/zlib-ng")

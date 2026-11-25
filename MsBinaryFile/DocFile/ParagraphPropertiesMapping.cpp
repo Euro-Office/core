@@ -29,8 +29,8 @@
 namespace DocFileFormat
 {
 	ParagraphPropertiesMapping::ParagraphPropertiesMapping(XMLTools::CStringXmlWriter* writer, ConversionContext* context, WordDocument* document, CharacterPropertyExceptions* paraEndChpx, bool isBidi, bool isParagraphStyleNeeded)
-		: PropertiesMapping( writer ), m_context(NULL), _pPr(NULL), _framePr(NULL), _sepx(NULL), _paraEndChpx(NULL), _sectionNr(0),
-		m_document(NULL), _isParagraphStyleNeeded(isParagraphStyleNeeded)
+		: PropertiesMapping( writer ), m_document(nullptr), m_context(nullptr), _pPr(nullptr), _framePr(nullptr), _sepx(nullptr), _paraEndChpx(nullptr), _sectionNr(0),
+		_isParagraphStyleNeeded(isParagraphStyleNeeded)
 	{
 		m_document		=	document;
 		m_context		=	context;
@@ -44,8 +44,8 @@ namespace DocFileFormat
 	}
 
 	ParagraphPropertiesMapping::ParagraphPropertiesMapping( XMLTools::CStringXmlWriter* writer, ConversionContext* context, WordDocument* document, CharacterPropertyExceptions* paraEndChpx, bool isBidi, SectionPropertyExceptions* sepx, int sectionNr, bool isParagraphStyleNeeded )
-		: PropertiesMapping( writer ), m_context(NULL), _pPr(NULL), _framePr(NULL), _sepx(NULL), _paraEndChpx(NULL), _sectionNr(0), 
-		m_document(NULL), _isParagraphStyleNeeded(isParagraphStyleNeeded)
+		: PropertiesMapping( writer ), m_document(nullptr), m_context(nullptr), _pPr(nullptr), _framePr(nullptr), _sepx(nullptr), _paraEndChpx(nullptr), _sectionNr(0), 
+		_isParagraphStyleNeeded(isParagraphStyleNeeded)
 	{
 		m_document		=	document;
 		m_context		=	context;
@@ -79,7 +79,7 @@ namespace DocFileFormat
         XMLTools::XMLElement numPr		( L"w:numPr" );
         XMLTools::XMLElement pBdr		( L"w:pBdr" );
         XMLTools::XMLElement spacing	( L"w:spacing" );
-        XMLTools::XMLElement* jc = NULL;
+        XMLTools::XMLElement* jc = nullptr;
 
 		if ( _isParagraphStyleNeeded )
 		{
@@ -100,7 +100,7 @@ namespace DocFileFormat
 
         XMLTools::XMLElementPtr rPr = XMLTools::XMLElementPtr(XMLTools::XMLElementPtr(new XMLTools::XMLElement( L"w:rPr" )));
 
-		if ( _paraEndChpx != NULL )
+		if ( _paraEndChpx != nullptr )
 		{
 			RevisionData* rev = new RevisionData( _paraEndChpx );
 			CharacterPropertiesMapping* ccMapping = new CharacterPropertiesMapping( rPr.get(), m_document, rev, papx, false );
@@ -436,6 +436,7 @@ namespace DocFileFormat
 				case sprmOldPNLvlAnm:
 				{					
 					short level = FormatUtils::BytesToUChar( iter->Arguments, 0, iter->argumentsSize) - 1;
+					(void)level;
 					
 					level = 0;
                     appendValueElement( &numPr, L"ilvl", level, true );
@@ -448,14 +449,14 @@ namespace DocFileFormat
 
 				case sprmPIlvl:
 				{
-					if(NULL != m_document->listTable && false == m_document->listTable->listData.empty())
+					if(nullptr != m_document->listTable && !m_document->listTable->listData.empty())
                         appendValueElement( &numPr, L"ilvl", iter->Arguments[0], true );
 				}break;
 
 				case sprmPIlfo:
 				{
 					//If numbering.xml is empty, then we don't add the property
-					if (NULL != m_document->listTable && false == m_document->listTable->listData.empty())
+					if (nullptr != m_document->listTable && !m_document->listTable->listData.empty())
 					{
 						unsigned short numId = FormatUtils::BytesToUInt16( iter->Arguments, 0, iter->argumentsSize );
 						appendValueElement( &numPr, L"numId", numId, true );
@@ -491,7 +492,7 @@ namespace DocFileFormat
 
 						tabs.AppendChild( tab );
 
-						//skip the tolerence array in sprm 0xC615
+						//skip the tolerance array in sprm 0xC615
 						if ( iter->OpCode == sprmPChgTabs )
 						{
 							pos += 4;
@@ -633,10 +634,12 @@ namespace DocFileFormat
 					if (iter->argumentsSize == 2)
 					{
 						nProperty = FormatUtils::BytesToUInt16( iter->Arguments, 0, iter->argumentsSize );
+						(void)nProperty;
 					}else
 						if (iter->argumentsSize == 1)
 					{
 						nProperty = FormatUtils::BytesToUChar( iter->Arguments, 0, iter->argumentsSize );
+						(void)nProperty;
 					}
 				}break;
 			}
@@ -653,7 +656,7 @@ namespace DocFileFormat
 		}
 
 		_isSectionPageBreak = 0;
-		if ( _sepx != NULL )
+		if ( _sepx != nullptr )
 		{
             XMLTools::XMLElement sectPr( L"w:sectPr" );
 			SectionPropertiesMapping* sectionPropertiesMapping = new SectionPropertiesMapping( &sectPr, m_context, _sectionNr );

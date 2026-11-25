@@ -35,6 +35,7 @@ namespace DocFileFormat
 
 	ByteStructure* FootnoteDescriptor::ConstructObject( VirtualStreamReader* reader, int length )
 	{
+		(void)length;
 		FootnoteDescriptor *newObject = new FootnoteDescriptor();
 
 		newObject->aFtnIdx = reader->ReadInt16();

@@ -87,6 +87,8 @@ class text : public paragraph_content_element
 {
 public:
     static office_element_ptr create(const std::wstring & Text);
+    // Text of a paragraph, a span or a link: keeps TAB, LF and CR for process_white_space.
+    static office_element_ptr create_in_paragraph(const std::wstring & Text);
 
 	static const wchar_t * ns;
     static const wchar_t * name;
@@ -116,6 +118,13 @@ private:
     virtual void add_text(const std::wstring & Text);
 	virtual void add_space(const std::wstring & Text);
 };
+
+// White-space processing of paragraph text (ODF 1.3 part 3, 6.1.2), applied by text:p and text:h
+// once they are read: with collapse, every run of SPACE, TAB, LF and CR becomes one space, and white
+// space at the start of the paragraph or after white space (also across spans and links) is dropped.
+// Without collapse (spreadsheet cells) TAB, LF and CR are dropped and spaces kept.
+// ignore is true at the start of the paragraph and carries the state from one element to the next.
+void process_white_space(office_element_ptr_array & content, bool collapse, bool & ignore);
 
 //-------------------------------------------------------------------------------------------------------------------
 // text:s
@@ -459,6 +468,61 @@ private:
 
 CP_REGISTER_OFFICE_ELEMENT2(span);
 //-------------------------------------------------------------------------------------------------------------------
+// text:meta
+//-------------------------------------------------------------------------------------------------------------------
+// Inline text with RDF metadata attached. Neither OOXML nor the editor keeps the metadata, so the element only
+// passes its content through.
+class meta : public paragraph_content_element
+{
+public:
+    static const wchar_t * ns;
+    static const wchar_t * name;
+    static const xml::NodeType xml_type = xml::typeElement;
+    static const ElementType type = typeTextMeta;
+
+    CPDOCCORE_DEFINE_VISITABLE();
+    CPDOCCORE_OFFICE_DOCUMENT_IMPL_NAME_FUNCS_;
+
+    virtual void docx_convert(oox::docx_conversion_context & Context);
+    virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
+    virtual void pptx_convert(oox::pptx_conversion_context & Context);
+
+    virtual void xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context);
+
+    virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
+
+    meta() {}
+
+    office_element_ptr_array content_;
+
+private:
+    virtual void add_attributes( const xml::attributes_wc_ptr & Attributes ) {}
+    virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
+    virtual void add_text(const std::wstring & Text);
+    virtual void add_space(const std::wstring & Text);
+};
+
+CP_REGISTER_OFFICE_ELEMENT2(meta);
+//-------------------------------------------------------------------------------------------------------------------
+// text:meta-field
+//-------------------------------------------------------------------------------------------------------------------
+// A field whose current value is its text content (with RDF metadata); the value is kept as plain text.
+class meta_field : public meta
+{
+public:
+    static const wchar_t * ns;
+    static const wchar_t * name;
+    static const xml::NodeType xml_type = xml::typeElement;
+    static const ElementType type = typeTextMetaField;
+
+    CPDOCCORE_DEFINE_VISITABLE();
+    CPDOCCORE_OFFICE_DOCUMENT_IMPL_NAME_FUNCS_;
+
+    meta_field() {}
+};
+
+CP_REGISTER_OFFICE_ELEMENT2(meta_field);
+//-------------------------------------------------------------------------------------------------------------------
 // text:a
 //-------------------------------------------------------------------------------------------------------------------
 class a : public paragraph_content_element
@@ -487,6 +551,8 @@ private:
 	virtual void add_space(const std::wstring & Text);
 
 	odf_types::common_xlink_attlist			xlink_attlist_;
+
+    friend void process_white_space(office_element_ptr_array & content, bool collapse, bool & ignore);
 
     std::wstring							office_name_;
     _CP_OPT(odf_types::target_frame_name)	office_target_frame_name_;
@@ -586,6 +652,9 @@ public:
     CPDOCCORE_OFFICE_DOCUMENT_IMPL_NAME_FUNCS_; 
 
     virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
+
+    virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
+    virtual void xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context);
 
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );

@@ -28,9 +28,9 @@ using namespace PPT;
 
 //--------------------------------------------------------------------------------
 #define SUBEFFECT_CASE(RECORD_TYPE, P_VAR, CLASS_RECORD_NAME, FLAG)				\
-    case RECORD_TYPE: { P_VAR = new CLASS_RECORD_NAME();                        \
-        P_VAR->ReadFromStream(ReadHeader, pStream);                             \
-        FLAG = true;                                                            \
+    case RECORD_TYPE: { (P_VAR) = new CLASS_RECORD_NAME();                      \
+        (P_VAR)->ReadFromStream(ReadHeader, pStream);                           \
+        (FLAG) = true;                                                          \
         break; }                                                                \
 //-------------------------------------------------------------------------------
 
@@ -80,7 +80,7 @@ void CRecordSubEffectContainer::ReadFromStream(SRecordHeader &oHeader, POLE::Str
     UINT lCurLen	=	m_oTimeNodeAtom.m_oHeader.RecLen + 8;
     while ( lCurLen < m_oHeader.RecLen )
     {
-        if ( ReadHeader.ReadFromStream(pStream) == false)
+        if ( !ReadHeader.ReadFromStream(pStream))
             break;
 
         lCurLen +=	8 + ReadHeader.RecLen;

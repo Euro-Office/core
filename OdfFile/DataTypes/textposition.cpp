@@ -59,23 +59,23 @@ text_position text_position::parse(const std::wstring & Str)
     boost::algorithm::to_lower(tmp);
 
     boost::algorithm::trim(tmp);
-    std::vector< std::wstring > splitted;
-    boost::algorithm::split(splitted, tmp, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
+    std::vector< std::wstring > split;
+    boost::algorithm::split(split, tmp, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
 
     text_position::type type_position_ = text_position::Sub;
     percent position_;
     bool has_font_width_ = false;
     percent font_width_;
    
-    if (splitted.size() > 0)
+    if (split.size() > 0)
     {
-        if (splitted[0] == L"sub")
+        if (split[0] == L"sub")
             type_position_ = text_position::Sub;
-        else if (splitted[0] == L"super")
+        else if (split[0] == L"super")
             type_position_ = text_position::Super;
-        else if (boost::algorithm::contains(splitted[0], L"%"))
+        else if (boost::algorithm::contains(split[0], L"%"))
         {
-            position_ = percent::parse(splitted[0]);
+            position_ = percent::parse(split[0]);
             type_position_ = text_position::Percent;
         }
         else
@@ -85,9 +85,9 @@ text_position text_position::parse(const std::wstring & Str)
         }
     }
 
-    if (splitted.size() > 1)
+    if (split.size() > 1)
     {
-        font_width_ = percent::parse(splitted[1]);
+        font_width_ = percent::parse(split[1]);
         has_font_width_ = true;
     }
 

@@ -27,22 +27,23 @@
 
 namespace DocFileFormat
 {	
-	BlipStoreEntry::BlipStoreEntry() : Record(), btWin32(Global::msoblipERROR), btMacOS(Global::msoblipERROR), rgbUid(NULL), tag(0), size(0), cRef(0),
-		foDelay(0), usage(Global::msoblipUsageDefault), cbName(0), unused2(0), unused3(0), m_rgbUid(NULL), m_rgbUidPrimary(NULL),
-		m_bTag(0), m_cb(0), m_cbSave(0), m_fCompression(0), m_fFilter(0), Blip(NULL)
+	BlipStoreEntry::BlipStoreEntry() : Record(), btWin32(Global::msoblipERROR), btMacOS(Global::msoblipERROR), Blip(nullptr), rgbUid(nullptr), tag(0), size(0), cRef(0),
+		foDelay(0), usage(Global::msoblipUsageDefault), cbName(0), unused2(0), unused3(0), m_rgbUid(nullptr), m_rgbUidPrimary(nullptr),
+		m_bTag(0), m_cb(0), m_cbSave(0), m_fCompression(0), m_fFilter(0)
 	{
 	}
 
 	BlipStoreEntry::BlipStoreEntry(IBinaryReader* _reader, unsigned int size, unsigned int typeCode, unsigned int version, unsigned int instance ):
-	Record( _reader, size, typeCode, version, instance ), btWin32(Global::msoblipERROR), btMacOS(Global::msoblipERROR), rgbUid(NULL), tag(0), size(0), cRef(0),
-		foDelay(0), usage(Global::msoblipUsageDefault), cbName(0), unused2(0), unused3(0), m_rgbUid(NULL), m_rgbUidPrimary(NULL),
-		m_bTag(0), m_cb(0), m_cbSave(0), m_fCompression(0), m_fFilter(0), Blip(NULL)
+	Record( _reader, size, typeCode, version, instance ), btWin32(Global::msoblipERROR), btMacOS(Global::msoblipERROR), Blip(nullptr), rgbUid(nullptr), tag(0), size(0), cRef(0),
+		foDelay(0), usage(Global::msoblipUsageDefault), cbName(0), unused2(0), unused3(0), m_rgbUid(nullptr), m_rgbUidPrimary(nullptr),
+		m_bTag(0), m_cb(0), m_cbSave(0), m_fCompression(0), m_fFilter(0)
 	{
 		btWin32		=	(Global::BlipType)Reader->ReadByte();
 		btMacOS		=	(Global::BlipType)Reader->ReadByte();
 		rgbUid		=	Reader->ReadBytes(16, true);
 		tag			=	Reader->ReadInt16();
 		size		=	Reader->ReadUInt32();
+		(void)size;
 		cRef		=	Reader->ReadUInt32();
 		foDelay		=	Reader->ReadUInt32();
 		usage		=	(Global::BlipUsage) Reader->ReadByte();

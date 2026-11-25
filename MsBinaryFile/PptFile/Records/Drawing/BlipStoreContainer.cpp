@@ -39,7 +39,7 @@ CRecordBlipStoreContainer::~CRecordBlipStoreContainer()
 
 void CRecordBlipStoreContainer::SetUpPicturesInfos(std::vector<int> *pArray)
 {
-    if (NULL == pArray)
+    if (nullptr == pArray)
         return;
 
     pArray->clear();
@@ -48,7 +48,7 @@ void CRecordBlipStoreContainer::SetUpPicturesInfos(std::vector<int> *pArray)
     for (size_t nIndex = 0; nIndex < m_arRecords.size(); ++nIndex)
     {
         CRecordBlipStoreEntry* pEntry = dynamic_cast<CRecordBlipStoreEntry*>(m_arRecords[nIndex]);
-        if (NULL != pEntry)
+        if (nullptr != pEntry)
         {
             image_map.insert(std::pair<_UINT32, int>(pEntry->m_nFoDelay, pArray->size()));
 

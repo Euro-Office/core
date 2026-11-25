@@ -43,5 +43,7 @@ _UINT32 COfficeDocFile::LoadFromFile(const std::wstring &  docFile, const std::w
 
 _UINT32 COfficeDocFile::SaveToFile (const std::wstring &  sDstFileName, const std::wstring &   sSrcFileName)
 {
+	(void)sDstFileName;
+	(void)sSrcFileName;
     return 0;
 }

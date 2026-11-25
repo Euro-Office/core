@@ -39,7 +39,7 @@ namespace DocFileFormat
 	{
 		setDefaultValues();
 
-		if (NULL != bytes)
+		if (nullptr != bytes)
 		{
 			if (10 == size)
 			{
@@ -108,8 +108,7 @@ namespace DocFileFormat
 					else if (0x09 == icoFore) { cvFore = RGB2 (0x00, 0x00, 0x80); }
 					else if (0x0A == icoFore) { cvFore = RGB2 (0x00, 0x80, 0x80); }
 					else if (0x0B == icoFore) { cvFore = RGB2 (0x00, 0x80, 0x00); }
-					else if (0x0C == icoFore) { cvFore = RGB2 (0x80, 0x00, 0x80); }
-					else if (0x0D == icoFore) { cvFore = RGB2 (0x80, 0x00, 0x80); }
+					else if (0x0C == icoFore || 0x0D == icoFore) { cvFore = RGB2 (0x80, 0x00, 0x80); }
 					else if (0x0E == icoFore) { cvFore = RGB2 (0x80, 0x80, 0x00); }
 					else if (0x0F == icoFore) { cvFore = RGB2 (0x80, 0x80, 0x80); }
 					else if (0x10 == icoFore) { cvFore = RGB2 (0xC0, 0xC0, 0xC0); }
@@ -126,8 +125,7 @@ namespace DocFileFormat
 					else if (0x09 == icoBack) { cvBack = RGB2 (0x00, 0x00, 0x80); }
 					else if (0x0A == icoBack) { cvBack = RGB2 (0x00, 0x80, 0x80); }
 					else if (0x0B == icoBack) { cvBack = RGB2 (0x00, 0x80, 0x00); }
-					else if (0x0C == icoBack) { cvBack = RGB2 (0x80, 0x00, 0x80); }
-					else if (0x0D == icoBack) { cvBack = RGB2 (0x80, 0x00, 0x80); }
+					else if (0x0C == icoBack || 0x0D == icoBack) { cvBack = RGB2 (0x80, 0x00, 0x80); }
 					else if (0x0E == icoBack) { cvBack = RGB2 (0x80, 0x80, 0x00); }
 					else if (0x0F == icoBack) { cvBack = RGB2 (0x80, 0x80, 0x80); }
 					else if (0x10 == icoBack) { cvBack = RGB2 (0xC0, 0xC0, 0xC0); }

@@ -28,9 +28,9 @@ using namespace PPT;
 
 CTextFullSettings::CTextFullSettings() : m_arRanges()
 {
-    m_pTextStyleProp	= NULL;
-    m_pTextSpecInfo		= NULL;
-    m_pTextRuler		= NULL;
+    m_pTextStyleProp	= nullptr;
+    m_pTextSpecInfo		= nullptr;
+    m_pTextRuler		= nullptr;
 
     m_nTextType			= 0xFFFFFFFF;
     m_lStyleThemeIndex	= 0; //default
@@ -44,6 +44,9 @@ CTextFullSettings::CTextFullSettings(const CTextFullSettings &oSrc)
 
 CTextFullSettings &CTextFullSettings::operator =(const CTextFullSettings &oSrc)
 {
+    if (this == &oSrc)
+        return (*this);
+
     m_pTextStyleProp	= oSrc.m_pTextStyleProp;
     m_pTextSpecInfo		= oSrc.m_pTextSpecInfo;
     m_pTextRuler		= oSrc.m_pTextRuler;
@@ -58,23 +61,23 @@ CTextFullSettings &CTextFullSettings::operator =(const CTextFullSettings &oSrc)
 
 CTextFullSettings::~CTextFullSettings()
 {
-    m_pTextStyleProp = NULL;
-    m_pTextSpecInfo = NULL;
-    m_pTextRuler = NULL;
+    m_pTextStyleProp = nullptr;
+    m_pTextSpecInfo = nullptr;
+    m_pTextRuler = nullptr;
 }
 
 std::wstring CTextFullSettings::ApplyProperties(CTextAttributesEx *pTextAttributes)
 {
-    if (NULL == pTextAttributes)
+    if (nullptr == pTextAttributes)
         return m_strText;
 
     pTextAttributes->m_lTextType		= m_nTextType;
     pTextAttributes->m_lStyleThemeIndex	= m_lStyleThemeIndex;
 
-    if (NULL != m_pTextStyleProp)
+    if (nullptr != m_pTextStyleProp)
         ConvertPPTTextToEditorStructure(m_pTextStyleProp->m_arrPFs, m_pTextStyleProp->m_arrCFs, m_strText, *pTextAttributes);
 
-    if (NULL != m_pTextRuler)
+    if (nullptr != m_pTextRuler)
         pTextAttributes->m_oRuler = m_pTextRuler->m_oTextRuler;
 
     return m_strText;

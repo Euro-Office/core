@@ -37,35 +37,34 @@ CVbaFile::~CVbaFile()
 	streams.clear();
 
 	if (storage_)delete storage_;
-	storage_ = NULL;
+	storage_ = nullptr;
 }
 
 bool CVbaFile::isError()
 {
-	if (storage_ != NULL) return false;
-	return true;
+	return storage_ == nullptr;
 }
 
 bool CVbaFile::Open(const std::wstring & file_path)
 {
 	if (storage_) delete storage_;
-	storage_ = NULL;
+	storage_ = nullptr;
 
 	storage_ = new POLE::Storage(file_path.c_str());
-	if (storage_ == NULL) return false;
+	if (storage_ == nullptr) return false;
 
-	if (storage_->open(false, false) == false)
+	if (!storage_->open(false, false))
 	{
 		delete storage_;
-		storage_ = NULL;
+		storage_ = nullptr;
 	}
 
-	if (storage_ == NULL) return false;
+	if (storage_ == nullptr) return false;
 	return true;
 }
 CVbaFile::CVbaFile(const std::wstring & file_path)
 {
-	storage_ = NULL;
+	storage_ = nullptr;
 	Open(file_path);
 }
 CVbaFileStreamPtr CVbaFile::getNamedStream(const std::wstring& name, _UINT32 offset)
@@ -86,16 +85,16 @@ void CVbaFile::closeNamedStream(const std::wstring& name)
 
 POLE::Stream* CVbaFile::openStream(const std::wstring & stream_name)
 {
-	if (storage_ == NULL) return NULL;
+	if (storage_ == nullptr) return nullptr;
 
 	POLE::Stream* pStream = new POLE::Stream(storage_, stream_name);
-	if (pStream == NULL)
+	if (pStream == nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
 	if ((pStream) && (pStream->size() > 0))
 		return pStream;
-	else return NULL;
+	else return nullptr;
 }
 const unsigned char VBASTREAM_SIGNATURE = 1;
 
@@ -147,12 +146,10 @@ CVbaFileStream::CVbaFileStream(POLE::Stream* stream, _UINT32 offset)
 		bool bCompressed = ((header & CHUNK_COMPRESSED) != 0);
 		_UINT16 chunkSize = (header & CHUNK_LENMASK) + 1;
 
-		bool bUnknown = false;
 		if ((header & CHUNK_SIGMASK) != CHUNK_SIG)
 		{
 			bCompressed = true;
 			chunkSize = 4094; //in fact
-			bUnknown = true;
 		}
 		unsigned char *dataNext = dataCur + chunkSize;
 
@@ -211,7 +208,7 @@ CVbaFileStream::CVbaFileStream(POLE::Stream* stream, _UINT32 offset)
 		else
 		{
 			arrChunk.resize(chunkSize);
-			memcpy(arrChunk.data(), dataCur, chunkSize); dataCur += chunkSize;
+			memcpy(arrChunk.data(), dataCur, chunkSize);
 		}
 
 		dataCur = dataNext;
@@ -224,7 +221,7 @@ CVbaFileStream::~CVbaFileStream()
 }
 void CVbaFileStream::read(void* buf, size_t size)
 {
-	if (NULL == buf || arrChunks.empty())
+	if (nullptr == buf || arrChunks.empty())
 	{
 		return;
 	}

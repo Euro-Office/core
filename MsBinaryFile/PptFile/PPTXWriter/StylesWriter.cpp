@@ -89,6 +89,8 @@ std::wstring CStylesWriter::GetColorInScheme(const LONG &lIndex)
     case 15: return L"lt2";
     case 16: return L"dk2";
         break;
+    default:
+        break;
     };
     return L"none";
 }

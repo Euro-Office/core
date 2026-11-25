@@ -34,8 +34,9 @@ namespace DocFileFormat
 	}
 
 	ListLevel::ListLevel( VirtualStreamReader* reader, int length ):
-							grpprlPapx(NULL), grpprlChpx(NULL)
+							grpprlPapx(nullptr), grpprlChpx(nullptr)
 	{
+		(void)length;
 		//parse the fix part
 		iStartAt	= reader->ReadInt32();
 		nfc			= reader->ReadByte();

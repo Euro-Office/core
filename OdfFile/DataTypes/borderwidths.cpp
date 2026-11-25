@@ -41,15 +41,15 @@ border_widths border_widths::parse(const std::wstring & Str)
     std::wstring tmp = Str;
     boost::algorithm::to_lower(tmp);
     boost::algorithm::trim(tmp);
-    std::vector< std::wstring > splitted;
-    boost::algorithm::split(splitted, tmp, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
+    std::vector< std::wstring > split;
+    boost::algorithm::split(split, tmp, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
 
-    if (splitted.size() != 3)
+    if (split.size() != 3)
         BOOST_THROW_EXCEPTION( errors::invalid_attribute() );
 
-    length len1 = length::parse(splitted[0]);
-    length len2 = length::parse(splitted[1]);
-    length len3 = length::parse(splitted[2]);
+    length len1 = length::parse(split[0]);
+    length len2 = length::parse(split[1]);
+    length len3 = length::parse(split[2]);
 
     return border_widths(len1, len2, len3);
 }
