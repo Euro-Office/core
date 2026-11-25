@@ -53,9 +53,9 @@ namespace
 		return style.substr(position_begin, style.find(L'"', position_begin) - position_begin);
 	}
 
-	std::wstring convert_fixture()
+	std::wstring convert_fixture(const std::wstring& file = L"ExampleFiles/run_position.docx")
 	{
-		const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/run_position.docx");
+		const std::wstring dir = convert_ooxml_to_odf_dir(file);
 		if (dir.empty())
 			return L"";
 		return read_part(dir, L"content.xml");
@@ -94,4 +94,17 @@ TEST(DocxToOdt, RunPositionAndVerticalAlignment)
 	EXPECT_EQ(text_position(content, L"BOTH"), L"25% 100%");
 	EXPECT_EQ(text_position(content, L"ZERO"), L"sub 58%");
 	EXPECT_EQ(text_position(content, L"PLAIN"), L"-");
+}
+
+// The size a run without one falls back to is the document's default or its paragraph's, never one that a numbering
+// level (converted before the styles) or the section's footer (converted with the first paragraph) left behind.
+// Document default 10 pt, paragraph style Big 20 pt, bullet level and the footer's last run 8 pt.
+TEST(DocxToOdt, RunPositionIgnoresSizesOfListLevelsAndFooters)
+{
+	const std::wstring content = convert_fixture(L"ExampleFiles/run_position_streams.docx");
+	ASSERT_FALSE(content.empty()) << "DOCX -> ODT conversion failed";
+
+	EXPECT_EQ(text_position(content, L"FIRST"), L"15% 100%");  // +3 pt at Big's 20 pt, not the footer's 8 pt
+	EXPECT_EQ(text_position(content, L"LIST"), L"20% 100%");   // +2 pt at the default 10 pt, not the bullet's 8 pt
+	EXPECT_EQ(text_position(content, L"NORMAL"), L"20% 100%");
 }

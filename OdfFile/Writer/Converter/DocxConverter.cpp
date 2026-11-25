@@ -1007,7 +1007,7 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 			case OOX::et_w_pPr:
 			{
 				// Skip ..
-			}break;
+			}break;		
 			default:
 				convert(oox_paragraph->m_arrItems[i]);
 				break;
@@ -3125,13 +3125,7 @@ void DocxConverter::convert(OOX::Logic::CRunProperty *oox_run_pr, odf_writer::te
 		double spacing = oox_run_pr->m_oSpacing->m_oVal->ToPoints();
 		text_properties->fo_letter_spacing_ = odf_types::letter_spacing(odf_types::length(spacing, odf_types::length::pt));
 	}
-	//if (oox_run_pr->m_oPosition.IsInit() && oox_run_pr->m_oPosition->m_oVal.IsInit())
-	//{
-	//	double position_pt = oox_run_pr->m_oPosition->m_oVal->ToPoints();
-	//	double percent = current_font_size.empty() ? 0 : position_pt / current_font_size.back() * 100;
-
-	//	text_properties->style_text_position_ = odf_types::text_position(percent, 100.);
-	//}
+	// w:position is written by convert(CRun): the percentage needs the size the run ends up with
 	if (oox_run_pr->m_oBdr.IsInit())
 	{
 		std::wstring odf_border;
@@ -3884,12 +3878,22 @@ void DocxConverter::convert_styles()
 {
 	if (!odt_context) return;
 
+	// The bottom of current_font_size is the document's default size: every paragraph keeps only that one. Numbering
+	// levels, converted before, may have pushed their own sizes.
+	current_font_size.clear();
+
 	OOX::CStyles* styles = docx_document ? docx_document->m_oMain.styles : (docx_flat_document ? docx_flat_document->m_pStyles.GetPointer() : nullptr);
-	if (!styles)return;
+	if (!styles)
+	{
+		current_font_size.push_back(10.);
+		return;
+	}
 
 	//nullable<OOX::CLatentStyles > m_oLatentStyles;
 
 	convert(styles->m_oDocDefaults.GetPointer(), styles);
+	if (current_font_size.empty())
+		current_font_size.push_back(10.);	// docDefaults without a size: 10 pt, as the default paragraph style gets
 
 	for (size_t i = 0; i < styles->m_arrStyle.size(); i++)
 	{
@@ -4799,12 +4803,15 @@ void DocxConverter::convert_hdr_ftr(std::wstring sId)
 
 	const size_t back_tables = tables_around_hdr_ftr;
 	tables_around_hdr_ftr = odt_context->table_context()->depth();
+	// converted while a body paragraph's properties are: its paragraphs reset the font size stack and push their own
+	const std::vector<double> back_font_size = current_font_size;
 
     for (size_t i = 0; i < oox_hdr_ftr->m_arrItems.size(); ++i)
 	{
 		convert(oox_hdr_ftr->m_arrItems[i]);
 	}
 	tables_around_hdr_ftr = back_tables;
+	current_font_size = back_font_size;
 	oox_current_child_document  = back_document;
 }
 bool DocxConverter::in_table()
