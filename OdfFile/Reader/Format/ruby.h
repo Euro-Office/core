@@ -47,6 +47,7 @@ public:
     CPDOCCORE_DEFINE_VISITABLE();
 
     virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
+    virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
     ruby_base() {}
 
 private:

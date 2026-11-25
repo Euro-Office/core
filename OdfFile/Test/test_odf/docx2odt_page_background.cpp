@@ -36,3 +36,18 @@ TEST(DocxToOdt, ImagePageBackgroundWithoutPageSize)
 	EXPECT_TRUE(has_page_bitmap_fill(styles));
 	EXPECT_NE(read_part(dir, L"content.xml").find(L"BODY"), std::wstring::npos);
 }
+
+// w:background whose VML fill repeats the picture (type="tile"): the ODF page fill repeats it too.
+TEST(DocxToOdt, TiledPagePictureIsRepeated)
+{
+	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/page_background_tiled_picture.docx");
+	ASSERT_FALSE(dir.empty()) << "DOCX -> ODT conversion failed";
+
+	const std::wstring styles = read_part(dir, L"styles.xml");
+	ASSERT_FALSE(styles.empty()) << "styles.xml is missing";
+	ASSERT_TRUE(has_page_bitmap_fill(styles)) << styles.substr(0, 3000);
+
+	const size_t props = styles.find(L"<style:page-layout-properties");
+	const std::wstring tag = styles.substr(props, styles.find(L'>', props) - props);
+	EXPECT_NE(tag.find(L"style:repeat=\"repeat\""), std::wstring::npos) << std::string(tag.begin(), tag.end());
+}

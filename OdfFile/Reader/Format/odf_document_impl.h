@@ -84,7 +84,7 @@ private:
 	odf_read_context_ptr context_;
     
 	void parse_styles	(office_element *element);
-    void parse_fonts	(office_element *elemen);
+    void parse_fonts	(office_element *element);
 	void parse_manifests(office_element *element);
     void parse_settings	(office_element *element);
     void parse_meta		(office_element *element);

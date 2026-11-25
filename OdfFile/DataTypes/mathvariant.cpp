@@ -76,79 +76,79 @@ math_variant::math_variant(const std::wstring & Value) :  none_(true)
    
 	boost::algorithm::to_lower(tmp);
     
-	std::vector< std::wstring > splitted;
-	boost::algorithm::split(splitted, Value, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
+	std::vector< std::wstring > split;
+	boost::algorithm::split(split, Value, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
 
-	for (size_t i = 0 ; i < splitted.size(); i++)
+	for (size_t i = 0 ; i < split.size(); i++)
 	{
-		if (splitted[i] == L"bold")
+		if (split[i] == L"bold")
 		{
 			style_.bold = true;
 		}
-		else if (splitted[i] == L"italic")
+		else if (split[i] == L"italic")
 		{
 			style_.italic = true;
 		}
-		else if (splitted[i] == L"bold-italic")
+		else if (split[i] == L"bold-italic")
 		{
 			style_.bold = true;
 			style_.italic = true;
 		}		
- 		else if (splitted[i] == L"double-struck")
+ 		else if (split[i] == L"double-struck")
 		{
 			style_.type = 1;
 		}
- 		else if (splitted[i] == L"bold-fraktur")
+ 		else if (split[i] == L"bold-fraktur")
 		{
 			style_.type = 2;
 			style_.bold = true;
 		}
-  		else if (splitted[i] == L"fraktur")
+  		else if (split[i] == L"fraktur")
 		{
 			style_.type = 2;
 		}
-		else if (splitted[i] == L"script")
+		else if (split[i] == L"script")
 		{
 			style_.type = 3;
 		}	
- 		else if (splitted[i] == L"bold-script")
+ 		else if (split[i] == L"bold-script")
 		{
 			style_.type = 3;
 			style_.bold = true;
 		}	
- 		else if (splitted[i] == L"sans-serif-italic")
+ 		else if (split[i] == L"sans-serif-italic")
 		{
 			style_.type = 4;
 			style_.italic = true;
 		}
- 		else if (splitted[i] == L"bold-sans-serif")
+ 		else if (split[i] == L"bold-sans-serif")
 		{
 			style_.type = 4;
 			style_.bold = true;
 		}
- 		else if (splitted[i] == L"sans-serif-bold-italic")
+ 		else if (split[i] == L"sans-serif-bold-italic")
 		{
 			style_.type = 4;
 			style_.italic = true;
 			style_.bold = true;
 		}
- 		else if (splitted[i] == L"monospace")
+ 		else if (split[i] == L"monospace")
 		{
 			style_.type = 5;
 		}
-		else if (splitted[i] == L"stretched")
+		else if (split[i] == L"stretched")
 		{
 			//style_.stretched = true;
 		}
- 		else if (splitted[i] == L"tailed")
+ 		else if (split[i] == L"tailed")
 		{
 			//style_.type = 7;
 		}
- 		else if (splitted[i] == L"looped")
+ 		else if (split[i] == L"looped")
 		{
 			//style_.type = 8;
 		}
- 		else if (splitted[i] == L"initial")
+ 		else if (split[i] == L"initial")
 		{
 			//style_.type = 9;
 		}

@@ -111,29 +111,29 @@ border_style::border_style(const std::wstring & Value) : initialized_(false), no
     {
 		none_ = false;
 
-        std::vector< std::wstring > splitted;
-        boost::algorithm::split(splitted, Value, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
+        std::vector< std::wstring > split;
+        boost::algorithm::split(split, Value, boost::algorithm::is_any_of(L" \t"), boost::algorithm::token_compress_on);
 
         try 
         {
-            if (splitted.size() > 0)
-                length_ = length::parse(splitted[0]);
+            if (split.size() > 0)
+                length_ = length::parse(split[0]);
 
-            if (splitted.size() > 1)
+            if (split.size() > 1)
             {
-                if (splitted[1] == L"solid")        style_ = solid;
-                if (splitted[1] == L"double")       style_ = double_;
-                if (splitted[1] == L"dotted")       style_ = dotted;
-                if (splitted[1] == L"dashed")       style_ = dash;
-                if (splitted[1] == L"dot-dashed")   style_ = dot_dash;
-                if (splitted[1] == L"dash-dot")     style_ = dot_dash;
-                if (splitted[1] == L"dash-dot-dot") style_ = dot_dot_dash;
-                if (splitted[1] == L"fine-dashed")  style_ = fine_dashed;
-                if (splitted[1] == L"double-thin")  style_ = double_thin;                
+                if (split[1] == L"solid")        style_ = solid;
+                if (split[1] == L"double")       style_ = double_;
+                if (split[1] == L"dotted")       style_ = dotted;
+                if (split[1] == L"dashed")       style_ = dash;
+                if (split[1] == L"dot-dashed")   style_ = dot_dash;
+                if (split[1] == L"dash-dot")     style_ = dot_dash;
+                if (split[1] == L"dash-dot-dot") style_ = dot_dot_dash;
+                if (split[1] == L"fine-dashed")  style_ = fine_dashed;
+                if (split[1] == L"double-thin")  style_ = double_thin;                
             }
 
-            if (splitted.size() > 2)
-                color_ = color::parse(splitted[2]);
+            if (split.size() > 2)
+                color_ = color::parse(split[2]);
         }
         catch(...)
         {
