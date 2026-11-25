@@ -108,3 +108,12 @@ TEST(DocxToOdt, RunPositionIgnoresSizesOfListLevelsAndFooters)
 	EXPECT_EQ(text_position(content, L"LIST"), L"20% 100%");   // +2 pt at the default 10 pt, not the bullet's 8 pt
 	EXPECT_EQ(text_position(content, L"NORMAL"), L"20% 100%");
 }
+
+// A tracked change of the paragraph mark converts the old run properties too; their size is not the paragraph's.
+TEST(DocxToOdt, RunPositionIgnoresTrackedOldParagraphMarkSize)
+{
+	const std::wstring content = convert_fixture(L"ExampleFiles/run_position_streams.docx");
+	ASSERT_FALSE(content.empty()) << "DOCX -> ODT conversion failed";
+
+	EXPECT_EQ(text_position(content, L"MARKCHANGE"), L"20% 100%"); // +2 pt at the default 10 pt, not the old 8 pt
+}

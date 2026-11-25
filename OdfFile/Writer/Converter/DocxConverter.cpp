@@ -790,6 +790,8 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 
 	current_bidi_set = (oox_paragraph->m_oParagraphProperty && oox_paragraph->m_oParagraphProperty->m_oBidi.IsInit() && oox_paragraph->m_oParagraphProperty->m_oBidi->m_oVal.ToBool());
 
+	// the old (tracked) properties below push their sizes too: they must not become the size of the paragraph's runs
+	const size_t font_size_depth_before_changes = current_font_size.size();
 	if (oox_paragraph->m_oParagraphProperty)
 	{//chain of format changes in deleted chunks of LibreOffice (and OO) isn't supported -
 		int id;
@@ -824,6 +826,8 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 		if (id >= 0)	
 			id_change_properties.push_back(std::pair<int, int> (3, id));
 	}	
+	if (current_font_size.size() > font_size_depth_before_changes)
+		current_font_size.resize(font_size_depth_before_changes);
 //---------------------------------------------------------------------------------------------------------------------
 	if (oox_paragraph->m_oParagraphProperty && odt_context->text_context()->get_list_item_state() == false)
 	{
