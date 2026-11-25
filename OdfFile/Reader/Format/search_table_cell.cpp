@@ -103,7 +103,7 @@ public:
 private:
     virtual void on_not_impl(std::string const & message)
     {
-        _CP_LOG << L"[table_round visitor] : not impliment for \"" << utf8_to_utf16(message) << L"\"" << std::endl;
+        _CP_LOG << L"[table_round visitor] : not implement for \"" << utf8_to_utf16(message) << L"\"" << std::endl;
     }
 
 public:    

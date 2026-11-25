@@ -40,12 +40,12 @@ const std::wstring CVbaReader::convert()
 {
 	_UINT32 code_page_ = 0;
 
-	if (false == vbaProject_file_->isDirectory(L"VBA")) return L"";
+	if (!vbaProject_file_->isDirectory(L"VBA")) return L"";
 
 	CVbaFileStreamPtr strmDir = vbaProject_file_->getNamedStream(L"VBA/dir");
 	VBA::DirStreamObjectPtr DirStreamObject = VBA::DirStreamObjectPtr(new VBA::DirStreamObject(strmDir));
 
-	if (false == DirStreamObject->loadContent()) return L"";
+	if (!DirStreamObject->loadContent()) return L"";
 
 	code_page_ = strmDir->CodePage;
 //------------------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ const std::wstring CVbaReader::convert()
 			}
 		}
 
-		if (false == ProjectStreamObject->DesignerModules.empty())
+		if (!ProjectStreamObject->DesignerModules.empty())
 		{
 			CP_XML_NODE(L"DesignerModules")
 			{

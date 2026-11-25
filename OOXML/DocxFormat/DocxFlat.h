@@ -96,7 +96,7 @@ namespace OOX
 		std::map<std::wstring, NSCommon::smart_ptr<OOX::File>> m_mapImages;
 		std::map<std::wstring, NSCommon::smart_ptr<OOX::File>> m_mapOleData;
 
-		OOX::IFileContainer *m_currentContainer = NULL;
+		OOX::IFileContainer *m_currentContainer = nullptr;
 	private:
 		void ParsingOleData();
 		void ParsingSuppData();

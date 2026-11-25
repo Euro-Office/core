@@ -91,14 +91,14 @@ namespace MetaFile
 		if (!m_pDC)
 		{
 			m_pParser->SetError();
-			return NULL;
+			return nullptr;
 		}
 
 		CWmfDC* pNewDC = m_pDC->Copy();
 		if (!pNewDC)
 		{
 			m_pParser->SetError();
-			return NULL;
+			return nullptr;
 		}
 
 		m_vDCStack.push_back(pNewDC);
@@ -230,8 +230,8 @@ namespace MetaFile
 		m_pBrush       = &m_oDefaultBrush;
 		m_pPen         = &m_oDefaultPen;
 		m_pFont        = &m_oDefaultFont;
-		m_pPalette     = NULL;
-		m_pRegion      = NULL;
+		m_pPalette     = nullptr;
+		m_pRegion      = nullptr;
 		m_ushMapMode   = MM_TEXT;
 		m_dPixelWidth  = 1;
 		m_dPixelHeight = 1;
@@ -259,7 +259,7 @@ namespace MetaFile
 	{
 		CWmfDC* pNewDC = new CWmfDC();
 		if (!pNewDC)
-			return NULL;
+			return nullptr;
 
 		pNewDC->m_oClip.Copy(m_oClip);
 		pNewDC->m_pBrush            = (m_pBrush == &m_oDefaultBrush ? &pNewDC->m_oDefaultBrush : m_pBrush);
@@ -300,7 +300,7 @@ namespace MetaFile
 	void CWmfDC::RemoveBrush(CWmfBrush* pBrush)
 	{
 		if (pBrush == m_pBrush)
-			m_pBrush = NULL;
+			m_pBrush = nullptr;
 	}
 	const CWmfBrush* CWmfDC::GetBrush() const
 	{
@@ -313,7 +313,7 @@ namespace MetaFile
 	void CWmfDC::RemovePen(CWmfPen* pPen)
 	{
 		if (m_pPen == pPen)
-			m_pPen = NULL;
+			m_pPen = nullptr;
 	}
 	const CWmfPen* CWmfDC::GetPen() const
 	{
@@ -326,7 +326,7 @@ namespace MetaFile
 	void CWmfDC::RemovePalette(CWmfPalette* pPalette)
 	{
 		if (m_pPalette == pPalette)
-			m_pPalette = NULL;
+			m_pPalette = nullptr;
 	}
 	const CWmfPalette* CWmfDC::GetPalette() const
 	{
@@ -339,11 +339,11 @@ namespace MetaFile
 	void CWmfDC::RemoveFont(CWmfFont* pFont)
 	{
 		if (m_pFont == pFont)
-			m_pFont = NULL;
+			m_pFont = nullptr;
 	}
 	const CWmfFont* CWmfDC::GetFont() const
 	{
-		return (NULL != m_pFont) ? m_pFont : &m_oDefaultFont;
+		return (nullptr != m_pFont) ? m_pFont : &m_oDefaultFont;
 	}
 	void CWmfDC::SetRegion(CWmfRegion* pRegion)
 	{
@@ -352,7 +352,7 @@ namespace MetaFile
 	void CWmfDC::RemoveRegion(CWmfRegion* pRegion)
 	{
 		if (m_pRegion == pRegion)
-			m_pRegion = NULL;
+			m_pRegion = nullptr;
 	}
 	const CWmfRegion* CWmfDC::GetRegion() const
 	{
@@ -408,6 +408,10 @@ namespace MetaFile
 			case MM_ANISOTROPIC:
 			{
 				UpdatePixelMetrics();
+				break;
+			}
+			default:
+			{
 				break;
 			}
 		}

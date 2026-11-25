@@ -1482,7 +1482,7 @@ xmlns:xda=\"http://schemas.microsoft.com/office/spreadsheetml/2017/dynamicarray\
 		}
 		CMetadataFile::CMetadataFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 		{
-			read(oRootPath, oPath);
+			CMetadataFile::read(oRootPath, oPath);
 		}
 		CMetadataFile::~CMetadataFile()
 		{
@@ -1524,7 +1524,7 @@ xmlns:xda=\"http://schemas.microsoft.com/office/spreadsheetml/2017/dynamicarray\
 		{
 			return m_oReadPath;
 		}
-		void CMetadataFile::read(const CPath& oRootPath, const CPath& oPath)
+		void CMetadataFile::read(const CPath&  /*oRootPath*/, const CPath& oPath)
 		{
 			m_oReadPath = oPath;
 
@@ -1564,7 +1564,7 @@ xmlns:xda=\"http://schemas.microsoft.com/office/spreadsheetml/2017/dynamicarray\
 		}
 		void CMetadataFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 		{
-			if (false == m_oMetadata.IsInit()) return;
+			if (!m_oMetadata.IsInit()) return;
 
 			CXlsb* xlsb = dynamic_cast<CXlsb*>(File::m_pMainDocument);
 			if ((xlsb) && (xlsb->m_bWriteToXlsb))

@@ -23,7 +23,9 @@
  *
  */
 #include "ApplicationFontsWorker.h"
+#include "FontThumbnailAlpha.h"
 
+#include <cmath>
 #include <map>
 #include <set>
 
@@ -69,7 +71,7 @@ public:
 	CApplicationFontsWorker_private(CApplicationFontsWorker* pMain)
 	{
 		m_pMain = pMain;
-		m_pBreaker = NULL;
+		m_pBreaker = nullptr;
 
 		m_bIsCheckThumbnailsMode = false;
 	}
@@ -217,7 +219,7 @@ public:
 		{
 		}
 
-		virtual void Check(const int& nCode, const unsigned int& nIndex)
+		virtual void Check(const int& nCode, const unsigned int&  /*nIndex*/)
 		{
 			if (nCode > m_nMaxSymbols)
 				return;
@@ -229,9 +231,7 @@ public:
 				return;
 			}
 
-			if (m_pSymbols[nCode] == 0)
-				m_pSymbols[nCode] = m_nPriority;
-			else if (m_pSymbols[nCode] > m_nPriority)
+			if (m_pSymbols[nCode] == 0 || m_pSymbols[nCode] > m_nPriority)
 				m_pSymbols[nCode] = m_nPriority;
 		}
 
@@ -266,6 +266,7 @@ public:
 			m_nMax = -1;
 
 			m_nStyle = 0;
+			m_nPriority = 0;
 		}
 
 		void Apply1(int nMask)
@@ -275,9 +276,7 @@ public:
 			{
 				if (nMask == *tmp)
 				{
-					if (m_pSymbols[i] == 0)
-						m_pSymbols[i] = m_nPriority;
-					else if (m_pSymbols[i] > m_nPriority)
+					if (m_pSymbols[i] == 0 || m_pSymbols[i] > m_nPriority)
 						m_pSymbols[i] = m_nPriority;
 				}
 			}
@@ -296,9 +295,9 @@ public:
 
 			BYTE* tmp = m_pTmpSymbols + m_nMin;
 			BYTE* tmpLast = m_pTmpSymbols + m_nMax + 1;
-			BYTE* tmpFirst = NULL;
-			int* pSymbols = NULL;
-			int* pSymbolsLast = NULL;
+			BYTE* tmpFirst = nullptr;
+			int* pSymbols = nullptr;
+			int* pSymbolsLast = nullptr;
 			int nPriority = 0;
 			int nFirstOffset = 0;
 
@@ -340,9 +339,7 @@ public:
 
 				while (pSymbols < pSymbolsLast)
 				{
-					if (*pSymbols == 0)
-						*pSymbols = nPriority;
-					else if (*pSymbols > nPriority)
+					if (*pSymbols == 0 || *pSymbols > nPriority)
 						*pSymbols = nPriority;
 
 					++pSymbols;
@@ -356,7 +353,7 @@ public:
 			m_nMax = -1;
 		}
 
-		virtual void Check(const int& nCode, const unsigned int& nIndex)
+		virtual void Check(const int& nCode, const unsigned int&  /*nIndex*/)
 		{
 			if (nCode > m_nMaxSymbols)
 				return;
@@ -406,18 +403,16 @@ public:
 		static bool Compare(const CFontPriority& p1, const CFontPriority& p2)
 		{
 			if (p1.priority != p2.priority)
-				return (p1.priority < p2.priority) ? true : false;
+				return p1.priority < p2.priority;
 
-			return (p1.name < p2.name) ? true : false;
+			return p1.name < p2.name;
 		}
 	};
 
 public:
 	inline bool CheckBreak()
 	{
-		if (m_pBreaker && !m_pBreaker->IsFontsWorkerRunned())
-			return true;
-		return false;
+		return m_pBreaker && !m_pBreaker->IsFontsWorkerRunned();
 	}
 
 	bool IsEastAsianScript(const unsigned int& value)
@@ -582,7 +577,6 @@ public:
 		if (CheckBreak()) return;
 
 		std::vector<NSFonts::CFontInfo*>* pList = applicationFonts->GetList()->GetFonts();
-		int nCount = (int)pList->size();
 
 		// first build an array of all font files
 		std::map<std::wstring, LONG> mapFontFiles;
@@ -614,7 +608,6 @@ public:
 		{
 			NSFonts::CFontInfo* pInfo = *i;
 			std::wstring strPath = pInfo->m_wsFontPath;
-			std::wstring strName = pInfo->m_wsFontName;
 
 			int lFontIndex = 0;
 			int lFaceIndex = 0;
@@ -733,7 +726,7 @@ public:
 			strFontSelectionBin = m_pMain->m_sDirectory + L"/font_selection.bin";
 		}
 
-		NSMemoryUtils::CByteBuilder* pRangeBuilder = NULL;
+		NSMemoryUtils::CByteBuilder* pRangeBuilder = nullptr;
 		int nRangeBuilderCount = 0;
 		if (!strFontSelectionBin.empty())
 		{
@@ -747,7 +740,7 @@ public:
 		if (!m_pMain->m_sAllFontsJSPath.empty())
 			sAllFontsPath = m_pMain->m_sAllFontsJSPath;
 		if (nVersion != ONLYOFFICE_ALL_FONTS_VERSION)
-			sAllFontsPath += (L"." + std::to_wstring((int)(nVersion + 1)));
+			sAllFontsPath += (L"." + std::to_wstring((nVersion + 1)));
 
 		if (m_bIsCheckThumbnailsMode)
 			sAllFontsPath = L"";
@@ -847,7 +840,6 @@ public:
 			}
 			oWriterJS += (L"];\n\n");
 
-			if (true)
 			{
 				//DWORD dwTime = NSTimers::GetTickCount();
 
@@ -1175,15 +1167,14 @@ public:
 				delete[] arSymbolsAll;
 			}
 
-			if (true)
 			{
-				BYTE* pData = NULL;
+				BYTE* pData = nullptr;
 				LONG lLen = 0;
 
 				NSFonts::CFontListToBufferSerializer oSerializer(L"", false, nVersion);
 				applicationFonts->GetList()->ToBuffer(&pData, &lLen, oSerializer);
 
-				char* cData64 = NULL;
+				char* cData64 = nullptr;
 				int nData64Dst = 0;
 				NSFile::CBase64Converter::Encode(pData, (int)lLen, cData64, nData64Dst, NSBase64::B64_BASE64_FLAG_NOCRLF);
 
@@ -1214,7 +1205,7 @@ public:
 
 		if (!strFontSelectionBin.empty())
 		{
-			BYTE* pData = NULL;
+			BYTE* pData = nullptr;
 			LONG lLen = 0;
 			NSFonts::CFontListToBufferSerializer oSerializer(L"", false, ONLYOFFICE_ALL_FONTS_VERSION);
 			applicationFonts->GetList()->ToBuffer(&pData, &lLen, oSerializer);
@@ -1329,16 +1320,16 @@ public:
 				if (bIsEA)
 					strThumbnailPath += L"_ea";
 
-				int nScaleOut = (int)(dScale * 100 + 0.5);
+				int nScaleOut = static_cast<int>(std::lround(dScale * 100));
 
 				if (nScaleOut == 100)
 					strThumbnailPath += L".png";
 				else if ((nScaleOut % 100) == 0)
-					strThumbnailPath += L"@" + std::to_wstring((int)(nScaleOut / 100)) + L"x.png";
+					strThumbnailPath += L"@" + std::to_wstring((nScaleOut / 100)) + L"x.png";
 				else if ((nScaleOut % 10) == 0)
-					strThumbnailPath += L"@" + std::to_wstring((int)(nScaleOut / 100)) + L"." + std::to_wstring((int)((nScaleOut / 10) % 10)) + L"x.png";
+					strThumbnailPath += L"@" + std::to_wstring((nScaleOut / 100)) + L"." + std::to_wstring(((nScaleOut / 10) % 10)) + L"x.png";
 				else
-					strThumbnailPath += L"@" + std::to_wstring((int)(nScaleOut / 100)) + L"." + std::to_wstring((int)(nScaleOut % 100)) + L"x.png";
+					strThumbnailPath += L"@" + std::to_wstring((nScaleOut / 100)) + L"." + std::to_wstring((nScaleOut % 100)) + L"x.png";
 
 				arrScales.push_back(dScale);
 				arrFiles.push_back(strThumbnailPath);
@@ -1365,7 +1356,7 @@ public:
 			return;
 
 		NSFonts::IApplicationFonts* applicationFontsGood = applicationFonts;
-		if (NULL == applicationFontsGood)
+		if (nullptr == applicationFontsGood)
 		{
 			applicationFontsGood = NSFonts::NSApplication::Create();
 			applicationFontsGood->InitializeFromFolder(m_pMain->m_sDirectory);
@@ -1396,7 +1387,6 @@ public:
 			LONG lWidthPix = (LONG)(300 * dScale);
 			LONG lHeightPix = (LONG)(nCountFonts * lH1_px);
 			double dW_mm = 25.4 * lWidthPix / dDpi;
-			double dH1_mm = 25.4 * lH1_px / dDpi;
 
 			LONG lCountPixels = 4 * lWidthPix * lHeightPix;
 			BYTE* pImageData = new BYTE[lCountPixels];
@@ -1456,12 +1446,12 @@ public:
 					oSelectFormat.wsName = new std::wstring(L"Courier New");
 					NSFonts::CFontInfo* pInfoCur = pManager->GetFontInfoByParams(oSelectFormat);
 
-					if (NULL != pInfoCur)
+					if (nullptr != pInfoCur)
 					{
 						pManager->LoadFontFromFile(pInfoCur->m_wsFontPath, 0, 14, dDpi, dDpi);
+						pRenderer->put_FontPath(pInfoCur->m_wsFontPath);
+						pRenderer->put_FontFaceIndex(0);
 					}
-					pRenderer->put_FontPath(pInfoCur->m_wsFontPath);
-					pRenderer->put_FontFaceIndex(0);
 				}
 				else if (pFile)
 				{
@@ -1485,12 +1475,12 @@ public:
 						NSFonts::CFontSelectFormat oSelectFormat;
 						oSelectFormat.wsName = new std::wstring(L"Arial");
 						NSFonts::CFontInfo* pInfoCur = pManager->GetFontInfoByParams(oSelectFormat);
-						if (NULL != pInfoCur)
+						if (nullptr != pInfoCur)
 						{
 							pManager->LoadFontFromFile(pInfoCur->m_wsFontPath, 0, 14, dDpi, dDpi);
+							pRenderer->put_FontPath(pInfoCur->m_wsFontPath);
+							pRenderer->put_FontFaceIndex(0);
 						}
-						pRenderer->put_FontPath(pInfoCur->m_wsFontPath);
-						pRenderer->put_FontFaceIndex(0);
 					}
 				}
 
@@ -1519,7 +1509,7 @@ public:
 			oFrame.SaveFile(strThumbnailPath, 4);
 
 			LONG lBinarySize = lWidthPix * lHeightPix;
-			BYTE* pBinaryFormat = new BYTE[lBinarySize + 12];
+			BYTE* pBinaryFormat = new BYTE[NSFontThumbnail::GetEncodedAlphaMaxSize(lBinarySize) + 12];
 
 			pBinaryFormat[0] = 0xFF & (lWidthPix >> 24);
 			pBinaryFormat[1] = 0xFF & (lWidthPix >> 16);
@@ -1534,37 +1524,7 @@ public:
 			pBinaryFormat[10] = 0xFF & (nCountFonts >> 8);
 			pBinaryFormat[11] = 0xFF & (nCountFonts >> 0);
 
-			BYTE* pBinaryFormatCur = pBinaryFormat + 12;
-			BYTE* pImageDataAlpha = pImageData + 3;
-			LONG nIndexCur = 0;
-			while (nIndexCur < lBinarySize)
-			{
-				*pBinaryFormatCur++ = *pImageDataAlpha;
-
-				if (0 != *pImageDataAlpha)
-				{
-					++nIndexCur;
-					pImageDataAlpha += 4;
-				}
-				else
-				{
-					LONG nIndexCur0 = nIndexCur;
-					LONG nIndexCurLimit = nIndexCur0 + 255;
-					if (nIndexCurLimit > lBinarySize)
-						nIndexCurLimit = lBinarySize;
-
-					while (nIndexCur < nIndexCurLimit)
-					{
-						++nIndexCur;
-						pImageDataAlpha += 4;
-
-						if (0 != *pImageDataAlpha)
-							break;
-					}
-
-					*pBinaryFormatCur++ = nIndexCur - nIndexCur0;
-				}
-			}
+			BYTE* pBinaryFormatCur = NSFontThumbnail::EncodeAlpha(pImageData, lBinarySize, pBinaryFormat + 12);
 
 #if 0
 			BYTE* pPixelsValues = new BYTE[4 * lWidthPix * lHeightPix];
@@ -1621,7 +1581,7 @@ public:
 
 		RELEASEOBJECT(pManager);
 
-		if (applicationFonts == NULL)
+		if (applicationFonts == nullptr)
 			RELEASEOBJECT(applicationFontsGood);
 	}
 };
@@ -1655,7 +1615,7 @@ CApplicationFontsWorker::~CApplicationFontsWorker()
 NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 {
 	if (m_sDirectory.empty())
-		return NULL;
+		return nullptr;
 
 	for (std::vector<std::wstring>::iterator i = m_arAdditionalFolders.begin(); i != m_arAdditionalFolders.end(); i++)
 	{
@@ -1665,14 +1625,12 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 			*i = NSFile::GetProcessDirectory() + L"/" + *i;
 	}
 
-	std::wstring strAllFontsJSPath      = m_sDirectory + L"/AllFonts.js";
 	std::wstring strFontsSelectionBin   = m_sDirectory + L"/font_selection.bin";
 
 	std::vector<std::string> strFonts;
 	std::wstring strFontsCheckPath = m_sDirectory + L"/fonts.log";
 
 	// read the "old" font set
-	if (true)
 	{
 		NSFile::CFileBinary oFile;
 		if (oFile.OpenFile(strFontsCheckPath))
@@ -1833,7 +1791,7 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 	}
 
 	pApplicationF->Release();
-	pApplicationF = NULL;
+	pApplicationF = nullptr;
 
 	if (!m_pInternal->m_pBreaker || m_pInternal->m_pBreaker->IsFontsWorkerRunned())
 	{
@@ -1859,7 +1817,7 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 
 void CApplicationFontsWorker::CheckThumbnails()
 {
-	m_pInternal->SaveThumbnails(NULL);
+	m_pInternal->SaveThumbnails(nullptr);
 }
 
 void CApplicationFontsWorker::SetBreaker(CApplicationFontsWorkerBreaker* pChecker)

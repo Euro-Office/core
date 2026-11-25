@@ -83,7 +83,7 @@ namespace DocFileFormat
 
 		if (docFile->m_sXmlApp.empty())
 		{
-			OOX::CApp* pApp = new OOX::CApp(NULL);
+			OOX::CApp* pApp = new OOX::CApp(nullptr);
 			if (pApp)
 			{
 				std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
@@ -107,7 +107,7 @@ namespace DocFileFormat
 		}
 		if (docFile->m_sXmlCore.empty())
 		{
-			OOX::CCore* pCore = new OOX::CCore(NULL);
+			OOX::CCore* pCore = new OOX::CCore(nullptr);
 			if (pCore)
 			{
 				pCore->SetCreator(L"");

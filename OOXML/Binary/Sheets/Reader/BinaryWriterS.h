@@ -159,7 +159,7 @@ namespace BinXlsxRW
 		void WriteCellStyleXfs(const OOX::Spreadsheet::CCellStyleXfs& cellStyleXfs);
 		void WriteCellXfs(const OOX::Spreadsheet::CCellXfs& cellXfs);
 		void WriteXfs(const OOX::Spreadsheet::CXfs& xfs);
-		void WriteAligment(const OOX::Spreadsheet::CAligment& aligment);
+		void WriteAligment(const OOX::Spreadsheet::CAligment& alignment);
 		void WriteProtection(const OOX::Spreadsheet::CProtection& protection);
 		void WriteFills(const OOX::Spreadsheet::CFills& fills, OOX::Spreadsheet::CIndexedColors* pIndexedColors, PPTX::Theme* pTheme);
 		void WriteFill(const OOX::Spreadsheet::CFill& fill, OOX::Spreadsheet::CIndexedColors* pIndexedColors);
@@ -202,6 +202,9 @@ namespace BinXlsxRW
 		OOX::Spreadsheet::CXlsxFlat *m_pXlsxFlat;
 	public:
 		BinaryWorkbookTableWriter(NSBinPptxRW::CBinaryFileWriter &oCBufferedStream, OOX::Document *pDocument);
+
+		// File type (AVS_OFFICESTUDIO_FILE_*) the workbook was converted from; 0 = not written
+		int m_nSourceFileType;
 		
 		void Write(OOX::Spreadsheet::CWorkbook& workbook);
 		void WriteWorkbook(OOX::Spreadsheet::CWorkbook& workbook);
@@ -332,11 +335,11 @@ namespace BinXlsxRW
 		void WriteCell(const OOX::Spreadsheet::CCell& oCell);
 		void WriteFormula(OOX::Spreadsheet::CFormula& oFormula);
         
-		void WriteDrawings(const OOX::Spreadsheet::CWorksheet& oWorksheet, OOX::Spreadsheet::CDrawing* pDrawing, OOX::CVmlDrawing *pVmlDrawing = NULL);
-        void WriteDrawing(const OOX::Spreadsheet::CWorksheet& oWorksheet, OOX::Spreadsheet::CDrawing* pDrawing, OOX::Spreadsheet::CCellAnchor* pCellAnchor, OOX::CVmlDrawing *pVmlDrawing = NULL, OOX::Spreadsheet::COleObject* pOleObject = NULL);
+		void WriteDrawings(const OOX::Spreadsheet::CWorksheet& oWorksheet, OOX::Spreadsheet::CDrawing* pDrawing, OOX::CVmlDrawing *pVmlDrawing = nullptr);
+        void WriteDrawing(const OOX::Spreadsheet::CWorksheet& oWorksheet, OOX::Spreadsheet::CDrawing* pDrawing, OOX::Spreadsheet::CCellAnchor* pCellAnchor, OOX::CVmlDrawing *pVmlDrawing = nullptr, OOX::Spreadsheet::COleObject* pOleObject = nullptr);
 		void WriteCellAnchor(OOX::Spreadsheet::CCellAnchor* pCellAnchor);
-		void WriteOleObjects(const OOX::Spreadsheet::CWorksheet& oWorksheet, OOX::Spreadsheet::CDrawing* pDrawing, OOX::CVmlDrawing *pVmlDrawing = NULL);
-		void WriteControls(const OOX::Spreadsheet::CWorksheet& oWorksheet, OOX::CVmlDrawing *pVmlDrawing = NULL);
+		void WriteOleObjects(const OOX::Spreadsheet::CWorksheet& oWorksheet, OOX::Spreadsheet::CDrawing* pDrawing, OOX::CVmlDrawing *pVmlDrawing = nullptr);
+		void WriteControls(const OOX::Spreadsheet::CWorksheet& oWorksheet, OOX::CVmlDrawing *pVmlDrawing = nullptr);
 		void WriteControlPr(OOX::Spreadsheet::CControlPr* pControlPr, OOX::Spreadsheet::CFormControlPr* pFormControlPr);
 
 		void WriteLegacyDrawingHF(const OOX::Spreadsheet::CWorksheet& oWorksheet);
@@ -458,6 +461,7 @@ namespace BinXlsxRW
 		int GetMainTableSize();
 
 		int m_nLastFilePosOffset;
+		int m_nSourceFileType;
 	private:
 		int WriteTableStart(BYTE type, int nStartPos = -1);
 		void WriteTableEnd(int nCurPos);

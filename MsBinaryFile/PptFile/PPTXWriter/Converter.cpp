@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "../Drawing/Document.h"
 
@@ -92,8 +91,8 @@ namespace PPT
 
     CPPTXWriter::CPPTXWriter(const std::wstring& destPath) : m_strDestPath(destPath)
     {
-        m_pDocument = NULL;
-        m_pUserInfo = NULL;
+        m_pDocument = nullptr;
+        m_pUserInfo = nullptr;
 
         m_pShapeWriter = new CShapeWriter();
     }
@@ -554,7 +553,7 @@ namespace PPT
 
         std::wstring strDefaultTextStyle = L"<p:defaultTextStyle>";
 
-        if (false == m_pDocument->m_arThemes.empty())
+        if (!m_pDocument->m_arThemes.empty())
         {
             CStylesWriter styleWriter(m_pDocument->m_arThemes[0].get());
             strDefaultTextStyle += styleWriter.ConvertStyles(m_pDocument->m_arThemes[0]->m_pStyles[0], 9);
@@ -612,7 +611,7 @@ namespace PPT
 
         WriteSlides();
         WriteNotes();
-        m_pShapeWriter->SetRelsGenerator(NULL);
+        m_pShapeWriter->SetRelsGenerator(nullptr);
     }
 
     // todo reforming and refactoring!
@@ -641,7 +640,7 @@ namespace PPT
             {
                 m_pShapeWriter->m_pTheme = m_pDocument->m_arThemes[i].get();
                 WriteTheme(m_pDocument->m_arThemes[i], nIndexTheme, nStartLayout);
-                m_pShapeWriter->m_pTheme = NULL;
+                m_pShapeWriter->m_pTheme = nullptr;
             }
 
             WriteTheme(m_pDocument->m_pNotesMaster, nIndexTheme, nStartLayout);
@@ -730,7 +729,7 @@ namespace PPT
         auto themeRelsPath = extractor.getOneFile(twoThemePathS + L"_rels" + FILE_SEPARATOR_STR + L"theme1.xml.rels");
         auto arrImagesPaths = extractor.find(L".*image[0-9]+.*");
 
-        BYTE* utf8Data = NULL;
+        BYTE* utf8Data = nullptr;
         ULONG utf8DataSize = 0;
         bool wasThemeWrite = false;
         bool needRels = false;
@@ -785,7 +784,6 @@ namespace PPT
 
             oFile.CloseFile();
             RELEASEOBJECT(utf8Data);
-            utf8DataSize = 0;
         }
 
         // get slide master ID
@@ -836,7 +834,7 @@ namespace PPT
             oWriter.WriteString(L"<p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr>\
                             <a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr>");
 
-            CGroupElement* pGroupElement = !pTheme->m_arElements.empty() ? dynamic_cast<CGroupElement*>(pTheme->m_arElements[0].get()) : NULL;
+            CGroupElement* pGroupElement = !pTheme->m_arElements.empty() ? dynamic_cast<CGroupElement*>(pTheme->m_arElements[0].get()) : nullptr;
 
             size_t start_index = 0;
             if (pGroupElement)
@@ -942,23 +940,23 @@ namespace PPT
                 {
                     auto strTxStyles = utf8strMaster.substr(txStylesIter);
 
-                    UINT proccesed = 0;
+                    UINT processed = 0;
                     UINT rIdIter = 0;
                     UINT rIdIterEnd = 0;
                     const std::wstring searchStrEmbed = L"<a:blip r:embed=\"rId";
                     while (true)
                     {
-                        rIdIter = strTxStyles.find(searchStrEmbed, proccesed);
+                        rIdIter = strTxStyles.find(searchStrEmbed, processed);
                         if (rIdIter == (UINT)-1) break;
-                        proccesed = rIdIter + searchStrEmbed.size();
-                        rIdIterEnd = strTxStyles.find(L"\"", proccesed);
+                        processed = rIdIter + searchStrEmbed.size();
+                        rIdIterEnd = strTxStyles.find(L"\"", processed);
 
-                        auto strId = strTxStyles.substr(proccesed, rIdIterEnd - proccesed);
+                        auto strId = strTxStyles.substr(processed, rIdIterEnd - processed);
                         unsigned numId = std::stoi(strId) + rIdShift;
                         strId = std::to_wstring(numId);
 
-                        strTxStyles.erase(proccesed, rIdIterEnd - proccesed);
-                        strTxStyles.insert(proccesed, strId);
+                        strTxStyles.erase(processed, rIdIterEnd - processed);
+                        strTxStyles.insert(processed, strId);
                     }
                     oWriter.WriteString(strTxStyles);
                 }
@@ -1024,7 +1022,7 @@ namespace PPT
             nStartLayout += nCountLayouts;
         }
 
-        m_pShapeWriter->m_pTheme = NULL;
+        m_pShapeWriter->m_pTheme = nullptr;
 
         return true;
     }
@@ -1141,7 +1139,7 @@ namespace PPT
         oWriter.WriteString(L"<p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr>\
                         <a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr>");
 
-        CGroupElement* pGroupElement = !pTheme->m_arElements.empty() ? dynamic_cast<CGroupElement*>(pTheme->m_arElements[0].get()) : NULL;
+        CGroupElement* pGroupElement = !pTheme->m_arElements.empty() ? dynamic_cast<CGroupElement*>(pTheme->m_arElements[0].get()) : nullptr;
 
         size_t start_index = 0;
         if (pGroupElement)
@@ -1351,7 +1349,7 @@ namespace PPT
         m_pShapeWriter->SetRelsGenerator(&oRels);
         std::wstring sBg = m_pShapeWriter->ConvertBrush(oBackground);
 
-        if (false == sBg.empty())
+        if (!sBg.empty())
         {
             oWriter.WriteString(std::wstring(L"<p:bg><p:bgPr>"));
             oWriter.WriteString(sBg);
@@ -1371,7 +1369,7 @@ namespace PPT
         }
         oWriter.WriteString(L"</p:grpSp>");
     }
-    void CPPTXWriter::WriteTable(CStringWriter& oWriter, CRelsGenerator& oRels, CElementPtr pElement, CLayout* pLayout)
+    void CPPTXWriter::WriteTable(CStringWriter& oWriter, CRelsGenerator& oRels, CElementPtr pElement, CLayout*  /*pLayout*/)
     {
         CTableElement* pTableElement = dynamic_cast<CTableElement*>(pElement.get());
 
@@ -1412,7 +1410,7 @@ namespace PPT
         {
             m_pShapeWriter->SetRelsGenerator(&oRels);
 
-            if (NULL != pLayout)
+            if (nullptr != pLayout)
             {
                 if (-1 != pElement->m_lPlaceholderType)
                 {
@@ -1429,12 +1427,12 @@ namespace PPT
 
                             if (bIsEqualTransform)
                             {
-                                if (pElement->m_bAnchorEnabled == pElLayout->m_bAnchorEnabled && pElLayout->m_bAnchorEnabled == true)
+                                if (pElement->m_bAnchorEnabled == pElLayout->m_bAnchorEnabled && pElLayout->m_bAnchorEnabled)
                                 {
                                     if (pElement->m_rcAnchor.IsEqual(pElLayout->m_rcAnchor, 0.5))
                                         pElement->m_bAnchorEnabled = false;
                                 }
-                                if (pElement->m_bChildAnchorEnabled == pElLayout->m_bChildAnchorEnabled && pElLayout->m_bChildAnchorEnabled == true)
+                                if (pElement->m_bChildAnchorEnabled == pElLayout->m_bChildAnchorEnabled && pElLayout->m_bChildAnchorEnabled)
                                 {
                                     if (pElement->m_rcChildAnchor.IsEqual(pElLayout->m_rcChildAnchor, 0.5))
                                         pElement->m_bChildAnchorEnabled = false;
@@ -1466,7 +1464,7 @@ namespace PPT
         oWriter.WriteString(std::wstring(L" showMasterSp=\"") + (pLayout->m_bShowMasterShapes ? L"1" : L"0"));
         oWriter.WriteString(std::wstring(L"\" preserve=\"1\"><p:cSld"));
 
-        if (pLayout->m_sName.empty() == false)
+        if (!pLayout->m_sName.empty())
             oWriter.WriteString(std::wstring(L" name=\"") + pLayout->m_sName + std::wstring(L"\""));
         oWriter.WriteString(std::wstring(L">"));
 
@@ -1483,7 +1481,7 @@ namespace PPT
 
         if (pLayout->m_bIsTitleMaster)
         {
-            CGroupElement* pGroupElement = (!pLayout->m_arElements.empty()) ? dynamic_cast<CGroupElement*>(pLayout->m_arElements[0].get()) : NULL;
+            CGroupElement* pGroupElement = (!pLayout->m_arElements.empty()) ? dynamic_cast<CGroupElement*>(pLayout->m_arElements[0].get()) : nullptr;
 
             if (pGroupElement)
             {
@@ -1558,7 +1556,7 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
 
         oWriter.WriteString(std::wstring(L"<p:cSld"));
 
-        if (pSlide->m_sName.empty() == false)
+        if (!pSlide->m_sName.empty())
             oWriter.WriteString(std::wstring(L" name=\"") + pSlide->m_sName + std::wstring(L"\""));
 
         oWriter.WriteString(std::wstring(L">"));
@@ -1571,7 +1569,7 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
         oWriter.WriteString(std::wstring(L"<p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr>\
                                      <a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr>"));
 
-        CGroupElement* pGroupElement = !pSlide->m_arElements.empty() ? dynamic_cast<CGroupElement*>(pSlide->m_arElements[0].get()) : NULL;
+        CGroupElement* pGroupElement = !pSlide->m_arElements.empty() ? dynamic_cast<CGroupElement*>(pSlide->m_arElements[0].get()) : nullptr;
 
         size_t start_index = 0;
 
@@ -1636,7 +1634,7 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
         
         CSlide* pNotes = m_pDocument->m_arNotes[nIndexNotes];
 
-        oRels.StartNotes(pNotes->m_lSlideID, m_pDocument->m_pNotesMaster != NULL);
+        oRels.StartNotes(pNotes->m_lSlideID, m_pDocument->m_pNotesMaster != nullptr);
         
         m_pShapeWriter->SetRelsGenerator(&oRels);
 
@@ -1656,7 +1654,7 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
         oWriter.WriteString(std::wstring(L"<p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr>\
                                      <a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr>"));
 
-        CGroupElement* pGroupElement = !pNotes->m_arElements.empty() ? dynamic_cast<CGroupElement*>(pNotes->m_arElements[0].get()) : NULL;
+        CGroupElement* pGroupElement = !pNotes->m_arElements.empty() ? dynamic_cast<CGroupElement*>(pNotes->m_arElements[0].get()) : nullptr;
 
         size_t start_index = 0;
 
@@ -1741,7 +1739,7 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
         oWriter.WriteString(L"<p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr>\
                         <a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr>");
 
-        CGroupElement* pGroupElement = !pTheme->m_arElements.empty() ? dynamic_cast<CGroupElement*>(pTheme->m_arElements[0].get()) : NULL;
+        CGroupElement* pGroupElement = !pTheme->m_arElements.empty() ? dynamic_cast<CGroupElement*>(pTheme->m_arElements[0].get()) : nullptr;
 
         size_t start_index = 0;
         if (pGroupElement)
@@ -1801,7 +1799,6 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
         {
             oWriter.WriteString(std::wstring(L"<p:sldLayoutIdLst>"));
 
-            size_t __nCountLayouts = 0;
             for (int nIndexLayout = 0; nIndexLayout < nCountLayouts; ++nIndexLayout)
             {
                 oWriter.WriteString(L"<p:sldLayoutId id=\"" + std::to_wstring(0x80000000 + nIndexTheme + 1 + nStartLayout + nIndexLayout) + L"\" r:id=\"rId" + std::to_wstring(nIndexLayout + 1) + L"\"/>");
@@ -1922,7 +1919,7 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
                     filtredPaths.push_back(path);
             }
         }
-        catch (...) {}
+        catch (...) { (void)0; }
 
         return filtredPaths;
     }

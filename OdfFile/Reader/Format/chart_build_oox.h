@@ -105,7 +105,7 @@ public:
 
     void add_point(unsigned int rep);
 	
-    void calc_cache_series(std::wstring adress, std::vector<std::wstring> & cash);
+    void calc_cache_series(std::wstring address, std::vector<std::wstring> & cash);
 	
 	void xlsx_convert	(oox::xlsx_conversion_context & Context);
 	void docx_convert	(oox::docx_conversion_context & Context);

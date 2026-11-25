@@ -368,7 +368,7 @@ public:
 
 	void start_cell(office_element_ptr & elm ,office_element_ptr & style);
 	void end_cell();
-    void add_default_cell(_INT32 repeated);
+    void add_default_cell(_INT32 repeated, const std::wstring & style_name = L"");
 
 	void check_spanned_cells();
 
@@ -484,6 +484,8 @@ public:
 	_INT32 is_cell_comment(_INT32 col, _INT32 row, _UINT32 repeate_col = 1);
 	_INT32 is_row_comment(_INT32 row, _INT32 repeate_row = 1);
 	_INT32 is_row_validation(_INT32 row, _INT32& repeate_row);
+	bool is_rows_plain(_INT32 row, _INT32 count);
+	_INT32 get_covered_rows_ahead();
 	_INT32 is_cell_data_validation(_INT32 col, _INT32 row, _UINT32 repeate_col, data_validation_state::_ref & ref);
 
 	_UINT32 get_last_row_repeated ();
@@ -500,6 +502,7 @@ public:
 
 	_INT32 dimension_columns;
 	_INT32 dimension_row;
+	_INT32 columns_count = 0;
 
 	double defaut_column_width_sym_ = 0;
 	double defaut_column_width_;

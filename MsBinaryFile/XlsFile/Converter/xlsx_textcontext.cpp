@@ -104,8 +104,8 @@ private:
 
 
 
-xlsx_text_context::Impl::Impl(): paragraphs_cout_(0),
-				in_comment(false),in_draw(false),in_paragraph(false),in_span(false),in_cell_content(false)
+xlsx_text_context::Impl::Impl(): in_draw(false), in_comment(false), in_span(false),
+				in_paragraph(false), in_cell_content(false), paragraphs_cout_(0)
 {
 	//text_properties_cell_ = NULL;
 }
@@ -354,6 +354,7 @@ std::wstring xlsx_text_context::Impl::end_drawing_content()
 }
 int xlsx_text_context::Impl::end_cell_content(bool need_cache)
 {
+	(void)need_cache;
 	dump_text();
 
 	const int sharedStrId = 0;//output_.str().empty() ? (-1) :  static_cast<int>(xlsx_shared_strings_.add(output_.str()));

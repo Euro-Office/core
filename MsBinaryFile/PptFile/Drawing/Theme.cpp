@@ -22,11 +22,10 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 #include "Theme.h"
 
-PPT::CTheme::CTheme(_typeMaster type) : m_arColorScheme(), m_arFonts(), m_arBrushes(),
-m_arPens(), m_arEffects(), m_arLayouts(), m_eType(type), m_wasBulletStart(false),
+PPT::CTheme::CTheme(_typeMaster type) : m_eType(type), m_arColorScheme(), m_arFonts(), m_arBrushes(),
+m_arPens(), m_arEffects(), m_arLayouts(), m_wasBulletStart(false),
 m_bulletPos(0)
 {
 	Clear();

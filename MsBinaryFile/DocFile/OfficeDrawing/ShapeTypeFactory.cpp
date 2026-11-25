@@ -31,7 +31,7 @@ namespace DocFileFormat
 {
 	ShapeType* ShapeTypeFactory::NewShapeType (MSOSPT TypeCode)
 	{
-		ShapeType* pShape = NULL;
+		ShapeType* pShape = nullptr;
 
 		switch (TypeCode)
 		{
@@ -215,7 +215,7 @@ namespace DocFileFormat
 		case msosptTextPlainText				:	
 													{	pShape	=	new WordArtTextType(TypeCode);			}	break;
 
-		default									:	{	pShape	=	NULL;									}	break;
+		default									:	{	pShape	=	nullptr;									}	break;
 		}
 
 		return pShape;

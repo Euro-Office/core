@@ -36,7 +36,7 @@ namespace XLSB
 
     BookProtectionFlags::BookProtectionFlags(XLS::CFRecord& record)
     {
-        load(record);
+        BookProtectionFlags::load(record);
     }
 
     BookProtectionFlags::~BookProtectionFlags()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void BookProtectionFlags::load(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         record >> flags;
 
         fLockStructure     = GETBIT(flags, 0);

@@ -110,14 +110,12 @@ saxXmlLiteReader::saxXmlLiteReader(const wchar_t * FileName)
 	
 	xml_->FromFile(FileName);
 
-	bool res;
-
-	res = xml_->ReadNextNode();
+	xml_->ReadNextNode();
 }
 
 unsigned int saxXmlLiteReader::attrCount()
 {
-	if (xml_.IsInit() == false) return 0;
+	if (!xml_.IsInit()) return 0;
 
     return xml_->GetAttributesCount();
 }
@@ -125,7 +123,7 @@ unsigned int saxXmlLiteReader::attrCount()
 
 unsigned int saxXmlLiteReader::depth()
 {
- 	if (xml_.IsInit() == false) return 0;
+ 	if (!xml_.IsInit()) return 0;
 
     return xml_->GetDepth();
 }
@@ -133,7 +131,7 @@ unsigned int saxXmlLiteReader::depth()
 // <p:abc/>, returns "abc".
 std::wstring saxXmlLiteReader::nodeLocalName()
 {
-	if (xml_.IsInit() == false) return _T("");
+	if (!xml_.IsInit()) return _T("");
 
     return XmlUtils::GetNameNoNS(xml_->GetName());
 }
@@ -141,21 +139,21 @@ std::wstring saxXmlLiteReader::nodeLocalName()
 // <p:abc />, returns "p:abc".
 std::wstring saxXmlLiteReader::nodeQualifiedName()
 {
-	if (xml_.IsInit() == false) return _T("");
+	if (!xml_.IsInit()) return _T("");
 	return xml_->GetName();
 }
 
 // <xyz:abc xmlns:xyz="u://1" />, it returns "xyz".
 std::wstring saxXmlLiteReader::namespacePrefix()
 {
-	if (xml_.IsInit() == false) return _T("");
+	if (!xml_.IsInit()) return _T("");
 
     return xml_->GetNamespacePrefix();
 }
 
 NodeType saxXmlLiteReader::nodeType()
 {
-	if (xml_.IsInit() == false) return typeNone;	
+	if (!xml_.IsInit()) return typeNone;	
 
     XmlUtils::XmlNodeType nTempType = xml_->GetNodeType();
 	return NodeTypeConvert(nTempType); 
@@ -163,7 +161,7 @@ NodeType saxXmlLiteReader::nodeType()
 
 std::wstring saxXmlLiteReader::value()
 {
- 	if (xml_.IsInit() == false) return _T("");
+ 	if (!xml_.IsInit()) return _T("");
     
 	return xml_->GetText();
 
@@ -171,35 +169,35 @@ std::wstring saxXmlLiteReader::value()
 
 bool saxXmlLiteReader::isEmptyElement()
 {
-	if (xml_.IsInit() == false) return false;
+	if (!xml_.IsInit()) return false;
 
     return xml_->IsEmptyNode();    
 }
 
 bool saxXmlLiteReader::moveToAttrFirst()
 {
-	if (xml_.IsInit() == false) return false;
+	if (!xml_.IsInit()) return false;
 
     return xml_->MoveToFirstAttribute();
 }
 
 bool saxXmlLiteReader::moveToAttrNext()
 {
-	if (xml_.IsInit() == false) return false;
+	if (!xml_.IsInit()) return false;
 
     return xml_->MoveToNextAttribute();
 }
 
 bool saxXmlLiteReader::moveToAttrOwner()
 {
-	if (xml_.IsInit() == false) return false;
+	if (!xml_.IsInit()) return false;
 
 	return xml_->MoveToElement();
 }
 
 bool saxXmlLiteReader::attrDefault()
 {
-	if (xml_.IsInit() == false) return false;
+	if (!xml_.IsInit()) return false;
 	
     return xml_->IsDefaultAttribute();
 }

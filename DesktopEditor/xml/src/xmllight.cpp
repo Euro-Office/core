@@ -55,12 +55,12 @@ namespace XmlUtils
 
     void IXmlDOMDocument::DisableOutput()
     {
-        xmlSetGenericErrorFunc(NULL, (xmlGenericErrorFunc)libxml2_err_no);
+        xmlSetGenericErrorFunc(nullptr, (xmlGenericErrorFunc)libxml2_err_no);
     }
 
     void IXmlDOMDocument::EnableOutput()
     {
-        xmlSetGenericErrorFunc(NULL, NULL);
+        xmlSetGenericErrorFunc(nullptr, nullptr);
     }
 }
 

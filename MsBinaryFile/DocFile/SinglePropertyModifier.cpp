@@ -30,14 +30,14 @@
 namespace DocFileFormat
 {
 	SinglePropertyModifier::SinglePropertyModifier(OperationCode opCode, int argumentsSize, unsigned char* arguments) :
-					Arguments(NULL), OpCode(opCode), fSpec(false), Type(PAP), argumentsSize(argumentsSize), nWordVersion (2)
+					nWordVersion (2), OpCode(opCode), fSpec(false), Type(PAP), Arguments(nullptr), argumentsSize(argumentsSize)
 	{
 		Arguments = new unsigned char[argumentsSize];
 		memcpy(Arguments, arguments, argumentsSize);
 	}
 
 	SinglePropertyModifier::SinglePropertyModifier(unsigned char* bytes, int size, int nWordVersion_) : 
-					Arguments(NULL), OpCode(sprmPIstd), fSpec(false), Type(PAP), argumentsSize(0), nWordVersion (nWordVersion_)
+					nWordVersion (nWordVersion_), OpCode(sprmPIstd), fSpec(false), Type(PAP), Arguments(nullptr), argumentsSize(0)
 	{
 		unsigned char opSize		= 0;
 		unsigned char opCodeSize	= 0;
@@ -68,14 +68,7 @@ namespace DocFileFormat
 			unsigned int j = (unsigned int)this->OpCode << 22;
 			j = j >> 31;
 
-			if ( j == 1 )
-			{
-				fSpec = true;
-			}
-			else
-			{
-				fSpec = false;
-			}
+			fSpec = j == 1;
 
 			//... and bits 10,11,12 are the type ...
 			unsigned int i = (unsigned int)OpCode << 19;
@@ -140,9 +133,9 @@ namespace DocFileFormat
 		}
 	}
 
-	SinglePropertyModifier::SinglePropertyModifier(const SinglePropertyModifier& spm) : Arguments(NULL), OpCode(sprmPIstd), fSpec(false), Type(PAP), argumentsSize(0)
+	SinglePropertyModifier::SinglePropertyModifier(const SinglePropertyModifier& spm) : OpCode(sprmPIstd), fSpec(false), Type(PAP), Arguments(nullptr), argumentsSize(0)
 	{
-		if ( spm.Arguments != NULL )
+		if ( spm.Arguments != nullptr )
 		{
 			argumentsSize	= spm.argumentsSize;
 			Arguments		= new unsigned char[argumentsSize];
@@ -156,15 +149,8 @@ namespace DocFileFormat
 
 	bool SinglePropertyModifier::operator == (const SinglePropertyModifier& spm) const
 	{
-		if ( ( argumentsSize == spm.argumentsSize ) && ( memcmp( Arguments, spm.Arguments, argumentsSize ) == 0 ) &&
-			( fSpec == spm.fSpec ) && ( OpCode == spm.OpCode ) && ( Type == spm.Type ) )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return ( argumentsSize == spm.argumentsSize ) && ( memcmp( Arguments, spm.Arguments, argumentsSize ) == 0 ) &&
+			( fSpec == spm.fSpec ) && ( OpCode == spm.OpCode ) && ( Type == spm.Type );
 	}
 
 	bool SinglePropertyModifier::operator != (const SinglePropertyModifier& spm) const
@@ -174,7 +160,10 @@ namespace DocFileFormat
 
 	SinglePropertyModifier& SinglePropertyModifier::operator = (const SinglePropertyModifier& spm)
 	{
-		if ((*this != spm) && (NULL != spm.Arguments))
+		if (this == &spm)
+			return *this;
+
+		if ((*this != spm) && (nullptr != spm.Arguments))
 		{
 			RELEASEARRAYOBJECTS(Arguments);
 
@@ -203,11 +192,11 @@ namespace DocFileFormat
 	{
 		switch (spra)
 		{
-		case 0: return 1;
+		case 0:
 		case 1: return 1;
 		case 2: return 2;
 		case 3: return 4;
-		case 4: return 2;
+		case 4:
 		case 5: return 2;
 		case 6: return 255;
 		case 7: return 3;

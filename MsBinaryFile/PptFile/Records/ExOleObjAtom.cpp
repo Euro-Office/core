@@ -60,7 +60,7 @@ void CRecordExOleObjStg::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pS
         decompressedSize = StreamUtils::ReadDWORD(pStream);
     }
 
-    BYTE* pData = (compressedSize > 0 && compressedSize < 0xffffff ) ? new BYTE[compressedSize] : NULL;
+    BYTE* pData = (compressedSize > 0 && compressedSize < 0xffffff ) ? new BYTE[compressedSize] : nullptr;
 
     if (!pData) return;
 
@@ -68,7 +68,7 @@ void CRecordExOleObjStg::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pS
 
     if (m_oHeader.RecInstance == 0x01)
     {
-        BYTE* pDataUncompress = (compressedSize > 0 && compressedSize < 0xffffff) ?  new BYTE[decompressedSize + 64] : NULL;
+        BYTE* pDataUncompress = (compressedSize > 0 && compressedSize < 0xffffff) ?  new BYTE[decompressedSize + 64] : nullptr;
         if ((pDataUncompress) && (NSZip::Decompress(pData, compressedSize, pDataUncompress, decompressedSize)))
         {
             delete []pData;
@@ -77,7 +77,7 @@ void CRecordExOleObjStg::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pS
         else
         {
             delete []pData;
-            pData = NULL;
+            pData = nullptr;
         }
     }
     //if (pDecryptor)
@@ -95,6 +95,6 @@ void CRecordExOleObjStg::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pS
             file.CloseFile();
         }
         delete[] pData;
-        pData = NULL;
+        pData = nullptr;
     }
 }

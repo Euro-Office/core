@@ -27,7 +27,7 @@
 
 namespace DocFileFormat
 {
-	OfficeArtContent::OfficeArtContent (const FileInformationBlock* pFIB, POLE::Stream* pStream): m_pDrawingGroupData(NULL), m_pBackgroud(NULL), m_uLastShapeId(1024)
+	OfficeArtContent::OfficeArtContent (const FileInformationBlock* pFIB, POLE::Stream* pStream): m_uLastShapeId(1024), m_pBackgroud(nullptr), m_pDrawingGroupData(nullptr)
 	{
 		VirtualStreamReader oStearmReader(pStream, 0 , pFIB->m_nWordVersion);
 
@@ -98,7 +98,7 @@ namespace DocFileFormat
 
 	ShapeContainer* OfficeArtContent::GetShapeContainer (int spid)
 	{
-		ShapeContainer* ret = NULL;
+		ShapeContainer* ret = nullptr;
 
 		for (auto& iter : m_arrDrawings)
 		{
@@ -117,8 +117,8 @@ namespace DocFileFormat
 							GroupContainer* subgroup = dynamic_cast<GroupContainer*>(groupChild);
 
 							//the referenced shape must be the first shape in the group
-							ShapeContainer* container = subgroup ? dynamic_cast<ShapeContainer*>(subgroup->Children[0]) : NULL;
-							Shape* shape = container ? dynamic_cast<Shape*>(container->Children[1]) : NULL;
+							ShapeContainer* container = subgroup ? dynamic_cast<ShapeContainer*>(subgroup->Children[0]) : nullptr;
+							Shape* shape = container ? dynamic_cast<Shape*>(container->Children[1]) : nullptr;
 
 							if (shape && shape->GetShapeID() == spid)
 							{
@@ -128,9 +128,9 @@ namespace DocFileFormat
 						}
 						else if (groupChild->TypeCode == ShapeContainer::TYPE_CODE_0xF004)
 						{
-							//It's a singe shape
+							//It's a single shape
 							ShapeContainer* container = dynamic_cast<ShapeContainer*>(groupChild);
-							Shape* shape = container ? dynamic_cast<Shape*>(container->Children[0]) : NULL;
+							Shape* shape = container ? dynamic_cast<Shape*>(container->Children[0]) : nullptr;
 
 							if (shape && shape->GetShapeID() == spid)
 							{

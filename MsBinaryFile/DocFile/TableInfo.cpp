@@ -30,7 +30,8 @@ namespace DocFileFormat
 	TableInfo::TableInfo( ParagraphPropertyExceptions* papx, int  nWordVersion):
 			fInTable(false), fTtp(false), fInnerTtp(false), fInnerTableCell(false), iTap(0)
 	{
-		if ( papx != NULL )
+		(void)nWordVersion;
+		if ( papx != nullptr )
 		{
 			for ( std::vector<SinglePropertyModifier>::iterator iter = papx->grpprl->begin(); iter != papx->grpprl->end(); iter++ )
 			{
@@ -73,6 +74,8 @@ namespace DocFileFormat
 							fInTable = true;
 						}
 					}break;
+					default:
+						break;
 				}
 
 				if ( (int)( iter->OpCode ) == sprmTCnf )//66a
