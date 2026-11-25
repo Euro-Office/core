@@ -62,7 +62,7 @@ namespace DocFileFormat
       static std::vector<FormattedDiskPagePAPX*>* GetAllPAPXFKPs( FileInformationBlock* fib, POLE::Stream* wordStream, POLE::Stream* tableStream, POLE::Stream* dataStream);
       /// Returns a list of all PAPX FCs between they given boundaries.
       static std::vector<int>* GetFileCharacterPositions( int fcMin, int fcMax, FileInformationBlock* fib, POLE::Stream* wordStream, POLE::Stream* tableStream, POLE::Stream* dataStream );
-      /// Returnes a list of all ParagraphPropertyExceptions which correspond to text 
+      /// Returns a list of all ParagraphPropertyExceptions which correspond to text 
       /// between the given offsets.
       static std::vector<ParagraphPropertyExceptions*>* GetParagraphPropertyExceptions( int fcMin, int fcMax, FileInformationBlock* fib, POLE::Stream* wordStream, POLE::Stream* tableStream, POLE::Stream* dataStream );
       /// Returns the PAPX of the first paragraph, or NULL when the list of FKPs is

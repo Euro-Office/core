@@ -143,14 +143,11 @@ namespace NSFontCutter
 
 		USHORT *pArray = new USHORT [nCount];
 
-		if (NULL == pArray)
-			return false;
-
 		USHORT *pBuffer = pArray;
 
 		for (std::map<WCHAR, bool>::const_iterator pPair = m_CharMap.begin(); pPair != m_CharMap.end(); ++pPair)
 		{
-			*pBuffer = pPair->first;
+			*pBuffer = (USHORT)pPair->first; // NOLINT(bugprone-signed-char-misuse): an unsigned char cast would change stored codes >= 0x80
 			++pBuffer;
 		}
 		*ppArray = pArray;

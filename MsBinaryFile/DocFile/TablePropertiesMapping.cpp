@@ -28,8 +28,8 @@
 namespace DocFileFormat
 {
 	TablePropertiesMapping::TablePropertiesMapping(XMLTools::CStringXmlWriter* pWriter, StyleSheet* styles, std::vector<short>* grid, bool isTableStyleNeeded) :
-		PropertiesMapping(pWriter), _tblPr(NULL), _tblGrid(NULL), _tblBorders(NULL), _grid(grid),
-		brcLeft(NULL), brcTop(NULL), brcBottom(NULL), brcRight(NULL), brcHorz(NULL), brcVert(NULL), _styles(styles),
+		PropertiesMapping(pWriter), _tblPr(nullptr), _tblGrid(nullptr), _tblBorders(nullptr), _styles(styles), _grid(grid),
+		brcLeft(nullptr), brcTop(nullptr), brcBottom(nullptr), brcRight(nullptr), brcHorz(nullptr), brcVert(nullptr),
 		_isTableStyleNeeded(isTableStyleNeeded)
 	{
 		_tblPr = new XMLTools::XMLElement(L"w:tblPr");
@@ -110,7 +110,9 @@ namespace DocFileFormat
 			case sprmTMerge:
 			{
 				itcFirst = iter->Arguments[0];
+				(void)itcFirst;
 				itcLim = iter->Arguments[1];
+				(void)itcLim;
 			}break;
 			case sprmTSplit:
 			{
@@ -171,6 +173,7 @@ namespace DocFileFormat
 				if (FormatUtils::BitmaskToBool((int)grfbrc, 0x02))
 				{
 					cellSpacing = wSpc;
+					(void)cellSpacing;
 				}
 			}break;
 			case sprmTCellPaddingDefault:
@@ -304,9 +307,11 @@ namespace DocFileFormat
 			{
 				appendValueAttribute(&tblpPr, L"w:tblpY", FormatUtils::BytesToInt16(iter->Arguments, 0, iter->argumentsSize));
 			}break;
+			default:
+				break;
 			}
 		}
-		if (false == bTableW)
+		if (!bTableW)
 		{
 			XMLTools::XMLElement tblW(L"w:tblW");
 
@@ -384,7 +389,7 @@ namespace DocFileFormat
 			_tblPr->AppendChild(*_tblBorders);
 		}
 
-		if (false == layoutType.GetValue().empty())
+		if (!layoutType.GetValue().empty())
 		{
 			tblLayout.AppendAttribute(layoutType);
 		}

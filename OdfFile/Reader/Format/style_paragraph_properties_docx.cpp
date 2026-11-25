@@ -468,6 +468,17 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 				}
 		    }
 		}
+		if (style_contextual_spacing_)
+		{
+			if (*style_contextual_spacing_)
+			{
+				CP_XML_NODE(L"w:contextualSpacing");
+			}
+			else
+			{
+				CP_XML_NODE(L"w:contextualSpacing"){CP_XML_ATTR(L"w:val", L"0");}
+			}
+		}
 
 		if (style_vertical_align_ && Context.get_drop_cap_context().state() != 2)
 		{

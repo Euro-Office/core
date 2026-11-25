@@ -34,7 +34,7 @@ class CPPTDocumentInfo;
 class CRecordOfficeArtBlip  : public CUnknownRecord
 {
 public:
-	CPPTDocumentInfo* m_pDocumentInfo = NULL;
+	CPPTDocumentInfo* m_pDocumentInfo = nullptr;
 	
 	std::wstring m_fileName;
 

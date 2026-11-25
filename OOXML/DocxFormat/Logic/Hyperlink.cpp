@@ -91,7 +91,7 @@ namespace OOX
             XmlMacroReadAttributeBase( oNode, _T("w:tgtFrame"),		m_sTgtFrame );
             XmlMacroReadAttributeBase( oNode, _T("w:tooltip"),		m_sTooltip );
 
-			if (false == m_oId.IsInit())
+			if (!m_oId.IsInit())
 			{
 				XmlMacroReadAttributeBase( oNode, _T("relationships:id"), m_oId );
 			}
@@ -105,7 +105,7 @@ namespace OOX
 					if (oItem.IsValid())
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("w:bdo") == sName )
 							AssignPtrXmlContent(pItem, CBdo, oItem)
@@ -190,8 +190,7 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if(oReader, _T("w:dest"), m_sDestinition) //for Word 2003 XML
 				WritingElement_ReadAttributes_Read_else_if(oReader, _T("w:docLocation"), m_sDocLocation)
 				WritingElement_ReadAttributes_Read_else_if(oReader, _T("w:history"), m_oHistory)
-				WritingElement_ReadAttributes_Read_else_if(oReader, _T("r:id"), m_oId)
-				WritingElement_ReadAttributes_Read_else_if(oReader, _T("relationships:id"), m_oId)
+				else if ( _T("r:id") == wsName || _T("relationships:id") == wsName ) m_oId = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if(oReader, _T("w:tgtFrame"), m_sTgtFrame)
 				WritingElement_ReadAttributes_Read_else_if(oReader, _T("w:tooltip"), m_sTooltip)
 			WritingElement_ReadAttributes_End(oReader)
@@ -220,7 +219,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("w:bdo") == sName )
 					pItem = new CBdo( document );
@@ -368,7 +367,7 @@ namespace OOX
 					if (oItem.IsValid())
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( L"w:matchSrc" == sName )
 							m_oMatchSrc = PPTX::CreatePtrXmlContent<ComplexTypes::Word::CMatchSrc>(oItem);
@@ -385,7 +384,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( L"w:matchSrc" == sName )
 					m_oMatchSrc = oReader ;
@@ -422,7 +421,7 @@ namespace OOX
 		{
             XmlMacroReadAttributeBase( oNode, L"r:id", m_oId );
 			
-			if (false == m_oId.IsInit())
+			if (!m_oId.IsInit())
 			{
 				XmlMacroReadAttributeBase( oNode, L"relationships:id", m_oId );
 			}
@@ -436,7 +435,7 @@ namespace OOX
 					if (oItem.IsValid())
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( L"w:altChunkPr" == sName )
 						{
@@ -458,7 +457,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( L"w:altChunkPr" == sName )
 					m_oAltChunkPr = oReader ;

@@ -30,7 +30,7 @@ namespace Writers
 	FontTableWriter::FontTableWriter(std::wstring sDir, std::wstring sFontDir, bool bNoFontDir) : m_sDir(sDir)
 	{
 		m_pApplicationFonts = NSFonts::NSApplication::Create();
-		m_pFontManager = NULL;
+		m_pFontManager = nullptr;
 		if(!bNoFontDir)
 		{
 			if(sFontDir.empty())
@@ -65,11 +65,11 @@ namespace Writers
 				bCambria = true;
 			WriteFont(sFontName);
 		}
-		if(false == bCalibri)
+		if(!bCalibri)
 			WriteFont(_T("Calibri"));
-		if(false == bTimes)
+		if(!bTimes)
 			WriteFont(_T("Times New Roman"));
-		if(false == bCambria)
+		if(!bCambria)
 			WriteFont(_T("Cambria"));
 
 		m_oWriter.WriteString(g_string_ft_End);
@@ -86,14 +86,14 @@ namespace Writers
 		{
 			std::wstring sPanose;
 			bool bUsePanose = false;
-			if(NULL != m_pFontManager)
+			if(nullptr != m_pFontManager)
 			{
 				NSFonts::CFontSelectFormat oFontSelectFormat;
 				oFontSelectFormat.wsName = new std::wstring;
 				*oFontSelectFormat.wsName = sFontName;
 
 				NSFonts::CFontInfo* pFontInfo = m_pFontManager->GetFontInfoByParams(oFontSelectFormat);
-				if(NULL != pFontInfo)
+				if(nullptr != pFontInfo)
 				{
 					for (size_t i = 0; i < 10; ++i)
 					{

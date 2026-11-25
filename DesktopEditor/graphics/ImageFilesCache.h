@@ -115,7 +115,7 @@ public:
 
 	virtual ~CImageFilesCache()
 	{
-		Clear();
+		CImageFilesCache::Clear();
 		m_oCS.DeleteCriticalSection();
 
 		RELEASEINTERFACE(m_pApplicationFonts);

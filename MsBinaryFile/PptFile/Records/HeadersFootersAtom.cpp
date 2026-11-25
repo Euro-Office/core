@@ -108,8 +108,12 @@ void CRecordHeadersFootersContainer::ReadFromStream(SRecordHeader &oHeader, POLE
                 case 0x000: m_HeadersFootersString[0].push_back(str->m_strText);	break;
                 case 0x001: m_HeadersFootersString[1].push_back(str->m_strText);	break;
                 case 0x002: m_HeadersFootersString[2].push_back(str->m_strText);	break;
+                default:
+                    break;
                 }
             }break;
+        default:
+            break;
         }
     }
 }

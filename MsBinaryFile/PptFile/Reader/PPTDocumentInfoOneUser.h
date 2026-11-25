@@ -43,7 +43,7 @@ class CPPTDocumentInfo;
 class CPPTUserInfo : public CDocument
 {
 public:
-    CPPTDocumentInfo*           m_pDocumentInfo = NULL;
+    CPPTDocumentInfo*           m_pDocumentInfo = nullptr;
     CUserEdit                   m_oUser;
     std::map<_UINT32, _UINT32>  m_mapOffsetInPIDs;
     CRecordDocument             m_oDocument;
@@ -176,6 +176,6 @@ public:
     CElementPtr	AddLayoutSlidePlaceholder	(CSlide *pSlide,	int placeholderType, CLayout *pLayout, bool idx_only = false);
 
     void LoadGroupShapeContainer(CRecordGroupShapeContainer* pGroup, std::vector<CElementPtr>* pParentElements,
-                                 CTheme* pTheme, CLayout* pLayout, CSlideInfo* pThemeWrapper, CSlideInfo* pSlideWrapper, CSlide* pSlide = NULL);
+                                 CTheme* pTheme, CLayout* pLayout, CSlideInfo* pThemeWrapper, CSlideInfo* pSlideWrapper, CSlide* pSlide = nullptr);
 };
 }

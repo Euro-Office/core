@@ -37,7 +37,7 @@ namespace DocFileFormat
 	}
 
     LanguageIdMapping::LanguageIdMapping (XMLTools::XMLElement* parentElement, LanguageType type, const std::wstring& langcode) 
-		: PropertiesMapping(NULL)
+		: PropertiesMapping(nullptr)
 	{
 		_parent = parentElement;
 		_type = type;
@@ -57,7 +57,7 @@ namespace DocFileFormat
 	{
 		if ( dynamic_cast<LanguageId*>( lid )->Code != Nothing )
 		{
-            XMLTools::XMLAttribute* att = NULL;
+            XMLTools::XMLAttribute* att = nullptr;
 
 			switch ( _type )
 			{
@@ -91,7 +91,7 @@ namespace DocFileFormat
 				// !!!TODO!!!
 				m_pXmlWriter->WriteString( att->GetXMLString());
 			}
-			else if ( _parent != NULL )
+			else if ( _parent != nullptr )
 			{
 				_parent->AppendAttribute( *att );
 			}

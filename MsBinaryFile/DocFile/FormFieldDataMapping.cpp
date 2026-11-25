@@ -28,7 +28,7 @@
 namespace DocFileFormat
 {	
 	FormFieldDataMapping::FormFieldDataMapping(XMLTools::CStringXmlWriter* writer, ConversionContext* context, IMapping* caller)
-																	: AbstractOpenXmlMapping(writer), m_context(NULL),_caller(NULL)
+																	: AbstractOpenXmlMapping(writer), m_context(nullptr),_caller(nullptr)
 	{
 		m_context	=	context;
 		_caller		=	caller;
@@ -38,7 +38,7 @@ namespace DocFileFormat
 	{
 		FormFieldData* ffData = static_cast<FormFieldData*>(visited);
 
-		if ( ffData == NULL ) return;
+		if ( ffData == nullptr ) return;
 
 		if (ffData->FFData.bExist)
 		{
@@ -57,27 +57,27 @@ namespace DocFileFormat
 					m_pXmlWriter->WriteAttribute(L"w:val", ffData->FFData.fRecalc);
 				m_pXmlWriter->WriteNodeEnd(L"w:calcOnExit", true, true );
 
-				if (false == ffData->FFData.xstzHelpText.empty())
+				if (!ffData->FFData.xstzHelpText.empty())
 				{
 					m_pXmlWriter->WriteNodeBegin(L"w:helpText", true);
 					m_pXmlWriter->WriteAttribute(L"w:type", ffData->FFData.fOwnHelp ? L"text" : L"autoText");
 					m_pXmlWriter->WriteAttribute(L"w:val", XmlUtils::EncodeXmlString(ffData->FFData.xstzHelpText));
 					m_pXmlWriter->WriteNodeEnd(L"w:helpText", true, true);
 				}
-				if (false == ffData->FFData.xstzStatText.empty())
+				if (!ffData->FFData.xstzStatText.empty())
 				{
 					m_pXmlWriter->WriteNodeBegin(L"w:statusText", true);
 					m_pXmlWriter->WriteAttribute(L"w:type", ffData->FFData.fOwnStat ? L"text" : L"autoText");
 					m_pXmlWriter->WriteAttribute(L"w:val", XmlUtils::EncodeXmlString(ffData->FFData.xstzStatText));
 					m_pXmlWriter->WriteNodeEnd(L"w:statusText", true, true);
 				}
-				if (false == ffData->FFData.xstzEntryMcr.empty())
+				if (!ffData->FFData.xstzEntryMcr.empty())
 				{
 					m_pXmlWriter->WriteNodeBegin(L"w:entryMacro", true);
 					m_pXmlWriter->WriteAttribute(L"w:val", XmlUtils::EncodeXmlString(ffData->FFData.xstzEntryMcr));
 					m_pXmlWriter->WriteNodeEnd(L"w:entryMacro", true, true);
 				}
-				if (false == ffData->FFData.xstzExitMcr.empty())
+				if (!ffData->FFData.xstzExitMcr.empty())
 				{
 					m_pXmlWriter->WriteNodeBegin(L"w:exitMacro", true);
 					m_pXmlWriter->WriteAttribute(L"w:val", XmlUtils::EncodeXmlString(ffData->FFData.xstzExitMcr));

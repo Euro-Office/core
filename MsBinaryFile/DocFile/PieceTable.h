@@ -44,7 +44,7 @@ namespace DocFileFormat
 
 	public:
 		~PieceTable();
-		// Parses the pice table and creates a list of PieceDescriptors.
+		// Parses the piece table and creates a list of PieceDescriptors.
 		PieceTable(FileInformationBlock* fib, POLE::Stream* tableStream, POLE::Stream* wordStream);
 		
 		std::vector<wchar_t>* GetAllEncodingText(POLE::Stream* wordStream);

@@ -108,7 +108,7 @@ public:
 		else if (m_classType == NSBaseShape::ppt)
 		{
 			m_pShape = CPPTShape::CreateByType((PPTShapes::ShapeType)ShapeType_ );
-			if (m_pShape == NULL)
+			if (m_pShape == nullptr)
 			{
 				m_pShape = CBaseShapePtr(new CPPTShape());
 				m_pShape->SetType(NSBaseShape::ppt, ShapeType_);
@@ -167,7 +167,7 @@ public:
 
 	void ToRenderer(IRenderer* pRenderer, CGeomShapeInfo& oGeomInfo, double dStartTime, double dEndTime)
 	{
-		if (m_pShape == NULL) 
+		if (m_pShape == nullptr) 
 			return;
 		oGeomInfo.m_dLimoX = m_lLimoX;
 		oGeomInfo.m_dLimoY = m_lLimoY;
@@ -225,7 +225,7 @@ public:
 
 	virtual bool SetToDublicate(CShape* Shape)
 	{
-		if(Shape == NULL)
+		if(Shape == nullptr)
 			return false;
 
 		Shape->m_dStartTime			= m_dStartTime;

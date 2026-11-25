@@ -24,6 +24,9 @@
  */
 #pragma once
 
+#include <limits>
+#include <set>
+
 #include "Workbook.h"
 #include "../Worksheets/Worksheet.h"
 #include "../Pivot/PivotCacheDefinition.h"
@@ -56,6 +59,7 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/DREF.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/SUPBOOK.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SXStreamID.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SxView.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SXVS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/DConRef.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SupBook.h"
@@ -148,8 +152,9 @@ namespace OOX
 		{
 			auto ptr = new XLS::PIVOTCACHEDEFINITION;
 			auto idPtr = new XLS::SXStreamID;
+			// the XLS stream id is cacheId + 1 (cacheId 0 is valid in XLSX); pivot views find their cache by it too
 			if(m_oCacheId.IsInit())
-				idPtr->idStm = m_oCacheId->GetValue();
+				idPtr->idStm = m_oCacheId->GetValue() + 1;
 			ptr->m_SXStreamID = XLS::BaseObjectPtr(idPtr);
 			return XLS::BaseObjectPtr(ptr);
 		}
@@ -455,26 +460,67 @@ namespace OOX
             }
 			return workBookStream;
 		}
-		XLS::BaseObjectPtr CWorkbook::toXLS() const
+		std::vector<CWorkbook::PivotCacheForXLS> CWorkbook::GetPivotCachesForXLS() const
+		{
+			std::vector<PivotCacheForXLS> caches;
+			if(!m_oPivotCaches.IsInit())
+				return caches;
+			std::set<unsigned int> cacheIds;
+			for(auto cache : m_oPivotCaches->m_arrItems)
+			{
+				if(!cache->m_oCacheId.IsInit() || !cache->m_oRid.IsInit() || !this->IsExist(cache->m_oRid->GetValue()))
+					continue;
+				const unsigned int cacheId = cache->m_oCacheId->GetValue();
+				// the XLS stream id, cacheId + 1, is a signed 16-bit field (SXStreamID::idStm), and a pivot view finds its
+				// cache by it in another one (SxView::iCache) while the XLS is written
+				if(cacheId >= static_cast<unsigned int>(std::numeric_limits<decltype(XLS::SxView::iCache)>::max()))
+					continue;
+				// a pivot table names its cache by cacheId, so a repeated one cannot be told apart: the first is kept
+				if(cacheIds.count(cacheId))
+					continue;
+				// r:id may point to a part of another type; EnsureDefinition writes to the object, so check before using it
+				auto definition = dynamic_cast<CPivotCacheDefinitionFile*>(this->Find(cache->m_oRid->GetValue()).GetPointer());
+				if(!definition)
+					continue;
+				definition->EnsureDefinition();
+				if(!definition->m_oPivotCashDefinition.IsInit())
+					continue;
+				// a worksheet cache source without <worksheetSource> has no source range to write
+				const auto& source = definition->m_oPivotCashDefinition->m_oCacheSource;
+				if(source.IsInit() && source->m_oType.IsInit()
+					&& source->m_oType->GetValue() == SimpleTypes::Spreadsheet::ESourceCacheType::typeSourceWorksheet
+					&& !source->m_oWorksheetSource.IsInit())
+					continue;
+				cacheIds.insert(cacheId);
+				caches.emplace_back(cache, definition);
+			}
+			return caches;
+		}
+		std::vector<CWorkbook::SheetForXLS> CWorkbook::GetSheetsForXLS() const
+		{
+			std::vector<SheetForXLS> sheets;
+			if(!m_oSheets.IsInit())
+				return sheets;
+			for(auto sheet : m_oSheets->m_arrItems)
+			{
+				// nullptr if the r:id is missing, has no relationship or points at a part that is not a sheet
+				CWorksheet* sheetFile = nullptr;
+				if(sheet->m_oRid.IsInit())
+					sheetFile = Get<CWorksheet>(RId(sheet->m_oRid->GetValue())).GetPointer();
+				sheets.emplace_back(sheet, sheetFile);
+			}
+			return sheets;
+		}
+		XLS::BaseObjectPtr CWorkbook::toXLS(const std::vector<SheetForXLS>& sheets, const std::vector<PivotCacheForXLS>& pivotCaches) const
 		{
 			auto globalsSubstream = new XLS::GlobalsSubstream(XLS::WorkbookStreamObject::DefaultCodePage);
 			auto objectPtr = XLS::BaseObjectPtr(globalsSubstream);
 			if(m_oSheets.IsInit())
 			{
-				std::vector<_UINT16> SheetTypes;
-				for(auto i: m_oSheets->m_arrItems)
-				{
-					_UINT16 type = 0;
-					if(i->m_oRid.IsInit())
-					{
-						RId rid(i->m_oRid->GetValue());
-						auto sheetFile = Get<OOX::File>(rid);
-						if(sheetFile->type() == OOX::Spreadsheet::FileTypes::Chartsheets)
-							type = 2;
-					}
-					SheetTypes.push_back(type);
-				}
-				m_oSheets->toXLS(objectPtr, SheetTypes);
+				std::vector<std::pair<CSheet*, _UINT16>> sheetTypes;
+				for(const auto& sheet : sheets)
+					sheetTypes.emplace_back(sheet.first, sheet.second && sheet.second->m_bIsChartSheet ? 2 : 0);
+				m_oSheets->toXLS(objectPtr, sheetTypes);
 			}
 			if(m_oDefinedNames.IsInit())
 				m_oDefinedNames->toXLS(objectPtr);
@@ -482,22 +528,17 @@ namespace OOX
 				m_oBookViews->toXLS(objectPtr);
 			if (m_oWorkbookProtection.IsInit())
 				globalsSubstream->m_PROTECTION = m_oWorkbookProtection->toXLS();
-			if(m_oPivotCaches.IsInit())
+			if(!pivotCaches.empty())
 			{
-				for(auto i : m_oPivotCaches->m_arrItems)
-				{	auto pivotCacheBin = i->toXLS();
-
-					if(!i->m_oCacheId.IsInit() || !i->m_oRid.IsInit() ||  !this->IsExist(i->m_oRid->GetValue()))
-					continue;
-					auto cacheFilePtr = this->Find(i->m_oRid->GetValue());
-					// r:id may point to a part of another type; EnsureDefinition writes to the object, so check before using it
-					auto CachePtr = dynamic_cast<CPivotCacheDefinitionFile*>(cacheFilePtr.GetPointer());
-					if (CachePtr)
-						CachePtr->EnsureDefinition();
-					if(CachePtr && CachePtr->m_oPivotCashDefinition.IsInit() && CachePtr->m_oPivotCashDefinition->m_oCacheSource.IsInit()
+				for(const auto& cache : pivotCaches)
+				{
+					auto CachePtr = cache.second;
+					auto pivotCacheBin = cache.first->toXLS();
+					if(CachePtr->m_oPivotCashDefinition->m_oCacheSource.IsInit()
 						&& CachePtr->m_oPivotCashDefinition->m_oCacheSource->m_oType.IsInit()
 						&& CachePtr->m_oPivotCashDefinition->m_oCacheSource->m_oType->GetValue() == SimpleTypes::Spreadsheet::ESourceCacheType::typeSourceWorksheet)
 					{
+						// GetPivotCachesForXLS skips a worksheet cache source without <worksheetSource>
 						auto source = CachePtr->m_oPivotCashDefinition->m_oCacheSource;
 						auto castedPivotCache = static_cast<XLS::PIVOTCACHEDEFINITION*>(pivotCacheBin.get());
 						auto cacheSourcePtr = new XLS::SXSRC;

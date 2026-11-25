@@ -91,8 +91,6 @@ namespace NSGuidesVML
 		switch (eType)
 		{
 		case OOXMLShapes::sptCRect:
-			pPPTShape->m_eType = PPTShapes::sptCRect;
-			break;
 		case OOXMLShapes::sptCArc:
 			pPPTShape->m_eType = PPTShapes::sptCRect;
 			break;
@@ -103,6 +101,8 @@ namespace NSGuidesVML
 	}
 	void CConverterPPTXPPT::AddSizeGuides (LONG lWidth, LONG lHeight)
 	{
+		(void)lWidth;
+		(void)lHeight;
 		//TODO insert w and h in formulas
 		NSGuidesVML::CFormula pNewFmla3;
 		pNewFmla3.m_eFormulaType = ftVal;
