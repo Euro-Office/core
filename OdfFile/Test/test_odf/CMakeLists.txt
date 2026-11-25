@@ -106,6 +106,7 @@ add_core_gtest(
             audio.cpp
             interactions.cpp
             xlsx2ods_table_print_titles.cpp
+            odt2docx_page_background_transparent.cpp
             ods2xlsx_trailing_cell_style.cpp
             ods2xlsx_header_footer_ampersand.cpp
             ods2xlsx_fit_to_page.cpp
