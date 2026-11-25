@@ -24,7 +24,7 @@ nc.init_for_dep(
 def fetch_and_patch():
     nc.create_workdir()
 
-    nc.shallow_checkout( nc.work_dir, "https://github.com/harfbuzz/harfbuzz.git", "894a1f72ee93a1fd8dc1d9218cb3fd8f048be29a" )
+    nc.shallow_checkout( nc.work_dir, "https://github.com/harfbuzz/harfbuzz.git", "894a1f72ee93a1fd8dc1d9218cb3fd8f048be29a" ) # 8.3.0
 
     nc.run_command(
         [ "git", "apply", f"{ patches_dir / 'harfbuzz.patch' }" ],
