@@ -50,7 +50,7 @@ color blue(0,0,255, L"Blue");
 color magenta(255,0,255, L"Magenta");
 color yellow(255,255,0, L"Yellow");
 
-color cyan(0,0,0, L"Cyan");
+color cyan(0,255,255, L"Cyan");
 color red(255,0,0, L"Red");
 
 color colors[] = {black, green, white, blue, magenta, yellow, cyan, red };
@@ -70,7 +70,7 @@ std::wstring RGBToString(int r, int g, int b)
     color v(r, g, b);
     double minDist = (std::numeric_limits<double>::max)();
     
-    for (size_t i = 0; i < 6; i++)
+    for (size_t i = 0; i < sizeof(colors) / sizeof(colors[0]); i++)
     {
         double dist = color_dist(v, colors[i]);
         if (dist < minDist)
