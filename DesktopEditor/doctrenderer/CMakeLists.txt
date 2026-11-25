@@ -121,7 +121,7 @@ add_library(doctrenderer SHARED
 set_default_options(doctrenderer)
 
 if( MSVC )
-    set_property(TARGET doctrenderer PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    # The DLL runtime, as the rest of core (common.cmake) and V8 (nc-build.py).
 
     target_compile_definitions( doctrenderer PRIVATE
         _UNICODE
