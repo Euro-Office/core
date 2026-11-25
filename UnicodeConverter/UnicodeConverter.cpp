@@ -51,6 +51,17 @@ std::string g_overrideIcuDataPath = "";
 
 namespace NSUnicodeConverter
 {
+	// Last resort when a code page cannot be converted: each byte becomes the
+	// character with that value (0..255, not sign-extended)
+	static std::wstring WidenBytes(const char* sInput, unsigned int nInputLen)
+	{
+		std::wstring sRes;
+		sRes.reserve(nInputLen);
+		for (unsigned int i = 0; i < nInputLen; ++i)
+			sRes.push_back((wchar_t)(unsigned char)sInput[i]);
+		return sRes;
+	}
+
 	class CUnicodeConverter_Private
 	{
 	public:
@@ -161,7 +172,8 @@ namespace NSUnicodeConverter
 			UConverter* conv = ucnv_open(converterName, &status);
 			if (U_SUCCESS(status))
 			{
-				int32_t nUCharCapacity = (int32_t)nInputLen;// UTF-16 uses 2 code-points per char
+				// wchar_t is 32 bits on Linux and macOS, and a character outside the BMP takes 2 UChars
+				int32_t nUCharCapacity = (int32_t)nInputLen * 2;
 
 				//UChar* pUChar = new UChar[nUCharCapacity];
 				UChar* pUChar = (UChar*)malloc((uint32_t)nUCharCapacity * sizeof(UChar));
@@ -189,7 +201,7 @@ namespace NSUnicodeConverter
 							sRes.clear();
 						}
 					}
-					//delete []pUCharStart;
+					free(pUChar);
 				}
 				ucnv_close(conv);
 			}
@@ -214,9 +226,11 @@ namespace NSUnicodeConverter
 					const char* source = sInput;
 					const char* sourceLimit = source + nInputLen;
 
-					unsigned int uBufSize = (nInputLen / (uint8_t)ucnv_getMinCharSize(conv));
+					// a character takes at least minCharSize bytes and gives at most 2 UChars
+					// (a surrogate pair), which UTF-32 needs for a character outside the BMP
+					unsigned int uBufSize = (nInputLen / (uint8_t)ucnv_getMinCharSize(conv)) * 2;
 
-					UChar* targetStart = new UChar[uBufSize * sizeof(UChar)];
+					UChar* targetStart = new UChar[uBufSize];
 					if (targetStart)
 					{
 						UChar* target = targetStart;
@@ -251,8 +265,7 @@ namespace NSUnicodeConverter
 
 			if (!isExact && sRes.empty() && nInputLen > 0)
 			{
-				std::string ws(sInput, nInputLen);
-				sRes = std::wstring(ws.begin(), ws.end());
+				sRes = WidenBytes(sInput, nInputLen);
 			}
 			return sRes;
 		}
@@ -269,9 +282,11 @@ namespace NSUnicodeConverter
 					const char* source = sInput;
 					const char* sourceLimit = source + nInputLen;
 
-					unsigned int uBufSize = (nInputLen / (uint8_t)ucnv_getMinCharSize(conv));
+					// a character takes at least minCharSize bytes and gives at most 2 UChars
+					// (a surrogate pair), which UTF-32 needs for a character outside the BMP
+					unsigned int uBufSize = (nInputLen / (uint8_t)ucnv_getMinCharSize(conv)) * 2;
 
-					UChar* targetStart = new UChar[uBufSize * sizeof(UChar)];
+					UChar* targetStart = new UChar[uBufSize];
 					if (targetStart)
 					{
 						UChar* target = targetStart;
@@ -302,8 +317,7 @@ namespace NSUnicodeConverter
 
 			if (isExact && sRes.empty() && nInputLen > 0)
 			{
-				std::string ws(sInput, nInputLen);
-				sRes = std::wstring(ws.begin(), ws.end());
+				sRes = WidenBytes(sInput, nInputLen);
 			}
 			return sRes;
 		}
@@ -348,11 +362,25 @@ namespace NSUnicodeConverter
 					iconv_close(ic);
 				}
 #endif
+#if !defined (_WIN32) && !defined (_WIN64)
+				if (ansi)
+				{
+					// ICU could not open this code page by number and the platform could not convert it
+					// (iconv does not know the name CP<n> for ISO-8859-x, KOI8, EUC, GB18030, UTF-8/16/32...,
+					// and macOS, Android and iOS have no iconv): open it by name instead, as RtfFile does
+					std::map<int, std::string>::const_iterator pFind = mapEncodingsICU.find(nCodepage);
+					if (pFind != mapEncodingsICU.end())
+					{
+						std::wstring sByName = toUnicode(sInput, nInputLen, pFind->second.c_str(), false);
+						if (!sByName.empty())
+							return sByName;
+					}
+				}
+#endif
 			}
 			if (ansi)
 			{
-				std::string inp(sInput, nInputLen);
-				sResult = std::wstring(inp.begin(), inp.end());
+				sResult = WidenBytes(sInput, nInputLen);
 			}
 
 			return sResult;
