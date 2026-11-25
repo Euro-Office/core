@@ -106,3 +106,19 @@ TEST(OdtToDocxPageBackground, GradientAngleIsTheOdfAngle)
     EXPECT_EQ(attribute_of(xml, L"<v:fill", L"angle"), L"30") << xml.substr(0, 1000);
     EXPECT_EQ(attribute_of(xml, L"<v:background", L"fillcolor"), L"#FF0000") << xml.substr(0, 1000);
 }
+
+// A gradient without a start colour has no first colour to start with: keep the page colour (white
+// for "transparent") rather than writing an empty fillcolor.
+TEST(OdtToDocxPageBackground, GradientWithoutStartColourKeepsPageColour)
+{
+    const std::wstring dir = convert_odf_to_ooxml_dir(L"ExampleFiles/page_background_transparent_gradient_no_start.odt");
+    ASSERT_FALSE(dir.empty()) << "ODT -> DOCX conversion failed";
+
+    const std::wstring document = read_part(dir, L"word/document.xml");
+    ASSERT_FALSE(document.empty()) << "word/document.xml is missing";
+
+    const size_t background = document.find(L"<w:background");
+    ASSERT_NE(background, std::wstring::npos) << document.substr(0, 2000);
+    const std::wstring xml = document.substr(background);
+    EXPECT_EQ(attribute_of(xml, L"<v:background", L"fillcolor"), L"#ffffff") << xml.substr(0, 1000);
+}

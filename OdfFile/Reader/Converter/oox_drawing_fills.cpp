@@ -418,9 +418,9 @@ void vml_serialize_background (std::wostream & strm, const _oox_fill & val, cons
 
 	// A VML gradient runs from fillcolor to color2. In ODF a page fill replaces the page colour, so a
 	// gradient starts with its own first colour, not with fo:background-color (or white when that is
-	// transparent).
+	// transparent). A first stop without a colour keeps the page colour.
 	std::wstring fill_color = color;
-	if (val.type == 3 && val.gradient && !val.gradient->colors.empty())
+	if (val.type == 3 && val.gradient && !val.gradient->colors.empty() && !val.gradient->colors[0].color_ref.empty())
 		fill_color = val.gradient->colors[0].color_ref;
 
 	CP_XML_WRITER(strm)
