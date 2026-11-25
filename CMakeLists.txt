@@ -24,7 +24,7 @@ if(EMSCRIPTEN)
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/fontengine/js" fonts )
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/graphics/pro/js/" drawingfile )
 
-elseif(ANDROID)
+elseif(ANDROID OR IOS)
 
     # Only the converter libraries; the tools are built for the host
     add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/build/cmake" x2t )

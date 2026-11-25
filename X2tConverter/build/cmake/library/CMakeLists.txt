@@ -194,9 +194,9 @@ if( MSVC )
     )
 endif()
 
-if( ANDROID )
+if( ANDROID OR IOS )
     # Name and C API (X2T_Convert, GetOfficeFileFormat) expected by the
-    # libx2t JNI wrapper (X2tConverter/build/Android)
+    # libx2t JNI wrapper (X2tConverter/build/Android) and the mobile editors' engine
     set_target_properties(x2tlib PROPERTIES
         OUTPUT_NAME x2t
     )

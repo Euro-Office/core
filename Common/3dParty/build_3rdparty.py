@@ -55,7 +55,7 @@ subfolders = [
     'libheif',
 ]
 
-known_targets = [ 'android-arm64', 'android-x64', 'wasm' ]
+known_targets = [ 'android-arm64', 'android-x64', 'ios-arm64', 'ios-sim-arm64', 'wasm' ]
 
 force_redo_subfolders = []
 only_subfolders = []
@@ -78,8 +78,8 @@ Usage: { script_path.name } [options] work_dir_abs install_dir_abs
         --except=     : Build everything except the specified comma-separated subfolders.
                         Note: --only= and --except= are mutually exclusive.
         --target=     : Cross-compile for another platform: { ', '.join( known_targets ) }.
-                        Android needs ANDROID_NDK_ROOT. wasm only names the remote-cache
-                        folder (the *-wasm deps always build with Emscripten).
+                        Android needs ANDROID_NDK_ROOT, iOS needs Xcode. wasm only names the
+                        remote-cache folder (the *-wasm deps always build with Emscripten).
                         Default: build for the host.
         --help | -h   : Prints this help.
 
