@@ -45,14 +45,14 @@ namespace ImageHelper
 		CBgraFrame oFrame;
 		int offset = 0, biSizeImage = 0;
 
-		__BITMAPINFOHEADER * header = (__BITMAPINFOHEADER*)data;
+		DocBitmapInfoHeader * header = (DocBitmapInfoHeader*)data;
 		if (!header) return result;
 
 		result = Global::msoblipDIB;
 
 		if (header->biWidth > 100000 || header->biHeight > 100000 || header->biSize != 40)
 		{
-			__BITMAPCOREHEADER * header_core = (__BITMAPCOREHEADER *)data;
+			DocBitmapCoreHeader * header_core = (DocBitmapCoreHeader *)data;
 			if (header_core->bcSize != 12)
 			{
 				result = Global::msoblipWMF;
@@ -65,6 +65,7 @@ namespace ImageHelper
 				oFrame.put_Width	(header_core->bcWidth );
 				
 				int sz_bitmap = header_core->bcHeight * header_core->bcWidth * header_core->bcBitCount/ 8;
+				(void)sz_bitmap;
 				
 				//if (header_core->bcWidth % 2 != 0 && sz_bitmap < size - offset)
 				//	header_core->bcWidth++;
@@ -89,13 +90,14 @@ namespace ImageHelper
 			oFrame.put_Width	(header->biWidth );
 			
 			int sz_bitmap = header->biHeight * header->biWidth * header->biBitCount/ 8;
+			(void)sz_bitmap;
 			
 			//if (header->biWidth % 2 != 0 && sz_bitmap < size -offset)
 			//	header->biWidth++;
 
 			if (header->biClrUsed > 0)
 			{
-				oFrame.put_Palette((unsigned char*)data + offset, header->biClrUsed);
+				oFrame.put_Palette(data + offset, header->biClrUsed);
 			
 				offset += header->biClrUsed * 4;
 			}
@@ -115,14 +117,14 @@ namespace ImageHelper
 
 		if (result == Global::msoblipPNG)
 		{
-			oFrame.put_Data((unsigned char*)data + offset);
+			oFrame.put_Data(data + offset);
 			
 			file_name += L".png";
 			if (!oFrame.SaveFile(file_name, 4/*CXIMAGE_FORMAT_PNG*/))
 			{
 				result = Global::msoblipDIB;
 			}
-			oFrame.put_Data(NULL);
+			oFrame.put_Data(nullptr);
 		}
 		else if (result == Global::msoblipWMF)
 		{
@@ -158,8 +160,8 @@ namespace DocFileFormat
 	PictureDescriptor::PictureDescriptor(CharacterPropertyExceptions* chpx, POLE::Stream* stream, int size, int nWordVersion) 
 		: 
 		dxaGoal(0), dyaGoal(0), mx(0), my(0), Type(jpg), mfp(), dxaCropLeft(0), dyaCropTop(0),
-		dxaCropRight(0), dyaCropBottom(0), brcTop(NULL), brcLeft(NULL), brcBottom(NULL), brcRight(NULL), dxaOrigin(0), dyaOrigin(0),
-		cProps(0), shapeContainer(NULL), blipStoreEntry(NULL), embeddedData(NULL), embeddedDataSize(0), embeddedDataHeader(NULL)
+		dxaCropRight(0), dyaCropBottom(0), brcTop(nullptr), brcLeft(nullptr), brcBottom(nullptr), brcRight(nullptr), dxaOrigin(0), dyaOrigin(0),
+		cProps(0), shapeContainer(nullptr), blipStoreEntry(nullptr), embeddedDataHeader(nullptr), embeddedData(nullptr), embeddedDataSize(0)
 	{
 		//Get start and length of the PICT
 		int fc = GetFcPic( chpx );
@@ -172,8 +174,8 @@ namespace DocFileFormat
 	PictureDescriptor::PictureDescriptor()
 		: 
 		dxaGoal(0), dyaGoal(0), mx(0), my(0), Type(jpg), mfp(), dxaCropLeft(0), dyaCropTop(0),
-		dxaCropRight(0), dyaCropBottom(0), brcTop(NULL), brcLeft(NULL), brcBottom(NULL), brcRight(NULL), dxaOrigin(0), dyaOrigin(0),
-		cProps(0), shapeContainer(NULL), blipStoreEntry(NULL), embeddedData(NULL), embeddedDataSize(0), embeddedDataHeader(NULL)
+		dxaCropRight(0), dyaCropBottom(0), brcTop(nullptr), brcLeft(nullptr), brcBottom(nullptr), brcRight(nullptr), dxaOrigin(0), dyaOrigin(0),
+		cProps(0), shapeContainer(nullptr), blipStoreEntry(nullptr), embeddedDataHeader(nullptr), embeddedData(nullptr), embeddedDataSize(0)
 	{
 	}
 	PictureDescriptor::~PictureDescriptor()
@@ -200,6 +202,7 @@ namespace DocFileFormat
 		VirtualStreamReader reader(stream, fc, nWordVersion);
 
 		int sz_stream = reader.GetSize();
+		(void)sz_stream;
 
 		int lcb = reader.ReadInt32();
 		
@@ -222,6 +225,7 @@ namespace DocFileFormat
 			return;
 	
 		int cbHeader	=	reader.ReadUInt16();
+		(void)cbHeader;
 
 		mfp.mm			=	reader.ReadInt16();
 		mfp.xExt		=	reader.ReadInt16();
@@ -273,14 +277,18 @@ namespace DocFileFormat
 		{
 			int flag = brcl;
 
-			brcl = FormatUtils::BitmaskToBool(flag, 0x000F);
 			//(	0	single 	1	thick	2	double	3	shadow )
 
 			bool fFrameEmpty	= FormatUtils::BitmaskToBool(flag, 0x0010);//	picture consists of a single frame
+			(void)fFrameEmpty;
 			bool fBitmap		= FormatUtils::BitmaskToBool(flag, 0x0020);//	==1, when picture is just a bitmap
+			(void)fBitmap;
 			bool fDrawHatch		= FormatUtils::BitmaskToBool(flag, 0x0040);//	==1, when picture is an active OLE object
+			(void)fDrawHatch;
 			bool fError			= FormatUtils::BitmaskToBool(flag, 0x0080);//	==1, when picture is just an error message
+			(void)fError;
 			short bpp			= FormatUtils::BitmaskToBool(flag, 0x8000);//	bits per pixel
+			(void)bpp;
 				//(0 unknown 1 monochrome 4 VGA)
 
 			int sz_hdr = pos_end - pos_start;
@@ -300,7 +308,7 @@ namespace DocFileFormat
 				unsigned char cchPicName	=	reader.ReadByte();
 				unsigned char* stPicName	=	reader.ReadBytes(cchPicName, true);
 
-				if ( stPicName != NULL )
+				if ( stPicName != nullptr )
 				{
 					std::wstring picName;
 					FormatUtils::GetWStringFromBytes( picName, stPicName, cchPicName, ENCODING_WINDOWS_1250 );
@@ -345,7 +353,6 @@ namespace DocFileFormat
 
 			case sprmOldCHps:
 			case sprmCHps:
-				ret1 = FormatUtils::BytesToInt32( iter->Arguments, 0, iter->argumentsSize );
 				break;
 
 			case sprmCHsp:
@@ -354,7 +361,6 @@ namespace DocFileFormat
 
 			case sprmOldCFData:
 			case sprmCFData:
-				break;
 			default:
 				break;
 			}

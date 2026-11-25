@@ -24,6 +24,11 @@
  */
 
 #include "utils.h"
+#include <algorithm>
+#include <cmath>
+#include <iomanip>
+#include <locale>
+#include <sstream>
 #include <vector>
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -49,7 +54,7 @@ namespace _graphics_utils_
 	bool GetResolution(const wchar_t* fileName, double & Width, double &Height) //px
 	{
 		NSFile::CFileBinary file;
-		if (false == file.OpenFile(fileName)) return false;
+		if (!file.OpenFile(fileName)) return false;
 
 		long file_size = file.GetFileSize();
 		file.CloseFile();
@@ -60,7 +65,8 @@ namespace _graphics_utils_
 		try
 		{
 			CBgraFrame image;
-			if (result = image.OpenFile(fileName, 0))
+			result = image.OpenFile(fileName, 0);
+			if (result)
 			{
 				Width = image.get_Width();
 				Height = image.get_Height();
@@ -107,6 +113,10 @@ namespace _graphics_utils_
 	{
 		std::pair<double, double> result = std::make_pair(7., 8.);
 
+#if !defined(_WIN32) && !defined(_WIN64)
+		// Parameters are only consumed by the GDI+ implementation below.
+		(void)name; (void)size; (void)italic; (void)bold; (void)test_str;
+#endif
 #if defined(_WIN32) || defined(_WIN64)
 		Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 		ULONG_PTR gdiplusToken=0;
@@ -161,7 +171,7 @@ namespace _graphics_utils_
 #endif
 		return result;
 	}
-	std::pair<double, double> calculate_size_symbol_asc(std::wstring name, double size, bool italic, bool bold , NSFonts::IApplicationFonts *appFonts)
+	std::pair<double, double> calculate_size_symbol_asc(std::wstring name, double size, bool /*italic*/, bool /*bold*/, NSFonts::IApplicationFonts *appFonts)
 	{
 		if (name.empty())
 			name = L"Calibri";
@@ -171,3 +181,110 @@ namespace _graphics_utils_
         return val;
 	}
 };
+
+namespace _doc_props_utils_
+{
+	namespace
+	{
+		bool read_digits(const std::wstring & s, size_t & pos, size_t count, int & value)
+		{
+			if (pos + count > s.size()) return false;
+			value = 0;
+			for (size_t i = 0; i < count; ++i)
+			{
+				const wchar_t c = s[pos + i];
+				if (c < L'0' || c > L'9') return false;
+				value = value * 10 + (c - L'0');
+			}
+			pos += count;
+			return true;
+		}
+		bool read_char(const std::wstring & s, size_t & pos, wchar_t c)
+		{
+			if (pos >= s.size() || s[pos] != c) return false;
+			++pos;
+			return true;
+		}
+	}
+
+	std::wstring w3cdtf_date(const std::wstring & value)
+	{
+		const size_t first = value.find_first_not_of(L" \t\r\n");
+		if (first == std::wstring::npos) return L"";
+		const std::wstring s = value.substr(first, value.find_last_not_of(L" \t\r\n") - first + 1);
+
+		size_t pos = 0;
+		int year = 0, month = 0, day = 0;
+		if (!read_digits(s, pos, 4, year) || !read_char(s, pos, L'-') || !read_digits(s, pos, 2, month)
+			|| !read_char(s, pos, L'-') || !read_digits(s, pos, 2, day))
+			return L"";
+		if (year < 1601 || year > 9999 || month < 1 || month > 12 || day < 1) return L"";
+		const bool leap = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+		const int days_in_month[12] = { 31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		if (day > days_in_month[month - 1]) return L"";
+
+		const std::wstring date = s.substr(0, pos);
+		if (pos == s.size()) return date + L"T00:00:00Z";
+
+		int hour = 0, minute = 0, second = 0;
+		if (!read_char(s, pos, L'T') || !read_digits(s, pos, 2, hour) || !read_char(s, pos, L':')
+			|| !read_digits(s, pos, 2, minute) || !read_char(s, pos, L':') || !read_digits(s, pos, 2, second))
+			return L"";
+		if (hour > 23 || minute > 59 || second > 59) return L"";
+		const std::wstring time = s.substr(date.size() + 1, 8);
+
+		if (pos < s.size() && (s[pos] == L'.' || s[pos] == L','))
+		{
+			const size_t fraction = ++pos;
+			while (pos < s.size() && s[pos] >= L'0' && s[pos] <= L'9') ++pos;
+			if (pos == fraction) return L"";
+		}
+
+		std::wstring zone = L"Z";
+		if (pos < s.size() && s[pos] == L'Z')
+		{
+			++pos;
+		}
+		else if (pos < s.size() && (s[pos] == L'+' || s[pos] == L'-'))
+		{
+			const size_t start = pos++;
+			int zone_hour = 0, zone_minute = 0;
+			if (!read_digits(s, pos, 2, zone_hour) || !read_char(s, pos, L':') || !read_digits(s, pos, 2, zone_minute)
+				|| zone_hour > 14 || zone_minute > 59 || (zone_hour == 14 && zone_minute != 0))
+				return L"";
+			zone = s.substr(start, pos - start);
+		}
+		if (pos != s.size()) return L"";
+
+		return date + L"T" + time + zone;
+	}
+
+	std::wstring shortest_number(double value)
+	{
+		if (!std::isfinite(value)) return L"";
+		for (int precision = 1; precision <= 17; ++precision)
+		{
+			std::wostringstream scientific;
+			scientific.imbue(std::locale::classic());
+			scientific << std::scientific << std::setprecision(precision - 1) << value;
+
+			std::wistringstream back(scientific.str());
+			back.imbue(std::locale::classic());
+			double read = 0;
+			if (!(back >> read) || read != value)
+				continue;
+
+			const std::wstring text = scientific.str();
+			const int exponent = std::stoi(text.substr(text.find(L'e') + 1));
+			const bool whole = std::fabs(value) < 9007199254740992.0 && value == std::floor(value);
+			if (!whole && (exponent <= -15 || exponent >= 15))
+				return text;
+
+			std::wostringstream fixed;
+			fixed.imbue(std::locale::classic());
+			fixed << std::fixed << std::setprecision(whole ? 0 : (std::max)(0, precision - 1 - exponent)) << value;
+			return fixed.str();
+		}
+		return L"";
+	}
+}

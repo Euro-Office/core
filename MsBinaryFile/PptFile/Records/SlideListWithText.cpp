@@ -83,7 +83,7 @@ void CRecordSlideListWithText::ReadFromStream(SRecordHeader &oHeader, POLE::Stre
                     continue;
 
                 CRecordTextHeaderAtom* pHeader = dynamic_cast<CRecordTextHeaderAtom*>(pRecord);
-                if (NULL != pHeader)
+                if (nullptr != pHeader)
                 {
                     CTextFullSettings oAttr;
                     m_arTextPlaceHolders[nCurrentSlide].push_back(oAttr);
@@ -100,12 +100,12 @@ void CRecordSlideListWithText::ReadFromStream(SRecordHeader &oHeader, POLE::Stre
                     continue;
 
                 // here are more settings besides text
-                if (NULL != pChars)
+                if (nullptr != pChars)
                 {
                     m_arTextPlaceHolders[nCurrentSlide][nCurrentTextHeader].m_strText = pChars->m_strText;
                     lSymbolCount = (_UINT32)pChars->m_strText.length();
                 }
-                else if (NULL != pBytes)
+                else if (nullptr != pBytes)
                 {
                     m_arTextPlaceHolders[nCurrentSlide][nCurrentTextHeader].m_strText = pBytes->m_strText;
                     lSymbolCount = (_UINT32)pBytes->m_strText.length();

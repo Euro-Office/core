@@ -708,7 +708,7 @@ void odp_page_state::start_anim_level(const std::wstring& ns, const std::wstring
 	anim_animate* animate					= dynamic_cast<anim_animate*>			(anim.elm.get());
 	anim_animate_motion* motion				= dynamic_cast<anim_animate_motion*>	(anim.elm.get());
 	anim_animate_color* color				= dynamic_cast<anim_animate_color*>		(anim.elm.get());
-	anim_animate_transform* transfrom		= dynamic_cast<anim_animate_transform*>	(anim.elm.get());
+	anim_animate_transform* transform		= dynamic_cast<anim_animate_transform*>	(anim.elm.get());
 	anim_audio* audio						= dynamic_cast<anim_audio*>				(anim.elm.get());
 
 	if (par)
@@ -745,10 +745,10 @@ void odp_page_state::start_anim_level(const std::wstring& ns, const std::wstring
 		anim.attlist = &color->common_attlist_;
 		anim.color_attlist = &color->color_attlist_;
 	}
-	else if (transfrom)
+	else if (transform)
 	{
-		anim.attlist = &transfrom->common_attlist_;
-		anim.transform_attlist = &transfrom->animate_transform_attlist_;
+		anim.attlist = &transform->common_attlist_;
+		anim.transform_attlist = &transform->animate_transform_attlist_;
 	}
 	else if (audio)
 	{

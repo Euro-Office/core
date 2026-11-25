@@ -70,7 +70,7 @@ namespace DocFileFormat
 			{
 				VirtualStreamReader reader( tableStream, fc, nWordVersion);
 
-				parse( &reader, fc, lcb, bReadExta ) ;
+				StringTable::parse( &reader, fc, lcb, bReadExta ) ;
 			}
 		}
 		std::vector<unsigned char*> & getDataExtra() {return DataExtra;}
@@ -197,7 +197,7 @@ namespace DocFileFormat
 			{
 				VirtualStreamReader reader(tableStream, fc, nWordVersion);
 
-				parse(&reader, fc, lcb, true);
+				StringTableEx::parse(&reader, fc, lcb, true);
 			}
 		}
 	private:

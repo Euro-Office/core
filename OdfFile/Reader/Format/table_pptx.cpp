@@ -351,7 +351,7 @@ void table_table_column::pptx_convert(oox::pptx_conversion_context & Context)
 
 			if ((inst) && (inst->content()))
             {
-				//column properies
+				//column properties
 				if (inst->content()->get_style_table_column_properties())
 				   inst->content()->get_style_table_column_properties()->pptx_convert(Context);				
             }

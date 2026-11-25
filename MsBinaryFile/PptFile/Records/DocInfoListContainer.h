@@ -33,7 +33,7 @@ class DocInfoListSubContainerOrAtom
 {
 public:
     nullable<IRecord> m_record;
-    _commonInfo* m_pCommonInfo = NULL;
+    _commonInfo* m_pCommonInfo = nullptr;
 
     void ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStream);
 };

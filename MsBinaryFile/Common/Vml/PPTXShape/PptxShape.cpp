@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "PptxShape.h"
 #include "PresetShapesHeader.h"
@@ -118,6 +117,7 @@ bool CPPTXShape::LoadGuidesList(const std::wstring& xml)
 }
 bool CPPTXShape::LoadAdjustHandlesList(const std::wstring& xml)
 {
+	(void)xml;
 	/*XmlUtils::CXmlNode ahLst;
 			if(ahLst.FromXmlString(xml))
 			{
@@ -175,6 +175,7 @@ bool CPPTXShape::LoadAdjustHandlesList(const std::wstring& xml)
 }
 bool CPPTXShape::LoadConnectorsList(const std::wstring& xml)
 {
+	(void)xml;
 	return true;
 }
 bool CPPTXShape::LoadTextRect(const std::wstring& xml)
@@ -244,7 +245,7 @@ const ClassType CPPTXShape::GetClassType()const
 }
 bool CPPTXShape::SetProperties(CBaseShape* Shape)
 {
-	if(Shape == NULL)
+	if(Shape == nullptr)
 		return false;
 
 	if(Shape->GetClassType() != NSBaseShape::pptx)
@@ -255,7 +256,7 @@ bool CPPTXShape::SetProperties(CBaseShape* Shape)
 }
 bool CPPTXShape::SetToDublicate(CBaseShape* Shape)
 {
-	if(Shape == NULL)
+	if(Shape == nullptr)
 		return false;
 
 	if(Shape->GetClassType() != NSBaseShape::pptx)
@@ -519,6 +520,7 @@ CBaseShapePtr CPPTXShape::CreateByType(OOXMLShapes::ShapeType type)
 	case OOXMLShapes::sptCWedgeEllipseCallout:		return CBaseShapePtr(new OOXMLShapes::CWedgeEllipseCallout());
 	case OOXMLShapes::sptCWedgeRectCallout:			return CBaseShapePtr(new OOXMLShapes::CWedgeRectCallout());
 	case OOXMLShapes::sptCWedgeRoundRectCallout:	return CBaseShapePtr(new OOXMLShapes::CWedgeRoundRectCallout());
+	default:										break;
 	}
 	return shape;
 }

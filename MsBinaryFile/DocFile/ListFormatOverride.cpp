@@ -31,6 +31,7 @@ namespace DocFileFormat
 	ListFormatOverride::ListFormatOverride( VirtualStreamReader* reader, int length ):
 		lsid(0), clfolvl(0), ibstFltAutoNum(0), grfhic(0)
 	{
+		(void)length;
 		long startPos = reader->GetPosition();
 
 		this->lsid = reader->ReadInt32();

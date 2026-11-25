@@ -30,7 +30,7 @@ namespace DocFileFormat
 {
 	DrawingPrimitive * DrawingPrimitive::Create(VirtualStreamReader* reader, int length, short dpk)
 	{
-		DrawingPrimitive * dp = NULL;
+		DrawingPrimitive * dp = nullptr;
 
 		int pos1 = reader->GetPosition();
 		switch(dpk)
@@ -47,7 +47,7 @@ namespace DocFileFormat
 		case 0x0003: //rectangle
 			dp = new DrawingPrimitiveRect(reader, length);
 			break;
-		case 0x0004: //elipse
+		case 0x0004: //ellipse
 			dp = new DrawingPrimitiveElipse(reader, length);
 			break;
 		case 0x0005: //arc
@@ -85,8 +85,9 @@ namespace DocFileFormat
 	}
 
 	DrawingPrimitive::DrawingPrimitive(VirtualStreamReader *reader, int length) :
-						lineWeight(0), lineStyle(0), lineColor(0), fillBack(0), fillFore(0), fillPattern(0), shadowX(0), shadowY(0)
+						type(0), lineWeight(0), lineStyle(0), lineColor(0), fillBack(0), fillFore(0), fillPattern(0), shadowInt(0), shadowX(0), shadowY(0)
 	{
+		(void)length;
 		xa		= reader->ReadInt16();
 		ya		= reader->ReadInt16();
 		dxa		= reader->ReadInt16();
@@ -122,6 +123,7 @@ namespace DocFileFormat
 		unsigned g = reader->ReadByte();
 		unsigned b = reader->ReadByte();
 		unsigned a = reader->ReadByte();
+		(void)a;
 		return ( (r<<16) | (g<<8) | (b) );
 	}
 	
@@ -213,21 +215,24 @@ namespace DocFileFormat
 	{
 		strVmlType	= L"v:rect";
 
-		txbx		= NULL;
-		polyline	= NULL;
+		txbx		= nullptr;
+		polyline	= nullptr;
 
 		unsigned short f = reader->ReadUInt16();
+		(void)f;
 		
 		dzaOffset	= reader->ReadUInt16();
 		dzaDescent	= reader->ReadUInt16();
 		dzaLength	= reader->ReadUInt16();
 
 		unsigned short dpk_txbx = reader->ReadUInt16();
+		(void)dpk_txbx;
 		unsigned short cb_txbx	= reader->ReadUInt16();
 
 		txbx  = new DrawingPrimitiveTextBox(reader, cb_txbx);
 		
 		unsigned short dpk_polyline = reader->ReadUInt16();
+		(void)dpk_polyline;
 		unsigned short cb_polyline	= reader->ReadUInt16();
 
 		polyline = new DrawingPrimitivePolyline(reader, cb_polyline);

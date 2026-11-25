@@ -656,20 +656,12 @@ std::wstring convert_bullet_char(std::wstring c)
 
 	for(size_t i = 0; i < c.size(); ++i)
 	{
+		// Symbol bullets (check marks, ballot boxes, arrows, circles) keep their Unicode code point. Mapping them to the
+		// Symbol/Wingdings private-use codes is only right together with a Symbol or Wingdings font, and the level keeps
+		// the font of the ODF list style, so the mapped code drew another glyph or none.
 		switch (c[i])
 		{
-		case L'\xE00C': res += L'\xF075';/*L'\xF0A8'*/; break;
-		case L'\xE00A': res += L'\xF0A7'; break;
-		case L'\x2611': res += L'\xF0FE'; break;
 		case L'\x2022': res += L'\x2022'; res += L'\x20'; break;
-		case L'\x25CF': res += L'\xF0B7'; break;
-		case L'\x27A2': res += L'\xF0D8'; break;
-		case L'\x2714': res += L'\xF0FC'; break;
-			/*case L'\x25A0': res = L'\xF0A7'; break; */
-		case L'\x25CB': res += L'\x006F'; break;
-		case L'\x2794': res += L'\xF0DA'; break;
-		case L'\x2717': res += L'\xF04F'; break;
-		case L'\x2013': res += L'\x2013'; break;
 		default:
 			res += c[i];
 			break;

@@ -36,7 +36,7 @@ namespace DocFileFormat
 	{
 		m_document = static_cast<WordDocument*>( visited );
 
-		if ( ( m_document != NULL ) && ( m_document->FIB->m_RgLw97.ccpEdn > 0 ) )
+		if ( ( m_document != nullptr ) && ( m_document->FIB->m_RgLw97.ccpEdn > 0 ) )
 		{
 			m_context->_docx->RegisterEndnotes();
 

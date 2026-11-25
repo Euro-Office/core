@@ -27,7 +27,7 @@
 
 namespace DocFileFormat
 {  
-	  FormattedDiskPage::FormattedDiskPage(): Type(Character), WordStream(NULL), crun(0), rgfc(NULL), rgfcSize(0)
+	  FormattedDiskPage::FormattedDiskPage(): Type(Character), WordStream(nullptr), crun(0), rgfc(nullptr), rgfcSize(0)
 	  {
 	  }  
 }

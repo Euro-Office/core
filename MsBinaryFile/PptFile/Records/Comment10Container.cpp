@@ -85,7 +85,7 @@ void CRecordComment10Container::ReadFromStream(SRecordHeader &oHeader, POLE::Str
     SRecordHeader ReadHeader;
 
     while (lCurLen < m_oHeader.RecLen) {
-        if ( ReadHeader.ReadFromStream(pStream) == false )
+        if ( !ReadHeader.ReadFromStream(pStream) )
         {
             break;
         }

@@ -68,14 +68,14 @@ typedef shared_ptr<const office_element>::Type office_element_ptr_const;
                 VAL[ii]->accept(*this); \
         }
 
-static double convert_symbol_size(double val, double metrix, bool add_padding)
+static double convert_symbol_size(double val, double metric, bool add_padding)
 {
 	//if (add_padding)
 	{
-		val = ((int)((val * metrix + 5) / metrix * 256)) / 256.;
+		val = ((int)((val * metric + 5) / metric * 256)) / 256.;
 	}
 
-	double pixels = (int)(((256. * val + ((int)(128. / metrix))) / 256.) * metrix); //in pixels
+	double pixels = (int)(((256. * val + ((int)(128. / metric))) / 256.) * metric); //in pixels
 
 	return pixels * 0.75; //* 9525. * 72.0 / (360000.0 * 2.54);
 }
@@ -352,13 +352,13 @@ void object_odf_context::pptx_convert(oox::pptx_conversion_context & Context)
 		//embedded
 	}
 }
-void object_odf_context::calc_cache_series(std::wstring adress, std::vector<std::wstring> & cash)
+void object_odf_context::calc_cache_series(std::wstring address, std::vector<std::wstring> & cash)
 {
-	if (adress.empty()) return;
+	if (address.empty()) return;
 
 	if (bPivotChart_)
 	{
-		std::map<std::wstring, _cell>::iterator pFind = cash_pivot.find(adress);
+		std::map<std::wstring, _cell>::iterator pFind = cash_pivot.find(address);
 		if (pFind != cash_pivot.end())
 		{
 			int col = pFind->second.col;
@@ -399,7 +399,7 @@ void object_odf_context::calc_cache_series(std::wstring adress, std::vector<std:
 		std::wstring ref_1, ref_2, table;
 		size_t col_1 = 0, row_1 = 0, col_2 = 0, row_2 = 0;
 	   
-		if (!converter.find_first_last_ref(adress, table, ref_1, ref_2))return;
+		if (!converter.find_first_last_ref(address, table, ref_1, ref_2))return;
 		//if ((res = table.find(L"local-table"))<0)return;
 
 		bool res1 = oox::getCellAddressInv(ref_1, col_1, row_1);
@@ -823,7 +823,7 @@ bool process_build_object::visit_rows(unsigned int repeated)
 //////////////////////////////////////////////////
 void process_build_object::on_not_impl(std::string const & message)
 {
-    _CP_LOG << L"[process_object visitor] : not impliment for \"" << utf8_to_utf16(message) << L"\"" << std::endl;
+    _CP_LOG << L"[process_object visitor] : not implement for \"" << utf8_to_utf16(message) << L"\"" << std::endl;
 }
 
 //-----------------------------------------------------------------------------------
