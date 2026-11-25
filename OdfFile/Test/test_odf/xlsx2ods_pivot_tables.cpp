@@ -32,6 +32,15 @@
 //   CalcUnused       same cache, Double not used
 //   Grouped          row field Year with grouped items (fieldGroup)
 //   TableSource      its cache's worksheetSource is the table name SalesTable
+//   ErrorHidden      row field Product with an error item (#N/A) hidden
+//   Filtered         a label filter (Region equals North)
+//   Sorted           row field Region sorted descending
+//   NoSubtotals      row fields Region and Product, Region defaultSubtotal="0"
+//   CustomSubtotal   row fields Region and Product, Region sumSubtotal="1"
+//   ShowAsExt        data field "% of parent row total" (x14:dataField
+//                    pivotShowAs in the data field's extension list)
+//   SortManual       as NoSubtotals, but Region has sortType="manual" and
+//                    defaultSubtotal="1" (the defaults, written out)
 
 #include "gtest/gtest.h"
 
@@ -389,4 +398,21 @@ TEST(XlsxToOds, PivotTableSourceIsATable)
 	ASSERT_FALSE(table.empty());
 	EXPECT_EQ(source_range(table), L"Data.A1:Data.D9");
 	EXPECT_EQ(fields_of(table, L"Region", L"row").size(), 1u) << table;
+}
+
+// What the converter does not write yet would be dropped by a refresh: label,
+// value and date filters, the sort order of a field, subtotals other than the
+// automatic ones, and the "show values as" kinds that only the extension list
+// holds. Such a pivot table is not written (its cells keep their values); the
+// defaults written out do not count.
+TEST(XlsxToOds, PivotTableUnwrittenOptionsSkipTheTable)
+{
+	ASSERT_TRUE(is_well_formed(review_content()));
+	for (const wchar_t* name : {L"Filtered", L"Sorted", L"NoSubtotals", L"CustomSubtotal", L"ShowAsExt"})
+		EXPECT_TRUE(pilot_table(name, review_content()).empty()) << name << ": " << pilot_table(name, review_content());
+
+	const std::wstring table = pilot_table(L"SortManual", review_content());
+	ASSERT_FALSE(table.empty());
+	EXPECT_EQ(fields_of(table, L"Region", L"row").size(), 1u) << table;
+	EXPECT_EQ(fields_of(table, L"Product", L"row").size(), 1u) << table;
 }

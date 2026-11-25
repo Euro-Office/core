@@ -817,6 +817,31 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_t
 			if (data_field && data_field->m_oFld.IsInit() && data_field->m_oFld->GetValue() < field_in_data.size())
 				field_in_data[data_field->m_oFld->GetValue()] = 1;
 	}
+
+	// Not written yet, and a refresh would drop them: label, value and date filters, a sort order of a field on an axis,
+	// subtotals other than the automatic ones, and the "show values as" kinds kept in a data field's extension list
+	// (x14:dataField pivotShowAs). Such a pivot table is not written; its cells keep their values.
+	if (oox_pivot_table->m_bHasFilters) return;
+	for (size_t i = 0; i < pivot_fields.size() && i < field_on_axis.size(); i++)
+	{
+		const OOX::Spreadsheet::CPivotField *field = pivot_fields[i];
+		if (!field || !field_on_axis[i]) continue;
+		if (field->m_oSortType.IsInit() && field->m_oSortType->GetValue() != SimpleTypes::Spreadsheet::sortManual) return;
+		if (field->m_oDefaultSubtotal.IsInit() && !*field->m_oDefaultSubtotal) return;
+		for (const NSCommon::nullable_bool *subtotal : {&field->m_oSumSubtotal, &field->m_oCountASubtotal, &field->m_oAvgSubtotal,
+											  &field->m_oMaxSubtotal, &field->m_oMinSubtotal, &field->m_oProductSubtotal,
+											  &field->m_oCountSubtotal, &field->m_oStdDevSubtotal, &field->m_oStdDevPSubtotal,
+											  &field->m_oVarSubtotal, &field->m_oVarPSubtotal})
+		{
+			if (subtotal->IsInit() && **subtotal) return;
+		}
+	}
+	if (oox_pivot_table->m_oDataFields.IsInit())
+	{
+		for (OOX::Spreadsheet::CDataField *data_field : oox_pivot_table->m_oDataFields->m_arrItems)
+			if (data_field && data_field->m_oExtLst.IsInit()) return;
+	}
+
 	std::wstring item_name;
 	for (size_t i = 0; i < pivot_fields.size() && i < cache_fields.size(); i++)
 	{

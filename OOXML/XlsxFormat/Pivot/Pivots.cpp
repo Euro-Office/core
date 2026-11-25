@@ -574,7 +574,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			else if (L"rowFields" == sName)				m_oRowFields = oReader;
 			else if (L"rowItems" == sName)				m_oRowItems = oReader;
             else if (L"pivotHierarchies" == sName)		m_oPivotHierarchies = oReader;
-			//else if (L"filters" == sName)				m_oFilters = oReader;
+			else if (L"filters" == sName)				m_bHasFilters = true;
 			//else if (L"chartFormats" == sName)		m_oChartFormats = oReader;
 
 			//else if (L"conditionalFormats" == sName)	m_oConditionalFormats = oReader;
@@ -972,6 +972,9 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 
             if(ptr->m_SXPIS != nullptr)
                 m_oPageFields = ptr->m_SXPIS;
+
+            if(ptr->m_SXFILTERS != nullptr)
+                m_bHasFilters = true;
 
             if(ptr->m_SXTHS != nullptr)
                 m_oPivotHierarchies = ptr->m_SXTHS;
