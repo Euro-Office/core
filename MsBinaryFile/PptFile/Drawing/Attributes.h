@@ -125,12 +125,12 @@ namespace PPT
             }
 
             // Second chance
-            std::vector<std::wstring> splited;
-            boost::split(splited, str, boost::is_any_of(L","));
-            if (splited.size() == 3)
+            std::vector<std::wstring> parts;
+            boost::split(parts, str, boost::is_any_of(L","));
+            if (parts.size() == 3)
             {
                 try {
-                    int num = std::stoi(splited[1]);
+                    int num = std::stoi(parts[1]);
                     if (num > 0 && num < 256)
                         return num;
                 }
@@ -214,7 +214,7 @@ namespace PPT
                 }
             }
 
-            return NULL;
+            return nullptr;
         }
         CExFilesInfo* LockSlide(_UINT32 dwID)
         {
@@ -227,7 +227,7 @@ namespace PPT
                 }
             }
 
-            return NULL;
+            return nullptr;
         }
         CExFilesInfo* LockVideo(_UINT32 dwID)
         {
@@ -240,7 +240,7 @@ namespace PPT
                 }
             }
 
-            return NULL;
+            return nullptr;
         }
         CExFilesInfo* LockImage(_UINT32 dwID)
         {
@@ -253,7 +253,7 @@ namespace PPT
                 }
             }
 
-            return NULL;
+            return nullptr;
         }
         CExFilesInfo* LockAudio(_UINT32 dwID)
         {
@@ -266,7 +266,7 @@ namespace PPT
                 }
             }
 
-            return NULL;
+            return nullptr;
         }
         CExFilesInfo* LockOleObject(_UINT32 dwID)
         {
@@ -279,7 +279,7 @@ namespace PPT
                 }
             }
 
-            return NULL;
+            return nullptr;
         }
         CExFilesInfo* LockAudioFromCollection(_UINT32 dwID)
         {
@@ -292,39 +292,39 @@ namespace PPT
                 }
             }
 
-            return NULL;
+            return nullptr;
         }
 
         CExFilesInfo* Lock(_UINT32 dwID, CExFilesInfo::ExFilesType& eType)
         {
-            CExFilesInfo* pInfo = NULL;
+            CExFilesInfo* pInfo = nullptr;
 
             pInfo = LockHyperlink(dwID);
-            if (NULL != pInfo)
+            if (nullptr != pInfo)
             {
                 eType = CExFilesInfo::eftHyperlink;
                 return pInfo;
             }
             pInfo = LockVideo(dwID);
-            if (NULL != pInfo)
+            if (nullptr != pInfo)
             {
                 eType = CExFilesInfo::eftVideo;
                 return pInfo;
             }
             pInfo = LockAudio(dwID);
-            if (NULL != pInfo)
+            if (nullptr != pInfo)
             {
                 eType = CExFilesInfo::eftAudio;
                 return pInfo;
             }
             pInfo = LockOleObject(dwID);
-            if (NULL != pInfo)
+            if (nullptr != pInfo)
             {
                 eType = CExFilesInfo::eftOleObject;
                 return pInfo;
             }
             pInfo = LockSlide(dwID);
-            if (NULL != pInfo)
+            if (nullptr != pInfo)
             {
                 eType = CExFilesInfo::eftSlide;
                 return pInfo;
@@ -565,7 +565,7 @@ namespace ODRAW
         }
         void SetDashPattern(double* arrDashPattern, long nCount)
         {
-            if ((arrDashPattern == NULL) || (nCount == 0))
+            if ((arrDashPattern == nullptr) || (nCount == 0))
             {
                 Count = 0;
                 RELEASEARRAYOBJECTS(DashPattern);
@@ -598,7 +598,7 @@ namespace ODRAW
 
         bool IsEqual(CPen* pPen)
         {
-            if (NULL == pPen)
+            if (nullptr == pPen)
                 return false;
 
             return ((Color == pPen->Color) && (Alpha == pPen->Alpha) && (Size == pPen->Size) &&
@@ -649,7 +649,7 @@ namespace ODRAW
             LineEndWidth = 1;
             LineStartWidth = 1;
 
-            DashPattern = NULL;
+            DashPattern = nullptr;
             Count = 0;
 
             Color.SetRGB(0x00, 0x00, 0x00);
@@ -782,7 +782,7 @@ namespace ODRAW
 
         bool IsEqual(CBrush* pBrush)
         {
-            if (NULL == pBrush)
+            if (nullptr == pBrush)
                 return false;
 
             /*return ((Type == pBrush->Type) &&
@@ -954,7 +954,7 @@ namespace ODRAW
 
         bool IsEqual(CFont* pFont)
         {
-            if (NULL == pFont)
+            if (nullptr == pFont)
                 return false;
 
             return ((Name == pFont->Name) && (Path == pFont->Path) && (StringGID == pFont->StringGID) && (Size == pFont->Size) &&
@@ -963,7 +963,7 @@ namespace ODRAW
         }
         bool IsEqual2(CFont* pFont)
         {
-            if (NULL == pFont)
+            if (nullptr == pFont)
                 return false;
 
             return ((Name == pFont->Name) && (Path == pFont->Path) && (StringGID == pFont->StringGID) && (Size == pFont->Size) &&

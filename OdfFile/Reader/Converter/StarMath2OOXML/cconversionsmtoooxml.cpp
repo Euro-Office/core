@@ -361,7 +361,7 @@ namespace StarMath {
 		pXmlWrite->WriteNodeEnd(L"m:funcPr",false,false);
 	}
 
-	void CConversionSMtoOOXML::PropertiesDPr(XmlUtils::CXmlWriter *pXmlWrite, const std::wstring &wsOpenBracket,const std::wstring &wsCloseBracket, CAttribute* pAttribute, const TypeConversion &enTypeConversion, const TypeElement &enTypeBracket)
+	void CConversionSMtoOOXML::PropertiesDPr(XmlUtils::CXmlWriter *pXmlWrite, const std::wstring &wsOpenBracket,const std::wstring &wsCloseBracket, CAttribute* pAttribute, const TypeConversion &enTypeConversion, const TypeElement & /*enTypeBracket*/)
 	{
 		pXmlWrite->WriteNodeBegin(L"m:dPr",false);
 		BracketTypeNotation(wsOpenBracket,wsCloseBracket,pXmlWrite);
@@ -391,7 +391,7 @@ namespace StarMath {
 			pXmlWrite->WriteNodeEnd(L"w",true,true);
 		}
 	}
-	void CConversionSMtoOOXML::PropertiesMPr(XmlUtils::CXmlWriter *pXmlWrite, const TypeElement &enTypeMatrix, CAttribute* pAttribute, const TypeConversion &enTypeConversion, const unsigned int &iDimension)
+	void CConversionSMtoOOXML::PropertiesMPr(XmlUtils::CXmlWriter *pXmlWrite, const TypeElement & /*enTypeMatrix*/, CAttribute* pAttribute, const TypeConversion &enTypeConversion, const unsigned int &iDimension)
 	{
 		pXmlWrite->WriteNodeBegin(L"m:mPr",false);
 		pXmlWrite->WriteNodeBegin(L"m:mcs",false);

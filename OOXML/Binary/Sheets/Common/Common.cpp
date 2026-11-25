@@ -50,7 +50,7 @@ namespace SerializeCommon
 			strFileName = oDownloader.GetFilePath();
 			
 			CImageFileFormatChecker checker;
-			if (false == checker.isImageFile(strFileName))
+			if (!checker.isImageFile(strFileName))
 			{
 				strFileName.clear();
 			}  
@@ -62,7 +62,7 @@ namespace SerializeCommon
 	}
     VOID convertBase64ToImage (NSFile::CFileBinary& oFile, std::wstring &pBase64)
 	{
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		long nUtf8Size;
         NSFile::CUtf8Converter::GetUtf8StringFromUnicode(pBase64.c_str(), pBase64.length(), pUtf8, nUtf8Size);
         std::string sUnicode((char*)pUtf8, nUtf8Size);
@@ -85,7 +85,7 @@ namespace SerializeCommon
 		CImageFileFormatChecker checker;
 		std::wstring detectImageExtension = checker.DetectFormatByData(pBuffer, nDstLength);
 
-		if (false == detectImageExtension.empty())
+		if (!detectImageExtension.empty())
 		{
 			oFile.WriteFile(pBuffer, nDstLength);
 		}
@@ -95,6 +95,7 @@ namespace SerializeCommon
 
 	long Round(double val)
 	{
+		// NOLINTNEXTLINE(bugprone-incorrect-roundings): truncation after +0.5 is the value the binary format stores
 		return (long)(val+ 0.5);
 	}
     std::wstring changeExtention(const std::wstring& sSourcePath, const std::wstring& sTargetExt)
@@ -123,7 +124,7 @@ namespace SerializeCommon
 		sDelimiter = L","; // default common
 
 		XmlUtils::CXmlLiteReader oReader;
-        if (true != oReader.FromString(sXMLOptions) || true != oReader.IsValid())
+        if (!oReader.FromString(sXMLOptions) || !oReader.IsValid())
 			return;
 
 		oReader.ReadNextNode(); // XmlOptions

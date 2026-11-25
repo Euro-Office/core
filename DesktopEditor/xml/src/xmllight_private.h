@@ -436,7 +436,7 @@ namespace XmlUtils
         inline std::wstring GetText()
         {
             if (!IsValid())
-                return NULL;
+                return L"";
 
             const xmlChar* pValue = xmlTextReaderConstValue(reader);
             if (NULL == pValue)
@@ -448,7 +448,7 @@ namespace XmlUtils
         inline std::string GetTextA()
         {
             if (!IsValid())
-                return NULL;
+                return "";
 
             const xmlChar* pValue = xmlTextReaderConstValue(reader);
             if (NULL == pValue)
@@ -569,7 +569,7 @@ namespace XmlUtils
                 {
                     nSize *= 2;
                 }
-                RELEASEOBJECT(sBuffer);
+                RELEASEARRAYOBJECTS(sBuffer);
                 sBuffer = new WCHAR[nSize];
             }
         }

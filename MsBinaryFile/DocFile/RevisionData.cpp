@@ -34,12 +34,12 @@ namespace DocFileFormat
 	}
 
 	RevisionData::RevisionData():
-	Dttm(), Isbt(0), Type(NoRevision), Changes(NULL), RsidDel(0), RsidProp(0), Rsid(0)
+	Dttm(), Isbt(0), Type(NoRevision), Changes(nullptr), RsidDel(0), RsidProp(0), Rsid(0)
 	{
 		this->Changes = new std::vector<SinglePropertyModifier>();
 	}
 
-	RevisionData::RevisionData( CharacterPropertyExceptions* chpx ) : Dttm(), Isbt(0), Type(NoRevision), Changes(NULL), RsidDel(0), RsidProp(0), Rsid(0)
+	RevisionData::RevisionData( CharacterPropertyExceptions* chpx ) : Dttm(), Isbt(0), Type(NoRevision), Changes(nullptr), RsidDel(0), RsidProp(0), Rsid(0)
 	{
 		if (!chpx) return;
 		if (!chpx->grpprl)
@@ -64,21 +64,15 @@ namespace DocFileFormat
 					collectRevisionData = false;
 				}break;
 				case sprmCIbstRMark:
-				{
-					this->Isbt = FormatUtils::BytesToInt16( iter->Arguments, 0, iter->argumentsSize );
-				}break;		
 				case sprmCIbstRMarkDel:
 				{
 					this->Isbt = FormatUtils::BytesToInt16(iter->Arguments, 0, iter->argumentsSize);
-				}break;
+				}break;		
 				case sprmCDttmRMark:
-				{
-					this->Dttm = DateAndTime( iter->Arguments, 4 );
-				}break;	
 				case sprmCDttmRMarkDel:
 				{
 					this->Dttm = DateAndTime(iter->Arguments, 4);
-				}break;
+				}break;	
 				case sprmCFRMarkDel:
 				{
 					this->Type = Deleted;

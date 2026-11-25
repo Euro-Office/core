@@ -73,6 +73,7 @@ const bool FNGROUPS::saveContent(BinProcessor& proc)
     for(auto i : fnGrp12)
         if(i != nullptr)
             proc.mandatory(*i);
+    return true;
 }
 
 } // namespace XLS

@@ -34,17 +34,17 @@ namespace DocFileFormat
 		RELEASEOBJECT( grpprl );
 	}
 
-	PropertyExceptions::PropertyExceptions() : grpprl(NULL)
+	PropertyExceptions::PropertyExceptions() : grpprl(nullptr)
 	{
 		grpprl = new std::vector<SinglePropertyModifier>();
 	}
 
-	PropertyExceptions::PropertyExceptions( const std::vector<SinglePropertyModifier>& _grpprl ) : grpprl(NULL)
+	PropertyExceptions::PropertyExceptions( const std::vector<SinglePropertyModifier>& _grpprl ) : grpprl(nullptr)
 	{
 		grpprl = new std::vector<SinglePropertyModifier>( _grpprl );
 	}
 
-	PropertyExceptions::PropertyExceptions( unsigned char* bytes, int size, int nWordVersion ) : grpprl(NULL)
+	PropertyExceptions::PropertyExceptions( unsigned char* bytes, int size, int nWordVersion ) : grpprl(nullptr)
 	{
 		if (nWordVersion >= 2)//word 2.0 or 1.0
 			return;
@@ -57,7 +57,7 @@ namespace DocFileFormat
 
 		grpprl = new std::vector<SinglePropertyModifier>();
 
-		if ( ( bytes == NULL ) || ( size == 0 ) ) return;
+		if ( ( bytes == nullptr ) || ( size == 0 ) ) return;
 
 		//read the sprms
 	              
@@ -133,18 +133,11 @@ namespace DocFileFormat
 						}break;	
 
 						case sprmOldPAnld:
+						default:
 							{
 								lenByte = 1;
 								opSize	= bytes[sprmStart + opCodeSize];
 							}break;
-				      
-						default:
-						{  
-							//The variable length stand in the unsigned char after the opcode
-							lenByte = 1;
-							opSize = bytes[sprmStart + opCodeSize];
-						}
-						break;
 					}
 				}
 
@@ -155,7 +148,7 @@ namespace DocFileFormat
 
 				//length is 2byte for the opCode, lenByte for the length, opSize for the length of the operand
 				int sprmBytesSize = opCodeSize + lenByte + opSize;
-				unsigned char* sprmBytes = NULL;
+				unsigned char* sprmBytes = nullptr;
 
 				sprmBytes = new unsigned char[sprmBytesSize];
 

@@ -22,6 +22,7 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
+#include <limits>
 #include "PivotTable.h"
 #include "PivotCacheDefinition.h"
 #include "PivotCacheRecords.h"
@@ -166,6 +167,88 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SXAddl.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/QsiSXTag.h"
 
+namespace
+{
+	// Index just past the '>' that closes the root start tag, or 0 if it is not within the data. Skips the XML
+	// declaration, comments and processing instructions; quote-aware, since '>' is legal inside an attribute value.
+	size_t RootStartTagEnd(const BYTE* data, size_t length)
+	{
+		size_t at = 0;
+		while (at < length)
+		{
+			if (data[at] != '<') { ++at; continue; }
+			if (at + 1 < length && (data[at + 1] == '?' || data[at + 1] == '!'))
+			{
+				// <?...?> ends at "?>" and <!--...--> at "-->"; both may hold '>' and '<' before that.
+				// <!DOCTYPE ...> ends at '>' (OPC parts may not have a DTD, so it has no internal subset).
+				bool comment = at + 3 < length && data[at + 1] == '!' && data[at + 2] == '-' && data[at + 3] == '-';
+				size_t i = at + 2;
+				if (comment)
+				{
+					for (i = at + 4; i + 2 < length && !(data[i] == '-' && data[i + 1] == '-' && data[i + 2] == '>'); ++i) {}
+					if (i + 2 >= length) return 0;
+					at = i + 3;
+				}
+				else if (data[at + 1] == '?')
+				{
+					for (; i + 1 < length && !(data[i] == '?' && data[i + 1] == '>'); ++i) {}
+					if (i + 1 >= length) return 0;
+					at = i + 2;
+				}
+				else
+				{
+					while (i < length && data[i] != '>') ++i;
+					if (i >= length) return 0;
+					at = i + 1;
+				}
+				continue;
+			}
+			char quote = 0;
+			for (size_t i = at + 1; i < length; ++i)
+			{
+				if (quote) { if (data[i] == quote) quote = 0; }
+				else if (data[i] == '"' || data[i] == '\'') quote = data[i];
+				else if (data[i] == '>') return i + 1;
+			}
+			return 0;
+		}
+		return 0;
+	}
+
+	// OPC stores XML parts as UTF-8 or UTF-16, and RootStartTagEnd reads bytes as ASCII, which only fits UTF-8.
+	// A UTF-16 part starts with a byte order mark or has a 0x00 byte in its first four bytes (its first character,
+	// '<' or white space, is below U+0100); a UTF-8 XML part never holds 0x00.
+	bool IsUtf16(const BYTE* data, size_t length)
+	{
+		if (length >= 2 && ((data[0] == 0xFF && data[1] == 0xFE) || (data[0] == 0xFE && data[1] == 0xFF)))
+			return true;
+		for (size_t i = 0; i < length && i < 4; ++i)
+			if (data[i] == 0)
+				return true;
+		return false;
+	}
+
+	// Opens `reader` on a stored XML part and moves to its root element. CXmlLiteReader::FromStringA copies the
+	// whole buffer, so with rootOnly (the caller wants only the root's attributes) only the bytes up to the end
+	// of the root start tag are handed over; if the tag does not end inside the part the part is malformed and
+	// there is nothing to read. A UTF-16 part is handed over whole, for libxml2 to decode. Returns false if there
+	// is no root element.
+	bool OpenPartRoot(XmlUtils::CXmlLiteReader& reader, const BYTE* data, DWORD length, bool rootOnly)
+	{
+		if (!data || !length || length > static_cast<DWORD>(std::numeric_limits<int>::max()))
+			return false;
+		size_t size = length;
+		if (rootOnly && !IsUtf16(data, length))
+		{
+			size = RootStartTagEnd(data, length);
+			if (!size)
+				return false;
+		}
+		reader.FromStringA(reinterpret_cast<const char*>(data), static_cast<int>(size));
+		return reader.ReadNextNode();
+	}
+}
+
 namespace OOX
 {
 namespace Spreadsheet
@@ -236,10 +319,8 @@ namespace Spreadsheet
             CPivotTableDefinition tableDef;
             {
                 XmlUtils::CXmlLiteReader reader;
-				reader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength);
-  
-				reader.ReadNextNode();
-                tableDef.fromXML(reader);
+				if (OpenPartRoot(reader, m_pData, m_nDataLength, false))
+					tableDef.fromXML(reader);
             }
             return tableDef.toBin();
 
@@ -265,8 +346,7 @@ namespace Spreadsheet
 		else
 		{
 			// The object model is built on demand (EnsureDefinition); Editor.bin only needs the raw bytes
-			NSFile::CFileBinary::ReadAllBytes(oPath.GetPath(), &m_pData, m_nDataLength);
-			m_bDefinitionPending = true;
+			m_bDefinitionPending = NSFile::CFileBinary::ReadAllBytes(oPath.GetPath(), &m_pData, m_nDataLength);
 		}
 	}
 	void CPivotTableFile::EnsureDefinition() const
@@ -280,10 +360,7 @@ namespace Spreadsheet
 
 		XmlUtils::CXmlLiteReader oReader;
 
-		if (!oReader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength))
-			return;
-
-		if (!oReader.ReadNextNode())
+		if (!OpenPartRoot(oReader, m_pData, m_nDataLength, false))
 			return;
 
 		m_oPivotTableDefinition = oReader;
@@ -300,10 +377,7 @@ namespace Spreadsheet
 
 		XmlUtils::CXmlLiteReader oReader;
 
-		if (!oReader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength))
-			return false;
-
-		if (!oReader.ReadNextNode())
+		if (!OpenPartRoot(oReader, m_pData, m_nDataLength, true))
 			return false;
 
 		CPivotTableDefinition oDefinition;
@@ -4151,6 +4225,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
     }
 	XLS::BaseObjectPtr CPivotCacheDefinitionFile::WriteBin() const
 	{
+		EnsureDefinition();
         if(m_oPivotCashDefinition.IsInit())
         {
             auto pivotCacheDefStream = m_oPivotCashDefinition->toBin();
@@ -4161,10 +4236,8 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
             CPivotCacheDefinition cacheDef;
             {
                 XmlUtils::CXmlLiteReader reader;
-				reader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength);
-
-                reader.ReadNextNode();
-                cacheDef.fromXML(reader);
+				if (OpenPartRoot(reader, m_pData, m_nDataLength, false))
+					cacheDef.fromXML(reader);
             }
             return cacheDef.toBin();
         }
@@ -4187,15 +4260,14 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 		else
 		{
 			// The object model is built on demand (EnsureDefinition); Editor.bin only needs the raw bytes
-			NSFile::CFileBinary::ReadAllBytes(oPath.GetPath(), &m_pData, m_nDataLength);
-
-			// Same early exit as before the lazy parse: an unreadable part does not load its records
-			XmlUtils::CXmlLiteReader oReader;
-
-			if (!oReader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength))
+			if (!NSFile::CFileBinary::ReadAllBytes(oPath.GetPath(), &m_pData, m_nDataLength))
 				return;
 
-			if (!oReader.ReadNextNode())
+			// Same early exit as before the lazy parse: a part without a root element does not load its records.
+			// Only the root start tag is read, so this does not copy the whole part.
+			XmlUtils::CXmlLiteReader oReader;
+
+			if (!OpenPartRoot(oReader, m_pData, m_nDataLength, true))
 				return;
 
 			m_bDefinitionPending = true;
@@ -4214,10 +4286,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 
 		XmlUtils::CXmlLiteReader oReader;
 
-		if (!oReader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength))
-			return;
-
-		if (!oReader.ReadNextNode())
+		if (!OpenPartRoot(oReader, m_pData, m_nDataLength, false))
 			return;
 
 		m_oPivotCashDefinition = oReader;

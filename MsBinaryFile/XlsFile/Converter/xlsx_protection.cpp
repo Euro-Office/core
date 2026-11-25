@@ -43,16 +43,16 @@ bool xlsx_protection::operator != (const xlsx_protection & rVal) const
     return !(this->operator ==(rVal));
 }
 
-void xlsx_serialize(std::wostream & _Wostream, const xlsx_protection & protection)
+void xlsx_serialize(std::wostream & wostream_, const xlsx_protection & protection)
 {
-    _Wostream << L"<protection ";
+    wostream_ << L"<protection ";
     
     if (protection.hidden)
-        _Wostream << L"hidden=\"" << protection.hidden.get() << L"\" ";
+        wostream_ << L"hidden=\"" << protection.hidden.get() << L"\" ";
     if (protection.locked)
-        _Wostream << L"locked=\"" << protection.locked.get() << L"\" ";
+        wostream_ << L"locked=\"" << protection.locked.get() << L"\" ";
 
-    _Wostream << L"/>";    
+    wostream_ << L"/>";    
 }
 
 std::size_t hash_value(xlsx_protection const & val)

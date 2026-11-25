@@ -56,9 +56,9 @@ PPT::CElement::CElement()
     m_bLine						= true;
     m_bIsFilled					= true;
 
-    m_pTheme					= NULL;
-    m_pLayout					= NULL;
-    m_pParentElements			= NULL;
+    m_pTheme					= nullptr;
+    m_pLayout					= nullptr;
+    m_pParentElements			= nullptr;
 }
 
 PPT::CElement::~CElement()

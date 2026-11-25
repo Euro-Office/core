@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "OleObject.h"
 #include "WordDocument.h"
@@ -71,8 +70,11 @@ OleObject::OleObject( const CharacterPropertyExceptions* chpx, WordDocument* doc
 			int pos = reader.GetPosition();
 
 			short a1 = reader.ReadInt16();
+			(void)a1;
 			short a2 = reader.ReadInt16();
+			(void)a2;
 			short a3 = reader.ReadInt16();
+			(void)a3;
 
 			int lcb = reader.ReadInt32();
 			//short a4 = reader.ReadInt16();
@@ -80,23 +82,29 @@ OleObject::OleObject( const CharacterPropertyExceptions* chpx, WordDocument* doc
 			//short a6 = reader.ReadInt16();
 			//short a7 = reader.ReadInt16();
 			int lcb1 = reader.ReadInt32();
+			(void)lcb1;
 
 			ClipboardFormat = Program = reader.ReadLengthPrefixedAnsiString(0xffff);
 
 			short a10 = reader.ReadInt16();
+			(void)a10;
 			short a11 = reader.ReadInt16();
+			(void)a11;
 			short a12 = reader.ReadInt16();
+			(void)a12;
 			short a14 = reader.ReadInt16();
+			(void)a14;
 
 			//int lcb = 5000;//reader.ReadInt32();
 
 			int szHeader  = reader.GetPosition() - pos;
+			(void)szHeader;
 			size_t szData  = reader.ReadInt32();
 			if (szData > lcb)
 			{
 				szData = szData >> 16;
 			}
-			char* bytes = (szData < 0xffff) ? (char*)reader.ReadBytes( szData, true ) : NULL;
+			char* bytes = (szData < 0xffff) ? (char*)reader.ReadBytes( szData, true ) : nullptr;
 			if (bytes)
 			{
 				boost::shared_array<char> buffer(bytes);
@@ -115,7 +123,7 @@ bool OleObject::processLinkInfoStream( const std::wstring& linkStream )
 	{
 		POLE::Stream* pLinkStream = new POLE::Stream(oleStorage, linkStream);
 
-		if (( pLinkStream ) && (false == pLinkStream->fail()))
+		if (( pLinkStream ) && (!pLinkStream->fail()))
 		{
 			VirtualStreamReader reader( pLinkStream, 0, false);
 			processLinkInfoStream(reader);
@@ -126,6 +134,7 @@ bool OleObject::processLinkInfoStream( const std::wstring& linkStream )
 	}
 	catch (...)
 	{
+	    (void)0;
 	}
 	return res;
 }
@@ -136,7 +145,7 @@ void OleObject::processEquationNativeStream( const std::wstring& eqStream )
 	{
 	  POLE::Stream* pCompStream = new POLE::Stream(oleStorage, eqStream);
 
-	  if ((pCompStream) && (false == pCompStream->fail()))
+	  if ((pCompStream) && (!pCompStream->fail()))
 	  {
 		  VirtualStreamReader reader(pCompStream, 0, false);
 
@@ -154,6 +163,7 @@ void OleObject::processEquationNativeStream( const std::wstring& eqStream )
 	}
 	catch (...)
 	{
+	    (void)0;
 	}
 }
 bool OleObject::processPackageStream(const std::wstring& packageStream)
@@ -163,14 +173,14 @@ bool OleObject::processPackageStream(const std::wstring& packageStream)
 	{
 		POLE::Stream* pPackageStream = new POLE::Stream(oleStorage, packageStream);
 
-		if ((pPackageStream) && (false == pPackageStream->fail()))
+		if ((pPackageStream) && (!pPackageStream->fail()))
 		{ 
 // AVS_OFFICESTUDIO_FILE_OTHER_PACKAGE_IN_OLE
 			VirtualStreamReader reader(pPackageStream, 0, false);
 
 			size_t sz = reader.GetSize();
 			
-			char* bytes = (sz < 0xffffff) ? (char*)reader.ReadBytes(sz, true) : NULL;
+			char* bytes = (sz < 0xffffff) ? (char*)reader.ReadBytes(sz, true) : nullptr;
 			if (bytes)
 			{
 				boost::shared_array<char> buffer(bytes);
@@ -183,6 +193,7 @@ bool OleObject::processPackageStream(const std::wstring& packageStream)
 	}
 	catch (...)
 	{
+	    (void)0;
 	}
 	return res;
 }
@@ -192,7 +203,7 @@ void OleObject::processMETAStream( const std::wstring& metaStream )
 	{
 		POLE::Stream* pMETAStream = new POLE::Stream(oleStorage, metaStream);
 
-		if (( pMETAStream ) && (false == pMETAStream->fail()))
+		if (( pMETAStream ) && (!pMETAStream->fail()))
 		{
 			pictureDesciptor.Type = wmf;
 			VirtualStreamReader reader( pMETAStream, 0, false);
@@ -209,6 +220,7 @@ void OleObject::processMETAStream( const std::wstring& metaStream )
 	}
 	catch (...)
 	{
+	    (void)0;
 	}
 }
 void OleObject::processPICStream( const std::wstring& picStream )
@@ -217,15 +229,16 @@ void OleObject::processPICStream( const std::wstring& picStream )
 	{
 		POLE::Stream* pPICStream = new POLE::Stream(oleStorage, picStream);
 
-		if ((pPICStream) && (false == pPICStream->fail()))
+		if ((pPICStream) && (!pPICStream->fail()))
 		{
 			VirtualStreamReader reader( pPICStream, 0, false);
 
 			int sz = reader.GetSize();
 
 			int cbHeader =	reader.ReadUInt32();
+			(void)cbHeader;
 
-			unsigned char* bytes = NULL;
+			unsigned char* bytes = nullptr;
 				
 			pictureDesciptor.mfp.mm		=	reader.ReadInt16();
 			pictureDesciptor.mfp.xExt	=	reader.ReadInt16();
@@ -233,7 +246,9 @@ void OleObject::processPICStream( const std::wstring& picStream )
 			pictureDesciptor.mfp.hMf	=	reader.ReadInt16();
 
 			int x	=	reader.ReadUInt32();
+			(void)x;
 			int y	=	reader.ReadUInt32();
+			(void)y;
 
 			pictureDesciptor.dxaGoal	=	reader.ReadUInt32();
 			pictureDesciptor.dyaGoal	=	reader.ReadUInt32();
@@ -275,6 +290,7 @@ void OleObject::processPICStream( const std::wstring& picStream )
 	}
 	catch (...)
 	{
+	    (void)0;
 	}
 }
 
@@ -285,7 +301,7 @@ bool OleObject::processCompObjStream( const std::wstring& compStream )
 	{
 		POLE::Stream* pCompStream = new POLE::Stream(oleStorage, compStream);
 
-		if ( (pCompStream) && (false == pCompStream->fail()) )
+		if ( (pCompStream) && (!pCompStream->fail()) )
 		{
 			VirtualStreamReader reader( pCompStream, 0, false);
 			processCompObjStream(reader);
@@ -296,6 +312,7 @@ bool OleObject::processCompObjStream( const std::wstring& compStream )
 	}
 	catch (...)
 	{
+	    (void)0;
 	}
 	return res;
 }
@@ -321,6 +338,7 @@ bool OleObject::processOleStream( const std::wstring& oleStreamName )
 	}
 	catch (...)
 	{ 
+	    (void)0;
 	}
 
 	return false;
@@ -396,7 +414,7 @@ std::wstring OleObject::getOleEntryName( const CharacterPropertyExceptions* chpx
 {
 	std::wstring ret;
 
-	if ( chpx != NULL )
+	if ( chpx != nullptr )
 	{
 	  for ( std::vector<SinglePropertyModifier>::const_iterator iter = chpx->grpprl->begin(); iter != chpx->grpprl->end(); iter++ )
 	  {

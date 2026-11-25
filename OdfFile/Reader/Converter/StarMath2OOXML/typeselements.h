@@ -55,7 +55,7 @@ enum class TypeElement{
 	minus,
 	frac,
 	div,
-	multipl,
+	multiply,
 	division,
 	oplus,
 	ominus,
@@ -191,7 +191,7 @@ enum class TypeElement{
 	nsupset,
 	nsubseteq,
 	in,
-	notin,
+	not_in,
 	owns,
 	//connection
 	approx,

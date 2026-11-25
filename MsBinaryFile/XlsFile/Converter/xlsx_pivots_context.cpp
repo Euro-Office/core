@@ -78,7 +78,7 @@ int xlsx_pivots_context::get_cache_count()
 
 void xlsx_pivots_context::dump_rels_cache(int index, rels & Rels)
 {
-	if (impl_->caches_[index].records_.empty() == false)
+	if (!impl_->caches_[index].records_.empty())
 	{
 		Rels.add(relationship(L"rId1",							
 						L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/pivotCacheRecords",

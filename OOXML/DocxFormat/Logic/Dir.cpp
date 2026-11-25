@@ -80,7 +80,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("w:bdo") == sName )
 					AssignPtrXmlContent(pItem, CBdo, oReader)

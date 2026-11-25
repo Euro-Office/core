@@ -3,10 +3,12 @@
 
 #include "../../Reader/Converter/xlsx_numFmts.h"
 #include "../../DataTypes/officevaluetype.h"
+#include "../../Common/CPColorUtils.h"
 
 #include <iostream>
 #include <set>
 #include <sstream>
+#include <string>
 #include <stdexcept>
 #include <vector>
 
@@ -151,6 +153,90 @@ void scientific_repeated_lookup()
     formats.serialize(after);
     require(before.str() == after.str(), "Repeated lookup must not add duplicate XML entries");
 }
+
+void percentage_builtin_formats()
+{
+    using cpdoccore::odf_types::office_value_type;
+    cpdoccore::oox::xlsx_num_fmts formats;
+    require(formats.add_or_find(L"0%", office_value_type::Percentage) == 9,
+            "Exact percentage format must use built-in ID 9");
+    require(formats.add_or_find(L"0.00%", office_value_type::Percentage) == 10,
+            "Exact decimal percentage format must use built-in ID 10");
+    require(formats.add_or_find(L"0%", office_value_type::Percentage) == 9 &&
+                formats.add_or_find(L"0.00%", office_value_type::Percentage) == 10,
+            "Repeated built-in percentage formats must keep their built-in IDs");
+
+    std::wostringstream xml;
+    formats.serialize(xml);
+    require(xml.str().find(L"<numFmt ") == std::wstring::npos,
+            "Built-in percentage formats must not need a custom XML entry");
+}
+
+void percentage_custom_formats()
+{
+    using cpdoccore::odf_types::office_value_type;
+    cpdoccore::oox::xlsx_num_fmts formats;
+    // Each of these contains "0%" or "0.00%" but shows numbers differently from the built-in formats.
+    const std::vector<std::wstring> codes = {
+        L"#,##0.00%",
+        L"#,##0%",
+        L"0.0%",
+        L"0.000%",
+        L".00%",
+        L"0.00%;[Red]-0.00%",
+        L"[Red]0.00%",
+        L"\"Rendite \"0.00%",
+        L"0.00%\" p.a.\""
+    };
+    std::set<unsigned int> ids;
+    for (const auto& code : codes)
+    {
+        const auto id = formats.add_or_find(code, office_value_type::Percentage);
+        require(id >= 164, "Percentage format that is not a built-in one must use a custom ID");
+        require(ids.insert(id).second, "Distinct percentage formats must have distinct IDs");
+        require(formats.add_or_find(code, office_value_type::Percentage) == id,
+                "Repeated percentage formats must reuse their ID");
+    }
+
+    std::wostringstream xml;
+    formats.serialize(xml);
+    for (const auto& code : codes)
+    {
+        std::wstring escaped;
+        for (const wchar_t c : code)
+            escaped += c == L'"' ? std::wstring(L"&quot;") : std::wstring(1, c);
+        require(xml.str().find(L"formatCode=\"" + escaped + L"\"") != std::wstring::npos,
+                "Custom percentage format code must survive serialization unchanged");
+    }
+}
+
+void number_format_colours()
+{
+    struct Colour
+    {
+        const char* label;
+        int r, g, b;
+        const wchar_t* expected;
+    };
+    // the eight colours of an Excel number format, and two colours close to red and cyan
+    const Colour colours[] = {
+        {"black", 0, 0, 0, L"Black"},
+        {"white", 255, 255, 255, L"White"},
+        {"red", 255, 0, 0, L"Red"},
+        {"green", 0, 255, 0, L"Green"},
+        {"blue", 0, 0, 255, L"Blue"},
+        {"yellow", 255, 255, 0, L"Yellow"},
+        {"magenta", 255, 0, 255, L"Magenta"},
+        {"cyan", 0, 255, 255, L"Cyan"},
+        {"near red", 240, 20, 10, L"Red"},
+        {"near cyan", 10, 230, 250, L"Cyan"}
+    };
+    for (const auto& colour : colours)
+    {
+        if (cpdoccore::RGBToString(colour.r, colour.g, colour.b) != colour.expected)
+            throw std::runtime_error(std::string("Wrong number format colour for ") + colour.label);
+    }
+}
 }
 
 int main()
@@ -167,7 +253,10 @@ int main()
         {"scientific different precision", scientific_different_precision},
         {"scientific literal", scientific_literal},
         {"scientific serialization", scientific_serialization},
-        {"scientific repeated lookup", scientific_repeated_lookup}
+        {"scientific repeated lookup", scientific_repeated_lookup},
+        {"percentage built-in formats", percentage_builtin_formats},
+        {"percentage custom formats", percentage_custom_formats},
+        {"number format colours", number_format_colours}
     };
     int failures = 0;
     for (const auto& test : tests)
