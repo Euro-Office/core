@@ -843,8 +843,14 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_t
 				!pivot_fields[index]->m_oItems.IsInit()) continue;
 			std::vector<OOX::Spreadsheet::CFieldItem*> &items = pivot_fields[index]->m_oItems->m_arrItems;
 			const size_t item_index = page_field->m_oItem->GetValue();
-			if (item_index < items.size() && items[item_index] && items[item_index]->m_oItemIndex.IsInit() &&
-				!pivot_item_name(cache_fields[index], items[item_index]->m_oItemIndex->GetValue(), item_name)) return;
+			if (item_index >= items.size() || !items[item_index] || !items[item_index]->m_oItemIndex.IsInit()) continue;
+			// A selected page is written as all other items hidden (see add_field), so every item needs a name.
+			for (OOX::Spreadsheet::CFieldItem *item : items)
+			{
+				if (!item || !item->m_oItemIndex.IsInit()) continue;
+				if (item->m_oItemType.IsInit() && item->m_oItemType->GetValue() != SimpleTypes::Spreadsheet::typeData) continue;
+				if (!pivot_item_name(cache_fields[index], item->m_oItemIndex->GetValue(), item_name)) return;
+			}
 		}
 	}
 
@@ -938,17 +944,17 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_t
 		}
 		else
 			field->table_function_ = odf_types::table_function(odf_types::table_function::Auto);
-		if (selected_page)
-			field->table_selected_page_ = *selected_page;
-		else if (orientation == odf_types::table_orientation::page)
+		if (orientation == odf_types::table_orientation::page)
 		{
-			// ODF requires table:selected-page on a page field; with no single item selected ("All" or several items)
-			// write it empty and tell LibreOffice to ignore it, as LibreOffice does itself.
-			field->table_selected_page_ = std::wstring();
+			// ODF requires table:selected-page on a page field. LibreOffice writes it with loext:ignore-selected-page
+			// and keeps the filter in the member visibility; a plain selected page makes LibreOffice's refresh leave
+			// the other pivot tables on the same source empty. So: the selected item (or empty for "All" or several
+			// items), ignored, and with a single item every other item is written hidden below.
+			field->table_selected_page_ = selected_page ? *selected_page : std::wstring();
 			field->loext_ignore_selected_page_ = odf_types::Bool(true);
 		}
 
-		// Items hidden by a filter: table:data-pilot-member with table:display="false".
+		// Items hidden by a filter, or not the selected page: table:data-pilot-member with table:display="false".
 		OOX::Spreadsheet::CPivotField *pivot_field =
 			(!data_layout && !data_field && static_cast<size_t>(index) < pivot_fields.size()) ? pivot_fields[index] : NULL;
 		// With grouped items the item indexes point into the group items, not the shared items: no members.
@@ -958,9 +964,11 @@ void XlsxConverter::convert(OOX::Spreadsheet::CPivotTableDefinition *oox_pivot_t
 			for (OOX::Spreadsheet::CFieldItem *item : pivot_field->m_oItems->m_arrItems)
 			{
 				std::wstring name;
-				if (!item || !item->m_oHidden.IsInit() || !*item->m_oHidden || !item->m_oItemIndex.IsInit()) continue;
+				if (!item || !item->m_oItemIndex.IsInit()) continue;
+				if (!selected_page && (!item->m_oHidden.IsInit() || !*item->m_oHidden)) continue;
 				if (item->m_oItemType.IsInit() && item->m_oItemType->GetValue() != SimpleTypes::Spreadsheet::typeData) continue;
 				if (!pivot_item_name(cache_field, item->m_oItemIndex->GetValue(), name)) continue;
+				if (selected_page && name == *selected_page) continue;
 
 				if (!members_elm)
 					odf_writer::create_element(L"table", L"data-pilot-members", members_elm, ods_context);

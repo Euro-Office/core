@@ -247,6 +247,24 @@ TEST(XlsxToOds, PivotTablePageFieldWithoutSelection)
 	EXPECT_EQ(attribute(region[0].tag, L"loext:ignore-selected-page"), L"true") << region[0].tag;
 }
 
+// A selected page is written as LibreOffice writes it: the item in
+// table:selected-page, marked to be ignored, and every other item a hidden
+// member. A plain selected page left the other pivot table on the same source
+// (UnitsByProduct) empty after a refresh in LibreOffice.
+TEST(XlsxToOds, PivotTableSelectedPageAsHiddenMembers)
+{
+	const std::wstring table = pilot_table(L"RevenueByRegion");
+	ASSERT_FALSE(table.empty());
+	const std::vector<Field> year = fields_of(table, L"Year", L"page");
+	ASSERT_EQ(year.size(), 1u) << table;
+	EXPECT_EQ(attribute(year[0].tag, L"table:selected-page"), L"2026") << year[0].tag;
+	EXPECT_EQ(attribute(year[0].tag, L"loext:ignore-selected-page"), L"true") << year[0].tag;
+	EXPECT_NE(year[0].element.find(L"<table:data-pilot-member table:name=\"2025\" table:display=\"false\""),
+			  std::wstring::npos)
+		<< year[0].element;
+	EXPECT_EQ(year[0].element.find(L"table:name=\"2026\""), std::wstring::npos) << year[0].element;
+}
+
 // A pivot table over a range in another workbook is not written as a range
 // of this document.
 TEST(XlsxToOds, PivotTableExternalSourceSkipped)
