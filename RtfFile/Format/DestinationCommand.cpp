@@ -2957,7 +2957,7 @@ void RtfShapeReader::ShapePropertyReader::ShapePropertyValueReader::PopState( Rt
 	else if ( L"adjust9Value"	== m_sPropName ) m_oShape.m_nAdjustValue[8]	= nValue;
 	else if ( L"adjust10Value"	== m_sPropName ) m_oShape.m_nAdjustValue[9]	= nValue;
 	//WordArt Effects
-	else if ( L"cropFromTop"	== m_sPropName || L"cropFromRight" == m_sPropName ) m_oShape.m_nCropFromTop	= nValue;
+	else if ( L"cropFromTop"	== m_sPropName ) m_oShape.m_nCropFromTop	= nValue;
 	else if ( L"cropFromBottom"	== m_sPropName ) m_oShape.m_nCropFromBottom = nValue;
 	else if ( L"cropFromLeft"	== m_sPropName ) m_oShape.m_nCropFromLeft	= nValue;
 	else if ( L"cropFromRight"	== m_sPropName ) m_oShape.m_nCropFromRight	= nValue;
