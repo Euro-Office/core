@@ -27,6 +27,8 @@
 #include "odf_conversion_context.h"
 #include "odp_slide_context.h"
 
+#include <set>
+
 namespace cpdoccore { 
 namespace odf_writer {
 
@@ -58,6 +60,8 @@ public:
 	size_t get_pages_count();
 
 	void start_master_slide(std::wstring & name);
+	// The name of a master page of the file. A number for a duplicate name never gives it.
+	void reserve_master_name(const std::wstring & name);
 	void end_master_slide();
 
 	void start_layout_slide();
@@ -102,6 +106,7 @@ public:
 	
 	std::map<std::wstring, int> map_masterNames_;
 private:
+	std::set<std::wstring>		reserved_masterNames_;
 	odp_slide_context			slide_context_;
 	office_presentation*		root_presentation_;
 

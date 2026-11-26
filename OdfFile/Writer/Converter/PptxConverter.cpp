@@ -1347,8 +1347,55 @@ void PptxConverter::convert_masters_and_layouts()
 	}
 }
 
+// The name of the master or of its theme, the first part of the name of an ODF
+// master page.
+std::wstring PptxConverter::master_base_name(const PPTX::Slide & slide) const
+{
+	const PPTX::Theme* theme = slide.theme.GetPointer();
+
+	if (slide.Master->cSld.attrName.IsInit())			return slide.Master->cSld.attrName.get();
+	else if ((theme) && (theme->name.IsInit()))		return theme->name.get();
+	return L"MasterPage";
+}
+
+// The name of the ODF master page for the master and the layout of a slide, or
+// an empty name when the layout has neither a name nor a type.
+std::wstring PptxConverter::master_page_name(const PPTX::Slide & slide) const
+{
+	if (!slide.Layout->cSld.attrName.IsInit() && !slide.Layout->attrType.IsInit())
+		return L"";
+
+	std::wstring master_style_name = master_base_name(slide);
+
+	// The ODF reader gives the layout the name of the master page.
+	// Use only that name, or each save makes it longer.
+	if (slide.Layout->cSld.attrName.IsInit() && !slide.Layout->cSld.attrName.get().empty() &&
+		(master_style_name.empty() || master_style_name == slide.Layout->cSld.attrName.get()))
+		master_style_name.clear();
+	else
+		master_style_name += L"_" ;
+
+	if (slide.Layout->cSld.attrName.IsInit())	master_style_name += slide.Layout->cSld.attrName.get();
+	else										master_style_name += slide.Layout->attrType->get();
+
+	return master_style_name;
+}
+
 void PptxConverter::convert_slides()
 {
+	// Each master page keeps its name. A second master page of the same name
+	// gets a number, which must not give the name of another one.
+	for (size_t i = 0; i < presentation->sldIdLst.size(); ++i)
+	{
+		smart_ptr<PPTX::Slide> slide = ((*presentation)[presentation->sldIdLst[i].rid.get()]).smart_dynamic_cast<PPTX::Slide>();
+		if (slide.IsInit() && slide->Master.IsInit() && slide->Layout.IsInit())
+		{
+			const std::wstring name = master_page_name(*slide);
+			if (!name.empty())
+				odp_context->reserve_master_name(name);
+		}
+	}
+
 	for (size_t i = 0; i < presentation->sldIdLst.size(); ++i)
 	{
 		odp_context->map_table_styles_.clear();// TODO - don't clean for identical themes
@@ -1382,27 +1429,15 @@ void PptxConverter::convert_slides()
 			std::map<std::wstring, std::wstring>::iterator pFind = m_mapMasters.find(master_name);
 			if (pFind == m_mapMasters.end())
 			{
-				master_style_name = L"MasterPage";
-				
 				bool bShowLayoutMasterAnim	= slide->Layout->showMasterPhAnim.get_value_or(true);
 				bool bShowLayoutMasterSp	= slide->Layout->showMasterSp.get_value_or(true);
-				
-				if (slide->Master->cSld.attrName.IsInit())					master_style_name = slide->Master->cSld.attrName.get();
-				else if ((current_theme) && (current_theme->name.IsInit()))	master_style_name = current_theme->name.get();
 
-				// The ODF reader gives the layout the name of the master page.
-				// Use only that name, or each save makes it longer.
-				if (slide->Layout->cSld.attrName.IsInit() && !slide->Layout->cSld.attrName.get().empty() &&
-					(master_style_name.empty() || master_style_name == slide->Layout->cSld.attrName.get()))
-					master_style_name.clear();
-				else
-					master_style_name += L"_" ;
-				
-				if (slide->Layout->cSld.attrName.IsInit())	master_style_name += slide->Layout->cSld.attrName.get();
-				else if (slide->Layout->attrType.IsInit())	master_style_name += slide->Layout->attrType->get();
-				else
-					master_style_name += std::to_wstring((int)m_mapMasters.size());
-				
+				master_style_name = master_page_name(*slide);
+				// A layout without a name or a type: as before, "_" and the number of
+				// the master page. This name is not reserved.
+				if (master_style_name.empty())
+					master_style_name = master_base_name(*slide) + L"_" + std::to_wstring((int)m_mapMasters.size());
+
 				odp_context->start_master_slide(master_style_name);
 					convert_common();
 

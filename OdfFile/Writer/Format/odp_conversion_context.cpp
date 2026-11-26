@@ -138,20 +138,32 @@ void odp_conversion_context::start_master_slide(std::wstring & name)
 {
 	slide_context_.set_styles_context(page_layout_context()->get_local_styles_context());
 
+	// A name that is used already gets a number. The numbered name must not be
+	// the name of another master page of the file (reserved), and not a name
+	// used already: two numbered names can be equal ("A1" + "2", "A" + "12").
+	// The numbered name is recorded too.
 	std::map<std::wstring, int>::iterator pFind = map_masterNames_.find(name);
-	if (map_masterNames_.end() == pFind)
+	if (map_masterNames_.end() != pFind)
 	{
-		map_masterNames_.insert(std::make_pair(name, 1));
+		std::wstring unique_name;
+		do
+		{
+			unique_name = name + std::to_wstring(++pFind->second);
+		}
+		while (map_masterNames_.end() != map_masterNames_.find(unique_name) ||
+			reserved_masterNames_.end() != reserved_masterNames_.find(unique_name));
+		name = unique_name;
 	}
-	else
-	{
-		name += std::to_wstring(++pFind->second);
-	}
+	map_masterNames_.insert(std::make_pair(name, 1));
 	
 	page_layout_context()->add_master_page(name);	
 	slide_context_.start_page(page_layout_context()->last_master()->get_root());
 	
 	drawing_context()->set_presentation(1);	
+}
+void odp_conversion_context::reserve_master_name(const std::wstring & name)
+{
+	reserved_masterNames_.insert(name);
 }
 void odp_conversion_context::end_master_slide()
 {

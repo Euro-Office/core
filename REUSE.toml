@@ -252,6 +252,6 @@ SPDX-FileCopyrightText = "2010-2024 Ascensio System SIA"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
-path = "OdfFile/Test/test_odf/ExampleFiles/master_name.pptx"
+path = ["OdfFile/Test/test_odf/ExampleFiles/master_name.pptx", "OdfFile/Test/test_odf/ExampleFiles/master_clash.odp"]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
