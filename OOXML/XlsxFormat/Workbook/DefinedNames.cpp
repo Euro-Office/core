@@ -127,8 +127,9 @@ namespace OOX
                 ptr->fPublished = m_oPublishToServer->GetValue();
 			else
 				ptr->fPublished = false;
-			if (m_oShortcutKey.IsInit())
-                ptr->chKey = std::stoi(m_oShortcutKey.get());
+			// shortcutKey is the key itself ("k"); the record keeps its character code
+			if (m_oShortcutKey.IsInit() && !m_oShortcutKey->empty() && (*m_oShortcutKey)[0] < 0x80)
+				ptr->chKey = (unsigned char)(*m_oShortcutKey)[0];
 			else
 				ptr->chKey = 0;
 
@@ -238,7 +239,8 @@ namespace OOX
 
 			m_oName = ptr->name.value();
 			m_oPublishToServer = ptr->fPublished;
-			m_oShortcutKey = std::to_wstring(ptr->chKey);
+			if (ptr->chKey)
+				m_oShortcutKey = std::wstring(1, (wchar_t)ptr->chKey);
 			//m_oStatusBar = ;
 			m_oVbProcedure = ptr->fOB;
 			m_oWorkbookParameter = ptr->fWorkbookParam;
