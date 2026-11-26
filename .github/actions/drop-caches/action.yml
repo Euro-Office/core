@@ -1,0 +1,38 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+
+# Deletes this ref's caches of a build leg right before the leg saves its new
+# one. Deleting only afterwards (ccache-prune.yml) leaves two copies of every
+# leg until the workflow ends, which is enough to push the repo's 10 GB of
+# Actions caches over the limit and have GitHub evict other legs' caches.
+# If the save then fails, the leg's next run starts cold. Needs actions: write;
+# without it (fork PRs) nothing is deleted and the prune cleans up as before.
+name: Drop caches
+description: Delete this ref's caches whose key starts with a prefix
+
+inputs:
+  prefix:
+    description: Key prefix of the leg, without run id or runner image version
+    required: true
+
+runs:
+  using: composite
+  steps:
+  - uses: actions/github-script@v7
+    continue-on-error: true
+    env:
+      PREFIX: ${{ inputs.prefix }}
+    with:
+      script: |
+        const { owner, repo } = context.repo;
+        const caches = await github.paginate(github.rest.actions.getActionsCacheList,
+          { owner, repo, ref: context.ref, key: process.env.PREFIX, per_page: 100 });
+        for (const cache of caches) {
+          core.info(`Deleting ${cache.key}`);
+          try {
+            await github.rest.actions.deleteActionsCacheById({ owner, repo, cache_id: cache.id });
+          } catch (e) {
+            // Another workflow's prune may have deleted it already
+            if (e.status !== 404) throw e;
+          }
+        }

@@ -158,6 +158,10 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/continuous_sections.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/continuous_sections_line_numbers.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/continuous_sections_margins.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/continuous_sections_page_numbers.docx",
     "OdfFile/Test/test_odf/ExampleFiles/deletion_around_note.docx",
     "OdfFile/Test/test_odf/ExampleFiles/deletion_over_paragraph_break.docx",
     "OdfFile/Test/test_odf/ExampleFiles/deletion_same_id_apart.docx",
@@ -186,6 +190,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/doc_props_typed.odt",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers_duplicate.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_starts_with_table.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_after_header_only.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_continuous.docx",
@@ -367,6 +372,9 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent.odt",
     "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_image.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_gradient.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_gradient_angle.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_gradient_no_start.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
@@ -466,7 +474,22 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/number_text_style_map.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = "OdfFile/Test/test_odf/ExampleFiles/number_styles_auto_data_style.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_index.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_nested_index.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_table.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_text_box_table.odt",
+]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
@@ -518,5 +541,10 @@ path = [
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_rules.xlsx",
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_x14.xlsx",
 ]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/ruby_base_text.odt"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
