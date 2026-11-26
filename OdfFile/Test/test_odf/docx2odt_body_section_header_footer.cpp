@@ -24,6 +24,33 @@ namespace
 			return L"";
 		return styles.substr(start, end - start);
 	}
+
+	// The master page name in the paragraph style of the paragraph that holds `text`: "" if it has none,
+	// "?" if the text or its style is not found.
+	std::wstring master_page_of(const std::wstring& content, const std::wstring& text)
+	{
+		const size_t at = content.find(L">" + text + L"<");
+		const size_t para = at == std::wstring::npos ? std::wstring::npos : content.rfind(L"<text:p ", at);
+		if (para == std::wstring::npos)
+			return L"?";
+		const std::wstring key = L"text:style-name=\"";
+		const size_t name = content.find(key, para);
+		if (name == std::wstring::npos || name > content.find(L'>', para))
+			return L"";
+		const size_t name_end = content.find(L'"', name + key.size());
+		const std::wstring style = content.substr(name + key.size(), name_end - name - key.size());
+
+		const size_t def = content.find(L"style:name=\"" + style + L"\"");
+		if (def == std::wstring::npos)
+			return L"?";
+		const size_t start = content.rfind(L"<style:style ", def);
+		const std::wstring tag = content.substr(start, content.find(L'>', def) - start);
+		const std::wstring mp = L"style:master-page-name=\"";
+		const size_t m = tag.find(mp);
+		if (m == std::wstring::npos)
+			return L"";
+		return tag.substr(m + mp.size(), tag.find(L'"', m + mp.size()) - m - mp.size());
+	}
 }
 
 // Three continuous sections; only the first has a header and a footer.
@@ -92,4 +119,19 @@ TEST(DocxToOdt, BodySectionTakesLastDuplicateHeader)
 	ASSERT_FALSE(standard.empty()) << "no Standard master page";
 	EXPECT_NE(standard.find(L"Last listed header"), std::wstring::npos);
 	EXPECT_EQ(standard.find(L"First listed header"), std::wstring::npos);
+}
+
+// The body section is continuous and has no headers or footers of its own: it keeps the page, as the
+// earlier continuous section does. The references it borrows for the Standard page do not count.
+TEST(DocxToOdt, ContinuousBodySectionWithBorrowedHeaderKeepsPage)
+{
+	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/body_section_inherited_header_footer.docx");
+	ASSERT_FALSE(dir.empty()) << "DOCX -> ODT conversion failed";
+
+	const std::wstring content = read_part(dir, L"content.xml");
+	ASSERT_FALSE(content.empty()) << "content.xml is missing";
+	EXPECT_TRUE(is_well_formed(content));
+
+	EXPECT_EQ(master_page_of(content, L"SECOND"), L"") << "continuous section without own references";
+	EXPECT_EQ(master_page_of(content, L"THIRD"), L"") << "continuous body section without own references";
 }

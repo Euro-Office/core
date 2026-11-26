@@ -357,6 +357,12 @@ void DocxConverter::convert_document()
 
 		sections.push_back(section);
 	}					
+	// Decide which continuous sections keep the page before the body section borrows headers and footers below:
+	// keeps_page() looks at the section's own references, and borrowed ones must not start a new page.
+	for (size_t i = 1; i < sections.size(); ++i)
+	{
+		sections[i].bKeepPage = sections[i].bContinue && keeps_page(sections[i - 1].props, sections[i].props);
+	}
 	// The body section is converted first, as the Standard page. Where it has no header or footer of a type, Word
 	// uses the one of the closest earlier section that has it (ECMA-376 17.10.5). Add those for this conversion only,
 	// so the sections keep their own references for the rest of the document.
@@ -378,7 +384,6 @@ void DocxConverter::convert_document()
 		sections[i].bFirst = (i == 0);
 		sections[i].bTurnsPage = i > 0 && sections[i - 1].props && sections[i].props
 			&& is_landscape(sections[i - 1].props) != is_landscape(sections[i].props);
-		sections[i].bKeepPage = i > 0 && sections[i].bContinue && keeps_page(sections[i - 1].props, sections[i].props);
 	}
 
 	convert(doc->m_oSectPr.GetPointer(), false, L"Standard", true);
