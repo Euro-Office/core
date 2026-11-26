@@ -712,6 +712,16 @@ std::wstring CalcCellDataStyle(oox::xlsx_conversion_context & Context,
     if (defaultCellStyle)
         data_style = SearchCellDataStyle(Context, defaultCellStyle);
 
+    // A cell's own style replaces the column and row default cell styles, as it does for the formatting properties:
+    // without a data style in its chain, the cell has the default number format, not the one of its column or row.
+    if (cellStyle)
+    {
+        std::wstring ds1 = SearchCellDataStyle(Context, cellStyle);
+        if (!ds1.empty())
+            data_style = ds1;
+        return data_style;
+    }
+
     {
         std::wstring ds1 = SearchCellDataStyle(Context, defaultColumnCellStyle);
         if (!ds1.empty())
@@ -720,12 +730,6 @@ std::wstring CalcCellDataStyle(oox::xlsx_conversion_context & Context,
 
     {
         std::wstring ds1 = SearchCellDataStyle(Context, defaultRowCellStyle);
-        if (!ds1.empty())
-            data_style = ds1;
-    }
-
-    {
-        std::wstring ds1 = SearchCellDataStyle(Context, cellStyle);
         if (!ds1.empty())
             data_style = ds1;
     }
