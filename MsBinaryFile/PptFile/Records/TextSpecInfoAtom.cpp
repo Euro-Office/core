@@ -42,14 +42,12 @@ void CRecordTextSpecInfoAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Strea
     m_oHeader = oHeader;
     StreamUtils::StreamPosition(m_lOffsetInStream, pStream);
 
-    _UINT32 lMemCount = 0;
     while (true)
     {
         PPT::CTextSIRun elm;
         m_arrSIs.push_back(elm);
 
         NSStreamReader::Read(pStream, m_arrSIs.back());
-        lMemCount += m_arrSIs.back().lCount;
 
         long sz = (long)(pStream->tell() - m_lOffsetInStream);
 

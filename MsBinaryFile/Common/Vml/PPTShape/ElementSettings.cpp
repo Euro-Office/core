@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "ElementSettings.h"
 #include "../../../../OOXML/SystemUtility/File.h"
@@ -41,14 +40,14 @@ CProperty::CProperty()
 	m_bIsBlip = false;
 	m_bComplex = false;
 	m_lValue = 0;
-	m_pOptions = NULL;
+	m_pOptions = nullptr;
 
 	m_bIsTruncated = false;
 }
 CProperty::~CProperty()
 {
 	if (m_pOptions)	delete []m_pOptions;
-	m_pOptions = NULL;
+	m_pOptions = nullptr;
 }
 void CProperty::FromStream(POLE::Stream* pStream)
 {
@@ -88,6 +87,7 @@ void CProperty::ComplexFromStream(POLE::Stream* pStream)
 			WORD nElems = StreamUtils::ReadWORD(pStream);
 			WORD nElemsAlloc = StreamUtils::ReadWORD(pStream);
 			WORD nElemSize = StreamUtils::ReadWORD(pStream);
+			(void)nElemsAlloc;
 
 			if (0xFFF0 == nElemSize)
 			{
@@ -95,7 +95,7 @@ void CProperty::ComplexFromStream(POLE::Stream* pStream)
 				m_bIsTruncated = TRUE;
 			}
 
-			LONG dwSize = nElems * nElemSize;
+			LONG dwSize = static_cast<LONG>(nElems) * nElemSize;
 
 			if (m_lValue != (dwSize + 6))
 			{
@@ -110,7 +110,7 @@ void CProperty::ComplexFromStream(POLE::Stream* pStream)
 		case ODRAW::fillBlip:
 		{
             PPT::SRecordHeader oHeader;
-			if (oHeader.ReadFromStream(pStream) == false)
+			if (!oHeader.ReadFromStream(pStream))
 			{
 				return;
 			}
@@ -127,6 +127,8 @@ void CProperty::ComplexFromStream(POLE::Stream* pStream)
                 PPT::CRecordOfficeArtBlip art_blip;
 				art_blip.ReadFromStream(oHeader, pStream);
 			}
+			default:
+				break;
 			}
 
 		}break;

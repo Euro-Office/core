@@ -44,7 +44,7 @@ namespace DocFileFormat
 
 	FixedPointNumber::FixedPointNumber( const unsigned char* bytes, unsigned int size )
 	{
-		if ( ( bytes != NULL ) && ( size >= 4 ) )
+		if ( ( bytes != nullptr ) && ( size >= 4 ) )
 		{
 			this->Integral = FormatUtils::BytesToUInt16( bytes, 0, size );
 			this->Fractional = FormatUtils::BytesToUInt16( bytes, 2, size );

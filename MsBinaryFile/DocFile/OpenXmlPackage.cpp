@@ -46,10 +46,11 @@
 
 namespace DocFileFormat
 {
-    OpenXmlPackage::OpenXmlPackage(const WordDocument* _docFile) :  m_strOutputPath(L""), relID(1), _imageCounter(0), _headerCounter(0), _footerCounter(0),
-        _oleCounter(0), docFile(NULL), DocumentRelationshipsFile( L"word/_rels/document.xml.rels"), MainRelationshipsFile( L"_rels/.rels"),
+    OpenXmlPackage::OpenXmlPackage(const WordDocument* _docFile) : docFile(nullptr),
+        MainRelationshipsFile( L"_rels/.rels"), DocumentRelationshipsFile( L"word/_rels/document.xml.rels"),
         FootnotesRelationshipsFile( L"word/_rels/footnotes.xml.rels"), EndnotesRelationshipsFile( L"word/_rels/endnotes.xml.rels"),
-        CommentsRelationshipsFile( L"word/_rels/comments.xml.rels"), NumberingRelationshipsFile( L"word/_rels/numbering.xml.rels")
+        CommentsRelationshipsFile( L"word/_rels/comments.xml.rels"), NumberingRelationshipsFile( L"word/_rels/numbering.xml.rels"),
+        relID(1), _imageCounter(0), _headerCounter(0), _footerCounter(0), _oleCounter(0), m_strOutputPath(L"")
 	{
 		docFile = _docFile;
 
@@ -112,7 +113,7 @@ namespace DocFileFormat
 
 	void OpenXmlPackage::SaveToFile( const std::wstring& outputDir, const std::wstring& fileName, const void* buf, unsigned int size )
 	{
-		if ( buf != NULL )
+		if ( buf != nullptr )
 		{
 
 			int         fileHandle = 0;
@@ -150,7 +151,7 @@ namespace DocFileFormat
 					,0x00,0x00,0x00,0x00,0x00,0xc0,0x00,0x00,0x00,0x00,0x00,0x00,0x46};
 				POLE::Stream oStream1(storageOut, L"\001CompObj", true, 28 +	(object.clsid.length() + 5) + 
 																				(object.clsid.length() + 5) + 
-																				(object.clsid.length() + 5) + 4 * 4);
+																				(object.clsid.length() + 5) + static_cast<size_t>(4) * 4);
 				oStream1.write(dataCompObjHeader, 28);
 
 				str_size = object.clsid.length() + 1;
@@ -206,12 +207,12 @@ namespace DocFileFormat
 
 	bool OpenXmlPackage::SaveOLEObject( const std::wstring& fileName, const OleObjectFileStructure& object )
 	{
-		if (docFile == NULL) return false;
+		if (docFile == nullptr) return false;
 
 		POLE::Storage *storageOut = new POLE::Storage(fileName.c_str());
-		if (storageOut == NULL) return false;
+		if (storageOut == nullptr) return false;
 		
-		if (storageOut->open(true, true)==false)
+		if (!storageOut->open(true, true))
 		{	
 			delete storageOut;
 			return false;
@@ -236,7 +237,7 @@ namespace DocFileFormat
 						stream_name_open = stream_name_open.substr(1);
 
 					POLE::Stream *stream_inp = new POLE::Stream(storageInp, path + L"/"+ stream_name_open);
-					if (stream_inp == NULL)continue;
+					if (stream_inp == nullptr)continue;
 
 					POLE::uint64 size = stream_inp->size();
 					
@@ -257,6 +258,7 @@ namespace DocFileFormat
 					delete stream_inp;
 					delete stream_out;
 				}
+				delete oleStorage;
 			}
 		}
 
@@ -424,6 +426,7 @@ namespace DocFileFormat
 
 	void OpenXmlPackage::WriteContentTypesFile( const ContentTypesFile& contentTypesFile )
 	{
+		(void)contentTypesFile;
 		XMLTools::CStringXmlWriter writer;
 
 		// write content types
@@ -530,7 +533,7 @@ namespace DocFileFormat
 	{
 		int relID = 0;
 
-		if ( mapping != NULL )
+		if ( mapping != nullptr )
 		{
 			if ( typeid(*mapping) == typeid(MainDocumentMapping) )
 			{

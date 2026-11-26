@@ -98,6 +98,10 @@ xlsx_style_manager::Impl::Impl(xlsx_conversion_context *context_) : next_index_(
     xlsx_xf xfRecord;
     xfRecord.applyNumberForm = true;
 	xfRecord.numFmtId = 0;
+	// Font 0 is the document's default font (start_document() registers it first).
+	// Name it: Excel reads a missing fontId as font 0, but other readers leave the
+	// Default cell style without a font.
+	xfRecord.fontId = 0;
     
 	cellStyleXfs_.insert(xfRecord);
 }

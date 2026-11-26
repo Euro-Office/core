@@ -1242,15 +1242,28 @@ void note::docx_convert(oox::docx_conversion_context & Context)
 const wchar_t * ruby::ns = L"text";
 const wchar_t * ruby::name = L"ruby";
 
+void ruby::docx_convert(oox::docx_conversion_context & Context)
+{
+    // The editor has no ruby model, so a w:ruby would lose the text again: write the base text as normal runs
+    // and drop the annotation.
+    if (text_ruby_base_)
+        text_ruby_base_->docx_convert(Context);
+}
+
+// The plain text is the base only, as in docx_convert: it feeds alphabetical index entries (XE) and the matching of
+// "#...|outline" links to headings, where the annotation would add text that is not in the document.
 std::wostream & ruby::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
 {
     if (text_ruby_base_)
         text_ruby_base_->text_to_stream(_Wostream, bXmlEncode);
 
-    if (text_ruby_text_)
-        text_ruby_text_->text_to_stream(_Wostream, bXmlEncode);
-
     return _Wostream;
+}
+
+const office_element_ptr_array * ruby::base_content() const
+{
+    const ruby_base * base = dynamic_cast<const ruby_base *>(text_ruby_base_.get());
+    return base ? &base->content() : NULL;
 }
 
 void ruby::xlsx_convert(oox::xlsx_conversion_context & Context)

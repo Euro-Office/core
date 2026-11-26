@@ -49,7 +49,7 @@ public:
 
 	relationship(const std::wstring & Id, int Type, const std::wstring & Target, bool lExternal) ;
 
-	virtual std::wostream & xml_to_stream(::std::wostream & _Wostream) const;
+	virtual std::wostream & xml_to_stream(::std::wostream & wostream_) const;
 
 public:
     const std::wstring & id() const { return id_; }
@@ -75,7 +75,7 @@ public:
     static const wchar_t * name;
 
 public:
-    virtual ::std::wostream & xml_to_stream(::std::wostream & _Wostream) const;
+    virtual ::std::wostream & xml_to_stream(::std::wostream & wostream_) const;
     std::vector<relationship> & relationships() { return relationship_; }
     void add(relationship const & r);
     bool empty() { return relationship_.empty(); } 

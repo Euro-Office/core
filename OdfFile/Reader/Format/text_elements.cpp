@@ -217,6 +217,13 @@ void paragraph::drop_cap_text_docx_convert(office_element_ptr first_text_element
 }
 
 namespace {
+bool ruby_has_base_content(const office_element_ptr & element)
+{
+	ruby* r = dynamic_cast<ruby*>(element.get());
+	const office_element_ptr_array* base = r ? r->base_content() : NULL;
+	return base && !base->empty();
+}
+
 // A text:meta / text:meta-field that holds nothing but empty metas: it writes nothing. (A span is never empty here:
 // span::docx_convert always writes a run, even without text.)
 bool meta_is_empty(const office_element_ptr & element)
@@ -243,6 +250,10 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 		const ElementType type = content_[index]->get_type();
 		if (type == typeTextText || type == typeTextSpan)
 			break;
+		// a ruby writes its base text as runs, so one with base content stops the scan too: those runs must come after
+		// the drop cap paragraph properties. A ruby without base content writes nothing and the scan goes on.
+		if (type == typeTextRuby && ruby_has_base_content(content_[index]))
+			break;
 		// a text:meta / text:meta-field with content stops the scan too: its runs must come after the drop cap paragraph
 		// properties. An empty one writes nothing and the scan goes on.
 		if ((type == typeTextMeta || type == typeTextMetaField) && !meta_is_empty(content_[index]))
@@ -258,25 +269,27 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 	}
 	else
 	{
-		// a span, or a text:meta / text:meta-field: the drop cap comes from the first text inside it. A meta is followed
-		// through the spans and metas it starts with (LibreOffice writes formatted text in a meta as a span inside it).
-		span* first_span_in_paragraph = dynamic_cast<span*>(content_[index].get());
-		const office_element_ptr_array* first_content = first_span_in_paragraph ? &first_span_in_paragraph->content_ : NULL;
-		if (meta* first_meta_in_paragraph = dynamic_cast<meta*>(content_[index].get()))
+		// a span, a ruby or a text:meta / text:meta-field: the drop cap comes from the first text inside it, following
+		// the spans, ruby bases and metas it starts with (<text:ruby><text:ruby-base><text:span>, <text:span><text:ruby>;
+		// LibreOffice writes formatted text in a meta as a span inside it)
+		span* first_span_in_paragraph = NULL;
+		const office_element_ptr_array* first_content = NULL;
+		office_element_ptr first_element = content_[index];
+		while (first_element)
 		{
-			first_content = &first_meta_in_paragraph->content_;
-			while (!first_content->empty())
+			if (span* inner_span = dynamic_cast<span*>(first_element.get()))
 			{
-				if (span* inner_span = dynamic_cast<span*>((*first_content)[0].get()))
-				{
-					first_span_in_paragraph = inner_span; // when the paragraph style has no font size, the size comes from this span, as for a span first
-					first_content = &inner_span->content_;
-				}
-				else if (meta* inner_meta = dynamic_cast<meta*>((*first_content)[0].get()))
-					first_content = &inner_meta->content_;
-				else
-					break;
+				// without a font size in the paragraph style, the drop cap size comes from this span
+				first_span_in_paragraph = inner_span;
+				first_content = &inner_span->content_;
 			}
+			else if (ruby* inner_ruby = dynamic_cast<ruby*>(first_element.get()))
+				first_content = inner_ruby->base_content();
+			else if (meta* inner_meta = dynamic_cast<meta*>(first_element.get()))
+				first_content = &inner_meta->content_;
+			else
+				break;
+			first_element = (first_content && !first_content->empty()) ? (*first_content)[0] : office_element_ptr();
 		}
 
 		if (Context.get_drop_cap_context().FontSize < 1)
@@ -305,10 +318,9 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 			}
 		}
 		//Only the first elements are taken into account!!! there are different break-and cancel the drop_cap mode!!
-		if ((first_content) && (!first_content->empty()) &&
-			 ((*first_content)[0]->get_type() == typeTextText))
+		if ((first_element) && (first_element->get_type() == typeTextText))
 		{
-			drop_cap_text_docx_convert((*first_content)[0], Context);
+			drop_cap_text_docx_convert(first_element, Context);
 		}
 	}
 	return index;

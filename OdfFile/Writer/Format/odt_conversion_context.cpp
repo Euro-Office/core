@@ -451,7 +451,7 @@ void odt_conversion_context::end_alphabetical_index()
 	create_element(L"text", L"alphabetical-index-source", elm, this);
 	
 	text_context()->start_element(elm);
-	//tempalte
+	//template
 	text_context()->end_element();
 	text_context()->end_element();
 }
@@ -1095,6 +1095,9 @@ int odt_conversion_context::get_current_section_columns()
 }
 void odt_conversion_context::add_section(bool continuous)
 {
+	// Elements still open (a table whose first paragraph starts the new section) go to the end of the previous
+	// section, so they keep their order; only elements before the first section go to the root.
+	flush_section();
 //--dump first elements to root------------------------------------------------
 	for (size_t i = 0; i< current_root_elements_.size(); i++)
 	{
@@ -1107,6 +1110,7 @@ void odt_conversion_context::add_section(bool continuous)
 	
 	state.empty			= true;
 	state.continuous	= continuous;
+	state.count_columns	= 1;
 //----------------------------------------------------------------
 	styles_context()->create_style(L"", odf_types::style_family::Section, true, false, -1);		
 
@@ -1159,6 +1163,22 @@ void odt_conversion_context::add_section_columns(int count, double space_pt, boo
 			sep->style_color_			= color(L"#000000");	
 		}
 	}
+}
+void odt_conversion_context::set_section_margins(double left_pt, double right_pt)
+{
+	if (sections_.empty() || (left_pt == 0 && right_pt == 0)) return;
+
+	style* style_ = dynamic_cast<style*>(sections_.back().style_elm.get());
+	if (!style_)return;
+
+	style_section_properties* section_properties = style_->content_.add_get_style_section_properties();
+
+	if (left_pt != 0)
+		section_properties->common_horizontal_margin_attlist_.fo_margin_left_ =
+			length(length(left_pt, length::pt).get_value_unit(length::cm), length::cm);
+	if (right_pt != 0)
+		section_properties->common_horizontal_margin_attlist_.fo_margin_right_ =
+			length(length(right_pt, length::pt).get_value_unit(length::cm), length::cm);
 }
 void odt_conversion_context::add_section_column(std::vector<std::pair<double, double>> width_space)
 {

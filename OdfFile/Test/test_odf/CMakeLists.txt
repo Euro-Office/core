@@ -65,7 +65,7 @@ add_core_gtest(
             docx2odt_deletion_paragraphs.cpp
             docx2odt_page_background.cpp
             docx2odt_section_footers.cpp
-            docx2odt_endnote_page.cpp
+            docx2odt_continuous_sections.cpp
             docx2odt_add_para_table_spacing.cpp
             docx2odt_section_header_and_footer.cpp
             math_bar.cpp
@@ -100,10 +100,14 @@ add_core_gtest(
             pptx2odp_table_styles.cpp
             docx2odt_header_footer_margins.cpp
             entrance.cpp
+            ooxml2odf_custom_props.cpp
+            odf2ooxml_doc_props.cpp
+            ooxml2odf_doc_props.cpp
             motion.cpp
             audio.cpp
             interactions.cpp
             xlsx2ods_table_print_titles.cpp
+            odt2docx_page_background_transparent.cpp
             ods2xlsx_trailing_cell_style.cpp
             ods2xlsx_header_footer_ampersand.cpp
             ods2xlsx_fit_to_page.cpp
@@ -116,10 +120,12 @@ add_core_gtest(
             ods2xlsx_database_range.cpp
             docx2odt_list_number_suffix.cpp
             odt2docx_section_columns.cpp
+            odt2docx_symbol_bullets.cpp
             odt2docx_chapter_field.cpp
             odt2docx_database_display.cpp
-            odt2docx_endnote_page.cpp
             odt2docx_note_body_whitespace.cpp
+            xlsx2ods_default_cell_style.cpp
+            ods2xlsx_default_cell_style_font.cpp
             ods2xlsx_fill_character.cpp
             ods2xlsx_cell_ruby.cpp
             ods_formula_function_names.cpp
@@ -127,9 +133,15 @@ add_core_gtest(
             odf_font_family.cpp
             docx2odt_line_break_after_text.cpp
             odt2docx_character_style_based_on.cpp
+            odt2docx_ruby.cpp
             docx2odt_style_based_on.cpp
             odf_bitmap_fill_size.cpp
             xlsx2ods_fit_to_pages.cpp
+            ods2xlsx_styles_auto_data_style.cpp
+            ods2xlsx_text_style_map.cpp
+            odt2docx_tracked_deleted_table.cpp
+            docx2odt_endnote_page.cpp
+            odt2docx_endnote_page.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )

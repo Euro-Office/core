@@ -2089,16 +2089,16 @@ void ods_table_state::start_conditional_rule(int rule_type, _CP_OPT(unsigned int
 			if ((condition_fmt) && (condition_fmt->calcext_target_range_address_))
 			{
 				std::wstring cell, table,test = *condition_fmt->calcext_target_range_address_;
-				std::vector< std::wstring > splitted;
+				std::vector< std::wstring > split;
 			
-				boost::algorithm::split(splitted, test, boost::algorithm::is_any_of(L"!"), boost::algorithm::token_compress_on);
-    			if (splitted.size()>1)
+				boost::algorithm::split(split, test, boost::algorithm::is_any_of(L"!"), boost::algorithm::token_compress_on);
+    			if (split.size()>1)
 				{
-					table = splitted[0];
-					test = splitted[1];
+					table = split[0];
+					test = split[1];
 				}else table = office_table_name_;
-				boost::algorithm::split(splitted, test, boost::algorithm::is_any_of(L":"), boost::algorithm::token_compress_on);
-				cell = splitted[0];
+				boost::algorithm::split(split, test, boost::algorithm::is_any_of(L":"), boost::algorithm::token_compress_on);
+				cell = split[0];
 
 				std::wstring col, row;
 

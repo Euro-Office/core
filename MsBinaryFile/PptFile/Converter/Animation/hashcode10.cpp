@@ -30,7 +30,7 @@ namespace PPT
 	{
 		std::array<_UINT32, HashCode10::RASize> HashCode10::InitRandomArray()
 		{
-			std::array<_UINT32, 256 * 256> randomArray;
+			std::array<_UINT32, static_cast<std::size_t>(256) * 256> randomArray;
 			std::fill(randomArray.begin(), randomArray.end(), 0);
 			_UINT32 randomSeed = 1;
 			for (int iRow = 0; iRow < 256; iRow++)
@@ -104,7 +104,7 @@ namespace PPT
 
 		bool HashCode10::IsValidHash(const Intermediate::SlideAnimation &sldAnim) const
 		{
-			if (sldAnim.pAnim_2010 == nullptr || sldAnim.pAnim_2010->m_haveHashCode == false || sldAnim.pAnim_2010->m_pHashCode10Atom == nullptr)
+			if (sldAnim.pAnim_2010 == nullptr || !sldAnim.pAnim_2010->m_haveHashCode || sldAnim.pAnim_2010->m_pHashCode10Atom == nullptr)
 				return false;
 
 			auto wroteHash = GetWroteHash(sldAnim.pAnim_2010);

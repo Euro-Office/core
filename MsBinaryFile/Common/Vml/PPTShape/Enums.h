@@ -329,7 +329,7 @@ namespace ODRAW
 		sgfAbsolute,			// guide := fabs(value)    
 		sgfMin,					// guide := min(value, param1)    
 		sgfMax,					// guide := max(value, param1)    
-		sgfIf,					// guide := vaule > 0 ? param1 : param2      
+		sgfIf,					// guide := value > 0 ? param1 : param2      
 		
 		// Polar arithmetic - angles are 16.16 degrees    
 		sgfMod,					// guide := sqrt(value^2 + param1^2 + param2^2)    
@@ -409,7 +409,7 @@ namespace ODRAW
 	enum eBlipType
 	{                   
 		// GEL provided types...    
-		blipERROR = 0,			// An error occured during loading    
+		blipERROR = 0,			// An error occurred during loading    
 		blipUNKNOWN,			// An unknown blip type    
 		blipEMF,				// Windows Enhanced Metafile    
 		blipWMF,				// Windows Metafile    
@@ -1133,7 +1133,7 @@ namespace ODRAW
 		
 		calloutBooleanProperties = 895,
 
-        //Groupe Shape
+        //Grouped Shape
         wzName = 896,
         wzDescription = 897,
         pihlShape=898,
@@ -1195,7 +1195,7 @@ namespace ODRAW
         FakeShapeType=1039,
         fFakeMaster=1086,
 
-        //Diagramm
+        //Diagram
         dgmt=1280,
         dgmStyle=1281,
         pRelationTbl=1284,
@@ -1248,7 +1248,7 @@ namespace ODRAW
         fSigSetupSignInstSet=1982,
         fIsSignatureLine=1983,
 
-        //Groupe Shape 2
+        //Grouped Shape 2
         pctHoriz=1984,
         pctVert=1985,
         pctHorizPos=1986,

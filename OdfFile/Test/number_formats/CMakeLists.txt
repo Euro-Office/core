@@ -10,6 +10,7 @@ find_package(Boost CONFIG REQUIRED)
 add_executable(odf_number_formats_test
     main.cpp
     ../../Reader/Converter/xlsx_numFmts.cpp
+    ../../Common/CPColorUtils.cpp
 )
 target_compile_features(odf_number_formats_test PRIVATE cxx_std_17)
 target_include_directories(odf_number_formats_test PRIVATE ../../Common ${Boost_INCLUDE_DIRS})

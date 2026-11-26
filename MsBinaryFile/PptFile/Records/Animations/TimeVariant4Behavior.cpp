@@ -44,10 +44,12 @@ IRecord *FactoryTimeVariant4Behavior::createByInstanse(unsigned short recInstanc
     CREATE_BY_Instanse(TL_TBPID_ColorColorModel,        CRecordTimeColorModel)
     CREATE_BY_Instanse(TL_TBPID_ColorDirection,         CRecordTimeColorDirection)
     CREATE_BY_Instanse(TL_TBPID_Override,               CRecordTimeOverride)
-    CREATE_BY_Instanse(TL_TBPID_PathEditRotationAngle,  CRecordTimeVariantFloat)
-    CREATE_BY_Instanse(TL_TBPID_PathEditRotationX,      CRecordTimeVariantFloat)
-    CREATE_BY_Instanse(TL_TBPID_PathEditRotationY,      CRecordTimeVariantFloat)
+    case TL_TBPID_PathEditRotationAngle:
+    case TL_TBPID_PathEditRotationX:
+    case TL_TBPID_PathEditRotationY: { pRecord = new CRecordTimeVariantFloat(); break; }
     CREATE_BY_Instanse(TL_TBPID_PointsTypes,            CRecordTimePointsTypes)
+    default:
+        break;
     }
 
     return pRecord;

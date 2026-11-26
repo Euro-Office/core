@@ -23,6 +23,10 @@
  *
  */
 
+// This is the unity-build translation unit of the XLS BIFF logic layer: every
+// record/union implementation is compiled through the .cpp includes below.
+// NOLINTBEGIN(bugprone-suspicious-include)
+
 #include "../Biff_records/AlRuns.cpp"
 #include "../Biff_records/Area.cpp"
 #include "../Biff_records/AreaFormat.cpp"
@@ -813,3 +817,6 @@
 #include "../WorkbookStreamObject.cpp"
 #include "../WorksheetSubstream.cpp"
 #include "../CommonSubstream.cpp"
+
+// NOLINTEND(bugprone-suspicious-include)
+

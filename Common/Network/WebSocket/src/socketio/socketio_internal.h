@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2010-2023 Ascensio System SIA
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-only
+
 /*
  * (c) Copyright Ascensio System SIA 2010-2023
  *
@@ -27,7 +31,7 @@
 #define _IO_WEB_SOCKET_H_
 
 #include "../websocketbase.h"
-#include "../../../../../DesktopEditor/graphics/TemporaryCS.h"
+#include "DesktopEditor/graphics/TemporaryCS.h"
 
 namespace NSNetwork
 {
@@ -76,7 +80,6 @@ namespace NSNetwork
 
             friend class CIOWebSocket_private;
             friend class CIOWebSocket_private_tls;
-            friend class CIOWebSocket_private_no_tls;
         };
     }
 }

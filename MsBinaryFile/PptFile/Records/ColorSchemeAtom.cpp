@@ -43,7 +43,7 @@ void CRecordColorSchemeAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Stream
 
 void CRecordColorSchemeAtom::ToArray(std::vector<SColorAtom> *pArray)
 {
-    if (NULL != pArray)
+    if (nullptr != pArray)
     {
         pArray->push_back(m_oBackgroundColor);
         pArray->push_back(m_oTextAndLinesColor);
@@ -59,7 +59,7 @@ void CRecordColorSchemeAtom::ToArray(std::vector<SColorAtom> *pArray)
 void CRecordColorSchemeAtom::ToArray(std::vector<CColor> *pArray)
 {
     CColor oColor;
-    if (NULL != pArray)
+    if (nullptr != pArray)
     {
         m_oBackgroundColor.ToColor(&oColor);
         pArray->push_back(oColor);

@@ -120,7 +120,40 @@ namespace Oox2Odf
 			&& props->m_oPgSz->m_oOrient->GetValue() == SimpleTypes::pageorientLandscape;
 	}
 
-DocxConverter::DocxConverter(const std::wstring & path, bool bTemplate) : docx_flat_document(NULL), docx_document(NULL)
+	int page_number_format(OOX::Logic::CSectionProperty* props)
+	{
+		return props->m_oPgNumType.IsInit() && props->m_oPgNumType->m_oFmt.IsInit()
+			? props->m_oPgNumType->m_oFmt->GetValue() : SimpleTypes::numberformatDecimal;
+	}
+
+	// A continuous section break does not start a new page, unless the orientation changes (as in Word and
+	// LibreOffice). Only sections without their own headers, footers or title page keep the page here.
+	bool keeps_page(OOX::Logic::CSectionProperty* prev, OOX::Logic::CSectionProperty* props)
+	{
+		if (!prev || !props) return false;
+		if (!props->m_oType.IsInit() || !props->m_oType->m_oVal.IsInit()
+			|| props->m_oType->m_oVal->GetValue() != SimpleTypes::sectionmarkContinious)
+			return false;
+		if (props->m_oTitlePg.IsInit() || !props->m_arrHeaderReference.empty() || !props->m_arrFooterReference.empty())
+			return false;
+		// The line numbering settings are written by the section conversion that is skipped here; the previous section
+		// has already written them if it has line numbering too.
+		if (props->m_oLnNumType.IsInit() && !prev->m_oLnNumType.IsInit())
+			return false;
+		// ODF restarts page numbers (style:page-number) and changes their format only with a new master page.
+		if ((props->m_oPgNumType.IsInit() && props->m_oPgNumType->m_oStart.IsInit())
+			|| page_number_format(prev) != page_number_format(props))
+			return false;
+		return is_landscape(prev) == is_landscape(props);
+	}
+
+	// Difference between two left (or right) margins in points, 0 if one of them is not set.
+	double margin_difference(SimpleTypes::CTwipsMeasure* margin, SimpleTypes::CTwipsMeasure* page_margin)
+	{
+		return margin && page_margin ? margin->ToPoints() - page_margin->ToPoints() : 0;
+	}
+
+DocxConverter::DocxConverter(const std::wstring & path, bool bTemplate) : docx_flat_document(nullptr), docx_document(nullptr)
 {
     const OOX::CPath oox_path(std::wstring(path.c_str()));
 
@@ -128,7 +161,7 @@ DocxConverter::DocxConverter(const std::wstring & path, bool bTemplate) : docx_f
 
 	if (docx_document && !docx_document->m_oMain.document)
 	{
-		delete docx_document; docx_document = NULL;
+		delete docx_document; docx_document = nullptr;
 		docx_flat_document = new OOX::CDocxFlat(oox_path);
 	}
 
@@ -137,16 +170,16 @@ DocxConverter::DocxConverter(const std::wstring & path, bool bTemplate) : docx_f
 	drawingConverter = new NSBinPptxRW::CDrawingConverter;
 
 //set flags to default
-	current_section_properties	= NULL;
-    last_section_properties		= NULL;
+	current_section_properties	= nullptr;
+    last_section_properties		= nullptr;
 }
 DocxConverter::~DocxConverter()
 {
-	if (odt_context)			delete odt_context;			odt_context = NULL;
-	if (output_document)		delete output_document;		output_document = NULL;
-	if (docx_document)			delete docx_document;		docx_document = NULL;
-	if (docx_flat_document)		delete docx_flat_document;	docx_flat_document = NULL;
-	if (drawingConverter)		delete drawingConverter;	drawingConverter = NULL;
+	if (odt_context)			delete odt_context;			odt_context = nullptr;
+	if (output_document)		delete output_document;		output_document = nullptr;
+	if (docx_document)			delete docx_document;		docx_document = nullptr;
+	if (docx_flat_document)		delete docx_flat_document;	docx_flat_document = nullptr;
+	if (drawingConverter)		delete drawingConverter;	drawingConverter = nullptr;
 }
 odf_writer::odf_conversion_context* DocxConverter::odf_context()
 {
@@ -157,7 +190,7 @@ PPTX::Theme* DocxConverter::oox_theme()
 	if (docx_document)
 		return docx_document->m_pTheme;
 	else
-		return NULL;
+		return nullptr;
 }
 OOX::IFileContainer* DocxConverter::current_document()
 {
@@ -166,7 +199,7 @@ OOX::IFileContainer* DocxConverter::current_document()
 	else if (docx_document)
 		return dynamic_cast<OOX::IFileContainer*>(docx_document->m_oMain.document);
 
-	return NULL;
+	return nullptr;
 }
 NSCommon::smart_ptr<OOX::File> DocxConverter::find_file_by_id(const std::wstring &sId)
 {
@@ -195,7 +228,7 @@ std::wstring DocxConverter::find_link_by_id (const std::wstring & sId, int type,
 	if (!ref.empty()) return ref;
 
 	if (!docx_document) return L"";
-	if (docx_document->m_oMain.document == NULL) return L"";
+	if (docx_document->m_oMain.document == nullptr) return L"";
 	
 	oFile	= docx_document->m_oMain.document->Find(sId);
 	ref		= OoxConverter::find_link_by(oFile, type, bExternal);
@@ -223,8 +256,8 @@ bool DocxConverter::convertDocument()
 	convert_document();
 
 	//delete the no longer needed docx document
-	if (docx_document)		delete docx_document; docx_document = NULL;
-	if (docx_flat_document)	delete docx_flat_document; docx_flat_document = NULL;
+	if (docx_document)		delete docx_document; docx_document = nullptr;
+	if (docx_flat_document)	delete docx_flat_document; docx_flat_document = nullptr;
 
 	odt_context->end_document();
 	return true;
@@ -232,14 +265,14 @@ bool DocxConverter::convertDocument()
 
 void DocxConverter::convert_document()
 {
-	OOX::CDocument *doc = docx_document ? docx_document->m_oMain.document : (docx_flat_document ? docx_flat_document->m_pDocument.GetPointer() : NULL);
+	OOX::CDocument *doc = docx_document ? docx_document->m_oMain.document : (docx_flat_document ? docx_flat_document->m_pDocument.GetPointer() : nullptr);
 	
 	if (!doc)return;
 
 	std::vector<_section> sections;
 //----------------------------------------------------------------------------------------------------------
 
-	OOX::Logic::CSectionProperty* prev = NULL;
+	OOX::Logic::CSectionProperty* prev = nullptr;
 
 	if (false == doc->m_arrSections.empty())
 	{
@@ -263,7 +296,7 @@ void DocxConverter::convert_document()
 		size_t last_section_start = 0;
 		for (size_t i = 0; i < doc->m_arrItems.size(); ++i)
 		{
-			if ((doc->m_arrItems[i]) == NULL) continue;
+			if ((doc->m_arrItems[i]) == nullptr) continue;
 
 			if (doc->m_arrItems[i]->getType() == OOX::et_w_p)
 			{
@@ -304,6 +337,7 @@ void DocxConverter::convert_document()
 		sections[i].bFirst = (i == 0);
 		sections[i].bTurnsPage = i > 0 && sections[i - 1].props && sections[i].props
 			&& is_landscape(sections[i - 1].props) != is_landscape(sections[i].props);
+		sections[i].bKeepPage = i > 0 && sections[i].bContinue && keeps_page(sections[i - 1].props, sections[i].props);
 	}
 
 	convert(doc->m_oSectPr.GetPointer(), false, L"Standard", true);
@@ -511,7 +545,7 @@ std::wstring DocxConverter::dump_text(OOX::WritingElement *oox_unknown)
 {
 	std::wstring result;
 
-	if (oox_unknown == NULL)return result;
+	if (oox_unknown == nullptr)return result;
 
 	switch(oox_unknown->getType())
 	{
@@ -555,7 +589,7 @@ std::wstring DocxConverter::dump_text(OOX::WritingElement *oox_unknown)
 
 void DocxConverter::convert(OOX::WritingElement  *oox_unknown)
 {
-	if (oox_unknown == NULL)return;
+	if (oox_unknown == nullptr)return;
 
 	switch(oox_unknown->getType())
 	{
@@ -702,7 +736,7 @@ void DocxConverter::convert(OOX::WritingElement  *oox_unknown)
 
 void DocxConverter::convert(OOX::Logic::CSdt *oox_sdt)
 {
-	if (oox_sdt == NULL) return;
+	if (oox_sdt == nullptr) return;
 
 	bool bField = false, bForm = false;
 	
@@ -903,7 +937,7 @@ void DocxConverter::convert(OOX::Logic::CSdt *oox_sdt)
 }
 void DocxConverter::convert(OOX::Logic::CSdtContent *oox_sdt)
 {
-	if (oox_sdt == NULL) return;
+	if (oox_sdt == nullptr) return;
 
 	for (size_t i = 0; i < oox_sdt->m_arrItems.size(); ++i)
 	{
@@ -935,7 +969,7 @@ static int paragraph_outline_level(odf_writer::odt_conversion_context* odt_conte
 }
 void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 {
-	if (oox_paragraph == NULL) return; 
+	if (oox_paragraph == nullptr) return; 
 
 	// The section conversion asks whether its first paragraph starts a page. A tracked change of the paragraph
 	// properties is converted first, with the old properties, so the answer is taken from the paragraph itself.
@@ -1049,8 +1083,8 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 	{
 		bStyled			= true;
 		
-		odf_writer::paragraph_format_properties	*paragraph_properties	= NULL;
-		odf_writer::text_format_properties		*text_properties		= NULL;
+		odf_writer::paragraph_format_properties	*paragraph_properties	= nullptr;
+		odf_writer::text_format_properties		*text_properties		= nullptr;
 
 		if (odt_context->text_context()->get_KeepNextParagraph())
 		{
@@ -1214,7 +1248,7 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
  }
 void DocxConverter::convert(OOX::Logic::CRun *oox_run)//wordprocessing 22.1.2.87 math 17.3.2.25
 {
-	if (oox_run == NULL) return;
+	if (oox_run == nullptr) return;
 	//hmm figure out whether this is needed... it often happens in the wrong place!!! - A GRUBU.docx
 	//https://forums.asp.net/t/1951556.aspx?Facing+problem+finding+out+page+end+in+Ms+Word+Open+XML+SDK+Asp+net+c+We+can+t+get+a+lastRenderedPageBreak
 	////test for break - 2 first element THIS element MUST be pulled out separately!!!
@@ -1366,7 +1400,7 @@ void DocxConverter::convert(OOX::Logic::CBookmarkEnd *oox_bookmark_end)
 
 void DocxConverter::convert(OOX::Logic::CPTab *oox_ptab)
 {
-	if (oox_ptab == NULL) return;
+	if (oox_ptab == nullptr) return;
 
 	_CP_OPT(int) ref;
 
@@ -1424,7 +1458,7 @@ void DocxConverter::convert(OOX::Logic::CPTab *oox_ptab)
 }
 void DocxConverter::convert(OOX::Logic::CSym *oox_sym)
 {
-	if (oox_sym == NULL) return;
+	if (oox_sym == nullptr) return;
 	if (oox_sym->m_oChar.IsInit() == false) return;
 	
 	if (oox_sym->m_oFont.IsInit())
@@ -1435,7 +1469,7 @@ void DocxConverter::convert(OOX::Logic::CSym *oox_sym)
 }
 void DocxConverter::convert(OOX::Logic::CFldChar *oox_fld)
 {
-	if (oox_fld == NULL) return;
+	if (oox_fld == nullptr) return;
 
 		//nullable<SimpleTypes::COnOff<>       > m_oDirty;
 		//nullable<SimpleTypes::COnOff<>       > m_oFldLock;
@@ -1450,7 +1484,7 @@ void DocxConverter::convert(OOX::Logic::CFldChar *oox_fld)
 }
 void DocxConverter::convert(OOX::Logic::CFldSimple	*oox_fld)
 {
-	if (oox_fld == NULL) return;
+	if (oox_fld == nullptr) return;
 
 	//SimpleTypes::COnOff<SimpleTypes::onoffFalse> m_oDirty;
 	//SimpleTypes::COnOff<SimpleTypes::onoffFalse> m_oFldLock;
@@ -1478,14 +1512,14 @@ void DocxConverter::convert(OOX::Logic::CFldSimple	*oox_fld)
 }
 void DocxConverter::convert(OOX::Logic::CInstrText *oox_instrText)
 {
-	if (oox_instrText == NULL) return;
+	if (oox_instrText == nullptr) return;
 
 	odt_context->add_field_instr(oox_instrText->m_sText);
 
 }
 void DocxConverter::convert(OOX::Logic::CDelText *oox_delText)
 {
-	if (oox_delText == NULL) return;
+	if (oox_delText == nullptr) return;
 
 	if (oox_delText->m_oSpace.IsInit())
 	{
@@ -1497,7 +1531,7 @@ void DocxConverter::convert(OOX::Logic::CDelText *oox_delText)
 }
 void DocxConverter::convert(OOX::Logic::CIns *oox_ins)
 {
-	if (oox_ins == NULL) return;
+	if (oox_ins == nullptr) return;
 	
 	std::wstring	author	= oox_ins->m_sAuthor.IsInit()	? oox_ins->m_sAuthor.get2()		: L"";
 	std::wstring	userId	= oox_ins->m_sUserId.IsInit()	? oox_ins->m_sUserId.get2()		: L"";
@@ -1562,8 +1596,8 @@ int DocxConverter::convert(OOX::Logic::CPPrChange *oox_para_prop_change)
 		int			 list_level = -1;
 		int			 list_style_id = -1;
 
-		odf_writer::text_format_properties* text_properties	= NULL;
-		odf_writer::paragraph_format_properties* paragraph_properties = NULL;
+		odf_writer::text_format_properties* text_properties	= nullptr;
+		odf_writer::paragraph_format_properties* paragraph_properties = nullptr;
 
 		bool bRunPara = oox_para_prop_change->m_pParPr->m_oRPr.IsInit() ? true : false;
 		if (list_present)
@@ -1699,7 +1733,7 @@ int DocxConverter::convert(OOX::Logic::CTblPrChange *oox_table_prop_change)
 }
 void DocxConverter::convert(OOX::Logic::CDel *oox_del)
 {
-	if (oox_del == NULL) return;
+	if (oox_del == nullptr) return;
 
 	std::wstring	author	= oox_del->m_sAuthor.IsInit()	? oox_del->m_sAuthor.get2()		: L"";
 	std::wstring	userId	= oox_del->m_sUserId.IsInit()	? oox_del->m_sUserId.get2()		: L"";
@@ -1717,7 +1751,7 @@ void DocxConverter::convert(OOX::Logic::CDel *oox_del)
 }
 void DocxConverter::convert(OOX::Logic::CSmartTag *oox_tag)
 {
-	if (oox_tag == NULL) return;
+	if (oox_tag == nullptr) return;
 
     for (size_t i = 0; i < oox_tag->m_arrItems.size(); ++i)
 	{
@@ -2002,7 +2036,7 @@ void DocxConverter::convert(OOX::Logic::CParagraphProperty	*oox_paragraph_pr,
 		paragraph_properties->add_child_element(odf_context()->start_tabs());
 		for (size_t i = 0; i < oox_paragraph_pr->m_oTabs->m_arrTabs.size(); i++)
 		{
-			if (oox_paragraph_pr->m_oTabs->m_arrTabs[i] == NULL) continue;
+			if (oox_paragraph_pr->m_oTabs->m_arrTabs[i] == nullptr) continue;
 			
 			_CP_OPT(int)				type;
 			_CP_OPT(int)				leader;
@@ -2071,12 +2105,12 @@ void DocxConverter::convert( ComplexTypes::Word::CShading* shading, _CP_OPT(odf_
 			break;
 		}
 	}
-	convert(NULL, shading->m_oThemeFill.GetPointer(),
+	convert(nullptr, shading->m_oThemeFill.GetPointer(),
 		shading->m_oThemeFillTint.GetPointer(), shading->m_oThemeFillShade.GetPointer(), odf_color);
 		
 	if (odf_color) return;
 
-	convert(NULL, shading->m_oThemeColor.GetPointer(), 
+	convert(nullptr, shading->m_oThemeColor.GetPointer(), 
 		shading->m_oThemeTint.GetPointer(), shading->m_oThemeShade.GetPointer(), odf_color);
 
 	if (odf_color) return;
@@ -2139,7 +2173,7 @@ static void set_hdr_ftr_ref(std::vector<nullable<ComplexTypes::Word::CHdrFtrRef>
 }
 void DocxConverter::apply_HF_from(OOX::Logic::CSectionProperty *props, OOX::Logic::CSectionProperty *other)
 {
-	if (props == NULL || other== NULL)return;
+	if (props == nullptr || other== nullptr)return;
 
 	for (size_t i =0 ; i < other->m_arrFooterReference.size() ; i++)
 	{
@@ -2153,12 +2187,38 @@ void DocxConverter::apply_HF_from(OOX::Logic::CSectionProperty *props, OOX::Logi
 void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool bSection,
 							const std::wstring& master_name, bool bAlways, bool bPageStart)
 {
-	if (oox_section_pr == NULL) return;
+	if (oox_section_pr == nullptr) return;
+	const bool bKeepPage = current_section_properties && current_section_properties->bKeepPage;
 	const bool first_section = current_section_properties && current_section_properties->bFirst;
 	const bool turns_page = current_section_properties && current_section_properties->bTurnsPage;
-	current_section_properties = NULL;
+	current_section_properties = nullptr;
 
 	odt_context->text_context()->set_type_break(-1, 0);
+
+	if (bKeepPage) // same columns, continuous: no new master page, so no page break
+	{
+		// Left and right margins that differ from the page's become the indents of a text section; a section
+		// with the page's margins after an indented one needs a new text section without indents.
+		double left = 0, right = 0;
+		if (page_section_properties && page_section_properties->m_oPgMar.IsInit() && oox_section_pr->m_oPgMar.IsInit())
+		{
+			left = margin_difference(oox_section_pr->m_oPgMar->m_oLeft.GetPointer(),
+				page_section_properties->m_oPgMar->m_oLeft.GetPointer());
+			right = margin_difference(oox_section_pr->m_oPgMar->m_oRight.GetPointer(),
+				page_section_properties->m_oPgMar->m_oRight.GetPointer());
+		}
+		if (left == 0 && right == 0 && !bSectionIndents)
+			return;
+		if (odt_context->get_current_section_columns() < 2)
+		{
+			odt_context->add_section(true);
+			odt_context->set_section_margins(left, right);
+			bSectionIndents = left != 0 || right != 0;
+			return;
+		}
+		// inside a text section with columns: a new page with the section's margins, as before
+	}
+	page_section_properties = oox_section_pr;
 
 	bool continuous = false;
 
@@ -2505,10 +2565,11 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 			//nullable<ComplexTypes::Word::CRel                            > m_oPrinterSettings;
 			//nullable<OOX::Logic::CSectPrChange                           > m_oSectPrChange;
 //--------------------------------------------------------------------------------------------------------------------------------------------		
-	if (bSection)
+	if (bSection || bSectionIndents) // a new page section also ends the indents of a kept section
 	{
 		odt_context->add_section(continuous);
 	}
+	bSectionIndents = false;
 	if ( oox_section_pr->m_oCols.IsInit() )
 	{
 		int num_columns = oox_section_pr->m_oCols->m_oNum.IsInit() ? oox_section_pr->m_oCols->m_oNum->GetValue() : 1;
@@ -2560,12 +2621,12 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 }
 void DocxConverter::convert(OOX::Logic::CBgPict *oox_bg_pict, int type)
 {
-	if (oox_bg_pict == NULL) return;
+	if (oox_bg_pict == nullptr) return;
 
 	if (oox_bg_pict->m_oColor.IsInit())
 	{
 		_CP_OPT(odf_types::color) color;
-		convert (oox_bg_pict->m_oColor.GetPointer(), NULL, NULL, NULL, color);
+		convert (oox_bg_pict->m_oColor.GetPointer(), nullptr, nullptr, nullptr, color);
 
 		odt_context->set_background(color, type);	
 	}
@@ -2588,7 +2649,7 @@ void DocxConverter::convert(OOX::Logic::CBgPict *oox_bg_pict, int type)
 }
 void DocxConverter::convert(OOX::Logic::CBackground *oox_background, int type)
 {
-	if (oox_background == NULL) return;
+	if (oox_background == nullptr) return;
 
 	_CP_OPT(odf_types::color) color;
 	convert (	oox_background->m_oColor.GetPointer(), 
@@ -2622,8 +2683,8 @@ void DocxConverter::convert(OOX::Logic::CBackground *oox_background, int type)
 
 void DocxConverter::convert(ComplexTypes::Word::CFramePr *oox_frame_pr, odf_writer::paragraph_format_properties * paragraph_properties)
 {
-	if (oox_frame_pr == NULL) return;
-	if (paragraph_properties == NULL) return;
+	if (oox_frame_pr == nullptr) return;
+	if (paragraph_properties == nullptr) return;
 
 	if (oox_frame_pr->m_oDropCap.IsInit() || oox_frame_pr->m_oLines.IsInit())
 	{
@@ -2678,8 +2739,8 @@ void DocxConverter::convert(ComplexTypes::Word::CFramePr *oox_frame_pr, odf_writ
 }
 void DocxConverter::convert(OOX::Logic::CTblBorders	*oox_border, odf_writer::style_table_cell_properties	*table_cell_properties)
 {
-	if (oox_border == NULL) return;
-	if (table_cell_properties == NULL) return;
+	if (oox_border == nullptr) return;
+	if (table_cell_properties == nullptr) return;
 
 	std::wstring left,right,top,bottom, other;
 
@@ -2711,8 +2772,8 @@ void DocxConverter::convert(OOX::Logic::CTblBorders	*oox_border, odf_writer::sty
 }
 void DocxConverter::convert(OOX::Logic::CTcBorders 	*oox_border, odf_writer::style_table_cell_properties	*table_cell_properties)
 {
-	if (oox_border == NULL) return;
-	if (table_cell_properties == NULL) return;
+	if (oox_border == nullptr) return;
+	if (table_cell_properties == nullptr) return;
 
 	std::wstring left,right,top,bottom, other;
 
@@ -2761,8 +2822,8 @@ void DocxConverter::convert(OOX::Logic::CTcBorders 	*oox_border, odf_writer::sty
 
 void DocxConverter::convert(OOX::Logic::CPBdr *oox_border, odf_writer::paragraph_format_properties *paragraph_properties)
 {
-	if (oox_border == NULL) return;
-	if (paragraph_properties == NULL) return;
+	if (oox_border == nullptr) return;
+	if (paragraph_properties == nullptr) return;
 
 	std::wstring left,right,top,bottom, other;
 
@@ -2949,14 +3010,14 @@ void DocxConverter::convert(ComplexTypes::Word::CJc * oox_jc, bool bidi,  _CP_OP
 void DocxConverter::convert(SimpleTypes::CUniversalMeasure *oox_size, _CP_OPT(odf_types::length) & odf_size)
 {
 	odf_size = boost::none;
-	if (oox_size == NULL)return;
+	if (oox_size == nullptr)return;
 
 	odf_size = odf_types::length(oox_size->ToPoints(), odf_types::length::pt);
 }
 void DocxConverter::convert(SimpleTypes::CUniversalMeasure* oox_size, _CP_OPT(odf_types::length_or_percent) & odf_size)
 {
 	odf_size = boost::none;
-	if (oox_size == NULL)return;
+	if (oox_size == nullptr)return;
 
 		//odf_size = odf_types::percent(oox_size->ToPoints(());
 	odf_size = odf_types::length(oox_size->ToPoints(), odf_types::length::pt);
@@ -2965,7 +3026,7 @@ void DocxConverter::convert(SimpleTypes::CUniversalMeasure* oox_size, _CP_OPT(od
 void DocxConverter::convert(ComplexTypes::Word::CTblWidth *oox_size, _CP_OPT(odf_types::length) & odf_size)
 {
 	odf_size = boost::none;
-	if (oox_size == NULL)return;
+	if (oox_size == nullptr)return;
 
 	if (oox_size->m_oW.IsInit() == false) return;
 
@@ -2981,8 +3042,8 @@ void DocxConverter::convert(ComplexTypes::Word::CTblWidth *oox_size, _CP_OPT(odf
 }
 void DocxConverter::convert(OOX::Logic::CRunProperty *oox_run_pr, odf_writer::text_format_properties * text_properties, bool is_para_props)
 {
-	if (oox_run_pr		== NULL) return;
-	if (text_properties == NULL) return;
+	if (oox_run_pr		== nullptr) return;
+	if (text_properties == nullptr) return;
 	
 	if (oox_run_pr->m_oRStyle.IsInit() && oox_run_pr->m_oRStyle->m_sVal.IsInit())
 	{
@@ -3330,9 +3391,9 @@ void DocxConverter::convert(OOX::Logic::CRunProperty *oox_run_pr, odf_writer::te
 
 void DocxConverter::convert(SimpleTypes::CTheme* oox_font_theme, _CP_OPT(std::wstring) & odf_font_name)
 {
-	if (oox_font_theme == NULL) return;
+	if (oox_font_theme == nullptr) return;
 
-	if (docx_document->m_pTheme == NULL) return;
+	if (docx_document->m_pTheme == nullptr) return;
 
 	std::wstring font;
 
@@ -3364,7 +3425,7 @@ void DocxConverter::convert(SimpleTypes::CTheme* oox_font_theme, _CP_OPT(std::ws
 
 void DocxConverter::convert(OOX::Logic::CText *oox_text)
 {
-	if (oox_text == NULL) return;
+	if (oox_text == nullptr) return;
 
 	if (oox_text->m_oSpace.IsInit())
 	{
@@ -3377,7 +3438,7 @@ void DocxConverter::convert(OOX::Logic::CText *oox_text)
 }
 void DocxConverter::convert(OOX::Logic::CAlternateContent *oox_alt_content)
 {
-	if (oox_alt_content == NULL)return;
+	if (oox_alt_content == nullptr)return;
 
 	for(size_t i = 0; i < oox_alt_content->m_arrChoiceItems.size(); ++i) // right choice
 	{
@@ -3395,7 +3456,7 @@ void DocxConverter::convert(OOX::Logic::CAlternateContent *oox_alt_content)
 //old formating vml
 void DocxConverter::convert(OOX::Logic::CPicture* oox_pic)
 {
-	if (oox_pic == NULL) return;
+	if (oox_pic == nullptr) return;
 	
 	odt_context->start_drawing_context();
 
@@ -3449,7 +3510,7 @@ void DocxConverter::convert(OOX::Logic::CPicture* oox_pic)
 }
 void DocxConverter::convert(OOX::Logic::CObject* oox_obj)
 {
-	if (oox_obj == NULL) return;
+	if (oox_obj == nullptr) return;
 
 	odt_context->start_drawing_context();
 			
@@ -3492,7 +3553,7 @@ void DocxConverter::convert(OOX::Logic::CObject* oox_obj)
 			std::wstring pathImage = find_link_by_id(sIdImageFileCache, 1, bExternal);
 			std::wstring odf_ref_image = odf_context()->add_imageobject(pathImage, bExternal);
 
-			OoxConverter::convert(oox_obj->m_oShape.GetPointer(), NULL);
+			OoxConverter::convert(oox_obj->m_oShape.GetPointer(), nullptr);
 			odf_context()->drawing_context()->set_image_replacement(odf_ref_image);
 
 			odf_context()->drawing_context()->end_object_ole();
@@ -3550,7 +3611,7 @@ void DocxConverter::convert(OOX::Logic::CObject* oox_obj)
 ///////////////////////////////////////////////
 void DocxConverter::convert(OOX::Logic::CDrawing *oox_drawing)
 {
-	if (oox_drawing == NULL) return;
+	if (oox_drawing == nullptr) return;
 
 	odt_context->start_drawing_context();
 	if (oox_drawing->m_oAnchor.IsInit())
@@ -3574,7 +3635,7 @@ void DocxConverter::convert(OOX::Logic::CDrawing *oox_drawing)
 }
 void DocxConverter::convert(OOX::Drawing::CAnchor* oox_anchor)
 {
-	if (oox_anchor == NULL)return;
+	if (oox_anchor == nullptr)return;
 
 	_CP_OPT(double) width, height;
 	_CP_OPT(double) x, y;
@@ -3757,7 +3818,7 @@ void DocxConverter::convert(OOX::Drawing::CAnchor* oox_anchor)
 }
 void DocxConverter::convert(OOX::Drawing::CInline *oox_inline)
 {
-	if (oox_inline == NULL)return;
+	if (oox_inline == nullptr)return;
 
 	_CP_OPT(double) width, height;
 	_CP_OPT(double) x = 0., y = 0.;
@@ -3876,8 +3937,8 @@ void DocxConverter::convert(ComplexTypes::Word::CColor *color, _CP_OPT(odf_types
 PPTX::Logic::ClrMap* DocxConverter::oox_clrMap()
 {
 	//return current_clrMap; TODO
-	if (!docx_document) return NULL;
-	if (!docx_document->m_oMain.settings) return NULL;
+	if (!docx_document) return nullptr;
+	if (!docx_document->m_oMain.settings) return nullptr;
 	
 	return docx_document->m_oMain.settings->m_oClrSchemeMapping.GetPointer();
 }
@@ -3885,7 +3946,7 @@ void DocxConverter::convert_settings()
 {
 	if (!odt_context) return;
 
-	OOX::CSettings *settings = docx_document ? docx_document->m_oMain.settings : (docx_flat_document ? docx_flat_document->m_pSettings.GetPointer() : NULL);
+	OOX::CSettings *settings = docx_document ? docx_document->m_oMain.settings : (docx_flat_document ? docx_flat_document->m_pSettings.GetPointer() : nullptr);
 
 	// w:doNotUseHTMLParagraphAutoSpacing is ODF's AddParaTableSpacing: on, the spacing below a paragraph and the
 	// spacing above the next one add up; off (Word's default), only the larger one counts. Write it either way,
@@ -3991,7 +4052,7 @@ void DocxConverter::convert_lists_styles()
 {
 	if (!odt_context) return;
 
-	OOX::CNumbering * lists_styles = docx_document ? docx_document->m_oMain.numbering : docx_flat_document ? docx_flat_document->m_pNumbering.GetPointer() : NULL;
+	OOX::CNumbering * lists_styles = docx_document ? docx_document->m_oMain.numbering : docx_flat_document ? docx_flat_document->m_pNumbering.GetPointer() : nullptr;
 	
 	if (!lists_styles)return;
 
@@ -3999,7 +4060,7 @@ void DocxConverter::convert_lists_styles()
 
 	for (size_t i = 0; i < lists_styles->m_arrNum.size(); i++)
 	{
-		if (lists_styles->m_arrNum[i] == NULL) continue;
+		if (lists_styles->m_arrNum[i] == nullptr) continue;
 
 		if (lists_styles->m_arrNum[i]->m_oNumId.IsInit() == false) continue;
 
@@ -4017,8 +4078,8 @@ void DocxConverter::convert_lists_styles()
 		odt_context->styles_context()->lists_styles().start_style(true, *lists_styles->m_arrNum[i]->m_oNumId);
 		for (int j = 0; j < 9; ++j)
 		{
-			OOX::Numbering::CLvl* pLvl = NULL;
-			OOX::Numbering::CNumLvl* pOverrideLvl = NULL;
+			OOX::Numbering::CLvl* pLvl = nullptr;
+			OOX::Numbering::CNumLvl* pOverrideLvl = nullptr;
 
 			std::map<int, size_t>::iterator pFindLvl = num_style->m_mapLvl.find(j);
 			std::map<int, size_t>::iterator pFindOverrideLvl = lists_styles->m_arrNum[i]->m_mapLvlOverride.find(j);			
@@ -4034,13 +4095,13 @@ void DocxConverter::convert_lists_styles()
 
 		odt_context->styles_context()->lists_styles().end_style();
 	}
-	oox_current_child_document = NULL;
+	oox_current_child_document = nullptr;
 }
 void DocxConverter::convert_styles()
 {
 	if (!odt_context) return;
 
-	OOX::CStyles* styles = docx_document ? docx_document->m_oMain.styles : (docx_flat_document ? docx_flat_document->m_pStyles.GetPointer() : NULL);
+	OOX::CStyles* styles = docx_document ? docx_document->m_oMain.styles : (docx_flat_document ? docx_flat_document->m_pStyles.GetPointer() : nullptr);
 	if (!styles)return;
 
 	//nullable<OOX::CLatentStyles > m_oLatentStyles;
@@ -4049,7 +4110,7 @@ void DocxConverter::convert_styles()
 
 	for (size_t i = 0; i < styles->m_arrStyle.size(); i++)
 	{
-		if (styles->m_arrStyle[i] == NULL) continue;
+		if (styles->m_arrStyle[i] == nullptr) continue;
 
 		if (!current_font_size.empty())
 		{
@@ -4068,7 +4129,7 @@ void DocxConverter::convert_styles()
 
 void DocxConverter::convert(OOX::Logic::CHyperlink *oox_hyperlink)
 {
-	if (oox_hyperlink == NULL)return;
+	if (oox_hyperlink == nullptr)return;
 
 	std::wstring link, location;
 	bool bExternal = false;
@@ -4110,8 +4171,8 @@ void DocxConverter::convert(OOX::Logic::CHyperlink *oox_hyperlink)
 
 void DocxConverter::convert(OOX::CDocDefaults *def_style, OOX::CStyles *styles)
 {
-	if (def_style == NULL)return;
-	if (styles == NULL)return;
+	if (def_style == nullptr)return;
+	if (styles == nullptr)return;
 
 	bool is_default_par_props = false;
 
@@ -4129,7 +4190,7 @@ void DocxConverter::convert(OOX::CDocDefaults *def_style, OOX::CStyles *styles)
 		odt_context->styles_context()->create_default_style(odf_types::style_family::Paragraph);					
 		
 		odf_writer::paragraph_format_properties* paragraph_properties = odt_context->styles_context()->last_state()->get_paragraph_properties();
-		odf_writer::text_format_properties* text_properties = NULL;
+		odf_writer::text_format_properties* text_properties = nullptr;
 
 		OOX::Logic::CParagraphProperty paraProps;
 		
@@ -4144,7 +4205,7 @@ void DocxConverter::convert(OOX::CDocDefaults *def_style, OOX::CStyles *styles)
 			}
 		}
 
-		convert(&paraProps, paragraph_properties, NULL, is_default_par_props);
+		convert(&paraProps, paragraph_properties, nullptr, is_default_par_props);
 		
 		if (def_style->m_oParPr.IsInit() && def_style->m_oParPr->m_oRPr.IsInit())
 		{
@@ -4184,7 +4245,7 @@ void DocxConverter::convert(OOX::CDocDefaults *def_style, OOX::CStyles *styles)
 	///////to the default paragraph - default font settings
 		odf_writer::odf_style_state_ptr def_style_state;
 
-		odf_writer::text_format_properties* para_text_properties = NULL;
+		odf_writer::text_format_properties* para_text_properties = nullptr;
 		if (odt_context->styles_context()->find_odf_default_style_state(odf_types::style_family::Paragraph, def_style_state) && def_style_state)
 		{
 			para_text_properties = def_style_state->get_text_properties();
@@ -4248,10 +4309,10 @@ void DocxConverter::convert(OOX::CDocDefaults *def_style, OOX::CStyles *styles)
 
 void DocxConverter::convert(OOX::Numbering::CLvl *oox_num_lvl, OOX::Numbering::CNumLvl *oox_num_lvl_over, int lvl)
 {
-	if (oox_num_lvl == NULL) return;
+	if (oox_num_lvl == nullptr) return;
 	if (oox_num_lvl->m_oIlvl.IsInit() == false) return; 
 
-	OOX::Numbering::CLvl *lvl_over = oox_num_lvl_over ? oox_num_lvl_over->m_oLvl.GetPointer() : NULL;
+	OOX::Numbering::CLvl *lvl_over = oox_num_lvl_over ? oox_num_lvl_over->m_oLvl.GetPointer() : nullptr;
 
 	int oox_type_list = 48; //none
 	if ((oox_num_lvl->m_oNumFmt.IsInit()) && (oox_num_lvl->m_oNumFmt->m_oVal.IsInit()))
@@ -4277,8 +4338,8 @@ void DocxConverter::convert(OOX::Numbering::CLvl *oox_num_lvl, OOX::Numbering::C
 	odf_writer::style_list_level_properties			*level_props	= odt_context->styles_context()->lists_styles().get_list_level_properties();
 	odf_writer::style_list_level_label_alignment	*aligment_props	= odt_context->styles_context()->lists_styles().get_list_level_alignment_properties();
 	
-	if (level_props		== NULL)return;
-	if (aligment_props	== NULL)return;
+	if (level_props		== nullptr)return;
+	if (aligment_props	== nullptr)return;
 
 	//nullable<SimpleTypes::COnOff<>         > m_oTentative;
 	//nullable<SimpleTypes::CLongHexNumber<> > m_oTplc;
@@ -4482,7 +4543,7 @@ void DocxConverter::convert(OOX::Numbering::CLvl *oox_num_lvl, OOX::Numbering::C
 }
 void DocxConverter::convert_table_style(OOX::CStyle *oox_style)
 {
-	if (oox_style == NULL)return;
+	if (oox_style == nullptr)return;
 
 	std::wstring oox_name_id = oox_style->m_sStyleId.get_value_or(L"");
 
@@ -4524,7 +4585,7 @@ void DocxConverter::convert_table_style(OOX::CStyle *oox_style)
 	if (oox_style->m_oParPr.IsInit())
 	{
 		odf_writer::paragraph_format_properties* paragraph_properties = odt_context->styles_context()->table_styles().get_paragraph_properties();
-		convert(oox_style->m_oParPr.GetPointer(), paragraph_properties, NULL, false);
+		convert(oox_style->m_oParPr.GetPointer(), paragraph_properties, nullptr, false);
 	}
 
 	if (oox_style->m_oTcPr.IsInit())
@@ -4540,7 +4601,7 @@ void DocxConverter::convert_table_style(OOX::CStyle *oox_style)
 //separate
 	for (size_t i = 0; i < oox_style->m_arrTblStylePr.size() ; i++)
 	{
-		if (oox_style->m_arrTblStylePr[i] == NULL) continue;
+		if (oox_style->m_arrTblStylePr[i] == nullptr) continue;
 
 		if (oox_style->m_arrTblStylePr[i]->m_oType.IsInit() == false) continue;
 		switch (oox_style->m_arrTblStylePr[i]->m_oType->GetValue())
@@ -4562,7 +4623,7 @@ void DocxConverter::convert_table_style(OOX::CStyle *oox_style)
 		//first inherit from the general settings???
 		convert(oox_style->m_arrTblStylePr[i]->m_oTcPr.GetPointer(), odt_context->styles_context()->table_styles().get_table_cell_properties());
 		convert(oox_style->m_arrTblStylePr[i]->m_oRunPr.GetPointer(),odt_context->styles_context()->table_styles().get_text_properties());
-		convert(oox_style->m_arrTblStylePr[i]->m_oParPr.GetPointer(),odt_context->styles_context()->table_styles().get_paragraph_properties(), NULL, false);
+		convert(oox_style->m_arrTblStylePr[i]->m_oParPr.GetPointer(),odt_context->styles_context()->table_styles().get_paragraph_properties(), nullptr, false);
 
 			//nullable<OOX::Logic::CTableProperty      >      m_oTblPr;
 			//nullable<OOX::Logic::CTableRowProperties >      m_oTrPr;
@@ -4573,7 +4634,7 @@ void DocxConverter::convert_table_style(OOX::CStyle *oox_style)
 }
 void DocxConverter::convert(OOX::CStyle	*oox_style)
 {
-	if (oox_style == NULL)return;
+	if (oox_style == nullptr)return;
 
 	if (oox_style->m_oType.IsInit() == false)return;
 	odf_types::style_family::type family = odf_types::style_family::None;
@@ -4619,7 +4680,7 @@ void DocxConverter::convert(OOX::CStyle	*oox_style)
 	{
 		odt_context->styles_context()->last_state()->set_class(L"default");
 	}
-	odf_writer::text_format_properties* text_properties = NULL;
+	odf_writer::text_format_properties* text_properties = nullptr;
 	if (oox_style->m_oRunPr.IsInit())
 	{
 		text_properties = odt_context->styles_context()->last_state()->get_text_properties();
@@ -4653,7 +4714,7 @@ void DocxConverter::convert(OOX::CStyle	*oox_style)
 			}
 		}
 
-		convert(oox_style->m_oParPr.GetPointer(), paragraph_properties, NULL, false);
+		convert(oox_style->m_oParPr.GetPointer(), paragraph_properties, nullptr, false);
 
 		odf_writer::style* odf_style =
 			dynamic_cast<odf_writer::style*>(odt_context->styles_context()->last_state()->get_office_element().get());
@@ -4695,7 +4756,7 @@ void DocxConverter::convert(OOX::CStyle	*oox_style)
 		// lookups never find.
 		const std::wstring & parent_id = *oox_style->m_oBasedOn->m_sVal;
 
-		OOX::CStyles* styles = docx_document ? docx_document->m_oMain.styles : (docx_flat_document ? docx_flat_document->m_pStyles.GetPointer() : NULL);
+		OOX::CStyles* styles = docx_document ? docx_document->m_oMain.styles : (docx_flat_document ? docx_flat_document->m_pStyles.GetPointer() : nullptr);
 		if (styles)
 		{
 			std::map<std::wstring, size_t>::iterator pFind = styles->m_mapStyleNames.find(parent_id);
@@ -4727,7 +4788,7 @@ void DocxConverter::convert(OOX::CStyle	*oox_style)
 
 void DocxConverter::convert(OOX::Logic::CCommentRangeStart* oox_comm_start)
 {
-	if (oox_comm_start == NULL)return;
+	if (oox_comm_start == nullptr)return;
 	if (oox_comm_start->m_oId.IsInit() == false) return;
 
 	int oox_comm_id = oox_comm_start->m_oId->GetValue();
@@ -4747,7 +4808,7 @@ void DocxConverter::convert(OOX::Logic::CCommentRangeStart* oox_comm_start)
 
 void DocxConverter::convert(OOX::Logic::CCommentRangeEnd* oox_comm_end)
 {
-	if (oox_comm_end == NULL)return;
+	if (oox_comm_end == nullptr)return;
 	if (oox_comm_end->m_oId.IsInit() == false) return;
 
 	int oox_comm_id = oox_comm_end->m_oId->GetValue();
@@ -4756,7 +4817,7 @@ void DocxConverter::convert(OOX::Logic::CCommentRangeEnd* oox_comm_end)
 }
 void DocxConverter::convert(OOX::CComment* oox_comment)
 {
-	if (oox_comment == NULL) return;
+	if (oox_comment == nullptr) return;
 	if (oox_comment->m_oId.IsInit() == false) return;
 	
 	int oox_comm_id = oox_comment->m_oId->GetValue();
@@ -4777,7 +4838,7 @@ void DocxConverter::convert(OOX::CComment* oox_comment)
 }
 void DocxConverter::convert(OOX::Logic::CCommentReference* oox_comm_ref)
 {
-	if (oox_comm_ref == NULL)					return;
+	if (oox_comm_ref == nullptr)					return;
 	if (oox_comm_ref->m_oId.IsInit() == false)	return;
 
 	int oox_comm_id = oox_comm_ref->m_oId->GetValue();
@@ -4797,7 +4858,7 @@ void DocxConverter::convert(OOX::Logic::CCommentReference* oox_comm_ref)
 }
 void DocxConverter::convert(OOX::Logic::CFootnoteReference* oox_ref)
 {
-	if (oox_ref == NULL)					return;
+	if (oox_ref == nullptr)					return;
 	if (oox_ref->m_oId.IsInit() == false)	return;
 
 	int oox_ref_id = oox_ref->m_oId->GetValue();
@@ -4806,7 +4867,7 @@ void DocxConverter::convert(OOX::Logic::CFootnoteReference* oox_ref)
 }
 void DocxConverter::convert(OOX::Logic::CEndnoteReference* oox_ref)
 {
-	if (oox_ref == NULL)					return;
+	if (oox_ref == nullptr)					return;
 	if (oox_ref->m_oId.IsInit() == false)	return;
 
 	int oox_ref_id = oox_ref->m_oId->GetValue();
@@ -4817,7 +4878,7 @@ void DocxConverter::convert_comment(int oox_comm_id)
 {
 	bool bContent = false;
 
-	OOX::CComments *pComments = NULL;
+	OOX::CComments *pComments = nullptr;
 
 	if (docx_document) 
 	{
@@ -4841,7 +4902,7 @@ void DocxConverter::convert_comment(int oox_comm_id)
 		{
 			OOX::CComment* oox_comment = pComments->m_arrComments[pFind->second];
 			
-			if (oox_comment != NULL)
+			if (oox_comment != nullptr)
 			{				
 				odt_context->start_comment_content();
 				{
@@ -4862,7 +4923,7 @@ void DocxConverter::convert_comment(int oox_comm_id)
 }
 void DocxConverter::convert_footnote(int oox_ref_id)
 {
-	OOX::CFootnotes *oox_footnotes = NULL;
+	OOX::CFootnotes *oox_footnotes = nullptr;
 	
 	if (docx_document)
 	{
@@ -4872,7 +4933,7 @@ void DocxConverter::convert_footnote(int oox_ref_id)
 	{
 		oox_footnotes = docx_flat_document->m_pFootnotes.GetPointer();
 	}
-	if (oox_footnotes == NULL ) return;
+	if (oox_footnotes == nullptr ) return;
 
 	OOX::IFileContainer* back_document = oox_current_child_document;
 	oox_current_child_document = dynamic_cast<OOX::IFileContainer*>(oox_footnotes);
@@ -4900,7 +4961,7 @@ void DocxConverter::convert_footnote(int oox_ref_id)
 }
 void DocxConverter::convert_endnote(int oox_ref_id)
 {
-	OOX::CEndnotes *oox_endnotes = NULL;
+	OOX::CEndnotes *oox_endnotes = nullptr;
 	
 	if (docx_document)
 	{
@@ -4910,7 +4971,7 @@ void DocxConverter::convert_endnote(int oox_ref_id)
 	{
 		oox_endnotes = docx_flat_document->m_pEndnotes.GetPointer();
 	}
-	if (oox_endnotes == NULL ) return;
+	if (oox_endnotes == nullptr ) return;
 
 	OOX::IFileContainer* back_document = oox_current_child_document;
 	oox_current_child_document = dynamic_cast<OOX::IFileContainer*>(oox_endnotes);
@@ -4940,7 +5001,7 @@ void DocxConverter::convert_endnote(int oox_ref_id)
 }
 void DocxConverter::convert_hdr_ftr(std::wstring sId)
 {
-	OOX::CHdrFtr *oox_hdr_ftr = NULL;
+	OOX::CHdrFtr *oox_hdr_ftr = nullptr;
 	
 	if (docx_document)
 	{
@@ -4950,7 +5011,7 @@ void DocxConverter::convert_hdr_ftr(std::wstring sId)
 	{
 		oox_hdr_ftr = docx_flat_document->GetHeaderOrFooter(sId);
 	}
-	if (oox_hdr_ftr == NULL ) return;
+	if (oox_hdr_ftr == nullptr ) return;
 
 	OOX::IFileContainer* back_document = oox_current_child_document;
 	oox_current_child_document = dynamic_cast<OOX::IFileContainer*>(oox_hdr_ftr);
@@ -4972,7 +5033,7 @@ bool DocxConverter::in_table()
 
 void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 {
-	if (oox_table == NULL) return;
+	if (oox_table == nullptr) return;
 
 	if (odt_context->text_context()->get_KeepNextParagraph())
 	{
@@ -5196,7 +5257,7 @@ void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 
 void DocxConverter::convert(OOX::Logic::CTblGrid	*oox_table_grid)
 {
-	if (oox_table_grid == NULL) return;
+	if (oox_table_grid == nullptr) return;
 
 	int id_change_properties = convert(oox_table_grid->m_oTblGridChange.GetPointer());
 
@@ -5204,7 +5265,7 @@ void DocxConverter::convert(OOX::Logic::CTblGrid	*oox_table_grid)
 
 	for (size_t i =0 ; i < oox_table_grid->m_arrGridCol.size(); i++)
 	{
-		if (oox_table_grid->m_arrGridCol[i] == NULL) continue;
+		if (oox_table_grid->m_arrGridCol[i] == nullptr) continue;
 		double width = -1;
 
 		const double pt_per_cm = 28.3464567;
@@ -5255,7 +5316,7 @@ int DocxConverter::convert(OOX::Logic::CTblGridChange *oox_table_grid_prop_chang
 	
 void DocxConverter::convert(OOX::Logic::CTr	*oox_table_row)
 {
-	if (oox_table_row == NULL) return;
+	if (oox_table_row == nullptr) return;
 
 	bool styled = oox_table_row->m_pTableRowProperties ? true : false;
 	bool is_header = false;
@@ -5299,7 +5360,7 @@ void DocxConverter::convert(OOX::Logic::CTr	*oox_table_row)
 }
 void DocxConverter::convert(OOX::Logic::CTc	*oox_table_cell)
 {
-	if (oox_table_cell == NULL) return;
+	if (oox_table_cell == nullptr) return;
 
 	bool covered				= false;
 	int id_change_properties	= -1;
@@ -5372,8 +5433,8 @@ void DocxConverter::convert(OOX::Logic::CTc	*oox_table_cell)
 }
 bool DocxConverter::convert(OOX::Logic::CTableProperty *oox_table_pr, odf_writer::style_table_properties *table_properties )
 {
-	if (oox_table_pr == NULL) return false;
-	if (table_properties == NULL) return false;
+	if (oox_table_pr == nullptr) return false;
+	if (table_properties == nullptr) return false;
 
 	if (oox_table_pr->m_oTblW.IsInit() && oox_table_pr->m_oTblW->m_oW.IsInit())
 	{
@@ -5474,7 +5535,7 @@ bool DocxConverter::convert(OOX::Logic::CTableProperty *oox_table_pr, odf_writer
 
 void DocxConverter::convert(OOX::Logic::CTableProperty *oox_table_pr, odf_writer::style_table_cell_properties * table_cell_properties)
 {
-	if (oox_table_pr == NULL || table_cell_properties == NULL) return;
+	if (oox_table_pr == nullptr || table_cell_properties == nullptr) return;
 
 	convert(oox_table_pr->m_oTblBorders.GetPointer(), table_cell_properties);
 
@@ -5538,8 +5599,8 @@ bool DocxConverter::convert(OOX::Logic::CTableProperty *oox_table_pr, bool base_
 }
 void DocxConverter::convert(OOX::Logic::CTableRowProperties *oox_table_row_pr, odf_writer::style_table_row_properties *table_row_properties)
 {
-	if (oox_table_row_pr == NULL) return;
-	if (table_row_properties == NULL) return;
+	if (oox_table_row_pr == nullptr) return;
+	if (table_row_properties == nullptr) return;
 
 	if ((oox_table_row_pr->m_oTblHeight.IsInit()) && 
 		(oox_table_row_pr->m_oTblHeight->m_oVal.IsInit()))
@@ -5568,7 +5629,7 @@ void DocxConverter::convert(OOX::Logic::CTableRowProperties *oox_table_row_pr, o
 }
 void DocxConverter::convert(OOX::Logic::CTableRowProperties *oox_table_row_pr)
 {
-	if (oox_table_row_pr == NULL) return;
+	if (oox_table_row_pr == nullptr) return;
 
 	odf_writer::style_table_row_properties	*table_row_properties = odt_context->styles_context()->last_state()->get_table_row_properties();
 
@@ -5594,8 +5655,8 @@ void DocxConverter::convert(OOX::Logic::CTableRowProperties *oox_table_row_pr)
 }
 bool DocxConverter::convert(OOX::Logic::CTableCellProperties *oox_table_cell_pr, odf_writer::style_table_cell_properties *table_cell_properties)
 {
-	if (oox_table_cell_pr == NULL) return false;
-	if (table_cell_properties == NULL) return false;
+	if (oox_table_cell_pr == nullptr) return false;
+	if (table_cell_properties == nullptr) return false;
 
 	if (oox_table_cell_pr->m_oShd.IsInit())
 	{
@@ -5713,12 +5774,12 @@ bool DocxConverter::convert(OOX::Logic::CTableCellProperties *oox_table_cell_pr,
 		
 	bool is_base_styled = odt_context->table_context()->is_styled(row , col);
 
-	odf_writer::style_table_cell_properties * parent_cell_properties = NULL;
+	odf_writer::style_table_cell_properties * parent_cell_properties = nullptr;
 
 	std::wstring parent_name = odt_context->table_context()->get_default_cell_properties();
 	if (false == parent_name.empty()) 
 	{
-		odf_writer::style * style_ = NULL;		
+		odf_writer::style * style_ = nullptr;		
 		if (odt_context->styles_context()->find_odf_style(parent_name, odf_types::style_family::TableCell, style_))
 		{
 			parent_cell_properties = style_->content_.add_get_style_table_cell_properties();
@@ -5726,13 +5787,13 @@ bool DocxConverter::convert(OOX::Logic::CTableCellProperties *oox_table_cell_pr,
 	}
 	bool bTableCellPropsPresent = IsOdfTableCellPresent(oox_table_cell_pr);
 
-	if (!bTableCellPropsPresent && is_base_styled == false && parent_cell_properties == NULL) return false;
+	if (!bTableCellPropsPresent && is_base_styled == false && parent_cell_properties == nullptr) return false;
 	
 	odt_context->styles_context()->create_style(L"", odf_types::style_family::TableCell, true, false, -1); 	
 	
 	odf_writer::style_table_cell_properties *cell_properties = odt_context->styles_context()->last_state()->get_table_cell_properties();
 
-	if (cell_properties == NULL) return false;
+	if (cell_properties == nullptr) return false;
 
 	if (is_base_styled)
 	{
