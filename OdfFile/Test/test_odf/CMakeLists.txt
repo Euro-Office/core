@@ -139,6 +139,7 @@ add_core_gtest(
             xlsx2ods_fit_to_pages.cpp
             ods2xlsx_styles_auto_data_style.cpp
             odt2docx_tracked_deleted_table.cpp
+            docx2odt_table_first_cell_page_break.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )

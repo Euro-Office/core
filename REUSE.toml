@@ -177,6 +177,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/line_break_after_text.docx",
     "OdfFile/Test/test_odf/ExampleFiles/page_background_image_no_page_size.docx",
     "OdfFile/Test/test_odf/ExampleFiles/page_break_after_text.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/table_first_cell_page_break.docx",
     "OdfFile/Test/test_odf/ExampleFiles/custom_props_typed.docx",
     "OdfFile/Test/test_odf/ExampleFiles/doc_props.odp",
     "OdfFile/Test/test_odf/ExampleFiles/doc_props.ods",
