@@ -78,7 +78,7 @@ CFill::CFill()
 	: m_nFillType(0), m_eHatchStyle(EColorFillPattern::NONE), m_eMode(EImageFillType::NONE), m_chAlpha(0xff)
 {}
 
-CFill::CFill(CHWPStream& oBuffer, int nOff, int nSize)
+CFill::CFill(CHWPStream& oBuffer, int /*nOff*/, int /*nSize*/)
 	: m_nFillType(0), m_eHatchStyle(EColorFillPattern::NONE), m_eMode(EImageFillType::NONE), m_chAlpha(0xff)
 {
 	oBuffer.SavePosition();
@@ -252,11 +252,11 @@ void CFill::ReadImgBrush(CXMLReader& oReader, EHanType eType)
 			{
 				const std::string sEffect{oReader.GetTextA()};
 
-				if (GetValueName(EValue::RealPic, eType))
+				if (GetValueName(EValue::RealPic, eType) == sEffect)
 					m_chEffect = 0;
-				else if (GetValueName(EValue::GrayScale, eType))
+				else if (GetValueName(EValue::GrayScale, eType) == sEffect)
 					m_chEffect = 1;
-				else if (GetValueName(EValue::BlackWhite, eType))
+				else if (GetValueName(EValue::BlackWhite, eType) == sEffect)
 					m_chEffect = 2;
 			}
 			else if (GetAttributeName(EAttribute::BinItem, eType))
@@ -343,7 +343,7 @@ CHWPRecordBorderFill::CHWPRecordBorderFill(int nTagNum, int nLevel, int nSize)
 	: CHWPRecord(nTagNum, nLevel, nSize), m_pFill(nullptr)
 {}
 
-CHWPRecordBorderFill::CHWPRecordBorderFill(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CHWPRecordBorderFill::CHWPRecordBorderFill(CHWPDocInfo& /*oDocInfo*/, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 	: CHWPRecord(nTagNum, nLevel, nSize), m_pFill(nullptr)
 {
 	short shTypeBits;
@@ -362,9 +362,9 @@ CHWPRecordBorderFill::CHWPRecordBorderFill(CHWPDocInfo& oDocInfo, int nTagNum, i
 
 	#define READ_SIDE(side) \
 	oBuffer.ReadByte(chLineStyleNum); \
-	side.m_eStyle = GetLineStyle2(chLineStyleNum); \
-	oBuffer.ReadByte(side.m_chWidth);\
-	oBuffer.ReadColor(side.m_nColor)
+	(side).m_eStyle = GetLineStyle2(chLineStyleNum); \
+	oBuffer.ReadByte((side).m_chWidth);\
+	oBuffer.ReadColor((side).m_nColor)
 
 	HWP_BYTE chLineStyleNum;
 
@@ -374,10 +374,10 @@ CHWPRecordBorderFill::CHWPRecordBorderFill(CHWPDocInfo& oDocInfo, int nTagNum, i
 	READ_SIDE(m_oBottom);
 	READ_SIDE(m_oDiagonal);
 
-	m_pFill = new CFill(oBuffer, 0, 0); // TODO:: перейти от использования off и size
+	m_pFill = new CFill(oBuffer, 0, 0); // TODO:: move away from using off and size
 }
 
-CHWPRecordBorderFill::CHWPRecordBorderFill(CHWPDocInfo& oDocInfo, CXMLReader& oReader, EHanType eType)
+CHWPRecordBorderFill::CHWPRecordBorderFill(CHWPDocInfo& /*oDocInfo*/, CXMLReader& oReader, EHanType eType)
 	: CHWPRecord(EHWPTag::HWPTAG_BORDER_FILL, 0, 0), m_pFill(nullptr)
 {
 	START_READ_ATTRIBUTES(oReader)

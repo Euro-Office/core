@@ -50,7 +50,7 @@ namespace SerializeCommon
 			strFileName = oDownloader.GetFilePath();
 			
 			CImageFileFormatChecker checker;
-			if (false == checker.isImageFile(strFileName))
+			if (!checker.isImageFile(strFileName))
 			{
 				strFileName.clear();
 			}  
@@ -62,20 +62,20 @@ namespace SerializeCommon
 	}
     VOID convertBase64ToImage (NSFile::CFileBinary& oFile, std::wstring &pBase64)
 	{
-		BYTE* pUtf8 = NULL;
+		BYTE* pUtf8 = nullptr;
 		long nUtf8Size;
         NSFile::CUtf8Converter::GetUtf8StringFromUnicode(pBase64.c_str(), pBase64.length(), pUtf8, nUtf8Size);
         std::string sUnicode((char*)pUtf8, nUtf8Size);
 		RELEASEARRAYOBJECTS(pUtf8);
 
-		//Убираем "data:image/jpg;base64,"
+		//Remove "data:image/jpg;base64,"
 		int nShift = 0;
         int nIndex = sUnicode.find("base64,");
 		if(-1 != nIndex)
 		{
 			nShift = nIndex + 7;
 		}
-		// Получаем размер файла
+		// Getting the file size
         LONG lFileSize = sUnicode.length () - nShift;
 		INT nDstLength = lFileSize;
 		BYTE *pBuffer = new BYTE [lFileSize];
@@ -85,7 +85,7 @@ namespace SerializeCommon
 		CImageFileFormatChecker checker;
 		std::wstring detectImageExtension = checker.DetectFormatByData(pBuffer, nDstLength);
 
-		if (false == detectImageExtension.empty())
+		if (!detectImageExtension.empty())
 		{
 			oFile.WriteFile(pBuffer, nDstLength);
 		}
@@ -95,6 +95,7 @@ namespace SerializeCommon
 
 	long Round(double val)
 	{
+		// NOLINTNEXTLINE(bugprone-incorrect-roundings): truncation after +0.5 is the value the binary format stores
 		return (long)(val+ 0.5);
 	}
     std::wstring changeExtention(const std::wstring& sSourcePath, const std::wstring& sTargetExt)
@@ -107,7 +108,7 @@ namespace SerializeCommon
     void ReadFileType(const std::wstring& sXMLOptions, BYTE& result, UINT& nCodePage, std::wstring& sDelimiter, BYTE& cSaveFileType, _INT32& Lcid)
 	{
 		result = BinXlsxRW::c_oFileTypes::XLSX;
-		nCodePage = 46;		//default 46 временно CP_UTF8
+		nCodePage = 46;		//default 46 temporary CP_UTF8
 		cSaveFileType = BinXlsxRW::c_oFileTypes::XLSX;// default
         Lcid = -1;// default
 
@@ -123,7 +124,7 @@ namespace SerializeCommon
 		sDelimiter = L","; // default common
 
 		XmlUtils::CXmlLiteReader oReader;
-        if (true != oReader.FromString(sXMLOptions) || true != oReader.IsValid())
+        if (!oReader.FromString(sXMLOptions) || !oReader.IsValid())
 			return;
 
 		oReader.ReadNextNode(); // XmlOptions

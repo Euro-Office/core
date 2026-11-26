@@ -32,8 +32,8 @@
 
 namespace NSFontConverter
 {
-    #define type1MaxBlueValues 14 // 7 пар
-    #define type1MaxOtherBlues 10 // 5 пар
+    #define type1MaxBlueValues 14 // 7 pairs
+    #define type1MaxOtherBlues 10 // 5 pairs
     #define type1MaxStemSnap   12
 
     struct Type1PrivateDict
@@ -66,12 +66,12 @@ namespace NSFontConverter
 
     struct Type1TopDict
     {
-        // TO DO: дополнить данную структуру
+        // TO DO: supplement this structure
         double arrdFontMatrix[6];
         double arrdFontBBox[4];
     };
 
-    // команды
+    // commands
     const int c_nType1hstem				= 0x0001; // 'hstem'
     const int c_nType1vstem				= 0x0003; // 'vstem'
     const int c_nType1vmoveto			= 0x0004; // 'vmoveto'
@@ -79,10 +79,10 @@ namespace NSFontConverter
     const int c_nType1hlineto			= 0x0006; // 'hlineto'
     const int c_nType1vlineto			= 0x0007; // 'vlineto'
     const int c_nType1rrcurveto			= 0x0008; // 'rrcurveto'
-    const int c_nType1closepath			= 0x0009; // 'closepath' не используется в Type2
+    const int c_nType1closepath			= 0x0009; // 'closepath' isn't used in Type2
     const int c_nType1callsubr			= 0x000A; // 'callsubr
     const int c_nType1return			= 0x000B; // 'return'
-    const int c_nType1dotsection		= 0x000C; // 'dotsection' не используется в Type2
+    const int c_nType1dotsection		= 0x000C; // 'dotsection' isn't used in Type2
     const int c_nType1vstem3			= 0x010C; // 'vstem'
     const int c_nType1hstem3			= 0x020C; // 'hstem'
     const int c_nType1seac				= 0x060C; // 'seac' Type1 only
@@ -91,7 +91,7 @@ namespace NSFontConverter
     const int c_nType1div				= 0x0C0C; // 'div'
     const int c_nType1callothersubr		= 0x100C; // 'callothersubr'
     const int c_nType1pop				= 0x110C; // 'pop'
-    const int c_nType1setcurrentpoint	= 0x210C; // 'setcurrentpoint' не используется в Type2
+    const int c_nType1setcurrentpoint	= 0x210C; // 'setcurrentpoint' isn't used in Type2
     const int c_nType1hsbw				= 0x000D; // 'hsbw'
     const int c_nType1endchar			= 0x000E; // 'endchar'
     const int c_nType1rmoveto			= 0x0015; // 'rmoveto'
@@ -101,8 +101,8 @@ namespace NSFontConverter
 
     struct Type1CharstringItem
     {
-        int  nValue;   // Значение
-        bool bCommand; // TRUE: значение - номер команды, FALSE: значение - параметр команды
+        int  nValue;   // Value
+        bool bCommand; // TRUE: value - command number, FALSE: value - command parameter
 
         Type1CharstringItem(int nVal, bool bCom)
         {
@@ -139,10 +139,10 @@ namespace NSFontConverter
 
     struct Type1Glyph
     {
-        std::wstring    sGlyph;    // Type1 имя глифа
-        int             nUnicode;  // Юникодное значение глифа
+        std::wstring    sGlyph;    // Type1 glyph name
+        int             nUnicode;  // Unicode glyph value
         Type1Charstring oData;
-        int             nReserved; // Используем для SID при конвертации Type1->Type2
+        int             nReserved; // Use it for SID when converting Type1->Type2
 
         Type1Glyph(std::wstring& sGlyf, int nUni, Type1Charstring &oCharstring)
         {
@@ -240,7 +240,7 @@ namespace NSFontConverter
                     if ( nCount >= nMax )
                         break;
 
-                    // Добавляем предыдущее число в массив
+                    // Add the previous number to the array
                     if ( nCount > 0 )
                         pArray[nCount - 1] = Utils::GetDouble( (const char *)sBuffer );
 
@@ -306,7 +306,7 @@ namespace NSFontConverter
                     if ( nCount >= nMax )
                         break;
 
-                    // Добавляем предыдущее число в массив
+                    // Add the previous number to the array
                     if ( nCount > 0 )
                         pArray[nCount - 1] = Utils::GetInteger( (const char *)sBuffer );
 
@@ -328,7 +328,7 @@ namespace NSFontConverter
 
         double ReadDouble     (unsigned char *sString, int nMaxLen)
         {
-            // Смещаемся к первому пробелу (после него идет значение)
+            // Move to the first space (after it comes the value)
             int nPos = 0;
             while ( ' ' == sString[nPos] && nPos < nMaxLen )
                 nPos++;

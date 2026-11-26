@@ -28,28 +28,28 @@
 #define  OK                    0
 #define  NOERROR               0
 
-// Стандартный размер буфера в memory-stream-object
+// Standard buffer size in memory-stream-object
 #define STREAM_BUF_SIZ         4096
 
 #define MAX_OPENED_FT_FACES    30
 
-// Необходимый размер буффера для конвертирования с символьную строку.
+// The required buffer size for converting to a character string.
 #define SHORT_BUFFER_SIZE      32
 #define REAL_LEN               31//11
 #define INT_LEN                11
 #define TEXT_DEFAULT_LEN       256
 #define DATE_TIME_STR_LEN      23
 
-// Соответсвующие длины в таблицу cross-reference-table
+// Entry lengths for the cross-reference table
 #define BYTE_OFFSET_LEN        10
 #define OBJ_ID_LEN             7
 #define GEN_NO_LEN             5
 
-// Стандартный размер страницы (А4)
+// Standard page size (A4)
 #define DEF_PAGE_WIDTH         595.276
 #define DEF_PAGE_HEIGHT        841.89
 
-// Типы компрессии
+// Compression types
 
 #define  COMP_NONE            0x00
 #define  COMP_TEXT            0x01
@@ -69,7 +69,7 @@
 #define ENABLE_COPY         16
 #define ENABLE_EDIT         32
 
-// Варианты просмотра документа
+// Document viewing options
 
 #define HIDE_TOOLBAR    1
 #define HIDE_MENUBAR    2
@@ -78,7 +78,7 @@
 #define CENTER_WINDOW   16
 
 
-// Ограничения, в соответствии со спецификацией
+// Limitations according to specification
 #define LIMIT_MAX_INT             2147483647
 #define LIMIT_MIN_INT             -2147483647
 

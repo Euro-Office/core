@@ -1,6 +1,7 @@
 #include "Converter2OOXML.h"
 
 #include <cfloat>
+#include <cstdint>
 
 #include "../../../DesktopEditor/common/File.h"
 #include "../../../DesktopEditor/common/Directory.h"
@@ -31,7 +32,7 @@
 namespace HWP
 {
 
-enum class EShapeObjectType
+enum class EShapeObjectType : std::uint8_t
 {
 	Arc,
 	Curve,
@@ -160,7 +161,7 @@ void CConverter2OOXML::CreateEmptyFiles()
 
 void CConverter2OOXML::FillDefaultData()
 {
-	// Заполняем начало файлов
+	// Filling in the beginning of the files
 	AddRelationship(L"styles", L"styles.xml");
 	AddRelationship(L"settings", L"settings.xml");
 	AddRelationship(L"webSettings", L"webSettings.xml");
@@ -181,7 +182,7 @@ void CConverter2OOXML::FillDefaultData()
 
 void CConverter2OOXML::Close()
 {
-	// Дописываем концы файлов
+	// Appending the ends of the files
 	m_oDocXml.WriteString(L"</w:body></w:document>");
 
 	NSFile::CFileBinary oDocumentWriter;
@@ -305,7 +306,7 @@ void CConverter2OOXML::WriteCharacter(const CCtrlCharacter* pCharacter, short sh
 	{
 		case ECtrlCharType::PARAGRAPH_BREAK:
 		{
-			// Таблицы пишутся без тега <w:p>, поэтому для них не открывается параграф
+			// Tables are written without the <w:p> tag, so a paragraph doesn't open for them
 			if (TConversionState::TLastNode::ELastNodeType::Table == oState.m_oLastNode.m_eType &&
 			    oState.m_unParaIndex == oState.m_oLastNode.m_unParaIndex && !oState.m_bInTable)
 			{
@@ -386,7 +387,7 @@ void CConverter2OOXML::WriteShape(const CCtrlGeneralShape* pShape, short shParaS
 	}
 }
 
-void CConverter2OOXML::WriteNote(const CCtrlNote* pNote, short shParaShapeID, NSStringUtils::CStringBuilder& oBuilder, TConversionState& oState)
+void CConverter2OOXML::WriteNote(const CCtrlNote* pNote, short /*shParaShapeID*/, NSStringUtils::CStringBuilder& oBuilder, TConversionState& oState)
 {
 	if (nullptr == pNote)
 		return;
@@ -398,7 +399,7 @@ void CConverter2OOXML::WriteNote(const CCtrlNote* pNote, short shParaShapeID, NS
 
 	WriteRunnerStyle(oState.m_ushLastCharShapeId, oBuilder, oState, oRunnerStyle);
 
-	oBuilder.WriteString(m_oFootnoteConverter.CreateNote((const CCtrlNote*)pNote, *this));
+	oBuilder.WriteString(m_oFootnoteConverter.CreateNote(pNote, *this));
 
 	oBuilder.WriteString(L"</w:r>");
 }
@@ -471,7 +472,7 @@ void CConverter2OOXML::WriteField(const CCtrlField* pShape, short shParaShapeID,
 			oState.m_arOpenedBookmarks.pop();
 			break;
 		}
-		//TODO:: как-будто хочется определить тип закрывающей field на этапе парса hwpx
+		//TODO:: it seems like we should determine the type of the closing field at the hwpx parsing stage
 		case EFieldType::Unknown:
 		{
 			std::map<unsigned int, const CCtrlField*>::const_iterator itFound = oState.m_mOpenField.find(pShape->GetInstanceID());
@@ -653,7 +654,7 @@ void CConverter2OOXML::WriteParaShapeProperties(short shParaShapeID, short shPar
 	if (m_oStyleConverter.GetLastParaShapeId() != shParaShapeID)
 		m_oStyleConverter.WriteDifferenceParagraphStyles(m_oStyleConverter.GetLastParaShapeId(), shParaShapeID, *m_pContext, oBuilder);
 
-	const CHWPRecordParaShape* pParaShape= dynamic_cast<const CHWPRecordParaShape*>(m_pContext->GetParaShape(shParaShapeID));
+	const CHWPRecordParaShape* pParaShape= m_pContext->GetParaShape(shParaShapeID);
 
 	if (nullptr == pParaShape)
 		return;
@@ -663,7 +664,7 @@ void CConverter2OOXML::WriteParaShapeProperties(short shParaShapeID, short shPar
 		case EHeadingType::NUMBER:
 		case EHeadingType::BULLET:
 		{
-			const int nNumId = m_oNumberingConverter.CreateNumbering(dynamic_cast<const CHWPRecordNumbering*>(m_pContext->GetNumbering(pParaShape->GetHeadingIdRef())), pParaShape->GetHeadingType(), *this);
+			const int nNumId = m_oNumberingConverter.CreateNumbering(m_pContext->GetNumbering(pParaShape->GetHeadingIdRef()), pParaShape->GetHeadingType(), *this);
 
 			if (0 == nNumId)
 				break;
@@ -800,8 +801,8 @@ void CConverter2OOXML::WriteTable(const CCtrlTable* pTable, short shParaShapeID,
 		}
 	}
 
-	//TODO:: в случаях, когда есть пустые столбцы необходимо добавить возможность удаления данных столбцов
-	// Например для матрицы 3x2, у которой значения есть только в 2x2, необходимо удалить последний столбец
+	//TODO:: in cases where there are empty columns add support to delete column data
+	// For example, for a 3x2 matrix that only has values in 2x2, remove the last column
 
 	for (unsigned int unRowIndex = 0; unRowIndex < pTable->GetRows(); ++unRowIndex)
 	{
@@ -851,7 +852,7 @@ void CConverter2OOXML::WriteTableProperties(const CCtrlTable* pTable, short shPa
 
 	oBuilder.WriteString(L"<w:tblPr>");
 
-	// TODO:: сделать вычисление
+	// TODO:: do the calculation
 	oBuilder.WriteString(L"<w:tblW w:w=\"0\" w:type=\"auto\"/>");
 
 	if (0 != pTable->GetInLSpace() || 0 != pTable->GetInTSpace() ||
@@ -943,7 +944,7 @@ void CConverter2OOXML::WriteCellProperties(short shBorderFillID, NSStringUtils::
 	const CHWPRecordBorderFill* pBorderFill = nullptr;
 
 	if (nullptr != m_pContext)
-		pBorderFill = dynamic_cast<const CHWPRecordBorderFill*>(m_pContext->GetBorderFill(shBorderFillID));
+		pBorderFill = m_pContext->GetBorderFill(shBorderFillID);
 
 	if (nullptr == pBorderFill)
 		return;
@@ -954,7 +955,7 @@ void CConverter2OOXML::WriteCellProperties(short shBorderFillID, NSStringUtils::
 
 		if (pFill->ColorFill())
 			oBuilder.WriteString(L"<w:shd w:val=\"clear\" w:color=\"auto\" w:fill=\"" + Transform::IntColorToHEX(pFill->GetFaceColor()) + L"\"/>");
-		// In OOXML, there is no gradient support for cell fills, so we fill in the first color of the gradient.
+		// In OOXML, there is no gradient support for cell fills, so fill in the first color of the gradient.
 		else if (pFill->GradFill() && 0 != pFill->GetGradColorNum())
 			oBuilder.WriteString(L"<w:shd w:val=\"clear\" w:color=\"auto\" w:fill=\"" + Transform::IntColorToHEX(pFill->GetGradColors().front()) + L"\"/>");
 	}
@@ -976,7 +977,7 @@ void CConverter2OOXML::WriteBorder(const TBorder& oBorder, const HWP_STRING& sBo
 
 	HWP_STRING sType;
 
-	//TODO:: проверить стиль линий
+	//TODO:: check line style
 	switch(oBorder.m_eStyle)
 	{
 		case ELineStyle2::NONE: oBuilder.WriteString(L"<w:" + sBorderName + L" w:val=\"none\"/>"); return;
@@ -985,7 +986,7 @@ void CConverter2OOXML::WriteBorder(const TBorder& oBorder, const HWP_STRING& sBo
 		case ELineStyle2::DOT: sType = L"dotted"; break;
 		case ELineStyle2::DASH_DOT: sType = L"dotDash"; break;
 		case ELineStyle2::DASH_DOT_DOT: sType = L"dotDotDash"; break;
-		case ELineStyle2::LONG_DASH: sType = L"dashed"; break;
+		case ELineStyle2::LONG_DASH:
 		case ELineStyle2::CIRCLE: sType = L"dashed"; break;
 		case ELineStyle2::DOUBLE_SLIM: sType = L"double"; break;
 		case ELineStyle2::SLIM_THICK: sType = L"thinThickSmallGap"; break;
@@ -1001,7 +1002,7 @@ VECTOR<TPoint> ArcToBezier(const TPoint& oStart, const TPoint& oEnd, const TPoin
 	const double dRadiusX = std::abs(oStart.m_nX - oCenter.m_nX);
 	const double dRadiusY = std::abs(oStart.m_nY - oCenter.m_nY);
 
-	// Вычисление углов
+	// Calculating angles
 	double dStartAngle = std::atan2(oStart.m_nY - oCenter.m_nY, oStart.m_nX - oCenter.m_nX);
 	double dEndAngle   = std::atan2(oEnd.m_nY   - oCenter.m_nY, oEnd.m_nX   - oCenter.m_nX);
 
@@ -1159,8 +1160,8 @@ void CConverter2OOXML::WriteGeometryShape(const CCtrlGeneralShape* pGeneralShape
 			oBuilder.WriteString(L"<a:custGeom><a:pathLst><a:path>");
 			oBuilder.WriteString(L"<a:moveTo><a:pt x=\"" + std::to_wstring(arPoints[0].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[0].m_nY) + L"\"/></a:moveTo>");
 
-			for (unsigned short ushIndex = 1; ushIndex < arPoints.size(); ++ushIndex)
-				oBuilder.WriteString(L"<a:lnTo><a:pt x=\"" + std::to_wstring(arPoints[ushIndex].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[ushIndex].m_nY) + L"\"/></a:lnTo>");
+			for (size_t numIndex = 1; numIndex < arPoints.size(); ++numIndex)
+				oBuilder.WriteString(L"<a:lnTo><a:pt x=\"" + std::to_wstring(arPoints[numIndex].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[numIndex].m_nY) + L"\"/></a:lnTo>");
 
 			oBuilder.WriteString(L"</a:path></a:pathLst></a:custGeom>");
 			break;
@@ -1187,19 +1188,19 @@ void CConverter2OOXML::WriteGeometryShape(const CCtrlGeneralShape* pGeneralShape
 
 			oBuilder.WriteString(L"<a:moveTo><a:pt x=\"" + std::to_wstring(arPoints[0].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[0].m_nY) + L"\"/></a:moveTo>");
 
-			for (unsigned short ushIndex = 0; ushIndex < arSegmentType.size(); ++ushIndex)
+			for (size_t numIndex = 0; numIndex < arSegmentType.size(); ++numIndex)
 			{
-				if (0x01 == arSegmentType[ushIndex])
+				if (0x01 == arSegmentType[numIndex])
 				{
 					oBuilder.WriteString(L"<a:cubicBezTo>");
-					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[ushIndex + 1].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[ushIndex + 1].m_nY) + L"\"/>");
-					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[ushIndex + 2].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[ushIndex + 2].m_nY) + L"\"/>");
-					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[ushIndex + 3].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[ushIndex + 3].m_nY) + L"\"/>");
+					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[numIndex + 1].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[numIndex + 1].m_nY) + L"\"/>");
+					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[numIndex + 2].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[numIndex + 2].m_nY) + L"\"/>");
+					oBuilder.WriteString(L"<a:pt x=\"" + std::to_wstring(arPoints[numIndex + 3].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[numIndex + 3].m_nY) + L"\"/>");
 					oBuilder.WriteString(L"</a:cubicBezTo>");
-					ushIndex += 2;
+					numIndex += 2;
 				}
 				else
-					oBuilder.WriteString(L"<a:lnTo><a:pt x=\"" + std::to_wstring(arPoints[ushIndex + 1].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[ushIndex + 1].m_nY) + L"\"/></a:lnTo>");
+					oBuilder.WriteString(L"<a:lnTo><a:pt x=\"" + std::to_wstring(arPoints[numIndex + 1].m_nX) + L"\" y=\"" + std::to_wstring(arPoints[numIndex + 1].m_nY) + L"\"/></a:lnTo>");
 			}
 
 			oBuilder.WriteString(L"</a:path></a:pathLst></a:custGeom>");
@@ -1269,10 +1270,10 @@ void CConverter2OOXML::WriteEqEditShape(const CCtrlEqEdit* pEqEditShape, short s
 
 void CConverter2OOXML::WriteOleShape(const CCtrlShapeOle* pOleShape, short shParaShapeID, short shParaStyleID, NSStringUtils::CStringBuilder& oBuilder, TConversionState& oState)
 {
-	//TODO:: добавить конвертацию hwp ole -> ooxml chart
-	//TODO:: необходимо добавить поддержку формата "Hwp Document File Formats - Charts" (для случаев, когда нет ooxml представления)
-	// Пока можем вытащить лишь ooxml представление данных
-	// Реализовать с использованием pole.h?
+	//TODO:: add conversion hwp ole -> ooxml chart
+	//TODO:: add support for the "Hwp Document File Formats - Charts" format (for cases where there is no ooxml representation)
+	// For now, only the OOXML data representation can be extracted
+	// Implement using pole.h?
 
 	if (nullptr == m_pContext)
 		return;
@@ -1294,8 +1295,6 @@ void CConverter2OOXML::WriteOleShape(const CCtrlShapeOle* pOleShape, short shPar
 
 	WriteCaption((const CCtrlCommon*)pOleShape, oBuilder, oState);
 
-	const std::wstring wsWidth  = std::to_wstring(Transform::HWPUINT2OOXML(pOleShape->GetWidth()));
-	const std::wstring wsHeight = std::to_wstring(Transform::HWPUINT2OOXML(pOleShape->GetHeight()));
 	const std::wstring wsRelID  = AddRelationship(L"chart", L"charts/chart" + std::to_wstring(unChartIndex) + L".xml", &oState);
 
 	OpenParagraph(shParaShapeID, shParaStyleID, oBuilder, oState);
@@ -1349,9 +1348,9 @@ void CConverter2OOXML::WriteSectionSettings(TConversionState& oState)
 		}
 
 		#define WRITE_ID(id)\
-		if (!id.empty() && id.length() > 6)\
+		if (!(id).empty() && (id).length() > 6)\
 		{\
-			const std::wstring wsType = id.substr(0, 6);\
+			const std::wstring wsType = (id).substr(0, 6);\
 			AddContentType(id, L"application/vnd.openxmlformats-officedocument.wordprocessingml." + wsType + L"+xml");\
 			m_oDocXml.WriteString(L"<w:" + wsType + L"Reference w:type=\"default\" r:id=\"" + AddRelationship(wsType, id, &oState) + L"\"/>");\
 		}
@@ -1367,7 +1366,7 @@ void CConverter2OOXML::WriteSectionSettings(TConversionState& oState)
 
 		for (const CCtrlHeadFoot* pCtrlHeadFoot : arCtrlsHeadFoot)
 		{
-			const std::wstring wsID = m_oFootnoteConverter.CreateHeadOrFoot((const CCtrlHeadFoot*)pCtrlHeadFoot, *this);
+			const std::wstring wsID = m_oFootnoteConverter.CreateHeadOrFoot(pCtrlHeadFoot, *this);
 
 			WRITE_ID(wsID);
 		}
@@ -1395,7 +1394,7 @@ void CConverter2OOXML::WriteSectionSettings(TConversionState& oState)
 
 	if (nullptr != oState.m_pColumnDef && 1 < oState.m_pColumnDef->GetColCount())
 	{
-		//TODO:: Добавить поддержку остальный свойств
+		//TODO:: Add support for other properties
 		m_oDocXml.WriteString(L"<w:cols w:num=\"" + std::to_wstring(oState.m_pColumnDef->GetColCount()) + L"\"  w:space=\"454\"");
 
 		if (ELineStyle2::NONE != oState.m_pColumnDef->GetColLineStyle())
@@ -1538,7 +1537,7 @@ HWP_STRING CConverter2OOXML::SavePicture(const HWP_STRING& sBinItemId, TConversi
 	if (nullptr == m_pContext || sBinItemId.empty())
 		return HWP_STRING();
 
-	//TODO:: добавить поддержку устновки размеров изображения из свойств шейпа
+	//TODO:: add support for setting image sizes from shape properties
 	CHWPStream oBuffer;
 	HWP_STRING sFileName;
 
@@ -1579,7 +1578,7 @@ void CConverter2OOXML::WriteRunnerStyle(short shCharShapeID, NSStringUtils::CStr
 	if (m_oStyleConverter.GetLastCharShapeId() != shCharShapeID)
 		m_oStyleConverter.WriteDifferenceRunnerStyles(m_oStyleConverter.GetLastCharShapeId(), shCharShapeID, *m_pContext, oBuilder);
 
-	const CHWPRecordCharShape* pCharShape = dynamic_cast<const CHWPRecordCharShape*>(m_pContext->GetCharShape(shCharShapeID));
+	const CHWPRecordCharShape* pCharShape = m_pContext->GetCharShape(shCharShapeID);
 
 	if (nullptr != pCharShape)
 	{
@@ -1606,9 +1605,9 @@ void CConverter2OOXML::WriteRunnerStyle(short shCharShapeID, NSStringUtils::CStr
 	oState.m_eBreakType = TConversionState::EBreakType::None;
 }
 
-void CConverter2OOXML::WriteTextBorderStyle(short shBorderFillId, NSStringUtils::CStringBuilder& oBuilder, TConversionState& oState)
+void CConverter2OOXML::WriteTextBorderStyle(short shBorderFillId, NSStringUtils::CStringBuilder& oBuilder, TConversionState& /*oState*/)
 {
-	const CHWPRecordBorderFill* pBorderFill = dynamic_cast<const CHWPRecordBorderFill*>(m_pContext->GetBorderFill(shBorderFillId));
+	const CHWPRecordBorderFill* pBorderFill = m_pContext->GetBorderFill(shBorderFillId);
 
 	if (nullptr == pBorderFill)
 		return;
@@ -2110,6 +2109,7 @@ void CConverter2OOXML::WriteLineSettings(const TLineData& oLineData, NSStringUti
 			oBuilder.WriteString(L"<a:miter lim=\"800000\"/>");
 			break;
 		}
+		default: break;
 	}
 
 	oBuilder.WriteString(L"</a:ln>");
@@ -2138,7 +2138,7 @@ void CConverter2OOXML::WriteAutoNumber(const CCtrlAutoNumber* pAutoNumber, short
 	unsigned short ushValue = 0;
 	HWP_STRING wsType;
 
-	//TODO:: лучше перейти не на ручной подсчет, а на автоматический в word (но там есть свои проблемы)
+	//TODO:: it's better to switch not to manual counting, but to automatic counting in word (but it has its own problems)
 	switch (pAutoNumber->GetNumType())
 	{
 		case ENumType::PAGE:

@@ -9,10 +9,6 @@ include(${CORE_ROOT_DIR}/common.cmake)
 set(OOXML_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
 set(DOCX_FORMAT_SOURCES_ROOT "${OOXML_ROOT_DIR}/DocxFormat")
 
-
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 add_library(DocxFormatLib STATIC
     ${CORE_ROOT_DIR}/Common/3dParty/pole/pole.cpp
     ${DOCX_FORMAT_SOURCES_ROOT}/App.cpp
@@ -168,6 +164,7 @@ add_library(DocxFormatLib STATIC
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/CustomsXml.cpp
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/DefinedNames.cpp
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/ExternalReferences.cpp
+    ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/FeaturePropertyBag.cpp
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Metadata.cpp
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Sheets.cpp
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Workbook.cpp
@@ -359,6 +356,7 @@ add_library(DocxFormatLib STATIC
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/CustomsXml.h
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/DefinedNames.h
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/ExternalReferences.h
+    ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/FeaturePropertyBag.h
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Metadata.h
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Sheets.h
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Workbook.h
@@ -382,21 +380,25 @@ add_library(DocxFormatLib STATIC
 
 set_default_options(DocxFormatLib)
 
+if( MSVC )
+    target_compile_definitions( DocxFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_precompile_headers(DocxFormatLib PRIVATE
     precompiled.h
 )
 
-if(LINUX)
+if(UNIX)
     target_compile_options(DocxFormatLib PRIVATE
         -include cfloat
+        # Re-enable exporting symbols
+        -fvisibility=default
+        -fvisibility-inlines-hidden
     )
 endif()
-
-# Re-enable exporting symbols
-target_compile_options(DocxFormatLib PRIVATE
-    -fvisibility=default
-    -fvisibility-inlines-hidden
-)
 
 target_link_libraries(DocxFormatLib PRIVATE 
     Boost::system
@@ -408,4 +410,4 @@ target_link_libraries(DocxFormatLib PRIVATE
 
 set_property(TARGET DocxFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-copy_boost_libs(DocxFormatLib)
+declare_victory( DocxFormatLib )

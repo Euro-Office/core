@@ -252,7 +252,7 @@ namespace Global
 	{
         L"lrTb",
         L"tbRl",
-        L"lrTb",//его на самом деле нету (2.9.323 TextFlow)
+        L"lrTb",//it actually doesn't exist (2.9.323 TextFlow)
         L"btLr",
         L"lrTbV",
         L"tbRlV",
@@ -304,7 +304,7 @@ namespace Global
 
 	typedef enum _BlipType
 	{
-		msoblipERROR = 0, // An error occured during loading 
+		msoblipERROR = 0, // An error occurred during loading 
 		msoblipUNKNOWN, // An unknown blip type 
 		msoblipEMF, // Windows Enhanced Metafile 
 		msoblipWMF, // Windows Metafile 

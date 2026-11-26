@@ -36,7 +36,7 @@ CHwpRecordTabDef::CHwpRecordTabDef(int nTagNum, int nLevel, int nSize)
 	: CHWPRecord(nTagNum, nLevel, nSize), m_pParent(nullptr), m_nAttr(0)
 {}
 
-CHwpRecordTabDef::CHwpRecordTabDef(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CHwpRecordTabDef::CHwpRecordTabDef(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 	: CHWPRecord(nTagNum, nLevel, nSize), m_pParent(&oDocInfo)
 {
 	oBuffer.SavePosition();
@@ -47,7 +47,7 @@ CHwpRecordTabDef::CHwpRecordTabDef(CHWPDocInfo& oDocInfo, int nTagNum, int nLeve
 	oBuffer.ReadInt(nCount);
 
 	if (nSize - oBuffer.GetDistanceToLastPos() != nCount * 8)
-		return; // TODO:: ошибка
+		return; // TODO::error
 
 	TTab *pTab = nullptr;
 	for (unsigned int unIndex = 0; unIndex < nCount; ++unIndex)
@@ -93,7 +93,7 @@ CHwpRecordTabDef::CHwpRecordTabDef(CHWPDocInfo& oDocInfo, CXMLReader& oReader, E
 	}
 	END_READ_ATTRIBUTES(oReader)
 
-	// Дальнейшая структура встречается лишь в HWPX формате
+	// Further structure is found only in HWPX format
 	if (EHanType::HWPX != eType)
 		return;
 	

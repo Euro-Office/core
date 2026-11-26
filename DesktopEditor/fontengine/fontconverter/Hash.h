@@ -82,9 +82,9 @@ namespace NSFontConverter
 
     private:
 
-      bool          m_bDeleteKeys;   // Будем ли удалять имена? set if key strings should be deleted
-      int           m_nBucketsCount; // Количество наборов
-      int           m_nLength;       // Количество вхождений
+      bool          m_bDeleteKeys;   // Will remove names? set if key strings should be deleted
+      int           m_nBucketsCount; // Number of sets
+      int           m_nLength;       // Number of occurrences
       THashBucket **m_ppTable;
     };
 

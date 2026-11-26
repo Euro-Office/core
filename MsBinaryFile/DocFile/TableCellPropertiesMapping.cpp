@@ -39,10 +39,10 @@ namespace DocFileFormat
 		_grid		=	grid;
 		_cellIndex	=	cellIndex;
 
-		_brcTop		=	NULL;
-		_brcLeft	=	NULL;
-		_brcRight	=	NULL;
-		_brcBottom	=	NULL;
+		_brcTop		=	nullptr;
+		_brcLeft	=	nullptr;
+		_brcRight	=	nullptr;
+		_brcBottom	=	nullptr;
 
         _tcPr		=	new XMLTools::XMLElement(L"w:tcPr");
         _tcMar		=	new XMLTools::XMLElement(L"w:tcMar");
@@ -74,12 +74,14 @@ namespace DocFileFormat
 		for ( std::vector<SinglePropertyModifier>::iterator iter = tapx->grpprl->begin(); iter != tapx->grpprl->end(); iter++ )
 		{
 			DWORD code = iter->OpCode;
+			(void)code;
 
 			switch(iter->OpCode)
 			{
 				case sprmPItap:
 				{
 					iTap_current = FormatUtils::BytesToUInt32( iter->Arguments, 0, iter->argumentsSize );
+					(void)iTap_current;
 				}break;
 				default:
 					break;
@@ -112,6 +114,7 @@ namespace DocFileFormat
 							}
 						}
 						int cc = tdef.numberOfColumns;
+						(void)cc;
 
 						_tGrid = tdef.rgdxaCenter;
 						_tcDef = tdef.rgTc80[(std::min)(_cellIndex,  (int)tdef.rgTc80.size() - 1)];	
@@ -147,7 +150,7 @@ namespace DocFileFormat
 						//		break;
 						//	ind1++;
 						//}
-						_ftsWidth = (Global::CellWidthType)(_tcDef.ftsWidth);
+						_ftsWidth = _tcDef.ftsWidth;
 
 						if (_cellIndex < tdef.rgTc80.size())
 						{
@@ -201,26 +204,27 @@ namespace DocFileFormat
 					unsigned char first		=	iter->Arguments[0];
 					unsigned char lim		=	iter->Arguments[1];
 					unsigned char ftsMargin	=	iter->Arguments[3];
+					(void)ftsMargin;
 					short wMargin	=	FormatUtils::BytesToInt16( iter->Arguments, 4, iter->argumentsSize );
 
 					if ( ( _cellIndex >= first ) && ( _cellIndex < lim ) )
 					{
-						if ( FormatUtils::GetBitFromInt( iter->Arguments[2], 0 ) == true )
+						if ( FormatUtils::GetBitFromInt( iter->Arguments[2], 0 ) )
 						{
                             appendDxaElement( _tcMar, L"top", FormatUtils::IntToWideString( wMargin ), true );
 						}
 
-						if ( FormatUtils::GetBitFromInt( iter->Arguments[2], 1 ) == true )
+						if ( FormatUtils::GetBitFromInt( iter->Arguments[2], 1 ) )
 						{
                             appendDxaElement( _tcMar, L"left", FormatUtils::IntToWideString( wMargin ), true );
 						}
 
-						if (  FormatUtils::GetBitFromInt( iter->Arguments[2], 2 ) == true )
+						if (  FormatUtils::GetBitFromInt( iter->Arguments[2], 2 ) )
 						{
                             appendDxaElement( _tcMar, L"bottom", FormatUtils::IntToWideString( wMargin ), true );
 						}
 
-						if ( FormatUtils::GetBitFromInt( iter->Arguments[2], 3 ) == true )
+						if ( FormatUtils::GetBitFromInt( iter->Arguments[2], 3 ) )
 						{
                             appendDxaElement( _tcMar, L"right", FormatUtils::IntToWideString( wMargin ), true );
 						}
@@ -229,7 +233,7 @@ namespace DocFileFormat
 				break;
 				case sprmTDefTableShd80:
 				{
-					if (!tapx->IsSkipShading97())	// если такой операнд единственный то учитываем его, иначе скипаем его
+					if (!tapx->IsSkipShading97())	// if such an operand is the only one, then we take it into account, otherwise we skip it
 					{
 						apppendCellShading(iter->Arguments, iter->argumentsSize, _cellIndex);
 					}
@@ -490,7 +494,7 @@ namespace DocFileFormat
 			{
 				if ( ( cellIndex * shdLength ) < size )
 				{
-					memcpy (shdBytes, sprmArg + (cellIndex * shdLength), shdLength);
+					memcpy (shdBytes, sprmArg + (static_cast<size_t>(cellIndex) * shdLength), shdLength);
 
 					ShadingDescriptor shd (shdBytes, shdLength);
 					appendShading (_tcPr, shd);

@@ -255,7 +255,7 @@ namespace OOX
 
 		public:
 			nullable<SimpleTypes::CParameterId> m_oType;
-			nullable_string m_oVal; //union of SimpleTypes ... todooo?
+			nullable_string m_oVal; //union of SimpleTypes ... TODO?
 		};
 
 		class CAlg : public WritingElementWithChilds<CParam>

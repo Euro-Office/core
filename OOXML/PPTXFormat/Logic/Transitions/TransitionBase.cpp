@@ -133,7 +133,7 @@ namespace PPTX
 		}
 		TransitionSerialize& TransitionSerialize::operator =(const TransitionSerialize& src)
 		{
-			//проверка на самоприсваивание
+			//self-assignment check
 			if (this == &src) {
 				return *this;
 			}
@@ -218,7 +218,7 @@ namespace PPTX
 
 			pWriter->StartAttributes();
 
-			//и нафига тогда листы?? - примем аксиомно что размеры одинаковые
+			//and what for then sheets?? - let's take it as an axiom that the sizes are the same
 			//size_t c1 = m_strAttributesNames.GetCount();
 			//size_t c2 = m_strAttributesValues.GetCount();
 

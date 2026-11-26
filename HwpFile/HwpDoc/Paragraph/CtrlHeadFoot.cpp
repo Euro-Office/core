@@ -16,7 +16,7 @@ CCtrlHeadFoot::CCtrlHeadFoot(const HWP_STRING& sCtrlID)
 	: CCtrl(sCtrlID)
 {}
 
-CCtrlHeadFoot::CCtrlHeadFoot(const HWP_STRING& sCtrlID, int nSize, CHWPStream& oBuffer, int nOff, int nVersion, bool bIsHeader)
+CCtrlHeadFoot::CCtrlHeadFoot(const HWP_STRING& sCtrlID, int /*nSize*/, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/, bool bIsHeader)
 	: CCtrl(sCtrlID), m_bIsHeader(bIsHeader)
 {
 	oBuffer.ReadInt(m_nAttr);
@@ -84,7 +84,7 @@ void CCtrlHeadFoot::ReadFromHWPML(CXMLReader &oReader)
 			m_nTextHeight = oReader.GetInt();
 		else if ("TextWidth" == sAttributeName)
 			m_nTextWidth = oReader.GetInt();
-		//TODO:: Реализовать HasTextRef и HasTextRef
+		//TODO:: Implement HasNumRef and HasTextRef
 	}
 	END_READ_ATTRIBUTES(oReader)
 
@@ -120,7 +120,7 @@ VECTOR<const CHWPPargraph*> CCtrlHeadFoot::GetParagraphs() const
 	return arParagraphs;
 }
 
-int CCtrlHeadFoot::ParseListHeaderAppend(CCtrlHeadFoot& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlHeadFoot::ParseListHeaderAppend(CCtrlHeadFoot& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

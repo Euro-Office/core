@@ -2,7 +2,7 @@
 
 namespace HWP
 {
-CHWPRecordBullet::CHWPRecordBullet(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CHWPRecordBullet::CHWPRecordBullet(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 	: CHWPRecord(nTagNum, nLevel, nSize), m_pParent(&oDocInfo)
 {
 	oBuffer.SavePosition();
@@ -49,7 +49,7 @@ CHWPRecordBullet::CHWPRecordBullet(CHWPDocInfo& oDocInfo, CXMLReader& oReader, E
 	: CHWPRecord(EHWPTag::HWPTAG_BULLET, 0, 0), m_pParent(&oDocInfo)
 {
 	if (EHanType::HWPML == eType)
-		return; // TODO:: реализовать как встретится пример
+		return; // TODO:: implement when a sample is encountered
 	
 	START_READ_ATTRIBUTES(oReader)
 	{

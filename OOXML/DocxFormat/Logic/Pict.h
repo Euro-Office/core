@@ -46,7 +46,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CBinData)
 
-			CBinData(OOX::Document *pMain = NULL);
+			CBinData(OOX::Document *pMain = nullptr);
 			virtual ~CBinData();
 
 			virtual void fromXML(XmlUtils::CXmlNode &oNode);
@@ -71,7 +71,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CControl)
 
-			CControl(OOX::Document *pMain = NULL);
+			CControl(OOX::Document *pMain = nullptr);
 			virtual ~CControl();
 
 			virtual void fromXML(XmlUtils::CXmlNode &oNode);
@@ -97,7 +97,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CPicture)
 
-			CPicture(OOX::Document *pMain = NULL);
+			CPicture(OOX::Document *pMain = nullptr);
 			virtual ~CPicture();
 
 			virtual void fromXML(XmlUtils::CXmlNode &oNode);
@@ -116,7 +116,7 @@ namespace OOX
 			nullable<OOX::WritingElement> m_oShapeElement;
 			nullable<OOX::VmlOffice::COLEObject> m_oOLEObject;
 			
-			// TO DO: Добавить класс, читающий movie
+			// TO DO: Add a class that reads movie
 		};
 
 		//--------------------------------------------------------------------------------
@@ -127,7 +127,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CObject)
 
-			CObject(OOX::Document *pMain = NULL);
+			CObject(OOX::Document *pMain = nullptr);
 			virtual ~CObject();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);

@@ -41,6 +41,7 @@ namespace DocFileFormat
 
 	ByteStructure* SectionDescriptor::ConstructObject( VirtualStreamReader* reader, int length )
 	{
+		(void)length;
 		SectionDescriptor *newObject = new SectionDescriptor();
 
 		if (reader->nWordVersion == 2)

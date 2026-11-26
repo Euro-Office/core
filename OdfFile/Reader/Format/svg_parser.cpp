@@ -392,7 +392,7 @@ namespace svg_path
                 {
                     bRelative = true;
                 }
-                case 'H' ://горизонт линия
+                case 'H' ://horizontal line
                 {
                     nPos++;
                     skipSpaces(nPos, rSvgDStatement, nLen);
@@ -424,7 +424,7 @@ namespace svg_path
                 {
                     bRelative = true;
                 }
-                case 'V' ://вертикальная линия
+                case 'V' ://vertical line
                 {
                     nPos++;
                     skipSpaces(nPos, rSvgDStatement, nLen);
@@ -663,7 +663,7 @@ namespace svg_path
         Polyline.clear();
 
         _polyline aCurrPoly;
-		aCurrPoly.command = L"a:moveTo"; //первая точка сдвиг - остальные линия
+		aCurrPoly.command = L"a:moveTo"; //first point shift - rest line
 
  		std::vector<std::wstring> points_str;
 		
@@ -689,7 +689,7 @@ namespace svg_path
 		}
 		if (Polyline.size() > 2 && closed)
 		{
-			//замкнем
+			//Close
 			Polyline.push_back(Polyline[0]);
 			Polyline.back().command = L"a:lnTo";
 		}
@@ -963,7 +963,7 @@ namespace svg_path
             {
                 bRelative = true;
             }
-            case 'H'://горизонт линия
+            case 'H'://horizontal line
             {
                 nPos++;
                 skipSpaces(nPos, rSvgDStatement, nLen);
@@ -993,7 +993,7 @@ namespace svg_path
             {
                 bRelative = true;
             }
-            case 'V'://вертикальная линия
+            case 'V'://vertical line
             {
                 nPos++;
                 skipSpaces(nPos, rSvgDStatement, nLen);
@@ -1064,6 +1064,48 @@ namespace svg_path
                 if (false == bPresentNumber)
                 {
                     bStroked = false;
+                }
+            }break;
+
+            case 'q':
+            {
+                bRelative = true;
+            }
+            case 'Q':
+            {
+                nPos++;
+                skipSpaces(nPos, rSvgDStatement, nLen);
+
+                while (nPos < nLen && isOnNumberChar(rSvgDStatement, nPos))
+                {
+                    std::wstring nX, nY;
+                    std::wstring nX1, nY1;
+
+                    if (!importStringAndSpaces(nX1, nPos, rSvgDStatement, nLen))	return false;
+                    if (!importStringAndSpaces(nY1, nPos, rSvgDStatement, nLen))	return false;
+                    if (!importStringAndSpaces(nX, nPos, rSvgDStatement, nLen))	return false;
+                    if (!importStringAndSpaces(nY, nPos, rSvgDStatement, nLen))	return false;
+
+                    if (bRelative)
+                    {
+                        nX1 += L"+" + nLastX;
+                        nY1 += L"+" + nLastY;
+                        nX += L"+" + nLastX;
+                        nY += L"+" + nLastY;
+                    }
+                    aCurrPoly.command = L"a:quadBezTo";
+
+                    aCurrPoly.points.push_back(_pointS(nX1, nY1));
+                    aCurrPoly.points.push_back(_pointS(nX, nY));
+
+                    Polyline.push_back(aCurrPoly);
+                    aCurrPoly.points.clear();
+
+                    nLastX = nX;
+                    nLastY = nY;
+
+                    nLastControlX = nX1;
+                    nLastControlY = nY1;
                 }
             }break;
 

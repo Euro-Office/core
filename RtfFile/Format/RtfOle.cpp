@@ -49,7 +49,7 @@ bool RtfOle::IsValid()
 
 std::wstring RtfOle::RenderToOOX(RenderParameter oRenderParameter)
 {
-	if( false == IsValid() )	return L"";
+	if( !IsValid() )	return L"";
 	
     std::wstring sResult;
 
@@ -64,7 +64,7 @@ std::wstring RtfOle::RenderToOOX(RenderParameter oRenderParameter)
 	{
 		RtfCharProperty * pCharProps = &m_oCharProperty;
 //------------------------------------------
-// todooo общая часть с RtfChar
+// TODO common part with RtfChar
 		bool bInsert = false;
 		bool bDelete = false;
 
@@ -177,6 +177,7 @@ std::wstring RtfOle::RenderToOOXOnlyOle(RenderParameter oRenderParameter)
 				sRelsType = L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/package";
 
 			}break;
+			default: break;
 		}
 	}
 
@@ -233,7 +234,7 @@ std::wstring RtfOle::RenderToRtf(RenderParameter oRenderParameter)
         sResult += L"{\\*\\objdata " + str + L"}";
     }
 //-------------------------------------
-	if( NULL != m_oResultShape )
+	if( nullptr != m_oResultShape )
 	{
         std::wstring str = m_oResultShape->RenderToRtf( oRenderParameter );
 		sResult += L"{\\result {\\pard\\plain" + str + L"}}";

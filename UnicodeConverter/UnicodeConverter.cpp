@@ -126,11 +126,11 @@ namespace NSUnicodeConverter
 								const UChar* pOutputLimit = pOutput + nOutputLen;
 								const UChar* pOutputStart = pOutput;
 
-								char *sResStart = new char[nOutputLen * ucnv_getMaxCharSize(conv)];
+								char *sResStart = new char[(size_t)nOutputLen * (size_t)ucnv_getMaxCharSize(conv)];
 								char *sResCur = sResStart;
-								const char *sResLimit = sResCur + nOutputLen * ucnv_getMaxCharSize(conv);
+								const char *sResLimit = sResCur + (size_t)nOutputLen * (size_t)ucnv_getMaxCharSize(conv);
 
-								ucnv_fromUnicode(conv, &sResCur, sResLimit, &pOutputStart, pOutputLimit, NULL, TRUE, &status);
+								ucnv_fromUnicode(conv, &sResCur, sResLimit, &pOutputStart, pOutputLimit, nullptr, TRUE, &status);
 								if (U_SUCCESS(status))
 								{
 									sRes = std::string(sResStart, sResCur - sResStart);
@@ -174,12 +174,12 @@ namespace NSUnicodeConverter
 					if (U_SUCCESS(status))
 					{
 						const UChar* pUCharLimit = pUCharStart + nUCharLength;
-						sRes.resize((uint32_t)nUCharLength * (uint8_t)ucnv_getMaxCharSize(conv));// UTF-16 uses 2 code-points per char
+						sRes.resize((size_t)(uint32_t)nUCharLength * (uint8_t)ucnv_getMaxCharSize(conv));// UTF-16 uses 2 code-points per char
 						char *sResStart = &sRes[0];
 						char *sResCur = sResStart;
 						const char *sResLimit = sResCur + sRes.size();
 
-						ucnv_fromUnicode(conv, &sResCur, sResLimit, &pUCharStart, pUCharLimit, NULL, TRUE, &status);
+						ucnv_fromUnicode(conv, &sResCur, sResLimit, &pUCharStart, pUCharLimit, nullptr, TRUE, &status);
 						if (U_SUCCESS(status))
 						{
 							sRes.resize(sResCur - sResStart);
@@ -222,7 +222,7 @@ namespace NSUnicodeConverter
 						UChar* target = targetStart;
 						UChar* targetLimit = target + uBufSize;
 
-						ucnv_toUnicode(conv, &target, targetLimit, &source, sourceLimit, NULL, TRUE, &status);
+						ucnv_toUnicode(conv, &target, targetLimit, &source, sourceLimit, nullptr, TRUE, &status);
 						if (U_SUCCESS(status))
 						{
 							size_t nTargetSize = target - targetStart;
@@ -277,7 +277,7 @@ namespace NSUnicodeConverter
 						UChar* target = targetStart;
 						UChar* targetLimit = target + uBufSize;
 
-						ucnv_toUnicode(conv, &target, targetLimit, &source, sourceLimit, NULL, TRUE, &status);
+						ucnv_toUnicode(conv, &target, targetLimit, &source, sourceLimit, nullptr, TRUE, &status);
 						if (U_SUCCESS(status))
 						{
 							size_t nTargetSize = target - targetStart;
@@ -359,7 +359,7 @@ namespace NSUnicodeConverter
 		}
 		std::string GetUtf8StringFromUnicode(const wchar_t* pUnicodes, size_t lCount)
 		{
-			if (NULL == pUnicodes || 0 == lCount)
+			if (nullptr == pUnicodes || 0 == lCount)
 				return "";
 
 			unsigned char* pData = new unsigned char[6 * lCount + 1];
@@ -370,11 +370,11 @@ namespace NSUnicodeConverter
 			const wchar_t* pEnd = pUnicodes + lCount;
 			const wchar_t* pCur = pUnicodes;
 
-			bool bIsUtf16 = (2 == sizeof(wchar_t)) ? true : false;
+			bool bIsUtf16 = (2 == sizeof(wchar_t));
 
 			while (pCur < pEnd)
 			{
-				unsigned int code = (unsigned int)*pCur++;
+				unsigned int code = (unsigned int)(uint32_t)*pCur++;
 				if (bIsUtf16)
 				{
 					if (code >= 0xD800 && code <= 0xDFFF && pCur < pEnd)
@@ -430,7 +430,7 @@ namespace NSUnicodeConverter
 			std::string s((char*)pData, lOutputCount);
 
 			if (pData) delete []pData;
-			pData = NULL;
+			pData = nullptr;
 			return s;
 		}
 	};

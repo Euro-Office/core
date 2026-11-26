@@ -168,7 +168,7 @@ namespace OdfCustomShape
 		}
 		return true;
 	}
-	void CElementNumber::ConversionOOXml(XmlUtils::CXmlWriter* pXmlWriter, const std::wstring &wsName)
+	void CElementNumber::ConversionOOXml(XmlUtils::CXmlWriter* pXmlWriter, const std::wstring & /*wsName*/)
 	{
 		if(m_wsNumber[0] == L'?' && m_wsNumber[1] == L'f')
 			m_wsNumber.replace(0,2,L"gd");
@@ -345,7 +345,7 @@ namespace OdfCustomShape
 		else
 			return false;
 	}
-	//Нет сравнения + и /
+	//No comparison + and /
 	bool CElementArithmeticOperations::ComparisonSign(const std::wstring& wsSign)
 	{
 		return((m_enTypeSign == TypeElement::multiplication && wsSign == L"/") || (m_enTypeSign == TypeElement::plus && wsSign == L"-"));
@@ -517,17 +517,11 @@ namespace OdfCustomShape
 		if(!m_wsElement.empty())
 			return true;
 		m_wsElement = GetElement(m_itStart,m_itEnd);
-		if(!m_wsElement.empty())
-			return true;
-		else
-			return false;
+		return !m_wsElement.empty();
 	}
 	bool CSMReader::CheckIteratorPosition()
 	{
-		if(m_itStart == m_itEnd)
-			return true;
-		else
-			return false;
+		return m_itStart == m_itEnd;
 	}
 	std::wstring CSMReader::GetElement()
 	{
@@ -913,7 +907,7 @@ namespace OdfCustomShape
 	}
 	std::wstring SMCustomShapeConversion::GetStringXml()
 	{
-		return m_pXmlWriter->GetXmlString();
+		return m_pXmlWriter ? m_pXmlWriter->GetXmlString() : L"";
 	}
 	void SMCustomShapeConversion::WritingFormulaXml(XmlUtils::CXmlWriter* pXmlWriter,const std::wstring& wsNameFormula,const std::wstring& wsFormula)
 	{

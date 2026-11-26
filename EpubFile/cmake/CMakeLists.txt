@@ -53,3 +53,5 @@ target_link_libraries(EpubFile PUBLIC
 )
 
 copy_artifacts_to_folder("EpubFile" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( EpubFile )

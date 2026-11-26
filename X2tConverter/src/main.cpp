@@ -53,7 +53,7 @@ int wmain_lib(int argc, wchar_t *argv[])
 #endif
 #ifndef BUILD_X2T_AS_LIBRARY_DYLIB
 #if !defined(_WIN32) && !defined(_WIN64)
-	int main(int argc, char *argv[])
+	int main(int argc, char *argv[]) // NOLINT(bugprone-exception-escape): a terminating exception must stay a crash, not silently become a return code
 #else
 	int wmain(int argc, wchar_t *argv[])
 #endif

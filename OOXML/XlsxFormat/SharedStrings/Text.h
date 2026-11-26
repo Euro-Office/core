@@ -69,12 +69,12 @@ namespace OOX
 			CStringXLSB m_oValue;
 		};
 
-		//необработано:
+		//raw:
 		class CText : public WritingElement
 		{
 		public:
 			WritingElement_AdditionMethods(CText)
-			CText(OOX::Document *pMain = NULL);
+			CText(OOX::Document *pMain = nullptr);
 			virtual ~CText();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

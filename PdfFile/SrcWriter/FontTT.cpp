@@ -57,7 +57,7 @@ namespace PdfWriter
 		Add("LastChar", 255);
 		
 		CDictObject* pFontDescriptor = new CDictObject();
-		// FontDescriptor обязательно должен идти ссылкой
+		// FontDescriptor must be a link
 		m_pXref->Add(pFontDescriptor);
 		pFontDescriptor->Add("Type", "FontDescriptor");
 		m_pFontDescriptor = pFontDescriptor;
@@ -68,7 +68,7 @@ namespace PdfWriter
 
 		if (m_bCanEmbed)
 		{
-			// Выставляем бит Symbolic, а бит NonSymbolic убираем
+			// Set the Symbolic bit and remove the NonSymbolic bit
 			unsigned int nFlags = 0;
 			if (!(nFlags & 4))
 				UIntChangeBit(nFlags, 2);
@@ -82,12 +82,12 @@ namespace PdfWriter
 		}
 		else
 		{
-			// Ставим флаг NonSymbolic, т.к. Adobe плохо подбирает шрифт с Symbolic флагом
-			// TODO: Хорошо бы сделать проверку, стоит ли ставить флаг Symbolic
+			// Set the NonSymbolic flag, because Adobe is bad at selecting fonts with the Symbolic flag
+			// TODO: It would be nice to check whether the Symbolic flag should be set
 			unsigned int nFlags = 0;
 			UIntChangeBit(nFlags, 5);
 			pFontDescriptor->Add("Flags", nFlags);
-			m_pFontFileDict = NULL;
+			m_pFontFileDict = nullptr;
 		}
 
 	}
@@ -116,12 +116,12 @@ namespace PdfWriter
 			return;
 
 		DWORD dwFileSize;
-		FT_Byte* pFaceMemory = NULL;
+		FT_Byte* pFaceMemory = nullptr;
 		NSFile::CFileBinary::ReadAllBytes(m_wsFontPath, &pFaceMemory, dwFileSize);
 		if (!pFaceMemory)
 			return;
 
-		FT_Face pFace = NULL;
+		FT_Face pFace = nullptr;
 		FT_New_Memory_Face(pLibrary, pFaceMemory, dwFileSize, m_unFontIndex, &pFace);
 
 		if (!pFace)
@@ -130,7 +130,7 @@ namespace PdfWriter
 			return;
 		}
 
-		// Дописываем имя шрифта во все необходимые словари, а также заполняем дескриптор
+		// Add the font name to all the necessary dictionaries, and also fill in the descriptor
 		std::string sFontName = pFace->family_name ? std::string(pFace->family_name) : std::string();
 		if (pFace->style_flags & FT_STYLE_FLAG_ITALIC)
 			sFontName += "-Italic";
@@ -193,8 +193,8 @@ namespace PdfWriter
 		m_pFontDescriptor->Add("StemV", 80);
 		m_pFontDescriptor->Add("FontWeight", m_pFontFile ? m_pFontFile->GetWeight() : 400);
 
-		// Сейчас мы этот класс используем для внедрения шрифтов, которые будут использоваться для заполнения
-		// внутри форм. Если класс будет использоваться для чего-то другого, тогда надо задавать ограничения на внедрение
+		// Now use this class to implement fonts that will be used to fill
+		// inside the forms. If the class will be used for something else, then need to set restrictions on implementation
 		FT_UShort fsType = FT_Get_FSType_Flags(pFace);
 		m_bCanEmbed = NSFonts::CFontInfo::CanEmbedForEdit(fsType);
 

@@ -31,11 +31,11 @@ namespace PdfWriter
 {
 	enum EInfoType
 	{
-		// Данные относительно даты создания и изменения.
+		// Data regarding creation and modification dates.
 		InfoCreationDate = 0,
 		InfoModaDate     = 1,
 
-		// Текстовые данные
+		// Text data
 		InfoAuthor       = 2,
 		InfoCreator      = 3,
 		InfoProducer     = 4,

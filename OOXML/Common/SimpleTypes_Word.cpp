@@ -37,8 +37,7 @@ namespace SimpleTypes
 
 	EAnnotationVMerge CAnnotationVMerge::FromString(const std::wstring &sValue)
 	{
-		if       ( (L"cont") == sValue ) this->m_eValue = annotvmergeCont;
-		else if  ( (L"rest") == sValue ) this->m_eValue = annotvmergeRest;
+		if ((L"rest") == sValue) this->m_eValue = annotvmergeRest;
 		else                              this->m_eValue = annotvmergeCont;
 
 		return this->m_eValue;
@@ -605,8 +604,7 @@ namespace SimpleTypes
 
 	EBrClear CBrClear::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"all")   == sValue ) this->m_eValue = brclearAll;
-		else if ( (L"left")  == sValue ) this->m_eValue = brclearLeft;
+		if ((L"left")  == sValue) this->m_eValue = brclearLeft;
 		else if ( (L"none")  == sValue ) this->m_eValue = brclearNone;
 		else if ( (L"right") == sValue ) this->m_eValue = brclearRight;
 		else                              this->m_eValue = brclearAll;
@@ -634,7 +632,6 @@ namespace SimpleTypes
 	EBrType CBrType::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"column")       == sValue ) this->m_eValue = brtypeColumn;
-		else if ( (L"page")         == sValue ) this->m_eValue = brtypePage;
 		else if ( (L"textWrapping") == sValue ) this->m_eValue = brtypeTextWrapping;
 		else                                     this->m_eValue = brtypePage;
 
@@ -658,8 +655,7 @@ namespace SimpleTypes
 
 	ECaptionPos CCaptionPos::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"above") == sValue ) this->m_eValue = captionposAbove;
-		else if ( (L"below") == sValue ) this->m_eValue = captionposBelow;
+		if ((L"below") == sValue) this->m_eValue = captionposBelow;
 		else if ( (L"left")  == sValue ) this->m_eValue = captionposLeft;
 		else if ( (L"right") == sValue ) this->m_eValue = captionposRight;
 		else                              this->m_eValue = captionposAbove;
@@ -685,8 +681,7 @@ namespace SimpleTypes
 
 	EChapterSep CChapterSep::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"colon")  == sValue ) this->m_eValue = chaptersepColon;
-		else if ( (L"emDash") == sValue ) this->m_eValue = chaptersepEmDash;
+		if ((L"emDash") == sValue) this->m_eValue = chaptersepEmDash;
 		else if ( (L"enDash") == sValue ) this->m_eValue = chaptersepEnDash;
 		else if ( (L"hyphen") == sValue ) this->m_eValue = chaptersepHyphen;
 		else if ( (L"period") == sValue ) this->m_eValue = chaptersepPeriod;
@@ -716,7 +711,6 @@ namespace SimpleTypes
 	{
 		if      ( (L"compressPunctuation")                == sValue ) this->m_eValue = charspacingCompressPunctuation;
 		else if ( (L"compressPunctuationAndJapaneseKana") == sValue ) this->m_eValue = charspacingCompressPunctuationAndJapaneseKana;
-		else if ( (L"doNotCompress")                      == sValue ) this->m_eValue = charspacingDoNotCompress;
 		else                                                           this->m_eValue = charspacingDoNotCompress;
 
 		return this->m_eValue;
@@ -728,7 +722,6 @@ namespace SimpleTypes
 		{
 		case charspacingCompressPunctuation                : return (L"compressPunctuation");
 		case charspacingCompressPunctuationAndJapaneseKana : return (L"compressPunctuationAndJapaneseKana");
-		case charspacingDoNotCompress                      : return (L"doNotCompress");
 		default                                            : return (L"doNotCompress");
 		}
 	}
@@ -742,7 +735,6 @@ namespace SimpleTypes
 	{
 		if      ( (L"angle")  == sValue ) this->m_eValue = combinebracketsAngle;
 		else if ( (L"curly")  == sValue ) this->m_eValue = combinebracketsCurly;
-		else if ( (L"none")   == sValue ) this->m_eValue = combinebracketsNone;
 		else if ( (L"round")  == sValue ) this->m_eValue = combinebracketsRound;
 		else if ( (L"square") == sValue ) this->m_eValue = combinebracketsSquare;
 		else                               this->m_eValue = combinebracketsNone;
@@ -874,8 +866,7 @@ namespace SimpleTypes
 
 	EDirection CDirection::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"ltr")  == sValue ) this->m_eValue = directionLTR;
-		else if ( (L"rtl")  == sValue ) this->m_eValue = directionRTL;
+		if ((L"rtl")  == sValue) this->m_eValue = directionRTL;
 		else                             this->m_eValue = directionLTR;
 
 		return this->m_eValue;
@@ -897,8 +888,7 @@ namespace SimpleTypes
 
 	EDisplacedByCustomXml CDisplacedByCustomXml::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"next")  == sValue ) this->m_eValue = displacedbycustomxmlNext;
-		else if ( (L"prev")  == sValue ) this->m_eValue = displacedbycustomxmlPrev;
+		if ((L"prev")  == sValue) this->m_eValue = displacedbycustomxmlPrev;
 		else                             this->m_eValue = displacedbycustomxmlNext;
 
 		return this->m_eValue;
@@ -920,8 +910,7 @@ namespace SimpleTypes
 
 	EDocGrid CDocGrid::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"default")       == sValue ) this->m_eValue = docgridDefault;
-		else if ( (L"lines")         == sValue ) this->m_eValue = docgridLines;
+		if ((L"lines")         == sValue) this->m_eValue = docgridLines;
 		else if ( (L"linesAndChars") == sValue ) this->m_eValue = docgridLinesAndChars;
 		else if ( (L"snapToChars")   == sValue ) this->m_eValue = docgridSnapToChars;
 		else                                      this->m_eValue = docgridDefault;
@@ -947,8 +936,7 @@ namespace SimpleTypes
 
 	EDocPartBehavior CDocPartBehavior::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"content") == sValue ) this->m_eValue = docpartbehaviorContent;
-		else if ( (L"p")       == sValue ) this->m_eValue = docpartbehaviorP;
+		if ((L"p")       == sValue) this->m_eValue = docpartbehaviorP;
 		else if ( (L"pg")      == sValue ) this->m_eValue = docpartbehaviorPg;
 		else                                this->m_eValue = docpartbehaviorContent;
 
@@ -996,7 +984,6 @@ namespace SimpleTypes
 		else if ( (L"custTbls")          == sValue ) this->m_eValue = docpartgalleryCustTbls;
 		else if ( (L"custTxtBox")        == sValue ) this->m_eValue = docpartgalleryCustTxtBox;
 		else if ( (L"custWatermarks")    == sValue ) this->m_eValue = docpartgalleryCustWatermarks;
-		else if ( (L"default")           == sValue ) this->m_eValue = docpartgalleryDefault;
 		else if ( (L"docParts")          == sValue ) this->m_eValue = docpartgalleryDocParts;
 		else if ( (L"eq")                == sValue ) this->m_eValue = docpartgalleryEq;
 		else if ( (L"ftrs")              == sValue ) this->m_eValue = docpartgalleryFtrs;
@@ -1070,7 +1057,6 @@ namespace SimpleTypes
 		if      ( (L"autoExp")  == sValue ) this->m_eValue = docparttypeAutoExp;
 		else if ( (L"bbPlcHdr") == sValue ) this->m_eValue = docparttypeBBPlcHdr;
 		else if ( (L"formFld")  == sValue ) this->m_eValue = docparttypeFormFld;
-		else if ( (L"none")     == sValue ) this->m_eValue = docparttypeNone;
 		else if ( (L"normal")   == sValue ) this->m_eValue = docparttypeNormal;
 		else if ( (L"speller")  == sValue ) this->m_eValue = docparttypeSpeller;
 		else if ( (L"toolbar")  == sValue ) this->m_eValue = docparttypeToolbar;
@@ -1102,7 +1088,6 @@ namespace SimpleTypes
 	{
 		if      ( (L"comments")       == sValue ) this->m_eValue = docprotectComments;
 		else if ( (L"forms")          == sValue ) this->m_eValue = docprotectForms;
-		else if ( (L"none")           == sValue ) this->m_eValue = docprotectNone;
 		else if ( (L"readOnly")       == sValue ) this->m_eValue = docprotectReadOnly;
 		else if ( (L"trackedChanges" )== sValue ) this->m_eValue = docprotectTrackedChanges;
 		else                                       this->m_eValue = docprotectNone;
@@ -1131,7 +1116,6 @@ namespace SimpleTypes
 	{
 		if      ( (L"eMail")        == sValue ) this->m_eValue = doctypeEMail;
 		else if ( (L"letter")       == sValue ) this->m_eValue = doctypeLetter;
-		else if ( (L"notSpecified") == sValue ) this->m_eValue = doctypeNotSpecified;
 		else                                     this->m_eValue = doctypeNotSpecified;
 
 		return this->m_eValue;
@@ -1143,7 +1127,6 @@ namespace SimpleTypes
 		{
 		case doctypeEMail        : return (L"eMail");
 		case doctypeLetter       : return (L"letter");
-		case doctypeNotSpecified : return (L"notSpecified");
 		default                  : return (L"notSpecified");
 		}
 	}
@@ -1156,7 +1139,6 @@ namespace SimpleTypes
 	{
 		if      ( (L"drop")   == sValue ) this->m_eValue = dropcapDrop;
 		else if ( (L"margin") == sValue ) this->m_eValue = dropcapMargin;
-		else if ( (L"none")   == sValue ) this->m_eValue = dropcapNone;
 		else                               this->m_eValue = dropcapNone;
 
 		return this->m_eValue;
@@ -1168,7 +1150,6 @@ namespace SimpleTypes
 		{
 		case dropcapDrop   : return (L"drop");
 		case dropcapMargin : return (L"margin");
-		case dropcapNone   : return (L"none");
 		default            : return (L"none");
 		}
 	}
@@ -1183,7 +1164,6 @@ namespace SimpleTypes
 		else if ( (L"contributors")   == sValue ) this->m_eValue = edgrpContributors;
 		else if ( (L"current")        == sValue ) this->m_eValue = edgrpCurrent;
 		else if ( (L"editors")        == sValue ) this->m_eValue = edgrpEditors;
-		else if ( (L"everyone")       == sValue ) this->m_eValue = edgrpEveryone;
 		else if ( (L"none")           == sValue ) this->m_eValue = edgrpNone;
 		else if ( (L"owners")         == sValue ) this->m_eValue = edgrpOwners;
 		else                                       this->m_eValue = edgrpEveryone;
@@ -1213,7 +1193,6 @@ namespace SimpleTypes
 	EEdnPos CEdnPos::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"docEnd")  == sValue ) this->m_eValue = ednposDocEnd;
-		else if ( (L"sectEnd") == sValue ) this->m_eValue = ednposSectEnd;
 		else                                this->m_eValue = ednposSectEnd;
 
 		return this->m_eValue;
@@ -1224,7 +1203,6 @@ namespace SimpleTypes
 		switch(this->m_eValue)
 		{
 		case ednposDocEnd  : return (L"docEnd");
-		case ednposSectEnd : return (L"sectEnd");
 		default            : return (L"sectEnd");
 		}
 	}
@@ -1290,7 +1268,6 @@ namespace SimpleTypes
 		if      ( (L"circle")   == sValue ) this->m_eValue = emCircle;
 		else if ( (L"comma")    == sValue ) this->m_eValue = emComma;
 		else if ( (L"dot")      == sValue ) this->m_eValue = emDot;
-		else if ( (L"none")     == sValue ) this->m_eValue = emNone;
 		else if ( (L"underDot") == sValue ) this->m_eValue = emUnderDot;
 		else                                 this->m_eValue = emNone;
 
@@ -1435,7 +1412,6 @@ namespace SimpleTypes
 		else if ( (L"currentTime") == sValue ) this->m_eValue = fftexttypeCurrentTime;
 		else if ( (L"date")        == sValue ) this->m_eValue = fftexttypeDate;
 		else if ( (L"number")      == sValue ) this->m_eValue = fftexttypeNumber;
-		else if ( (L"regular")     == sValue ) this->m_eValue = fftexttypeRegular;
 		else                                    this->m_eValue = fftexttypeRegular;
 
 		return this->m_eValue;
@@ -1450,7 +1426,6 @@ namespace SimpleTypes
 		case fftexttypeCurrentTime : return (L"currentTime");
 		case fftexttypeDate        : return (L"date");
 		case fftexttypeNumber      : return (L"number");
-		case fftexttypeRegular     : return (L"regular");
 		default                    : return (L"regular");
 		}
 	}
@@ -1461,8 +1436,7 @@ namespace SimpleTypes
 
 	EFldCharType CFldCharType::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"begin")    == sValue ) this->m_eValue = fldchartypeBegin;
-		else if ( (L"end")      == sValue ) this->m_eValue = fldchartypeEnd;
+		if ((L"end")      == sValue) this->m_eValue = fldchartypeEnd;
 		else if ( (L"separate") == sValue ) this->m_eValue = fldchartypeSeparate;
 		else                                 this->m_eValue = fldchartypeBegin;
 
@@ -1486,8 +1460,7 @@ namespace SimpleTypes
 
 	EFontFamily CFontFamily::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"auto")       == sValue ) this->m_eValue = fontfamilyAuto;
-		else if ( (L"decorative") == sValue ) this->m_eValue = fontfamilyDecorative;
+		if ((L"decorative") == sValue) this->m_eValue = fontfamilyDecorative;
 		else if ( (L"modern")     == sValue ) this->m_eValue = fontfamilyModern;
 		else if ( (L"roman")      == sValue ) this->m_eValue = fontfamilyRoman;
 		else if ( (L"script")     == sValue ) this->m_eValue = fontfamilyScript;
@@ -1518,7 +1491,6 @@ namespace SimpleTypes
 	EFrameLayout CFrameLayout::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"cols") == sValue ) this->m_eValue = framelayoutCols;
-		else if ( (L"none") == sValue ) this->m_eValue = framelayoutNone;
 		else if ( (L"rows") == sValue ) this->m_eValue = framelayoutRows;
 		else                             this->m_eValue = framelayoutNone;
 
@@ -1542,8 +1514,7 @@ namespace SimpleTypes
 
 	EFrameScrollbar CFrameScrollbar::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"auto") == sValue ) this->m_eValue = framescrollbarAuto;
-		else if ( (L"off")  == sValue ) this->m_eValue = framescrollbarOff;
+		if ((L"off")  == sValue) this->m_eValue = framescrollbarOff;
 		else if ( (L"on")   == sValue ) this->m_eValue = framescrollbarOn;
 		else                             this->m_eValue = framescrollbarAuto;
 
@@ -1570,7 +1541,6 @@ namespace SimpleTypes
 		if      (L"continuationNotice"    == sValue ) this->m_eValue = ftnednContinuationNotice;
 		else if (L"continuationSeparator" == sValue ||
 				 L"continuation-separator" == sValue) this->m_eValue = ftnednContinuationSeparator;
-		else if (L"normal"                == sValue ) this->m_eValue = ftnednNormal;
 		else if (L"separator"             == sValue ) this->m_eValue = ftnednSeparator;
 		else                                          this->m_eValue = ftnednNormal;
 
@@ -1598,7 +1568,6 @@ namespace SimpleTypes
 		if      ( (L"beneathText") == sValue ) this->m_eValue = ftnposBeneathText;
 		else if ( (L"docEnd")      == sValue ) this->m_eValue = ftnposDocEnd;
 		else if ( (L"pageBottom")  == sValue ) this->m_eValue = ftnposPageBottom;
-		else if ( (L"sectEnd")     == sValue ) this->m_eValue = ftnposSectEnd;
 		else                                    this->m_eValue = ftnposSectEnd;
 
 		return this->m_eValue;
@@ -1611,7 +1580,6 @@ namespace SimpleTypes
 		case ftnposBeneathText : return (L"beneathText");
 		case ftnposDocEnd      : return (L"docEnd");
 		case ftnposPageBottom  : return (L"pageBottom");
-		case ftnposSectEnd     : return (L"sectEnd");
 		default                : return (L"sectEnd");
 		}
 	}
@@ -1624,7 +1592,6 @@ namespace SimpleTypes
 	{
 		if      ( (L"margin") == sValue ) this->m_eValue = hanchorMargin;
 		else if ( (L"page")   == sValue ) this->m_eValue = hanchorPage;
-		else if ( (L"text")   == sValue ) this->m_eValue = hanchorText;
 		else                               this->m_eValue = hanchorText;
 
 		return this->m_eValue;
@@ -1636,7 +1603,6 @@ namespace SimpleTypes
 		{
 		case hanchorMargin : return (L"margin");
 		case hanchorPage   : return (L"page");
-		case hanchorText   : return (L"text");
 		default            : return (L"text");
 		}
 	}
@@ -1647,9 +1613,7 @@ namespace SimpleTypes
 
 	EHdrFtr CHdrFtr::FromString(const std::wstring &sValue)
 	{
-		if      ( L"default" == sValue ||
-				  L"odd"	 == sValue ) this->m_eValue = hdrftrDefault;
-		else if ( L"even"    == sValue ) this->m_eValue = hdrftrEven;
+		if ( L"even"    == sValue ) this->m_eValue = hdrftrEven;
 		else if ( L"first"   == sValue ) this->m_eValue = hdrftrFirst;
 		else							 this->m_eValue = hdrftrDefault;
 
@@ -1673,9 +1637,7 @@ namespace SimpleTypes
 
 	EHeightRule CHeightRule::FromString(const std::wstring &sValue)
 	{
-		if      (L"atLeast"		== sValue) this->m_eValue = heightruleAtLeast;
-		else if (L"at-least"	== sValue) this->m_eValue = heightruleAtLeast;
-		else if (L"auto"		== sValue) this->m_eValue = heightruleAuto;
+		if ((L"atLeast"		== sValue) || (L"at-least"	== sValue)) this->m_eValue = heightruleAtLeast;
 		else if (L"exact"		== sValue) this->m_eValue = heightruleExact;
 		else                               this->m_eValue = heightruleAuto;
 
@@ -1699,8 +1661,7 @@ namespace SimpleTypes
 
 	ETextFormFormatType CTextFormFormatType::FromString(const std::wstring &sValue)
 	{
-		if (L"none" == sValue) this->m_eValue = textFormFormatTypeNone;
-		else if (L"digit" == sValue) this->m_eValue = textFormFormatTypeDigit;
+		if (L"digit" == sValue) this->m_eValue = textFormFormatTypeDigit;
 		else if (L"letter" == sValue) this->m_eValue = textFormFormatTypeLetter;
 		else if (L"mask" == sValue) this->m_eValue = textFormFormatTypeMask;
 		else if (L"regExp" == sValue) this->m_eValue = textFormFormatTypeRegExp;
@@ -1724,8 +1685,7 @@ namespace SimpleTypes
 
 	EComplexFormType CComplexFormType::FromString(const std::wstring &sValue)
 	{
-		if (L"custom" == sValue || L"none" == sValue) this->m_eValue = complexFormTypeCustom;
-		else if (L"telephone" == sValue || L"phone" == sValue) this->m_eValue = complexFormTypeTelephone;
+		if (L"telephone" == sValue || L"phone" == sValue) this->m_eValue = complexFormTypeTelephone;
 		else if (L"email" == sValue) this->m_eValue = complexFormTypeEmail;
 		else if (L"labeledCheckBox" == sValue) this->m_eValue = complexFormTypeLabeledCheckBox;
 		else this->m_eValue = complexFormTypeCustom;
@@ -1826,7 +1786,7 @@ namespace SimpleTypes
 				sValue = sValue.substr(1);
 			}
 
-			//В документации не написано, что цвет может приходить строкой, но в реальных документах встречается и word это разруливает.
+			//The documentation doesn't say that color can come as a string, but it does occur in real documents and word sorts it out.
 			CPresetColorVal oPresetColorVal;
 			if(oPresetColorVal.FromStringIgnoreCase(sValue))
 			{
@@ -1841,21 +1801,21 @@ namespace SimpleTypes
 				this->m_eValue = hexcolorARGB;
 				m_sValue = sValue.substr(0, 8);
 				
-				if (false == Parse()) 
+				if (!Parse()) 
 					this->m_eValue = hexcolorAuto;
 			}
 			else if ( 6 <= sValue.length() )
 			{
 				this->m_eValue = hexcolorRGB;
 				m_sValue = sValue.substr( 0, 6 );
-				if (false == Parse()) this->m_eValue = hexcolorAuto;
+				if (!Parse()) this->m_eValue = hexcolorAuto;
 			}
 			else if ( 3 == sValue.length() )// a la #339 (Compo 3AP.docx)
 			{
 				this->m_eValue = hexcolorRGB;
 				m_sValue = sValue;
 				
-				if (false == Parse3()) 
+				if (!Parse3()) 
 					this->m_eValue = hexcolorAuto;
 			}
 			else   this->m_eValue = EHexColor::hexcolorAuto;//eDefValue;
@@ -1944,7 +1904,7 @@ namespace SimpleTypes
 	// HexColorAuto 17.18.39 (Part 1)
 	//--------------------------------------------------------------------------------
 
-	EHexColorAuto CHexColorAuto::FromString(const std::wstring &sValue)
+	EHexColorAuto CHexColorAuto::FromString(const std::wstring & /*sValue*/)
 	{
 		this->m_eValue = hexcolorautoAuto;
 
@@ -2131,7 +2091,7 @@ namespace SimpleTypes
 		{
 			this->m_eValue = highlightcolorNone;
 
-			// Инициализируем цвет
+			// Initializing the color
 			FromString( ToString() );
 		}
 
@@ -2165,7 +2125,6 @@ namespace SimpleTypes
 	EHint CHint::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"cs")       == sValue ) this->m_eValue = hintCs;
-		else if ( (L"default")  == sValue ) this->m_eValue = hintDefault;
 		else if ( (L"eastAsia") == sValue ) this->m_eValue = hintEastAsia;
 		else                                this->m_eValue = hintDefault;
 
@@ -2245,7 +2204,6 @@ namespace SimpleTypes
 	EInfoTextType CInfoTextType::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"autoText") == sValue ) this->m_eValue = infotexttypeAutoText;
-		else if ( (L"text")     == sValue ) this->m_eValue = infotexttypeText;
 		else                                 this->m_eValue = infotexttypeText;
 
 		return this->m_eValue;
@@ -2256,7 +2214,6 @@ namespace SimpleTypes
 		switch(this->m_eValue)
 		{
 		case infotexttypeAutoText : return (L"autoText");
-		case infotexttypeText     : return (L"text");
 		default                   : return (L"text");
 		}
 	}
@@ -2277,7 +2234,6 @@ namespace SimpleTypes
 		else if ( (L"numTab")         == sValue ) this->m_eValue = jcNumTab;
 		else if ( (L"start")          == sValue ) this->m_eValue = jcStart;
 		else if ( (L"thaiDistribute") == sValue ) this->m_eValue = jcThaiDistribute;
-		else if ( (L"left")           == sValue ) this->m_eValue = jcLeft;
 		else if ( (L"right")          == sValue ) this->m_eValue = jcRight;
 		else									  this->m_eValue = jcLeft;
 
@@ -2313,7 +2269,6 @@ namespace SimpleTypes
 		if      ( (L"center")	== sValue ) this->m_eValue = jctableCenter;
 		else if ( (L"end")		== sValue ) this->m_eValue = jctableEnd;
 		else if ( (L"start")	== sValue ) this->m_eValue = jctableStart;
-		else if ( (L"left")		== sValue ) this->m_eValue = jctableLeft;
 		else if ( (L"right")	== sValue ) this->m_eValue = jctableRight;
 		else								this->m_eValue = jctableLeft;
 
@@ -2339,8 +2294,7 @@ namespace SimpleTypes
 
 	ELevelSuffix CLevelSuffix::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"nothing") == sValue ) this->m_eValue = levelsuffixNothing;
-		else if ( (L"space")   == sValue ) this->m_eValue = levelsuffixSpace;
+		if ((L"space")   == sValue) this->m_eValue = levelsuffixSpace;
 		else if ( (L"tab")     == sValue ) this->m_eValue = levelsuffixTab;
 		else                                this->m_eValue = levelsuffixNothing;
 
@@ -2365,7 +2319,6 @@ namespace SimpleTypes
 	ELineNumberRestart CLineNumberRestart::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"continuous") == sValue ) this->m_eValue = linenumberrestartContinious;
-		else if ( (L"newPage")    == sValue ) this->m_eValue = linenumberrestartNewPage;
 		else if ( (L"newSection") == sValue ) this->m_eValue = linenumberrestartNewSection;
 		else                                   this->m_eValue = linenumberrestartNewPage;
 
@@ -2390,7 +2343,6 @@ namespace SimpleTypes
 	ELineSpacingRule CLineSpacingRule::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"atLeast") == sValue ) this->m_eValue = linespacingruleAtLeast;
-		else if ( (L"auto")    == sValue ) this->m_eValue = linespacingruleAuto;
 		else if ( (L"exact")   == sValue ) this->m_eValue = linespacingruleExact;
 		else                                this->m_eValue = linespacingruleAuto;
 
@@ -2417,7 +2369,6 @@ namespace SimpleTypes
 		if      ( (L"contentLocked")    == sValue ) this->m_eValue = lockContentLocked;
 		else if ( (L"sdtContentLocked") == sValue ) this->m_eValue = lockSdtContentLocked;
 		else if ( (L"sdtLocked")        == sValue ) this->m_eValue = lockSdtLocked;
-		else if ( (L"unlocked")         == sValue ) this->m_eValue = lockUnlocked;
 		else                                         this->m_eValue = lockUnlocked;
 
 		return this->m_eValue;
@@ -2430,7 +2381,6 @@ namespace SimpleTypes
 		case lockContentLocked    : return (L"contentLocked");
 		case lockSdtContentLocked : return (L"sdtContentLocked");
 		case lockSdtLocked        : return (L"sdtLocked");
-		case lockUnlocked         : return (L"unlocked");
 		default                   : return (L"unlocked");
 		}
 	}
@@ -2511,7 +2461,6 @@ namespace SimpleTypes
 		else if ( (L"query")       == sValue ) this->m_eValue = mailmergeddatatypeQuery;
 		else if ( (L"soap")        == sValue ) this->m_eValue = mailmergeddatatypeSoap;
 		else if ( (L"spreadsheet") == sValue ) this->m_eValue = mailmergeddatatypeSpreadsheet;
-		else if ( (L"textFile")    == sValue ) this->m_eValue = mailmergeddatatypeTextFile;
 		else if ( (L"xQuery")      == sValue ) this->m_eValue = mailmergeddatatypeXQuery;
 		else if ( (L"xmlFile")     == sValue ) this->m_eValue = mailmergeddatatypeXmlFile;
 		else                                   this->m_eValue = mailmergeddatatypeTextFile;
@@ -2541,8 +2490,7 @@ namespace SimpleTypes
 
 	EMailMergeDest CMailMergeDest::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"email")       == sValue ) this->m_eValue = mailmergeddestEmail;
-		else if ( (L"fax")         == sValue ) this->m_eValue = mailmergeddestFax;
+		if ((L"fax")         == sValue) this->m_eValue = mailmergeddestFax;
 		else if ( (L"newDocument") == sValue ) this->m_eValue = mailmergeddestNewDocument;
 		else if ( (L"printer")     == sValue ) this->m_eValue = mailmergeddestPrinter;
 		else                                    this->m_eValue = mailmergeddestEmail;
@@ -2569,7 +2517,6 @@ namespace SimpleTypes
 	EMailMergeDocType CMailMergeDocType::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"catalog")       == sValue ) this->m_eValue = mailmergeddoctypeCatalog;
-		else if ( (L"email")         == sValue ) this->m_eValue = mailmergeddoctypeEmail;
 		else if ( (L"envelopes")     == sValue ) this->m_eValue = mailmergeddoctypeEnvelopes;
 		else if ( (L"fax")           == sValue ) this->m_eValue = mailmergeddoctypeFax;
 		else if ( (L"formLetters")   == sValue ) this->m_eValue = mailmergeddoctypeFormLetters;
@@ -2600,7 +2547,6 @@ namespace SimpleTypes
 	EMailMergeOdsoFMDFieldType CMailMergeOdsoFMDFieldType::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"dbColumn") == sValue ) this->m_eValue = mailmergeodsofmdfieldtypeDbColumn;
-		else if ( (L"null")     == sValue ) this->m_eValue = mailmergeodsofmdfieldtypeNull;
 		else                                 this->m_eValue = mailmergeodsofmdfieldtypeNull;
 
 		return this->m_eValue;
@@ -2611,7 +2557,6 @@ namespace SimpleTypes
 		switch(this->m_eValue)
 		{
 		case mailmergeodsofmdfieldtypeDbColumn : return (L"dbColumn");
-		case mailmergeodsofmdfieldtypeNull     : return (L"null");
 		default                                : return (L"null");
 		}
 	}
@@ -2630,7 +2575,6 @@ namespace SimpleTypes
 		else if ( (L"legacy")      == sValue ) this->m_eValue = mailmergesourcetypeLegacy;
 		else if ( (L"master")      == sValue ) this->m_eValue = mailmergesourcetypeMaster;
 		else if ( (L"native")      == sValue ) this->m_eValue = mailmergesourcetypeNative;
-		else if ( (L"text")        == sValue ) this->m_eValue = mailmergesourcetypeText;
 		else                                    this->m_eValue = mailmergesourcetypeText;
 
 		return this->m_eValue;
@@ -2648,7 +2592,6 @@ namespace SimpleTypes
 		case mailmergesourcetypeLegacy      : return (L"legacy");
 		case mailmergesourcetypeMaster      : return (L"master");
 		case mailmergesourcetypeNative      : return (L"native");
-		case mailmergesourcetypeText        : return (L"text");
 		default                             : return (L"text");
 		}
 	}
@@ -2659,8 +2602,7 @@ namespace SimpleTypes
 
 	EMerge CMerge::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"continue") == sValue ) this->m_eValue = mergeContinue;
-		else if ( (L"restart")  == sValue ) this->m_eValue = mergeRestart;
+		if ((L"restart")  == sValue) this->m_eValue = mergeRestart;
 		else                                 this->m_eValue = mergeContinue;
 
 		return this->m_eValue;
@@ -2671,7 +2613,6 @@ namespace SimpleTypes
 		switch(this->m_eValue)
 		{
 		case mergeContinue : return (L"continue");
-		case mergeRestart  : return (L"restart");
 		default            : return (L"restart");
 		}
 	}
@@ -2686,8 +2627,6 @@ namespace SimpleTypes
 					L"HybridMultilevel" == sValue)	this->m_eValue = emultileveltypeHybridMultilevel;
 		else if (	L"multilevel"       == sValue ||
 					L"Multilevel"       == sValue )	this->m_eValue = emultileveltypeMultilevel;
-		else if (	L"singleLevel"      == sValue ||
-					L"SingleLevel"      == sValue)	this->m_eValue = emultileveltypeSingleLevel;
 		else										this->m_eValue = emultileveltypeSingleLevel;
 
 		return this->m_eValue;
@@ -2699,7 +2638,6 @@ namespace SimpleTypes
 		{
 		case emultileveltypeHybridMultilevel : return (L"hybridMultilevel");
 		case emultileveltypeMultilevel       : return (L"multilevel");
-		case emultileveltypeSingleLevel      : return (L"singleLevel");
 		default                              : return (L"singleLevel");
 		}
 	}
@@ -2758,7 +2696,6 @@ namespace SimpleTypes
 		else if ( (L"koreanLegal")                  == sValue ) this->m_eValue = numberformatKoreanLegal;
 		else if ( (L"lowerLetter")                  == sValue ) this->m_eValue = numberformatLowerLetter;
 		else if ( (L"lowerRoman")                   == sValue ) this->m_eValue = numberformatLowerRoman;
-		else if ( (L"none")                         == sValue ) this->m_eValue = numberformatNone;
 		else if ( (L"numberInDash")                 == sValue ) this->m_eValue = numberformatNumberInDash;
 		else if ( (L"ordinal")                      == sValue ) this->m_eValue = numberformatOrdinal;
 		else if ( (L"ordinalText")                  == sValue ) this->m_eValue = numberformatOrdinalText;
@@ -2855,8 +2792,7 @@ namespace SimpleTypes
 
 	EObjectDrawAspect CObjectDrawAspect::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"content") == sValue ) this->m_eValue = objectdrawaspectContent;
-		else if ( (L"icon")    == sValue ) this->m_eValue = objectdrawaspectIcon;
+		if ((L"icon")    == sValue) this->m_eValue = objectdrawaspectIcon;
 		else                                this->m_eValue = objectdrawaspectContent;
 
 		return this->m_eValue;
@@ -2878,8 +2814,7 @@ namespace SimpleTypes
 
 	EObjectUpdateMode CObjectUpdateMode::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"always") == sValue ) this->m_eValue = objectupdatemodeAlways;
-		else if ( (L"onCall") == sValue ) this->m_eValue = objectupdatemodeOnCall;
+		if ((L"onCall") == sValue) this->m_eValue = objectupdatemodeOnCall;
 		else                               this->m_eValue = objectupdatemodeAlways;
 
 		return this->m_eValue;
@@ -2901,8 +2836,7 @@ namespace SimpleTypes
 
 	EPageBorderDisplay CPageBorderDisplay::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"allPages")     == sValue ) this->m_eValue = pageborderdisplayAllPages;
-		else if ( (L"firstPage")    == sValue ) this->m_eValue = pageborderdisplayFirstPage;
+		if ((L"firstPage")    == sValue) this->m_eValue = pageborderdisplayFirstPage;
 		else if ( (L"notFirstPage") == sValue ) this->m_eValue = pageborderdisplayNotFirstPage;
 		else                                     this->m_eValue = pageborderdisplayAllPages;
 
@@ -2926,8 +2860,7 @@ namespace SimpleTypes
 
 	EPageBorderOffset CPageBorderOffset::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"page") == sValue ) this->m_eValue = pageborderoffsetPage;
-		else if ( (L"text") == sValue ) this->m_eValue = pageborderoffsetText;
+		if ((L"text") == sValue) this->m_eValue = pageborderoffsetText;
 		else                             this->m_eValue = pageborderoffsetPage;
 
 		return this->m_eValue;
@@ -2949,8 +2882,7 @@ namespace SimpleTypes
 
 	EPageBorderZOrder CPageBorderZOrder::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"back")  == sValue ) this->m_eValue = pageborderzorderBack;
-		else if ( (L"front") == sValue ) this->m_eValue = pageborderzorderFront;
+		if ((L"front") == sValue) this->m_eValue = pageborderzorderFront;
 		else                             this->m_eValue = pageborderzorderBack;
 
 		return this->m_eValue;
@@ -2973,7 +2905,6 @@ namespace SimpleTypes
 	EPageOrientation CPageOrientation::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"landscape") == sValue ) this->m_eValue = pageorientLandscape;
-		else if ( (L"portrait")  == sValue ) this->m_eValue = pageorientPortrait;
 		else                                  this->m_eValue = pageorientPortrait;
 
 		return this->m_eValue;
@@ -2984,7 +2915,6 @@ namespace SimpleTypes
 		switch(this->m_eValue)
 		{
 		case pageorientLandscape : return (L"landscape");
-		case pageorientPortrait  : return (L"portrait");
 		default                  : return (L"portrait");
 		}
 	}
@@ -2995,8 +2925,7 @@ namespace SimpleTypes
 
 	EPitch CPitch::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"default")  == sValue ) this->m_eValue = pitchDefault;
-		else if ( (L"fixed")    == sValue ) this->m_eValue = pitchFixed;
+		if ((L"fixed")    == sValue) this->m_eValue = pitchFixed;
 		else if ( (L"variable") == sValue ) this->m_eValue = pitchVariable;
 		else                                 this->m_eValue = pitchDefault;
 
@@ -3057,7 +2986,7 @@ namespace SimpleTypes
 
 	double CPointMeasure::ToMM() const
 	{
-		return (double)Pt_To_Mm(this->m_eValue);
+		return Pt_To_Mm(this->m_eValue);
 	}
 
 	double CPointMeasure::ToInches() const
@@ -3083,7 +3012,6 @@ namespace SimpleTypes
 	EProof CProof::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"clean") == sValue ) this->m_eValue = proofClean;
-		else if ( (L"dirty") == sValue ) this->m_eValue = proofDirty;
 		else                              this->m_eValue = proofDirty;
 
 		return this->m_eValue;
@@ -3094,7 +3022,6 @@ namespace SimpleTypes
 		switch(this->m_eValue)
 		{
 		case proofClean : return (L"clean");
-		case proofDirty : return (L"dirty");
 		default         : return (L"dirty");
 		}
 	}
@@ -3108,7 +3035,6 @@ namespace SimpleTypes
 		if      ( (L"gramEnd")    == sValue ) this->m_eValue = prooferrGramEnd;
 		else if ( (L"gramStart")  == sValue ) this->m_eValue = prooferrGramStart;
 		else if ( (L"spellEnd")   == sValue ) this->m_eValue = prooferrSpellEnd;
-		else if ( (L"spellStart") == sValue ) this->m_eValue = prooferrSpellStart;
 		else                                   this->m_eValue = prooferrSpellStart;
 
 		return this->m_eValue;
@@ -3121,7 +3047,6 @@ namespace SimpleTypes
 		case prooferrGramEnd    : return (L"gramEnd");
 		case prooferrGramStart  : return (L"gramStart");
 		case prooferrSpellEnd   : return (L"spellEnd");
-		case prooferrSpellStart : return (L"spellStart");
 		default                 : return (L"spellStart");
 		}
 	}
@@ -3133,7 +3058,6 @@ namespace SimpleTypes
 	EPTabAlignment CPTabAlignment::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"center") == sValue ) this->m_eValue = ptabalignmentCenter;
-		else if ( (L"left")   == sValue ) this->m_eValue = ptabalignmentLeft;
 		else if ( (L"right")  == sValue ) this->m_eValue = ptabalignmentRight;
 		else                               this->m_eValue = ptabalignmentLeft;
 
@@ -3160,7 +3084,6 @@ namespace SimpleTypes
 		if      ( (L"dot")        == sValue ) this->m_eValue = ptableaderDot;
 		else if ( (L"hyphen")     == sValue ) this->m_eValue = ptableaderHyphen;
 		else if ( (L"middleDot")  == sValue ) this->m_eValue = ptableaderMiddleDot;
-		else if ( (L"none")       == sValue ) this->m_eValue = ptableaderNone;
 		else if ( (L"underscore") == sValue ) this->m_eValue = ptableaderUnderscore;
 		else                                   this->m_eValue = ptableaderNone;
 
@@ -3186,8 +3109,7 @@ namespace SimpleTypes
 
 	EPTabRelativeTo CPTabRelativeTo::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"indent") == sValue ) this->m_eValue = ptabrelativetoIndent;
-		else if ( (L"margin") == sValue ) this->m_eValue = ptabrelativetoMargin;
+		if ((L"margin") == sValue) this->m_eValue = ptabrelativetoMargin;
 		else                               this->m_eValue = ptabrelativetoIndent;
 
 		return this->m_eValue;
@@ -3209,8 +3131,7 @@ namespace SimpleTypes
 
 	ERestartNumber CRestartNumber::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"continuous") == sValue ) this->m_eValue = restartnumberContinious;
-		else if ( (L"eachPage")   == sValue ) this->m_eValue = restartnumberEachPage;
+		if ((L"eachPage")   == sValue) this->m_eValue = restartnumberEachPage;
 		else if ( (L"eachSect")   == sValue ) this->m_eValue = restartnumberEachSect;
 		else                                   this->m_eValue = restartnumberContinious;
 
@@ -3237,7 +3158,6 @@ namespace SimpleTypes
 		if      ( (L"center")           == sValue ) this->m_eValue = erubyalignCenter;
 		else if ( (L"distributeLetter") == sValue ) this->m_eValue = erubyalignDistributeLetter;
 		else if ( (L"distributeSpace")  == sValue ) this->m_eValue = erubyalignDistributeSpace;
-		else if ( (L"left")             == sValue ) this->m_eValue = erubyalignLeft;
 		else if ( (L"right")            == sValue ) this->m_eValue = erubyalignRight;
 		else if ( (L"rightVertical")    == sValue ) this->m_eValue = erubyalignRightVertical;
 		else                                         this->m_eValue = erubyalignLeft;
@@ -3267,7 +3187,6 @@ namespace SimpleTypes
 	{
 		if      ( (L"date")     == sValue ) this->m_eValue = sdtdatemappingtypeDate;
 		else if ( (L"dateTime") == sValue ) this->m_eValue = sdtdatemappingtypeDateTime;
-		else if ( (L"text")     == sValue ) this->m_eValue = sdtdatemappingtypeText;
 		else                                 this->m_eValue = sdtdatemappingtypeText;
 
 		return this->m_eValue;
@@ -3279,7 +3198,6 @@ namespace SimpleTypes
 		{
 		case sdtdatemappingtypeDate     : return (L"date");
 		case sdtdatemappingtypeDateTime : return (L"dateTime");
-		case sdtdatemappingtypeText     : return (L"text");
 		default                         : return (L"text");
 		}
 	}
@@ -3293,7 +3211,6 @@ namespace SimpleTypes
 		if      ( (L"continuous") == sValue ) this->m_eValue = sectionmarkContinious;
 		else if ( (L"evenPage")   == sValue ) this->m_eValue = sectionmarkEvenPage;
 		else if ( (L"nextColumn") == sValue ) this->m_eValue = sectionmarkNextColumn;
-		else if ( (L"nextPage")   == sValue ) this->m_eValue = sectionmarkNextPage;
 		else if ( (L"oddPage")    == sValue ) this->m_eValue = sectionmarkOddPage;
 		else                                   this->m_eValue = sectionmarkNextPage;
 
@@ -3319,8 +3236,7 @@ namespace SimpleTypes
 
 	EShd CShd::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"clear")                 == sValue ) this->m_eValue = shdClear;
-		else if ( (L"diagCross")             == sValue ) this->m_eValue = shdDiagCross;
+		if ((L"diagCross")             == sValue) this->m_eValue = shdDiagCross;
 		else if ( (L"diagStripe")            == sValue ) this->m_eValue = shdDiagStripe;
 		else if ( (L"horzCross")             == sValue ) this->m_eValue = shdHorzCross;
 		else if ( (L"horzStripe")            == sValue ) this->m_eValue = shdHorzStripe;
@@ -3533,7 +3449,6 @@ namespace SimpleTypes
 		if      ( (L"basedOn")  == sValue || (L"0004") == sValue ) this->m_eValue = stylesortBasedOn;
 		else if ( (L"default")  == sValue || (L"0002") == sValue ) this->m_eValue = stylesortDefault;
 		else if ( (L"font")     == sValue || (L"0003") == sValue ) this->m_eValue = stylesortFont;
-		else if ( (L"name")     == sValue || (L"0000") == sValue ) this->m_eValue = stylesortName;
 		else if ( (L"priority") == sValue || (L"0001") == sValue ) this->m_eValue = stylesortPriority;
 		else if ( (L"type")     == sValue || (L"0005") == sValue ) this->m_eValue = stylesortType;
 		else                                 this->m_eValue = stylesortName;
@@ -3583,10 +3498,8 @@ namespace SimpleTypes
 	EStyleType CStyleType::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"character") == sValue ) this->m_eValue = styletypeCharacter;
-		else if ( (L"numbering") == sValue ) this->m_eValue = styletypeNumbering;
-		else if ( (L"paragraph") == sValue ) this->m_eValue = styletypeParagraph;
+		else if (((L"numbering") == sValue) || ((L"list")		 == sValue)) this->m_eValue = styletypeNumbering;
 		else if ( (L"table")     == sValue ) this->m_eValue = styletypeTable;
-		else if ( (L"list")		 == sValue)  this->m_eValue = styletypeNumbering;
 		else                                  this->m_eValue = styletypeParagraph;
 
 		return this->m_eValue;
@@ -3612,7 +3525,6 @@ namespace SimpleTypes
 	{
 		if      ( (L"bar")     == sValue ) this->m_eValue = tabjcBar;
 		else if ( (L"center")  == sValue ) this->m_eValue = tabjcCenter;
-		else if ( (L"clear")   == sValue ) this->m_eValue = tabjcClear;
 		else if ( (L"decimal") == sValue ) this->m_eValue = tabjcDecimal;
 		else if ( (L"end")     == sValue ) this->m_eValue = tabjcEnd;
 		else if ( (L"num")     == sValue ) this->m_eValue = tabjcNum;
@@ -3651,7 +3563,6 @@ namespace SimpleTypes
 		else if ( (L"heavy")      == sValue ) this->m_eValue = tabtlcHeavy;
 		else if ( (L"hyphen")     == sValue ) this->m_eValue = tabtlcHyphen;
 		else if ( (L"middleDot")  == sValue ) this->m_eValue = tabtlcMiddleDot;
-		else if ( (L"none")       == sValue ) this->m_eValue = tabtlcNone;
 		else if ( (L"underscore") == sValue ) this->m_eValue = tabtlcUnderscore;
 		else                                   this->m_eValue = tabtlcNone;
 
@@ -3681,7 +3592,6 @@ namespace SimpleTypes
 		if      ( (L"1024x768")  == sValue ) this->m_eValue = targetscreensz1024x768;
 		else if ( (L"1152x882")  == sValue ) this->m_eValue = targetscreensz1152x882;
 		else if ( (L"1152x900")  == sValue ) this->m_eValue = targetscreensz1152x900;
-		else if ( (L"1280x1024") == sValue ) this->m_eValue = targetscreensz1280x1024;
 		else if ( (L"1600x1200") == sValue ) this->m_eValue = targetscreensz1600x1200;
 		else if ( (L"1800x1440") == sValue ) this->m_eValue = targetscreensz1800x1440;
 		else if ( (L"1920x1200") == sValue ) this->m_eValue = targetscreensz1920x1200;
@@ -3719,8 +3629,7 @@ namespace SimpleTypes
 
 	ETblLayoutType CTblLayoutType::FromString(const std::wstring &sValue)
 	{
-		if (L"autofit" == sValue) this->m_eValue = tbllayouttypeAutofit;
-		else if (L"fixed" == sValue || L"Fixed" == sValue) this->m_eValue = tbllayouttypeFixed;
+		if (L"fixed" == sValue || L"Fixed" == sValue) this->m_eValue = tbllayouttypeFixed;
 		else this->m_eValue = tbllayouttypeAutofit;
 
 		return this->m_eValue;
@@ -3743,7 +3652,6 @@ namespace SimpleTypes
 	ETblOverlap CTblOverlap::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"never")   == sValue ) this->m_eValue = tbloverlapNever;
-		else if ( (L"overlap") == sValue ) this->m_eValue = tbloverlapOverlap;
 		else                                this->m_eValue = tbloverlapOverlap;
 
 		return this->m_eValue;
@@ -3754,7 +3662,6 @@ namespace SimpleTypes
 		switch(this->m_eValue)
 		{
 		case tbloverlapNever   : return (L"never");
-		case tbloverlapOverlap : return (L"overlap");
 		default                : return (L"overlap");
 		}
 	}
@@ -3777,7 +3684,6 @@ namespace SimpleTypes
 		else if ( (L"nwCell")     == sValue ) this->m_eValue = tblstyleoverridetypeNwCell;
 		else if ( (L"seCell")     == sValue ) this->m_eValue = tblstyleoverridetypeSeCell;
 		else if ( (L"swCell")     == sValue ) this->m_eValue = tblstyleoverridetypeSwCell;
-		else if ( (L"wholeTable") == sValue ) this->m_eValue = tblstyleoverridetypeWholeTable;
 		else                                   this->m_eValue = tblstyleoverridetypeWholeTable;
 
 		return this->m_eValue;
@@ -3799,7 +3705,6 @@ namespace SimpleTypes
 		case tblstyleoverridetypeNwCell     : return (L"nwCell");
 		case tblstyleoverridetypeSeCell     : return (L"seCell");
 		case tblstyleoverridetypeSwCell     : return (L"swCell");
-		case tblstyleoverridetypeWholeTable : return (L"wholeTable");
 		default                             : return (L"wholeTable");
 		}
 	}
@@ -3810,8 +3715,7 @@ namespace SimpleTypes
 
 	ETblWidth CTblWidth::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"auto") == sValue ) this->m_eValue = tblwidthAuto;
-		else if ( (L"dxa")  == sValue ) this->m_eValue = tblwidthDxa;
+		if ((L"dxa")  == sValue) this->m_eValue = tblwidthDxa;
 		else if ( (L"nil")  == sValue ) this->m_eValue = tblwidthNil;
 		else if ( (L"pct")  == sValue ) this->m_eValue = tblwidthPct;
 		else                             this->m_eValue = tblwidthAuto;
@@ -3837,8 +3741,7 @@ namespace SimpleTypes
 
 	ETextAlignment CTextAlignment::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"auto")     == sValue ) this->m_eValue = textalignAuto;
-		else if ( (L"baseline") == sValue ) this->m_eValue = textalignBaseLine;
+		if ((L"baseline") == sValue) this->m_eValue = textalignBaseLine;
 		else if ( (L"bottom")   == sValue ) this->m_eValue = textalignBottom;
 		else if ( (L"center")   == sValue ) this->m_eValue = textalignCenter;
 		else if ( (L"top")      == sValue ) this->m_eValue = textalignTop;
@@ -3870,7 +3773,6 @@ namespace SimpleTypes
 		else if ( (L"firstAndLastLine") == sValue ) this->m_eValue = textboxtightwrapFirstAndLastLine;
 		else if ( (L"firstLineOnly")    == sValue ) this->m_eValue = textboxtightwrapFirstLineOnly;
 		else if ( (L"lastLineOnly")     == sValue ) this->m_eValue = textboxtightwrapLastLineOnly;
-		else if ( (L"none")             == sValue ) this->m_eValue = textboxtightwrapNone;
 		else                                         this->m_eValue = textboxtightwrapNone;
 
 		return this->m_eValue;
@@ -3884,7 +3786,6 @@ namespace SimpleTypes
 		case textboxtightwrapFirstAndLastLine : return (L"firstAndLastLine");
 		case textboxtightwrapFirstLineOnly    : return (L"firstLineOnly");
 		case textboxtightwrapLastLineOnly     : return (L"lastLineOnly");
-		case textboxtightwrapNone             : return (L"none");
 		default                               : return (L"none");
 		}
 	}
@@ -3903,8 +3804,6 @@ namespace SimpleTypes
 			this->m_eValue = textdirectionRl;
 		else if ( (L"rlV") == sValue || (L"tbRlV") == sValue || (L"tb-rl-v") == sValue)
 			this->m_eValue = textdirectionRlV;
-		else if ( (L"tb")  == sValue || (L"lrTb")  == sValue)
-			this->m_eValue = textdirectionTb;
 		else if ( (L"tbV") == sValue || (L"lrTbV") == sValue || (L"lr-tb-v") == sValue)
 			this->m_eValue = textdirectionTbV;
 		//tb-rl
@@ -3938,7 +3837,6 @@ namespace SimpleTypes
 		else if ( (L"antsRed")         == sValue ) this->m_eValue = texteffectAntsRed;
 		else if ( (L"blinkBackground") == sValue ) this->m_eValue = texteffectBlinkBackground;
 		else if ( (L"lights")          == sValue ) this->m_eValue = texteffectLights;
-		else if ( (L"none")            == sValue ) this->m_eValue = texteffectNone;
 		else if ( (L"shimmer")         == sValue ) this->m_eValue = texteffectShimmer;
 		else if ( (L"sparkle")         == sValue ) this->m_eValue = texteffectSparkle;
 		else                                        this->m_eValue = texteffectNone;
@@ -3992,8 +3890,7 @@ namespace SimpleTypes
 
 	ETheme CTheme::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"majorAscii")    == sValue ) this->m_eValue = themeMajorAscii;
-		else if ( (L"majorBidi")     == sValue ) this->m_eValue = themeMajorBidi;
+		if ((L"majorBidi")     == sValue) this->m_eValue = themeMajorBidi;
 		else if ( (L"majorEastAsia") == sValue ) this->m_eValue = themeMajorEastAsia;
 		else if ( (L"majorHAnsi")    == sValue ) this->m_eValue = themeMajorHAnsi;
 		else if ( (L"minorAscii")    == sValue ) this->m_eValue = themeMinorAscii;
@@ -4041,7 +3938,6 @@ namespace SimpleTypes
 		else if ( (L"hyperlink")         == sValue ) this->m_eValue = themecolorHyperlink;
 		else if ( (L"light1")            == sValue ) this->m_eValue = themecolorLight1;
 		else if ( (L"light2")            == sValue ) this->m_eValue = themecolorLight2;
-		else if ( (L"none")              == sValue ) this->m_eValue = themecolorNone;
 		else if ( (L"text1")             == sValue ) this->m_eValue = themecolorText1;
 		else if ( (L"text2")             == sValue ) this->m_eValue = themecolorText2;
 		else                                          this->m_eValue = themecolorNone;
@@ -4134,7 +4030,6 @@ namespace SimpleTypes
 		else if ( (L"dotted")          == sValue ) this->m_eValue = underlineDotted;
 		else if ( (L"dottedHeavy")     == sValue ) this->m_eValue = underlineDottedHeavy;
 		else if ( (L"double")          == sValue ) this->m_eValue = underlineDouble;
-		else if ( (L"none")            == sValue ) this->m_eValue = underlineNone;
 		else if ( (L"single")          == sValue ) this->m_eValue = underlineSingle;
 		else if ( (L"thick")           == sValue ) this->m_eValue = underlineThick;
 		else if ( (L"wave")            == sValue ) this->m_eValue = underlineWave;
@@ -4180,7 +4075,6 @@ namespace SimpleTypes
 	{
 		if      ( (L"margin") == sValue ) this->m_eValue = vanchorMargin;
 		else if ( (L"page")   == sValue ) this->m_eValue = vanchorPage;
-		else if ( (L"text")   == sValue ) this->m_eValue = vanchorText;
 		else                               this->m_eValue = vanchorText;
 
 		return this->m_eValue;
@@ -4192,7 +4086,6 @@ namespace SimpleTypes
 		{
 		case vanchorMargin : return (L"margin");
 		case vanchorPage   : return (L"page");
-		case vanchorText   : return (L"text");
 		default            : return (L"text");
 		}
 	}
@@ -4206,7 +4099,6 @@ namespace SimpleTypes
 		if      ( (L"both")   == sValue ) this->m_eValue = verticaljcBoth;
 		else if ( (L"bottom") == sValue ) this->m_eValue = verticaljcBottom;
 		else if ( (L"center") == sValue ) this->m_eValue = verticaljcCenter;
-		else if ( (L"top")    == sValue ) this->m_eValue = verticaljcTop;
 		else                               this->m_eValue = verticaljcTop;
 
 		return this->m_eValue;
@@ -4219,7 +4111,6 @@ namespace SimpleTypes
 		case verticaljcBoth   : return (L"both");
 		case verticaljcBottom : return (L"bottom");
 		case verticaljcCenter : return (L"center");
-		case verticaljcTop    : return (L"top");
 		default               : return (L"top");
 		}
 	}
@@ -4231,7 +4122,6 @@ namespace SimpleTypes
 	EView CView::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"masterPages") == sValue ) this->m_eValue = viewMasterPages;
-		else if ( (L"none")        == sValue ) this->m_eValue = viewNone;
 		else if ( (L"normal")      == sValue ) this->m_eValue = viewNormal;
 		else if ( (L"outline")     == sValue ) this->m_eValue = viewOutline;
 		else if ( (L"print")       == sValue ) this->m_eValue = viewPrint;
@@ -4261,8 +4151,7 @@ namespace SimpleTypes
 
 	EWmlColorSchemeIndex CWmlColorSchemeIndex::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"accent1")           == sValue ) this->m_eValue = wmlcolorschemeindexAccent1;
-		else if ( (L"accent2")           == sValue ) this->m_eValue = wmlcolorschemeindexAccent2;
+		if ((L"accent2")           == sValue) this->m_eValue = wmlcolorschemeindexAccent2;
 		else if ( (L"accent3")           == sValue ) this->m_eValue = wmlcolorschemeindexAccent3;
 		else if ( (L"accent4")           == sValue ) this->m_eValue = wmlcolorschemeindexAccent4;
 		else if ( (L"accent5")           == sValue ) this->m_eValue = wmlcolorschemeindexAccent5;
@@ -4305,10 +4194,8 @@ namespace SimpleTypes
 	EWrap CWrap::FromString(const std::wstring &sValue)
 	{
 		if      (L"around"		== sValue ) this->m_eValue = wrapAround;
-		else if (L"auto"		== sValue ) this->m_eValue = wrapAuto;
 		else if (L"none"		== sValue ) this->m_eValue = wrapNone;
-		else if (L"notBeside"	== sValue ) this->m_eValue = wrapNotBeside;
-		else if (L"not-beside"	== sValue) this->m_eValue = wrapNotBeside;
+		else if ((L"notBeside"	== sValue) || (L"not-beside"	== sValue)) this->m_eValue = wrapNotBeside;
 		else if (L"through"		== sValue ) this->m_eValue = wrapThrough;
 		else if (L"tight"		== sValue ) this->m_eValue = wrapTight;
 		else                                  this->m_eValue = wrapAuto;
@@ -4338,7 +4225,6 @@ namespace SimpleTypes
 	{
 		if      ( (L"bestFit")  == sValue ) this->m_eValue = zoomBestFit;
 		else if ( (L"fullPage") == sValue ) this->m_eValue = zoomFullPage;
-		else if ( (L"none")     == sValue ) this->m_eValue = zoomNone;
 		else if ( (L"textFit")  == sValue ) this->m_eValue = zoomTextFit;
 		else                                 this->m_eValue = zoomNone;
 
@@ -4361,7 +4247,7 @@ namespace SimpleTypes
 
 
 
-// Дополнительные типы
+// Additional types
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------
@@ -4370,8 +4256,7 @@ namespace SimpleTypes
 
 	EFontCharset CFontCharset::FromString(const std::wstring &sValue)
 	{
-		if      ( (L"00") == sValue ) this->m_eValue = fontcharsetANSI;
-		else if ( (L"01") == sValue ) this->m_eValue = fontcharsetDefault;
+		if ((L"01") == sValue) this->m_eValue = fontcharsetDefault;
 		else if ( (L"02") == sValue ) this->m_eValue = fontcharsetSymbol;
 		else if ( (L"4D") == sValue ) this->m_eValue = fontcharsetMacintosh;
 		else if ( (L"80") == sValue ) this->m_eValue = fontcharsetShitJIS;
@@ -4435,13 +4320,13 @@ namespace SimpleTypes
 
 			if ( '0' == wsChar )
 			{
-				// Ничего не делаем
+				// Do nothing
 			}
 			else if ( '1' == wsChar )
 			{
 				this->m_eValue ^= nMult;
 			}
-			else // Неправильный формат
+			else // Wrong format
 				break;
 		}
 	}
@@ -4534,8 +4419,7 @@ namespace SimpleTypes
 
 	EXmlSpace CXmlSpace::FromString(const std::wstring &sValue)
 	{
-		if       ( (L"default")  == sValue ) this->m_eValue = xmlspaceDefault;
-		else if  ( (L"preserve") == sValue ) this->m_eValue = xmlspacePreserve;
+		if ((L"preserve") == sValue) this->m_eValue = xmlspacePreserve;
 		else                                  this->m_eValue = xmlspaceDefault;
 
 		return this->m_eValue;
@@ -4543,8 +4427,7 @@ namespace SimpleTypes
 
 	EXmlSpace CXmlSpace::FromStringA(const char* pValue)
 	{
-		if       ( strcmp("default", pValue)  == 0 ) this->m_eValue = xmlspaceDefault;
-		else if  ( strcmp("preserve", pValue) == 0 ) this->m_eValue = xmlspacePreserve;
+		if (strcmp("preserve", pValue) == 0) this->m_eValue = xmlspacePreserve;
 		else                                  this->m_eValue = xmlspaceDefault;
 
 		return this->m_eValue;
@@ -4564,8 +4447,7 @@ namespace SimpleTypes
 
 	ECryptAlgClass CCryptAlgClass::FromString(const std::wstring &sValue)
 	{
-		if (L"custom" == sValue) this->m_eValue = AlgClassCustom;
-		else if (L"hash" == sValue) this->m_eValue = AlgClassHash;
+		if (L"hash" == sValue) this->m_eValue = AlgClassHash;
 		else this->m_eValue = AlgClassCustom;
 
 		return this->m_eValue;
@@ -4573,8 +4455,7 @@ namespace SimpleTypes
 
 	ECryptAlgClass CCryptAlgClass::FromStringA(const char* pValue)
 	{
-		if (strcmp("custom", pValue) == 0) this->m_eValue = AlgClassCustom;
-		else if (strcmp("hash", pValue) == 0) this->m_eValue = AlgClassHash;
+		if (strcmp("hash", pValue) == 0) this->m_eValue = AlgClassHash;
 		else this->m_eValue = AlgClassCustom;
 
 		return this->m_eValue;
@@ -4594,8 +4475,7 @@ namespace SimpleTypes
 
 	ECryptAlgType CCryptAlgType::FromString(const std::wstring &sValue)
 	{
-		if (L"custom" == sValue) this->m_eValue = AlgTypeCustom;
-		else if (L"typeAny" == sValue) this->m_eValue = AlgTypeTypeAny;
+		if (L"typeAny" == sValue) this->m_eValue = AlgTypeTypeAny;
 		else this->m_eValue = AlgTypeCustom;
 
 		return this->m_eValue;
@@ -4603,8 +4483,7 @@ namespace SimpleTypes
 
 	ECryptAlgType CCryptAlgType::FromStringA(const char* pValue)
 	{
-		if (strcmp("custom", pValue) == 0) this->m_eValue = AlgTypeCustom;
-		else if (strcmp("typeAny", pValue) == 0) this->m_eValue = AlgTypeTypeAny;
+		if (strcmp("typeAny", pValue) == 0) this->m_eValue = AlgTypeTypeAny;
 		else this->m_eValue = AlgTypeCustom;
 
 		return this->m_eValue;
@@ -4624,8 +4503,7 @@ namespace SimpleTypes
 
 	ECryptProv CCryptProv::FromString(const std::wstring &sValue)
 	{
-		if (L"custom" == sValue) this->m_eValue = CryptProvCustom;
-		else if (L"rsaAES" == sValue) this->m_eValue = CryptProvRsaAES;
+		if (L"rsaAES" == sValue) this->m_eValue = CryptProvRsaAES;
 		else if (L"rsaFull" == sValue) this->m_eValue = CryptProvRsaFull;
 		else this->m_eValue = CryptProvCustom;
 
@@ -4634,8 +4512,7 @@ namespace SimpleTypes
 
 	ECryptProv CCryptProv::FromStringA(const char* pValue)
 	{
-		if (strcmp("custom", pValue) == 0) this->m_eValue = CryptProvCustom;
-		else if (strcmp("rsaAES", pValue) == 0) this->m_eValue = CryptProvRsaAES;
+		if (strcmp("rsaAES", pValue) == 0) this->m_eValue = CryptProvRsaAES;
 		else if (strcmp("rsaFull", pValue) == 0) this->m_eValue = CryptProvRsaFull;
 		else this->m_eValue = CryptProvCustom;
 
@@ -4764,8 +4641,7 @@ namespace SimpleTypes
 
 	EDirVal CDirVal::FromString(const std::wstring &sValue)
 	{
-		if       ( (L"ltr") == sValue ) this->m_eValue = dirLtr;
-		else if  ( (L"rtl") == sValue ) this->m_eValue = dirRtl;
+		if ((L"rtl") == sValue) this->m_eValue = dirRtl;
 		else							this->m_eValue = dirLtr;
 
 		return this->m_eValue;
@@ -4829,8 +4705,7 @@ namespace SimpleTypes
 
 	ENumForm CNumForm::FromString(const std::wstring &sValue)
 	{
-		if (L"default" == sValue)		this->m_eValue = numFormDefault;
-		else if (L"lining" == sValue)	this->m_eValue = numFormLining;
+		if (L"lining" == sValue)	this->m_eValue = numFormLining;
 		else if (L"oldStyle" == sValue) this->m_eValue = numFormOldStyle;
 		else							this->m_eValue = numFormDefault;
 
@@ -4850,8 +4725,7 @@ namespace SimpleTypes
 
 	ENumSpacing CNumSpacing::FromString(const std::wstring &sValue)
 	{
-		if (L"default" == sValue) this->m_eValue = numSpacingDefault;
-		else if (L"proportional" == sValue) this->m_eValue = numSpacingProportional;
+		if (L"proportional" == sValue) this->m_eValue = numSpacingProportional;
 		else if (L"tabular" == sValue) this->m_eValue = numSpacingTabular;
 		else							this->m_eValue = numSpacingDefault;
 

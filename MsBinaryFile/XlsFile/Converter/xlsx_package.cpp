@@ -393,9 +393,9 @@ void xl_files::add_sheet(int type, sheet_content_ptr sheet)
     sheets_files_.add_sheet(type, sheet);
 }
 
-void xl_files::set_media(external_items & _Mediaitems)
+void xl_files::set_media(external_items & mediaitems)
 {
-    media_ = element_ptr( new media(_Mediaitems) );
+    media_ = element_ptr( new media(mediaitems) );
 }
 void xl_files::set_comments(element_ptr Element)
 {
@@ -478,7 +478,7 @@ void xl_pivot_cache_files::write(const std::wstring & RootPath)
 
         package::simple_element(fileNameD, pivot_caches_[i]->definitions().str()).write(path);
 
-        if (pivot_caches_[i]->get_rels().empty() == false)
+        if (!pivot_caches_[i]->get_rels().empty())
 		{
 			rels_files relFiles;
 			pivot_caches_[i]->definitions_rels_file_->set_file_name(fileNameD + L".rels");
@@ -531,7 +531,7 @@ void xl_pivot_table_files::write(const std::wstring & RootPath)
 
         package::simple_element(fileName, pivot_tables_[i]->str()).write(path);
 
-        if (pivot_tables_[i]->get_rels().empty() == false)
+        if (!pivot_tables_[i]->get_rels().empty())
 		{
 			rels_files relFiles;
 			pivot_tables_[i]->rels_file_->set_file_name(fileName + L".rels");
@@ -568,7 +568,7 @@ void xl_table_part_files::write(const std::wstring & RootPath)
 
         package::simple_element(fileName, table_parts_[i]->str()).write(path);
 
-        if (table_parts_[i]->get_rels().empty() == false)
+        if (!table_parts_[i]->get_rels().empty())
 		{
 			rels_files relFiles;
 			table_parts_[i]->rels_file_->set_file_name(fileName + L".rels");
@@ -603,7 +603,7 @@ void xl_charts_files::write(const std::wstring & RootPath)
 
         package::simple_element(fileName, charts_[i]->str()).write(path);
 
-        if (charts_[i]->get_rels().empty() == false)
+        if (!charts_[i]->get_rels().empty())
 		{
 			rels_files relFiles;
 			charts_[i]->rels_file_->set_file_name(fileName + L".rels");
@@ -623,7 +623,7 @@ void xl_activeX_files::write(const std::wstring & RootPath)
 	if (activeXs_.empty()) return;
 
 	std::wstring path = RootPath + FILE_SEPARATOR_STR + L"activeX";
-    //NSDirectory::CreateDirectory(path.c_str()); уже есть
+    //NSDirectory::CreateDirectory(path.c_str()); already there
 
 	content_type & contentTypes = this->get_main_document()->content_type().get_content_type();
 	static const std::wstring kWSConType = L"application/vnd.ms-office.activeX+xml";
@@ -638,7 +638,7 @@ void xl_activeX_files::write(const std::wstring & RootPath)
 
         package::simple_element(fileName, activeXs_[i]->str()).write(path);
 
-        if (activeXs_[i]->get_rels().empty() == false)
+        if (!activeXs_[i]->get_rels().empty())
 		{
 			rels_files relFiles;
 			activeXs_[i]->rels_file_->set_file_name(fileName + L".rels");
@@ -761,7 +761,7 @@ void xl_externals_files::write(const std::wstring & RootPath)
 
         package::simple_element(fileName, externals_[i]->str()).write(path);
 
-        if (externals_[i]->get_rels().empty() == false)
+        if (!externals_[i]->get_rels().empty())
 		{
 			rels_files relFiles;
 			externals_[i]->rels_file_->set_file_name(fileName + L".rels");

@@ -33,14 +33,14 @@
 namespace OOX
 {
 
-//в файле VmlDrawing могут быть как отобразительная часть комментариев Xlsx, так и просто обычные объекты 
+//the VmlDrawing file can contain both the display part of Xlsx comments and just ordinary objects
 
 	class CVmlDrawing : public OOX::WritingElementWithChilds<OOX::WritingElement>, public OOX::FileGlobalEnumerated, public OOX::IFileContainer
 	{
 	public:
 		struct _vml_shape
 		{
-			_vml_shape() : bUsed(false), pElement(NULL), nId(0), bComment(false) {}
+			_vml_shape() : bUsed(false), pElement(nullptr), nId(0), bComment(false) {}
 			
 			int						nId;		// for comments
 			std::wstring			sXml;		// for pptx 
@@ -51,14 +51,14 @@ namespace OOX
 		CVmlDrawing(OOX::Document* pMain, bool bDocument = true) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 		{
 			m_bDocument		= bDocument;
-			m_mapComments	= NULL;
+			m_mapComments	= nullptr;
 			m_lObjectIdVML	= 1024;
 		}
 		CVmlDrawing(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 		{
-			m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));;
-			m_mapComments = NULL;
-			read( oRootPath, oPath );
+			m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));;
+			m_mapComments = nullptr;
+			CVmlDrawing::read( oRootPath, oPath );
 		}
 		virtual ~CVmlDrawing()
 		{

@@ -41,6 +41,11 @@ namespace DocFileFormat
 			tableStream->seek(fib->m_FibWord97.fcClx);
 			tableStream->read(clx, (int)fib->m_FibWord97.lcbClx);
 		}
+		else
+		{
+			delete [] clx;
+			return;
+		}
 
 		Pieces = std::list<PieceDescriptor>();
 		FileCharacterPositions	= new std::map<int, int>();
@@ -282,7 +287,7 @@ namespace DocFileFormat
 			}
 			else if ((fcStart >= (int)pcd.fc) && (fcEnd <= pcdFcEnd))
 			{
-				//requested chars are completly in this piece
+				//requested chars are completely in this piece
 				//read from fcStart to fcEnd
 
 				//get count of bytes
@@ -308,9 +313,8 @@ namespace DocFileFormat
 			}
 			else if ( fcEnd < (int)pcd.fc )
 			{
-				if ((int)pcd.fc > (int)fcEnd)
+				if ((int)pcd.fc > fcEnd)
 				{
-					pcdFcEnd = 0;
 					continue;
 				}
 
@@ -323,8 +327,6 @@ namespace DocFileFormat
 	std::vector<wchar_t>* PieceTable::GetChars(int fcStart, int fcEnd, int cp, POLE::Stream* word)
 	{
 		std::vector<wchar_t>* encodingChars = new std::vector<wchar_t>();
-
-		int fcSize = fcEnd - fcStart;
 
 		bool read = true;
 
@@ -358,10 +360,8 @@ namespace DocFileFormat
 				if (cb < 0)	
 					break;
 
-				if (!ReadSymbolsBuffer((int)fcStart, cb, pcd.code_page, word, encodingChars))
+				if (!ReadSymbolsBuffer(fcStart, cb, pcd.code_page, word, encodingChars))
 					break;
-
-				fcSize	-=	cb;
 
 				if (read)
 				{
@@ -380,8 +380,6 @@ namespace DocFileFormat
 
 				if (!ReadSymbolsBuffer((int)pcd.fc, cb, pcd.code_page, word, encodingChars))
 					break;
-
-				fcSize	-=	cb;
 
 				if (read)
 				{
@@ -411,14 +409,14 @@ namespace DocFileFormat
 				if (read)
 				{
 					m_carriageIter	=	iter;	
-					read			=	false;
+
 				}
 
 				break;
 			}
 			else if ((fcStart >= (int)pcd.fc) && (fcEnd <= pcdFcEnd))
 			{
-				//requested chars are completly in this piece
+				//requested chars are completely in this piece
 				//read from fcStart to fcEnd
 
 				//get count of bytes
@@ -426,20 +424,20 @@ namespace DocFileFormat
 				if (cb <= 0) 
 					break;
 
-				if (!ReadSymbolsBuffer((int)fcStart, cb, pcd.code_page, word, encodingChars))
+				if (!ReadSymbolsBuffer(fcStart, cb, pcd.code_page, word, encodingChars))
 					break;
 
 				if (read)
 				{
 					m_carriageIter	=	iter;	
-					read			=	false;
+
 				}
 
 				break;
 			}
 			else if (fcEnd < (int)pcd.fc)		//	this piece is beyond the requested range
 			{	
-				// имеет место быть перескок по стриму, поэтому корректируем начальную позицию
+				// there may be a jump in the stream, so we adjust the starting position
 
 				//size_t count = encodingChars->size();
 				//if (count && fcSize > 0)
@@ -479,7 +477,7 @@ namespace DocFileFormat
 	bool PieceTable::ReadSymbolsBuffer(int pos, int size, int coding, POLE::Stream* word, std::vector<wchar_t>* encodingChars)
 	{
 		unsigned char* bytes = new unsigned char[size];
-		if (NULL == bytes)
+		if (nullptr == bytes)
 			return false;
 
 		word->seek(pos);

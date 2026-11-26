@@ -83,14 +83,14 @@ int OOXFieldInsertText::GetType()
 }
 std::wstring OOXFieldInsertText::RenderToRtf(RenderParameter oRenderParameter)
 {
-	if( NULL != m_oText )
+	if( nullptr != m_oText )
 		return m_oText->RenderToRtf( oRenderParameter );
 	else
 		return L"";
 }
 std::wstring OOXFieldInsertText::RenderToOOX(RenderParameter oRenderParameter)
 {
-	if( NULL != m_oText )
+	if( nullptr != m_oText )
 	{
         std::wstring sResult;
 		sResult += L"<w:r>";
@@ -113,12 +113,11 @@ int OOXFieldSeparate::GetType()
 {
 	return TYPE_OOX_FIELD;
 }
-std::wstring OOXFieldSeparate::RenderToRtf(RenderParameter oRenderParameter)
+std::wstring OOXFieldSeparate::RenderToRtf(RenderParameter /*oRenderParameter*/)
 {
-	std::wstring sResult;
 	return L"}{\\fldrslt";
 }
-std::wstring OOXFieldSeparate::RenderToOOX(RenderParameter oRenderParameter)
+std::wstring OOXFieldSeparate::RenderToOOX(RenderParameter /*oRenderParameter*/)
 {
 	return L"<w:fldChar w:fldCharType=\"separate\"/>";
 }
@@ -127,12 +126,11 @@ int OOXFieldEnd::GetType()
 {
 	return TYPE_OOX_FIELD;
 }
-std::wstring OOXFieldEnd::RenderToRtf(RenderParameter oRenderParameter)
+std::wstring OOXFieldEnd::RenderToRtf(RenderParameter /*oRenderParameter*/)
 {
-	std::wstring sResult;
 	return L"}}";
 }
-std::wstring OOXFieldEnd::RenderToOOX(RenderParameter oRenderParameter)
+std::wstring OOXFieldEnd::RenderToOOX(RenderParameter /*oRenderParameter*/)
 {
 	return L"<w:fldChar w:fldCharType=\"end\"/>";
 }
@@ -144,11 +142,11 @@ int RtfFormField::GetType()
 {
 	return TYPE_OOX_FORMFIELD;
 }
-std::wstring RtfFormField::RenderToRtf(RenderParameter oRenderParameter)
+std::wstring RtfFormField::RenderToRtf(RenderParameter /*oRenderParameter*/)
 {
 	return L"";
 }
-std::wstring RtfFormField::RenderToOOX(RenderParameter oRenderParameter)
+std::wstring RtfFormField::RenderToOOX(RenderParameter /*oRenderParameter*/)
 {
 	return L"";
 }
@@ -169,15 +167,12 @@ void RtfFieldInst::SetDefault()
 {
 	m_pTextItems = TextItemContainerPtr( new TextItemContainer() );
 }
-std::wstring RtfFieldInst::RenderToRtf(RenderParameter oRenderParameter)
+std::wstring RtfFieldInst::RenderToRtf(RenderParameter /*oRenderParameter*/)
 {
 	return L"";
 }
 std::wstring RtfFieldInst::RenderToOOX(RenderParameter oRenderParameter)
 {
-	RtfDocument*	pRtfDocument	= static_cast<RtfDocument*>	(oRenderParameter.poDocument);
-	OOXWriter*		pOOXWriter		= static_cast<OOXWriter*>	(oRenderParameter.poWriter);
-	
 	if (m_pTextItems)
 		return m_pTextItems->RenderToOOX(oRenderParameter);
 	else 
@@ -240,7 +235,7 @@ std::wstring RtfField::RenderToRtf(RenderParameter oRenderParameter)
 	
 	sResult += m_pInsert->m_pTextItems->RenderToRtf( oNewParam );
 	
-	if( true == m_bReferenceToEndnote )
+	if( m_bReferenceToEndnote )
 		sResult +=  L"\\fldalt";
 
     if( !m_sData.empty() )
@@ -261,7 +256,7 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 	
     std::wstring sResult;
 	
-	if( true == m_bTextOnly )
+	if( m_bTextOnly )
 	{
 		RenderParameter oNewParam = oRenderParameter;
 		oNewParam.nType = RENDER_TO_OOX_PARAM_RUN;
@@ -295,7 +290,7 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 			sResult += L"<w:del w:date=\"" + sDate +  L"\" w:author=\"" + XmlUtils::EncodeXmlString(sAuthor) + L"\" w:id=\"" + std::to_wstring(pOOXWriter->m_nCurTrackChangesId++).c_str() + L"\">";
 			m_pInsert->m_oCharProperty.m_nDeleted = PROP_DEF;
 		}
-		//поверяем на наличие гиперссылки
+		//check for the presence of a hyperlink
 		RenderParameter oNewParam = oRenderParameter;
 		oNewParam.nType = RENDER_TO_OOX_PARAM_PLAIN;
 		
@@ -313,16 +308,16 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
                 sHyperlink = sHyperlink.substr(0, nSplash);
 			}
 	
-		//оставляем только одну ссылку
+		//leave only one link
             XmlUtils::replace_all(sHyperlink, L"\"", L"" );
             boost::algorithm::trim(sHyperlink);
-		//заменяем пробелы на %20
+		//replace spaces with %20
             XmlUtils::replace_all(sHyperlink, L" ", L"%20" );
 
-		//добавляем в rels
+		//add to rels
 			OOXRelsWriter* poRelsWriter = static_cast<OOXRelsWriter*>( oRenderParameter.poRels );
             std::wstring sId = poRelsWriter->AddRelationship( L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink", XmlUtils::EncodeXmlString( sHyperlink ), false );
-		//добавляем гиперссылку в документ
+		//adding a hyperlink to a document
 
             sResult += L"<w:hyperlink r:id=\"" + sId + L"\" >";
 			oNewParam.nType = RENDER_TO_OOX_PARAM_RUN;
@@ -353,7 +348,7 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 			std::wstring props = m_pResult->m_oCharProperty.RenderToOOX(oRenderParameter);
             if (!props.empty()) props = L"<w:rPr>" + props + L"</w:rPr>";
 
-	//начинаем Field
+	//start Field
             sResult += L"<w:r>";
             if (!props.empty())
 				sResult += props;			
@@ -369,14 +364,14 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 				else
 					sResult += L"<w:calcOnExit w:val=\"0\"/>";
 
-				if (false == m_pInsert->m_pFormField->entrymcr.empty())
+				if ( !m_pInsert->m_pFormField->entrymcr.empty() )
 					sResult += L"<w:entryMacro w:val=\"" + m_pInsert->m_pFormField->entrymcr + L"\"/>";
-				if (false == m_pInsert->m_pFormField->exitmcr.empty())
+				if ( !m_pInsert->m_pFormField->exitmcr.empty() )
 					sResult += L"<w:exitMacro w:val=\"" + m_pInsert->m_pFormField->exitmcr + L"\"/>";
 
-				if (false == m_pInsert->m_pFormField->helptext.empty())
+				if ( !m_pInsert->m_pFormField->helptext.empty() )
 					sResult += L"<w:helpText w:type=\"text\" w:val=\"" + XmlUtils::EncodeXmlString(m_pInsert->m_pFormField->helptext) + L"\"/>";
-				if (false == m_pInsert->m_pFormField->stattext.empty())
+				if ( !m_pInsert->m_pFormField->stattext.empty() )
 					sResult += L"<w:statusText w:type=\"text\" w:val=\"" + XmlUtils::EncodeXmlString(m_pInsert->m_pFormField->stattext) + L"\"/>";
 				
 				if (m_pInsert->m_pFormField->type == 0)
@@ -389,10 +384,11 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 					case 3: sResult += L"<w:type w:val=\"currentDate\"/>"; break;
 					case 4: sResult += L"<w:type w:val=\"currentTime\"/>"; break;
 					case 5: sResult += L"<w:type w:val=\"calculated\"/>"; break;
+					default: break;
 					}
-					if (false == m_pInsert->m_pFormField->deftext.empty())
+					if ( !m_pInsert->m_pFormField->deftext.empty() )
 						sResult += L"<w:default w:val=\"" + XmlUtils::EncodeXmlString(m_pInsert->m_pFormField->deftext) + L"\"/>";
-					if (false == m_pInsert->m_pFormField->format.empty())
+					if ( !m_pInsert->m_pFormField->format.empty() )
 						sResult += L"<w:format w:val=\"" + XmlUtils::EncodeXmlString(m_pInsert->m_pFormField->format) + L"\"/>";
 					if (m_pInsert->m_pFormField->maxlen > 0)
 						sResult += L"<w:maxLength w:val=\"" + std::to_wstring(m_pInsert->m_pFormField->maxlen) + L"\"/>";
@@ -431,11 +427,11 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 				}
 			}
 			oNewParametr = oRenderParameter;
-	// разделитель
+	// separator
 			sResult += L"<w:r>";
 			sResult += L"<w:fldChar w:fldCharType=\"separate\"/></w:r>";
 			
-	//пишем содержание-кэш	
+	//write content-cache
 			if ((m_pResult->m_pTextItems) && (m_pResult->m_pTextItems->GetCount() > 0))
 			{
 				sResult +=  m_pResult->m_pTextItems->m_aArray[0]->RenderToOOX(oNewParametr);
@@ -468,7 +464,7 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 				sResult += L"</w:r>";
 			}
 	
-	//заканчиваем Field
+	//finishing Field
             sResult += L"<w:r>";
             if (!props.empty())
                 sResult += props;

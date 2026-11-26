@@ -26,7 +26,7 @@
 
 #include "SimpleTypes_Base.h"
 
-// Здесь представлены все простые типы Drawing-Main из спецификации Office Open Xml (20.1.10)
+// Here are all the simple Drawing-Main types from the Office Open Xml specification (20.1.10)
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------
@@ -1339,7 +1339,7 @@ namespace SimpleTypes
 		////new//////////////
 		shapetypeBallon,
 		shapetypeRightUpArrow,
-		//дубирует с WordArd - может задаваться как внутри текстого бокса, так и в виде объекта
+		//duplicates with WordArt - can be specified both inside a text box and as an object
 		shapetypeTextArchDownPour,
 		shapetypeTextArchUpPour,
 		shapetypeTextCanDown,
@@ -1742,7 +1742,7 @@ namespace SimpleTypes
 
 } // SimpleTypes
 
-// Здесь представлены все простые типы Drawing-Word из спецификации Office Open Xml (20.4.3)
+// Here are all the simple Drawing-Word types from the Office Open Xml specification (20.4.3)
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------
@@ -1883,19 +1883,19 @@ namespace SimpleTypes
 
 } // SimpleTypes
 
-// Здесь представлены все простые типы Drawing-Spreadsheet из спецификации Office Open Xml (20.5.3)
+// Here are all the simple Drawing-Spreadsheet types from the Office Open Xml specification (20.5.3)
 namespace SimpleTypes
 {
 
 } // SimpleTypes
 
-// Здесь представлены все простые типы Drawing-Charts из спецификации Office Open Xml (21.2.3, 21.3.3)
+// Here are all the simple Drawing-Charts types from the Office Open Xml specification (21.2.3, 21.3.3)
 namespace SimpleTypes
 {
 
 } // SimpleTypes
 
-// Здесь представлены все простые типы Drawing-Diagrams из спецификации Office Open Xml (21.4.7)
+// Here are all the simple Drawing-Diagrams types from the Office Open Xml specification (21.4.7)
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------

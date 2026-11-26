@@ -58,7 +58,7 @@ namespace PPT
 	public:
 		CStringWriter()
 		{
-			m_pData = NULL;
+			m_pData = nullptr;
 			m_lSize = 0;
 
 			m_pDataCur	= m_pData;
@@ -71,7 +71,7 @@ namespace PPT
 
         void AddSize(const size_t nSize)
 		{
-			if (NULL == m_pData)
+			if (nullptr == m_pData)
 			{
                 m_lSize = (std::max)(nSize, (size_t) 1000);
 				m_pData = (wchar_t*)malloc(m_lSize * sizeof(wchar_t));
@@ -90,9 +90,9 @@ namespace PPT
 				}
 
 				wchar_t* pRealloc = (wchar_t*)realloc(m_pData, m_lSize * sizeof(wchar_t));
-				if (NULL != pRealloc)
+				if (nullptr != pRealloc)
 				{
-					// реаллок сработал
+					// realloc worked
 			
 					m_pData		= pRealloc;
 					m_pDataCur	= m_pData + m_lSizeCur;
@@ -184,7 +184,7 @@ namespace PPT
 		{
 			RELEASEMEM(m_pData);
 			
-			m_pData = NULL;
+			m_pData = nullptr;
 			m_lSize = 0;
 
 			m_pDataCur	= m_pData;

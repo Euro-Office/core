@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "ElementSettings.h"
 #include "../../../../OOXML/SystemUtility/File.h"
@@ -32,8 +31,8 @@
 
 #include "../../../PptFile/Records/Drawing/ArtBlip.h"
 
-// это класс, использующийся для передачи свойств объектов,
-// например - указатель на картинку... (по PID'у)
+// this is a class used to transfer properties of objects,
+// for example, a pointer to an image... (by PID)
 
 CProperty::CProperty()
 {
@@ -41,20 +40,20 @@ CProperty::CProperty()
 	m_bIsBlip = false;
 	m_bComplex = false;
 	m_lValue = 0;
-	m_pOptions = NULL;
+	m_pOptions = nullptr;
 
 	m_bIsTruncated = false;
 }
 CProperty::~CProperty()
 {
 	if (m_pOptions)	delete []m_pOptions;
-	m_pOptions = NULL;
+	m_pOptions = nullptr;
 }
 void CProperty::FromStream(POLE::Stream* pStream)
 {
-	// читаем из стрима...
-	// только пока без учета bComplex
-	// т.к. Complex - учитывается в контейнере, хранящем все проперти
+	// read from the stream...
+	// only for now excluding bComplex
+	// because Complex - taken into account in the container storing all properties
 	USHORT lMem = StreamUtils::ReadWORD(pStream);
 	m_ePID = (ODRAW::ePropertyId)(lMem & 0x3FFF);
 
@@ -88,6 +87,7 @@ void CProperty::ComplexFromStream(POLE::Stream* pStream)
 			WORD nElems = StreamUtils::ReadWORD(pStream);
 			WORD nElemsAlloc = StreamUtils::ReadWORD(pStream);
 			WORD nElemSize = StreamUtils::ReadWORD(pStream);
+			(void)nElemsAlloc;
 
 			if (0xFFF0 == nElemSize)
 			{
@@ -95,7 +95,7 @@ void CProperty::ComplexFromStream(POLE::Stream* pStream)
 				m_bIsTruncated = TRUE;
 			}
 
-			LONG dwSize = nElems * nElemSize;
+			LONG dwSize = static_cast<LONG>(nElems) * nElemSize;
 
 			if (m_lValue != (dwSize + 6))
 			{
@@ -110,7 +110,7 @@ void CProperty::ComplexFromStream(POLE::Stream* pStream)
 		case ODRAW::fillBlip:
 		{
             PPT::SRecordHeader oHeader;
-			if (oHeader.ReadFromStream(pStream) == false)
+			if (!oHeader.ReadFromStream(pStream))
 			{
 				return;
 			}
@@ -127,6 +127,8 @@ void CProperty::ComplexFromStream(POLE::Stream* pStream)
                 PPT::CRecordOfficeArtBlip art_blip;
 				art_blip.ReadFromStream(oHeader, pStream);
 			}
+			default:
+				break;
 			}
 
 		}break;
@@ -167,8 +169,8 @@ void CProperties::FromStream(POLE::Stream* pStream, long lCount)
 		m_arProperties.push_back(elem);
 		m_arProperties[lIndex].FromStream(pStream);
 	}
-	// теперь читаем дополнительную информацию
-	// сортировано по pid'ам (но у нас пока просто по-порядку)
+	// now read more information
+	// sorted by pid (currently just in order)
 	for (size_t lIndex = 0; lIndex < m_lCount; ++lIndex)
 	{
 		m_arProperties[lIndex].ComplexFromStream(pStream);

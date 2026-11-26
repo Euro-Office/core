@@ -21,10 +21,7 @@ add_executable(CMapSerialize
 
 set_default_options(CMapSerialize)
 
-# Equivalent to ADD_DEPENDENCY(UnicodeConverter, kernel)
-# You'll need to make sure these targets are defined in your base.cmake
-target_link_libraries(CMapSerialize 
-    PRIVATE 
+target_link_libraries(CMapSerialize PRIVATE 
     UnicodeConverter 
     kernel
 )
@@ -35,10 +32,11 @@ set(ARTIFACT_FILE "${EO_CORE_OUTPUT_DIR}/cmap.bin")
 
 add_custom_command(
     OUTPUT "${ARTIFACT_FILE}"
-    COMMAND ${EO_CORE_OUTPUT_DIR}/CMapSerialize "${CMAKE_CURRENT_SOURCE_DIR}/../CMap/CMap"
-    COMMAND rm ${EO_CORE_OUTPUT_DIR}/CMapSerialize
+    COMMAND  ${EO_CORE_OUTPUT_DIR}/$<TARGET_FILE_NAME:CMapSerialize> "${CMAKE_CURRENT_SOURCE_DIR}/../CMap/CMap"
+    COMMAND ${CMAKE_COMMAND} -E remove ${EO_CORE_OUTPUT_DIR}/$<TARGET_FILE_NAME:CMapSerialize>
     DEPENDS CMapSerialize
     COMMENT "Executing CMapSerialize to create ${ARTIFACT_FILE}"
+    WORKING_DIRECTORY "${EO_CORE_OUTPUT_DIR}"
     VERBATIM
 )
 

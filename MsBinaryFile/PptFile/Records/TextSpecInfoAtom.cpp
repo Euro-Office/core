@@ -42,14 +42,12 @@ void CRecordTextSpecInfoAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Strea
     m_oHeader = oHeader;
     StreamUtils::StreamPosition(m_lOffsetInStream, pStream);
 
-    _UINT32 lMemCount = 0;
     while (true)
     {
         PPT::CTextSIRun elm;
         m_arrSIs.push_back(elm);
 
         NSStreamReader::Read(pStream, m_arrSIs.back());
-        lMemCount += m_arrSIs.back().lCount;
 
         long sz = (long)(pStream->tell() - m_lOffsetInStream);
 
@@ -57,9 +55,9 @@ void CRecordTextSpecInfoAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Strea
             break;
     }
 
-    // на всякий случай...
-    // здесь когда текст сначала другой (т.е. например - placeholder в мастере) -
-    // то у нас неправильно выставился m_lCount... на число m_lCount пилюем .. берем структур si скока прописано
+    // just in case...
+    // here when the text is first different (i.e. for example - placeholder in the master) -
+    // then we have set m_lCount incorrectly... we ignore m_lCount .. take as many si structures as specified
     StreamUtils::StreamSeek(m_lOffsetInStream + m_oHeader.RecLen, pStream);
 }
 

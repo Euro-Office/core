@@ -146,7 +146,7 @@ void draw_frame::pptx_convert(oox::pptx_conversion_context & Context)
 
 		if (baseStyleInst && ((!common_presentation_attlist_.presentation_user_transformed_) ||
 			((common_presentation_attlist_.presentation_user_transformed_) &&
-			(common_presentation_attlist_.presentation_user_transformed_->get() == false))))//векторная фигура презентаций 
+			(common_presentation_attlist_.presentation_user_transformed_->get() == false))))//vector presentation shape
 		{
 			style_instance * defaultStyle = Context.root()->odf_context().styleContainer().style_default_by_type(odf_types::style_family::Presentation);
 			if (defaultStyle) instances.push_back(defaultStyle);
@@ -156,7 +156,7 @@ void draw_frame::pptx_convert(oox::pptx_conversion_context & Context)
 		{
 			instances.push_back(baseStyleInst);
 		}
-		if (grStyleInst)//обычная векторная фигура
+		if (grStyleInst)//regular vector shape
 		{
 			style_instance * defaultStyle = Context.root()->odf_context().styleContainer().style_default_by_type(odf_types::style_family::Graphic);
 			if (defaultStyle) instances.push_back(defaultStyle);
@@ -357,7 +357,7 @@ void draw_image::pptx_convert(oox::pptx_conversion_context & Context)
 	{
 		Context.get_slide_context().set_text_box();
 	}
-////////////////////////////////////в принципе достаточно общая часть ...	
+///////////////////////////////////in principle, a fairly general part...
 	Context.get_text_context().start_object();
 
 	for (size_t i = 0; i < content_.size(); i++)
@@ -399,7 +399,7 @@ void draw_text_box::pptx_convert(oox::pptx_conversion_context & Context)
 		return;
 	}
 //---------------------------------------------------------------------------------------------------------------
-	Context.get_slide_context().set_text_box();	//rect с наваротами
+	Context.get_slide_context().set_text_box();	//rect with extras
 	Context.get_text_context().start_object();
 
 	for (size_t i = 0; i < content_.size(); i++)
@@ -447,7 +447,7 @@ void draw_object::pptx_convert(oox::pptx_conversion_context & Context)
 			if (Context.get_mediaitems()->is_internal_path(href, odfPath))
 			{
 				std::wstring objectPath = odfPath + FILE_SEPARATOR_STR + href;
-				// normalize path ???? todooo
+				// normalize path ???? TODO
 				XmlUtils::replace_all(objectPath, FILE_SEPARATOR_STR + std::wstring(L"./"), FILE_SEPARATOR_STR);
 				odf_document_ = odf_document_ptr(new odf_document(objectPath, tempPath, L""));
 			}
@@ -456,8 +456,8 @@ void draw_object::pptx_convert(oox::pptx_conversion_context & Context)
 		office_element *contentSubDoc = odf_document_ ? odf_document_->get_impl()->get_content() : NULL;
 		if (!contentSubDoc)
 		{
-			//здесь другой формат xml (не Open Office)
-			//временно - замещающая картинка(если она конечно присутствует)
+			//here is a different xml format (not Open Office)
+			//temporarily - a replacement image (if it is present, of course)
 			return;
 		}
 		object_odf_context objectBuild(href);
@@ -489,12 +489,12 @@ void draw_object::pptx_convert(oox::pptx_conversion_context & Context)
 			}
 		}
 //---------------------------------------------------------------------------------------------------------------------
-		if (objectBuild.object_type_ == 1)//диаграмма
+		if (objectBuild.object_type_ == 1)//diagram
 		{		
 			const std::wstring href_draw = xlink_attlist_.href_.get_value_or(L"Chart");
 			objectBuild.pptx_convert(Context);
 			
-			Context.get_slide_context().set_chart(href_draw); // в рисовательной части только место объекта, рамочки ... и релсы 
+			Context.get_slide_context().set_chart(href_draw); // in the drawing part there is only the place of the object, frames... and rels
 		}
 		else if (objectBuild.object_type_ == 2)//odt text
 		{
@@ -554,7 +554,7 @@ void draw_object::pptx_convert(oox::pptx_conversion_context & Context)
 		}
 		else
 		{
-			//замещающая картинка(если она конечно присутствует)
+			//replacement image (if it is present, of course)
 			Context.get_slide_context().set_use_image_replacement();
 		}
 	

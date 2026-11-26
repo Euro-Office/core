@@ -74,7 +74,7 @@ class IRecord
 {
 public:
     SRecordHeader m_oHeader;
-    _commonInfo* m_pCommonInfo = NULL;
+    _commonInfo* m_pCommonInfo = nullptr;
 
     virtual ~IRecord();
     virtual void ReadFromStream(SRecordHeader & oHeader, const XLS::CFStreamPtr &pStream) = 0;
@@ -113,14 +113,14 @@ public:
     template <typename T>
     void GetRecordsByType(std::vector<T>* pArray, bool bIsChild, bool bOnlyFirst = false) const
     {
-        if (NULL == pArray)
+        if (nullptr == pArray)
             return;
 
-        // возвращаем указатели, их не удалять наверху!!!!
+        // Return pointers; don't delete them at the top!!!!
         for (size_t nIndex = 0; nIndex < m_arRecords.size(); ++nIndex)
         {
             T pRec = dynamic_cast<T>(m_arRecords[nIndex]);
-            if (NULL != pRec)
+            if (nullptr != pRec)
             {
                 pArray->push_back(pRec);
                 if (bOnlyFirst)
@@ -131,7 +131,7 @@ public:
             else if ((bIsChild) && (m_arRecords[nIndex]->m_oHeader.IsContainer()))
             {
                 CRecordsContainer* pContainer = dynamic_cast<CRecordsContainer*>(m_arRecords[nIndex]);
-                if (NULL != pContainer)
+                if (nullptr != pContainer)
                 {
                     pContainer->GetRecordsByType(pArray, bIsChild, bOnlyFirst);
                 }

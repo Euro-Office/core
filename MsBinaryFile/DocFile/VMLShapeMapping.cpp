@@ -51,7 +51,7 @@ namespace DocFileFormat
 
 		m_pSpa				=	pSpa;
 		m_pCaller			=	pCaller;
-		m_pBlipStore		=	NULL;
+		m_pBlipStore		=	nullptr;
 
 		m_context			=	pConv;
 		m_pict				=	pPicture;
@@ -64,7 +64,7 @@ namespace DocFileFormat
         m_3dstyle			=	XMLTools::XMLElement(L"o:extrusion");
         m_textpath			=	XMLTools::XMLElement(L"v:textpath");
 
-		Record* recBs		=	NULL;
+		Record* recBs		=	nullptr;
 		if ((m_context) && (m_context->_doc))
 		{
 			OfficeArtContent* officeArt = m_context->_doc->GetOfficeArt();
@@ -105,10 +105,10 @@ namespace DocFileFormat
 //----------------------------------------------------------------------------------------------
 
 		ShapeContainer* pContainer = dynamic_cast<ShapeContainer*>(visited);
-		if ((pContainer != NULL) && (!pContainer->Children.empty()))
+		if ((pContainer != nullptr) && (!pContainer->Children.empty()))
 		{
 			Record* firstRecord = pContainer->Children[0];
-			if (firstRecord != NULL)
+			if (firstRecord != nullptr)
 			{
 				if (typeid(*firstRecord) == typeid(Shape))
 				{
@@ -127,7 +127,7 @@ namespace DocFileFormat
 	/// Converts a group of shapes
 	void VMLShapeMapping::WriteGroup (const GroupContainer* container)
 	{
-		if ((container != NULL) && (!container->Children.empty()))
+		if ((container != nullptr) && (!container->Children.empty()))
 		{
 			ShapeContainer* groupShape	=	static_cast<ShapeContainer*>(container->Children[0]);
 			GroupShapeRecord* gsr		=	static_cast<GroupShapeRecord*>(groupShape->Children[0]);
@@ -186,19 +186,20 @@ namespace DocFileFormat
 			{
 				if (container->Children[i])
 				{
-					if (typeid(*container->Children[i]) == typeid(ShapeContainer))
+					Record* pChildRecord = container->Children[i];
+					if (typeid(*pChildRecord) == typeid(ShapeContainer))
 					{
 						ShapeContainer* pChildShape	= static_cast<ShapeContainer*>(container->Children[i]);
 						if (pChildShape)
 						{
-							VMLShapeMapping vmlShapeMapping(m_context, m_pXmlWriter, m_pSpa, NULL,  m_pCaller, false, true);
+							VMLShapeMapping vmlShapeMapping(m_context, m_pXmlWriter, m_pSpa, nullptr,  m_pCaller, false, true);
 							pChildShape->Convert(&vmlShapeMapping);
 						}
 					}
-					else if (typeid(*container->Children[i]) == typeid(GroupContainer))
+					else if (typeid(*pChildRecord) == typeid(GroupContainer))
 					{
 						GroupContainer* pChildGroup = static_cast<GroupContainer*>(container->Children[i]);
-						m_pSpa = NULL;
+						m_pSpa = nullptr;
 						WriteGroup(pChildGroup);
 					}
 				}
@@ -224,19 +225,19 @@ namespace DocFileFormat
 	/// Converts a single shape
 	void VMLShapeMapping::WriteShape(const ShapeContainer* pContainer)
 	{
-		if ((NULL == pContainer) || (pContainer->Children.empty())) return;
+		if ((nullptr == pContainer) || (pContainer->Children.empty())) return;
 
 		Shape* pShape = static_cast<Shape*>(pContainer->Children[0]);
 		if (!pShape) return;
 
 		int				indexOLE = -1;
 		bool			freeform = true;
-		std::wstring	sShapeId;
 
 		std::vector<ODRAW::OfficeArtFOPTEPtr> options = pContainer->ExtractOptions();
 
 		ChildAnchor* pAnchor = pContainer->FirstChildWithType<ChildAnchor>();
 		ClientAnchor* clientAnchor = pContainer->FirstChildWithType<ClientAnchor>();
+		(void)clientAnchor;
 
 		WriteBeginShapeNode(pShape);
 
@@ -378,12 +379,9 @@ namespace DocFileFormat
 			}
 			break;
 			case ODRAW::protectionBooleanProperties:
-			{
-				//ProtectionBooleanProperties booleans(iter->op);
-			}
-			break;
 			case ODRAW::diagramBooleanProperties:
 			{
+				//ProtectionBooleanProperties booleans(iter->op);
 			}
 			break;
 			case ODRAW::groupShapeBooleanProperties:
@@ -399,7 +397,9 @@ namespace DocFileFormat
 			case ODRAW::shapePath:
 			{
 				bHavePath = true;
+				(void)bHavePath;
 				nShapePath = iter->op;
+				(void)nShapePath;
 			}break;
 			case ODRAW::pVertices:
 			{
@@ -497,7 +497,7 @@ namespace DocFileFormat
 			{
 				ODRAW::OfficeArtCOLORREF lineColor((_UINT32)iter->op);
 				m_context->_doc->CorrectColor(lineColor, nColorRGBBase, 5);
-				if (false == lineColor.sColorRGB.empty() && !pShape->fBackground)
+				if (!lineColor.sColorRGB.empty() && !pShape->fBackground)
 					m_pXmlWriter->WriteAttribute(L"strokecolor", (std::wstring(L"#") + lineColor.sColorRGB));
 			}break;
 			case ODRAW::lineWidth:
@@ -542,7 +542,7 @@ namespace DocFileFormat
 			}break;
 			case ODRAW::cxstyle:
 			{
-				if (pShape->GetShapeType() == NULL)
+				if (pShape->GetShapeType() == nullptr)
 				{
 					freeform = false;
 					m_pXmlWriter->WriteAttribute(L"type", L"#_x0000_t32");
@@ -553,6 +553,7 @@ namespace DocFileFormat
 				case 1:	m_pXmlWriter->WriteAttribute(L"o:connectortype", L"elbow");		break;
 				case 2:	m_pXmlWriter->WriteAttribute(L"o:connectortype", L"curved");	break;
 				case 3:	m_pXmlWriter->WriteAttribute(L"o:connectortype", L"none");		break;
+				default: break;
 				}
 			}break;
 			// FILL
@@ -560,7 +561,7 @@ namespace DocFileFormat
 			{
 				ODRAW::OfficeArtCOLORREF fillColor((_UINT32)iter->op);
 				m_context->_doc->CorrectColor(fillColor, nColorRGBBase, 1);
-				if (false == fillColor.sColorRGB.empty())
+				if (!fillColor.sColorRGB.empty())
 					m_pXmlWriter->WriteAttribute(L"fillcolor", (std::wstring(L"#") + fillColor.sColorRGB));
 
 				nColorRGBBase = fillColor.nColorRGB;
@@ -570,7 +571,7 @@ namespace DocFileFormat
 				ODRAW::OfficeArtCOLORREF fillBackColor((_UINT32)iter->op);
 				m_context->_doc->CorrectColor(fillBackColor, nColorRGBBase, 2);
 
-				if (false == fillBackColor.sColorRGB.empty())
+				if (!fillBackColor.sColorRGB.empty())
 					appendValueAttribute(&m_fill, L"color2", (std::wstring(L"#") + fillBackColor.sColorRGB));
 			}break;
 			case ODRAW::fillAngle:
@@ -632,19 +633,19 @@ namespace DocFileFormat
 			}break;
 			case ODRAW::fillBlip:
 			{
-				BlipStoreEntry* pFillBlip = NULL;
+				BlipStoreEntry* pFillBlip = nullptr;
 
-				if ((m_pict != NULL) && (m_pict->blipStoreEntry != NULL))
+				if ((m_pict != nullptr) && (m_pict->blipStoreEntry != nullptr))
 				{
 					// Word Art Texture
 					//fillBlip = this->_pict->BlipStoreEntry;
 				}
-				else if ((m_pBlipStore != NULL) && ((iter->op - 1) < m_pBlipStore->Children.size()))
+				else if ((m_pBlipStore != nullptr) && ((iter->op - 1) < m_pBlipStore->Children.size()))
 				{
 					pFillBlip = static_cast<BlipStoreEntry*>(m_pBlipStore->Children[iter->op - 1]);
 				}
 
-				if ((pFillBlip != NULL) && copyPicture(pFillBlip))
+				if ((pFillBlip != nullptr) && copyPicture(pFillBlip))
 				{
 					appendValueAttribute(&m_fill, L"r:id", std::wstring((L"rId") + std::to_wstring(m_nImageId)));
 				}
@@ -680,7 +681,7 @@ namespace DocFileFormat
 			{
 				ODRAW::OfficeArtCOLORREF shadowColor((_UINT32)iter->op);
 				m_context->_doc->CorrectColor(shadowColor, nColorRGBBase, 3);
-				if (false == shadowColor.sColorRGB.empty())
+				if (!shadowColor.sColorRGB.empty())
 					appendValueAttribute(&m_shadow, L"color", (std::wstring(L"#") + shadowColor.sColorRGB));
 			}break;
 			case ODRAW::shadowOffsetX:
@@ -750,7 +751,7 @@ namespace DocFileFormat
 			{
 				int index = (int)(iter->op - 1);
 
-				if ((m_pBlipStore != NULL) && (index < (int)m_pBlipStore->Children.size()))
+				if ((m_pBlipStore != nullptr) && (index < (int)m_pBlipStore->Children.size()))
 				{
 					BlipStoreEntry* oBlip = static_cast<BlipStoreEntry*>(m_pBlipStore->Children[index]);
 					if (copyPicture(oBlip))
@@ -817,6 +818,7 @@ namespace DocFileFormat
 			case ODRAW::threeDStyleBooleanProperties:
 			{
 				ODRAW::ThreeDStyleBooleanProperties* booleans = dynamic_cast<ODRAW::ThreeDStyleBooleanProperties*>(iter.get());
+				(void)booleans;
 			}break;
 			case ODRAW::threeDObjectBooleanProperties:
 			{
@@ -904,17 +906,18 @@ namespace DocFileFormat
 				switch (iter->op)
 				{
 				case 0:
-				case 4://обычный 							
+				case 4://regular
 					break;
 				case 1:
 				case 3:
-				case 5://верт (склони голову направо)						
+				case 5://vert (tilt your head to the right)
 					appendStyleProperty(sTextboxStyle, L"layout-flow", L"vertical");
 					break;
-				case 2://верт (склони голову налево)	
+				case 2://vert (tilt your head to the left)
 					appendStyleProperty(sTextboxStyle, L"layout-flow", L"vertical");
 					appendStyleProperty(sTextboxStyle, L"mso-layout-flow-alt", L"bottom-to-top");
 					break;
+				default: break;
 				}
 			}break;
 			case ODRAW::hspNext:
@@ -993,6 +996,7 @@ namespace DocFileFormat
 			default:
 			{
 				nProperty = iter->op;
+				(void)nProperty;
 			}break;
 			}
 		}
@@ -1016,7 +1020,7 @@ namespace DocFileFormat
 			ODRAW::PathParser oParser(pSI->complex.data, pVP->complex.data, m_arrGuides, xCoord, yCoord);
 			std::wstring path = oParser.GetVmlPath();
 
-			if (false == path.empty())
+			if (!path.empty())
 				m_pXmlWriter->WriteAttribute(L"path", path);
 		}
 		if (freeform && (!xCoord || !yCoord))
@@ -1068,7 +1072,7 @@ namespace DocFileFormat
 		}
 		else if (DocFileFormat::msosptPictureFrame == nCode)
 		{
-			if (bPicturePresent == false)
+			if (!bPicturePresent)
 				m_isPictureBroken = true;
 		}
 		else
@@ -1188,7 +1192,7 @@ namespace DocFileFormat
 		{
 			if (b3D)
 			{
-				appendValueAttribute(&m_3dstyle, L"v:ext", L"view" ); //??? вытащить
+				appendValueAttribute(&m_3dstyle, L"v:ext", L"view" ); //??? pull out
 			}
 			appendValueAttribute(&m_3dstyle, L"on", b3D ? L"t" : L"f" );
 			m_pXmlWriter->WriteString(m_3dstyle.GetXMLString());
@@ -1311,7 +1315,7 @@ namespace DocFileFormat
 
 			std::wstring sOleXml = textboxMapping.getOLEObject();
 			
-			if (false == sOleXml.empty())
+			if (!sOleXml.empty())
 				m_pXmlWriter->WriteString(sOleXml);
 			else
 			{
@@ -1320,7 +1324,7 @@ namespace DocFileFormat
 		}
 
 //ShapeType 
-		if (NULL != pShape->GetShapeType() /* && !m_isInlineShape*/) //bullete only???
+		if (nullptr != pShape->GetShapeType() /* && !m_isInlineShape*/) //bullete only???
 		{
 			VMLShapeTypeMapping oXmlMapper(m_pXmlWriter, m_isInlineShape);
 			pShape->GetShapeType()->Convert(&oXmlMapper);
@@ -1330,7 +1334,7 @@ namespace DocFileFormat
 	//
 	void VMLShapeMapping::WriteBeginShapeNode (const Shape* pShape)
 	{
-		if (NULL != pShape)
+		if (nullptr != pShape)
 		{
 			if (pShape->fBackground)
 			{
@@ -1361,7 +1365,7 @@ namespace DocFileFormat
 
 	void VMLShapeMapping::WriteEndShapeNode (const Shape* pShape)
 	{
-		if (NULL != pShape)
+		if (nullptr != pShape)
 		{
 			if (pShape->fBackground)
 			{
@@ -1394,7 +1398,7 @@ namespace DocFileFormat
 	{
 		std::wstring strXmlAttr;
 
-		if (NULL != pShape)
+		if (nullptr != pShape)
 		{
 			strXmlAttr += std::wstring(L"_x0000_s");
             strXmlAttr += std::to_wstring(pShape->GetShapeID());
@@ -1405,12 +1409,12 @@ namespace DocFileFormat
 
 	std::wstring VMLShapeMapping::GetLineFrom(const ChildAnchor* pAnchor, bool twistDimensions) const
 	{
-		//Если линия находится в группе, то координаты должны быть в Twips
-		//Если линия находится в группе, то координаты должны быть в других единицах измерения (например в twips)
+		//If the line is in a group, then the coordinates should be in Twips
+		//If the line is in a group, then the coordinates must be in other units of measurement (for example, in twips)
 
 		std::wstring strXmlFrom;
 
-		if (NULL != pAnchor)
+		if (nullptr != pAnchor)
 		{
 			int left	= pAnchor->rcgBounds.topLeftAngle.x;
 			int top	= pAnchor->rcgBounds.topLeftAngle.y;
@@ -1450,11 +1454,11 @@ namespace DocFileFormat
 
 	std::wstring VMLShapeMapping::GetLineTo(const ChildAnchor* pAnchor, bool twistDimensions) const
 	{
-		//Если линия находится в группе, то координаты должны быть в других единицах измерения (например в twips)
+		//If the line is in a group, then the coordinates must be in other units of measurement (for example, in twips)
 
 		std::wstring strXmlTo;
 
-		if (NULL != pAnchor)
+		if (nullptr != pAnchor)
 		{
 			int right	= pAnchor->rcgBounds.topLeftAngle.x + pAnchor->rcgBounds.size.cx;
 			int bottom	= pAnchor->rcgBounds.topLeftAngle.y + pAnchor->rcgBounds.size.cy;
@@ -1536,12 +1540,12 @@ namespace DocFileFormat
 					if (metaBlip)
 					{
 						//meta images can be compressed
-						unsigned char* decompressed = NULL;
+						unsigned char* decompressed = nullptr;
 						unsigned int decompressedSize = 0;
 
 						decompressedSize = metaBlip->Decompress(&decompressed);
 
-						if (0 != decompressedSize && NULL != decompressed)
+						if (0 != decompressedSize && nullptr != decompressed)
 						{
 							boost::shared_array<unsigned char> arDecompressed(decompressed);
 							m_context->_docx->ImagesList.push_back(ImageFileStructure(GetTargetExt(oBlip->btWin32), arDecompressed, decompressedSize));
@@ -1565,7 +1569,7 @@ namespace DocFileFormat
 
 							oBlip->btWin32 = ImageHelper::SaveImageToFileFromDIB(bitBlip->m_pvBits, bitBlip->pvBitsSize, file_name);
 							
-							unsigned char* pData = NULL;
+							unsigned char* pData = nullptr;
 							DWORD nData = 0;
 							if (NSFile::CFileBinary::ReadAllBytes(file_name, &pData, nData))
 							{
@@ -1573,7 +1577,7 @@ namespace DocFileFormat
 									boost::shared_array<unsigned char>(pData), nData, oBlip->btWin32));
 								result = true;	
 								break;
-							}//в случае ошибки конвертации -храним оригинальный dib
+							}//in case of conversion error, store the original dib
 						}
 						m_context->_docx->ImagesList.push_back(ImageFileStructure(GetTargetExt(oBlip->btWin32), 
 							bitBlip->m_pvBits, bitBlip->pvBitsSize, oBlip->btWin32));
@@ -1637,7 +1641,7 @@ namespace DocFileFormat
 
 	void VMLShapeMapping::AppendDimensionToStyle(std::wstring& style, const PictureDescriptor* pict, bool twistDimensions) const
 	{
-		if (  pict != NULL ) 
+		if (  pict != nullptr ) 
 		{
 			double xScaling = pict->mx / 1000.0;
 			double yScaling = pict->my / 1000.0;
@@ -1661,7 +1665,7 @@ namespace DocFileFormat
 
 	void VMLShapeMapping::AppendDimensionToStyle(std::wstring& style, const Spa* pSpa, bool twistDimensions) const
 	{
-		if (pSpa != NULL )
+		if (pSpa != nullptr )
 		{
 			//append size and position ...
 
@@ -1695,7 +1699,7 @@ namespace DocFileFormat
 
 	void VMLShapeMapping::AppendDimensionToStyle(std::wstring& style, const ChildAnchor* anchor, bool twistDimensions) const
 	{
-		if (anchor != NULL)
+		if (anchor != nullptr)
 		{
 			DocFileFormat::Rectangle bounds = anchor->rcgBounds;
 
@@ -1855,7 +1859,7 @@ namespace DocFileFormat
 			case ODRAW::posrelh:
 				{
 					nRelH = iter->op;
-					if (false == m_inGroup)
+					if (!m_inGroup)
 						appendStyleProperty(oStyle, L"mso-position-horizontal-relative", mapHorizontalPositionRelative((PositionHorizontalRelative)iter->op));
 				}break;
 			case ODRAW::posv:
@@ -1865,7 +1869,7 @@ namespace DocFileFormat
 			case ODRAW::posrelv:
 				{
 					nRelV = iter->op;
-					if (false == m_inGroup)
+					if (!m_inGroup)
 						appendStyleProperty(oStyle, L"mso-position-vertical-relative", mapVerticalPositionRelative((PositionVerticalRelative)iter->op));
 				}break;
 //	BOOLEANS
@@ -1875,10 +1879,10 @@ namespace DocFileFormat
 
 					if (booleans->fUsefBehindDocument && booleans->fBehindDocument)
 					{
-						//за текстом (The shape is behind the text, so the z-index must be negative.)
+						//behind the text (The shape is behind the text, so the z-index must be negative.)
 						m_isInlineShape = false;
 
-						if (false == bZIndex/* && false == m_inGroup*/) // Пример.doc
+						if (!bZIndex/* && false == m_inGroup*/) // Пример.doc
 						{
 							appendStyleProperty(oStyle, L"z-index", FormatUtils::IntToWideString(-zIndex - 0x7ffff));
 							bZIndex = true;
@@ -1933,7 +1937,7 @@ namespace DocFileFormat
 			}
 		}
 		
-		if (nRelH < 0 && m_pSpa && false == m_inGroup)
+		if (nRelH < 0 && m_pSpa && !m_inGroup)
 		{
 			//if (m_pSpa->bx == TEXT && bZIndex)
 			//{
@@ -1946,7 +1950,7 @@ namespace DocFileFormat
 			else if (m_pSpa->bx == TEXT)
 				appendStyleProperty(oStyle, L"mso-position-horizontal-relative", mapHorizontalPositionRelative(msoprhText));
 		}
-		if (nRelV < 0 && m_pSpa && false == m_inGroup)
+		if (nRelV < 0 && m_pSpa && !m_inGroup)
 		{
 			//if (m_pSpa->by == TEXT && bZIndex) 
 			//{
@@ -1963,12 +1967,13 @@ namespace DocFileFormat
 		{
 			m_isInlineShape = true;
 		}	
-		if (false == m_isInlineShape && false == bZIndex  && false == m_inGroup)
+		if (!m_isInlineShape && !bZIndex  && !m_inGroup)
 		{
 			appendStyleProperty( oStyle, L"z-index", FormatUtils::IntToWideString(zIndex + 0x7ffff));
 			bZIndex = true;
+			(void)bZIndex;
 		}
-		if (false == m_isInlineShape && false == m_inGroup)
+		if (!m_isInlineShape && !m_inGroup)
 		{
 			if (nPosH >= 0)
 			{
@@ -2029,11 +2034,11 @@ namespace DocFileFormat
 
 		AppendOptionsToStyle( style, options, zIndex );
 		
-		//don't append the dimension info to lines, 
+		//don't append the dimension info to lines,
 		// because they have "from" and "to" attributes to decline the dimension
-		if (false == shape->is<LineType>())
+		if (!shape->is<LineType>())
 		{
-			if ( (m_pSpa != NULL) && ( anchor == NULL ) )
+			if ( (m_pSpa != nullptr) && ( anchor == nullptr ) )
 			{
 				//this shape is placed directly in the document, 
 				//so use the FSPA to build the style
@@ -2053,15 +2058,15 @@ namespace DocFileFormat
 		}
 		else
 		{
-			//если не написать тип позиции, то будет inline
-			if ( anchor != NULL )
+			//if the position type isn't written, it will be inline
+			if ( anchor != nullptr )
 			{
 				appendStylePropertyFirst( style, L"position", L"absolute" );
 			}
 			else if (m_pSpa)
 			{
 				//append size and position ...
-				//if (m_pSpa->fAnchorLock)//это возможность смены привязки , а не ее тип
+				//if (m_pSpa->fAnchorLock)//this is the ability to change the anchor, not its type
 
 				if (m_isInlineShape)/*m_pSpa->bx == TEXT && m_pSpa->by == TEXT*/
 				{
@@ -2168,7 +2173,7 @@ namespace DocFileFormat
 		case 2:	return L"tile";
 		case 3:	return L"frame";
 		case 4:	return L"gradient";
-		case 5:	return L"gradientRadial";
+		case 5:
 		case 6:	return L"gradientRadial";
 		case 7:	return L"gradient";
 		case 9:
@@ -2196,7 +2201,7 @@ namespace DocFileFormat
 	std::wstring VMLShapeMapping::getWrapType (const Spa* pSpa) const
 	{
 		// spec values
-		// 0 = like 2 but doesn't equire absolute object
+		// 0 = like 2 but doesn't require absolute object
 		// 1 = no text next to shape
 		// 2 = wrap around absolute object
 		// 3 = wrap as if no object present
@@ -2205,7 +2210,7 @@ namespace DocFileFormat
 
 		std::wstring wrapType = L"none";
 
-		if (pSpa != NULL)
+		if (pSpa != nullptr)
 		{
 			switch (pSpa->wr)
 			{
@@ -2332,8 +2337,8 @@ namespace DocFileFormat
 	
 	size_t VMLShapeMapping::ApplyPrimitive(DrawingPrimitives * primitives, size_t index)
 	{
-		if (!primitives) return index++;
-		if (index >= primitives->size()) return index++;
+		if (!primitives) return index;
+		if (index >= primitives->size()) return index;
 
 		DrawingPrimitive *primitive = dynamic_cast<DrawingPrimitive *>(primitives->at(index));
 		
@@ -2344,16 +2349,16 @@ namespace DocFileFormat
 			DrawingPrimitiveCTextBox * callout = dynamic_cast<DrawingPrimitiveCTextBox *>(primitive);
 			if ((callout) && (callout->txbx))
 			{
-				//временно обычный текстбокс
+				//temporary normal textbox
 				callout->txbx->xa += callout->xa;
 				callout->txbx->ya += callout->ya;
 
-				WritePrimitiveProps(dynamic_cast<DrawingPrimitive*>(callout->txbx), (index==0?true:false));
+				WritePrimitiveProps(dynamic_cast<DrawingPrimitive*>(callout->txbx), (index==0));
 			}
-			//todooo нарисовать кастомный шейп
+			//TODO draw a custom shape
 		}
 		else 
-			WritePrimitiveProps(primitive, (index==0?true:false));
+			WritePrimitiveProps(primitive, (index==0));
 
 		
 		if (primitive->type == 0x0000) 
@@ -2436,7 +2441,7 @@ namespace DocFileFormat
                 strStyle += L"margin-left:"	+ std::to_wstring( (int)x.ToPoints()) + L"pt;";
                 strStyle +=	L"margin-top:"	+ std::to_wstring( (int)y.ToPoints()) + L"pt;";
 
-				if (false == m_inGroup)
+				if (!m_inGroup)
 				{
 					std::wstring xMargin;
 					std::wstring yMargin;
@@ -2451,7 +2456,6 @@ namespace DocFileFormat
 				}
 
                 std::wstring strSize = std::to_wstring(primitive->dxa) + L"," + std::to_wstring(primitive->dya);
-                std::wstring strOrigin = std::to_wstring(primitive->xa) + L"," + std::to_wstring(primitive->ya);
 				
 				m_pXmlWriter->WriteAttribute( L"coordsize", strSize);
 				//m_pXmlWriter->WriteAttribute( L"coordorigin"), strOrigin);

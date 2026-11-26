@@ -63,7 +63,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:chr") == sName )
 							m_oChr = new OOX::Logic::CChr( oItem );
@@ -116,7 +116,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:accPr") == sName )
 						{
@@ -172,7 +172,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:argSz") == sName )
 							m_oArgSz = new OOX::Logic::CArgSz( oItem );
@@ -230,7 +230,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:ctrlPr") == sName )
 						{
@@ -284,7 +284,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:barPr") == sName )
 						{
@@ -340,7 +340,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:ctrlPr") == sName )
 						{
@@ -422,7 +422,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:borderBoxPr") == sName )
 						{
@@ -517,7 +517,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:aln") == sName )
 							m_oAln = new OOX::Logic::CAln( oItem );
@@ -590,7 +590,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:boxPr") == sName )
 						{
@@ -646,7 +646,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:begChr") == sName )
 							m_oBegChr = new OOX::Logic::CBegChr( oItem );
@@ -758,7 +758,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:baseJc") == sName )
 							m_oBaseJc = new OOX::Logic::CBaseJc( oItem );
@@ -829,7 +829,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:eqArrPr") == sName )
 							AssignPtrXmlContent(pItem, CEqArrPr, oItem)
@@ -852,7 +852,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("m:eqArrPr") == sName )
 					AssignPtrXmlContent(pItem, CEqArrPr, oReader)
@@ -907,7 +907,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:type") == sName )
 							m_oType = new OOX::Logic::CType( oItem );
@@ -974,7 +974,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:den") == sName )
 						{
@@ -1037,7 +1037,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:ctrlPr") == sName )
 						{
@@ -1097,7 +1097,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:e") == sName )
 						{
@@ -1160,7 +1160,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:chr") == sName )
 							m_oChr = new OOX::Logic::CChr( oItem );
@@ -1241,7 +1241,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:e") == sName )
 						{
@@ -1297,7 +1297,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:ctrlPr") == sName )
 						{
@@ -1358,7 +1358,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:e") == sName )
 						{
@@ -1421,7 +1421,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:ctrlPr") == sName )
 						{
@@ -1552,7 +1552,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:count") == sName )
 							m_oCount = new OOX::Logic::CCount( oItem );
@@ -1616,7 +1616,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:mcPr") == sName )
 						{
@@ -1665,7 +1665,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:mc") == sName )
 							AssignPtrXmlContent(pItem, Logic::CMc, oItem)
@@ -1685,7 +1685,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("m:mc") == sName )
 					AssignPtrXmlContent(pItem, Logic::CMc, oReader)
@@ -1752,7 +1752,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:e") == sName )
 						{
@@ -1777,7 +1777,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("m:e") == sName )
 				{
@@ -1839,7 +1839,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:mPr") == sName )
 							AssignPtrXmlContent(pItem, CMPr, oItem)
@@ -1864,7 +1864,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("m:mPr") == sName )
 					AssignPtrXmlContent(pItem, CMPr, oReader)
@@ -1936,7 +1936,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:e") == sName )
 						{
@@ -2006,7 +2006,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:jc") == sName )
 							m_oMJc = new OOX::Logic::CMJc( oItem );
@@ -2064,7 +2064,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:ctrlPr") == sName )
 						{
@@ -2159,7 +2159,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:e") == sName )
 						{
@@ -2287,7 +2287,7 @@ namespace OOX
 		}
 		CMRun::~CMRun()
 		{
-			ClearItems();
+			CMRun::ClearItems();
 		}
 		void CMRun::ClearItems()
 		{
@@ -2310,7 +2310,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement* pItem = NULL;
+						WritingElement* pItem = nullptr;
 
 						if (L"w:annotationRef" == sName)
 							AssignPtrXmlContent(pItem, CAnnotationRef, oItem)
@@ -2405,7 +2405,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement* pItem = NULL;
+				WritingElement* pItem = nullptr;
 
 				if (L"w:annotationRef" == sName)
 					pItem = new CAnnotationRef();
@@ -2657,7 +2657,7 @@ namespace OOX
 		}
 		void CMIns::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("w:author"), m_sAuthor )
 					WritingElement_ReadAttributes_Read_else_if( oReader, _T("w:date"),   m_oDate  )
@@ -2687,7 +2687,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:ctrlPr") == sName )
 						{
@@ -2753,7 +2753,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:radPr") == sName )
 						{
@@ -2833,7 +2833,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:ctrlPr") == sName )
 						{
@@ -2893,7 +2893,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:sPrePr") == sName )
 						{
@@ -2983,7 +2983,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:ctrlPr") == sName )
 						{
@@ -3042,7 +3042,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:sSubPr") == sName )
 						{
@@ -3121,7 +3121,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:alnScr") == sName )
 							m_oAlnScr = new OOX::Logic::CAlnScr( oItem );
@@ -3187,7 +3187,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:sSubSupPr") == sName )
 						{
@@ -3276,7 +3276,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:ctrlPr") == sName )
 						{
@@ -3335,7 +3335,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("m:sSupPr") == sName )
 						{
@@ -3406,7 +3406,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = XmlUtils::GetNameNoNS(oItem.GetName());
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if (L"brkBin" == sName)
 							m_oBrkBin = oItem;
@@ -3453,7 +3453,7 @@ namespace OOX
 			while (oReader.ReadNextSiblingNode(nCurDepth))
 			{
 				std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if (L"brkBin" == sName)
 					m_oBrkBin = oReader;
@@ -3526,7 +3526,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if (L"m:aln" == sName)
 							m_oAln = new OOX::Logic::CAln(oItem);
@@ -3606,7 +3606,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if (L"m:ctrlPr" == sName)
 						{
@@ -3687,7 +3687,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if (L"m:baseJc" == sName)
 							m_oBaseJc = new OOX::Logic::CBaseJc(oItem);
@@ -3938,7 +3938,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if (L"w:rP" == sName)
 							m_oRPr = new OOX::Logic::CRunProperty(oItem);
@@ -4011,14 +4011,14 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if (L"m:dPr" == sName)
 							AssignPtrXmlContent(pItem, CDelimiterPr, oItem)
 						else if (L"m:e" == sName)
 						{
 							AssignPtrXmlContent(pItem, CElement, oItem)
-							//нужно заранее знать колисество столбцов для отрисовки
+							//need to know in advance the number of columns to draw
 							m_lColumn++;
 						}
 
@@ -4039,14 +4039,14 @@ namespace OOX
 			while (oReader.ReadNextSiblingNode(nCurDepth))
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if (L"m:dPr" == sName)
 					AssignPtrXmlContent(pItem, CDelimiterPr, oReader)
 				else if (L"m:e" == sName)
 				{
 					AssignPtrXmlContent(pItem, CElement, oReader)
-					//нужно заранее знать колисество столбцов для отрисовки
+					//need to know in advance the number of columns to draw
 					m_lColumn++;
 				}
 
@@ -4178,7 +4178,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if (L"m:e" == sName)
 						{

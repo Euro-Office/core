@@ -36,7 +36,7 @@ namespace XLSB
 
     SrvFmtCV::SrvFmtCV(XLS::CFRecord& record)
     {
-        load(record);
+        SrvFmtCV::load(record);
     }
 
     SrvFmtCV::~SrvFmtCV()

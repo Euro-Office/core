@@ -45,11 +45,11 @@ namespace oox {
 
 oox_chart_series::oox_chart_series()
 {
-	values_[0].type	= L"c:cat";//подписи
+	values_[0].type	= L"c:cat";//labels
 	values_[1].type	= L"c:val";
 	values_[2].type	= L"c:xVal";
 	values_[3].type	= L"c:yVal";
-	values_[4].type	= L"c:bubbleSize";//заместо оси х!!!!
+	values_[4].type	= L"c:bubbleSize";//instead of the x axis!!!!
 
 	iSymbolMarkerType_		= 0;
 	bCacheOnly_				= false;
@@ -105,10 +105,10 @@ void oox_chart_series::parse_properties()
 		iSymbolMarkerType_ = intVal.get() ;
 		if (iSymbolMarkerType_ == 2)
 		{
-			odf_reader::GetProperty(content_.properties_, L"symbol-name", intVal);   //    квадратики, звездочки ...
+			odf_reader::GetProperty(content_.properties_, L"symbol-name", intVal);   //    squares, stars...
 			
 			if (intVal)	iSymbolMarkerType_	= intVal.get() ;
-			else		iSymbolMarkerType_	= 0;//выключим
+			else		iSymbolMarkerType_	= 0;//turn it off
 		}
 	}
 	//odf_reader::GetProperty(content_.properties_, L"data-label-symbol", boolVal);
@@ -269,7 +269,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 										CP_XML_ATTR(L"idx", i);
 										CP_XML_NODE(L"c:v")
 										{
-											CP_XML_STREAM() <<  label_.str_cache[i];
+											CP_XML_STREAM() << XmlUtils::EncodeXmlString(label_.str_cache[i]);
 										}
 									}
 								}
@@ -281,7 +281,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 				{
 					CP_XML_NODE(L"c:v")
 					{
-						CP_XML_STREAM() <<  label_.str_cache[0];
+						CP_XML_STREAM() << XmlUtils::EncodeXmlString(label_.str_cache[0]);
 					}
 				}
 
@@ -314,7 +314,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 						{
 							CP_XML_NODE(L"c:f")
 							{
-								CP_XML_CONTENT(values_[i].numRef_.formula);
+								CP_XML_STREAM() << XmlUtils::EncodeXmlString(values_[i].numRef_.formula);
 							}
 						
 							if (values_[i].numRef_.num_cache_count > 0)
@@ -396,7 +396,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 						{
 							CP_XML_NODE(L"c:f")
 							{
-								CP_XML_CONTENT(values_[i].strRef_.formula);
+								CP_XML_STREAM() << XmlUtils::EncodeXmlString(values_[i].strRef_.formula);
 							}
 							if (false == values_[i].strRef_.str_cache.empty())
 							{
@@ -415,7 +415,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 											CP_XML_ATTR(L"idx", j);
 											CP_XML_NODE(L"c:v")
 											{
-												CP_XML_CONTENT(v);
+												CP_XML_STREAM() << XmlUtils::EncodeXmlString(v);
 											}
 										}
 									}
@@ -439,7 +439,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 									CP_XML_ATTR(L"idx", j);
 									CP_XML_NODE(L"c:v")
 									{
-										CP_XML_CONTENT(v);
+										CP_XML_STREAM() << XmlUtils::EncodeXmlString(v);
 									}
 								}
 							}
@@ -545,10 +545,10 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 						int symbol = intVal.get();
 						if (symbol == 2)
 						{
-							odf_reader::GetProperty(content_.points_[i].properties_, L"symbol-name", intVal);   //    квадратики, звездочки ...
+							odf_reader::GetProperty(content_.points_[i].properties_, L"symbol-name", intVal);   //    squares, stars...
 
 							if (intVal)	symbol = intVal.get();
-							else		symbol = 0;//выключим
+							else		symbol = 0;//turn it off
 						}
 						CP_XML_NODE(L"c:marker")
 						{
@@ -668,7 +668,7 @@ _CP_PTR(oox_chart_series) oox_pie_series::create()
 }
 void oox_pie_series::oox_serialize(std::wostream & _Wostream)
 {
-	content_.fill_.clear();		//авто подбор цветов
+	content_.fill_.clear();		//auto color selection
 
 	CP_XML_WRITER(_Wostream)
     {

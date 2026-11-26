@@ -22,11 +22,10 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 #include "Theme.h"
 
-PPT::CTheme::CTheme(_typeMaster type) : m_arColorScheme(), m_arFonts(), m_arBrushes(),
-m_arPens(), m_arEffects(), m_arLayouts(), m_eType(type), m_wasBulletStart(false),
+PPT::CTheme::CTheme(_typeMaster type) : m_eType(type), m_arColorScheme(), m_arFonts(), m_arBrushes(),
+m_arPens(), m_arEffects(), m_arLayouts(), m_wasBulletStart(false),
 m_bulletPos(0)
 {
 	Clear();
@@ -155,7 +154,7 @@ void PPT::CTheme::CalculateStyle(CTheme *pTheme, CTextStyles &oStyle)
 {
 	LONG lCountColors = (LONG)pTheme->m_arColorScheme.size();
 
-	// пока здесь расчитываются только цвета
+	// so far only colors are calculated here
 	size_t nLevels = 10;
 	for (size_t i = 0; i < nLevels; ++i)
 	{

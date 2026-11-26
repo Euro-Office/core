@@ -90,10 +90,6 @@ CAnnotFieldInfo::CActionFieldPr* ReadAction(NSOnlineOfficeBinToPdf::CBufferReade
 		break;
 	}
 	case 10: // Named
-	{
-		pRes->wsStr1 = pReader->ReadString();
-		break;
-	}
 	case 6: // URI
 	{
 		pRes->wsStr1 = pReader->ReadString();
@@ -115,6 +111,10 @@ CAnnotFieldInfo::CActionFieldPr* ReadAction(NSOnlineOfficeBinToPdf::CBufferReade
 		pRes->arrStr.reserve(n);
 		for (int i = 0; i < n; ++i)
 			pRes->arrStr.push_back(pReader->ReadString());
+		break;
+	}
+	default:
+	{
 		break;
 	}
 	}
@@ -144,20 +144,20 @@ CAnnotFieldInfo::CAnnotFieldInfo() : IAdvancedCommand(AdvancedCommandType::Annot
 	m_oBorder.nType  = 0;
 	m_oBorder.dWidth = 0.0;
 
-	m_pMarkupPr       = NULL;
-	m_pTextPr         = NULL;
-	m_pInkPr          = NULL;
-	m_pLinePr         = NULL;
-	m_pTextMarkupPr   = NULL;
-	m_pSquareCirclePr = NULL;
-	m_pPolygonLinePr  = NULL;
-	m_pPopupPr        = NULL;
-	m_pFreeTextPr     = NULL;
-	m_pCaretPr        = NULL;
-	m_pStampPr        = NULL;
-	m_pRedactPr       = NULL;
-	m_pLinkPr         = NULL;
-	m_pWidgetPr       = NULL;
+	m_pMarkupPr       = nullptr;
+	m_pTextPr         = nullptr;
+	m_pInkPr          = nullptr;
+	m_pLinePr         = nullptr;
+	m_pTextMarkupPr   = nullptr;
+	m_pSquareCirclePr = nullptr;
+	m_pPolygonLinePr  = nullptr;
+	m_pPopupPr        = nullptr;
+	m_pFreeTextPr     = nullptr;
+	m_pCaretPr        = nullptr;
+	m_pStampPr        = nullptr;
+	m_pRedactPr       = nullptr;
+	m_pLinkPr         = nullptr;
+	m_pWidgetPr       = nullptr;
 }
 CAnnotFieldInfo::~CAnnotFieldInfo()
 {
@@ -412,7 +412,7 @@ CAnnotFieldInfo::CRedactAnnotPr*       CAnnotFieldInfo::GetRedactAnnotPr()      
 CAnnotFieldInfo::CLinkAnnotPr*         CAnnotFieldInfo::GetLinkAnnotPr()         { return m_pLinkPr; }
 CAnnotFieldInfo::CWidgetAnnotPr*       CAnnotFieldInfo::GetWidgetAnnotPr()       { return m_pWidgetPr; }
 
-bool CAnnotFieldInfo::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter* pCorrector)
+bool CAnnotFieldInfo::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter*  /*pCorrector*/)
 {
 	BYTE nType = pReader->ReadByte();
 	SetType(nType);
@@ -765,7 +765,7 @@ void CAnnotFieldInfo::CCaretAnnotPr::Read(NSOnlineOfficeBinToPdf::CBufferReader*
 double CAnnotFieldInfo::CStampAnnotPr::GetRotate() { return m_nRotate; }
 const std::wstring& CAnnotFieldInfo::CStampAnnotPr::GetName() { return m_wsName; }
 void CAnnotFieldInfo::CStampAnnotPr::GetInRect(double& dRD1, double& dRD2, double& dRD3, double& dRD4) { dRD1 = m_dInRect[0]; dRD2 = m_dInRect[1]; dRD3 = m_dInRect[2]; dRD4 = m_dInRect[3]; }
-void CAnnotFieldInfo::CStampAnnotPr::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, int nFlags)
+void CAnnotFieldInfo::CStampAnnotPr::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, int  /*nFlags*/)
 {
 	m_wsName = pReader->ReadString();
 	m_nRotate = pReader->ReadDouble();
@@ -817,8 +817,8 @@ void CAnnotFieldInfo::CRedactAnnotPr::Read(NSOnlineOfficeBinToPdf::CBufferReader
 
 CAnnotFieldInfo::CLinkAnnotPr::CLinkAnnotPr()
 {
-	m_pAction = NULL;
-	m_pPA = NULL;
+	m_pAction = nullptr;
+	m_pPA = nullptr;
 }
 CAnnotFieldInfo::CLinkAnnotPr::~CLinkAnnotPr()
 {
@@ -890,12 +890,13 @@ CAnnotFieldInfo::CWidgetAnnotPr::CButtonWidgetPr*    CAnnotFieldInfo::CWidgetAnn
 CAnnotFieldInfo::CWidgetAnnotPr::CTextWidgetPr*      CAnnotFieldInfo::CWidgetAnnotPr::GetTextWidgetPr()      { return m_pTextPr; }
 CAnnotFieldInfo::CWidgetAnnotPr::CChoiceWidgetPr*    CAnnotFieldInfo::CWidgetAnnotPr::GetChoiceWidgetPr()    { return m_pChoicePr; }
 CAnnotFieldInfo::CWidgetAnnotPr::CSignatureWidgetPr* CAnnotFieldInfo::CWidgetAnnotPr::GetSignatureWidgetPr() { return m_pSignaturePr; }
+void CAnnotFieldInfo::CWidgetAnnotPr::SetFontName(const std::wstring& sName) { m_wsFN = sName; }
 CAnnotFieldInfo::CWidgetAnnotPr::CWidgetAnnotPr(BYTE nType)
 {
-	m_pButtonPr    = NULL;
-	m_pTextPr      = NULL;
-	m_pChoicePr    = NULL;
-	m_pSignaturePr = NULL;
+	m_pButtonPr    = nullptr;
+	m_pTextPr      = nullptr;
+	m_pChoicePr    = nullptr;
+	m_pSignaturePr = nullptr;
 
 	m_nType = nType;
 	switch (nType)
@@ -932,6 +933,10 @@ CAnnotFieldInfo::CWidgetAnnotPr::CWidgetAnnotPr(BYTE nType)
 		m_pSignaturePr = new CWidgetAnnotPr::CSignatureWidgetPr();
 		break;
 	}
+	default:
+	{
+		break;
+	}
 	}
 }
 CAnnotFieldInfo::CWidgetAnnotPr::~CWidgetAnnotPr()
@@ -945,7 +950,7 @@ CAnnotFieldInfo::CWidgetAnnotPr::~CWidgetAnnotPr()
 		RELEASEOBJECT(m_arrAction[i]);
 }
 
-CAnnotFieldInfo::CActionFieldPr::CActionFieldPr() : pNext(NULL) {}
+CAnnotFieldInfo::CActionFieldPr::CActionFieldPr() : pNext(nullptr) {}
 CAnnotFieldInfo::CActionFieldPr::~CActionFieldPr() { RELEASEOBJECT(pNext); }
 void CAnnotFieldInfo::CWidgetAnnotPr::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, BYTE nType)
 {
@@ -1101,7 +1106,7 @@ BYTE* CAnnotFieldInfo::CWidgetAnnotPr::CTextWidgetPr::GetRender(LONG& nLen)
 	nLen = m_nRenderLen;
 	return m_pRender;
 }
-void CAnnotFieldInfo::CWidgetAnnotPr::CTextWidgetPr::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, int nFlags, int nWidgetFlag)
+void CAnnotFieldInfo::CWidgetAnnotPr::CTextWidgetPr::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, int nFlags, int  /*nWidgetFlag*/)
 {
 	if (nFlags & (1 << 9))
 		m_wsV = pReader->ReadString();
@@ -1174,7 +1179,7 @@ void CAnnotFieldInfo::CWidgetAnnotPr::CChoiceWidgetPr::Read(NSOnlineOfficeBinToP
 CAnnotFieldDelete::CAnnotFieldDelete() : IAdvancedCommand(AdvancedCommandType::DeleteAnnot) {}
 CAnnotFieldDelete::~CAnnotFieldDelete() {}
 int CAnnotFieldDelete::GetID() { return m_nID; }
-bool CAnnotFieldDelete::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter* pCorrector)
+bool CAnnotFieldDelete::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter*  /*pCorrector*/)
 {
 	m_nID = pReader->ReadInt();
 	return true;
@@ -1290,7 +1295,7 @@ CRedact::~CRedact()
 		RELEASEOBJECT(m_arrRedact[i]);
 }
 const std::vector<CRedact::SRedact*>& CRedact::GetRedact() { return m_arrRedact; }
-bool CRedact::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter* pCorrector)
+bool CRedact::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter*  /*pCorrector*/)
 {
 	int n = pReader->ReadInt();
 	m_arrRedact.reserve(n);
@@ -1299,7 +1304,7 @@ bool CRedact::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRe
 		SRedact* pRedact = new SRedact();
 		pRedact->sID = pReader->ReadString();
 		int m = pReader->ReadInt();
-		pRedact->arrQuadPoints.reserve(m * 8);
+		pRedact->arrQuadPoints.reserve(static_cast<size_t>(m) * 8);
 		for (int j = 0; j < m; ++j)
 		{
 			pRedact->arrQuadPoints.push_back(pReader->ReadDouble());

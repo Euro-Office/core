@@ -301,7 +301,7 @@ CFile.prototype["getGlyphs"] = function(originIndex)
 	let res = this._getGlyphs(originIndex);
 	// there is no need to delete the result; this buffer is used as a text buffer 
 	// for text commands on other pages. After receiving ALL text pages, 
-	// you need to call destroyTextInfo()
+	// need to call destroyTextInfo()
 	this.unlockPageNumForFontsLoader();
 
 	if (page.fonts.length > 0)
@@ -536,7 +536,7 @@ function readAnnot(reader, rec, readDoubleFunc, readDouble2Func, readStringFunc,
 		rec["BE"]["S"] = reader.readByte();
 		rec["BE"]["I"] = readDoubleFunc.call(reader);
 	}
-	// Special annotation color - С
+	// Special annotation color - C
 	if (flags & (1 << 3))
 	{
 		let n = reader.readInt();
@@ -1174,7 +1174,7 @@ function readWidgetType(reader, rec, readDoubleFunc, readDouble2Func, readString
 		if (flags & (1 << 9))
 			rec["value"] = readStringFunc.call(reader);
 		let IFflags = reader.readInt();
-		// Header - СA
+		// Header - CA
 		if (flags & (1 << 10))
 			rec["caption"] = readStringFunc.call(reader);
 		// Rollover header - RC

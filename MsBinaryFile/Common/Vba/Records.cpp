@@ -31,13 +31,16 @@
 #include <map>
 #include <locale>
 
-#define GETBITS(from, numL, numH) ((from & (((1 << (numH - numL + 1)) - 1) << numL)) >> numL)
-#define GETBIT(from, num) ((from & (1 << num)) != 0)
+#undef GETBITS
+#undef GETBIT
+#define GETBITS(from, numL, numH) (((from) & (((1u << ((numH) - (numL) + 1)) - 1) << (numL))) >> (numL))
+#define GETBIT(from, num) (((from) & (1u << (num))) != 0)
 
 namespace VBA
 {
 	const std::string int2str(const int val, const int radix)
 	{
+		(void)radix;
 		static char num_buf[10] = {};
 #if defined(_WIN32) || defined(_WIN64)
 		_itoa_s(val, num_buf, 9, radix);
@@ -48,6 +51,7 @@ namespace VBA
 	}
 	const std::wstring int2wstr(const int val, const int radix)
 	{
+		(void)radix;
 #if defined(_WIN32) || defined(_WIN64)
 		static wchar_t num_buf[20] = {};
 		_itow_s(val, num_buf, 19, radix);
@@ -110,7 +114,7 @@ namespace VBA
 			return oConverter.toUnicode(buffer, size, nCodePage, true);
 		}
 		else
-		{//текущая локаль
+		{//current locale
 
 			std::locale loc("");
 			std::ctype<wchar_t> const &facet = std::use_facet<std::ctype<wchar_t> >(loc);
@@ -288,7 +292,7 @@ namespace VBA
 	};
 
 //------------------------------------------------------------------------------------------
-	StdFont::StdFont(CVbaFileStreamPtr stream) { load(stream); }
+	StdFont::StdFont(CVbaFileStreamPtr stream) { StdFont::load(stream); }
 	BaseRecordPtr StdFont::clone()
 	{
 		return BaseRecordPtr(new StdFont(*this));
@@ -321,7 +325,7 @@ namespace VBA
 		}
 	}
 //------------------------------------------------------------------------------------------
-	TextProps::TextProps(CVbaFileStreamPtr stream) { load(stream); }
+	TextProps::TextProps(CVbaFileStreamPtr stream) { TextProps::load(stream); }
 	BaseRecordPtr TextProps::clone()
 	{
 		return BaseRecordPtr(new TextProps(*this));
@@ -334,7 +338,6 @@ namespace VBA
 
 		*stream >> MinorVersion >> MajorVersion >> cbTextProps;
 		
-		_UINT32 pos = stream->GetDataPos();
 		*stream >> flag2;
 		TextPropsPropMask propMask(flag2);
 
@@ -379,7 +382,7 @@ namespace VBA
 		}
 	}
 //------------------------------------------------------------------------------------------
-	AnsiString::AnsiString(CVbaFileStreamPtr stream) { load(stream); }
+	AnsiString::AnsiString(CVbaFileStreamPtr stream) { AnsiString::load(stream); }
 	BaseRecordPtr AnsiString::clone()
 	{
 		return BaseRecordPtr(new AnsiString(*this));
@@ -401,7 +404,7 @@ namespace VBA
 		}
 	}
 //------------------------------------------------------------------------------------------
-	Utf16String::Utf16String(CVbaFileStreamPtr stream) { load(stream); }
+	Utf16String::Utf16String(CVbaFileStreamPtr stream) { Utf16String::load(stream); }
 	BaseRecordPtr Utf16String::clone()
 	{
 		return BaseRecordPtr(new Utf16String(*this));
@@ -579,7 +582,7 @@ namespace VBA
 		}
 	}
 //-------------------------------------------------------------------------------------------------------
-	PROJECTSYSKIND::PROJECTSYSKIND(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTSYSKIND::PROJECTSYSKIND(CVbaFileStreamPtr stream) { PROJECTSYSKIND::load(stream); }
 	BaseRecordPtr PROJECTSYSKIND::clone()
 	{
 		return BaseRecordPtr(new PROJECTSYSKIND(*this));
@@ -590,7 +593,7 @@ namespace VBA
 		*stream >> sizeOf >> SysKind;
 	}
 //-------------------------------------------------------------------------------
-	PROJECTCOMPATVERSION::PROJECTCOMPATVERSION(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTCOMPATVERSION::PROJECTCOMPATVERSION(CVbaFileStreamPtr stream) { PROJECTCOMPATVERSION::load(stream); }
 	PROJECTCOMPATVERSION::~PROJECTCOMPATVERSION() {}
 	BaseRecordPtr PROJECTCOMPATVERSION::clone()
 	{
@@ -602,7 +605,7 @@ namespace VBA
 		*stream >> sizeOf >> CompatVersion;
 	}
 //-------------------------------------------------------------------------------
-	PROJECTLCID::PROJECTLCID(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTLCID::PROJECTLCID(CVbaFileStreamPtr stream) { PROJECTLCID::load(stream); }
 	PROJECTLCID::~PROJECTLCID() {}
 	BaseRecordPtr PROJECTLCID::clone()
 	{
@@ -614,7 +617,7 @@ namespace VBA
 		*stream >> sizeOf >> Lcid;
 	}
 //-------------------------------------------------------------------------------
-	PROJECTLCIDINVOKE::PROJECTLCIDINVOKE(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTLCIDINVOKE::PROJECTLCIDINVOKE(CVbaFileStreamPtr stream) { PROJECTLCIDINVOKE::load(stream); }
 	PROJECTLCIDINVOKE::~PROJECTLCIDINVOKE() {}
 	BaseRecordPtr PROJECTLCIDINVOKE::clone()
 	{
@@ -626,7 +629,7 @@ namespace VBA
 		*stream >> sizeOf >> LcidInvoke;
 	}
 //-------------------------------------------------------------------------------	
-	PROJECTCODEPAGE::PROJECTCODEPAGE(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTCODEPAGE::PROJECTCODEPAGE(CVbaFileStreamPtr stream) { PROJECTCODEPAGE::load(stream); }
 	PROJECTCODEPAGE::~PROJECTCODEPAGE() {}
 	BaseRecordPtr PROJECTCODEPAGE::clone()
 	{
@@ -640,7 +643,7 @@ namespace VBA
 		stream->CodePage = CodePage;
 	}
 //-------------------------------------------------------------------------------
-	PROJECTNAME::PROJECTNAME(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTNAME::PROJECTNAME(CVbaFileStreamPtr stream) { PROJECTNAME::load(stream); }
 	PROJECTNAME::~PROJECTNAME() {}
 	BaseRecordPtr PROJECTNAME::clone()
 	{
@@ -651,7 +654,7 @@ namespace VBA
 		ProjectName.load(stream);
 	}
 //-------------------------------------------------------------------------------
-	PROJECTDOCSTRING::PROJECTDOCSTRING(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTDOCSTRING::PROJECTDOCSTRING(CVbaFileStreamPtr stream) { PROJECTDOCSTRING::load(stream); }
 	PROJECTDOCSTRING::~PROJECTDOCSTRING() {}
 	BaseRecordPtr PROJECTDOCSTRING::clone()
 	{
@@ -665,7 +668,7 @@ namespace VBA
 		uDocString.load(stream);
 	}
 //-------------------------------------------------------------------------------
-	PROJECTHELPFILEPATH::PROJECTHELPFILEPATH(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTHELPFILEPATH::PROJECTHELPFILEPATH(CVbaFileStreamPtr stream) { PROJECTHELPFILEPATH::load(stream); }
 	PROJECTHELPFILEPATH::~PROJECTHELPFILEPATH() {}
 	BaseRecordPtr PROJECTHELPFILEPATH::clone()
 	{
@@ -679,7 +682,7 @@ namespace VBA
 		HelpFile2.load(stream);
 	}
 //-------------------------------------------------------------------------------
-	PROJECTHELPCONTEXT::PROJECTHELPCONTEXT(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTHELPCONTEXT::PROJECTHELPCONTEXT(CVbaFileStreamPtr stream) { PROJECTHELPCONTEXT::load(stream); }
 	PROJECTHELPCONTEXT::~PROJECTHELPCONTEXT() {}
 	BaseRecordPtr PROJECTHELPCONTEXT::clone()
 	{
@@ -691,7 +694,7 @@ namespace VBA
 		*stream >> sizeOf >> HelpContext;
 	}
 //-------------------------------------------------------------------------------
-	PROJECTLIBFLAGS::PROJECTLIBFLAGS(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTLIBFLAGS::PROJECTLIBFLAGS(CVbaFileStreamPtr stream) { PROJECTLIBFLAGS::load(stream); }
 	PROJECTLIBFLAGS::~PROJECTLIBFLAGS() {}
 	BaseRecordPtr PROJECTLIBFLAGS::clone()
 	{
@@ -703,7 +706,7 @@ namespace VBA
 		*stream >> sizeOf >> ProjectLibFlags;
 	}
 //-------------------------------------------------------------------------------
-	PROJECTVERSION::PROJECTVERSION(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTVERSION::PROJECTVERSION(CVbaFileStreamPtr stream) { PROJECTVERSION::load(stream); }
 	PROJECTVERSION::~PROJECTVERSION() {}
 	BaseRecordPtr PROJECTVERSION::clone()
 	{
@@ -720,7 +723,7 @@ namespace VBA
 	//ConstantName = VbaIdentifier 
 	//ConstantValue = ["-"] 1 * 5DIGIT
 
-	PROJECTCONSTANTS::PROJECTCONSTANTS(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTCONSTANTS::PROJECTCONSTANTS(CVbaFileStreamPtr stream) { PROJECTCONSTANTS::load(stream); }
 	PROJECTCONSTANTS::~PROJECTCONSTANTS() {}
 	BaseRecordPtr PROJECTCONSTANTS::clone()
 	{
@@ -735,7 +738,7 @@ namespace VBA
 		uConstants.load(stream);
 	}
 //-------------------------------------------------------------------------------
-	REFERENCENAME::REFERENCENAME(CVbaFileStreamPtr stream) { load(stream); }
+	REFERENCENAME::REFERENCENAME(CVbaFileStreamPtr stream) { REFERENCENAME::load(stream); }
 	REFERENCENAME::~REFERENCENAME() {}
 	BaseRecordPtr REFERENCENAME::clone()
 	{
@@ -749,7 +752,7 @@ namespace VBA
 		uName.load(stream);
 	}
 //-------------------------------------------------------------------------------
-	REFERENCEORIGINAL::REFERENCEORIGINAL(CVbaFileStreamPtr stream) { load(stream); }
+	REFERENCEORIGINAL::REFERENCEORIGINAL(CVbaFileStreamPtr stream) { REFERENCEORIGINAL::load(stream); }
 	REFERENCEORIGINAL::~REFERENCEORIGINAL() {}
 	BaseRecordPtr REFERENCEORIGINAL::clone()
 	{
@@ -760,7 +763,7 @@ namespace VBA
 		LibidOriginal.load(stream);
 	}
 //-------------------------------------------------------------------------------
-	REFERENCEREGISTERED::REFERENCEREGISTERED(CVbaFileStreamPtr stream) { load(stream); }
+	REFERENCEREGISTERED::REFERENCEREGISTERED(CVbaFileStreamPtr stream) { REFERENCEREGISTERED::load(stream); }
 	REFERENCEREGISTERED::~REFERENCEREGISTERED() {}
 	BaseRecordPtr REFERENCEREGISTERED::clone()
 	{
@@ -775,7 +778,7 @@ namespace VBA
 		*stream >> Reserved1 >> Reserved2;
 	}
 //-------------------------------------------------------------------------------
-	REFERENCEPROJECT::REFERENCEPROJECT(CVbaFileStreamPtr stream) { load(stream); }
+	REFERENCEPROJECT::REFERENCEPROJECT(CVbaFileStreamPtr stream) { REFERENCEPROJECT::load(stream); }
 	REFERENCEPROJECT::~REFERENCEPROJECT() {}
 	BaseRecordPtr REFERENCEPROJECT::clone()
 	{
@@ -792,7 +795,7 @@ namespace VBA
 		*stream >> MajorVersion >> MinorVersion;
 	}
 //-------------------------------------------------------------------------------
-	REFERENCECONTROL::REFERENCECONTROL(CVbaFileStreamPtr stream) { load(stream); }
+	REFERENCECONTROL::REFERENCECONTROL(CVbaFileStreamPtr stream) { REFERENCECONTROL::load(stream); }
 	REFERENCECONTROL::~REFERENCECONTROL() {}
 	BaseRecordPtr REFERENCECONTROL::clone()
 	{
@@ -813,17 +816,13 @@ namespace VBA
 			NameRecordExtended = boost::make_shared<REFERENCENAME>(stream);
 			*stream >> Reserved3;
 		}
-		else
-		{
-			Reserved3 = Id; // = 0x0030
-		}
 
 		*stream >> SizeExtended;
 		LibidExtended.load(stream);
 		*stream >> Reserved4 >> Reserved5 >> OriginalTypeLib >> Cookie;
 	}
 //-------------------------------------------------------------------------------
-	PROJECTCOOKIE::PROJECTCOOKIE(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTCOOKIE::PROJECTCOOKIE(CVbaFileStreamPtr stream) { PROJECTCOOKIE::load(stream); }
 	PROJECTCOOKIE::~PROJECTCOOKIE() {}
 	BaseRecordPtr PROJECTCOOKIE::clone()
 	{
@@ -836,7 +835,7 @@ namespace VBA
 		*stream >> Id >> sizeOf >> Cookie;
 	}
 //-----------------------------------------------------------------------------------
-	PROJECTMODULES::PROJECTMODULES(CVbaFileStreamPtr stream) { load(stream); }
+	PROJECTMODULES::PROJECTMODULES(CVbaFileStreamPtr stream) { PROJECTMODULES::load(stream); }
 	PROJECTMODULES::~PROJECTMODULES() {}
 	BaseRecordPtr PROJECTMODULES::clone()
 	{
@@ -1128,7 +1127,7 @@ namespace VBA
 		}
 	}
 //------------------------------------------------------------------------------------------
-	SiteClassInfo::SiteClassInfo(CVbaFileStreamPtr stream) { load(stream); }
+	SiteClassInfo::SiteClassInfo(CVbaFileStreamPtr stream) { SiteClassInfo::load(stream); }
 	BaseRecordPtr SiteClassInfo::clone()
 	{
 		return BaseRecordPtr(new SiteClassInfo(*this));
@@ -1222,7 +1221,7 @@ namespace VBA
 		}
 	}
 //------------------------------------------------------------------------------------------
-	FormObjectDepthTypeCount::FormObjectDepthTypeCount(CVbaFileStreamPtr stream) { load(stream); }
+	FormObjectDepthTypeCount::FormObjectDepthTypeCount(CVbaFileStreamPtr stream) { FormObjectDepthTypeCount::load(stream); }
 	BaseRecordPtr FormObjectDepthTypeCount::clone()
 	{
 		return BaseRecordPtr(new FormObjectDepthTypeCount(*this));
@@ -1241,7 +1240,7 @@ namespace VBA
 		}
 	}
 //------------------------------------------------------------------------------------------
-	OleSiteConcreteControl::OleSiteConcreteControl(CVbaFileStreamPtr stream) { load(stream); }
+	OleSiteConcreteControl::OleSiteConcreteControl(CVbaFileStreamPtr stream) { OleSiteConcreteControl::load(stream); }
 	BaseRecordPtr OleSiteConcreteControl::clone()
 	{
 		return BaseRecordPtr(new OleSiteConcreteControl(*this));
@@ -1309,7 +1308,6 @@ namespace VBA
 		{
 			*stream >> RuntimeLicKeyLengthAndCompression;
 		}
-		pos1 = stream->GetDataPos();
 		if (propMask.fControlSource)
 		{
 			*stream >> ControlSourceLengthAndCompression;
@@ -1355,8 +1353,8 @@ namespace VBA
 		}
 	}
 //------------------------------------------------------------------------------------------
-	FormSiteData::FormSiteData(CVbaFileStreamPtr stream) { load(stream); }
-	FormSiteData::FormSiteData(CVbaFileStreamPtr stream, bool _bClassTableEnable) { bClassTableEnable = _bClassTableEnable; load(stream); }
+	FormSiteData::FormSiteData(CVbaFileStreamPtr stream) { FormSiteData::load(stream); }
+	FormSiteData::FormSiteData(CVbaFileStreamPtr stream, bool _bClassTableEnable) { bClassTableEnable = _bClassTableEnable; FormSiteData::load(stream); }
 	BaseRecordPtr FormSiteData::clone()
 	{
 		return BaseRecordPtr(new FormSiteData(*this));
@@ -1382,7 +1380,7 @@ namespace VBA
 		_UINT32 pos1 = stream->GetDataPos();
 
 		int countSites = 0;
-		for (_UINT16 i = 0; i < CountOfSites; ++i)
+		for (_UINT32 i = 0; i < CountOfSites; ++i)
 		{
 			FormObjectDepthTypeCountPtr ptr = FormObjectDepthTypeCountPtr(new FormObjectDepthTypeCount(stream));
 			SiteDepthsAndTypes.push_back(ptr);
@@ -1398,13 +1396,13 @@ namespace VBA
 		if (count_padding > 0 && count_padding < 4)
 			stream->skipBytes(count_padding);
 
-		for (_UINT16 i = 0; i < CountOfSites; ++i)
+		for (_UINT32 i = 0; i < CountOfSites; ++i)
 		{
 			Sites.push_back(OleSiteConcreteControlPtr(new OleSiteConcreteControl(stream)));
 		}
 	}
 //------------------------------------------------------------------------------------------
-	FormDesignExData::FormDesignExData(CVbaFileStreamPtr stream) { load(stream); }
+	FormDesignExData::FormDesignExData(CVbaFileStreamPtr stream) { FormDesignExData::load(stream); }
 	BaseRecordPtr FormDesignExData::clone()
 	{
 		return BaseRecordPtr(new FormDesignExData(*this));

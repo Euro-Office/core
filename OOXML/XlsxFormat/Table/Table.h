@@ -374,7 +374,7 @@ namespace OOX
 			nullable<SimpleTypes::CUnsignedDecimalNumber> m_oCount;
 		};
 
-		//необработанные child:
+		//raw child:
 		//<extLst>
 		class CTableFile : public OOX::FileGlobalEnumerated, public OOX::IFileContainer
 		{
@@ -386,7 +386,7 @@ namespace OOX
 			CTableFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 			{
 				m_bSpreadsheets = true;
-				read( oRootPath, oPath );
+				CTableFile::read( oRootPath, oPath );
 			}
 			virtual ~CTableFile()
 			{

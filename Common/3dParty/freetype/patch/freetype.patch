@@ -1,0 +1,51 @@
+diff --git a/src/base/ftobjs.c b/src/base/ftobjs.c
+index acefdf4..ff28434 100644
+--- a/src/base/ftobjs.c
++++ b/src/base/ftobjs.c
+@@ -16,6 +16,9 @@
+  */
+ 
+ 
++#ifdef BUILDING_WASM_MODULE
++#include <wasm_jmp.h>
++#endif
+ #include <freetype/ftlist.h>
+ #include <freetype/ftoutln.h>
+ #include <freetype/ftfntfmt.h>
+@@ -176,7 +179,11 @@
+ 
+     /* throw away volatileness; use `jump_buffer' or the  */
+     /* compiler may warn about an unused local variable   */
++#ifdef BUILDING_WASM_MODULE
++    ft_longjmp_ex( *(ft_jmp_buf*) jump_buffer, 1 );
++#else
+     ft_longjmp( *(ft_jmp_buf*) jump_buffer, 1 );
++#endif
+   }
+ 
+ 
+diff --git a/src/sfnt/ttcmap.c b/src/sfnt/ttcmap.c
+index 6fae704..7a3df6f 100644
+--- a/src/sfnt/ttcmap.c
++++ b/src/sfnt/ttcmap.c
+@@ -4411,11 +4411,20 @@
+ 
+             valid.num_glyphs = face->maxp_num_glyphs;
+ 
++#ifdef BUILDING_WASM_MODULE
++            try
++#else
+             if ( ft_setjmp( FT_VALIDATOR( &valid )->jump_buffer) == 0 )
++#endif
+             {
+               /* validate this cmap sub-table */
+               error = clazz->validate( cmap, FT_VALIDATOR( &valid ) );
+             }
++#ifdef BUILDING_WASM_MODULE
++            catch ( int )
++            {
++            }
++#endif
+ 
+             if ( !valid.validator.error )
+             {

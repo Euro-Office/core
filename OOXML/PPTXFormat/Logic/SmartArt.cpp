@@ -82,12 +82,12 @@ namespace PPTX
 		{
 			if (!pDiagramData) return NULL;
 
-			// easy4cargo1.pptx - слайд 2 - в диаграмме Smart вместо ссылки на drawing.xml ссылка на стороннюю картинку
+			// easy4cargo1.pptx - slide 2 - in the Smart diagram, instead of a link to drawing.xml, a link to a third-party image
 			OOX::CPath pathDiagramData = pDiagramData->m_strFilename;
 
 			int a1 = (int)pathDiagramData.GetFilename().find(L".");
 			std::wstring strId = pathDiagramData.GetFilename().substr(4, pathDiagramData.GetFilename().length() - 8);
-			//стандартизированные имена only
+			//standardized names only
 
 			OOX::CPath pathDiagramDrawing = pathDiagramData.GetDirectory() + FILE_SEPARATOR_STR + L"drawing" + strId + L".xml";
 
@@ -111,7 +111,7 @@ namespace PPTX
 
 			m_pDataContainer = oFileData.smart_dynamic_cast<OOX::IFileContainer>();
 
-			// это smart art ..есть у него drawing или нет - неважно
+			// this is smart art ..whether it has drawing or not - it doesn't matter
 			smart_ptr<OOX::File> oFileDrawing;
 			OOX::CDiagramDrawing* pDiagramDrawing = NULL;
 
@@ -122,8 +122,8 @@ namespace PPTX
 			}
 			else
 			{
-				//Monetizing_Innovation.pptx (слайд 13) - diagrams/data1.xml не ссылается на diagrams/drawing1.xml
-				//пробуем по тому же пути с номером data.xml - ниже			
+				//Monetizing_Innovation.pptx (slide 13) - diagrams/data1.xml doesn't link to diagrams/drawing1.xml
+				//try the same path with data.xml number - below
 			}
 			pDiagramDrawing = dynamic_cast<OOX::CDiagramDrawing*>(oFileDrawing.GetPointer());
 
@@ -331,7 +331,7 @@ namespace PPTX
 						pDiagramData->fromPPTY(pReader);	
 
 						pReader->SaveDstContentRels(strDstDiagram + FILE_SEPARATOR_STR + L"_rels" + FILE_SEPARATOR_STR + pDiagramData->m_sOutputFilename + L".rels");
-						// !!! id_drawing что в data пишется относительно контейнера выше
+						// !!! id_drawing what is written in data relative to the container above
 						if (pDiagramDrawing.IsInit())
 						{
 							unsigned int nRId = pReader->m_pRels->WriteRels(pDiagramDrawing->type().RelationType(), pDiagramDrawing->m_sOutputFilename, L"");

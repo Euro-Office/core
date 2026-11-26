@@ -572,7 +572,7 @@ void anim_par::pptx_convert(oox::pptx_conversion_context & Context)
 	_CP_OPT(int)			presentationPresetId;
 	_CP_OPT(int)			presentationPresetPresetSubType;
 
-	bool isSlideAnimation = false; // NOTE: Анимация применяется к самому слайду, а не элементу на слайде
+	bool isSlideAnimation = false; // NOTE: The animation is applied to the slide itself, not the element on the slide
 
 	_CP_OPT(int)	accelerate; 
 	_CP_OPT(int)	decelerate;
@@ -705,14 +705,14 @@ void anim_par::pptx_convert(oox::pptx_conversion_context & Context)
 	if (anim_par_array_.size())
 	{
 		for(size_t i = 0; i < anim_par_array_.size(); i++)
-			anim_par_array_[i]->pptx_convert(Context); // это для самого слайда (то что и нужно)
+			anim_par_array_[i]->pptx_convert(Context); // this is for the slide itself (that's what's needed)
 	}
 	for (size_t i = 0; i < anim_seq_array_.size(); i++)
     {
 		anim_seq_array_[i]->pptx_convert(Context);
 	}
 /////////////////////////////////////////////////////////////////
-//внутренние эффекты - те что внутри одной последовательности
+//internal effects - those that are within one sequence
 	for (size_t i = 0; i < content_.size(); i++)
     {
 		content_[i]->pptx_convert(Context);
@@ -726,7 +726,7 @@ void anim_par::add_child_element( xml::sax * Reader, const std::wstring & Ns, co
 	if CP_CHECK_NAME(L"anim", L"par") 
 		CP_CREATE_ELEMENT(anim_par_array_);
 	else if	CP_CHECK_NAME(L"anim", L"seq") 
-		CP_CREATE_ELEMENT(anim_seq_array_);//более 1 элемента- взаимосвязанная анимация (между фигурами)
+		CP_CREATE_ELEMENT(anim_seq_array_);//more than 1 element - interconnected animation (between shapes)
 	else
 		CP_CREATE_ELEMENT(content_);
 }
@@ -1145,13 +1145,19 @@ void anim_transitionFilter::convert_slide_transition_filter(oox::pptx_conversion
 		break;
 	case smil_transition_type::checkerBoardWipe:
 		type = L"checker";
-		if (filter_attlist_.smil_subtype_.get() == L"across")	dir = L"horz";
-		if (filter_attlist_.smil_subtype_.get() == L"down")	dir = L"vert";
+		if (filter_attlist_.smil_subtype_)
+		{
+			if (filter_attlist_.smil_subtype_.get() == L"across")	dir = L"horz";
+			if (filter_attlist_.smil_subtype_.get() == L"down")	dir = L"vert";
+		}
 		break;
 	case smil_transition_type::blindsWipe:
 		type = L"blinds";
-		if (filter_attlist_.smil_subtype_.get() == L"vertical")		dir = L"vert";
-		else if (filter_attlist_.smil_subtype_.get() == L"horizontal")	dir = L"horz";
+		if (filter_attlist_.smil_subtype_)
+		{
+			if (filter_attlist_.smil_subtype_.get() == L"vertical")		dir = L"vert";
+			else if (filter_attlist_.smil_subtype_.get() == L"horizontal")	dir = L"horz";
+		}
 		break;
 	case smil_transition_type::diagonalWipe:
 	case smil_transition_type::waterfallWipe:
@@ -1177,8 +1183,11 @@ void anim_transitionFilter::convert_slide_transition_filter(oox::pptx_conversion
 		break;
 	case smil_transition_type::pushWipe:
 		type = L"push";
-		if (filter_attlist_.smil_subtype_.get() == L"combVertical") { type = L"comb"; dir = L"vert"; }
-		else if (filter_attlist_.smil_subtype_.get() == L"combHorizontal") { type = L"comb"; dir = L"horz"; }
+		if (filter_attlist_.smil_subtype_)
+		{
+			if (filter_attlist_.smil_subtype_.get() == L"combVertical") { type = L"comb"; dir = L"vert"; }
+			else if (filter_attlist_.smil_subtype_.get() == L"combHorizontal") { type = L"comb"; dir = L"horz"; }
+		}
 		break;
 	case smil_transition_type::slideWipe:
 	case smil_transition_type::boxWipe:
@@ -1186,8 +1195,15 @@ void anim_transitionFilter::convert_slide_transition_filter(oox::pptx_conversion
 		break;
 	case smil_transition_type::barnDoorWipe:
 		type = L"split";
-		if (filter_attlist_.smil_subtype_.get() == L"vertical")		param = L"vert";
-		if (filter_attlist_.smil_subtype_.get() == L"horizontal")	param = L"horz";
+		if (filter_attlist_.smil_subtype_)
+		{
+			if (filter_attlist_.smil_subtype_.get() == L"vertical")		param = L"vert";
+			if (filter_attlist_.smil_subtype_.get() == L"horizontal")	param = L"horz";
+		}
+		else
+		{
+			param = L"vert"; // SMIL 2.0 default subtype of barnDoorWipe
+		}
 		break;
 	case smil_transition_type::barWipe:
 		type = L"wipe";

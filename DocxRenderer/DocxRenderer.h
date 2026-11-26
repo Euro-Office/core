@@ -167,7 +167,7 @@ public:
 	virtual HRESULT IsSupportAdvancedCommand(const IAdvancedCommand::AdvancedCommandType& type);
 	virtual HRESULT AdvancedCommand(IAdvancedCommand* command);
 
-	// методы, которыми будет пользоваться конвертер
+	// methods that the converter will use
 	HRESULT SetTextAssociationType(const NSDocxRenderer::TextAssociationType& eType);
 	int Convert(IOfficeDrawingFile* pFile, const std::wstring& sDstFile, bool bIsOutCompress = true);
 	std::vector<std::wstring> ScanPage(IOfficeDrawingFile* pFile, size_t nPage);

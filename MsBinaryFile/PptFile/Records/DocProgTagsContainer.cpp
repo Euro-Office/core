@@ -45,7 +45,7 @@ void CRecordPP9DocBinaryTagExtension::ReadFromStream(SRecordHeader &oHeader, POL
 
     while ( lCurLen < m_oHeader.RecLen )
     {
-        if ( ReadHeader.ReadFromStream(pStream) == false)
+        if ( !ReadHeader.ReadFromStream(pStream))
             break;
 
         lCurLen += 8 + ReadHeader.RecLen;
@@ -207,7 +207,7 @@ void CRecordDocProgTagsContainer::ReadFromStream(SRecordHeader &oHeader, POLE::S
 
     while (lCurLen < (LONG)m_oHeader.RecLen)
     {
-        if ( ReadHeader.ReadFromStream(pStream) == false)
+        if ( !ReadHeader.ReadFromStream(pStream))
             break;
         lCurLen +=	8 + ReadHeader.RecLen;
         CRecordDocProgBinaryTagSubContainerOrAtom* pRecord = new CRecordDocProgBinaryTagSubContainerOrAtom();

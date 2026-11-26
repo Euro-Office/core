@@ -37,7 +37,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//raw:
 		//<extLst>
 		class CSi : public WritingElementWithChilds<>
 		{

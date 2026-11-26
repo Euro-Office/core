@@ -56,7 +56,7 @@ namespace ODRAW
 
     namespace NSBaseShape
     {
-		enum ClassType {unknown, pptx, ppt, odp};// Перечисление можно расширять
+		enum ClassType {unknown, pptx, ppt, odp};// The enumeration can be expanded
     }
 
     enum RulesType

@@ -71,10 +71,10 @@ namespace OOX
 			wchar_t wsChar1 = sName[0];
 			wchar_t wsChar3 = sName[2];
 
-			WritingElement *pItem = NULL;
+			WritingElement *pItem = nullptr;
 
-			OOX::Vml::CClientData *client_data = NULL; // for set marker comment
-			OOX::Vml::CImageData *image_data = NULL; // for set marker image
+			OOX::Vml::CClientData *client_data = nullptr; // for set marker comment
+			OOX::Vml::CImageData *image_data = nullptr; // for set marker image
 			switch (wsChar1)
 			{
 			case 'o':
@@ -108,6 +108,7 @@ namespace OOX
 						pItem = new OOX::VmlOffice::CSkew(document);
 
 					break;
+				default: break;
 				}
 				break;
 			case 'p':
@@ -159,23 +160,16 @@ namespace OOX
 						pItem = new OOX::Vml::CTextPath(document);
 
 					break;
+				default: break;
 				}
 				break;
 			case 'w':
 
 				if (L"wd:anchorLock" == sName)
 					pItem = new OOX::VmlWord::CAnchorLock(document);
-				else if (L"wd:borderbottom" == sName)
+				else if (L"wd:borderbottom" == sName || L"wd:borderleft" == sName || L"wd:borderright" == sName || L"wd:bordertop" == sName)
 					pItem = new OOX::VmlWord::CBorder(document);
-				else if (L"wd:borderleft" == sName)
-					pItem = new OOX::VmlWord::CBorder(document);
-				else if (L"wd:borderright" == sName)
-					pItem = new OOX::VmlWord::CBorder(document);
-				else if (L"wd:bordertop" == sName)
-					pItem = new OOX::VmlWord::CBorder(document);
-				else if (L"wd:wrap" == sName)
-					pItem = new OOX::VmlWord::CWrap(document);
-				else if (L"w10:wrap" == sName)
+				else if (L"wd:wrap" == sName || L"w10:wrap" == sName)
 					pItem = new OOX::VmlWord::CWrap(document);
 				else if (L"w:binData" == sName)
 				{
@@ -192,7 +186,7 @@ namespace OOX
 
 							CImageFileFormatChecker fileChecker;
 							std::wstring ext = fileChecker.DetectFormatByData(pImageFile->m_Data.data(), pImageFile->m_Data.size());
-							if (false == ext.empty())
+							if (!ext.empty())
 							{
 								OOX::CPath filename(L"image." + ext);
 								pImageFile->set_filename(filename, false, true);
@@ -217,9 +211,10 @@ namespace OOX
 					pItem = client_data = new OOX::Vml::CClientData(document);
 				}
 				break;
+			default: break;
 			}
 
-			if (NULL != pItem)
+			if (nullptr != pItem)
 			{
 				pItem->fromXML(oReader);
 				m_arrItems.push_back(pItem);
@@ -349,6 +344,7 @@ namespace OOX
 							if      (L"o:userdrawn"  == wsName ) m_oUserDrawn  = oReader.GetText();
 							else if (L"o:userhidden" == wsName ) m_oUserHidden = oReader.GetText();
 							break;
+						default: break;
 						}
 
 					break;
@@ -370,6 +366,7 @@ namespace OOX
 				case 'w':
 					if      (L"wrapcoords" == wsName ) m_oWrapCoords = oReader.GetText();
 					break;
+				default: break;
 				}
 
 				if ( !oReader.MoveToNextAttribute() )
@@ -397,65 +394,65 @@ namespace OOX
 		{
 			if (!parent) return;
 
-			if (false == m_oStyle.IsInit()) m_oStyle = parent->m_oStyle;
+			if (!m_oStyle.IsInit()) m_oStyle = parent->m_oStyle;
 			else
 			{
 				m_oStyle->mergeFrom(parent->m_oStyle.GetPointer());
 			}
-			if (false == m_sHref.IsInit())			m_sHref = parent->m_sHref;
-			if (false == m_sTarget.IsInit())		m_sTarget = parent->m_sTarget;
-			if (false == m_sClass.IsInit())			m_sClass = parent->m_sClass;
-			if (false == m_sTitle.IsInit())			m_sTitle = parent->m_sTitle;
-			if (false == m_sAlt.IsInit())			m_sAlt = parent->m_sAlt;
-			if (false == m_oCoordSize.IsInit())		m_oCoordSize = parent->m_oCoordSize;
-			if (false == m_oCoordOrigin.IsInit())	m_oCoordOrigin = parent->m_oCoordOrigin;
-			if (false == m_oWrapCoords.IsInit())	m_oWrapCoords = parent->m_oWrapCoords;
-			if (false == m_oPrint.IsInit())			m_oPrint = parent->m_oPrint;
+			if (!m_sHref.IsInit())			m_sHref = parent->m_sHref;
+			if (!m_sTarget.IsInit())		m_sTarget = parent->m_sTarget;
+			if (!m_sClass.IsInit())			m_sClass = parent->m_sClass;
+			if (!m_sTitle.IsInit())			m_sTitle = parent->m_sTitle;
+			if (!m_sAlt.IsInit())			m_sAlt = parent->m_sAlt;
+			if (!m_oCoordSize.IsInit())		m_oCoordSize = parent->m_oCoordSize;
+			if (!m_oCoordOrigin.IsInit())	m_oCoordOrigin = parent->m_oCoordOrigin;
+			if (!m_oWrapCoords.IsInit())	m_oWrapCoords = parent->m_oWrapCoords;
+			if (!m_oPrint.IsInit())			m_oPrint = parent->m_oPrint;
 
-			if (false == m_sSpId.IsInit())			m_sSpId = parent->m_sSpId;
-			if (false == m_oOned.IsInit())			m_oOned = parent->m_oOned;
-			if (false == m_oRegroupId.IsInit())		m_oRegroupId = parent->m_oRegroupId;
-			if (false == m_oDoubleClickNotify.IsInit())  m_oDoubleClickNotify = parent->m_oDoubleClickNotify;
-			if (false == m_oButton.IsInit())		m_oButton = parent->m_oButton;
-			if (false == m_oUserHidden.IsInit())	m_oUserHidden = parent->m_oUserHidden;
-			if (false == m_oBullet.IsInit())		m_oBullet = parent->m_oBullet;
-			if (false == m_oHr.IsInit())			m_oHr = parent->m_oHr;
-			if (false == m_oHrStd.IsInit())			m_oHrStd = parent->m_oHrStd;
-			if (false == m_oHrNoShade.IsInit())		m_oHrNoShade = parent->m_oHrNoShade;
-			if (false == m_oHrPct.IsInit())			m_oHrPct = parent->m_oHrPct;
-			if (false == m_oHrAlign.IsInit())		m_oHrAlign = parent->m_oHrAlign;
-			if (false == m_oAllowInCell.IsInit())	m_oAllowInCell = parent->m_oAllowInCell;
-			if (false == m_oAllowOverlap.IsInit())  m_oAllowOverlap = parent->m_oAllowOverlap;
-			if (false == m_oUserDrawn.IsInit())		m_oUserDrawn = parent->m_oUserDrawn;
-			if (false == m_oBorderTopColor.IsInit())  m_oBorderTopColor = parent->m_oBorderTopColor;
-			if (false == m_oBorderLeftColor.IsInit())  m_oBorderLeftColor = parent->m_oBorderLeftColor;
-			if (false == m_oBorderBottomColor.IsInit())  m_oBorderBottomColor = parent->m_oBorderBottomColor;
-			if (false == m_oBorderRightColor.IsInit())  m_oBorderRightColor = parent->m_oBorderRightColor;
-			if (false == m_oDgmLayout.IsInit())		m_oDgmLayout = parent->m_oDgmLayout;
-			if (false == m_oDgmNodeKind.IsInit())	m_oDgmNodeKind = parent->m_oDgmNodeKind;
-			if (false == m_oDgmLayoutMru.IsInit())  m_oDgmLayoutMru = parent->m_oDgmLayoutMru;
-			if (false == m_oInsetMode.IsInit())		m_oInsetMode = parent->m_oInsetMode;
+			if (!m_sSpId.IsInit())			m_sSpId = parent->m_sSpId;
+			if (!m_oOned.IsInit())			m_oOned = parent->m_oOned;
+			if (!m_oRegroupId.IsInit())		m_oRegroupId = parent->m_oRegroupId;
+			if (!m_oDoubleClickNotify.IsInit())  m_oDoubleClickNotify = parent->m_oDoubleClickNotify;
+			if (!m_oButton.IsInit())		m_oButton = parent->m_oButton;
+			if (!m_oUserHidden.IsInit())	m_oUserHidden = parent->m_oUserHidden;
+			if (!m_oBullet.IsInit())		m_oBullet = parent->m_oBullet;
+			if (!m_oHr.IsInit())			m_oHr = parent->m_oHr;
+			if (!m_oHrStd.IsInit())			m_oHrStd = parent->m_oHrStd;
+			if (!m_oHrNoShade.IsInit())		m_oHrNoShade = parent->m_oHrNoShade;
+			if (!m_oHrPct.IsInit())			m_oHrPct = parent->m_oHrPct;
+			if (!m_oHrAlign.IsInit())		m_oHrAlign = parent->m_oHrAlign;
+			if (!m_oAllowInCell.IsInit())	m_oAllowInCell = parent->m_oAllowInCell;
+			if (!m_oAllowOverlap.IsInit())  m_oAllowOverlap = parent->m_oAllowOverlap;
+			if (!m_oUserDrawn.IsInit())		m_oUserDrawn = parent->m_oUserDrawn;
+			if (!m_oBorderTopColor.IsInit())  m_oBorderTopColor = parent->m_oBorderTopColor;
+			if (!m_oBorderLeftColor.IsInit())  m_oBorderLeftColor = parent->m_oBorderLeftColor;
+			if (!m_oBorderBottomColor.IsInit())  m_oBorderBottomColor = parent->m_oBorderBottomColor;
+			if (!m_oBorderRightColor.IsInit())  m_oBorderRightColor = parent->m_oBorderRightColor;
+			if (!m_oDgmLayout.IsInit())		m_oDgmLayout = parent->m_oDgmLayout;
+			if (!m_oDgmNodeKind.IsInit())	m_oDgmNodeKind = parent->m_oDgmNodeKind;
+			if (!m_oDgmLayoutMru.IsInit())  m_oDgmLayoutMru = parent->m_oDgmLayoutMru;
+			if (!m_oInsetMode.IsInit())		m_oInsetMode = parent->m_oInsetMode;
 
-			if (false == m_oChromaKey.IsInit())		m_oChromaKey = parent->m_oChromaKey;
-			if (false == m_oFilled.IsInit())		m_oFilled = parent->m_oFilled;
-			if (false == m_oFillColor.IsInit())		m_oFillColor = parent->m_oFillColor;
-			if (false == m_oOpacity.IsInit())		m_oOpacity = parent->m_oOpacity;
-			if (false == m_oStroked.IsInit())		m_oStroked = parent->m_oStroked;
-			if (false == m_oStrokeColor.IsInit())	m_oStrokeColor = parent->m_oStrokeColor;
-			if (false == m_oStrokeWeight.IsInit())  m_oStrokeWeight = parent->m_oStrokeWeight;
-			if (false == m_oInsetPen.IsInit())		m_oInsetPen = parent->m_oInsetPen;
+			if (!m_oChromaKey.IsInit())		m_oChromaKey = parent->m_oChromaKey;
+			if (!m_oFilled.IsInit())		m_oFilled = parent->m_oFilled;
+			if (!m_oFillColor.IsInit())		m_oFillColor = parent->m_oFillColor;
+			if (!m_oOpacity.IsInit())		m_oOpacity = parent->m_oOpacity;
+			if (!m_oStroked.IsInit())		m_oStroked = parent->m_oStroked;
+			if (!m_oStrokeColor.IsInit())	m_oStrokeColor = parent->m_oStrokeColor;
+			if (!m_oStrokeWeight.IsInit())  m_oStrokeWeight = parent->m_oStrokeWeight;
+			if (!m_oInsetPen.IsInit())		m_oInsetPen = parent->m_oInsetPen;
 
-			if (false == m_oSpt.IsInit())			m_oSpt = parent->m_oSpt;
-			if (false == m_oConnectorType.IsInit())	m_oConnectorType = parent->m_oConnectorType;
-			if (false == m_oBwMode.IsInit())		m_oBwMode = parent->m_oBwMode;
-			if (false == m_oBwPure.IsInit())		m_oBwPure = parent->m_oBwPure;
-			if (false == m_oBwNormal.IsInit())		m_oBwNormal = parent->m_oBwNormal;
-			if (false == m_oForceDash.IsInit())		m_oForceDash = parent->m_oForceDash;
-			if (false == m_oOleIcon.IsInit())		m_oOleIcon = parent->m_oOleIcon;
-			if (false == m_oOle.IsInit())			m_oOle = parent->m_oOle;
-			if (false == m_oPreferRelative.IsInit())  m_oPreferRelative = parent->m_oPreferRelative;
-			if (false == m_oClipToWrap.IsInit())	m_oClipToWrap = parent->m_oClipToWrap;
-			if (false == m_oClip.IsInit())			m_oClip = parent->m_oClip;
+			if (!m_oSpt.IsInit())			m_oSpt = parent->m_oSpt;
+			if (!m_oConnectorType.IsInit())	m_oConnectorType = parent->m_oConnectorType;
+			if (!m_oBwMode.IsInit())		m_oBwMode = parent->m_oBwMode;
+			if (!m_oBwPure.IsInit())		m_oBwPure = parent->m_oBwPure;
+			if (!m_oBwNormal.IsInit())		m_oBwNormal = parent->m_oBwNormal;
+			if (!m_oForceDash.IsInit())		m_oForceDash = parent->m_oForceDash;
+			if (!m_oOleIcon.IsInit())		m_oOleIcon = parent->m_oOleIcon;
+			if (!m_oOle.IsInit())			m_oOle = parent->m_oOle;
+			if (!m_oPreferRelative.IsInit())  m_oPreferRelative = parent->m_oPreferRelative;
+			if (!m_oClipToWrap.IsInit())	m_oClipToWrap = parent->m_oClipToWrap;
+			if (!m_oClip.IsInit())			m_oClip = parent->m_oClip;
 		}
 		std::wstring CVmlCommonElements::WriteAttributes() const
 		{
@@ -578,7 +575,7 @@ namespace OOX
 		CArc::~CArc(){}
 		void CArc::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CArc::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CArc::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CArc::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -608,7 +605,7 @@ namespace OOX
 		}
 		void CArc::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -628,6 +625,7 @@ namespace OOX
 					case 's':
 						if      ( _T("startangle") == wsName || _T("startAngle") == wsName ) m_oStartAngle = oReader.GetText();
 						break;
+					default: break;
 					}
 
 					if ( !oReader.MoveToNextAttribute() )
@@ -647,7 +645,7 @@ namespace OOX
 		CCurve::~CCurve(){}
 		void CCurve::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CCurve::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CCurve::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CCurve::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -678,7 +676,7 @@ namespace OOX
 		}
 		void CCurve::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -703,6 +701,7 @@ namespace OOX
 					case 't':
 						if      ( _T("to")       == wsName ) m_oTo       = oReader.GetText();
 						break;
+					default: break;
 					}
 
 					if ( !oReader.MoveToNextAttribute() )
@@ -724,7 +723,7 @@ namespace OOX
 		}
 		void CF::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CF::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CF::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CF::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -759,6 +758,7 @@ namespace OOX
 					case 'e':
 						if      ( _T("eqn") == wsName ) m_sEqn = oReader.GetText();
 						break;
+					default: break;
 					}
 
 					if ( !oReader.MoveToNextAttribute() )
@@ -768,7 +768,7 @@ namespace OOX
 				}
 				oReader.MoveToElement();
 
-				// TO DO: Сделать парсер формул ( или использовать уже сделанный парсер в OfficeDrawing\Shapes)
+				// TO DO: Make a formula parser (or use an already made parser in OfficeDrawing\Shapes)
 			}
 
 		//--------------------------------------------------------------------------------
@@ -798,7 +798,7 @@ namespace OOX
 			int nCurDepth = oReader.GetDepth();
 			while ( oReader.ReadNextSiblingNode( nCurDepth ) )
 			{
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 				std::wstring sName = oReader.GetName();
 
 				if (L"v:arc" == sName)
@@ -829,7 +829,7 @@ namespace OOX
 				else
 					CreateElement(oReader);
 
-				if ( NULL != pItem )
+				if ( nullptr != pItem )
 				{
 					pItem->fromXML(oReader);
 					m_arrElements.push_back( pItem );
@@ -889,10 +889,10 @@ namespace OOX
 		}
 		void CPolyLine::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Выставляем значения по умолчанию
+				// Set default values
 				m_oPoints.SetDelimiter( ' ' );
 
-				// Читаем атрибуты
+				// Reading the attributes
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -908,6 +908,7 @@ namespace OOX
 					case 'p':
 						if      ( _T("points") == wsName ) m_oPoints = oReader.GetText();
 						break;
+					default: break;
 					}
 
 					if ( !oReader.MoveToNextAttribute() )
@@ -941,7 +942,7 @@ namespace OOX
 		CRect::~CRect(){}
 		void CRect::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CRect::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CRect::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CRect::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -976,7 +977,7 @@ namespace OOX
 		CRoundRect::~CRoundRect(){}
 		void CRoundRect::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CRoundRect::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CRoundRect::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CRoundRect::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1004,10 +1005,10 @@ namespace OOX
 		}
 		void CRoundRect::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Выставляем значения по умолчанию
+				// Set default values
 				m_oArcSize.SetPercentage( 20 );
 
-				// Читаем атрибуты
+				// Reading the attributes
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -1023,6 +1024,7 @@ namespace OOX
 					case 'a':
 						if      ( _T("arcsize") == wsName ) m_oArcSize = oReader.GetText();
 						break;
+					default: break;
 					}
 
 					if ( !oReader.MoveToNextAttribute() )
@@ -1143,6 +1145,7 @@ namespace OOX
 					case 't':
 						if      ( _T("type")       == wsName ) m_oType       = oReader.GetText();
 						break;
+					default: break;
 					}
 
 					if ( !oReader.MoveToNextAttribute() )
@@ -1200,6 +1203,7 @@ namespace OOX
 				case 't':
 					if      ( _T("type")        == wsName ) m_sType        = oReader.GetText();
 					break;
+				default: break;
 				}
 
 				if ( !oReader.MoveToNextAttribute() )
@@ -1209,7 +1213,7 @@ namespace OOX
 			}
 			oReader.MoveToElement();
 
-			// TO DO: Сделать парсер Adj
+			// TO DO: Make an Adj parser
 		}
 		std::wstring CShape::toXML() const
 		{
@@ -1247,13 +1251,13 @@ namespace OOX
 		{
 			if (!shape_type) return;
 
-			if (false == m_oPath.IsInit()) m_oPath = shape_type->m_oPath;
-			if (false == m_sAdj.IsInit()) m_sAdj = shape_type->m_sAdj;
+			if (!m_oPath.IsInit()) m_oPath = shape_type->m_oPath;
+			if (!m_sAdj.IsInit()) m_sAdj = shape_type->m_sAdj;
 
 			CVmlCommonElements::mergeFrom(shape_type);
 		}
 
-		void CShape::ConvertToPptx(double width, double height)
+		void CShape::ConvertToPptx(double /*width*/, double /*height*/)
 		{
 			NSGuidesVML::CFormulasManager oManager;
 			NSGuidesVML::CFormulaConverter oFormulaConverter;
@@ -1405,8 +1409,9 @@ namespace OOX
 					if (_T("adj") == wsName) m_sAdj = oReader.GetText();
 					break;
 				case 't':
-					if (_T("type") == wsName) m_sType = oReader.GetText(); // для некоторых багнутых файлов
+					if (_T("type") == wsName) m_sType = oReader.GetText(); // for some buggy files
 					break;
+				default: break;
 				}
 
 				if (!oReader.MoveToNextAttribute())
@@ -1416,7 +1421,7 @@ namespace OOX
 			}
 			oReader.MoveToElement();
 
-			// TO DO: Сделать парсер Adj
+			// TO DO: Make an Adj parser
 		}
 		std::wstring CShapeType::toXML() const
 		{
@@ -1471,7 +1476,7 @@ namespace OOX
 		}
 		void CClientData::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CShapeType::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CShapeType::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CClientData::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1779,7 +1784,7 @@ namespace OOX
 		}
 		void CTextbox::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CTextbox::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CTextbox::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		EElementType CTextbox::getType() const
 		{
@@ -1844,11 +1849,11 @@ namespace OOX
 		}
 		void CTextbox::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Выставляем значения по умолчанию
+			// Set default values
 			m_oInset.Init();
 			m_oInset->Set(7.2, 3.6, 7.2, 3.6 );
 			
-			// Читаем атрибуты
+			// Reading the attributes
 			if ( oReader.GetAttributesCount() <= 0 )
 				return;
 			
@@ -1872,6 +1877,7 @@ namespace OOX
 				case 's':
 					if      (L"style"         == wsName ) m_oStyle       = oReader.GetText();
 					break;
+				default: break;
 				}
 
 				if ( !oReader.MoveToNextAttribute() )
@@ -1893,7 +1899,7 @@ namespace OOX
 		}
 		void CTextPath::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CTextPath::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CTextPath::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CTextPath::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1969,6 +1975,7 @@ namespace OOX
 					case 'x':
 						if      ( _T("xscale")   == wsName ) m_oXScale   = oReader.GetText();
 						break;
+					default: break;
 					}
 
 					if ( !oReader.MoveToNextAttribute() )
@@ -1990,7 +1997,7 @@ namespace OOX
 		}
 		void CFill::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CFill::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CFill::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CFill::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2066,8 +2073,7 @@ namespace OOX
 				case 'r':
 					if      (L"recolor" == wsName ) m_oRecolor = oReader.GetText();
 					else if (L"rotate"  == wsName ) m_oRotate  = oReader.GetText();
-					else if (L"r:id"    == wsName ) m_rId      = oReader.GetText();
-					else if (L"relationships:id" == wsName ) m_rId = oReader.GetText();
+					else if ( L"r:id"    == wsName || L"relationships:id" == wsName ) m_rId      = oReader.GetText();
 					break;
 
 				case 's':
@@ -2078,6 +2084,7 @@ namespace OOX
 				case 't':
 					if      (L"type" == wsName ) m_oType = oReader.GetText();
 					break;
+				default: break;
 				}
 
 				if ( !oReader.MoveToNextAttribute() )
@@ -2172,7 +2179,7 @@ namespace OOX
 		}
 		void CBackground::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CBackground::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CBackground::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CBackground::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2220,7 +2227,7 @@ namespace OOX
 		}
 		void CFormulas::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CFormulas::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CFormulas::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CFormulas::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2271,7 +2278,7 @@ namespace OOX
 		}
 		void CStroke::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CStroke::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CStroke::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CStroke::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2357,8 +2364,7 @@ namespace OOX
 					else if (L"o:title"     == wsName ) m_sTitle     = oReader.GetText();
 					break;
 				case 'r':
-					if      (L"r:id" == wsName ) m_rId = oReader.GetText();
-					else if (L"relationships:id" == wsName ) m_rId = oReader.GetText();
+					if ( L"r:id" == wsName || L"relationships:id" == wsName ) m_rId = oReader.GetText();
 					break;
 				case 's':
 					if      (L"src"              == wsName ) m_sSrc              = oReader.GetText();
@@ -2369,6 +2375,7 @@ namespace OOX
 				case 'w':
 					if      (L"weight" == wsName ) m_oWeight = oReader.GetText();
 					break;
+				default: break;
 				}
 
 				if ( !oReader.MoveToNextAttribute() )
@@ -2378,7 +2385,7 @@ namespace OOX
 			}
 			oReader.MoveToElement();
 
-			// TO DO: Сделать парсер формул ( или использовать уже сделанный парсер в OfficeDrawing\Shapes)
+			// TO DO: Make a formula parser (or use an already made parser in OfficeDrawing\Shapes)
 		}
 		std::wstring CStroke::toXML() const
 		{
@@ -2491,7 +2498,7 @@ namespace OOX
 		}
 		void CPath::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CPath::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CPath::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CPath::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2552,6 +2559,7 @@ namespace OOX
 						case 'e':
 							if      (L"o:extrusionok"   == wsName ) m_oExtrusionOk   = oReader.GetText();
 							break;
+						default: break;
 						}
 
 					break;
@@ -2570,6 +2578,7 @@ namespace OOX
 				case 'v':
 					if      (L"v"           == wsName ) m_oV           = oReader.GetText();
 					break;
+				default: break;
 				}
 
 				if ( !oReader.MoveToNextAttribute() )
@@ -2579,7 +2588,7 @@ namespace OOX
 			}
 			oReader.MoveToElement();
 
-			// TO DO: Сделать парсер параметров connectangles, connectlocs
+			// TO DO: Make a parser for connectangles, connectlocs parameters
 		}
 		std::wstring CPath::toXML() const
 		{
@@ -2637,7 +2646,7 @@ namespace OOX
 		CImage::~CImage(){}
 		void CImage::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CImage::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CImage::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CImage::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2685,6 +2694,7 @@ namespace OOX
 				case 's':
 					if      (L"src" == wsName ) m_pSrc = oReader.GetText();
 					break;
+				default: break;
 				}
 
 				if ( !oReader.MoveToNextAttribute() )
@@ -2750,7 +2760,7 @@ namespace OOX
 		}
 		void CImageData::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CImageData::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CImageData::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CImageData::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2830,6 +2840,7 @@ namespace OOX
 						case 't':
 							if      (L"title"    == wsName ) m_sTitle   = oReader.GetText();
 							break;
+						default: break;
 						}
 
 					break;
@@ -2837,8 +2848,7 @@ namespace OOX
 
 				case 'r':
 					if      (L"r:href"        == wsName ) m_rHref          = oReader.GetText();
-					else if (L"r:id"          == wsName ) m_rId            = oReader.GetText();
-					else if (L"relationships:id" == wsName ) m_rId         = oReader.GetText();
+					else if ( L"r:id"          == wsName || L"relationships:id" == wsName ) m_rId            = oReader.GetText();
 					else if (L"r:pict"        == wsName ) m_rPict          = oReader.GetText();
 					else if (L"recolortarget" == wsName ) m_oRecolorTarget = oReader.GetText();
 					break;
@@ -2846,6 +2856,7 @@ namespace OOX
 				case 's':
 					if      (L"src"           == wsName ) m_sSrc           = oReader.GetText();
 					break;
+				default: break;
 				}
 
 				if ( !oReader.MoveToNextAttribute() )
@@ -2858,7 +2869,7 @@ namespace OOX
 			CDocxFlat* docx_flat = dynamic_cast<CDocxFlat*>(m_pMainDocument);
 			if (m_sSrc.IsInit())
 			{
-				if (false == m_sTitle.IsInit()) m_sTitle = m_sSrc;
+				if (!m_sTitle.IsInit()) m_sTitle = m_sSrc;
 				if (docx_flat)
 				{
 					OOX::RId rId;
@@ -2938,7 +2949,7 @@ namespace OOX
 		CLine::~CLine(){}
 		void CLine::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CLine::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CLine::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CLine::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2967,11 +2978,11 @@ namespace OOX
 		}
 		void CLine::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Выставляем значения по умолчанию
+				// Set default values
 				m_oFrom.SetValue( 0, 0 );
 				m_oTo.SetValue( 10, 10 );
 
-				// Читаем атрибуты
+				// Reading the attributes
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -2991,6 +3002,7 @@ namespace OOX
 					case 't':
 						if      ( _T("to")   == wsName ) m_oTo   = oReader.GetText();
 						break;
+					default: break;
 					}
 
 					if ( !oReader.MoveToNextAttribute() )
@@ -3011,7 +3023,7 @@ namespace OOX
 		COval::~COval(){}
 		void COval::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать COval::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement COval::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void COval::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -3048,7 +3060,7 @@ namespace OOX
 		}
 		void CH::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CH::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CH::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CH::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -3103,6 +3115,7 @@ namespace OOX
 				case 'y':
 					if      (L"yrange" == wsName ) m_oYRange = oReader.GetText();
 					break;
+				default: break;
 				}
 
 				if ( !oReader.MoveToNextAttribute() )
@@ -3158,7 +3171,7 @@ namespace OOX
 		}
 		void CHandles::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CHandles::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CHandles::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CHandles::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -3208,7 +3221,7 @@ namespace OOX
 		}
 		void CShapeDefaults::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CShapeDefaults::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CShapeDefaults::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CShapeDefaults::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -3273,6 +3286,7 @@ namespace OOX
 				case 'v':
 					if      (L"v:ext"         == wsName ) m_oExt         = oReader.GetText();
 					break;
+				default: break;
 				}
 
 				if ( !oReader.MoveToNextAttribute() )

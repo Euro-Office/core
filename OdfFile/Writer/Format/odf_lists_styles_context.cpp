@@ -104,7 +104,7 @@ void odf_lists_styles_context::start_style(bool bMaster, int based_number)
 	if (style == NULL)return;
 
 	style->text_list_style_attr_.style_name_ = state.odf_list_style_name;
-	lists_format_array_.push_back(state); //перенести в end??
+	lists_format_array_.push_back(state); //move to end??
 }
 
 style_list_level_properties * odf_lists_styles_context::get_list_level_properties()
@@ -340,7 +340,7 @@ int odf_lists_styles_context::start_style_level(int level, int type)
 			break;
 		case 49: //numberformatNumberInDash                 : //??
 			//suffix -
-			//preffix -
+			//prefix -
 			break;
 		case 50: //numberformatOrdinal                      : 
 			break;
@@ -477,10 +477,12 @@ void odf_lists_styles_context::set_numeric_format(std::wstring val)
 			}
 			style_number_->text_list_level_style_number_attr_.text_display_levels_ = level;
 
-			s = s.substr(0,r1);
+			// the suffix is the text after the last placeholder ("%1.%2)" -> ")")
+			s = s.substr(s.rfind(L"%"));
 		}
 		
-		boost::wregex r(L"(\\%[0-9]+)(\\S+)");
+		// keep whitespace in the suffix ("%1. " -> ". "), as LibreOffice does
+		boost::wregex r(L"(\\%[0-9]+)(.+)");
 		boost::match_results<std::wstring::const_iterator> res;
 		if ( boost::regex_match(s, res, r))
 		{

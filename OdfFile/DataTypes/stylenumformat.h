@@ -55,7 +55,7 @@ public:
 		russianUp
     };
 
-    style_numformat() {}
+    style_numformat() : type_(none) {}
 
     style_numformat(type _Type) : type_(_Type)
     {}

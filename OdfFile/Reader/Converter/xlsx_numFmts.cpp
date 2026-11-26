@@ -1,4 +1,8 @@
-﻿/*
+﻿// SPDX-FileCopyrightText: 2010-2023 Ascensio System SIA
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-only
+
+/*
  * (c) Copyright Ascensio System SIA 2010-2023
  *
  * This program is a free software product. You can redistribute it and/or
@@ -50,7 +54,7 @@ private:
 	unsigned int add(const std::wstring & format_code, unsigned int id);
 public:   
 	unsigned int add_or_find(std::wstring format_code, char type);
-	void serialize(std::wostream & _Wostream) const;
+	void serialize(std::wostream & ostrm) const;
 };
 unsigned int xlsx_num_fmts::Impl::add(const std::wstring & format_code, unsigned int id)
 {
@@ -69,7 +73,7 @@ unsigned int xlsx_num_fmts::Impl::add(const std::wstring & format_code, unsigned
 	}
 	else
 	{
-		//занято id для format_code -> следующий если есть берем
+		//id is already taken for format_code -> next if available we take
 		id = add(format_code, ++id);
 	}
 	return id;
@@ -87,17 +91,7 @@ unsigned int xlsx_num_fmts::Impl::add_or_find(std::wstring format_code, char for
 	else
 	{ 
 		unsigned int id = 0;
-		if (format_code_type == odf_types::office_value_type::Currency)
-		{
-			if (std::wstring::npos != format_code.find(L"#,##0.00"))
-			{
-				if (std::wstring::npos != format_code.find(L"[Red]"))			id = 8; // "€"#,##0.00;[Red]\-"€"#,##0.00
-				else															id = 7; // "€"#,##0.00;\-"€"#,##0.00
-			}
-			else
-				id = last_custom_id++;
-		}
-		else if (format_code_type == odf_types::office_value_type::Date)
+		if (format_code_type == odf_types::office_value_type::Date)
 		{
 			if (std::wstring::npos != format_code.find(L"mm-dd-yy"))			id = 14; 
 			else if (std::wstring::npos != format_code.find(L"d-mmm-yy"))		id = 15; 
@@ -119,7 +113,7 @@ unsigned int xlsx_num_fmts::Impl::add_or_find(std::wstring format_code, char for
 		}
 		else if (format_code_type == odf_types::office_value_type::Scientific)
 		{
-			if (std::wstring::npos != format_code.find(L"0.00E+00"))
+			if (format_code == L"0.00E+00")
 			{
 				format_code.clear();
 				id = 11;
@@ -144,12 +138,12 @@ unsigned int xlsx_num_fmts::Impl::add_or_find(std::wstring format_code, char for
 		}
 		else if (format_code_type == odf_types::office_value_type::Percentage)
 		{
-			if (std::wstring::npos != format_code.find(L"0.00%"))
+			if (format_code == L"0.00%")
 			{
 				format_code.clear();
 				id = 10;
 			}
-			else if (std::wstring::npos != format_code.find(L"0%"))
+			else if (format_code == L"0%")
 			{
 				format_code.clear();
 				id = 9;
@@ -159,6 +153,8 @@ unsigned int xlsx_num_fmts::Impl::add_or_find(std::wstring format_code, char for
 		}
 		else
 		{
+			// Currency and unknown types get a fresh custom id. Built-in currency IDs are
+			// locale-dependent and can replace the ODF symbol and layout.
 			id = last_custom_id++;
 		}
 		return add(format_code, id);
@@ -174,7 +170,7 @@ void xlsx_num_fmts::Impl::serialize(std::wostream & strm) const
 			
 			for (size_t i = 0; i < arrFormats.size(); ++i)
 			{
-				if (false == arrFormats[i].code.empty())
+				if (!arrFormats[i].code.empty())
 				{
 					CP_XML_NODE(L"numFmt")
 					{

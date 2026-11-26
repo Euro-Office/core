@@ -24,7 +24,7 @@
  */
 #include "oMathPara.h"
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:moveFrom>
 //        <w:moveTo>
 
@@ -84,7 +84,7 @@ namespace OOX
 					if ( oItem.IsValid( ) )
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 						
 						if ( _T("m:acc") == sName )
 							AssignPtrXmlContent(pItem, OOX::Logic::CAcc, oItem)
@@ -219,7 +219,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("m:acc") == sName )
 					AssignPtrXmlContent(pItem, OOX::Logic::CAcc, oReader)
@@ -347,7 +347,7 @@ namespace OOX
 			return m_eType;
 		}
 		std::wstring CMathArgNodes::GetMathNodeName(const EElementType & enumType)  const
-		{//todooo вытащить в одно место - пересекается с MathBottomNodes
+		{//TODO pull into one place - intersects with MathBottomNodes
 			switch(enumType)
 			{
 				case OOX::et_m_deg:		return L"m:deg";

@@ -29,7 +29,7 @@ using namespace PPT;
 CRecordSlide::CRecordSlide()
 {
     m_bExistsTransition			=	false;
-    m_pSlideProgTagsContainer	=	NULL;
+    m_pSlideProgTagsContainer	=	nullptr;
     m_lCountReferences			=	0;
 
     m_Index						=	-1;
@@ -101,7 +101,7 @@ void CRecordSlide::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStream)
     }
     if (lCurLen != m_oHeader.RecLen)
     {
-        // нужно разобраться, что тут такое!!!
+        // Need to figure out what's going on here!!!
         LONG lPosition = 0;
         StreamUtils::StreamSeek(lPosition + m_oHeader.RecLen, pStream);
     }

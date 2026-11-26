@@ -65,12 +65,12 @@ void draw_shape::common_docx_convert(oox::docx_conversion_context & Context)
 	
 	Context.get_drawing_context().add_name_object(name.get_value_or(L"Shape"));
 
-//---------------------------сначала элементы графики  потом все остальное	
+//---------------------------first the graphic elements, then everything else
 	if (enhanced_geometry_)
 		enhanced_geometry_->docx_convert(Context);
 
-//---------------------------на другом контексте
-	//тут может быть не только текст , но и таблицы, другие объекты ...
+//---------------------------in a different context
+	//there can be not only text, but also tables, other objects...
  	oox::StreamsManPtr prev = Context.get_stream_man();
 	
 	std::wstringstream temp_stream(Context.get_drawing_context().get_text_stream_shape());

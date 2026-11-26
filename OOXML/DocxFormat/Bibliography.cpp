@@ -39,7 +39,7 @@ namespace OOX
 	}
 	CBibliography::CBibliography(OOX::Document* pMain, const CPath& oPath) : OOX::File(pMain)
 	{
-		read( oPath );
+		CBibliography::read( oPath );
 	}
 	void CBibliography::read(const CPath& oFilePath)
 	{
@@ -105,7 +105,7 @@ namespace OOX
 	}
 	void CBibliography::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, _T("SelectedStyle"), m_sSelectedStyle )
 			WritingElement_ReadAttributes_Read_else_if( oReader, _T("StyleName"),     m_sStyleName )

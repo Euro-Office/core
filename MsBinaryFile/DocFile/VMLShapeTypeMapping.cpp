@@ -30,7 +30,7 @@
 
 namespace DocFileFormat
 {
-	VMLShapeTypeMapping::VMLShapeTypeMapping (XMLTools::CStringXmlWriter* pWriter, bool isInlineShape) : PropertiesMapping(pWriter), _lock(NULL), _isInlineShape(isInlineShape)
+	VMLShapeTypeMapping::VMLShapeTypeMapping (XMLTools::CStringXmlWriter* pWriter, bool isInlineShape) : PropertiesMapping(pWriter), _lock(nullptr), _isInlineShape(isInlineShape)
 	{
         this->_lock = new XMLTools::XMLElement( L"o:lock");
         appendValueAttribute( this->_lock, L"v:ext", L"edit");
@@ -87,7 +87,7 @@ namespace DocFileFormat
                 m_pXmlWriter->WriteAttribute( L"o:preferrelative", L"t");
 			}
 
-            m_pXmlWriter->WriteNodeEnd( L"", true, false );//закрытие атрибутов
+            m_pXmlWriter->WriteNodeEnd( L"", true, false );//closing attributes
 
 			//Textpath
 			if (!pShape->Textpath.empty())

@@ -236,3 +236,12 @@ TEST(SMCustomShapeTest,PlusFirstMinusEmpty)
 	std::wstring wsXmlString = L"<a:gd name=\"gd35\" fmla=\"+- 1 0 0 \" />";
 	EXPECT_EQ(oConvers.GetStringXml(),wsXmlString);
 }
+TEST(SMCustomShapeTest,EmptyFormula)
+{
+	std::wstring wsString =L"";
+    OdfCustomShape::SMCustomShapePars oPars;
+    OdfCustomShape::SMCustomShapeConversion oConvers;
+	oPars.StartParsSMCustomShape(wsString,LEFT,TOP,RIGHT,BOTTOM);
+	oConvers.StartConversion(oPars.GetVector(),L"gd35");
+	EXPECT_EQ(oConvers.GetStringXml(),L"");
+}

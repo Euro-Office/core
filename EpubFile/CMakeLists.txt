@@ -26,6 +26,8 @@ add_library(EpubFile SHARED
   src/CBookInfo.cpp
 )
 
+target_link_libraries(EpubFile PRIVATE kernel HtmlFile2)
+
 target_compile_definitions(EpubFile PRIVATE EPUBFILE_LIBRARY)
 
 copy_artifacts_to_folder("EpubFile" "${EO_CORE_OUTPUT_DIR}")

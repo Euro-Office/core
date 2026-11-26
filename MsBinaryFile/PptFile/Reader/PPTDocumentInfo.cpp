@@ -26,7 +26,7 @@
 
 using namespace PPT;
 
-CPPTDocumentInfo::CPPTDocumentInfo() : m_oCurrentUser(), m_bMacroEnabled(true), m_pStream(NULL)
+CPPTDocumentInfo::CPPTDocumentInfo() : m_oCurrentUser(), m_bMacroEnabled(true), m_pStream(nullptr)
 {
 }
 
@@ -40,7 +40,7 @@ void CPPTDocumentInfo::Clear()
     size_t nCount = m_arUsers.size();
     while(0 != nCount)
     {
-        if (NULL != m_arUsers[nCount-1])
+        if (nullptr != m_arUsers[nCount-1])
             RELEASEOBJECT(m_arUsers[nCount-1])
 
                     m_arUsers.pop_back();
@@ -81,10 +81,10 @@ bool CPPTDocumentInfo::ReadFromStream(CRecordCurrentUserAtom *pCurrentUser, POLE
         offsetToEdit = pInfo->m_oUser.m_nOffsetLastEdit;
         m_oCurrentUser.m_bIsEncrypt = pInfo->m_bEncrypt;
 
-        if (bResult == false)
+        if (!bResult)
         {
             delete pInfo;
-            pInfo = NULL;   // may not work
+            pInfo = nullptr;   // may not work
 
             if (m_oCurrentUser.m_bIsEncrypt)
                 return false;
@@ -93,10 +93,10 @@ bool CPPTDocumentInfo::ReadFromStream(CRecordCurrentUserAtom *pCurrentUser, POLE
         }
 
         m_arUsers.push_back(pInfo);
-        // теперь нужно выставить у него параметры для других юзеров
+        // Now need to set its parameters for other users
         pInfo->m_lIndexThisUser = m_arUsers.size() - 1;
 
-        pInfo = NULL;
+        pInfo = nullptr;
     }
     return true;
 }
@@ -112,7 +112,12 @@ std::wstring CPPTDocumentInfo::GetBinFromStg(const std::wstring& name, _UINT32 n
             StreamUtils::StreamSeek(offset_stream, m_pStream);
 
             SRecordHeader oHeader;
-            oHeader.ReadFromStream(m_pStream);
+            // The offset comes out of the persistence table, so the record it
+            // points at may not be there at all. Without a header there is no
+            // length to hand to the reader, and reading on would size a buffer
+            // from whatever the stream happened to hold.
+            if (!oHeader.ReadFromStream(m_pStream))
+                return result;
 
             CRecordExObjStg* pExObjStg = new CRecordExObjStg(name, m_pCommonInfo->tempPath);
 
@@ -135,7 +140,7 @@ bool CPPTDocumentInfo::LoadDocument()
 
     try
     {
-        m_arUsers[0]->ReadExtenalObjects(); // todooo ???? прочитать по всем (см 66864)
+        m_arUsers[0]->ReadExtenalObjects(); // TODO???? read on all (see 66864)
         m_arUsers[0]->FromDocument();
 
         m_bMacroEnabled = m_arUsers[0]->m_bMacroEnabled;

@@ -28,7 +28,7 @@
 #include <algorithm>
 
 #define VECSUM(cont) \
-    std::accumulate(cont.begin(), cont.end(), decltype(cont)::value_type(0))
+    std::accumulate((cont).begin(), (cont).end(), decltype(cont)::value_type(0))
 
 using namespace PPT;
 
@@ -40,17 +40,14 @@ void TableWriter::Convert(PPTX::Logic::GraphicFrame &oGraphicFrame)
     if (!m_pTableElement)
         return;
 
-    if (/*m_pTableElement->m_xmlRawData.empty() || */true)
-    {
-        oGraphicFrame.nvGraphicFramePr = new PPTX::Logic::NvGraphicFramePr;
-        FillNvGraphicFramePr(oGraphicFrame.nvGraphicFramePr.get2());
+    oGraphicFrame.nvGraphicFramePr = new PPTX::Logic::NvGraphicFramePr;
+    FillNvGraphicFramePr(oGraphicFrame.nvGraphicFramePr.get2());
 
-        oGraphicFrame.xfrm = new PPTX::Logic::Xfrm;
-        FillXfrm(oGraphicFrame.xfrm.get2());
+    oGraphicFrame.xfrm = new PPTX::Logic::Xfrm;
+    FillXfrm(oGraphicFrame.xfrm.get2());
 
-        oGraphicFrame.table = new PPTX::Logic::Table;
-        FillTable(oGraphicFrame.table.get2());
-    }
+    oGraphicFrame.table = new PPTX::Logic::Table;
+    FillTable(oGraphicFrame.table.get2());
 }
 
 void TableWriter::FillNvGraphicFramePr(PPTX::Logic::NvGraphicFramePr& oNvGFPr)
@@ -109,13 +106,13 @@ std::vector<int> ProtoTable::getWidth(const std::vector<CElementPtr>& arrCells, 
         double left = pCell->m_rcChildAnchor.left;
         double width = pCell->m_rcChildAnchor.right - left;
 
-        // Here we search uniq left to answer: is it new colum?
+        // Here we search uniq left to answer: is it new column?
         auto iter = mapLeftWidth.find(left);
         if (iter == mapLeftWidth.end())
         {
             mapLeftWidth.insert(std::make_pair(left, width));
         }
-        // Here we check qestion: was it merged cell and now is it true width of colum?
+        // Check: was this a merged cell, and is this the true width of the column?
         else if (iter->second > width)
         {
             mapLeftWidth.erase(iter);
@@ -154,7 +151,7 @@ std::vector<int> ProtoTable::getHeight(const std::vector<CElementPtr>& arrCells,
         {
             mapTopHeight.insert(std::make_pair(top, height));
         }
-        // Here we check qestion: was it merged cell and now is it true height of row?
+        // Check: was this a merged cell, and is this the true height of the row?
         else if (iter->second > height)
         {
             mapTopHeight.erase(iter);
@@ -236,7 +233,7 @@ bool ProtoTable::fillCells(std::vector<CElementPtr> &arrCells)
             if (top == m_arrTop[posRow]) break;
         for (; posCol < countCol; posCol++)
             if (left == m_arrLeft[posCol]) break;
-        TCell* pParent = NULL;
+        TCell* pParent = nullptr;
         
         if (posRow < m_table.size())
         {
@@ -291,10 +288,8 @@ void ProtoTable::fillBorders(std::vector<CElementPtr> &arrSpliters)
 
         findCellPos(top, left, posFirstTop, posFirstLeft);
         findCellPos(bottom, right, posLastTop, posLastLeft);
-        if (!isDefaultBoard(pBorder) || true) // It doesn't need any more bug 54124 reopen #3
-        {
-            setBorders(posFirstTop, posFirstLeft, posLastTop, posLastLeft, ptrBorder);
-        }
+        // It doesn't need any more bug 54124 reopen #3
+        setBorders(posFirstTop, posFirstLeft, posLastTop, posLastLeft, ptrBorder);
     }
 }
 
@@ -308,7 +303,7 @@ bool ProtoTable::findCellPos(const int top, const int left, UINT &posRow, UINT &
     for (posCol = 0; posCol < countCol; posCol++)
         if (left == m_arrLeft[posCol]) break;
 
-    return !(posRow == countRow || posCol == countCol);
+    return posRow != countRow && posCol != countCol;
 }
 
 void ProtoTable::setBorders(const UINT posFRow, const UINT posFCol, const UINT posLRow, const UINT posLCol, CElementPtr ptrBorder)
@@ -424,6 +419,8 @@ void TableWriter::prepareShapes(std::vector<CElementPtr> &arrCells, std::vector<
         case 20:
             arrSpliters.push_back(ptrShape);
             break;
+        default:
+            break;
         }
     }
 }
@@ -443,8 +440,8 @@ void TableWriter::FillRow(PPTX::Logic::TableRow &oRow, ProtoTableRow& arrCells)
 
 std::wstring TableWriter::getXmlForGraphicFrame(int ID, int idx) const
 {
-    //в таблице могут быть линки и ссылки на другние объекты (картинки???)
-    // yliko_provolis.ppt (+ тут есть смарт арты)
+    //the table may contain links and references to other objects (images???)
+    // yliko_provolis.ppt (+ there are smart arts here)
 
     auto& rXml = m_pTableElement->m_xmlRawData;
 
@@ -453,10 +450,10 @@ std::wstring TableWriter::getXmlForGraphicFrame(int ID, int idx) const
 
     if (graphic_frame.nvGraphicFramePr.IsInit())
     {
-        graphic_frame.nvGraphicFramePr->cNvPr.id = ID; // или менять в карте связей для анимаций
+        graphic_frame.nvGraphicFramePr->cNvPr.id = ID; // or change in the connection map for animations
 
         if (graphic_frame.nvGraphicFramePr->nvPr.ph.IsInit() && idx >= 0)
-        {//проверить
+        {//check
             graphic_frame.nvGraphicFramePr->nvPr.ph->idx = std::to_wstring(idx);
         }
     }
@@ -549,7 +546,7 @@ void TCell::setParentDirection()
         else if (m_pParent->m_col != m_col && m_pParent->m_row == m_row)
             m_parentDirection = horz;
         else
-            m_parentDirection = hove;
+            m_parentDirection = both;
     }
 }
 
@@ -560,9 +557,7 @@ void TCell::setGridSpan(int gridSpan)
 
 bool TCell::isRealCell() const
 {
-    if ((m_rowSpan == 2 || m_gridSpan == 2) && m_parentDirection != TCell::none)
-        return false;
-    return true;
+    return (m_rowSpan != 2 && m_gridSpan != 2) || m_parentDirection == TCell::none;
 }
 
 void TCell::FillTxBody(PPTX::Logic::TxBody& oTxBody, CTextCFRun* pLastCF)
@@ -598,7 +593,6 @@ void TCell::FillTcPr(PPTX::Logic::TableCellProperties &oTcPr)
     oTcPr.MarL = PPT::round(pShape->m_dTextMarginX);
     oTcPr.MarR = PPT::round(pShape->m_dTextMarginRight);
 
-    if (true)
     {
         oTcPr.HorzOverflow = new PPTX::Limit::HorzOverflow;
         oTcPr.HorzOverflow->set(L"overflow");
@@ -661,7 +655,7 @@ void TCell::SetTcPrInvisibleBorder(PPTX::Logic::TableCellProperties &oTcPr, TCel
 
 bool TCell::isInvisibleBorder(const CElementPtr ptrBorder)
 {
-    const bool isInv = ptrBorder && ptrBorder->m_bLine == false;
+    const bool isInv = ptrBorder && !ptrBorder->m_bLine;
     return isInv;
 }
 
@@ -674,7 +668,7 @@ bool TCell::isInvisibleBorders() const
     for (auto IterBorder : m_mapBorders)
     {
         if ((IterBorder.first != TCell::lnBlToTr && IterBorder.first != TCell::lnTlToBr)
-                && isInvisibleBorder(IterBorder.second) == false)
+                && !isInvisibleBorder(IterBorder.second))
         {
             isInvisibele = false;
         }

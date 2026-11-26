@@ -38,7 +38,7 @@ namespace DocFileFormat
 	/*========================================================================================================*/
 
 	FontFamilyName::FontFamilyName():
-	fTrueType(false), ff(0), wWeight(0), chs(0), prq(0), panose(NULL), panoseSize(0)
+	fTrueType(false), ff(0), wWeight(0), chs(0), prq(0), panose(nullptr), panoseSize(0)
 	{
 	  this->fs.CodePageBitfield0 = 0;
 	  this->fs.CodePageBitfield1 = 0;
@@ -63,7 +63,7 @@ namespace DocFileFormat
 		newObject->fTrueType	=					FormatUtils::BitmaskToBool	( ffid, 0x04 );
 		newObject->ff			= (unsigned char)	FormatUtils::BitmaskToInt	( ffid, 0x70 );
 
-		//int sz_fonts = 150; //..  нужно генерить уникальное todooo
+		//int sz_fonts = 150; //.. need to generate a unique TODO
 		int szAlt = 0;
 		if (reader->nWordVersion == 2)
 		{

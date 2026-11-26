@@ -64,7 +64,7 @@ namespace DocFileFormat
             else
                 dptSpace = val & 0x001F;
 
-			//not sure if this is correct, the values from the spec are definitly wrong:
+			//not sure if this is correct, the values from the spec are definitely wrong:
 			fShadow = FormatUtils::BitmaskToBool( val, 0x20 );
 			fFrame = FormatUtils::BitmaskToBool( val, 0x40 );
 		}
@@ -112,7 +112,7 @@ namespace DocFileFormat
 		{
 			return FormatUtils::IntToFormattedWideString(*cv, L"#%06x");
 		}
-		else if (false == ico.empty())
+		else if (!ico.empty())
 		{
 			return ico;
 		}
@@ -120,16 +120,9 @@ namespace DocFileFormat
 	}
 	bool BorderCode::operator == ( const BorderCode& bc )
 	{
-		if ( ( cv == bc.cv ) && ( dptLineWidth == bc.dptLineWidth ) && ( brcType == bc.brcType ) &&
+		return ( cv == bc.cv ) && ( dptLineWidth == bc.dptLineWidth ) && ( brcType == bc.brcType ) &&
 			(ico == bc.ico ) && ( dptSpace == bc.dptSpace ) && ( fShadow == bc.fShadow ) &&
-			( fFrame == bc.fFrame ) && ( fNil == bc.fNil ) )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+			( fFrame == bc.fFrame ) && ( fNil == bc.fNil );
 	}
 
 	bool BorderCode::operator != ( const BorderCode& bc )

@@ -51,3 +51,5 @@ add_library(CompoundFileLib STATIC
 set_default_options(CompoundFileLib)
 
 set_property(TARGET CompoundFileLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+declare_victory( CompoundFileLib )

@@ -1,18 +1,710 @@
 include_guard(GLOBAL)
 
+if(POLICY CMP0167)
+    cmake_policy(SET CMP0167 OLD)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(EO_CORE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/package" CACHE PATH "Where to place output files (absolute path recommended)")
-set(EO_CORE_TOOLS_DIR  "${CMAKE_BINARY_DIR}/package" CACHE PATH "Where to place tools output files (absolute path recommended)")
+cmake_path( APPEND DEFAULT_EO_CORE_OUTPUT_DIR "${CMAKE_BINARY_DIR}" "package" )
+cmake_path( APPEND DEFAULT_EO_CORE_TOOLS_DIR "${CMAKE_BINARY_DIR}" "package" )
 
-set(EO_CORE_3RD_PARTY_DIR "${CMAKE_BINARY_DIR}/third_party" CACHE PATH "Where to place and build 3rd party projects (absolute path recommended)")
-set(EO_CORE_3RD_PARTY_WORK_DIR "${EO_CORE_3RD_PARTY_DIR}/workdir" CACHE PATH "3rd party work dir for clone and build.")
-set(EO_CORE_3RD_PARTY_INSTALL_DIR "${EO_CORE_3RD_PARTY_DIR}/install" CACHE PATH "3rd party install dir.")
+cmake_path( APPEND DEFAULT_EO_CORE_3RD_PARTY_DIR "${CMAKE_BINARY_DIR}" "third_party" )
 
-set(VCPKG_BINARY_REMOTE "https://cloud.nextcloud.com/public.php/dav/files/n9KYBcFYyLLCgEw" CACHE STRING "Base URL for vcpkg binary package remote")
+if( NOT DEFINED EO_CORE_OUTPUT_DIR )
+    set(EO_CORE_OUTPUT_DIR "${DEFAULT_EO_CORE_OUTPUT_DIR}" CACHE PATH "Where to place output files (absolute path recommended)")
+endif()
 
+if( NOT DEFINED EO_CORE_TOOLS_DIR )
+    set(EO_CORE_TOOLS_DIR  "${DEFAULT_EO_CORE_TOOLS_DIR}" CACHE PATH "Where to place tools output files (absolute path recommended)")
+endif()
+
+file(TO_CMAKE_PATH "${EO_CORE_OUTPUT_DIR}" EO_CORE_OUTPUT_DIR)
+file(TO_CMAKE_PATH "${EO_CORE_TOOLS_DIR}"  EO_CORE_TOOLS_DIR)
+if(NOT IS_ABSOLUTE "${EO_CORE_OUTPUT_DIR}")
+    cmake_path(ABSOLUTE_PATH EO_CORE_OUTPUT_DIR BASE_DIRECTORY "${CMAKE_BINARY_DIR}" NORMALIZE)
+endif()
+if(NOT IS_ABSOLUTE "${EO_CORE_TOOLS_DIR}")
+    cmake_path(ABSOLUTE_PATH EO_CORE_TOOLS_DIR BASE_DIRECTORY "${CMAKE_BINARY_DIR}" NORMALIZE)
+endif()
+
+# Static and Windows import libraries of a core package (see
+# cmake/core-package.cmake). Only used by core's own top-level build.
+if( NOT DEFINED EO_CORE_LIB_DIR )
+    cmake_path( APPEND DEFAULT_EO_CORE_LIB_DIR "${CMAKE_BINARY_DIR}" "package" "lib" )
+    set(EO_CORE_LIB_DIR "${DEFAULT_EO_CORE_LIB_DIR}" CACHE PATH "Where to place the static and import libraries of a core package")
+endif()
+file(TO_CMAKE_PATH "${EO_CORE_LIB_DIR}" EO_CORE_LIB_DIR)
+if(NOT IS_ABSOLUTE "${EO_CORE_LIB_DIR}")
+    cmake_path(ABSOLUTE_PATH EO_CORE_LIB_DIR BASE_DIRECTORY "${CMAKE_BINARY_DIR}" NORMALIZE)
+endif()
+
+if( NOT DEFINED EO_CORE_3RD_PARTY_DIR )
+    set(EO_CORE_3RD_PARTY_DIR "${DEFAULT_EO_CORE_3RD_PARTY_DIR}" CACHE PATH "Where to place and build 3rd party projects (absolute path recommended)")
+endif()
+
+if( NOT DEFINED EO_CORE_3RD_PARTY_WORK_DIR )
+    cmake_path( APPEND DEFAULT_EO_CORE_3RD_PARTY_WORK_DIR "${EO_CORE_3RD_PARTY_DIR}" "work" )
+    set(EO_CORE_3RD_PARTY_WORK_DIR "${DEFAULT_EO_CORE_3RD_PARTY_WORK_DIR}" CACHE PATH "3rd party work dir for clone and build.")
+endif()
+
+if( NOT DEFINED EO_CORE_3RD_PARTY_INSTALL_DIR )
+    cmake_path( APPEND DEFAULT_EO_CORE_3RD_PARTY_INSTALL_DIR "${EO_CORE_3RD_PARTY_DIR}" "install" )
+    set(EO_CORE_3RD_PARTY_INSTALL_DIR "${DEFAULT_EO_CORE_3RD_PARTY_INSTALL_DIR}" CACHE PATH "3rd party install dir.")
+endif()
+
+# FreeType sources (Common/3dParty/freetype), compiled into each consumer
+set(FREETYPE_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/freetype")
+
+# OpenJPEG sources (Common/3dParty/openjpeg), compiled into each consumer
+set(OPENJPEG_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openjpeg")
+
+if( NOT DEFINED VCPKG_BINARY_REMOTE )
+    set(VCPKG_BINARY_REMOTE "https://s3.eu-central-4.ionoscloud.com/eo-build-assets/vcpkg" CACHE STRING "Base URL for vcpkg binary package remote")
+endif()
+
+if( NOT DEFINED PYTHON_BIN )
+    find_package(Python3 REQUIRED)
+    set(PYTHON_BIN "${Python3_EXECUTABLE}" CACHE FILEPATH "Python binary to use.")
+endif()
+
+if(NOT DEFINED LINUX AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(LINUX TRUE)
+endif()
+
+# Android builds (NDK toolchain file) use core's Linux code paths
+if(ANDROID)
+    set(LINUX TRUE)
+endif()
+
+message("3rdparty dir: " ${EO_CORE_3RD_PARTY_DIR})
+message("workdir: " ${EO_CORE_3RD_PARTY_WORK_DIR})
+message("install: " ${EO_CORE_3RD_PARTY_INSTALL_DIR})
+
+if( EMSCRIPTEN )
+
+    if(NOT THIRD_PARTY_PREPARED)
+        cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
+        execute_process(
+            COMMAND_ECHO STDOUT
+            COMMAND "${PYTHON_BIN}"
+            "${BUILDER_PATH}"
+            "--target=wasm"
+            "--only=openssl-hash,hunspell,brotli,cryptopp,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm,jbig2enc,djvulibre"
+            "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
+            RESULT_VARIABLE result
+            OUTPUT_VARIABLE output
+            ERROR_VARIABLE error
+        )
+
+        if(result) # on error
+            message(STATUS "Python script output: ${output}")
+            message(STATUS "Python script error: ${error}")
+            message(FATAL_ERROR "Common/3dParty/build_3rdparty.py failed!")
+        else()
+            message(STATUS "Python script output: ${output}")
+            set(THIRD_PARTY_PREPARED TRUE CACHE INTERNAL "Third party prepared")
+        endif()
+    endif()
+
+    # Third-party only (build.sh --third-party-only): stop after building them
+    if(EO_THIRD_PARTY_ONLY)
+        return()
+    endif()
+
+    # Setup openssl
+    set(OPENSSL_WASM_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash")
+    get_filename_component(OPENSSL_WASM_INSTALL_DIR_ABS "${OPENSSL_WASM_INSTALL_DIR}" ABSOLUTE)
+    set(OPENSSL_WASM_LIBSSL "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib64/libssl.a")
+    set(OPENSSL_WASM_LIBCRYPTO "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib64/libcrypto.a")
+
+    # Setup libxml2-wasm
+    set(LIBXML2_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libxml2-wasm")
+    get_filename_component(LIBXML2_INSTALL_DIR_ABS "${LIBXML2_INSTALL_DIR}" ABSOLUTE)
+    add_library(LibXml2 STATIC IMPORTED GLOBAL)
+    set_target_properties(LibXml2 PROPERTIES
+        IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
+    )
+
+    # Setup libjpeg-turbo-wasm
+    set(LIBJPEG_TURBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libjpeg-turbo-wasm")
+    get_filename_component(LIBJPEG_TURBO_INSTALL_DIR_ABS "${LIBJPEG_TURBO_INSTALL_DIR}" ABSOLUTE)
+    add_library(jpeg STATIC IMPORTED GLOBAL)
+    set_target_properties(jpeg PROPERTIES
+        IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/libjpeg.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
+    )
+
+    # Setup libpng-wasm
+    set(LIBPNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libpng-wasm")
+    get_filename_component(LIBPNG_INSTALL_DIR_ABS "${LIBPNG_INSTALL_DIR}" ABSOLUTE)
+    add_library(png STATIC IMPORTED GLOBAL)
+    set_target_properties(png PROPERTIES
+        IMPORTED_LOCATION "${LIBPNG_INSTALL_DIR_ABS}/lib/libpng16.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBPNG_INSTALL_DIR_ABS}/include"
+    )
+
+    # Setup libtiff-wasm
+    set(LIBTIFF_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libtiff-wasm")
+    get_filename_component(LIBTIFF_INSTALL_DIR_ABS "${LIBTIFF_INSTALL_DIR}" ABSOLUTE)
+    add_library(tiff STATIC IMPORTED GLOBAL)
+    set_target_properties(tiff PROPERTIES
+        IMPORTED_LOCATION "${LIBTIFF_INSTALL_DIR_ABS}/lib/libtiff.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBTIFF_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES jpeg
+    )
+
+    # Setup libwebp-wasm
+    set(LIBWEBP_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libwebp-wasm")
+    get_filename_component(LIBWEBP_INSTALL_DIR_ABS "${LIBWEBP_INSTALL_DIR}" ABSOLUTE)
+    add_library(sharpyuv STATIC IMPORTED GLOBAL)
+    set_target_properties(sharpyuv PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libsharpyuv.a"
+    )
+    add_library(webp STATIC IMPORTED GLOBAL)
+    set_target_properties(webp PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libwebp.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBWEBP_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES sharpyuv
+    )
+    foreach(LIBWEBP_COMPONENT webpdemux webpmux)
+        add_library(${LIBWEBP_COMPONENT} STATIC IMPORTED GLOBAL)
+        set_target_properties(${LIBWEBP_COMPONENT} PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/lib${LIBWEBP_COMPONENT}.a"
+            INTERFACE_LINK_LIBRARIES webp
+        )
+    endforeach()
+
+    # Setup leptonica-wasm
+    set(LEPTONICA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/leptonica-wasm")
+    get_filename_component(LEPTONICA_INSTALL_DIR_ABS "${LEPTONICA_INSTALL_DIR}" ABSOLUTE)
+    add_library(leptonica STATIC IMPORTED GLOBAL)
+    set_target_properties(leptonica PROPERTIES
+        IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/libleptonica.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+    )
+
+else()
+
+    if(NOT THIRD_PARTY_PREPARED)
+        set(THIRD_PARTY_ENV "")
+        if(ANDROID)
+            # Cross-compile the deps for this build's ABI
+            if(ANDROID_ABI STREQUAL "arm64-v8a")
+                set(ANDROID_3RD_PARTY_TARGET "android-arm64")
+            elseif(ANDROID_ABI STREQUAL "x86_64")
+                set(ANDROID_3RD_PARTY_TARGET "android-x64")
+            else()
+                message(FATAL_ERROR "Unsupported Android ABI: ${ANDROID_ABI}")
+            endif()
+            set(THIRD_PARTY_ARGS
+                "--target=${ANDROID_3RD_PARTY_TARGET}"
+                "--only=apple,boost,brotli,cryptopp,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,nlohmann_json,sioxx,v8,zlib-ng,libpng,libtiff,libwebp,libde265,libaom,libheif,leptonica,jbig2enc,djvulibre"
+            )
+            set(THIRD_PARTY_ENV
+                "ANDROID_NDK_ROOT=${ANDROID_NDK}"
+                "EO_ANDROID_API_LEVEL=${ANDROID_NATIVE_API_LEVEL}"
+            )
+        else()
+            if(NOT BUILD_DESKTOP)
+                set(NO_DESKTOP_EXCLUDE ",cef,qt")
+            endif()
+
+            set(PLATFORM_EXCLUDE "")
+            if(BUILD_DESKTOP AND APPLE)
+                # macOS editors are native Cocoa, not Qt - still need cef.
+                set(PLATFORM_EXCLUDE ",qt")
+            endif()
+
+            set(PREBUILT_EXCLUDE "")
+            if(EO_CORE_PREBUILT_DIR)
+                # Only doctrenderer links V8, and the package has it built in
+                set(PREBUILT_EXCLUDE ",v8")
+            endif()
+
+            # cef and qt need old build environment, cannot be built here
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libwebp-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}${PREBUILT_EXCLUDE}")
+
+            # On x86_64 Linux the Rocky 9 compiler may emit SSE4.2 or higher
+            # instructions without an explicit -march constraint. Pass CFLAGS/CXXFLAGS
+            # so that cmake-based and autoconf-based dep builds stay at x86-64 baseline.
+            if(LINUX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+                set(THIRD_PARTY_ENV
+                    "CFLAGS=-march=x86-64"
+                    "CXXFLAGS=-march=x86-64"
+                )
+            endif()
+        endif()
+
+        cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
+        execute_process(
+            COMMAND_ECHO STDOUT
+            COMMAND "${CMAKE_COMMAND}" -E env ${THIRD_PARTY_ENV}
+            "${PYTHON_BIN}"
+            "${BUILDER_PATH}"
+            ${THIRD_PARTY_ARGS}
+            "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
+            RESULT_VARIABLE result
+            OUTPUT_VARIABLE output
+            ERROR_VARIABLE error
+        )
+
+        if(result) # on error
+            message(STATUS "Python script output: ${output}")
+            message(STATUS "Python script error: ${error}")
+            message(FATAL_ERROR "Common/3dParty/build_3rdparty.py failed!")
+        else()
+            message(STATUS "Python script output: ${output}")
+            set(THIRD_PARTY_PREPARED TRUE CACHE INTERNAL "Third party prepared")
+        endif()
+    endif()
+
+    # Third-party only (build.sh --third-party-only): stop after building them
+    if(EO_THIRD_PARTY_ONLY)
+        return()
+    endif()
+
+    if(MSVC)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" CACHE STRING "" FORCE)
+    endif()
+
+    if(BUILD_DESKTOP)
+        if(NOT APPLE)
+            # macOS editors are native Cocoa, not Qt - only win-linux's desktop
+            # GUI needs it, so skip fetching/requiring it on Apple entirely.
+            # Setup qt
+            # Priority: explicit QT6_ROOT override > path recorded by the fetch script >
+            # glob of the <version>/<arch> layout of qt/nc-build.py.
+            if(DEFINED ENV{QT6_ROOT})
+                set(QT_ROOT "$ENV{QT6_ROOT}")
+            else()
+                set(_qt_install "${EO_CORE_3RD_PARTY_INSTALL_DIR}/qt")
+                message(STATUS "Searching qt6 root")
+                if(EXISTS "${_qt_install}/qt6_root.txt")
+                    file(READ "${_qt_install}/qt6_root.txt" QT_ROOT)
+                    string(STRIP "${QT_ROOT}" QT_ROOT)
+                    message(STATUS "Found qt6 root: " ${QT_ROOT})
+                else()
+                    # Fallback: find the prefix (arch folder varies by platform)
+                    file(GLOB _qt6_cfg "${_qt_install}/*/*/lib/cmake/Qt6/Qt6Config.cmake")
+                    if(_qt6_cfg)
+                        list(GET _qt6_cfg 0 _qt6_cfg)
+                        get_filename_component(_qt6_dir "${_qt6_cfg}" DIRECTORY)
+                        get_filename_component(QT_ROOT "${_qt6_dir}/../../.." ABSOLUTE)
+                    endif()
+                endif()
+            endif()
+
+            if(NOT QT_ROOT OR NOT EXISTS "${QT_ROOT}/lib/cmake/Qt6")
+                message(STATUS "Qt6 root: " ${QT_ROOT})
+                message(FATAL_ERROR "Qt6 not found. Run the fetch script or set QT6_ROOT.")
+            endif()
+
+            file(TO_CMAKE_PATH "${QT_ROOT}" QT_ROOT)
+
+            set(QT_VERSION_MAJOR 6)
+            set(QT_DIR  "${QT_ROOT}/lib/cmake/Qt6")
+            set(Qt6_DIR "${QT_ROOT}/lib/cmake/Qt6")
+
+            find_package(Qt6 REQUIRED COMPONENTS
+                Core Gui Widgets PrintSupport Svg LinguistTools Multimedia MultimediaWidgets OpenGLWidgets
+                CorePrivate GuiPrivate PrintSupportPrivate)
+        endif()
+
+        # Setup cef
+        set(CEF_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cef")
+        list(APPEND CMAKE_MODULE_PATH "${CEF_ROOT}/cmake")
+        # CEF only recognizes arm64 by the macOS/MSVC names and would build
+        # libcef_dll_wrapper with x86-64 flags for Linux aarch64.
+        if(NOT DEFINED PROJECT_ARCH AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|ARM64)$")
+            set(PROJECT_ARCH "arm64")
+        endif()
+        # CEF builds libcef_dll_wrapper with the static runtime (/MT) by default;
+        # everything here uses the DLL runtime (CMAKE_MSVC_RUNTIME_LIBRARY above).
+        set(CEF_RUNTIME_LIBRARY_FLAG "/MD" CACHE STRING "MSVC runtime for CEF targets")
+        find_package(CEF REQUIRED)
+
+    endif()
+
+
+    # Setup icu
+    # These version numbers don't affect what build_3rdparty.py builds. They just have to match.
+    set(ICU_MAJOR_VER "74")
+    set(ICU_MINOR_VER "2")
+    set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
+    get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
+        set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
+        set(LIBICUI    "${ICU_INSTALL_DIR_ABS}/lib/icuin.lib")
+    elseif( ANDROID )
+        # Renamed by Common/3dParty/icu/nc-build.py: Android only loads plain
+        # lib<name>.so files, and libicuuc.so would resolve to the system's ICU
+        set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc${ICU_MAJOR_VER}.so")
+        set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata${ICU_MAJOR_VER}.so")
+        set(LIBICUI "${ICU_INSTALL_DIR_ABS}/lib/libicui18n${ICU_MAJOR_VER}.so")
+    elseif( APPLE )
+        set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.${ICU_MAJOR_VER}.dylib")
+        set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.${ICU_MAJOR_VER}.dylib")
+        set(LIBICUI "${ICU_INSTALL_DIR_ABS}/lib/libicui18n.${ICU_MAJOR_VER}.dylib")
+    else()
+        set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}")
+        set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
+        set(LIBICUI "${ICU_INSTALL_DIR_ABS}/lib/libicui18n.so.${ICU_MAJOR_VER}")
+    endif()
+
+    # Setup boost
+    set( BOOST_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/boost" )
+    get_filename_component(BOOST_INSTALL_DIR_ABS "${BOOST_INSTALL_DIR}" ABSOLUTE)
+    list( APPEND CMAKE_PREFIX_PATH "${BOOST_INSTALL_DIR_ABS}" )
+    include_directories( "${BOOST_INSTALL_DIR_ABS}/include" )
+    set(Boost_USE_STATIC_LIBS ON)
+    if( ANDROID )
+        # The NDK toolchain only searches its sysroot for packages by default
+        set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
+    endif()
+    find_package( Boost REQUIRED COMPONENTS system filesystem regex date_time )
+
+    # Setup v8
+    set(V8_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/v8")
+    get_filename_component(V8_INSTALL_DIR_ABS "${V8_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(V8_MONOLITH "${V8_INSTALL_DIR_ABS}/v8_monolith.lib")
+    else()
+        set(V8_MONOLITH "${V8_INSTALL_DIR_ABS}/libv8_monolith.a")
+    endif()
+
+    # Setup openssl
+    set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl")
+    get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.lib")
+        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.lib")
+    elseif( APPLE )
+        set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a")
+        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a")
+    else()
+        set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib64/libssl.a")
+        # The static libcrypto calls dlopen() and pthread functions. Before
+        # glibc 2.34 (RHEL/Rocky 8) those are in libdl and libpthread, so
+        # linking an executable against it needs both.
+        find_package(Threads REQUIRED)
+        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a" ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
+    endif()
+
+    # Setup nlohmann_json
+    set(NLOHMANN_JSON_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/nlohmann_json")
+    get_filename_component(NLOHMANN_JSON_INSTALL_DIR_ABS "${NLOHMANN_JSON_INSTALL_DIR}" ABSOLUTE)
+    list( APPEND CMAKE_PREFIX_PATH "${NLOHMANN_JSON_INSTALL_DIR_ABS}" )
+
+    # On Android the NDK toolchain sets CMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY, so
+    # find_dependency() inside sioxxConfig.cmake won't search CMAKE_PREFIX_PATH.
+    if( ANDROID )
+        list( APPEND CMAKE_FIND_ROOT_PATH "${NLOHMANN_JSON_INSTALL_DIR_ABS}" "${OPENSSL_INSTALL_DIR_ABS}" )
+    endif()
+
+    # Setup sioxx
+    set(SIOXX_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/sioxx")
+    get_filename_component(SIOXX_INSTALL_DIR_ABS "${SIOXX_INSTALL_DIR}" ABSOLUTE)
+    list( APPEND CMAKE_PREFIX_PATH "${SIOXX_INSTALL_DIR_ABS}" )
+
+    # Setup zlib-ng
+    set(ZLIBNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/zlib-ng")
+    get_filename_component(ZLIBNG_INSTALL_DIR_ABS "${ZLIBNG_INSTALL_DIR}" ABSOLUTE)
+    set(ZLIBNG_INCLUDEDIR_ABS "${ZLIBNG_INSTALL_DIR_ABS}/include")
+    set(ZLIBNG_LIBDIR_ABS "${ZLIBNG_INSTALL_DIR_ABS}/lib")
+    if( MSVC )
+        set(ZLIBNG_LIB_NAME "zlibstatic")
+        add_library(minizip STATIC IMPORTED GLOBAL)
+        set_target_properties(minizip PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/minizip.lib"
+            INTERFACE_LINK_LIBRARIES "Bcrypt"
+        )
+        add_library(z STATIC IMPORTED GLOBAL)
+        set_target_properties(z PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/${ZLIBNG_LIB_NAME}.lib"
+        )
+    else()
+        add_library(minizip STATIC IMPORTED GLOBAL)
+        set_target_properties(minizip PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/libminizip.a"
+        )
+        add_library(z STATIC IMPORTED GLOBAL)
+        set_target_properties(z PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/libz.a"
+        )
+    endif()
+
+    # Setup libxml2
+    set(LIBXML2_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libxml2")
+    get_filename_component(LIBXML2_INSTALL_DIR_ABS "${LIBXML2_INSTALL_DIR}" ABSOLUTE)
+    add_library(LibXml2 STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        # libxml2's CMake names static MSVC builds lib<name><postfix>.lib, with
+        # postfix "s" for Release (and "sd" for Debug): libxml2s.lib.
+        # bcrypt: libxml2 needs it on Windows (random numbers), but only links it
+        # privately, which a static lib does not carry along.
+        set_target_properties(LibXml2 PROPERTIES
+            IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2s.lib"
+            INTERFACE_COMPILE_DEFINITIONS "LIBXML_STATIC"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
+            INTERFACE_LINK_LIBRARIES "bcrypt"
+        )
+    else()
+        set_target_properties(LibXml2 PROPERTIES
+            IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
+        )
+    endif()
+
+    # Setup libjpeg-turbo
+    set(LIBJPEG_TURBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libjpeg-turbo")
+    get_filename_component(LIBJPEG_TURBO_INSTALL_DIR_ABS "${LIBJPEG_TURBO_INSTALL_DIR}" ABSOLUTE)
+    add_library(jpeg STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        # libjpeg-turbo names its static MSVC library jpeg-static.lib
+        set_target_properties(jpeg PROPERTIES
+            IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/jpeg-static.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
+        )
+    else()
+        set_target_properties(jpeg PROPERTIES
+            IMPORTED_LOCATION "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/lib/libjpeg.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
+        )
+    endif()
+
+    # Setup libpng
+    set(LIBPNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libpng")
+    get_filename_component(LIBPNG_INSTALL_DIR_ABS "${LIBPNG_INSTALL_DIR}" ABSOLUTE)
+    add_library(png STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set(LIBPNG_LIB_NAME "libpng16_static.lib")
+    else()
+        set(LIBPNG_LIB_NAME "libpng16.a")
+    endif()
+    set_target_properties(png PROPERTIES
+        IMPORTED_LOCATION "${LIBPNG_INSTALL_DIR_ABS}/lib/${LIBPNG_LIB_NAME}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBPNG_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES z
+    )
+
+    # Setup libtiff
+    set(LIBTIFF_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libtiff")
+    get_filename_component(LIBTIFF_INSTALL_DIR_ABS "${LIBTIFF_INSTALL_DIR}" ABSOLUTE)
+    add_library(tiff STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set(LIBTIFF_LIB_NAME "tiff.lib")
+    else()
+        set(LIBTIFF_LIB_NAME "libtiff.a")
+    endif()
+    set_target_properties(tiff PROPERTIES
+        IMPORTED_LOCATION "${LIBTIFF_INSTALL_DIR_ABS}/lib/${LIBTIFF_LIB_NAME}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBTIFF_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES "jpeg;z"
+    )
+
+    # Setup libwebp (MSVC builds are named like the others, libwebp.lib)
+    set(LIBWEBP_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libwebp")
+    get_filename_component(LIBWEBP_INSTALL_DIR_ABS "${LIBWEBP_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(LIBWEBP_LIB_SUFFIX ".lib")
+        set(LIBWEBP_DEP_LIBS "")
+    elseif( ANDROID )
+        set(LIBWEBP_LIB_SUFFIX ".a")
+        add_library(cpufeatures-webp STATIC IMPORTED GLOBAL)
+        set_target_properties(cpufeatures-webp PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libcpufeatures-webp.a"
+            INTERFACE_LINK_LIBRARIES dl
+        )
+        set(LIBWEBP_DEP_LIBS "cpufeatures-webp;m")
+    else()
+        set(LIBWEBP_LIB_SUFFIX ".a")
+        set(LIBWEBP_DEP_LIBS m)
+    endif()
+    add_library(sharpyuv STATIC IMPORTED GLOBAL)
+    set_target_properties(sharpyuv PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libsharpyuv${LIBWEBP_LIB_SUFFIX}"
+        INTERFACE_LINK_LIBRARIES "${LIBWEBP_DEP_LIBS}"
+    )
+    add_library(webp STATIC IMPORTED GLOBAL)
+    set_target_properties(webp PROPERTIES
+        IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/libwebp${LIBWEBP_LIB_SUFFIX}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBWEBP_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES "sharpyuv;${LIBWEBP_DEP_LIBS}"
+    )
+    foreach(LIBWEBP_COMPONENT webpdemux webpmux)
+        add_library(${LIBWEBP_COMPONENT} STATIC IMPORTED GLOBAL)
+        set_target_properties(${LIBWEBP_COMPONENT} PROPERTIES
+            IMPORTED_LOCATION "${LIBWEBP_INSTALL_DIR_ABS}/lib/lib${LIBWEBP_COMPONENT}${LIBWEBP_LIB_SUFFIX}"
+            INTERFACE_LINK_LIBRARIES webp
+        )
+    endforeach()
+
+    # Setup libheif with libde265 (HEIC) and libaom (AVIF), decoding only.
+    # Not in the wasm builds (CXIMAGE_SUPPORT_HEIF is off there).
+    set(LIBDE265_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libde265")
+    get_filename_component(LIBDE265_INSTALL_DIR_ABS "${LIBDE265_INSTALL_DIR}" ABSOLUTE)
+    set(LIBAOM_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libaom")
+    get_filename_component(LIBAOM_INSTALL_DIR_ABS "${LIBAOM_INSTALL_DIR}" ABSOLUTE)
+    set(LIBHEIF_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libheif")
+    get_filename_component(LIBHEIF_INSTALL_DIR_ABS "${LIBHEIF_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(LIBDE265_LIBRARY "${LIBDE265_INSTALL_DIR_ABS}/lib/libde265.lib")
+        set(LIBAOM_LIBRARY "${LIBAOM_INSTALL_DIR_ABS}/lib/aom.lib")
+        set(LIBHEIF_LIBRARY "${LIBHEIF_INSTALL_DIR_ABS}/lib/heif.lib")
+        set(LIBHEIF_DEP_LIBS "")
+    else()
+        set(LIBDE265_LIBRARY "${LIBDE265_INSTALL_DIR_ABS}/lib/libde265.a")
+        set(LIBAOM_LIBRARY "${LIBAOM_INSTALL_DIR_ABS}/lib/libaom.a")
+        set(LIBHEIF_LIBRARY "${LIBHEIF_INSTALL_DIR_ABS}/lib/libheif.a")
+        # libde265 decodes on its own threads
+        if( ANDROID OR APPLE )
+            set(LIBHEIF_DEP_LIBS m)
+        else()
+            set(LIBHEIF_DEP_LIBS "m;pthread")
+        endif()
+    endif()
+    add_library(de265 STATIC IMPORTED GLOBAL)
+    set_target_properties(de265 PROPERTIES
+        IMPORTED_LOCATION "${LIBDE265_LIBRARY}"
+        INTERFACE_LINK_LIBRARIES "${LIBHEIF_DEP_LIBS}"
+    )
+    add_library(aom STATIC IMPORTED GLOBAL)
+    set_target_properties(aom PROPERTIES
+        IMPORTED_LOCATION "${LIBAOM_LIBRARY}"
+        INTERFACE_LINK_LIBRARIES "${LIBHEIF_DEP_LIBS}"
+    )
+    add_library(heif STATIC IMPORTED GLOBAL)
+    set_target_properties(heif PROPERTIES
+        IMPORTED_LOCATION "${LIBHEIF_LIBRARY}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBHEIF_INSTALL_DIR_ABS}/include"
+        INTERFACE_COMPILE_DEFINITIONS LIBHEIF_STATIC_BUILD
+        INTERFACE_LINK_LIBRARIES "de265;aom"
+    )
+
+    # Setup leptonica
+    set(LEPTONICA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/leptonica")
+    get_filename_component(LEPTONICA_INSTALL_DIR_ABS "${LEPTONICA_INSTALL_DIR}" ABSOLUTE)
+    add_library(leptonica STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set_target_properties(leptonica PROPERTIES
+            IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/leptonica-1.87.0.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+            INTERFACE_LINK_LIBRARIES "user32;gdi32"
+        )
+    else()
+        set_target_properties(leptonica PROPERTIES
+            IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/libleptonica.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+            INTERFACE_LINK_LIBRARIES m
+        )
+    endif()
+
+endif()
+
+# Crypto++ is fetched as sources and compiled by core (Common/3dParty/cryptopp).
+# Include it as <cryptopp/...>.
+set(CRYPTOPP_INCLUDE_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cryptopp")
+set(CRYPTOPP_SOURCES_DIR "${CRYPTOPP_INCLUDE_DIR}/cryptopp")
+
+# jbig2enc is compiled into the targets that use it (source-only dependency)
+set(JBIG2ENC_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/jbig2enc/src")
+set(JBIG2ENC_SOURCES
+    "${JBIG2ENC_SOURCES_DIR}/jbig2arith.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2comparator.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2enc.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2sym.cc"
+)
+
+# DjVuLibre's libdjvu is compiled into the targets that use it (source-only
+# dependency). It only builds with autotools, so DJVULIBRE_DEFINITIONS sets
+# what its configure script would. No HAVE_NAMESPACES: core uses the classes
+# without the DJVU:: namespace.
+set(DJVULIBRE_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/djvulibre/libdjvu")
+set(DJVULIBRE_SOURCES
+    "${DJVULIBRE_SOURCES_DIR}/Arrays.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/BSByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/BSEncodeByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/ByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DataPool.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/debug.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmDir.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmDir0.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmDoc.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVmNav.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuAnno.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuDocEditor.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuDocument.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuDumpHelper.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuErrorList.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuFile.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuFileCache.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuGlobal.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuGlobalMemory.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuImage.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuInfo.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuMessage.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuMessageLite.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuNavDir.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuPalette.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuPort.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuText.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/DjVuToPS.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GBitmap.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GContainer.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GException.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GIFFManager.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GMapAreas.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GOS.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GPixmap.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GRect.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GScaler.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GSmartPointer.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GString.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GThreads.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GUnicode.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/GURL.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/IFFByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/IW44EncodeCodec.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/IW44Image.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/JB2EncodeCodec.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/JB2Image.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/JPEGDecoder.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/MMRDecoder.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/MMX.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/UnicodeByteStream.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/XMLParser.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/XMLTags.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/ZPCodec.cpp"
+    "${DJVULIBRE_SOURCES_DIR}/atomic.cpp"
+)
+if(WIN32)
+    # Compiled in, not imported from libdjvulibre.dll
+    set(DJVULIBRE_DEFINITIONS "DJVUAPI=")
+else()
+    set(DJVULIBRE_DEFINITIONS
+        UNIX
+        HAVE_PTHREAD=1
+        HAVE_STDINCLUDES
+        HAVE_STDINT_H
+        HAS_WCHAR
+        HAVE_WCHAR_H
+        HAVE_MBSTATE_T
+        HAVE_SNPRINTF=1
+        # Without it GString formats with vsprintf() into a fixed buffer
+        USE_VSNPRINTF=vsnprintf
+    )
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        list(APPEND DJVULIBRE_DEFINITIONS HAVE_INTEL_ATOMIC_BUILTINS=1)
+    endif()
+    if(ANDROID)
+        list(APPEND DJVULIBRE_DEFINITIONS HAS_MBSTATE=1)
+    endif()
+endif()
 
 # Do NOT auto-add absolute link directories to RPATH
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
@@ -34,18 +726,50 @@ endif()
 set(COMMON_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 file(READ "${COMMON_CMAKE_DIR}/Common/version.txt" VERSION_TXT_CONTENT)
 
-set(COMMON_DEFINES
-    _LINUX
-    _REENTRANT
-    CRYPTOPP_DISABLE_ASM
-    INTVER=${VERSION_TXT_CONTENT}
-    LINUX
+if( LINUX )
+    set(COMMON_DEFINES
+        _LINUX
+        _REENTRANT
+        CRYPTOPP_DISABLE_ASM
+        INTVER=${VERSION_TXT_CONTENT}
+        LINUX
 
-    # Not sure about these:
-    _UNICODE
-    DONT_WRITE_EMBEDDED_FONTS
-    UNICODE
-)
+        # Not sure about these:
+        _UNICODE # This had to be removed for APPLE. Maybe it should be for LINUX as well
+        UNICODE # This had to be removed for APPLE. Maybe it should be for LINUX as well
+        DONT_WRITE_EMBEDDED_FONTS
+    )
+    if( ANDROID )
+        list(APPEND COMMON_DEFINES
+            _ARM_ALIGN_            # no unaligned memory access
+            NOT_USE_PTHREAD_CANCEL # bionic has no pthread_setcanceltype
+        )
+    endif()
+elseif( APPLE )
+    set(COMMON_DEFINES
+        _REENTRANT
+        CRYPTOPP_DISABLE_ASM
+        INTVER=${VERSION_TXT_CONTENT}
+
+        LINUX
+        _LINUX
+        # MAC # CryptoPP collides with this, moving to kernel
+        _MAC
+
+        # Not sure about these:
+        DONT_WRITE_EMBEDDED_FONTS
+    )
+else() # Assume win+msvc
+    set(COMMON_DEFINES
+        _REENTRANT
+        CRYPTOPP_DISABLE_ASM
+        INTVER=${VERSION_TXT_CONTENT}
+        NOMINMAX
+
+        # Not sure about these:
+        DONT_WRITE_EMBEDDED_FONTS
+    )
+endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     list(APPEND COMMON_DEFINES
@@ -53,39 +777,128 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     )
 endif()
 
+if( MSVC )
 
+    set(COMMON_CXX_FLAGS
+        /W4
+        /wd4100 # unreferenced formal parameter
+        /wd4101 # unreferenced local variable
+        /wd4505 # unreferenced local function removed
+        /O2
+        /EHsc
+        /permissive
+    )
 
-set(COMMON_CXX_FLAGS
-    -fvisibility=hidden
-    -fvisibility-inlines-hidden
-    -Wall
-    -Wextra
-    -Wno-ignored-qualifiers
-    -Wno-register
-    -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
-    -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
-    -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
-    -O2 # Remove for debugging
-)
+    set(COMMON_C_FLAGS
+        /W4
+        /wd4100
+        /wd4101
+        /wd4505
+        /wd4996 # optional: CRT deprecation spam
+        /O2
+    )
 
-set(COMMON_C_FLAGS
-    -fvisibility=hidden
-    # -fvisibility-inlines-hidden
-    -Wall
-    -Wextra
-    -Wno-ignored-qualifiers
-    # -Wno-register
-    -Wno-implicit-function-declaration
-    -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
-    -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
-    -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
-    -O2 #Remove for debugging
-)
+    set(COMMON_LINK_OPTIONS
+    )
+    
 
+elseif( APPLE )
 
-set(COMMON_LINK_OPTIONS
-    "-Wl,--disable-new-dtags"
-)
+    set(COMMON_CXX_FLAGS
+        -fvisibility=hidden
+        -fvisibility-inlines-hidden
+        -Wall
+        -Wextra
+        -Wno-ignored-qualifiers
+        -Wno-register
+        -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
+        -O2 # Remove for debugging
+    )
+
+    set(COMMON_C_FLAGS
+        -fvisibility=hidden
+        # -fvisibility-inlines-hidden
+        -Wall
+        -Wextra
+        -Wno-ignored-qualifiers
+        # -Wno-register
+        -Wno-implicit-function-declaration
+        -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
+        -O2 #Remove for debugging
+    )
+
+    set(COMMON_LINK_OPTIONS
+    )
+
+else() # if( LINUX )
+
+    set(COMMON_CXX_FLAGS
+        -fvisibility=hidden
+        -fvisibility-inlines-hidden
+        -Wall
+        -Wextra
+        -Wno-ignored-qualifiers
+        -Wno-register
+        -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
+        -O2 # Remove for debugging
+    )
+
+    set(COMMON_C_FLAGS
+        -fvisibility=hidden
+        # -fvisibility-inlines-hidden
+        -Wall
+        -Wextra
+        -Wno-ignored-qualifiers
+        # -Wno-register
+        -Wno-implicit-function-declaration
+        -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
+        -O2 #Remove for debugging
+    )
+
+    # On x86_64 the Rocky 9 build environment may emit SSE4.2 or higher instructions
+    # without an explicit -march constraint, breaking baseline x86_64 VPS deployments.
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        list(PREPEND COMMON_CXX_FLAGS -march=x86-64)
+        list(PREPEND COMMON_C_FLAGS   -march=x86-64)
+    endif()
+
+    set(COMMON_LINK_OPTIONS
+        "-Wl,--disable-new-dtags"
+    )
+
+endif()
+
+# The CI builds turn this on: the warnings filled most of their logs (some
+# 380,000 on Linux), which made them unreadable. Remove once the warnings
+# are fixed.
+option(EO_NO_WARNINGS "Compile without warnings" OFF)
+if(EO_NO_WARNINGS)
+    # -w and /w don't touch the errors, so the flags that turn errors into
+    # warnings or off (-Wno-register for ISO C++17's register) stay.
+    # The other way round doesn't hold: on GCC and non-Apple clang, -w also
+    # cancels -Werror=<warning>, so such a guard silently does nothing here.
+    # A target that needs one must strip -w, see XlsFormatLib's CMakeLists.txt
+    # (#421).
+    if(MSVC)
+        # Else cl warns on every source that /w overrides /W4 and /W3
+        list(FILTER COMMON_CXX_FLAGS EXCLUDE REGEX "^/W[0-4]$")
+        list(FILTER COMMON_C_FLAGS EXCLUDE REGEX "^/W[0-4]$")
+        foreach(flags CMAKE_C_FLAGS CMAKE_CXX_FLAGS)
+            string(REGEX REPLACE "/W[0-4]" "" ${flags} "${${flags}}")
+        endforeach()
+        add_compile_options(/w)
+    else()
+        add_compile_options(-w)
+    endif()
+endif()
 
 
 function(set_default_options target)
@@ -93,16 +906,23 @@ function(set_default_options target)
         message(FATAL_ERROR "set_default_options(): Target '${target}' does not exist yet.")
     endif()
 
-    # Base RPATHs
-    set_property(TARGET ${target} PROPERTY BUILD_RPATH "\$ORIGIN;\$ORIGIN/system")
-    set_property(TARGET ${target} PROPERTY INSTALL_RPATH "\$ORIGIN;\$ORIGIN/system")
+    if( NOT MSVC )
+        # Base RPATHs
+        if( LINUX )
+            set_property(TARGET ${target} PROPERTY BUILD_RPATH "\$ORIGIN;\$ORIGIN/system")
+            set_property(TARGET ${target} PROPERTY INSTALL_RPATH "\$ORIGIN;\$ORIGIN/system")
+        elseif( APPLE )
+            set_property(TARGET ${target} PROPERTY BUILD_RPATH "@executable_path;@executable_path/system")
+            set_property(TARGET ${target} PROPERTY INSTALL_RPATH "@executable_path;@executable_path/system")
+        endif()
 
-    # Optional: additional runtime paths from env variable RUN_PATH_ADDON
-    if(DEFINED ENV{RUN_PATH_ADDON})
-        set(RUN_PATH_ADDON "$ENV{RUN_PATH_ADDON}")
-        string(REPLACE ";;" ";" RUN_PATH_ADDON_LIST "${RUN_PATH_ADDON}")
+        # Optional: additional runtime paths from env variable RUN_PATH_ADDON
+        if(DEFINED ENV{RUN_PATH_ADDON})
+            set(RUN_PATH_ADDON "$ENV{RUN_PATH_ADDON}")
+            string(REPLACE ";;" ";" RUN_PATH_ADDON_LIST "${RUN_PATH_ADDON}")
 
-        set_property(TARGET ${target} APPEND PROPERTY INSTALL_RPATH "${RUN_PATH_ADDON_LIST}")
+            set_property(TARGET ${target} APPEND PROPERTY INSTALL_RPATH "${RUN_PATH_ADDON_LIST}")
+        endif()
     endif()
 
     # C++ flags
@@ -122,8 +942,97 @@ function(set_default_options target)
     target_link_options(${target} PRIVATE
         ${COMMON_LINK_OPTIONS}
     )
+
+    if( MSVC )
+        target_link_libraries(${target} PRIVATE
+            Rpcrt4
+        )
+    endif()
 endfunction()
 
+# ---------------------------------------------------------------------------
+# Unit-test helper (CTest + GoogleTest from vcpkg)
+# ---------------------------------------------------------------------------
+# add_core_gtest(
+#     NAME    <target name>
+#     SOURCES <source files...>
+#     LIBS    <core libraries to link...>
+#     [GTEST_MAIN]               # provide a default main() (suite has none of its own)
+#     [USE_GMOCK]                # also link GTest::gmock
+#     [WORKING_DIRECTORY <dir>]  # CTest working dir (default: the test binary's dir)
+# )
+#
+# Builds a GoogleTest executable, links it against the vcpkg-provided GTest and
+# the requested core libraries, and registers it as a CTest test. The shared core
+# libraries are collected into EO_CORE_OUTPUT_DIR (build/package) and depend on
+# each other (and on icu) being co-located there; the test is run with
+# LD_LIBRARY_PATH pointing at that directory so the loader can resolve them.
+function(add_core_gtest)
+    set(options GTEST_MAIN USE_GMOCK)
+    set(oneValueArgs NAME WORKING_DIRECTORY GTEST_FILTER)
+    set(multiValueArgs SOURCES LIBS)
+    cmake_parse_arguments(T "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if(NOT T_NAME)
+        message(FATAL_ERROR "add_core_gtest(): NAME is required")
+    endif()
+    if(NOT T_SOURCES)
+        message(FATAL_ERROR "add_core_gtest(${T_NAME}): SOURCES is required")
+    endif()
+
+    if(NOT TARGET GTest::gtest)
+        find_package(GTest CONFIG REQUIRED)
+    endif()
+
+    add_executable(${T_NAME} ${T_SOURCES})
+    target_link_libraries(${T_NAME} PRIVATE GTest::gtest ${T_LIBS})
+    if(T_USE_GMOCK)
+        target_link_libraries(${T_NAME} PRIVATE GTest::gmock)
+    endif()
+    if(T_GTEST_MAIN)
+        # Compile a bundled GoogleTest entry point instead of linking the vcpkg
+        # gtest_main library, whose versioned soname is not reliably resolvable
+        # on the runtime library path.
+        set(_eo_gtest_main "${CMAKE_CURRENT_BINARY_DIR}/${T_NAME}_gtest_main.cpp")
+        file(WRITE "${_eo_gtest_main}"
+            "#include \"gtest/gtest.h\"\n"
+            "int main(int argc, char** argv) {\n"
+            "    ::testing::InitGoogleTest(&argc, argv);\n"
+            "    return RUN_ALL_TESTS();\n"
+            "}\n")
+        target_sources(${T_NAME} PRIVATE "${_eo_gtest_main}")
+    endif()
+
+    set_default_options(${T_NAME})
+
+    if(NOT T_WORKING_DIRECTORY)
+        set(T_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${T_NAME}>")
+    endif()
+    set(_eo_test_args "")
+    if(T_GTEST_FILTER)
+        set(_eo_test_args "--gtest_filter=${T_GTEST_FILTER}")
+    endif()
+    add_test(NAME ${T_NAME} COMMAND ${T_NAME} ${_eo_test_args} WORKING_DIRECTORY "${T_WORKING_DIRECTORY}")
+
+    # Resolve shared libraries at run time: the core libraries (and their icu
+    # deps) from the collected output directory the shipped binaries load from,
+    # plus the vcpkg lib dir when GTest is built as shared libraries.
+    set(_eo_test_libpath "${EO_CORE_OUTPUT_DIR}")
+    if(DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
+        set(_eo_test_libpath "${_eo_test_libpath}:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
+    endif()
+    if(APPLE)
+        set(_eo_test_libpath_var DYLD_LIBRARY_PATH)
+    else()
+        set(_eo_test_libpath_var LD_LIBRARY_PATH)
+    endif()
+    set(_eo_test_env "${_eo_test_libpath_var}=${_eo_test_libpath}:$ENV{${_eo_test_libpath_var}}")
+    if(APPLE)
+        # Frameworks (ooxmlsignature) are looked up separately
+        list(APPEND _eo_test_env "DYLD_FRAMEWORK_PATH=${EO_CORE_OUTPUT_DIR}:$ENV{DYLD_FRAMEWORK_PATH}")
+    endif()
+    set_tests_properties(${T_NAME} PROPERTIES ENVIRONMENT "${_eo_test_env}")
+endfunction()
 
 function(copy_artifacts_to_folder artifacts dest_dir)
     foreach(artifact ${artifacts})
@@ -135,19 +1044,57 @@ function(copy_artifacts_to_folder artifacts dest_dir)
     endforeach()
 endfunction()
 
-function(copy_icu_libs artifact)
-    add_custom_command(TARGET ${artifact} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
-        COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
-        COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
+function(copy_framework_to_folder target dest_dir)
+    # cmake -E copy_directory dereferences symlinks, turning a versioned
+    # framework's Versions/Current -> <N> symlink (and the top-level
+    # convenience symlinks into it) into real, duplicated files/directories -
+    # codesign then can't tell if the result is a flat or versioned bundle
+    # ("bundle format is ambiguous"). cp -R preserves symlinks as symlinks.
+    add_custom_command(TARGET ${target} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${dest_dir}"
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${dest_dir}/${target}.framework"
+        COMMAND cp -R "$<TARGET_BUNDLE_DIR:${target}>" "${dest_dir}/${target}.framework"
+        COMMENT "Copying ${target}.framework to ${dest_dir}"
     )
 endfunction()
 
-function(copy_boost_libs artifact)
+function(copy_icu_libs artifact)
+    if( MSVC )
+
+        file(GLOB ICU_DLLS
+            "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib/icu*74.dll"
+        )
+
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                ${ICU_DLLS}
+                "${EO_CORE_OUTPUT_DIR}"
+            COMMENT "Copying ICU DLLs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    elseif( APPLE )
     add_custom_command(TARGET ${artifact} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
-        COMMAND /bin/sh -c "cp -P \"${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
-        COMMENT "Copying Boost libs to ${EO_CORE_OUTPUT_DIR}"
+        COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.dylib* \"${EO_CORE_OUTPUT_DIR}/\""
+        COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
+    )
+    else()
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
+            COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    endif()
+endfunction()
+
+
+function(declare_victory build_target)
+    add_custom_command(TARGET ${build_target} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E echo ""
+        COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
+        COMMAND ${CMAKE_COMMAND} -E echo "🎉  Success! [$<TARGET_FILE_NAME:${build_target}>] is ready!  🎉"
+        COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
+        COMMAND ${CMAKE_COMMAND} -E echo ""
     )
 endfunction()
 
@@ -209,3 +1156,58 @@ function(inject_script TARGET_NAME TEMPLATE_FILE OUTPUT_FILE)
         )
     endif()
 endfunction()
+
+function( add_cpp_sources_from_dir_recurive TARGET DIR )
+    file(GLOB_RECURSE DIR_SOURCES CONFIGURE_DEPENDS
+        "${DIR}/*.cpp"
+        "${DIR}/*.cxx"
+        "${DIR}/*.h"
+        "${DIR}/*.hpp"
+        "${DIR}/*.hxx"
+    )
+
+    target_sources( ${TARGET} PRIVATE
+        ${DIR_SOURCES}
+    )
+
+    target_include_directories( ${TARGET} PRIVATE
+        ${DIR}
+    )
+endfunction()
+
+# Windows: the core DLLs load each other through the private "converter"
+# side-by-side assembly, converter.manifest next to them (DesktopEditors
+# installs them in converter\). Call after the core targets exist; targets
+# that aren't built here (missing or IMPORTED) are skipped.
+set(_EO_CORE_DIR "${CMAKE_CURRENT_LIST_DIR}")
+function(eo_core_converter_assembly)
+    if(NOT WIN32)
+        return()
+    endif()
+    string(TOLOWER "${CMAKE_CXX_COMPILER_ARCHITECTURE_ID}" _arch)
+    if(_arch STREQUAL "x64" OR _arch STREQUAL "")
+        set(_arch amd64)
+    endif()
+    foreach(_t doctrenderer DocxRenderer kernel kernel_network graphics
+               UnicodeConverter PdfFile DjVuFile XpsFile ooxmlsignature
+               Fb2File EpubFile HtmlFile2 OFDFile IWorkFile HWPFile
+               StarMathConverter)
+        if(TARGET ${_t})
+            get_target_property(_imported ${_t} IMPORTED)
+            if(NOT _imported)
+                target_link_options(${_t} PRIVATE
+                    "/MANIFESTDEPENDENCY:type='win32' name='converter' version='1.0.0.0' processorArchitecture='${_arch}'")
+            endif()
+        endif()
+    endforeach()
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+        "${_EO_CORE_DIR}/Common/msvc/converter.manifest")
+    file(READ "${_EO_CORE_DIR}/Common/msvc/converter.manifest" _manifest)
+    string(REPLACE "processorArchitecture=\"amd64\"" "processorArchitecture=\"${_arch}\"" _manifest "${_manifest}")
+    file(WRITE "${EO_CORE_OUTPUT_DIR}/converter.manifest" "${_manifest}")
+endfunction()
+
+# A core package instead of building core, see cmake/prebuilt-core.cmake
+if(EO_CORE_PREBUILT_DIR)
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake/prebuilt-core.cmake")
+endif()

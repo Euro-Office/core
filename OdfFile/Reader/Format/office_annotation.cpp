@@ -180,7 +180,7 @@ void office_annotation::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 	Context.start_text_context();
 	Context.get_text_context()->start_comment_content();
-	for (size_t i = 0; i < content_.size(); i++)//текст + текстовый стиль
+	for (size_t i = 0; i < content_.size(); i++)//text + text style
     {
         content_[i]->xlsx_convert(Context);
     }
@@ -291,7 +291,7 @@ void officeooo_annotation::pptx_convert(oox::pptx_conversion_context & Context)
 	Context.get_comments_context().start_comment(x, y, id_idx.first, id_idx.second);//author & idx (uniq number for author
 	
 	Context.get_text_context().start_comment_content();
-	for (size_t i = 0; i < content_.size(); i++)//текст + текстовый стиль
+	for (size_t i = 0; i < content_.size(); i++)//text + text style
     {
         content_[i]->pptx_convert(Context);
     }
@@ -300,7 +300,7 @@ void officeooo_annotation::pptx_convert(oox::pptx_conversion_context & Context)
 	Context.get_comments_context().add_content(Context.get_text_context().end_comment_content());
 	
 //////////////////////////////////////////////////////////////////
-    /// Обрабатываем стиль draw
+    /// Process the draw style
 	std::vector<const odf_reader::style_instance *> instances;
 	style_instance* styleInst = Context.root()->odf_context().styleContainer().style_by_name(
 				attr_.draw_style_name_.get_value_or(L""), odf_types::style_family::Graphic,false/*Context.process_headers_footers_*/);

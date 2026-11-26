@@ -4,6 +4,8 @@
 #include "../../graphics/pro/Fonts.h"
 #include "../js_internal/js_base.h"
 
+namespace NSImages { class IImageFilesCache; }
+
 class CGraphicsAppImage_private;
 class JS_DECL CGraphicsAppImage
 {
@@ -22,6 +24,10 @@ public:
 
 	void SetFonts(NSFonts::IApplicationFonts* fonts);
 	NSFonts::IApplicationFonts* GetFonts();
+
+	// Decoded images and metafiles, shared between graphics objects (e.g. the tiles of a page)
+	void SetImageCache(NSImages::IImageFilesCache* cache);
+	NSImages::IImageFilesCache* GetImageCache();
 
 	void SetRgba(const bool& isRgba);
 	bool GetRgba();

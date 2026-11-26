@@ -103,7 +103,7 @@ namespace BinDocxRW
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"pkg:compression", compression)
 			WritingElement_ReadAttributes_End(oReader)
 
-			if (name.IsInit() == false) return;
+			if (!name.IsInit()) return;
 
 			if (contentType.IsInit())
 			{
@@ -120,7 +120,7 @@ namespace BinDocxRW
 					std::wstring data = oReader.GetInnerXml();
 					XmlUtils::replace_all(data, L"&#xA;", L"");
 					XmlUtils::replace_all(data, L"&#x9;", L"");
-					//todooo убрать "красивую" разметку xml
+					//TODO remove the "pretty" xml markup
 					WriteXmlFile(*name, data);
 				}
 				if (L"pkg:binaryData" == sName)
@@ -146,7 +146,7 @@ namespace BinDocxRW
 				file.CloseFile();
 			}
 		}
-		void WriteBinaryFile(const std::wstring & name, std::string & data, const std::wstring & compression)
+		void WriteBinaryFile(const std::wstring & name, std::string & data, const std::wstring &  /*compression*/)
 		{
 			if (name.empty()) return;
 			
@@ -163,7 +163,7 @@ namespace BinDocxRW
 			NSFile::CFileBinary file;
 			if (file.CreateFileW(fileName))
 			{
-				BYTE* pDstBuffer = NULL;
+				BYTE* pDstBuffer = nullptr;
 				int dstLen = Base64::Base64DecodeGetRequiredLength((int)data.size());
 
 				pDstBuffer = new BYTE[dstLen];
@@ -183,8 +183,8 @@ namespace BinDocxRW
 
 BinDocxRW::CDocxSerializer::CDocxSerializer() : m_bIsMacro(false), m_bIsNoBase64Save(false), m_bIsNoBase64(false), m_bIsOForm(false)
 {
-	m_pParamsWriter		= NULL;
-	m_pCurFileWriter	= NULL;
+	m_pParamsWriter		= nullptr;
+	m_pCurFileWriter	= nullptr;
 }
 BinDocxRW::CDocxSerializer::~CDocxSerializer()
 {
@@ -208,8 +208,8 @@ bool BinDocxRW::CDocxSerializer::saveToFile(const std::wstring& sDstFileName, co
 	oDrawingConverter.SetFontManager(pFontManager);
 	NSBinPptxRW::CBinaryFileWriter& oBufferedStream = *oDrawingConverter.m_pBinaryWriter;
 
-	NSFontCutter::CEmbeddedFontsManager* pEmbeddedFontsManager = NULL;
-    if(false == m_sEmbeddedFontsDir.empty())
+	NSFontCutter::CEmbeddedFontsManager* pEmbeddedFontsManager = nullptr;
+    if(!m_sEmbeddedFontsDir.empty())
 	{
 		NSDirectory::CreateDirectory(m_sEmbeddedFontsDir);
 
@@ -217,13 +217,13 @@ bool BinDocxRW::CDocxSerializer::saveToFile(const std::wstring& sDstFileName, co
 
 		pEmbeddedFontsManager = pFontPicker->GetNativeCutter();
 
-		//добавляем весь латинский алфавит для списков.
+		//adding the entire Latin alphabet for lists.
         pEmbeddedFontsManager->CheckString(std::wstring(_T("abcdefghijklmnopqrstuvwxyz")));
 
-		//добавим мега шрифт
+		//add a mega font
 		pEmbeddedFontsManager->CheckFont(_T("Wingdings 3"), fp.getFontManager());
 		pEmbeddedFontsManager->CheckFont(_T("Arial"), fp.getFontManager());
-		//pEmbeddedFontsManager добавляются все цифры
+		//pEmbeddedFontsManager adds all digits
 	}
 
 	oDrawingConverter.SetFontDir(m_sFontDir);
@@ -259,7 +259,7 @@ bool BinDocxRW::CDocxSerializer::saveToFile(const std::wstring& sDstFileName, co
 		int nBase64BufferLen = Base64::Base64EncodeGetRequiredLength(nBinBufferLen, Base64::B64_BASE64_FLAG_NOCRLF);
         BYTE* pbBase64Buffer = new BYTE[nBase64BufferLen + 64];
 //        if(TRUE == Base64::Base64Encode(pbBinBuffer, nBinBufferLen, (LPSTR)pbBase64Buffer, &nBase64BufferLen, Base64::B64_BASE64_FLAG_NOCRLF))
-        if(true == Base64_1::Base64Encode(pbBinBuffer, nBinBufferLen, pbBase64Buffer, &nBase64BufferLen))
+        if(Base64_1::Base64Encode(pbBinBuffer, nBinBufferLen, pbBase64Buffer, &nBase64BufferLen))
 		{
 			NSFile::CFileBinary oFile;
 			oFile.CreateFileW(sDstFileName);
@@ -315,7 +315,7 @@ bool BinDocxRW::CDocxSerializer::loadFromFile(const std::wstring& sSrcFileName, 
 	RELEASEOBJECT(m_pCurFileWriter);
 	
 	NSFile::CFileBinary oFile;
-	if (false == oFile.OpenFile(sSrcFileName)) return false;
+	if (!oFile.OpenFile(sSrcFileName)) return false;
 	
 	bool bResultOk = false;
 
@@ -324,7 +324,7 @@ bool BinDocxRW::CDocxSerializer::loadFromFile(const std::wstring& sSrcFileName, 
 	oFile.ReadFile(pBase64Data, oFile.GetFileSize(), nBase64DataSize);
 	oFile.CloseFile();
 
-	//проверяем формат
+	//checking the format
 	bool bValidFormat = false;
 	std::wstring sSignature(g_sFormatSignature);
 	int nSigLength = (int)sSignature.length();
@@ -339,7 +339,7 @@ bool BinDocxRW::CDocxSerializer::loadFromFile(const std::wstring& sSrcFileName, 
 	}
 	if (bValidFormat)
 	{
-		//Читаем из файла версию и длину base64
+		//Read the base64 version and length from the file
 		int nIndex = nSigLength;
 		int nType = 0;
 		std::string version = "";
@@ -378,7 +378,7 @@ bool BinDocxRW::CDocxSerializer::loadFromFile(const std::wstring& sSrcFileName, 
 		NSBinPptxRW::CDrawingConverter oDrawingConverter;
 		NSBinPptxRW::CBinaryFileReader& oBufferedStream = *oDrawingConverter.m_pBinaryReader;
 		int nDataSize = 0;
-		BYTE* pData = NULL;
+		BYTE* pData = nullptr;
 		if (!bIsNoBase64)
 		{
 			nDataSize = atoi(dst_len.c_str());
@@ -400,7 +400,7 @@ bool BinDocxRW::CDocxSerializer::loadFromFile(const std::wstring& sSrcFileName, 
 			oBufferedStream.Seek(nIndex);
 		}
 
-		if (NULL != pData)
+		if (nullptr != pData)
 		{
 			oDrawingConverter.SetDocxSerializer(this);
 			oDrawingConverter.SetDstPath(sDstPath + FILE_SEPARATOR_STR + L"word");
@@ -410,7 +410,7 @@ bool BinDocxRW::CDocxSerializer::loadFromFile(const std::wstring& sSrcFileName, 
 
 			m_pCurFileWriter = new Writers::FileWriter(sDstPath, m_sFontDir, false, nVersion, &oDrawingConverter, sThemePath);
 
-			//папка с картинками
+			//folder with images
 			std::wstring strFileInDir = NSSystemPath::GetDirectoryName(sSrcFileName);
 			std::wstring sFileInDir = strFileInDir.c_str();
 
@@ -431,29 +431,29 @@ bool BinDocxRW::CDocxSerializer::loadFromFile(const std::wstring& sSrcFileName, 
 
 			OOX::CPath DocProps = std::wstring(_T("docProps"));
 
-			if (NULL != m_pCurFileWriter->m_pApp)
+			if (nullptr != m_pCurFileWriter->m_pApp)
 			{
 				m_pCurFileWriter->m_pApp->write(pathDocProps + FILE_SEPARATOR_STR + _T("app.xml"), DocProps, *pContentTypes);
 			}
 			else
 			{
-				OOX::CApp pApp(NULL);
+				OOX::CApp pApp(nullptr);
 				pApp.SetDefaults();
 				pApp.write(pathDocProps + FILE_SEPARATOR_STR + _T("app.xml"), DocProps, *pContentTypes);
 			}
 
-			if (NULL != m_pCurFileWriter->m_pCore)
+			if (nullptr != m_pCurFileWriter->m_pCore)
 			{
 				m_pCurFileWriter->m_pCore->write(pathDocProps + FILE_SEPARATOR_STR + _T("core.xml"), DocProps, *pContentTypes);
 			}
 			else
 			{
-				OOX::CCore pCore(NULL);
+				OOX::CCore pCore(nullptr);
 				pCore.SetDefaults();
 				pCore.write(pathDocProps + FILE_SEPARATOR_STR + _T("core.xml"), DocProps, *pContentTypes);
 			}
 
-			if (NULL != m_pCurFileWriter->m_pCustomProperties)
+			if (nullptr != m_pCurFileWriter->m_pCustomProperties)
 			{
 				m_pCurFileWriter->m_pCustomProperties->write(pathDocProps + FILE_SEPARATOR_STR + _T("custom.xml"), DocProps, *pContentTypes);
 			}
@@ -475,7 +475,7 @@ bool BinDocxRW::CDocxSerializer::loadFromFile(const std::wstring& sSrcFileName, 
 
 	return bResultOk;
 }
-bool BinDocxRW::CDocxSerializer::getXmlContent(NSBinPptxRW::CBinaryFileReader& oBufferedStream, long lLength, std::wstring& sOutputXml)
+bool BinDocxRW::CDocxSerializer::getXmlContent(NSBinPptxRW::CBinaryFileReader& oBufferedStream, long  /*lLength*/, std::wstring& sOutputXml)
 {
 	long nLength = oBufferedStream.GetLong();
 	Writers::ContentWriter oTempContentWriter;
@@ -487,7 +487,7 @@ bool BinDocxRW::CDocxSerializer::getXmlContent(NSBinPptxRW::CBinaryFileReader& o
 }
 bool BinDocxRW::CDocxSerializer::getBinaryContent(const std::wstring& bsTxContent, NSBinPptxRW::CBinaryFileWriter& oBufferedStream, long& lDataSize)
 {
-	if(NULL == m_pParamsWriter)
+	if(nullptr == m_pParamsWriter)
 		return false;
 	long nStartPos = oBufferedStream.GetPosition();
 
@@ -516,7 +516,7 @@ bool BinDocxRW::CDocxSerializer::getBinaryContent(const std::wstring& bsTxConten
 	int nCurPos = oBinaryCommonWriter.WriteItemWithLengthStart();
 	BinDocxRW::ParamsDocumentWriter oParams(oParamsWriter.m_pCurRels);
 	
-	BinDocxRW::BinaryDocumentTableWriter oBinaryDocumentTableWriter(oParamsWriter, oParams, &oParamsWriter.m_mapIgnoreComments, NULL);
+	BinDocxRW::BinaryDocumentTableWriter oBinaryDocumentTableWriter(oParamsWriter, oParams, &oParamsWriter.m_mapIgnoreComments, nullptr);
 	oBinaryDocumentTableWriter.WriteDocumentContent(oSdtContent.m_arrItems);
 	oBinaryCommonWriter.WriteItemWithLengthEnd(nCurPos);
 
@@ -527,7 +527,7 @@ bool BinDocxRW::CDocxSerializer::getBinaryContent(const std::wstring& bsTxConten
 }
 bool BinDocxRW::CDocxSerializer::getBinaryContentElem(OOX::EElementType eElemType, void* pElem, NSBinPptxRW::CBinaryFileWriter& oBufferedStream, long& lDataSize)
 {
-	if(NULL == m_pParamsWriter)
+	if(nullptr == m_pParamsWriter)
 		return false;
 	long nStartPos = oBufferedStream.GetPosition();
 
@@ -539,7 +539,7 @@ bool BinDocxRW::CDocxSerializer::getBinaryContentElem(OOX::EElementType eElemTyp
 	int nCurPos = oBinaryCommonWriter.WriteItemWithLengthStart();
 	
 	BinDocxRW::ParamsDocumentWriter oParams(oParamsWriter.m_pCurRels);
-	BinDocxRW::BinaryDocumentTableWriter oBinaryDocumentTableWriter(oParamsWriter, oParams, &oParamsWriter.m_mapIgnoreComments, NULL);
+	BinDocxRW::BinaryDocumentTableWriter oBinaryDocumentTableWriter(oParamsWriter, oParams, &oParamsWriter.m_mapIgnoreComments, nullptr);
 	if(OOX::et_m_oMathPara == eElemType)
 	{
 		OOX::Logic::COMathPara* pMathPara = static_cast<OOX::Logic::COMathPara*>(pElem);
@@ -628,7 +628,7 @@ bool BinDocxRW::CDocxSerializer::convertFlat(const std::wstring& sSrcFileName, c
 	docxflat.m_sTempPath = sTempPath;
 	docxflat.read(sSrcFileName);
 
-	if (false == docxflat.m_pDocument.IsInit())
+	if (!docxflat.m_pDocument.IsInit())
 		return false;
 
 	OOX::CDocx docx;

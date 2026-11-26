@@ -55,11 +55,11 @@ RtfReader::RtfReader(RtfDocument& oDocument, std::wstring sFilename ) : m_oDocum
 	m_nDefFont = PROP_DEF;
 	m_nDefLang = PROP_DEF;
 	m_nDefLangAsian = PROP_DEF;
-	m_convertationManager = NULL;
+	m_convertationManager = nullptr;
 }
 bool RtfReader::Load()
 {
-	if (false == m_oLex.SetSource(m_sFilename)) return false;
+	if (!m_oLex.SetSource(m_sFilename)) return false;
 	
 	RtfNormalReader oNormalReader( m_oDocument, (*this) );
 	oNormalReader.Parse( m_oDocument, (*this) );
@@ -90,7 +90,7 @@ void RtfReader::PushState()
 }
 void RtfReader::PopState()
 {
-	if( 0 != m_oState->m_pSaveState )
+	if( nullptr != m_oState->m_pSaveState )
 		m_oState = m_oState->m_pSaveState;
 }
 
@@ -101,7 +101,7 @@ RtfAbstractReader::RtfAbstractReader()
 	m_bSkip = false;
 	m_nSkipChars = 0;
 	m_nCurGroups = 1;
-	m_oFileWriter = NULL;
+	m_oFileWriter = nullptr;
 	m_bStopReader = false;
 
 	m_bUseGlobalCodepage = false;
@@ -129,7 +129,7 @@ void RtfAbstractReader::PopState(RtfDocument& oDocument, RtfReader& oReader)
 }
 bool RtfAbstractReader::StartSubReader( RtfAbstractReader& poNewReader, RtfDocument& oDocument, RtfReader& oReader  )
 {
-	if( true == m_bCanStartNewReader )
+	if( m_bCanStartNewReader )
 	{
 		m_bCanStartNewReader = false;
 		m_nCurGroups--;
@@ -154,7 +154,7 @@ void RtfAbstractReader::Skip( RtfDocument& oDocument, RtfReader& oReader )
 	}
 	PopState( oDocument, oReader );
 }
-bool RtfAbstractReader::ExecuteCommand( RtfDocument& oDocument, RtfReader& oReader, std::string sKey, bool bHasPar, int nPar )
+bool RtfAbstractReader::ExecuteCommand( RtfDocument& /*oDocument*/, RtfReader& /*oReader*/, std::string /*sKey*/, bool /*bHasPar*/, int /*nPar*/ )
 {
 	return true;
 }
@@ -178,7 +178,7 @@ bool RtfAbstractReader::RtfAbstractReader::Parse(RtfDocument& oDocument, RtfRead
 	if (m_oTok.Type == m_oTok.None)
 		m_oTok = oReader.m_oLex.NextToken();
 
-	while (m_oTok.Type != RtfToken::Eof && false == m_bStopReader)
+	while (m_oTok.Type != RtfToken::Eof && !m_bStopReader)
 	{
 		switch (m_oTok.Type)
 		{
@@ -203,33 +203,33 @@ bool RtfAbstractReader::RtfAbstractReader::Parse(RtfDocument& oDocument, RtfRead
 			}
 			else
 			{
-				if (true == m_bSkip)
+				if (m_bSkip)
 				{
-					if (false == ExecuteCommand(oDocument, oReader, m_oTok.Key, m_oTok.HasParameter, m_oTok.Parameter))
+					if (!ExecuteCommand(oDocument, oReader, m_oTok.Key, m_oTok.HasParameter, m_oTok.Parameter))
 						Skip(oDocument, oReader);
 					m_bSkip = false;
 				}
 				else
 					ExecuteCommand(oDocument, oReader, m_oTok.Key, m_oTok.HasParameter, m_oTok.Parameter);
 			}
-			if (true == m_bCanStartNewReader)
+			if (m_bCanStartNewReader)
 				m_bCanStartNewReader = false;
 		}break;
 		case RtfToken::Control:
 		{
 			if (m_oTok.Key == "42")
 				m_bSkip = true;
-			if (m_oTok.Key == "39" && true == m_oTok.HasParameter)
+			if (m_oTok.Key == "39" && m_oTok.HasParameter)
 			{
-				oReader.m_oState->m_sCurText += m_oTok.Parameter;
+				oReader.m_oState->m_sCurText += (char)m_oTok.Parameter;
 				oReader.m_oState->m_bControlPresent = true;
 			}
-			if (m_oTok.Key == "32" && false == m_oTok.HasParameter)
+			if (m_oTok.Key == "32" && !m_oTok.HasParameter)
 			{
 				oReader.m_oState->m_sCurText += " ";
 				oReader.m_oState->m_bControlPresent = true;
 			}
-            if (m_oTok.Key == "par" && false == m_oTok.HasParameter)
+            if (m_oTok.Key == "par" && !m_oTok.HasParameter)
             {
                 oReader.m_oState->m_sCurText += "\n";
                 oReader.m_oState->m_bControlPresent = true;
@@ -241,7 +241,7 @@ bool RtfAbstractReader::RtfAbstractReader::Parse(RtfDocument& oDocument, RtfRead
 		}break;
 
 		}
-		if (false == m_bStopReader)
+		if (!m_bStopReader)
 			m_oTok = oReader.m_oLex.NextToken();
 	}
 
@@ -255,7 +255,7 @@ std::wstring RtfAbstractReader::ExecuteTextInternal(RtfDocument& oDocument, RtfR
 
 	if ("u" == sKey)
 	{
-		if (true == bHasPar)
+		if (bHasPar)
 		{
 			if (m_bUseGlobalCodepage && sizeof(wchar_t) != 2)
 			{
@@ -269,7 +269,7 @@ std::wstring RtfAbstractReader::ExecuteTextInternal(RtfDocument& oDocument, RtfR
 		std::string sCharString;
 		if ("39" == sKey)
 		{
-			if (true == bHasPar)
+			if (bHasPar)
 				sCharString += (char)nPar;
 		}
 		else
@@ -280,9 +280,9 @@ std::wstring RtfAbstractReader::ExecuteTextInternal(RtfDocument& oDocument, RtfR
 	ExecuteTextInternalSkipChars(sResult, oReader, sKey, nSkipChars);
 	return sResult;
 }
-void RtfAbstractReader::ExecuteTextInternal2(RtfDocument& oDocument, RtfReader& oReader, std::string & sKey, int& nSkipChars)
+void RtfAbstractReader::ExecuteTextInternal2(RtfDocument& oDocument, RtfReader& oReader, std::string & /*sKey*/, int& nSkipChars)
 {
-	if (false == oReader.m_oState->m_sCurText.empty())
+	if (!oReader.m_oState->m_sCurText.empty())
 	{
 		std::string str;
 		ExecuteTextInternalSkipChars(oReader.m_oState->m_sCurText, oReader, str, nSkipChars);
@@ -292,7 +292,7 @@ void RtfAbstractReader::ExecuteTextInternal2(RtfDocument& oDocument, RtfReader& 
 		oReader.m_oState->m_sCurText.erase();
 		oReader.m_oState->m_bControlPresent = false;
 		
-		if (false == sResult.empty())
+		if (!sResult.empty())
 		{
 			ExecuteText(oDocument, oReader, sResult);
 		}
@@ -300,7 +300,7 @@ void RtfAbstractReader::ExecuteTextInternal2(RtfDocument& oDocument, RtfReader& 
 }
 void RtfAbstractReader::ExecuteTextInternalSkipChars(std::string & sResult, RtfReader& oReader, std::string & sKey, int& nSkipChars)
 {
-	//удаляем символы вслед за юникодом
+	//remove characters following Unicode
 	if (nSkipChars > 0)
 	{
 		if (nSkipChars >= (int)sResult.length())
@@ -316,13 +316,13 @@ void RtfAbstractReader::ExecuteTextInternalSkipChars(std::string & sResult, RtfR
 	}
 	if ("u" == sKey)
 	{
-		//надо правильно установить m_nSkipChars по значению \ucN
+		//need to set m_nSkipChars correctly by the value \ucN
 		nSkipChars = oReader.m_oState->m_nUnicodeClean;
 	}
 }
 void RtfAbstractReader::ExecuteTextInternalSkipChars(std::wstring & sResult, RtfReader& oReader, std::string & sKey, int& nSkipChars)
 {
-	//удаляем символы вслед за юникодом
+	//remove characters following Unicode
 	if (nSkipChars > 0)
 	{
 		if (nSkipChars >= (int)sResult.length())
@@ -338,7 +338,7 @@ void RtfAbstractReader::ExecuteTextInternalSkipChars(std::wstring & sResult, Rtf
 	}
 	if ("u" == sKey)
 	{
-		//надо правильно установить m_nSkipChars по значению \ucN
+		//need to set m_nSkipChars correctly by the value \ucN
 		nSkipChars = oReader.m_oState->m_nUnicodeClean;
 	}
 }
@@ -351,9 +351,9 @@ std::wstring RtfAbstractReader::ExecuteTextInternalCodePage( std::string& sCharS
 
 	int nCodepage = -1;
 
-	//применяем параметры codepage от текущего шрифта todo associated fonts.
+	//apply the codepage parameters from the current font todo associated fonts.
 	RtfFont oFont;
-	if ((!m_bUseGlobalCodepage) && (true == oDocument.m_oFontTable.GetFont(oReader.m_oState->m_oCharProp.m_nFont, oFont)))
+	if ((!m_bUseGlobalCodepage) && oDocument.m_oFontTable.GetFont(oReader.m_oState->m_oCharProp.m_nFont, oFont))
 	{
 		if (PROP_DEF != oFont.m_nCodePage)
 		{
@@ -365,7 +365,7 @@ std::wstring RtfAbstractReader::ExecuteTextInternalCodePage( std::string& sCharS
 			nCodepage = RtfUtility::CharsetToCodepage(oFont.m_nCharset);
 		}
 	}
-	//от настроек документа
+	//from document settings
 	if (-1 == nCodepage && RtfDocumentProperty::cp_none != oDocument.m_oProperty.m_eCodePage)
 	{
 		switch (oDocument.m_oProperty.m_eCodePage)
@@ -380,12 +380,12 @@ std::wstring RtfAbstractReader::ExecuteTextInternalCodePage( std::string& sCharS
 				nCodepage = CP_ACP;
 			break;
 		}
-		case RtfDocumentProperty::cp_mac:   nCodepage = CP_MACCP;   break; //?? todooo
+		case RtfDocumentProperty::cp_mac:   nCodepage = CP_MACCP;   break; //?? TODO
 		case RtfDocumentProperty::cp_pc:    nCodepage = 437;        break; //ms dos latin us
 		case RtfDocumentProperty::cp_pca:   nCodepage = 850;        break; //ms dos latin eu
 		}
 	}
-	//если ничего нет ставим ANSI или default from user
+	//if there is nothing, set ANSI or default from user
 	if (-1 == nCodepage)
 	{
 		nCodepage = CP_ACP;

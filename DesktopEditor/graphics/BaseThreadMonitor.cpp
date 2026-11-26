@@ -30,7 +30,7 @@ namespace NSThreads
 	CBaseThreadMonitor::CBaseThreadMonitor()
 	{
 		m_bIsInit = false;
-		m_pReceiver = NULL;
+		m_pReceiver = nullptr;
 		m_funcRelease = nullptr;
 
 		m_oCS.InitializeCriticalSection();
@@ -67,7 +67,7 @@ namespace NSThreads
 			return false;
 
 		m_bIsInit = false;
-		m_pReceiver = NULL;
+		m_pReceiver = nullptr;
 		m_listThreads.clear();
 		return true;
 	}
@@ -85,10 +85,10 @@ namespace NSThreads
 
 	CBaseThread* CBaseThreadMonitor::GetBaseThread(const ASC_THREAD_ID& nThreadId)
 	{
-		// лист - потому что будет всегда мало записей - и то будет быстрее мапа. двигаем всегда текущий на первое место
+		// list - because there will always be few records - and it will be faster than a map. Always move the current one to the front.
 
 		if (m_listThreads.size() == 0)
-			return NULL;
+			return nullptr;
 
 		std::list<CBaseThreadInfo>::iterator i = m_listThreads.begin();
 
@@ -112,7 +112,7 @@ namespace NSThreads
 			i++;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void CBaseThreadMonitor::SetReleaseHandler(std::function<void(void* initializer, CBaseThread*)> func)

@@ -43,7 +43,7 @@ class CPPTDocumentInfo;
 class CPPTUserInfo : public CDocument
 {
 public:
-    CPPTDocumentInfo*           m_pDocumentInfo = NULL;
+    CPPTDocumentInfo*           m_pDocumentInfo = nullptr;
     CUserEdit                   m_oUser;
     std::map<_UINT32, _UINT32>  m_mapOffsetInPIDs;
     CRecordDocument             m_oDocument;
@@ -53,7 +53,7 @@ public:
     std::wstring                    m_strPassword;
     CRYPT::ECMADecryptor*           m_pDecryptor;
     POLE::Storage*                  m_pStorageDecrypt;
-    std::vector<XLS::CFStreamPtr>   m_arStreamDecrypt; // на каждый Persist свой ... оО
+    std::vector<XLS::CFStreamPtr>   m_arStreamDecrypt; // for each Persist its own... oO
 
     std::map<_UINT32, CRecordSlide*>    m_mapSlides;
     std::map<_UINT32, CRecordSlide*>    m_mapMasters;
@@ -66,7 +66,7 @@ public:
     std::vector<_UINT32>    m_arrMastersOrder;
     std::vector<_UINT32>    m_arrNotesOrder;
 
-    // перевод id мастера в индекс темы/шаблона
+    // converting master id to theme/template index
     std::map<_UINT32, LONG> m_mapMasterToTheme;
 
     std::map<_UINT32, LONG> m_mapRealUsedMaster;
@@ -103,12 +103,12 @@ public:
     std::vector<int>    m_arOffsetPictures;
     bool                m_bIsSetupEmpty;
 
-// вся инфа о ex - файлах
+// all the information about ex-files
     CExMedia                m_oExMedia;
 
     std::vector<CColor>     m_oSchemeColors;
 
-    nullable<WORD>          m_wLanguage;	// язык пользователя (редактора)
+    nullable<WORD>          m_wLanguage;	// user (editor) language
     bool                    m_bRtl;
     bool                    m_bShowComments;
 
@@ -176,6 +176,6 @@ public:
     CElementPtr	AddLayoutSlidePlaceholder	(CSlide *pSlide,	int placeholderType, CLayout *pLayout, bool idx_only = false);
 
     void LoadGroupShapeContainer(CRecordGroupShapeContainer* pGroup, std::vector<CElementPtr>* pParentElements,
-                                 CTheme* pTheme, CLayout* pLayout, CSlideInfo* pThemeWrapper, CSlideInfo* pSlideWrapper, CSlide* pSlide = NULL);
+                                 CTheme* pTheme, CLayout* pLayout, CSlideInfo* pThemeWrapper, CSlideInfo* pSlideWrapper, CSlide* pSlide = nullptr);
 };
 }

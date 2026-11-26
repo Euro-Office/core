@@ -53,12 +53,12 @@ const bool XFS::loadContent(BinProcessor& proc)
 	int cellXfs_count		= 0;
 	
     XF xf(cell_xf_current_id, style_xf_current_id);
-    int count = proc.repeated(xf , 0, 0); // "Stock symbols comparison1.xls" (второй FORMATING)
+    int count = proc.repeated(xf , 0, 0); // "Stock symbols comparison1.xls" (second FORMATTING)
 
 	int ind = 0;
 	while (count > 0 && elements_.size() > 0)
 	{
-		//разделить style & complex
+		//separate style & complex
 		XF* xfs = dynamic_cast<XF*>(elements_.front().get());
 
 		xfs->ind_xf = ind++;
@@ -237,4 +237,3 @@ int XFS::serialize(std::wostream & stream)
 }
 
 } // namespace XLS
-

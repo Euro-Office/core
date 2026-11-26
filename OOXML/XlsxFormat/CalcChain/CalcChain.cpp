@@ -59,7 +59,7 @@ namespace OOX
 			}
 			void CCalcCell::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("a"),      m_oArray )
@@ -89,12 +89,12 @@ namespace OOX
 					if(xlsx->m_bNeedCalcChain)
 					{
 						xlsx->m_pCalcChain = this;
-						read( oRootPath, oPath );
+						CCalcChain::read( oRootPath, oPath );
 					}
 				}
 				else
 				{
-					read( oRootPath, oPath );
+					CCalcChain::read( oRootPath, oPath );
 				}
 			}
 			CCalcChain::~CCalcChain()

@@ -75,7 +75,7 @@ public:
 	TextItemContainerPtr	m_oEndnoteSep;
 	TextItemContainerPtr	m_oEndnoteCon;
 
-//для того чтобы конвертировать старый формат List в Numbering
+//to convert the old List format to Numbering
 	std::vector<RtfOldListPtr> m_aOldLists;
 	
 	NSFonts::IApplicationFonts* m_pAppFonts;

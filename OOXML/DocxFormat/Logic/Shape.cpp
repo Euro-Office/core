@@ -65,7 +65,7 @@ namespace OOX
 		}
 		void CTxbxContent::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CTxbxContent::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CTxbxContent::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CTxbxContent::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -80,7 +80,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if (L"w:altChunk" == sName )
 					pItem = new CAltChunk( document );

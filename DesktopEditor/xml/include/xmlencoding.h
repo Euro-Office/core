@@ -31,8 +31,8 @@
 
 namespace XmlUtils
 {
-	// эта функция считает, что на вход пришла точно хмл.
-	// надо лишь определить кодировку и отдать строку в utf-8
+	// this function considers that the input received is exactly xml.
+	// determine the encoding and return the string in UTF-8
 	static std::string GetXmlContentAsUTF8(const std::wstring& sFile)
 	{
 		std::string sXmlSource;

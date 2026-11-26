@@ -35,8 +35,8 @@ namespace oox {
     
 
 xlsx_conversion_context::xlsx_conversion_context( package::xlsx_document * outputDocument)	: output_document_(outputDocument),
-	next_vml_file_id_				( 1 ),
 	sheet_context_					( *this ), 
+	next_vml_file_id_				( 1 ),
 	xlsx_drawing_context_handle_	( next_vml_file_id_, get_mediaitems())
 {
 }
@@ -165,9 +165,9 @@ void xlsx_conversion_context::set_sheet_id(int id)
 void xlsx_conversion_context::start_chart()
 {
 	charts_.push_back(oox_chart_context::create());
-	//добавляем новую форму для диаграммы
-	 //в ней будет информационная часть - и она пишется каждый раз в свою xml (их - по числу диаграмм)
-	//этот контекст нужно передавать в файл
+	//adding a new form for the diagram
+	 //it will contain an information part - and it is written each time in its own xml (their number is based on the number of diagrams)
+	//this context must be passed to the file
 
 }
 
@@ -243,7 +243,7 @@ void xlsx_conversion_context::end_document()
 {
 	std::wstringstream workbook_content;
 
-	//for (size_t i = 0; i < sheets_.size(); i++) нужно по id
+	//for (size_t i = 0; i < sheets_.size(); i++) needed by id
 	for (std::map<int, int>::iterator it = sheets_map_.begin(); it != sheets_map_.end(); ++it)
 	{
 		int i = it->second;
@@ -374,7 +374,7 @@ void xlsx_conversion_context::end_document()
 
 			std::wstring str_bookViews = xlsx_workbook_views_.str();
 
-			if (false == str_bookViews.empty())
+			if (!str_bookViews.empty())
 			{
 				CP_XML_NODE(L"bookViews")
 				{
@@ -385,7 +385,7 @@ void xlsx_conversion_context::end_document()
             {
                 CP_XML_STREAM() << workbook_content.str();
             }
-			if (externals_.empty() == false)
+			if (!externals_.empty())
 			{
 				CP_XML_NODE(L"externalReferences")
 				{
@@ -428,8 +428,6 @@ void xlsx_conversion_context::end_document()
 					for (int i = 0; i < pivot_cache_count; i++)
 					{
 						std::wstring				rId		= L"pcId" + std::to_wstring(i+1);
-						static const std::wstring	sType	= L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/pivotCacheDefinition"; 
-						const std::wstring			sName	= std::wstring(L"../pivotCache/pivotCacheDefinition" + std::to_wstring(i + 1) + L".xml");
 						
 						package::pivot_cache_content_ptr content = package::pivot_cache_content::create();
 						

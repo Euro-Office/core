@@ -63,6 +63,10 @@ void office_meta::add_child_element( xml::sax * Reader, const std::wstring & Ns,
 	{
 		CP_CREATE_ELEMENT(meta_initial_creator_);
 	}
+	else if (Ns == L"meta" && Name == L"keyword")
+	{
+		CP_CREATE_ELEMENT(meta_keyword_);
+	}
 	else if (Ns == L"meta" && Name == L"template")
 	{
 		CP_CREATE_ELEMENT(meta_template_);
@@ -113,6 +117,11 @@ const wchar_t * meta_creation_date::name = L"creation-date";
 
 const wchar_t * meta_template::ns = L"meta";
 const wchar_t * meta_template::name = L"template";
+
+void meta_template::add_attributes(const xml::attributes_wc_ptr & Attributes)
+{
+	CP_APPLY_ATTR(L"xlink:title", xlink_title_, std::wstring(L""));
+}
 
 const wchar_t * meta_keyword::ns = L"meta";
 const wchar_t * meta_keyword::name = L"keyword";

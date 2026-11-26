@@ -28,11 +28,11 @@ namespace NSDocxRenderer
 {
 	enum class TextAssociationType
 	{
-		tatBlockChar        = 0, // Каждый символ во фрейме
-		tatBlockLine        = 1, // Каждая линия - параграф во фрейме. Линии могут объединяться в рамках одного блока.
-		tatPlainLine        = 2, // Каждая линия - параграф обычный
-		tatShapeLine        = 3, // Каждая линия - параграф в шейпе. Линии могут объединяться в рамках одного блока.
-		tatPlainParagraph   = 4, // Все линии объединяются в параграфы
-		tatParagraphToShape = 5  // Параграфы записываем в шейпы
+		tatBlockChar        = 0, // Every character in the frame
+		tatBlockLine        = 1, // Each line is a paragraph in a frame. Lines can be combined within one block.
+		tatPlainLine        = 2, // Each line is a regular paragraph
+		tatShapeLine        = 3, // Each line is a paragraph in the shape. Lines can be combined within one block.
+		tatPlainParagraph   = 4, // All lines are combined into paragraphs
+		tatParagraphToShape = 5  // Write paragraphs in shapes
 	};
 }

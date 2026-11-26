@@ -103,8 +103,8 @@ public:
 	
 	_CP_OPT(std::wstring)					draw_background_size_;			//"border" or "full"
 
-	_CP_OPT(std::wstring)					presentation_transition_type_;	//manual, automatic, semi-automatic (переход отделен от эффектов кликом)
-	_CP_OPT(std::wstring)					presentation_transition_style_;	//none, fade, move, uncover,clockwise, .... игнор если smil
+	_CP_OPT(std::wstring)					presentation_transition_type_;	//manual, automatic, semi-automatic (transition separated from effects by click)
+	_CP_OPT(std::wstring)					presentation_transition_style_;	//none, fade, move, uncover, clockwise, .... ignore if smil
 	_CP_OPT(std::wstring)					presentation_transition_speed_;	//slow, medium, fast
 	
 	_CP_OPT(bool)							presentation_display_footer_;

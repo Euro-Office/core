@@ -17,6 +17,8 @@ namespace MetaFile
 		}
 		catch(...)
 		{
+			// not an int - try a wider integer type below
+			(void)0;
 		}
 
 		try
@@ -30,8 +32,8 @@ namespace MetaFile
 	}
 
 	CXmlOutput::CXmlOutput(TypeXmlOutput oTypeXmlOutput) :
-		m_pXmlWriter    (NULL),
-		m_pXmlLiteReader(NULL)
+		m_pXmlWriter    (nullptr),
+		m_pXmlLiteReader(nullptr)
 	{
 		if (oTypeXmlOutput == TypeXmlOutput::IsWriter)
 			m_pXmlWriter = new XmlUtils::CXmlWriter;
@@ -52,17 +54,17 @@ namespace MetaFile
 
 	bool CXmlOutput::IsWriter() const
 	{
-		return NULL != m_pXmlWriter;
+		return nullptr != m_pXmlWriter;
 	}
 
 	bool CXmlOutput::IsReader() const
 	{
-		return NULL != m_pXmlLiteReader;
+		return nullptr != m_pXmlLiteReader;
 	}
 
 	bool CXmlOutput::IsValid() const
 	{
-		return (IsReader()) ? m_pXmlLiteReader->IsValid() : m_pXmlLiteReader->IsValid();
+		return m_pXmlLiteReader->IsValid();
 	}
 
 	bool CXmlOutput::IsEmptyNode() const
@@ -706,7 +708,7 @@ namespace MetaFile
 
 	void CXmlOutput::WriteNode(const std::wstring &wsNameNode, const unsigned int *pUnValues, const unsigned int &unSize)
 	{
-		if (NULL == pUnValues || unSize == 0)
+		if (nullptr == pUnValues || unSize == 0)
 			return;
 
 		WriteNodeBegin(wsNameNode);
@@ -750,7 +752,7 @@ namespace MetaFile
 
 	bool CXmlOutput::IsRecord() const
 	{
-		return (IsReader() && m_pXmlLiteReader->GetDepth() == 1) ? true : false;
+		return IsReader() && m_pXmlLiteReader->GetDepth() == 1;
 	}
 
 	std::wstring CXmlOutput::GetName() const
@@ -805,7 +807,7 @@ namespace MetaFile
 		*this >> oTEmfAlphaBlend.nYDest;
 		*this >> oTEmfAlphaBlend.nCxDest;
 		*this >> oTEmfAlphaBlend.nCyDest;
-		//TODO: закончить реализацию при встрече примера
+		//TODO: finish implementation when a sample is encountered
 
 	}
 
@@ -1004,7 +1006,7 @@ namespace MetaFile
 		*this >> oTEmfSmallTextout.oBounds;
 
 		oTEmfSmallTextout.pTextString = new unsigned short[oTEmfSmallTextout.unCChars];
-		*this >> (unsigned short*)oTEmfSmallTextout.pTextString;
+		*this >> oTEmfSmallTextout.pTextString;
 	}
 
 	void CXmlOutput::operator>>(TEmrTextW &oTEmfEmrText)

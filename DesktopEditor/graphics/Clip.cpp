@@ -29,7 +29,7 @@ namespace Aggplus
 	/////////////////////////////////////////////////////////////////////////////////////
 	CClipMask::CClipMask() : m_pixf(m_alpha_rbuf)
 	{
-		m_pMask = NULL;
+		m_pMask = nullptr;
 		m_bIsClip = false;
 
 		m_lWidth	= 0;
@@ -43,7 +43,7 @@ namespace Aggplus
 
 	void CClipMask::Destroy()
 	{
-		if (NULL != m_pMask)
+		if (nullptr != m_pMask)
 			delete [] m_pMask;
 	}
 
@@ -74,7 +74,7 @@ namespace Aggplus
 
 	void CClipMask::GenerateClip(CGraphicsPath* pPath, CMatrix* pMatrix)
 	{
-		if (NULL == pPath)
+		if (nullptr == pPath)
 			return;
 
         memset(m_pMask, 0, m_lWidth * m_lHeight);
@@ -111,7 +111,7 @@ namespace Aggplus
 
 	CClip::CClip() : m_pixf(m_alpha_rbuf)
 	{
-		m_pMask = NULL;
+		m_pMask = nullptr;
 		m_bIsClip = false;
 
 		m_lWidth	= 0;
@@ -125,7 +125,7 @@ namespace Aggplus
 
 	void CClip::Destroy()
 	{
-		if (NULL != m_pMask)
+		if (nullptr != m_pMask)
 			delete [] m_pMask;
 	}
 
@@ -144,7 +144,7 @@ namespace Aggplus
 
 	void CClip::GenerateClip(CGraphicsPath* pPath, CMatrix* pMatrix)
 	{
-		if (NULL == pPath)
+		if (nullptr == pPath)
 			return;
 
 		m_rasterizer.reset();
@@ -191,7 +191,7 @@ namespace Aggplus
 			m_rasterizer.reset();
 			return &m_rasterizer;
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	void CClipMulti::Create(LONG width, LONG height)
@@ -205,7 +205,7 @@ namespace Aggplus
 
 	void CClipMulti::GenerateClip(CGraphicsPath* pPath, CMatrix* pMatrix)
 	{
-		if (NULL == pPath)
+		if (nullptr == pPath)
 			return;
 
 		m_rasterizer.reset();
@@ -239,7 +239,7 @@ namespace Aggplus
 
 		if (!m_bIsClip2)
 		{
-			// смешивать надо с растерайзером
+			// must be mixed with a rasterizer
 			pRasterizer->filling_rule(bEvenOdd ? agg::fill_even_odd : agg::fill_non_zero);
 
 			scanline_type sl1; 
@@ -252,7 +252,7 @@ namespace Aggplus
 		}
 		else
 		{
-			// надо смешивать со стораджем
+			// must be mixed with storage
 
 			pRasterizer->filling_rule(op ? agg::fill_even_odd : agg::fill_non_zero);
 

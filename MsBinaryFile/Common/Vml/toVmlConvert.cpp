@@ -26,9 +26,9 @@
 
 void COOXToVMLGeometry::_CStringWriter::AddSize(size_t nSize)
 {
-	if (NULL == m_pData)
+	if (nullptr == m_pData)
 	{
-        m_lSize = (std::max)((int)nSize, (int)1000);
+        m_lSize = (std::max)((int)nSize, 1000);
 		m_pData = (wchar_t*)malloc(m_lSize * sizeof(wchar_t));
 		
 		m_lSizeCur = 0;
@@ -44,9 +44,9 @@ void COOXToVMLGeometry::_CStringWriter::AddSize(size_t nSize)
 		}
 
 		wchar_t* pRealloc = (wchar_t*)realloc(m_pData, m_lSize * sizeof(wchar_t));
-		if (NULL != pRealloc)
+		if (nullptr != pRealloc)
 		{
-			// реаллок сработал
+			// realloc worked
 			m_pData		= pRealloc;
 			m_pDataCur	= m_pData + m_lSizeCur;
 		}
@@ -204,7 +204,7 @@ HRESULT COOXToVMLGeometry::PathCommandClose()
 }
 HRESULT COOXToVMLGeometry::PathCommandGetCurrentPoint(double* x, double* y)
 {
-	if (NULL != m_pSimpleGraphicsConverter)
+	if (nullptr != m_pSimpleGraphicsConverter)
 		return m_pSimpleGraphicsConverter->PathCommandGetCurrentPoint(x, y);
 	return S_OK; 
 }

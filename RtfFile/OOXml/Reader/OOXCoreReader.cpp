@@ -33,7 +33,7 @@ OOXCoreReader::OOXCoreReader(OOX::CCore * ooxCore)
 }
 bool OOXCoreReader::Parse( ReaderParameter oParam )
 {
-	if (m_ooxCore == NULL) return false;
+	if (m_ooxCore == nullptr) return false;
 
 	if (m_ooxCore->m_sTitle.IsInit())
 	{

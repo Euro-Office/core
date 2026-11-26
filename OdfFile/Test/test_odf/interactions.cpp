@@ -446,7 +446,10 @@ TEST_F(OOX2ODP_PlayAudioAnimationTest, mediaitem_path)
 	ASSERT_GE(items.size(), 1);
 
 	auto audioItem = items[0];
-	const std::wstring audioItemPath = L"../../../X2tConverter/test/win32Test/Res/media_example";
+	// The converter stores the link target's basename: it is only matched
+	// against slide names (PptxConverter::fill_in_deferred_hyperlinks), so
+	// the directory, here from the fixture author's build tree, is dropped.
+	const std::wstring audioItemPath = L"media_example";
 
 	EXPECT_EQ(audioItem.second, audioItemPath);
 }
@@ -530,7 +533,10 @@ TEST_F(OOX2ODP_RunProgramAnimationTest, mediaitem_path)
 	ASSERT_GE(items.size(), 1);
 
 	auto audioItem = items[0];
-	const std::wstring audioItemPath = L"../../../../build_tools/out/win_64/onlyoffice/core/x2t";
+	// The converter stores the link target's basename: it is only matched
+	// against slide names (PptxConverter::fill_in_deferred_hyperlinks), so
+	// the directory, here from the fixture author's build tree, is dropped.
+	const std::wstring audioItemPath = L"x2t";
 
 	EXPECT_EQ(audioItem.second, audioItemPath);
 }

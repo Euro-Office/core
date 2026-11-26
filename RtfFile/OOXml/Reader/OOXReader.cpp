@@ -40,8 +40,8 @@ OOXReader::OOXReader( RtfDocument& oDocument, std::wstring  path ): m_oDocument(
 	m_nCurOleChartId = 0;
 	m_nCurFittextId = 0;
 
-	m_convertationManager = NULL;
-	m_currentContainer = NULL;
+	m_convertationManager = nullptr;
+	m_currentContainer = nullptr;
 }
 bool OOXReader::Parse()
 {
@@ -55,7 +55,7 @@ bool OOXReader::Parse()
 	oReaderParameter.oReader	= this;
 
 	if (inputDocxFile.m_oMain.settings)
-	{ //важно чтобы первыми читались именно settings (например для footnote)
+	{ //it is important that the settings are read first (for example, for footnote)
 		OOXSettingsReader oSettingsReader( inputDocxFile.m_oMain.settings );
 		oSettingsReader.Parse( oReaderParameter );
 	}

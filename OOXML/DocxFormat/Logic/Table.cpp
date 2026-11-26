@@ -71,7 +71,7 @@ namespace ComplexTypes
 		}
 		void CTblGridCol::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_ReadSingle( oReader, L"w:w", m_oW )
 				WritingElement_ReadAttributes_End( oReader )
@@ -274,14 +274,14 @@ namespace OOX
 		// CTbl 17.4.38 (Part 1)
 		//--------------------------------------------------------------------------------
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>
 
 		CTbl::CTbl(OOX::Document *pMain) : WritingElementWithChilds<>(pMain)
 		{
-			m_oTableProperties = NULL;
+			m_oTableProperties = nullptr;
 			m_nCountRow = 0;
 		}		
 		CTbl::~CTbl()
@@ -302,7 +302,7 @@ namespace OOX
 		void CTbl::ClearItems()
 		{
 			m_oTblGrid.reset();
-			m_oTableProperties = NULL;
+			m_oTableProperties = nullptr;
 			m_nCountRow = 0;
 
 			WritingElementWithChilds::ClearItems();
@@ -318,7 +318,7 @@ namespace OOX
 					if (oItem.IsValid())
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("w:bookmarkEnd") == sName )
 							AssignPtrXmlContent(pItem, CBookmarkEnd, oItem)
@@ -398,8 +398,6 @@ namespace OOX
 			if ( oReader.IsEmptyNode() )
 				return;
 
-			OOX::Document* document = WritingElement::m_pMainDocument;
-			
 			int nParentDepth = oReader.GetDepth();
 			CreateElements(oReader, nParentDepth);
 		}
@@ -410,7 +408,7 @@ namespace OOX
 			while (oReader.ReadNextSiblingNode(Depth))
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if (_T("w:bookmarkEnd") == sName)
 					pItem = new CBookmarkEnd(document);
@@ -468,7 +466,7 @@ namespace OOX
 					pItem = new CSdt(document);
 				else if (_T("w:tblGrid") == sName)
 				{
-					if (false == m_oTblGrid.IsInit())
+					if (!m_oTblGrid.IsInit())
 					{
 						m_oTblGrid = new CTblGrid(document);
 					}
@@ -531,7 +529,7 @@ namespace OOX
 		// CTr 17.4.79 (Part 1)
 		//--------------------------------------------------------------------------------
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>
@@ -539,7 +537,7 @@ namespace OOX
 		CTr::CTr(OOX::Document *pMain) : WritingElementWithChilds<>(pMain)
 		{
 			m_nCountCell = 0;
-			m_pTableRowProperties = NULL;
+			m_pTableRowProperties = nullptr;
 		}		
 		CTr::~CTr()
 		{
@@ -558,7 +556,7 @@ namespace OOX
 		}
 		void CTr::ClearItems()
 		{
-			m_pTableRowProperties = NULL;
+			m_pTableRowProperties = nullptr;
 			m_oRsidDel.reset();
 			m_oRsidR.reset();
 			m_oRsidRPr.reset();
@@ -584,7 +582,7 @@ namespace OOX
 					if (oItem.IsValid())
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("w:bookmarkEnd") == sName )
 							AssignPtrXmlContent(pItem, CBookmarkEnd, oItem)
@@ -696,7 +694,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode(nDepth) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("w:bookmarkEnd") == sName )
 					pItem = new CBookmarkEnd( document );
@@ -847,7 +845,7 @@ namespace OOX
 		// CTc 17.4.66 (Part 1)
 		//--------------------------------------------------------------------------------
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>
@@ -855,7 +853,7 @@ namespace OOX
 		CTc::CTc(OOX::Document *pMain) : WritingElementWithChilds<>(pMain)
 		{
 			m_nNumCol = 0;
-			m_pTableCellProperties = NULL;
+			m_pTableCellProperties = nullptr;
 		}		
 		CTc::~CTc()
 		{
@@ -876,7 +874,7 @@ namespace OOX
 		}
 		void CTc::ClearItems()
 		{
-			m_pTableCellProperties = NULL;
+			m_pTableCellProperties = nullptr;
 			m_nNumCol = 0;
 			m_sId.reset();
 
@@ -895,7 +893,7 @@ namespace OOX
 					if (oItem.IsValid())
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( _T("w:altChunk") == sName )
 							AssignPtrXmlContent(pItem, CAltChunk, oItem)
@@ -987,7 +985,7 @@ namespace OOX
 			while( oReader.ReadNextSiblingNode(nDepth) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( _T("w:altChunk") == sName )
 					pItem = new CAltChunk( document );

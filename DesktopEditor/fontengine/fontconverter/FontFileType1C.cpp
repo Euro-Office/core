@@ -49,7 +49,7 @@ namespace NSFontConverter
 		if ( !pT1CFF->Parse() )
 		{
 			delete pT1CFF;
-			return NULL;
+			return nullptr;
 		}
 		return pT1CFF;
 	}
@@ -59,15 +59,16 @@ namespace NSFontConverter
 		char *sBuffer;
 		int nLen = 0;
 
-		if ( !( sBuffer = CFontFileBase::ReadFile( wsFileName, &nLen ) ) )
-			return NULL;
+		sBuffer = CFontFileBase::ReadFile( wsFileName, &nLen );
+		if ( !sBuffer )
+			return nullptr;
 
 		CFontFileType1C *pT1CFF = new CFontFileType1C( sBuffer, nLen, true);
 
 		if ( !pT1CFF->Parse() )
 		{
 			delete pT1CFF;
-			return NULL;
+			return nullptr;
 		}
 		return pT1CFF;
 	}
@@ -75,11 +76,11 @@ namespace NSFontConverter
 	CFontFileType1C::CFontFileType1C(char *sBuffer, int nLen, bool bFreeData):
 		CFontFileBase( sBuffer, nLen, bFreeData)
 	{
-		m_seName        = NULL;
-		m_arrEncoding   = NULL;
-		m_pPrivateDicts = NULL;
-		m_pnFDSelect    = NULL;
-		m_pnCharset     = NULL;
+		m_seName        = nullptr;
+		m_arrEncoding   = nullptr;
+		m_pPrivateDicts = nullptr;
+		m_pnFDSelect    = nullptr;
+		m_pnCharset     = nullptr;
 	}
 
 	CFontFileType1C::~CFontFileType1C()
@@ -93,7 +94,7 @@ namespace NSFontConverter
 			{
 				MemUtilsFree( m_arrEncoding[ nIndex ] );
 			}
-			MemUtilsFree( m_arrEncoding );
+			MemUtilsFree( (void *)m_arrEncoding );
 		}
 
 		if ( m_pPrivateDicts )
@@ -113,7 +114,7 @@ namespace NSFontConverter
 
 	char *CFontFileType1C::GetName()
 	{
-		return m_seName ? m_seName->GetBuffer() : (char *)NULL;
+		return m_seName ? m_seName->GetBuffer() : (char *)nullptr;
 	}
 
 	char **CFontFileType1C::GetEncoding()
@@ -126,7 +127,7 @@ namespace NSFontConverter
 		if ( m_oTopDict.nFirstOperator != 0x0c1e )
 		{
 			*arrCIDs = 0;
-			return NULL;
+			return nullptr;
 		}
 
 		int nCount = 0;
@@ -173,8 +174,8 @@ namespace NSFontConverter
 			(*pOutputFunc)( pOutputStream, sBuf, strlen( sBuf ));
 		}
 		(*pOutputFunc)( pOutputStream, "\n", 1);
-		// Для словаря нужно место для 12 полей: следующие 9 +
-		// Private и CharStrings (в eexec секции) и FID.
+		// The dictionary needs space for 12 fields: the next 9 +
+		// Private and CharStrings (in the eexec section) and FID.
 		(*pOutputFunc)( pOutputStream, "12 dict begin\n", 14);
 		(*pOutputFunc)( pOutputStream, "/FontInfo 10 dict dup begin\n", 28);
 		if ( m_oTopDict.nVersionSID != 0 )
@@ -268,7 +269,7 @@ namespace NSFontConverter
 			delete seBuffer;
 		}
 
-		// Запись кодировки
+		// Writing the encoding
 		(*pOutputFunc)( pOutputStream, "/Encoding ", 10);
 		if ( !ppNewEncoding && m_arrEncoding == c_arrsFontFileType1ExpertEncoding )
 		{
@@ -292,7 +293,7 @@ namespace NSFontConverter
 		}
 		(*pOutputFunc)( pOutputStream, "currentdict end\n", 16);
 
-		// Бинарная секция (eexec)
+		// Binary section (eexec)
 		Type1CEexecBuf oEexecBuffer;
 		(*pOutputFunc)( pOutputStream, "currentfile eexec\n", 18);
 		oEexecBuffer.pOutputFunc   = pOutputFunc;
@@ -527,7 +528,7 @@ namespace NSFontConverter
 		/*
 		// Cmap Table
 		int nNumCmapTables = 1;
-		int nStartCmapTable = 4 + nNumCmapTables * 8; // заголовок Cmap + заголовок подтаблицы
+		int nStartCmapTable = 4 + nNumCmapTables * 8; // Cmap header + subtable header
 
 		TCharBuffer oCmapTable;
 		oCmapTable.Write( "\x00\x00", 2 );     // version
@@ -606,7 +607,7 @@ namespace NSFontConverter
 		// Name Table
 		TCharBuffer oNameTable;
 
-		// Пока таблицу с именами сделаем пустой
+		// For now, make the table with names empty
 		oNameTable.Write( "\x00\x00", 2 ); // format
 		oNameTable.Write( "\x00\x00", 2 ); // number of name records
 		oNameTable.Write( "\x00\x06", 2 ); // offset to start of string storage
@@ -624,10 +625,10 @@ namespace NSFontConverter
 		oPostTable.Write( "\x00\x00\x00\x00", 4 ); // min Type 1 memory
 		oPostTable.Write( "\x00\x00\x00\x00", 4 ); // max Type 1 memory
 
-		// Создаем каталог с описанием всех таблиц:
-		// - сортируем талицы по тэгу
-		// - вычисляем позиции таблиц, учитывая 4-byte alignment
-		// - вычисляем чексуммы таблиц
+		// Create a catalog with a description of all tables:
+		// - sort the tables by tag
+		// - calculate table positions, taking into account 4-byte alignment
+		// - calculate checksums of tables
 
 		int nRequiredTablesCount = 8;
 		TrueTypeTable *pTables = (TrueTypeTable *)MemUtilsMallocArray( nRequiredTablesCount, sizeof(TrueTypeTable) );
@@ -691,7 +692,7 @@ namespace NSFontConverter
 			}
 		}
 
-		// Записываем каталог таблиц
+		// Write the table directory
 		TCharBuffer oTableDir; // 12 + nReqTabCount * 16
 		oTableDir.Write( "\x4F\x54\x54\x4F", 4 ); // sfnt version
 		oTableDir.Write16( nRequiredTablesCount); // numTables
@@ -716,15 +717,14 @@ namespace NSFontConverter
 		}
 		(*pOutputFunc)( pOutputStream, oTableDir.sBuffer, oTableDir.nLen );
 
-		// Вычислим чексумму файла
+		// Calculate the checksum of the file
 		int nFileChecksum = ComputeTTTableChecksum( (unsigned char *)oTableDir.sBuffer, oTableDir.nLen );
 		for ( int nIndex = 0; nIndex < nRequiredTablesCount; ++nIndex )
 		{
 			nFileChecksum += pTables[nIndex].unChecksum;
 		}
-		nFileChecksum = 0xb1b0afba - nFileChecksum;
 
-		// Записываем таблицы
+		// Writing tables
 		for ( int nIndex = 0; nIndex < nRequiredTablesCount; ++nIndex )
 		{
 			switch( pTables[nIndex].unTag )
@@ -738,6 +738,10 @@ namespace NSFontConverter
 			case maxpTag: (*pOutputFunc)( pOutputStream, oMaxpTable.sBuffer, pTables[nIndex].nLen ); break;
 			case nameTag: (*pOutputFunc)( pOutputStream, oNameTable.sBuffer, pTables[nIndex].nLen ); break;
 			case postTag: (*pOutputFunc)( pOutputStream, oPostTable.sBuffer, pTables[nIndex].nLen ); break;
+				default:
+				{
+					break;
+				}
 			}
 
 			if ( pTables[nIndex].nLen & 3 )
@@ -758,7 +762,7 @@ namespace NSFontConverter
 		bool bSuccess = true;
 		int nGID = 0, i, j, k;
 
-		// Вычислим количество CID и построим отображение CID->GID
+		// Calculate the number of CIDs and build a CID->GID mapping
 		int nCIDsCount = 0;
 		for ( i = 0; i < m_nGlyphsCount; ++i )
 		{
@@ -783,7 +787,8 @@ namespace NSFontConverter
 		for ( i = 0; i < nCIDsCount; ++i )
 		{
 			charStringOffsets[i] = charStrings->GetLength();
-			if ( ( nGID = arrCIDdMap[i] ) >= 0 )
+			nGID = arrCIDdMap[i];
+			if ( nGID >= 0 )
 			{
 				Type1CIndexVal oIndexVal;
 				bSuccess = true;
@@ -802,7 +807,7 @@ namespace NSFontConverter
 		}
 		charStringOffsets[ nCIDsCount ] = charStrings->GetLength();
 
-		// Вычислим nNeedBytes = количество байт, необходимых для charstring offsets
+		// Calculate nNeedBytes = number of bytes needed for charstring offsets
 		int nNeedBytes = 0;
 		i = ( nCIDsCount + 1) * 5 + charStrings->GetLength();
 		if (i < 0x100)
@@ -822,7 +827,7 @@ namespace NSFontConverter
 			nNeedBytes = 4;
 		}
 
-		// Начинаем запись Font Dictionary
+		// Start writing Font Dictionary
 		(*pOutputFunc)( pOutputStream, "/CIDInit /ProcSet findresource begin\n", 37);
 		(*pOutputFunc)( pOutputStream, "20 dict begin\n", 14);
 		(*pOutputFunc)( pOutputStream, "/CIDFontName /", 14);
@@ -1126,7 +1131,7 @@ namespace NSFontConverter
 
 		int nCurFD = 0;
 
-		// Вычислим количество CID и построим отображение CID->GID
+		// Calculate the number of CIDs and build a CID->GID mapping
 		int nCIDsCount = 0;
 		for (int nIndex = 0; nIndex < m_nGlyphsCount; ++nIndex )
 		{
@@ -1145,10 +1150,10 @@ namespace NSFontConverter
 			arrCIDMap[m_pnCharset[ nIndex ]] = nIndex;
 		}
 
-		// Запись Type 1 фонта
+		// Writing the Type 1 font
 		for (i = 0; i < nCIDsCount; i += 256)
 		{
-			// Игнорируем CID = 0, т.е. ".notdef"
+			// Ignore CID = 0, i.e. ".notdef"
 			nCurFD = 0;
 			for ( j = ((i == 0) ? 1 : 0); j < 256 && i+j < nCIDsCount; ++j )
 			{
@@ -1159,7 +1164,7 @@ namespace NSFontConverter
 				}
 			}
 
-			// Font Dictionary (незашифрованная часть)
+			// Font Dictionary (unencrypted part)
 			(*pOutputFunc)( pOutputStream, "16 dict begin\n", 14);
 			(*pOutputFunc)( pOutputStream, "/FontName /", 11);
 			(*pOutputFunc)( pOutputStream, sPSName, strlen(sPSName));
@@ -1664,10 +1669,10 @@ namespace NSFontConverter
 					{
 						// TO DO: error "Too few args to Type 2 callsubr"
 					}
-					// не очищаем стек
+					// don't clear the stack
 					break;
 				case 0x000b:		// return
-					// не очищаем стек
+					// don't clear the stack
 					break;
 				case 0x000e:		// endchar / seac
 					if (m_bFirstOperator)
@@ -1701,7 +1706,7 @@ namespace NSFontConverter
 					m_nOperatorsCount = 0;
 					break;
 				case 0x000f:		// (obsolete)
-					// Данная операция игнорируется, но нам нужна ширина символа
+					// This operation is ignored, but we need the width of the character
 					if (m_bFirstOperator)
 					{
 						ConvertGlyphWidth(m_nOperatorsCount > 0, seCharBuffer, pDict);
@@ -1714,7 +1719,7 @@ namespace NSFontConverter
 					m_nOperatorsCount = 0;
 					break;
 				case 0x0012:		// hstemhm
-					// Данная операция игнорируется
+					// This operation is ignored
 					if (m_bFirstOperator)
 					{
 						ConvertGlyphWidth(m_nOperatorsCount & 1, seCharBuffer, pDict);
@@ -1728,7 +1733,8 @@ namespace NSFontConverter
 					m_nOperatorsCount = 0;
 					break;
 				case 0x0013:		// hintmask
-					// Данная операция игнорируется
+				case 0x0014:		// cntrmask
+					// This operation is ignored
 					if (m_bFirstOperator)
 					{
 						ConvertGlyphWidth(m_nOperatorsCount & 1, seCharBuffer, pDict);
@@ -1739,24 +1745,6 @@ namespace NSFontConverter
 						if (m_nOperatorsCount & 1)
 						{
 							// TO DO: error "Wrong number of args (m_nOperatorsCount) to Type 2 hintmask/vstemhm"
-						}
-						m_nHints += m_nOperatorsCount / 2;
-					}
-					nPos += ( m_nHints + 7) >> 3;
-					m_nOperatorsCount = 0;
-					break;
-				case 0x0014:		// cntrmask
-					// Данная операция игнорируется
-					if (m_bFirstOperator)
-					{
-						ConvertGlyphWidth(m_nOperatorsCount & 1, seCharBuffer, pDict);
-						m_bFirstOperator = false;
-					}
-					if (m_nOperatorsCount > 0)
-					{
-						if (m_nOperatorsCount & 1)
-						{
-							// TO DO: error "Wrong number of args (m_nOperatorsCount) to Type 2 cntrmask/vstemhm"
 						}
 						m_nHints += m_nOperatorsCount / 2;
 					}
@@ -1803,7 +1791,7 @@ namespace NSFontConverter
 					m_nOperatorsCount = 0;
 					break;
 				case 0x0017:		// vstemhm
-					// Данная операция игнорируется
+					// This operation is ignored
 					if (m_bFirstOperator)
 					{
 						ConvertGlyphWidth(m_nOperatorsCount & 1, seCharBuffer, pDict);
@@ -1859,7 +1847,7 @@ namespace NSFontConverter
 					m_bOpenPath = true;
 					break;
 				case 0x001a:		// vvcurveto
-					if (m_nOperatorsCount < 4 || !(m_nOperatorsCount % 4 == 0 || (m_nOperatorsCount-1) % 4 == 0))
+					if (m_nOperatorsCount < 4 || (m_nOperatorsCount % 4 != 0 && (m_nOperatorsCount-1) % 4 != 0))
 					{
 						// TO DO: error "Wrong number of args (m_nOperatorsCount) to Type 2 vvcurveto"
 					}
@@ -1892,7 +1880,7 @@ namespace NSFontConverter
 					m_bOpenPath = true;
 					break;
 				case 0x001b:		// hhcurveto
-					if (m_nOperatorsCount < 4 || !(m_nOperatorsCount % 4 == 0 || (m_nOperatorsCount-1) % 4 == 0))
+					if (m_nOperatorsCount < 4 || (m_nOperatorsCount % 4 != 0 && (m_nOperatorsCount-1) % 4 != 0))
 					{
 						// TO DO: error "Wrong number of args (m_nOperatorsCount) to Type 2 hhcurveto"
 					}
@@ -1940,10 +1928,10 @@ namespace NSFontConverter
 					{
 						// TO DO: error "Too few args to Type 2 callgsubr"
 					}
-					// не очищаем стек
+					// don't clear the stack
 					break;
 				case 0x001e:		// vhcurveto
-					if (m_nOperatorsCount < 4 || !(m_nOperatorsCount % 4 == 0 || (m_nOperatorsCount-1) % 4 == 0))
+					if (m_nOperatorsCount < 4 || (m_nOperatorsCount % 4 != 0 && (m_nOperatorsCount-1) % 4 != 0))
 					{
 						// TO DO: "Wrong number of args (m_nOperatorsCount) to Type 2 vhcurveto"
 					}
@@ -1992,7 +1980,7 @@ namespace NSFontConverter
 					m_bOpenPath = true;
 					break;
 				case 0x001f:		// hvcurveto
-					if (m_nOperatorsCount < 4 || !(m_nOperatorsCount % 4 == 0 || (m_nOperatorsCount-1) % 4 == 0))
+					if (m_nOperatorsCount < 4 || (m_nOperatorsCount % 4 != 0 && (m_nOperatorsCount-1) % 4 != 0))
 					{
 						// TO DO: "Wrong number of args (m_nOperatorsCount) to Type 2 hvcurveto"
 					}
@@ -2041,9 +2029,6 @@ namespace NSFontConverter
 					m_bOpenPath = true;
 					break;
 				case 0x0c00:		// dotsection (should be Type 1 only?)
-					// игнорируем
-					m_nOperatorsCount = 0;
-					break;
 				case 0x0c03:		// and
 				case 0x0c04:		// or
 				case 0x0c05:		// not
@@ -2307,7 +2292,7 @@ namespace NSFontConverter
 
 	void CFontFileType1C::EexecWriteCharString(Type1CEexecBuf *pEexecBuffer, unsigned char *sBuffer, int nLen)
 	{
-		// Eexec шифрование
+		// Eexec encryption
 		for (int nIndex = 0; nIndex < nLen; ++nIndex )
 		{
 			unsigned nCurChar = sBuffer[nIndex] ^ ( pEexecBuffer->unEncryptionKey >> 8);
@@ -2337,7 +2322,7 @@ namespace NSFontConverter
 
 		m_bSuccessParsed = true;
 
-		// некоторые программы включают фонты Type 1C в пробелами в начале
+		// some programs include Type 1C fonts with leading spaces
 		if ( m_nLen > 0 && m_sFile[0] != '\x01' )
 		{
 			++m_sFile;
@@ -2354,7 +2339,7 @@ namespace NSFontConverter
 
 		m_nGsubrBias = (m_oGsubrIndex.nCount < 1240) ? 107 : (m_oGsubrIndex.nCount < 33900) ? 1131 : 32768;
 
-		// считываем первое имя фонта
+		// read the first font name
 		GetIndexVal( &m_oNameIndex, 0, &oIndexVal, &m_bSuccessParsed);
 
 		if ( !m_bSuccessParsed )
@@ -2362,7 +2347,7 @@ namespace NSFontConverter
 
 		m_seName = new StringExt((char *)&m_sFile[ oIndexVal.nPos ], oIndexVal.nLen);
 
-		// Считываем самый верхний словарь для первого фонта
+		// Reading the topmost dictionary for the first font
 		ReadTopDict();
 
 		if ( m_oTopDict.nFirstOperator == 0x0c1e )
@@ -2436,7 +2421,7 @@ namespace NSFontConverter
 
 	void CFontFileType1C::ReadTopDict()
 	{
-		Type1CIndexVal oTopDictPointer;
+		Type1CIndexVal oTopDictPointer = {};
 
 		m_oTopDict.nFirstOperator  = -1;
 		m_oTopDict.nVersionSID    = 0;
@@ -2529,14 +2514,18 @@ namespace NSFontConverter
 					m_oTopDict.nSupplement         = (int)m_arrOperators[2].dNumber; break;
 				case 0x0c24: m_oTopDict.nFDArrayOffset      = (int)m_arrOperators[0].dNumber; break;
 				case 0x0c25: m_oTopDict.nFDSelectOffset     = (int)m_arrOperators[0].dNumber; break;
+					default:
+					{
+						break;
+					}
 				}
 				m_nOperatorsCount = 0;
 			}
 		}
 	}
 
-	// Читаем словарь шрифта (CID Font Dict (FD)). Отсюда вытаскиваем указатель на private dict,
-	// и читаем private dict. Также вытаксиваем FontMatrix.
+	// Reading the font dictionary (CID Font Dict (FD)). From here we pull out a pointer to the private dict,
+	// and read private dict. We also extract FontMatrix.
 	void CFontFileType1C::ReadFD(int nOffset, int nLength, Type1CPrivateDict *pDict)
 	{
 		double arrdFontMatrix[6];
@@ -2694,6 +2683,10 @@ namespace NSFontConverter
 					pDict->dNominalWidthX = m_arrOperators[0].dNumber;
 					pDict->bNominalWidthXFP = m_arrOperators[0].bIsFloat;
 					break;
+					default:
+					{
+						break;
+					}
 				}
 				m_nOperatorsCount = 0;
 			}
@@ -2787,7 +2780,7 @@ namespace NSFontConverter
 			m_arrEncoding = (char **)MemUtilsMallocArray(256, sizeof(char *));
 			for (int nIndex = 0; nIndex < 256; ++nIndex)
 			{
-				m_arrEncoding[nIndex] = NULL;
+				m_arrEncoding[nIndex] = nullptr;
 			}
 			int nPos = m_oTopDict.nEncodingOffset;
 			int nEncodingFormat = GetU8( nPos++, &m_bSuccessParsed);
@@ -2953,7 +2946,7 @@ namespace NSFontConverter
 			if (!m_bSuccessParsed)
 			{
 				MemUtilsFree(m_pnCharset);
-				m_pnCharset = NULL;
+				m_pnCharset = nullptr;
 				return false;
 			}
 		}
@@ -3084,12 +3077,13 @@ namespace NSFontConverter
 		return nPos;
 	}
 
-	// Конвертируем delta-encoded массив операторов в массив ints
+	// Converting a delta-encoded array of operators to an array of ints
 	int CFontFileType1C::GetDeltaIntArray(int *pArray, int nMaxLen)
 	{
 		int nCount = 0;
 
-		if ( ( nCount = m_nOperatorsCount ) > nMaxLen )
+		nCount = m_nOperatorsCount;
+		if ( nCount > nMaxLen )
 		{
 			nCount = nMaxLen;
 		}
@@ -3102,12 +3096,13 @@ namespace NSFontConverter
 		return nCount;
 	}
 
-	// Конвертируем delta-encoded массив операторов в массив doubles
+	// Converting a delta-encoded array of operators into an array of doubles
 	int CFontFileType1C::GetDeltaDoubleArray(double *pArray, int nMaxLen)
 	{
 		int nCount = 0;
 
-		if ( ( nCount = m_nOperatorsCount ) > nMaxLen )
+		nCount = m_nOperatorsCount;
+		if ( nCount > nMaxLen )
 		{
 			nCount = nMaxLen;
 		}
@@ -3126,7 +3121,7 @@ namespace NSFontConverter
 		pIndex->nCount = GetU16BE( nPos, bSuccess);
 		if ( 0 == pIndex->nCount )
 		{
-			// возможны пустые индексы, они содержат только поле length
+			// Empty indexes are possible, they only contain the length field
 			pIndex->nOffsetSize = 0;
 			pIndex->nStartPos = pIndex->nEndPos = nPos + 2;
 		}
@@ -3175,7 +3170,8 @@ namespace NSFontConverter
 
 		if ( nSID < 391 )
 		{
-			strcpy( sBuffer, c_arrsFontFileType1CStandardStrings[ nSID ] );
+			strncpy( sBuffer, c_arrsFontFileType1CStandardStrings[ nSID ], 255 );
+			sBuffer[255] = '\0';
 		}
 		else
 		{
@@ -3183,7 +3179,8 @@ namespace NSFontConverter
 			GetIndexVal(&m_oStringIndex, nSID, &oIndexVal, pbSuccess);
 			if ( *pbSuccess )
 			{
-				if ( ( nCount = oIndexVal.nLen ) > 255 )
+				nCount = oIndexVal.nLen;
+				if ( nCount > 255 )
 				{
 					nCount = 255;
 				}

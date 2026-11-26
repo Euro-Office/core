@@ -48,14 +48,14 @@ bool OOXSettingsWriter::Save( std::wstring sFolder )
 {
 	std::wstring pathWord = sFolder + FILE_SEPARATOR_STR + _T("word");
 
-	if ( false == m_sFileXml.empty() )
+	if ( !m_sFileXml.empty() )
 	{
-		//генерируем свою xml
+		//generate its own xml
 		std::wstring sXml = CreateXml();
 
-		//todoooo ПЕРЕПИСАТЬ
+		//TODO REWRITE
 
-		////берем xml из шаблона
+		////take xml from template
 		//std::wstring sFilename = sFolder +  _T("\\word\\settings.xml");
 		//if( true == RtfUtility:: SaveResourceToFile( IDR_SETTINGS, L"XML", sFilename ) )
 		//{
@@ -71,7 +71,7 @@ bool OOXSettingsWriter::Save( std::wstring sFolder )
 		//}
 
 		NSFile::CFileBinary file;
-		if (false == file.CreateFile(pathWord + FILE_SEPARATOR_STR + _T("settings.xml"))) return false;
+		if (!file.CreateFile(pathWord + FILE_SEPARATOR_STR + _T("settings.xml"))) return false;
 
 		m_oWriter.m_oDocRels.AddRelationship( _T("http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings"), _T("settings.xml") );
 		m_oWriter.m_oContentTypes.AddContent( _T("application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"), _T("/word/settings.xml") );

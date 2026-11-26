@@ -49,7 +49,7 @@ namespace DocFileFormat
 {
 	Record* RecordFactory::ReadRecord (IBinaryReader* reader, unsigned int siblingIdx)
 	{
-		Record* result = NULL;
+		Record* result = nullptr;
 
 		try
 		{
@@ -61,8 +61,9 @@ namespace DocFileFormat
 			unsigned int size				=	reader->ReadUInt32();
 
 			bool isContainer				=	( version == 0xF );
+			(void)isContainer;
 
-			if (typeCode == 0x01f6) return NULL;	//орг диаграмм
+			if (typeCode == 0x01f6) return nullptr;	//org chart
 
 			Record* pRecord					=	NewRecord (typeCode);
 			if (pRecord)
@@ -75,7 +76,7 @@ namespace DocFileFormat
 		}
 		catch ( ... )
 		{
-			return NULL;
+			return nullptr;
 		}
 
 		return result;

@@ -30,10 +30,10 @@
 #include "../../../Common/Vml/PPTShape/PptShape.h"
 
 /***************************************************************
-вот, создавая автофигуру, или любой другой элемент
-officedrawing, наследуясь от этого класса, в конструкторе
-задаем все строковые параметры, и вызываем SetProperties,
-которые придут, или NULL, но вызов этой функции - ОБяЗАTЕЛЕН!!!
+here, creating an autoshape, or any other element
+officedrawing, inheriting from this class, in the constructor
+set all string parameters and call SetProperties,
+which will come, or NULL, but calling this function is MANDATORY!!!
 ****************************************************************/
 
 const LONG c_ShapeDrawType_Graphic	= 0x01;
@@ -64,7 +64,7 @@ public:
 	double					m_dXLogic;
 	double					m_dYLogic;
 
-	/* в миллиметрах!!! */
+	/* in millimeters!!! */
 	double					m_dTextMarginX;
 	double					m_dTextMarginY;
 	double					m_dTextMarginRight;
@@ -108,7 +108,7 @@ public:
 		else if (m_classType == NSBaseShape::ppt)
 		{
 			m_pShape = CPPTShape::CreateByType((PPTShapes::ShapeType)ShapeType_ );
-			if (m_pShape == NULL)
+			if (m_pShape == nullptr)
 			{
 				m_pShape = CBaseShapePtr(new CPPTShape());
 				m_pShape->SetType(NSBaseShape::ppt, ShapeType_);
@@ -167,7 +167,7 @@ public:
 
 	void ToRenderer(IRenderer* pRenderer, CGeomShapeInfo& oGeomInfo, double dStartTime, double dEndTime)
 	{
-		if (m_pShape == NULL) 
+		if (m_pShape == nullptr) 
 			return;
 		oGeomInfo.m_dLimoX = m_lLimoX;
 		oGeomInfo.m_dLimoY = m_lLimoY;
@@ -179,7 +179,7 @@ public:
 			//m_oPen.SetToRenderer(pRenderer);
 			//m_oBrush.SetToRenderer(pRenderer);
 			//m_oShadow.SetToRenderer(pRenderer);
-			CBrush	brush; //копии с уровня выше нужны
+			CBrush	brush; //copies from the level above are needed
 			CPen	pen;
 
 			m_pShape->ToRenderer(pRenderer, oGeomInfo, dStartTime, dEndTime, pen, brush);
@@ -225,7 +225,7 @@ public:
 
 	virtual bool SetToDublicate(CShape* Shape)
 	{
-		if(Shape == NULL)
+		if(Shape == nullptr)
 			return false;
 
 		Shape->m_dStartTime			= m_dStartTime;

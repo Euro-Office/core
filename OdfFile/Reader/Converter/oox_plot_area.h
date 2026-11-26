@@ -55,12 +55,12 @@ public:
 	void add_chart	(int type);
 	void add_axis	(odf_reader::chart::axis & content);
 
-	void set_no_local_table (bool val); //whithout embedded tables
+	void set_no_local_table (bool val); //without embedded tables
 	//void set_content_series	(odf_reader::chart::series & content);
 	void set_data_table(odf_reader::chart::simple & content);
 private:
 	odf_reader::chart::simple data_table_content_;
-	void reset_cross_axis(); //обязательно после всех добавлений
+	void reset_cross_axis(); //required after all additions
  	bool no_used_local_tables_;
 	unsigned int axis_id_ = 0xf2905;
 };

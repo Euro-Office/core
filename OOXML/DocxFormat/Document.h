@@ -52,7 +52,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CBackground)
-			CBackground(OOX::Document *pMain = NULL);
+			CBackground(OOX::Document *pMain = nullptr);
 			virtual ~CBackground();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -78,7 +78,7 @@ namespace OOX
 		{//Word 2003 XML Reference
 		public:
 			WritingElement_AdditionMethods(CDocSuppData)
-			CDocSuppData(OOX::Document* pMain = NULL);
+			CDocSuppData(OOX::Document* pMain = nullptr);
 			virtual ~CDocSuppData();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -97,7 +97,7 @@ namespace OOX
 		{//Word 2003 XML Reference
 		public:
 			WritingElement_AdditionMethods(CBgPict)
-			CBgPict(OOX::Document *pMain = NULL);
+			CBgPict(OOX::Document *pMain = nullptr);
 			virtual ~CBgPict();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
@@ -123,7 +123,7 @@ namespace OOX
 	class CDocument : public OOX::File, public IFileContainer, public WritingElement
 	{
 	public:
-		CDocument(OOX::Document *pMain = NULL, OOX::FileType type = OOX::FileTypes::Document);
+		CDocument(OOX::Document *pMain = nullptr, OOX::FileType type = OOX::FileTypes::Document);
 		CDocument(OOX::Document *pMain, const CPath& oRootPath, const CPath& oPath, OOX::FileType type = OOX::FileTypes::Document);
 		CDocument(XmlUtils::CXmlNode& oNode);
 		CDocument(XmlUtils::CXmlLiteReader& oReader);
@@ -171,9 +171,9 @@ namespace OOX
 		{
 			size_t start_elm = 0;
 			size_t end_elm = 0;
-			WritingElement* sect = NULL;
+			WritingElement* sect = nullptr;
 		};
-		std::vector<_section> m_arrSections; // дублирование ... для удобства конвертаций
+		std::vector<_section> m_arrSections; // duplication ... for ease of conversion
 
 	};
 

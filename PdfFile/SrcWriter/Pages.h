@@ -77,7 +77,7 @@ namespace PdfWriter
 			return dict_type_PAGES;
 		}
 	private:
-		CObjectBase* GetFromPageTree(int nPageIndex, int& nI, bool bRemove = false, bool bInsert = false, CObjectBase* pPage = NULL);
+		CObjectBase* GetFromPageTree(int nPageIndex, int& nI, bool bRemove = false, bool bInsert = false, CObjectBase* pPage = nullptr);
 
 		CNumberObject* m_pCount;
 		CArrayObject*  m_pPages;
@@ -187,7 +187,7 @@ namespace PdfWriter
 		void      ClearContent(CXref* pXref);
 		void      ClearContentFull(CXref* pXref);
 		CResourcesDict* GetResourcesItem();
-		void      AddResource(CXref* pXref = NULL);
+		void      AddResource(CXref* pXref = nullptr);
 		TBox      GetBox(const std::string& sBox);
 
 	private:
@@ -209,16 +209,16 @@ namespace PdfWriter
 
 		CDocument*   m_pDocument;
 		CPageTree*   m_pParent;
-		CPoint       m_oStartPos;          // Позиция начала текущего пата
-		CPoint       m_oCurPos;            // Текущая позиция пата
-		CPoint       m_oTextPos;           // Текущая позиция текста
+		CPoint       m_oStartPos;          // Start position of the current path
+		CPoint       m_oCurPos;            // Current path position
+		CPoint       m_oTextPos;           // Current text position
 		CMatrix      m_oTextMatrix;
 		CArrayObject* m_pContents;
 		CStream*     m_pStream;
 		unsigned int m_unCompressionMode;
 		EGrMode      m_eGrMode;
 		CGrState*    m_pGrState;
-		CFontDict*   m_pFont;              // Текущий шрифт
+		CFontDict*   m_pFont;              // Current font
 		CDictObject* m_pShadings;
 		unsigned int m_unShadingsCount;
 		CDictObject* m_pPatterns;
@@ -229,7 +229,7 @@ namespace PdfWriter
 	{
 	public:
 		CFakePage(int nOriginIndex);
-		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const
+		virtual CObjectBase* Copy(CObjectBase* pOut = nullptr) const
 		{
 			return pOut ? pOut : new CFakePage(m_nOriginIndex);
 		}
@@ -295,4 +295,3 @@ namespace PdfWriter
 }
 
 #endif // _PDF_WRITER_SRC_PAGES_H
-

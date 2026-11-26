@@ -256,7 +256,7 @@ public:
 			return false;
 		}
 
-		X509_NAME* name_record = X509_get_subject_name(m_cert);
+		X509_NAME* name_record = const_cast<X509_NAME*>(X509_get_subject_name(m_cert));
 
 		std::wstring sC = L"US";
 		std::wstring sO = L"Ascensio System SIA";
@@ -380,10 +380,10 @@ public:
 			return "";
 		}
 
-		if (asn1_serial->type == V_ASN1_NEG_INTEGER)
+		if (ASN1_STRING_type(asn1_serial) == V_ASN1_NEG_INTEGER)
 		{
 			std::string sPositive = "1";
-			for (int i = 0; i < asn1_serial->length; ++i)
+			for (int i = 0; i < ASN1_STRING_length(asn1_serial); ++i)
 				sPositive += "00";
 			BIGNUM* pn = NULL;
 			int res = BN_hex2bn(&pn, sPositive.c_str());
@@ -405,7 +405,7 @@ public:
 		if (NULL == m_cert)
 			return L"";
 
-		X509_NAME* name = X509_get_issuer_name(m_cert);
+		const X509_NAME* name = X509_get_issuer_name(m_cert);
 		char buffer[10000];
 		memset(buffer, 0, 10000);
 
@@ -666,10 +666,10 @@ public:
 
 		X509_STORE* x509_store = X509_STORE_new();
 		X509_STORE_add_cert(x509_store, m_cert);
-		// Нужно ли доверять сертификату, если нет доступа к локальному хранилищу сертификатов?
+		// Whether to trust the certificate when the local certificate store is unavailable
 		// X509_STORE_set_flags(x509_store, X509_V_FLAG_PARTIAL_CHAIN);
 
-		// Получала X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY
+		// Received X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY
 		if (PKCS7_verify(pkcs7, NULL, x509_store, inputbio, out_verify, PKCS7_NOCHAIN | PKCS7_NOSIGS) == 1)
 		{
 			nRes |= (1 << 0); // NOT CHANGED
@@ -687,7 +687,7 @@ public:
 			}
 		}
 
-		/* Извлечение сертификата из подписи. Работает
+		/* Retrieving a certificate from a signature. Works
 		PKCS7 *p7enc = d2i_PKCS7_bio(out_verify, NULL);
 		BIO* csr_bio = BIO_new(BIO_s_mem());
 		if (PKCS7_decrypt(p7enc, m_key, m_cert, csr_bio, 0))
@@ -1103,12 +1103,12 @@ protected:
 	tm ASN1_GetTimeT(ASN1_TIME* time)
 	{
 		struct tm t;
-		const char* str = (const char*) time->data;
+		const char* str = (const char*) ASN1_STRING_get0_data(time);
 		size_t i = 0;
 
 		memset(&t, 0, sizeof(t));
 
-		if (time->type == V_ASN1_UTCTIME)
+		if (ASN1_STRING_type(time) == V_ASN1_UTCTIME)
 		{
 			/* two digit year */
 			t.tm_year = (str[i++] - '0') * 10;
@@ -1116,7 +1116,7 @@ protected:
 			if (t.tm_year < 70)
 				t.tm_year += 100;
 		}
-		else if (time->type == V_ASN1_GENERALIZEDTIME)
+		else if (ASN1_STRING_type(time) == V_ASN1_GENERALIZEDTIME)
 		{
 			/* four digit year */
 			t.tm_year = (str[i++] - '0') * 1000;

@@ -43,7 +43,6 @@ void CRecordTextPFExceptionAtom::ReadFromStream(SRecordHeader &oHeader, POLE::St
 
     m_oPFRun.LoadFromStream(pStream, m_oHeader.RecLen == 12);
 
-    // это на всякий случай...
-    POLE::uint64 current_pos = pStream->tell();
+    // this is just in case...
     StreamUtils::StreamSeek(lPosition + m_oHeader.RecLen, pStream);
 }

@@ -6,7 +6,7 @@ CHWPRecordListHeader::CHWPRecordListHeader(int nTagNum, int nLevel, int nSize)
 	: CHWPRecord(nTagNum, nLevel, nSize)
 {}
 
-int CHWPRecordListHeader::GetCount(int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CHWPRecordListHeader::GetCount(int /*nTagNum*/, int /*nLevel*/, int /*nSize*/, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	short m_shParas;
 	oBuffer.ReadShort(m_shParas);
@@ -15,7 +15,7 @@ int CHWPRecordListHeader::GetCount(int nTagNum, int nLevel, int nSize, CHWPStrea
 	return m_shParas;
 }
 
-EVertAlign CHWPRecordListHeader::GetVertAlign(int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+EVertAlign CHWPRecordListHeader::GetVertAlign(int /*nSize*/, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.Skip(2);
 	int nAttr;

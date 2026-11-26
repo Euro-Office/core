@@ -34,8 +34,8 @@ namespace DocFileFormat
         m_pXmlNode			=	new XMLTools::XMLElement (L"w:sectPr");
 
 		m_nColumns			=	0;
-		m_arrWidth			=	NULL;
-		m_arrSpace			=	NULL;
+		m_arrWidth			=	nullptr;
+		m_arrSpace			=	nullptr;
 
 		_pgWidth			=	0;
 		_marLeft			=	0;
@@ -46,14 +46,14 @@ namespace DocFileFormat
         _type				=	std::wstring (L"nextPage");
 	}
 
-    SectionPropertiesMapping::SectionPropertiesMapping (XMLTools::XMLElement* pBaseNode, ConversionContext* pContext, int nSelectProperties) : PropertiesMapping(NULL)
+    SectionPropertiesMapping::SectionPropertiesMapping (XMLTools::XMLElement* pBaseNode, ConversionContext* pContext, int nSelectProperties) : PropertiesMapping(nullptr)
 	{
 		m_bDeleteNode		=	FALSE;
 		m_pXmlNode			=	pBaseNode;	
 
 		m_nColumns			=	0;
-		m_arrWidth			=	NULL;
-		m_arrSpace			=	NULL;
+		m_arrWidth			=	nullptr;
+		m_arrSpace			=	nullptr;
 
 		_pgWidth			=	0;
 		_marLeft			=	0;
@@ -111,6 +111,7 @@ namespace DocFileFormat
 						int val = FormatUtils::BytesToInt16( iter->Arguments, 0, iter->argumentsSize );
 						int pgbApplyTo		= FormatUtils::GetIntFromBits(val, 0 , 3);
 						int pgbPageDepth	= FormatUtils::GetIntFromBits(val, 3 , 2);
+						(void)pgbPageDepth;
 						int pgbOffsetFrom	= FormatUtils::GetIntFromBits(val, 5 , 3);
 
 						if (pgbOffsetFrom == 0x1) //else default from text
@@ -153,7 +154,7 @@ namespace DocFileFormat
 			}
 		}
 
-		//MUST be ignored if the section does not have page number restart enabled.([MS-DOC] — v20101113. стр 152)
+		//MUST be ignored if the section doesn't have page number restart enabled.([MS-DOC] - v20101113. page 152)
 		bool bWasSprmSFPgnRestart = false;
 		std::wstring wsSprmSPgnStart;
 		int nProperty = 0; // for unknown
@@ -370,7 +371,7 @@ namespace DocFileFormat
 			{				
 				if (m_nColumns)	// there is at least one width set, so create the array
 				{
-					if (NULL == m_arrWidth)
+					if (nullptr == m_arrWidth)
 						m_arrWidth = new short[m_nColumns];
 
 					unsigned char nInd = iter->Arguments[0];
@@ -388,7 +389,7 @@ namespace DocFileFormat
 				// there is at least one space set, so create the array
 				if (m_nColumns)
 				{
-					if (NULL == m_arrSpace)
+					if (nullptr == m_arrSpace)
 						m_arrSpace = new short[m_nColumns];
 
 					unsigned char nInd = iter->Arguments[0];
@@ -478,10 +479,12 @@ namespace DocFileFormat
 				if (iter->argumentsSize == 2)
 				{
 					nProperty = FormatUtils::BytesToUInt16(iter->Arguments, 0, iter->argumentsSize);
+					(void)nProperty;
 				}
 				else if (iter->argumentsSize == 1)
 				{
 					nProperty = FormatUtils::BytesToUChar(iter->Arguments, 0, iter->argumentsSize);
+					(void)nProperty;
 				}
 			}
 		}
@@ -490,7 +493,7 @@ namespace DocFileFormat
             appendValueElement( &endnotePr, L"numFmt", L"decimal", true );
         }
 
-		if (bWasSprmSFPgnRestart && false == wsSprmSPgnStart.empty() )
+		if (bWasSprmSFPgnRestart && !wsSprmSPgnStart.empty() )
             appendValueAttribute( &pgNumType, L"w:start", wsSprmSPgnStart );
 
 		// build the columns

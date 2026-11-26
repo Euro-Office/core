@@ -122,9 +122,8 @@ namespace ComplexTypes
 			{
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, (L"w:charSpace"), m_oCharSpace )
-				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:linePitch"), m_oLinePitch )
+				else if ( (L"w:linePitch") == wsName || (L"w:line-pitch") == wsName ) m_oLinePitch = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:type"),      m_oType )
-				WritingElement_ReadAttributes_Read_else_if(oReader, (L"w:line-pitch"), m_oLinePitch)	//2003 xml
 				WritingElement_ReadAttributes_End( oReader )
 			}
 
@@ -139,11 +138,11 @@ namespace ComplexTypes
 		{
 		}
 		void CHdrFtrRef::FromXML(XmlUtils::CXmlNode& oNode)
-		{//todooo переделать на перебор всех и без неймспейсов
+		{//TODO remake to enumerate everyone and without namespaces
 			XmlMacroReadAttributeBase( oNode, L"r:id",   m_oId );
 			XmlMacroReadAttributeBase( oNode, L"w:type", m_oType );
 
-			if (false == m_oId.IsInit())
+			if (!m_oId.IsInit())
 			{
 				XmlMacroReadAttributeBase( oNode, L"relationships:id", m_oId );
 			}
@@ -318,7 +317,7 @@ namespace ComplexTypes
 			XmlMacroReadAttributeBase( oNode, (L"w:themeTint"),   m_oThemeTint );
 			XmlMacroReadAttributeBase( oNode, (L"w:val"),         m_oVal );
 
-			if (false == m_oId.IsInit())
+			if (!m_oId.IsInit())
 			{
 				XmlMacroReadAttributeBase( oNode, L"relationships:id", m_oId );
 			}
@@ -409,8 +408,7 @@ namespace ComplexTypes
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, (L"w:color"),			m_oColor )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:frame"),			m_oFrame )
-				WritingElement_ReadAttributes_Read_else_if( oReader, (L"r:id"),				m_oId )
-				WritingElement_ReadAttributes_Read_else_if( oReader, (L"relationships:id"),	m_oId )
+				else if ( (L"r:id") == wsName || (L"relationships:id") == wsName ) m_oId = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:shadow"),			m_oShadow )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:space"),			m_oSpace )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:sz"),				m_oSz )
@@ -446,7 +444,7 @@ namespace ComplexTypes
 			XmlMacroReadAttributeBase( oNode, L"w:themeTint",   m_oThemeTint );
 			XmlMacroReadAttributeBase( oNode, L"w:val",         m_oVal );
 
-			if (false == m_oId.IsInit())
+			if (!m_oId.IsInit())
 			{
 				XmlMacroReadAttributeBase( oNode, L"relationships:id", m_oId );
 			}
@@ -553,8 +551,7 @@ namespace ComplexTypes
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"r:bottomRight"), m_oBottomRight )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:color"),       m_oColor )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:frame"),       m_oFrame )
-				WritingElement_ReadAttributes_Read_else_if( oReader, (L"r:id"),          m_oId )
-				WritingElement_ReadAttributes_Read_else_if( oReader, (L"relationships:id"), m_oId )
+				else if ( (L"r:id") == wsName || (L"relationships:id") == wsName ) m_oId = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:shadow"),      m_oShadow )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:space"),       m_oSpace )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:sz"),          m_oSz )
@@ -590,7 +587,7 @@ namespace ComplexTypes
 			XmlMacroReadAttributeBase( oNode, (L"r:topRight"),    m_oTopRight );
 			XmlMacroReadAttributeBase( oNode, (L"w:val"),         m_oVal );
 
-			if (false == m_oId.IsInit())
+			if (!m_oId.IsInit())
 			{
 				XmlMacroReadAttributeBase( oNode, L"relationships:id", m_oId );
 			}
@@ -695,8 +692,7 @@ namespace ComplexTypes
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, (L"w:color"),       m_oColor )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:frame"),       m_oFrame )
-				WritingElement_ReadAttributes_Read_else_if( oReader, (L"r:id"),          m_oId )
-				WritingElement_ReadAttributes_Read_else_if( oReader, (L"relationships:id"), m_oId )
+				else if ( (L"r:id") == wsName || (L"relationships:id") == wsName ) m_oId = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:shadow"),      m_oShadow )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:space"),       m_oSpace )
 				WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:sz"),          m_oSz )
@@ -1476,7 +1472,7 @@ namespace OOX
 		}		
 		CSectionProperty::~CSectionProperty()
 		{
-			ClearItems();
+			CSectionProperty::ClearItems();
 		}
 		void CSectionProperty::ClearItems()
 		{
@@ -1810,9 +1806,9 @@ namespace OOX
 			WritingElement_ReadAttributes_Read_else_if( oReader, (L"w:rsidSect"), m_oRsidSect )
 			WritingElement_ReadAttributes_End( oReader )
 		}
-		const CSectionProperty CSectionProperty::Merge(const CSectionProperty& oPrev, const CSectionProperty& oCurrent)
+		const CSectionProperty CSectionProperty::Merge(const CSectionProperty& oPrev, const CSectionProperty& /*oCurrent*/)
 		{
-			// ??? ну не хорошо это			
+			// ??? this is incorrect, needs to be fixed
 			return oPrev;
 		}
 

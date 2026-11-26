@@ -42,7 +42,7 @@ void CRecordSlideListWithText::ReadFromStream(SRecordHeader &oHeader, POLE::Stre
 
     if (m_oHeader.IsContainer())
     {
-        // а по-другому и быть не могло...
+        // and it couldn't be any other way...
         _UINT32 lSymbolCount = 0;
 
         UINT lCurLen = 0;
@@ -83,7 +83,7 @@ void CRecordSlideListWithText::ReadFromStream(SRecordHeader &oHeader, POLE::Stre
                     continue;
 
                 CRecordTextHeaderAtom* pHeader = dynamic_cast<CRecordTextHeaderAtom*>(pRecord);
-                if (NULL != pHeader)
+                if (nullptr != pHeader)
                 {
                     CTextFullSettings oAttr;
                     m_arTextPlaceHolders[nCurrentSlide].push_back(oAttr);
@@ -99,13 +99,13 @@ void CRecordSlideListWithText::ReadFromStream(SRecordHeader &oHeader, POLE::Stre
                 if (0 > nCurrentTextHeader)
                     continue;
 
-                // здесь еще настойки кроме текста
-                if (NULL != pChars)
+                // here are more settings besides text
+                if (nullptr != pChars)
                 {
                     m_arTextPlaceHolders[nCurrentSlide][nCurrentTextHeader].m_strText = pChars->m_strText;
                     lSymbolCount = (_UINT32)pChars->m_strText.length();
                 }
-                else if (NULL != pBytes)
+                else if (nullptr != pBytes)
                 {
                     m_arTextPlaceHolders[nCurrentSlide][nCurrentTextHeader].m_strText = pBytes->m_strText;
                     lSymbolCount = (_UINT32)pBytes->m_strText.length();

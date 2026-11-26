@@ -62,7 +62,7 @@ namespace NExtractTools
 		{
 			nRes = ConvertODF2OOXml(sTempUnpackedOdf, sTo, params.getFontPath(), convertParams.m_sTempDir, params.getPassword());
 
-			params.m_bMacro = false; // todooo ������� ��������� �������� odf
+			params.m_bMacro = false; // TODO check odf macros preservation
 			nRes = processEncryptionError(nRes, sFrom, params);
 		}
 		else
@@ -91,7 +91,7 @@ namespace NExtractTools
 
 			nRes = ConvertODF2OOXml(sTempUnpackedOdf, sTempUnpackedOox, params.getFontPath(), convertParams.m_sTempDir, params.getPassword());
 			
-			params.m_bMacro = false; // todooo ������� ��������� �������� odf
+			params.m_bMacro = false; // TODO check odf macros preservation
 			
 			nRes = processEncryptionError(nRes, sFrom, params);
 			if (SUCCEEDED_X2T(nRes))
@@ -118,6 +118,14 @@ namespace NExtractTools
 					case AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLTM:
 					case AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSB:
 					{
+						// Given by file names only, the source type is still unknown here; the workbook needs it
+						// for its SourceFileType record
+						if (params.m_nFormatFrom && AVS_OFFICESTUDIO_FILE_UNKNOWN == *params.m_nFormatFrom)
+						{
+							COfficeFileFormatChecker oSourceChecker;
+							if (oSourceChecker.isOfficeFile(sFrom))
+								*params.m_nFormatFrom = oSourceChecker.nFileType;
+						}
 						convertParams.m_bTempIsXmlOptions = false;
 						return xlsx_dir2xlst_bin(sTempUnpackedOox, sTo, params, convertParams);
 					}
@@ -157,7 +165,7 @@ namespace NExtractTools
 	_UINT32 odf_flat2oox_dir(const std::wstring& sFrom, const std::wstring& sTo, InputParams& params, ConvertParams& convertParams)
 	{
 		_UINT32 nRes = ConvertODF2OOXml(sFrom, sTo, params.getFontPath(), convertParams.m_sTempDir, params.getPassword());
-		params.m_bMacro = false; // todooo ������� ��������� �������� odf
+		params.m_bMacro = false; // TODO check odf macros preservation
 		
 		nRes = processEncryptionError(nRes, sFrom, params);
 		return nRes;
@@ -172,7 +180,7 @@ namespace NExtractTools
 		NSDirectory::CreateDirectory(sTempUnpackedOox);
 
 		_UINT32 nRes = ConvertODF2OOXml(sFrom, sTempUnpackedOox, params.getFontPath(), convertParams.m_sTempDir, params.getPassword());
-		params.m_bMacro = false; // todooo ������� ��������� �������� odf
+		params.m_bMacro = false; // TODO check odf macros preservation
 
 		nRes = processEncryptionError(nRes, sFrom, params);
 		if (SUCCEEDED_X2T(nRes))

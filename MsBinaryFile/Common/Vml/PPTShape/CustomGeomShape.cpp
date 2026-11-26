@@ -304,7 +304,7 @@ namespace NSCustomVML
 			}
 			};
 
-			m_nCount = (WORD)mem;
+			m_nCount = mem;
 			m_nCount = (WORD)GetCountPoints2(m_eRuler, m_nCount);
 			//m_nCount = (WORD)GetCountPoints2(m_eRuler);
 		}
@@ -432,7 +432,7 @@ namespace NSCustomVML
             param_value	= ShapeSizeVML;
         }    
 
-		CCustomVML::CCustomVML() : m_arVertices(), m_arSegments(), m_arGuides(), m_pAdjustValues(NULL)
+		CCustomVML::CCustomVML() : m_arVertices(), m_arSegments(), m_arGuides(), m_pAdjustValues(nullptr)
         {
             m_ePath = ODRAW::rtCurveTo/*rtLineTo*/;
 
@@ -445,6 +445,9 @@ namespace NSCustomVML
         }
 		CCustomVML& CCustomVML::operator=(const CCustomVML& oSrc)
         {
+            if (this == &oSrc)
+                return *this;
+
             m_ePath		= oSrc.m_ePath;
 
             m_arVertices.clear();
@@ -492,7 +495,7 @@ namespace NSCustomVML
 		}
 		void CCustomVML::addAdjust(int lIndex, int lValue)
 		{
-			if (NULL == m_pAdjustValues)
+			if (nullptr == m_pAdjustValues)
 				return;
 
 			size_t lCount = m_pAdjustValues->size();
@@ -511,11 +514,11 @@ namespace NSCustomVML
 		}
 		void CCustomVML::ToCustomShape(ODRAW::CBaseShape* pShape, NSGuidesVML::CFormulasManager& oManager)
 		{
-			if ((NULL == pShape) || (!IsCustom()))
+			if ((nullptr == pShape) || (!IsCustom()))
 				return;
 
 			oManager.Clear();
-			// сначала заполним формулы
+			// first fill out the formulas
 			for (size_t nIndex = 0; nIndex < m_arGuides.size(); ++nIndex)
 			{
 				NSGuidesVML::CFormula oF;
@@ -622,7 +625,6 @@ namespace NSCustomVML
 						if (lMaxF > m_arVertices[nV].x )	nGuideIndex_x = (_UINT32)m_arVertices[nV].x - (_UINT32)lMinF;
 						if (lMaxF > m_arVertices[nV].y )	nGuideIndex_y = (_UINT32)m_arVertices[nV].y - (_UINT32)lMinF;
 
-						std::wstring str = _T("");
 						if (nGuideIndex_x >= 0 && nGuideIndex_x < (int)m_arGuides.size())
 						{
 							strPath += std::to_wstring(m_arGuides[nGuideIndex_x].m_param_value1) + L",";
@@ -684,14 +686,10 @@ namespace NSCustomVML
                 LONG lMaxF = (LONG)0x8000007F;
                 if (lMinF <= oPoint.x)
                 {
-                    int nGuideIndex = (_UINT32)oPoint.x - 0x80000000;
-
                     bool b = false;
                 }
                 if (lMinF <= oPoint.y)
                 {
-                    int nGuideIndex = (_UINT32)oPoint.y - 0x80000000;
-
                     bool b = false;
                 }
 
@@ -741,14 +739,10 @@ namespace NSCustomVML
                 LONG lMaxF = (LONG)0x8000007F;
                 if (lMinF <= oPoint.x)
                 {
-                    int nGuideIndex = (_UINT32)oPoint.x - 0x80000000;
-
                     bool b = false;
                 }
                 if (lMinF <= oPoint.y)
                 {
-                    int nGuideIndex = (_UINT32)oPoint.y - 0x80000000;
-
                     bool b = false;
                 }
 
@@ -790,14 +784,10 @@ namespace NSCustomVML
                 LONG lMaxF = (LONG)0x8000007F;
                 if (lMinF <= oPoint.x)
                 {
-                    int nGuideIndex = (_UINT32)oPoint.x - 0x80000000;
-
                     bool b = false;
                 }
                 if (lMinF <= oPoint.y)
                 {
-                    int nGuideIndex = (_UINT32)oPoint.y - 0x80000000;
-
                     bool b = false;
                 }
 
@@ -857,7 +847,7 @@ namespace NSCustomVML
 
                 //if (rtClose == oInfo.m_eRuler)
                 //{
-                //	// проводим линию
+                //	// draw a line
                 //	CSegment oInfo2(rtLineTo, 1);
                 //	m_arSegments.push_back(oInfo2);
                 //}
@@ -910,7 +900,7 @@ namespace NSCustomVML
 		}
 		void CCustomVML::LoadAdjusts(LONG lIndex, LONG lValue)
         {
-            if (NULL == m_pAdjustValues)
+            if (nullptr == m_pAdjustValues)
                 return;
 
             LONG lCount = (LONG)m_pAdjustValues->size();

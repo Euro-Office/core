@@ -42,13 +42,13 @@ namespace Draw
 	{
 		m_bVisioPages = true;
 
-		read(uri.GetDirectory(), uri);
+		CMasterFile::read(uri.GetDirectory(), uri);
 	}
 	CMasterFile::CMasterFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bVisioPages = true;
 
-		read(oRootPath, oPath);
+		CMasterFile::read(oRootPath, oPath);
 	}
 	CMasterFile::~CMasterFile()
 	{
@@ -183,12 +183,12 @@ namespace Draw
 	CPageFile::CPageFile(OOX::Document* pMain, const CPath& uri) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bVisioPages = true;
-		read(uri.GetDirectory(), uri);
+		CPageFile::read(uri.GetDirectory(), uri);
 	}
 	CPageFile::CPageFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bVisioPages = true;
-		read(oRootPath, oPath);
+		CPageFile::read(oRootPath, oPath);
 	}
 	CPageFile::~CPageFile()
 	{
@@ -305,6 +305,7 @@ namespace Draw
 						{
 							UniqueID = pReader->GetString2();
 						}break;										
+					default: break;
 					}
 				}
 				pReader->Seek(_end_rec_2);
@@ -327,6 +328,7 @@ namespace Draw
 					{
 						ID = pReader->GetULong();
 					}break;
+					default: break;
 					}
 				}
 				pReader->Seek(_end_rec_2);
@@ -430,13 +432,13 @@ namespace Draw
 	CMastersFile::CMastersFile(OOX::Document* pMain, const CPath& uri) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bVisioPages = true;
-		read(uri.GetDirectory(), uri);
+		CMastersFile::read(uri.GetDirectory(), uri);
 	}
 	CMastersFile::CMastersFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bVisioPages = true;
 
-		read(oRootPath, oPath);
+		CMastersFile::read(oRootPath, oPath);
 	}
 	CMastersFile::~CMastersFile()
 	{
@@ -460,7 +462,7 @@ namespace Draw
 
 		m_strFilename = oFilePath.GetPath();
 
-		fromXML(oReader);
+		fromXML(oReader); // NOLINT(clang-analyzer-optin.cplusplus.VirtualCall): no class derives from CMastersFile
 	}
 	OOX::EElementType CMastersFile::getType() const
 	{
@@ -582,12 +584,12 @@ namespace Draw
 	CPagesFile::CPagesFile(OOX::Document* pMain, const CPath& uri) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bVisioPages = true;
-		read(uri.GetDirectory(), uri);
+		CPagesFile::read(uri.GetDirectory(), uri);
 	}
 	CPagesFile::CPagesFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bVisioPages = true;
-		read(oRootPath, oPath);
+		CPagesFile::read(oRootPath, oPath);
 	}
 	CPagesFile::~CPagesFile()
 	{
@@ -611,7 +613,7 @@ namespace Draw
 
 		m_strFilename = oFilePath.GetPath();
 
-		fromXML(oReader);
+		fromXML(oReader); // NOLINT(clang-analyzer-optin.cplusplus.VirtualCall): no class derives from CPagesFile
 	}
 	OOX::EElementType CPagesFile::getType() const
 	{
@@ -863,6 +865,7 @@ namespace Draw
 			{
 				AssociatedPage = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -1093,6 +1096,7 @@ namespace Draw
 			{
 				MasterType = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -1194,7 +1198,7 @@ namespace Draw
 		{
 			std::wstring sName = oReader.GetName();
 
-			WritingElement* pItem = NULL;
+			WritingElement* pItem = nullptr;
 			if (L"Cell" == sName)
 			{
 				pItem = new CCell();
@@ -1226,7 +1230,7 @@ namespace Draw
 
 		for (size_t i = 0; i < m_arrItems.size(); ++i)
 		{
-			int type = 0xff;					 //todooo predefine type for ???
+			int type = 0xff;					 //TODO predefine type for ???
 			switch (m_arrItems[i]->getType())
 			{
 			case et_dr_Cell: type = 0; break;
@@ -1264,6 +1268,7 @@ namespace Draw
 			{
 				TextStyle = pReader->GetULong();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)

@@ -18,19 +18,6 @@ if(NOT TARGET graphics)
     add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/graphics/cmake graphics)
 endif()
 
-message( "Fetch and build icu" )
-set(ICU_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
-set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
-set(ICU_MAJOR_VER "74")
-set(ICU_MINOR_VER "2")
-get_filename_component(ICU_3RDPARTY_DIR_ABS "${ICU_3RDPARTY_DIR}" ABSOLUTE)
-get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/icu" "${ICU_INSTALL_DIR}" ${ICU_MAJOR_VER} ${ICU_MINOR_VER}
-    WORKING_DIRECTORY ${ICU_3RDPARTY_DIR_ABS}
-)
-
 add_executable(allfontsgen
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
@@ -38,22 +25,17 @@ add_executable(allfontsgen
 set_default_options(allfontsgen)
 
 target_include_directories(allfontsgen PRIVATE
-    ${ICU_INSTALL_DIR}/include
-)
-
-
-target_compile_definitions(allfontsgen PRIVATE
-    KERNEL_USE_DYNAMIC_LIBRARY
-    GRAPHICS_USE_DYNAMIC_LIBRARY
+    ${ICU_INSTALL_DIR_ABS}/include
 )
 
 target_link_libraries(allfontsgen PUBLIC
     UnicodeConverter
     kernel
     graphics
-    ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
-    ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
+    ${LIBICUUC}
+    ${LIBICUDATA}
 )
 
 copy_artifacts_to_folder("allfontsgen" "${EO_CORE_TOOLS_DIR}")
-copy_icu_libs(allfontsgen)
+
+declare_victory( allfontsgen )

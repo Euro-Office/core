@@ -43,11 +43,11 @@ FileWriter::FileWriter(std::wstring sDirOutput,std::wstring sFontDir, bool bNoFo
 	m_sThemePath		(sThemePath),
 	m_oDocumentRelsWriter		(sDirOutput),
 	m_nDocPrIndex		(0),
-	m_pComments			(NULL),
-	m_pApp				(NULL),
-	m_pCore				(NULL),
-	m_pCustomProperties	(NULL),
-	m_pCurrentSettings	(NULL)
+	m_pComments			(nullptr),
+	m_pApp				(nullptr),
+	m_pCore				(nullptr),
+	m_pCustomProperties	(nullptr),
+	m_pCurrentSettings	(nullptr)
 {
 }
 FileWriter::~FileWriter()
@@ -56,13 +56,13 @@ FileWriter::~FileWriter()
     RELEASEOBJECT(m_pCore);
 	RELEASEOBJECT(m_pCustomProperties);
 
-	m_pCurrentSettings = NULL;
+	m_pCurrentSettings = nullptr;
 }
 void FileWriter::Write()
 {
 	m_oMain.Write();
     m_oChartWriter.Write();
-	//Rels и ContentTypes пишем в конце
+	//Write Rels and ContentTypes at the end
 	m_oDocumentRelsWriter.Write();
 }
 void FileWriter::WriteGlossary()

@@ -75,26 +75,28 @@ add_library(kernel SHARED
     ${CORE_ROOT_DIR}/DesktopEditor/common/ProcessEnv.cpp
 )
 
-set_default_options(kernel)
+set_default_options( kernel )
+add_officeutils( kernel ${CORE_ROOT_DIR}/OfficeUtils )
+add_libxml( kernel ${CORE_ROOT_DIR}/DesktopEditor/xml FALSE )
 
 target_compile_definitions(kernel PRIVATE
     KERNEL_USE_DYNAMIC_LIBRARY_BUILDING
-    BUILD_ZLIB_AS_SOURCES
 )
 
-target_compile_options(kernel PRIVATE
-    -include ${CMAKE_CURRENT_SOURCE_DIR}/posix_compat.h
-)
+if(APPLE)
+    target_compile_definitions(kernel PRIVATE MAC)
+endif()
 
-# static libs
-target_link_libraries(kernel PUBLIC
-    libxml
-    OfficeUtils
-)
+if( NOT MSVC )
+    target_compile_options(kernel PRIVATE
+        "SHELL:-include ${CMAKE_CURRENT_SOURCE_DIR}/posix_compat.h"
+    )
+endif()
 
-# dynamic libs
 target_link_libraries(kernel PUBLIC
     UnicodeConverter
 )
 
 copy_artifacts_to_folder("kernel" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( kernel )

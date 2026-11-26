@@ -71,7 +71,7 @@ void ChartParsedFormula::load(CFRecord& record)
 				if (sheet.size()<1)
 					sheet=c.substr(0, colon);
 			}
-			//todoooo вернуть листы !!
+			//TODO return the sheets!!
 
 			CellRef ref(arCells[0]);
 			if (arCells.size() > 1)

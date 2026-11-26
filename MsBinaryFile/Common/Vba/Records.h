@@ -35,7 +35,7 @@ namespace VBA
 {
 	typedef boost::shared_ptr<OOX::ActiveXObject> ActiveXObjectPtr;
 
-	typedef _UINT32 OLE_COLOR; // todooo -> RgbColorOrPaletteEntry(3) + OleColorType(1)
+	typedef _UINT32 OLE_COLOR; // TODO -> RgbColorOrPaletteEntry(3) + OleColorType(1)
 
 	struct _BooleanProperties
 	{
@@ -543,7 +543,7 @@ namespace VBA
 	public:
 		MODULENAME(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			MODULENAME::load(stream);
 		}
 		BaseRecordPtr clone();
 
@@ -559,7 +559,7 @@ namespace VBA
 	public:
 		MODULENAMEUNICODE(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			MODULENAMEUNICODE::load(stream);
 		}
 		BaseRecordPtr clone();
 
@@ -575,7 +575,7 @@ namespace VBA
 	public:
 		MODULESTREAMNAME(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			MODULESTREAMNAME::load(stream);
 		}
 		BaseRecordPtr clone();
 
@@ -592,7 +592,7 @@ namespace VBA
 	public:
 		MODULEDOCSTRING(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			MODULEDOCSTRING::load(stream);
 		}
 		BaseRecordPtr clone();
 
@@ -609,7 +609,7 @@ namespace VBA
 	public:
 		MODULEOFFSET(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			MODULEOFFSET::load(stream);
 		}
 		BaseRecordPtr clone();
 
@@ -625,7 +625,7 @@ namespace VBA
 	public:
 		MODULEHELPCONTEXT(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			MODULEHELPCONTEXT::load(stream);
 		}
 		BaseRecordPtr clone();
 
@@ -641,7 +641,7 @@ namespace VBA
 	public:
 		MODULECOOKIE(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			MODULECOOKIE::load(stream);
 		}
 		BaseRecordPtr clone();
 
@@ -655,7 +655,7 @@ namespace VBA
 	public:
 		MODULETYPE(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			MODULETYPE::load(stream);
 		}
 		BaseRecordPtr clone();
 
@@ -669,7 +669,7 @@ namespace VBA
 	public:
 		MODULEREADONLY(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			MODULEREADONLY::load(stream);
 		}
 		BaseRecordPtr clone();
 
@@ -683,7 +683,7 @@ namespace VBA
 	public:
 		MODULEPRIVATE(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			MODULEPRIVATE::load(stream);
 		}
 		BaseRecordPtr clone();
 
@@ -697,7 +697,7 @@ namespace VBA
 	public:
 		MODULE(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			MODULE::load(stream);
 		}
 		BaseRecordPtr clone();
 		virtual void load(CVbaFileStreamPtr stream);
@@ -748,7 +748,7 @@ namespace VBA
 	public:
 		REFERENCE(CVbaFileStreamPtr stream)
 		{
-			load(stream);
+			REFERENCE::load(stream);
 		}
 		BaseRecordPtr clone();
 

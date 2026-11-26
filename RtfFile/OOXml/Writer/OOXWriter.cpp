@@ -53,9 +53,9 @@ OOXWriter::OOXWriter( RtfDocument& oDocument, std::wstring sPath ) :
 		m_oDocRels			( L"document.xml", oDocument )
 {
 	m_nCurFitWidth		= PROP_DEF;
-	m_poFootnoteWriter	= NULL;
-	m_poEndnoteWriter	= NULL;
-	m_poCommentsWriter	= NULL;
+	m_poFootnoteWriter	= nullptr;
+	m_poEndnoteWriter	= nullptr;
+	m_poCommentsWriter	= nullptr;
 
 	m_poDocumentWriter	= new OOXDocumentWriter	( *this, m_oDocument );
 	m_poFootnoteWriter	= new OOXFootnoteWriter	( *this, m_oDocument );
@@ -66,8 +66,8 @@ OOXWriter::OOXWriter( RtfDocument& oDocument, std::wstring sPath ) :
 	m_poStylesWriter	= new OOXStylesWriter	( *this, m_oDocument );
 	m_poCommentsWriter	= new OOXCommentsWriter	( *this, m_oDocument );
 
-	m_poDocPropsApp		= new OOX::CApp(NULL);
-	m_poDocPropsCore	= new OOX::CCore(NULL);
+	m_poDocPropsApp		= new OOX::CApp(nullptr);
+	m_poDocPropsCore	= new OOX::CCore(nullptr);
 
 //default properties
 
@@ -130,7 +130,7 @@ bool OOXWriter::SaveByItemEnd()
     NSDirectory::CreateDirectory(pathTheme.GetPath()) ;
 	Writers::DefaultThemeWriter themeWriter;
 
-	if (false == m_oDocument.m_sThemeXml.empty())
+	if (!m_oDocument.m_sThemeXml.empty())
 	{
 		themeWriter.m_sContent = m_oDocument.m_sThemeXml;
 	}
@@ -147,7 +147,7 @@ bool OOXWriter::SaveByItemEnd()
 	((OOXStylesWriter*)		m_poStylesWriter)->Save		(m_sTargetFolder);
 	((OOXFontTableWriter*)	m_poFontTableWriter)->Save	(m_sTargetFolder);
 
-	((OOXSettingsWriter*)	m_poSettingsWriter)->Save	(m_sTargetFolder); //setting в последнюю очередь
+	((OOXSettingsWriter*)	m_poSettingsWriter)->Save	(m_sTargetFolder); //setting last
 
 //-------------------------------------------------------------------------------------
 	OOX::CPath pathDocProps = m_sTargetFolder + FILE_SEPARATOR_STR + L"docProps";

@@ -159,7 +159,7 @@ namespace NSDoctRenderer
 								m_strAllFonts = sAllFontsPath;
 						}
 
-						// на папку может не быть прав
+						// the folder may not have the required permissions
 						if (!NSFile::CFileBinary::Exists(m_strAllFonts))
 						{
 							FILE* pFileNative = NSFile::CFileBinary::OpenFileNative(m_strAllFonts, L"wb");

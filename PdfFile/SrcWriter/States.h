@@ -67,7 +67,7 @@ public:
         m_nLen        = nLen;
         m_dX          = dX;
         m_dY          = dY;
-        m_pFont       = NULL;
+        m_pFont       = nullptr;
         m_dSize       = -1;
 		m_nType       = PdfWriter::EFontType::fontUnknownType;
         m_lColor      = 0;
@@ -319,7 +319,7 @@ public:
 
     CPenState()
     {
-        m_pDashPattern = NULL;
+        m_pDashPattern = nullptr;
         Reset();
     }
     ~CPenState()
@@ -416,7 +416,7 @@ public:
         if (m_pDashPattern)
         {
             delete[] m_pDashPattern;
-            m_pDashPattern = NULL;
+            m_pDashPattern = nullptr;
         }
 
         m_lDashPatternSize = 0;
@@ -424,11 +424,11 @@ public:
         if (!pPattern || !lSize)
         {
             m_lDashPatternSize = 0;
-            m_pDashPattern     = NULL;
+            m_pDashPattern     = nullptr;
         }
         else
         {
-            // Избавляемся от нулей, потому что все pdf-ридеры плохо их воспринимают
+            // Get rid of zeros, because all pdf readers do not handle them well
             std::vector<double> vPattern;
             for (LONG lIndex = 0; lIndex < lSize; lIndex++)
             {
@@ -520,7 +520,7 @@ public:
 
         m_nDashStyle       = Aggplus::DashStyleSolid;
         m_lDashPatternSize = 0;
-        m_pDashPattern     = NULL;
+        m_pDashPattern     = nullptr;
 		m_dDashOffset      = 0;
 
 		m_nColor2Size = 0;
@@ -625,8 +625,8 @@ public:
 public:
     CBrushState()
     {
-        m_pShadingColors      = NULL;
-        m_pShadingPoints      = NULL;
+        m_pShadingColors      = nullptr;
+        m_pShadingPoints      = nullptr;
         m_lShadingPointsCount = 0;
         Reset();
     }
@@ -720,23 +720,23 @@ public:
     }
     inline void         SetGradientColors(LONG* pColors, double* pPoints, const LONG& lCount)
     {
-        // Мы создаем упорядоченный по возрастанию массив, причем первая и последняя точки должны быть 0 и 1 соответственно.
+        // Create an ascending array, with the first and last points being 0 and 1 respectively.
         if (m_pShadingColors)
         {
             delete[] m_pShadingColors;
-            m_pShadingColors = NULL;
+            m_pShadingColors = nullptr;
         }
 
         if (m_pShadingPoints)
         {
             delete[] m_pShadingPoints;
-            m_pShadingPoints = NULL;
+            m_pShadingPoints = nullptr;
         }
 
         if (!pColors || !pPoints || !lCount)
             return;
 
-        // Проверим вырожденный случай, когда задана либо 1 точка, либо несколько точек с одинковым значением
+        // Check the degenerate case when either 1 point or several points with the same value are given
         bool bIrregular = false;
         if (1 == lCount)
         {
@@ -1106,7 +1106,7 @@ private:
     TColor*      m_pShadingColors;
     double*      m_pShadingPoints;
     LONG         m_lShadingPointsCount;
-    double       m_pShadingPattern[6]; // У линейного градиента x0, y0, x1, y1 (2 не используются), у радиального x0, y0, r0, x1, y1, r1
+    double       m_pShadingPattern[6]; // For a linear gradient x0, y0, x1, y1 (2 aren't used), for a radial gradient x0, y0, r0, x1, y1, r1
 
 	bool         m_bIsScale;
 	double       m_dScaleX;
@@ -1470,7 +1470,7 @@ private:
         }
         void GetLastPoint(double& dX, double& dY)
         {
-            // TODO: Надо грамотно пересчитать
+            // TODO: Need to recalculate correctly
             dX = x;
             dY = y;
         }
@@ -1499,7 +1499,7 @@ private:
         }
         void GetLastPoint(double& dX, double& dY)
         {
-            // TODO: Надо грамотно пересчитать
+            // TODO: Need to recalculate correctly
             dX = 0;
             dY = 0;
         }
@@ -1659,7 +1659,7 @@ struct TDestinationInfo
 {
     TDestinationInfo(PdfWriter::CPage* page, const double& x, const double& y, const double& w, const double& h, const double& dx, const double& dy, const unsigned int& undpage)
     {
-		pDest      = NULL;
+		pDest      = nullptr;
         pPage      = page;
         dX         = x;
         dY         = y;
@@ -1672,7 +1672,7 @@ struct TDestinationInfo
 	TDestinationInfo(PdfWriter::CDestination* dest, const unsigned int& undpage)
 	{
 		pDest      = dest;
-		pPage      = NULL;
+		pPage      = nullptr;
 		unDestPage = undpage;
 	}
 
@@ -1691,8 +1691,8 @@ class CMultiLineTextManager
 public:
     CMultiLineTextManager()
     {
-        m_pCodes       = NULL;
-        m_pWidths      = NULL;
+        m_pCodes       = nullptr;
+        m_pWidths      = nullptr;
         m_unLen        = 0;
         m_ushSpaceCode = 0;
         m_unLineHeight = 0;
@@ -1712,8 +1712,8 @@ public:
     }
     void Clear()
     {
-        m_pCodes         = NULL;
-        m_pWidths        = NULL;
+        m_pCodes         = nullptr;
+        m_pWidths        = nullptr;
         m_unLen          = 0;
         m_ushSpaceCode   = 0;
         m_ushNewLineCode = 0;
@@ -1811,7 +1811,7 @@ public:
     {
         double dGoodFontSize = 0;
 
-        // Параметры подобраны для совместимости с AdobeReader
+        // Parameters selected for compatibility with AdobeReader
         double dFontSize     = 4;
         double dFontSizeStep = 0.797 / 3.0;
 

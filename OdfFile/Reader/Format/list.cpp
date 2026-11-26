@@ -84,7 +84,7 @@ void list_item::add_child_element( xml::sax * Reader, const std::wstring & Ns, c
 void list_item::docx_convert(oox::docx_conversion_context & Context)
 {
     bool restart = false;
-    // TODO - надо сделать так чтобы не только с 1
+    // TODO - need to make sure that not only from 1
     if (text_start_value_)
     {
         restart = true;                    
@@ -103,7 +103,7 @@ void list_item::docx_convert(oox::docx_conversion_context & Context)
 void list_item::pptx_convert(oox::pptx_conversion_context & Context)
 {
     bool restart = false;
-    // TODO - надо сделать так чтобы не только с 1
+    // TODO - need to make sure that not only from 1
     if (text_start_value_)
     {
         restart = true;                    
@@ -126,7 +126,7 @@ const wchar_t * list_header::name = L"list-header";
 
 void list_header::docx_convert(oox::docx_conversion_context & Context)
 {
-	//заголовок это не элемент списка
+	//title isn't a list element
 
 	std::wstring s = Context.current_list_style();
 	Context.end_list();
@@ -142,7 +142,7 @@ void list_header::pptx_convert(oox::pptx_conversion_context & Context)
 {
     bool restart = false;
 
-	//заголовок это не элемент списка
+	//title isn't a list element
 
 	Context.get_text_context().set_header(true);
 

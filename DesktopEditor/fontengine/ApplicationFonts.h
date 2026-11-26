@@ -25,8 +25,8 @@
 #ifndef _BUILD_APPLICATIONFONTS_H_
 #define _BUILD_APPLICATIONFONTS_H_
 
-#define UNKNOWN_CHARSET 3 // для случаев, когда задано значение DEFAULT_CHARSET, но 
-// на самом деле charset не учитывается
+#define UNKNOWN_CHARSET 3 // for cases where DEFAULT_CHARSET is set, but
+// actually charset isn't taken into account
 
 #include <vector>
 #include <list>
@@ -84,30 +84,60 @@ public:
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Liberation Sans", 2));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Helvetica", 2));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Sans L", 2));
+		// Metric twins of Arial under other names (StarOffice, ChromeOS, URW), as LibreOffice and
+		// fontconfig alias them.
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Albany", 2));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Albany AMT", 2));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Arimo", 2));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Sans", 2));
 
 		std::vector<std::wstring> ar2;
 		ar2.push_back(L"Arial");
 		ar2.push_back(L"Liberation Sans");
 		ar2.push_back(L"Helvetica");
 		ar2.push_back(L"Nimbus Sans L");
+		ar2.push_back(L"Arimo");
+		ar2.push_back(L"Nimbus Sans");
 		m_listLikes.push_back(ar2);
 
 		// 3 [Times New Roman]
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Times New Roman", 3));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Liberation Serif", 3));
+		// Metric twins of Times New Roman under other names (PostScript, StarOffice, ChromeOS, URW).
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Times", 3));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Thorndale", 3));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Thorndale AMT", 3));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Tinos", 3));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Roman", 3));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Roman No9 L", 3));
 
 		std::vector<std::wstring> ar3;
 		ar3.push_back(L"Times New Roman");
 		ar3.push_back(L"Liberation Serif");
+		ar3.push_back(L"Tinos");
+		ar3.push_back(L"Nimbus Roman");
+		ar3.push_back(L"Nimbus Roman No9 L");
 		m_listLikes.push_back(ar3);
 
 		// 4 [Courier New]
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Courier New", 4));
 		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Liberation Mono", 4));
+		// Metric twins of Courier New under other names (PostScript, StarOffice, ChromeOS, URW).
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Courier", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Cumberland", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Cumberland AMT", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Cousine", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Mono PS", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Mono", 4));
+		m_mapNamesToIndex.insert(std::pair<std::wstring, int>(L"Nimbus Mono L", 4));
 
 		std::vector<std::wstring> ar4;
 		ar4.push_back(L"Courier New");
 		ar4.push_back(L"Liberation Mono");
+		ar4.push_back(L"Cousine");
+		ar4.push_back(L"Nimbus Mono PS");
+		ar4.push_back(L"Nimbus Mono");
+		ar4.push_back(L"Nimbus Mono L");
 		m_listLikes.push_back(ar4);
 
 		// 5 [Segoe]
@@ -175,7 +205,7 @@ public:
 		return IsEqualsFontsAdvanced(name, req) ? 3000 : 10000;
 	}
 
-	// не учитываем регистр (латиница) и знаки /-/ /,/
+	// Ignore case (Latin) and the /-/ and /,/ signs
 	static bool IsEqualsFontsAdvanced(const std::wstring& name, const std::wstring& req, bool* bIsOneInAnother = NULL)
 	{
 		int lenName = (int)name.length();
@@ -241,7 +271,7 @@ private:
 	CFontRange*             m_pRanges;
 	int                     m_nRangesCount;
 
-	std::list<CFontRange>   m_listRanges; // последние использованные (найденные)
+	std::list<CFontRange>   m_listRanges; // last used (found)
 
 public:
 	CFontList()

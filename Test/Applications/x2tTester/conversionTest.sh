@@ -10,14 +10,18 @@ docFormats=(${docZipFormats[@]} ${docBinFormats[@]})
 docFiles=( empty medium fonts_and_images )
 
 slidesZipFormats=( odp pptx )
-slidesFormats=${slidesZipFormats} 
+slidesFormats=(${slidesZipFormats[@]})
 slidesFiles=( simple )
 
 sheetsZipFormats=( ods xlsx )
-sheetsFormats=${sheetsZipFormats} 
+sheetsFormats=(${sheetsZipFormats[@]})
 sheetsFiles=( spread_basic )
 
 cd $workDir
+
+# Reads the written archives with a reader that is not core's, see scripts/check_zip.py
+zipChecker="$(pwd)/../../../scripts/check_zip.py"
+pythonBin="${CORE_PYTHON:-python3}"
 
 function convertAndDiff() {
 
@@ -31,6 +35,11 @@ function convertAndDiff() {
 			cd $file.$inFormat
 			for outFormat in "${zipFormats[@]}"
 			do
+				# x2t writes nothing for a conversion to the same format
+				if [ -f $file.$outFormat ]
+				then
+					"$pythonBin" "$zipChecker" $file.$outFormat || exitCode=1
+				fi
 				unzip $file.$outFormat -d $outFormat > /dev/null 2>&1
 				rm $file.$outFormat > /dev/null 2>&1
 			done

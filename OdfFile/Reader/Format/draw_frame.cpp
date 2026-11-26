@@ -271,7 +271,7 @@ void draw_frame::add_child_element( xml::sax * Reader, const std::wstring & Ns, 
     {
         CP_CREATE_ELEMENT(content_);
     }
-	else if CP_CHECK_NAME(L"draw", L"object")	//embedded объект
+	else if CP_CHECK_NAME(L"draw", L"object")	//embedded object
     {
         CP_CREATE_ELEMENT(content_);
 		is_object_ = true;

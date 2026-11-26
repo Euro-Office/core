@@ -57,7 +57,7 @@ bool XML2TableConverter::ReadNextElement(std::map<_UINT32, std::wstring> &string
 
 void XML2TableConverter::readAttributes()
 {
-    ///@todo проверять нет ли в parents нод с таким же именем для вставки в их столбец вместо создания нового
+    ///@todo check if parents have nodes with the same name to insert into their column instead of creating a new one
     if(!reader_->GetAttributesCount())
     {
         return;
@@ -124,7 +124,7 @@ void XML2TableConverter::insertEmptyNode (const std::wstring &key)
 
 std::wstring XML2TableConverter::getNodeName(const std::wstring &name, std::set<std::wstring> &names)
 {
-    /// ищем среди использовавшихся имён нужное
+    /// looking for the right one among the names used
     for(auto i = names.begin(); i != names.end(); i++)
     {
         if(colNames_.GetXmlName(*i) == name)
@@ -132,7 +132,7 @@ std::wstring XML2TableConverter::getNodeName(const std::wstring &name, std::set<
             return *i;
         }
     }
-    /// если не нашли, создаём его и вставляем
+    /// if not found, create it and insert it
     auto resultName = name;
     colNames_.CreateColumnName(resultName);
     names.insert(resultName);
@@ -169,7 +169,7 @@ void XML2TableConverter::processNode(const XmlUtils::XmlNodeType &type)
     }
     else if(type == XmlUtils::XmlNodeType::XmlNodeType_EndElement)
     {
-        //вставка ноды типа <node></node>
+        //inserting a node of type <node></node>
         if(prevType_ == XmlUtils::XmlNodeType::XmlNodeType_Element)
         {
             insertValue(parents_.back().first, L"");
@@ -183,7 +183,7 @@ void XML2TableConverter::processNode(const XmlUtils::XmlNodeType &type)
 
 void XML2TableConverter::storeData(const XmlUtils::XmlNodeType &type)
 {
-    ///@todo проверять нет ли в parents нод с таким же именем для вставки в их столбец вместо создания нового
+    ///@todo check if parents have nodes with the same name to insert into their column instead of creating a new one
     if(type == XmlUtils::XmlNodeType::XmlNodeType_Text || type == XmlUtils::XmlNodeType::XmlNodeType_CDATA)
     {
         auto text = reader_->GetText();

@@ -92,7 +92,7 @@ std::string ReadStringFromOle(POLE::Stream *stream, unsigned int max_size)
 }
 bool COfficeFileFormatChecker::isRtfFormatFile(unsigned char *pBuffer, int dwBytes)
 {
-	if (pBuffer == NULL)
+	if (pBuffer == nullptr)
 		return false;
 
 	if ((5 <= dwBytes) && ('{' == pBuffer[0] && '\\' == pBuffer[1] && 'r' == pBuffer[2] && 't' == pBuffer[3] && 'f' == pBuffer[4]))
@@ -102,19 +102,15 @@ bool COfficeFileFormatChecker::isRtfFormatFile(unsigned char *pBuffer, int dwByt
 }
 bool COfficeFileFormatChecker::isMultiPartsHtmlFormatFile(unsigned char *pBuffer, int dwBytes)
 {
-	if (pBuffer == NULL)
+	if (pBuffer == nullptr)
 		return false;
 
 	const char *contentTypeFormatLine1 = "Content-Type: multipart/related";
-	const char *contentTypeFormatLine2 = "Content-Type: text/html"; // может быть и вне заданого буфера (todooo)
+	const char *contentTypeFormatLine2 = "Content-Type: text/html"; // may be outside the specified buffer (TODO)
 
 	std::string xml_string((char *)pBuffer, dwBytes);
 
-	if ((std::string::npos != xml_string.find(contentTypeFormatLine1)) && (std::string::npos != xml_string.find(contentTypeFormatLine2)))
-	{
-		return true;
-	}
-	return false;
+	return (std::string::npos != xml_string.find(contentTypeFormatLine1)) && (std::string::npos != xml_string.find(contentTypeFormatLine2));
 }
 
 bool COfficeFileFormatChecker::iXmlFile(const std::wstring &fileName)
@@ -145,7 +141,7 @@ bool COfficeFileFormatChecker::iXmlFile(const std::wstring &fileName)
 
 bool COfficeFileFormatChecker::isHtmlFormatFile(unsigned char *pBuffer, int dwBytes, bool testCloseTag)
 {
-	if (pBuffer == NULL || dwBytes < 4)
+	if (pBuffer == nullptr || dwBytes < 4)
 		return false;
 
 	bool tagOpen = false;
@@ -159,7 +155,8 @@ bool COfficeFileFormatChecker::isHtmlFormatFile(unsigned char *pBuffer, int dwBy
 			{
 				return true;
 			}
-			else if (
+
+			if (
 				(0x3C == pBuffer[i]) && (0x2F == pBuffer[i + 1]) && (0x62 == pBuffer[i + 2]) && (0x6f == pBuffer[i + 3]) && (0x64 == pBuffer[i + 4]) && (0x79 == pBuffer[i + 5]) &&
 				(0x3e == pBuffer[i + 6]))
 			{ //</body>
@@ -188,7 +185,7 @@ bool COfficeFileFormatChecker::isHtmlFormatFile(unsigned char *pBuffer, int dwBy
 
 bool COfficeFileFormatChecker::isBinaryDoctFormatFile(unsigned char *pBuffer, int dwBytes)
 {
-	if (pBuffer == NULL)
+	if (pBuffer == nullptr)
 		return false;
 
 	if ((4 <= dwBytes) && ('D' == pBuffer[0] && 'O' == pBuffer[1] && 'C' == pBuffer[2] && 'Y' == pBuffer[3]))
@@ -198,7 +195,7 @@ bool COfficeFileFormatChecker::isBinaryDoctFormatFile(unsigned char *pBuffer, in
 }
 bool COfficeFileFormatChecker::isBinaryXlstFormatFile(unsigned char *pBuffer, int dwBytes)
 {
-	if (pBuffer == NULL)
+	if (pBuffer == nullptr)
 		return false;
 
 	if ((4 <= dwBytes) && ('X' == pBuffer[0] && 'L' == pBuffer[1] && 'S' == pBuffer[2] && 'Y' == pBuffer[3]))
@@ -208,7 +205,7 @@ bool COfficeFileFormatChecker::isBinaryXlstFormatFile(unsigned char *pBuffer, in
 }
 bool COfficeFileFormatChecker::isBinaryPpttFormatFile(unsigned char *pBuffer, int dwBytes)
 {
-	if (pBuffer == NULL)
+	if (pBuffer == nullptr)
 		return false;
 
 	if ((4 <= dwBytes) && ('P' == pBuffer[0] && 'P' == pBuffer[1] && 'T' == pBuffer[2] && 'Y' == pBuffer[3]))
@@ -218,7 +215,7 @@ bool COfficeFileFormatChecker::isBinaryPpttFormatFile(unsigned char *pBuffer, in
 }
 bool COfficeFileFormatChecker::isBinaryVsdtFormatFile(unsigned char* pBuffer, int dwBytes)
 {
-	if (pBuffer == NULL)
+	if (pBuffer == nullptr)
 		return false;
 
 	if ((4 <= dwBytes) && ('V' == pBuffer[0] && 'S' == pBuffer[1] && 'D' == pBuffer[2] && 'Y' == pBuffer[3]))
@@ -228,7 +225,7 @@ bool COfficeFileFormatChecker::isBinaryVsdtFormatFile(unsigned char* pBuffer, in
 }
 bool COfficeFileFormatChecker::isPdfFormatFile(unsigned char *pBuffer, int dwBytes, std::wstring &documentID)
 {
-	if (pBuffer == NULL)
+	if (pBuffer == nullptr)
 		return false;
 
 	documentID.clear();
@@ -240,7 +237,7 @@ bool COfficeFileFormatChecker::isPdfFormatFile(unsigned char *pBuffer, int dwByt
 
 	char *pFirst = strstr((char *)pBuffer, "%PDF-");
 
-	if (NULL == pFirst)
+	if (nullptr == pFirst)
 	{
 		char* pData = (char*)pBuffer;
 		for (int i = 0; i < dwBytes - 5; ++i)
@@ -252,7 +249,7 @@ bool COfficeFileFormatChecker::isPdfFormatFile(unsigned char *pBuffer, int dwByt
 				break;
 			}
 		}
-		if (NULL == pFirst)
+		if (nullptr == pFirst)
 		{
 			//skip special
 			_UINT16 sz = pBuffer[0] + (pBuffer[1] << 8);
@@ -262,16 +259,15 @@ bool COfficeFileFormatChecker::isPdfFormatFile(unsigned char *pBuffer, int dwByt
 			}
 		}
 	}
-	if (NULL != pFirst)
+	if (nullptr != pFirst)
 	{
 		pFirst = strstr((char *)pBuffer, "%DocumentID ");
-		if (NULL != pFirst)
+		if (nullptr != pFirst)
 		{
 			pFirst += 12;
 			char *pLast = strstr(pFirst, " ");
-			if (NULL != pLast)
+			if (nullptr != pLast)
 			{
-				std::string s(pFirst, pLast - pFirst);
 				documentID = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)pFirst, (LONG)(pLast - pFirst));
 			}
 		}
@@ -282,6 +278,9 @@ bool COfficeFileFormatChecker::isPdfFormatFile(unsigned char *pBuffer, int dwByt
 }
 bool COfficeFileFormatChecker::isPdfOformFormatFile(unsigned char *pBuffer, int dwBytes)
 {
+	if (pBuffer == nullptr || dwBytes < 1)
+		return false;
+
 	pBuffer[dwBytes - 1] = 0;
 	char* pFirst = strstr((char*)pBuffer, "%\315\312\322\251\015");
 
@@ -308,24 +307,21 @@ bool COfficeFileFormatChecker::isPdfOformFormatFile(unsigned char *pBuffer, int 
 
 	pMeta = pMetaLast + 1;
 	pMetaLast = strstr(pMeta, " ");
-	if (!pMetaLast)
-		return false;
-
-	return true;
+	return pMetaLast != nullptr;
 }
 bool COfficeFileFormatChecker::isOleObjectFile(POLE::Storage *storage)
 {
-	if (storage == NULL)
+	if (storage == nullptr)
 		return false;
 
 	POLE::Stream streamOle(storage, L"Ole");
 
-	if (false == streamOle.fail())
+	if (!streamOle.fail())
 	{
 		std::string UserType, ClipboardFormat, Program;
 
 		POLE::Stream streamCompObject(storage, L"CompObj");
-		if (false == streamCompObject.fail() && streamCompObject.size() >= 28)
+		if (!streamCompObject.fail() && streamCompObject.size() >= 28)
 		{
 			streamCompObject.seek(28); // skip Header
 
@@ -344,7 +340,7 @@ bool COfficeFileFormatChecker::isOleObjectFile(POLE::Storage *storage)
 					Program = ReadStringFromOle(&streamCompObject, sz_obj);
 			}
 			POLE::Stream streamPackage(storage, L"Package");
-			if (false == streamPackage.fail())
+			if (!streamPackage.fail())
 			{
 				nFileType = AVS_OFFICESTUDIO_FILE_OTHER_PACKAGE_IN_OLE;
 			}
@@ -375,7 +371,7 @@ bool COfficeFileFormatChecker::isOleObjectFile(POLE::Storage *storage)
 		else
 		{
 			POLE::Stream streamLinkInfo(storage, L"LinkInfo");
-			if (false == streamLinkInfo.fail())
+			if (!streamLinkInfo.fail())
 			{
 				short cch = 0;
 				if (2 == streamLinkInfo.read((BYTE *)&cch, 2))
@@ -397,7 +393,7 @@ bool COfficeFileFormatChecker::isOleObjectFile(POLE::Storage *storage)
 }
 bool COfficeFileFormatChecker::isDocFormatFile(POLE::Storage *storage)
 {
-	if (storage == NULL)
+	if (storage == nullptr)
 		return false;
 
 	POLE::Stream stream(storage, L"WordDocument");
@@ -434,7 +430,7 @@ bool COfficeFileFormatChecker::isDocFormatFile(POLE::Storage *storage)
 }
 bool COfficeFileFormatChecker::isVbaProjectFile(POLE::Storage *storage)
 {
-	if (storage == NULL)
+	if (storage == nullptr)
 		return false;
 
 	unsigned char buffer[10];
@@ -444,20 +440,16 @@ bool COfficeFileFormatChecker::isVbaProjectFile(POLE::Storage *storage)
 	{
 		return false;
 	}
-	if (false == storage->isDirectory(L"VBA"))
+	if (!storage->isDirectory(L"VBA"))
 	{
 		return false;
 	}
 	POLE::Stream stream2(storage, L"VBA/dir");
-	if (stream2.read(buffer, 10) < 1)
-	{
-		return false;
-	}
-	return true;
+	return stream2.read(buffer, 10) >= 1;
 }
 bool COfficeFileFormatChecker::isHwpFile(POLE::Storage* storage)
 {
-	if (storage == NULL)
+	if (storage == nullptr)
 		return false;
 
 	unsigned char buffer[17];
@@ -466,15 +458,12 @@ bool COfficeFileFormatChecker::isHwpFile(POLE::Storage* storage)
 
 	static constexpr const char* hwpFormatLine = "HWP Document File";
 
-	if (17 == stream.read(buffer, 17) && NULL != strstr((char*)buffer, hwpFormatLine))
-		return true;
-
-	return false;
+	return 17 == stream.read(buffer, 17) && nullptr != strstr((char*)buffer, hwpFormatLine);
 }
 
 bool COfficeFileFormatChecker::isXlsFormatFile(POLE::Storage *storage)
 {
-	if (storage == NULL)
+	if (storage == nullptr)
 		return false;
 
 	unsigned char buffer[10];
@@ -511,7 +500,7 @@ bool COfficeFileFormatChecker::isXlsFormatFile(POLE::Storage *storage)
 }
 bool COfficeFileFormatChecker::isDocFlatFormatFile(unsigned char *pBuffer, int dwBytes)
 {
-	if (pBuffer == NULL || dwBytes < 2)
+	if (pBuffer == nullptr || dwBytes < 2)
 		return false;
 
 	if ((pBuffer[0] == 0xEC && pBuffer[1] == 0xA5) || (pBuffer[0] == 0xDC && pBuffer[1] == 0xA5) || (pBuffer[0] == 0xDB && pBuffer[1] == 0xA5))
@@ -521,7 +510,7 @@ bool COfficeFileFormatChecker::isDocFlatFormatFile(unsigned char *pBuffer, int d
 }
 bool COfficeFileFormatChecker::isXlsFlatFormatFile(unsigned char *pBuffer, int dwBytes)
 {
-	if (pBuffer == NULL || dwBytes < 2)
+	if (pBuffer == nullptr || dwBytes < 2)
 		return false;
 
 	// BOF started
@@ -533,21 +522,18 @@ bool COfficeFileFormatChecker::isXlsFlatFormatFile(unsigned char *pBuffer, int d
 }
 bool COfficeFileFormatChecker::isPptFormatFile(POLE::Storage *storage)
 {
-	if (storage == NULL)
+	if (storage == nullptr)
 		return false;
 
 	POLE::Stream stream(storage, L"PowerPoint Document");
 
 	unsigned char buffer[10];
-	if (stream.read(buffer, 10) < 1)
-		return false;
-
-	return true;
+	return stream.read(buffer, 10) >= 1;
 }
 
 bool COfficeFileFormatChecker::isCompoundFile(POLE::Storage* storage)
 {
-	if (storage == NULL) return false;
+	if (storage == nullptr) return false;
 
 	if (storage->GetAllStreams(L"/").size() == 1) return true;
 
@@ -577,7 +563,7 @@ std::wstring COfficeFileFormatChecker::getDocumentID(const std::wstring &_fileNa
 	}
 	else
 	{
-		if (false == isOpenOfficeFormatFile(fileName, documentID))
+		if (!isOpenOfficeFormatFile(fileName, documentID))
 		{
 			NSFile::CFileBinary file;
 			if (!file.OpenFile(fileName))
@@ -631,7 +617,7 @@ bool COfficeFileFormatChecker::isMS_OFFCRYPTOFormatFile(const std::wstring &_fil
 }
 bool COfficeFileFormatChecker::isMS_OFFICECRYPTOFormatFile(POLE::Storage *storage, std::wstring &documentID)
 {
-	if (storage == NULL)
+	if (storage == nullptr)
 		return false;
 
 	documentID.clear();
@@ -659,14 +645,14 @@ bool COfficeFileFormatChecker::isMS_OFFICECRYPTOFormatFile(POLE::Storage *storag
 
 bool COfficeFileFormatChecker::isMS_MITCRYPTOFormatFile(POLE::Storage *storage, std::wstring &documentID)
 {
-	if (storage == NULL)
+	if (storage == nullptr)
 		return false;
 
 	documentID.clear();
 
 	bool result = false;
 	std::list<std::wstring> entries = storage->entries(L"DataSpaces");
-	if (false == entries.empty() && false == storage->exists(L"EncryptionInfo") && storage->exists(L"EncryptedPackage"))
+	if (!entries.empty() && !storage->exists(L"EncryptionInfo") && storage->exists(L"EncryptedPackage"))
 	{
 		result = true;
 	}
@@ -699,20 +685,18 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 	std::wstring fileName = _fileName;
 #endif
 
-	// приоритет как оказывается важен
+	// priority turns out to be important
 	// Metamorphic Manual for windows 28415.doc
 	POLE::Storage storage(fileName.c_str());
 	if (storage.open())
 	{
 		if (isOleObjectFile(&storage))
 		{
-			if (nFileType != AVS_OFFICESTUDIO_FILE_UNKNOWN)
-				return true;
-			return false;
+			return nFileType != AVS_OFFICESTUDIO_FILE_UNKNOWN;
 		}
 		else if (isDocFormatFile(&storage))
 		{
-			// nFileType внутри
+			// nFileType inside
 			return true;
 		}
 		else if (isXlsFormatFile(&storage))
@@ -776,56 +760,16 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 	DWORD dwDetectdBytes = 0;
 	file.ReadFile(bufferDetect, MIN_SIZE_BUFFER, dwDetectdBytes);
 
-	COfficeUtils OfficeUtils(NULL);
-	if (OfficeUtils.IsArchive(fileName) == S_OK && (false == isPdfFormatFile(bufferDetect, dwDetectdBytes, sDocumentID)))
+	COfficeUtils OfficeUtils(nullptr);
+	if (OfficeUtils.IsArchive(fileName) == S_OK && (!isPdfFormatFile(bufferDetect, dwDetectdBytes, sDocumentID)))
 	{
-		if (isOOXFormatFile(fileName))
-        {
-            if (bufferDetect)
-                delete[] bufferDetect;
-            bufferDetect = NULL;
-			return true;
-        }
-		else if (isOpenOfficeFormatFile(fileName, sDocumentID))
-        {
-            if (bufferDetect)
-                delete[] bufferDetect;
-            bufferDetect = NULL;
-            return true;
-        }
-		else if (isOnlyOfficeFormatFile(fileName))
-        {
-            if (bufferDetect)
-                delete[] bufferDetect;
-            bufferDetect = NULL;
-            return true;
-        }
-		else if (isXpsFile(fileName))
-        {
-            if (bufferDetect)
-                delete[] bufferDetect;
-            bufferDetect = NULL;
-            return true;
-        }
-		else if (isOFDFile(fileName))
+		if (isOOXFormatFile(fileName) || isOpenOfficeFormatFile(fileName, sDocumentID) ||
+			isOnlyOfficeFormatFile(fileName) || isXpsFile(fileName) || isOFDFile(fileName) ||
+			isMacFormatFile(fileName) || isHwpxFile(fileName))
 		{
 			if (bufferDetect)
 				delete[] bufferDetect;
-			bufferDetect = NULL;
-			return true;
-		}
-		else if (isMacFormatFile(fileName))
-		{
-			if (bufferDetect)
-				delete[] bufferDetect;
-			bufferDetect = NULL;
-			return true;
-		}
-		else if (isHwpxFile(fileName))
-		{
-			if (bufferDetect)
-				delete[] bufferDetect;
-			bufferDetect = NULL;
+			bufferDetect = nullptr;
 			return true;
 		}
 	}
@@ -893,7 +837,11 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 		}
 		else if (isOpenOfficeFlatFormatFile(bufferDetect, sizeRead)) // min size - 78
 		{
-			// nFileType
+			// nFileType is set by the detector, so detection is complete here
+			file.CloseFile();
+			delete[] bufferDetect;
+			bufferDetect = nullptr;
+			return true;
 		}
 		else if (isDocFlatFormatFile(bufferDetect, sizeRead)) // min size - 2
 		{
@@ -916,14 +864,14 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 	}
 	if (bufferDetect)
 		delete[] bufferDetect;
-	bufferDetect = NULL;
+	bufferDetect = nullptr;
 
 	if (nFileType != AVS_OFFICESTUDIO_FILE_UNKNOWN)
 		return true;
 	//------------------------------------------------------------------------------------------------
 	if (iXmlFile(fileName))
 	{
-		// nFileType внутри
+		// nFileType inside
 		return true;
 	}
 	//// by Extension
@@ -947,7 +895,7 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 			nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_DOCX;
 		else if (0 == sExt.compare(L".pptx"))
 			nFileType = AVS_OFFICESTUDIO_FILE_PRESENTATION_PPTX;
-		else if (0 == sExt.compare(L".vsxd"))
+		else if (0 == sExt.compare(L".vsdx"))
 			nFileType = AVS_OFFICESTUDIO_FILE_DRAW_VSDX;
 		else if (0 == sExt.compare(L".ods"))
 			nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS;
@@ -971,7 +919,7 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 		nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_HTML;
 	else if (0 == sExt.compare(L".bin")) // base64 string
 		nFileType = AVS_OFFICESTUDIO_FILE_CANVAS_PDF;
-	else if (0 == sExt.compare(L".doct")) // случай архива с html viewer
+	else if (0 == sExt.compare(L".doct")) // case of archive with html viewer
 		nFileType = AVS_OFFICESTUDIO_FILE_TEAMLAB_DOCY;
 	else if (0 == sExt.compare(L".txt") || 0 == sExt.compare(L".xml") || 0 == sExt.compare(L".rtf")	|| 0 == sExt.compare(L".doc") || 0 == sExt.compare(L".docx"))
 		nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_TXT;
@@ -995,10 +943,10 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 }
 bool COfficeFileFormatChecker::isOOXFormatFile(const std::wstring &fileName, bool unpacked)
 {
-	COfficeUtils OfficeUtils(NULL);
+	COfficeUtils OfficeUtils(nullptr);
 
 	ULONG nBufferSize = 0;
-	BYTE *pBuffer = NULL;
+	BYTE *pBuffer = nullptr;
 
 	HRESULT hresult = S_FALSE;
 
@@ -1011,7 +959,7 @@ bool COfficeFileFormatChecker::isOOXFormatFile(const std::wstring &fileName, boo
 	{
 		hresult = OfficeUtils.LoadFileFromArchive(fileName, L"[Content_Types].xml", &pBuffer, nBufferSize);
 	}
-	if (hresult == S_OK && pBuffer != NULL)
+	if (hresult == S_OK && pBuffer != nullptr)
 	{
 
 		const char *docxFormatLine = "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml";
@@ -1147,7 +1095,7 @@ bool COfficeFileFormatChecker::isOOXFormatFile(const std::wstring &fileName, boo
 			bMacroEnabled = true;
 		}
 		delete []pBuffer;
-		pBuffer = NULL;
+		pBuffer = nullptr;
 
 		if (nFileType != AVS_OFFICESTUDIO_FILE_UNKNOWN)
 			return true;
@@ -1161,7 +1109,7 @@ bool COfficeFileFormatChecker::isDocFormatFile(const std::wstring &fileName)
 	{
 		if (isDocFormatFile(&storage))
 		{
-			// nFileType внутри;
+			// nFileType inside;
 			return true;
 		}
 	}
@@ -1182,13 +1130,13 @@ bool COfficeFileFormatChecker::isXlsFormatFile(const std::wstring &fileName)
 }
 bool COfficeFileFormatChecker::isOnlyOfficeFormatFile(const std::wstring &fileName)
 {
-	COfficeUtils OfficeUtils(NULL);
+	COfficeUtils OfficeUtils(nullptr);
 
-	ULONG nBufferSize = 128; // ограничим считывание из бинарника
-	BYTE *pBuffer = NULL;
+	ULONG nBufferSize = 128; // limit reading from the binary
+	BYTE *pBuffer = nullptr;
 
 	HRESULT hresult = OfficeUtils.LoadFileFromArchive(fileName, L"Editor.bin", &pBuffer, nBufferSize);
-	if (hresult == S_OK && pBuffer != NULL)
+	if (hresult == S_OK && pBuffer != nullptr)
 	{
 		if (isBinaryDoctFormatFile(pBuffer, nBufferSize))
 		{
@@ -1208,7 +1156,7 @@ bool COfficeFileFormatChecker::isOnlyOfficeFormatFile(const std::wstring &fileNa
 		}
 
 		delete[] pBuffer;
-		pBuffer = NULL;
+		pBuffer = nullptr;
 
 		if (nFileType != AVS_OFFICESTUDIO_FILE_UNKNOWN)
 			return true;
@@ -1257,7 +1205,7 @@ bool ReadUVar(BYTE* pBuffer, size_t unEndPos, size_t& unPos, uint64_t& unValue)
 
 bool ReadIWAField(BYTE* pBuffer, size_t unEndPos, size_t& unPos, TIWAField& oIWAField)
 {
-	if (NULL == pBuffer || unPos + 2 > unEndPos)
+	if (nullptr == pBuffer || unPos + 2 > unEndPos)
 		return false;
 
 	unsigned uSpec;
@@ -1308,14 +1256,14 @@ bool ReadIWAField(BYTE* pBuffer, size_t unEndPos, size_t& unPos, TIWAField& oIWA
 
 bool DetectIWorkFormat(const std::wstring& fileName, int &nType)
 {
-	COfficeUtils OfficeUtils(NULL);
+	COfficeUtils OfficeUtils(nullptr);
 
 	ULONG unSize = 0;
-	BYTE* pBuffer = NULL;
+	BYTE* pBuffer = nullptr;
 
 	HRESULT hresult = OfficeUtils.LoadFileFromArchive(fileName, L"Index/Document.iwa", &pBuffer, unSize);
 
-	if (hresult != S_OK || NULL == pBuffer)
+	if (hresult != S_OK || nullptr == pBuffer)
 		return false;
 
 	#define CLEAR_BUFFER_AND_RETURN(return_value)\
@@ -1401,6 +1349,8 @@ bool DetectIWorkFormat(const std::wstring& fileName, int &nType)
 			nType = AVS_OFFICESTUDIO_FILE_DOCUMENT_PAGES;
 			CLEAR_BUFFER_AND_RETURN(true);
 		}
+		default:
+			break;
 	}
 
 	CLEAR_BUFFER_AND_RETURN(false);
@@ -1436,17 +1386,17 @@ bool COfficeFileFormatChecker::isHwpxFile(const std::wstring &fileName)
 	COfficeUtils oOfficeUtils;
 	
 	ULONG unSize = 0;
-	BYTE* pBuffer = NULL;
+	BYTE* pBuffer = nullptr;
 
 	HRESULT hresult = oOfficeUtils.LoadFileFromArchive(fileName, L"mimetype", &pBuffer, unSize);
 
-	if (hresult != S_OK || NULL == pBuffer)
+	if (hresult != S_OK || nullptr == pBuffer)
 		return false;
 
 	static constexpr const char* hwpxFormatLine = "application/hwp+zip";
 	bool bResult = false;
 	
-	if (19 <= unSize && NULL != strstr((char *)pBuffer, hwpxFormatLine))
+	if (19 <= unSize && nullptr != strstr((char *)pBuffer, hwpxFormatLine))
 	{
 		nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_HWPX;
 		bResult = true;
@@ -1472,72 +1422,72 @@ bool COfficeFileFormatChecker::isOpenOfficeFormatFile(const std::wstring &fileNa
 	const char *sxcFormatLine = "application/vnd.sun.xml.calc";
 	const char *sxiFormatLine = "application/vnd.sun.xml.impress";
 
-	COfficeUtils OfficeUtils(NULL);
+	COfficeUtils OfficeUtils(nullptr);
 
 	ULONG nBufferSize = 0;
-	BYTE *pBuffer = NULL;
+	BYTE *pBuffer = nullptr;
 
 	HRESULT hresult = OfficeUtils.LoadFileFromArchive(fileName, L"documentID", &pBuffer, nBufferSize);
-	if (hresult == S_OK && pBuffer != NULL)
+	if (hresult == S_OK && pBuffer != nullptr)
 	{
 		documentID = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8(pBuffer, nBufferSize);
 
 		delete[] pBuffer;
-		pBuffer = NULL;
+		pBuffer = nullptr;
 	}
 
 	nBufferSize = 0;
 	hresult = OfficeUtils.LoadFileFromArchive(fileName, L"mimetype", &pBuffer, nBufferSize);
-	if (hresult == S_OK && pBuffer != NULL)
+	if (hresult == S_OK && pBuffer != nullptr)
 	{
-		if (48 <= nBufferSize && NULL != strstr((char *)pBuffer, ottFormatLine))
+		if (48 <= nBufferSize && nullptr != strstr((char *)pBuffer, ottFormatLine))
 		{
 			nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_OTT;
 		}
-		else if (55 <= nBufferSize && NULL != strstr((char *)pBuffer, otsFormatLine))
+		else if (55 <= nBufferSize && nullptr != strstr((char *)pBuffer, otsFormatLine))
 		{
 			nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS;
 		}
-		else if (56 <= nBufferSize && NULL != strstr((char *)pBuffer, otpFormatLine))
+		else if (56 <= nBufferSize && nullptr != strstr((char *)pBuffer, otpFormatLine))
 		{
 			nFileType = AVS_OFFICESTUDIO_FILE_PRESENTATION_OTP;
 		}
-		else if ((39 <= nBufferSize && NULL != strstr((char *)pBuffer, odtFormatLine)) ||
-				(30 <= nBufferSize && NULL != strstr((char *)pBuffer, sxwFormatLine)))
+		else if ((39 <= nBufferSize && nullptr != strstr((char *)pBuffer, odtFormatLine)) ||
+				(30 <= nBufferSize && nullptr != strstr((char *)pBuffer, sxwFormatLine)))
 		{
 			nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT;
 		}
-		else if ((46 <= nBufferSize && NULL != strstr((char *)pBuffer, odsFormatLine)) || 
-				(28 <= nBufferSize && NULL != strstr((char *)pBuffer, sxcFormatLine)))
+		else if ((46 <= nBufferSize && nullptr != strstr((char *)pBuffer, odsFormatLine)) || 
+				(28 <= nBufferSize && nullptr != strstr((char *)pBuffer, sxcFormatLine)))
 		{
 			nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS;
 		}
-		else if ((47 <= nBufferSize && NULL != strstr((char *)pBuffer, odpFormatLine)) || 
-				(31 <= nBufferSize && NULL != strstr((char *)pBuffer, sxiFormatLine)))
+		else if ((47 <= nBufferSize && nullptr != strstr((char *)pBuffer, odpFormatLine)) || 
+				(31 <= nBufferSize && nullptr != strstr((char *)pBuffer, sxiFormatLine)))
 		{
 			nFileType = AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP;
 		}
-		else if (43 <= nBufferSize && NULL != strstr((char*)pBuffer, odgFormatLine))
+		else if (43 <= nBufferSize && nullptr != strstr((char*)pBuffer, odgFormatLine))
 		{
 			nFileType = AVS_OFFICESTUDIO_FILE_PRESENTATION_ODG;
 		}
-		else if (20 <= nBufferSize && NULL != strstr((char *)pBuffer, epubFormatLine))
+		else if (20 <= nBufferSize && nullptr != strstr((char *)pBuffer, epubFormatLine))
 		{
 			nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_EPUB;
 		}
 
 		delete[] pBuffer;
-		pBuffer = NULL;
+		pBuffer = nullptr;
 
 		if (nFileType != AVS_OFFICESTUDIO_FILE_UNKNOWN)
 			return true;
 	}
 	else
 	{
-		// если не записан тип смотрим манифест
+		// if the type isn't recorded, look at the manifest
 		nBufferSize = 0;
 		HRESULT hresult = OfficeUtils.LoadFileFromArchive(fileName, L"META-INF/manifest.xml", &pBuffer, nBufferSize);
-		if (hresult == S_OK && pBuffer != NULL)
+		if (hresult == S_OK && pBuffer != nullptr)
 		{
 			std::string xml_string((char *)pBuffer, nBufferSize);
 
@@ -1575,7 +1525,7 @@ bool COfficeFileFormatChecker::isOpenOfficeFormatFile(const std::wstring &fileNa
 				nFileType = AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP;
 
 			delete[] pBuffer;
-			pBuffer = NULL;
+			pBuffer = nullptr;
 
 			if (nFileType != AVS_OFFICESTUDIO_FILE_UNKNOWN)
 				return true;
@@ -1624,7 +1574,7 @@ bool COfficeFileFormatChecker::isOpenOfficeFlatFormatFile(unsigned char *pBuffer
 
 bool COfficeFileFormatChecker::isHwpmlFile(unsigned char *pBuffer, int dwBytes)
 {
-	if (NULL == pBuffer || dwBytes < 8)
+	if (nullptr == pBuffer || dwBytes < 8)
 		return false;
 
 	for (unsigned int unPos = 0; unPos < dwBytes - 8; ++unPos)
@@ -1657,7 +1607,7 @@ bool COfficeFileFormatChecker::isOOXFlatFormatFile(unsigned char *pBuffer, int d
 	else if (pBuffer[0] == 0xfe && pBuffer[1] == 0xff)
 	{ // utf-16- big
 	  // swap bytes
-		DWORD file_size_round = (dwBytes / 2) * 2;
+		DWORD file_size_round = (DWORD)(dwBytes / 2) * 2;
 		for (DWORD i = 0; i < file_size_round; i += 2)
 		{
 			char v = pBuffer[i];
@@ -1886,6 +1836,8 @@ std::wstring COfficeFileFormatChecker::GetExtensionByType(int type)
 		return L".vssm";
 	case AVS_OFFICESTUDIO_FILE_DRAW_VSTM:
 		return L".vstm";
+	default:
+		break;
 	}
 	return L"";
 }
@@ -2080,7 +2032,7 @@ std::wstring COfficeFileFormatChecker::GetFormatExtension(const std::wstring &fi
 
 bool COfficeFileFormatChecker::isDjvuFormatFile(unsigned char *pBuffer, int dwBytes)
 {
-	if (pBuffer == NULL)
+	if (pBuffer == nullptr)
 		return false;
 
 	if ((8 <= dwBytes) &&
@@ -2091,7 +2043,7 @@ bool COfficeFileFormatChecker::isDjvuFormatFile(unsigned char *pBuffer, int dwBy
 }
 bool COfficeFileFormatChecker::isMobiFormatFile(unsigned char *pBuffer, int dwBytes)
 {
-	if (pBuffer == NULL)
+	if (pBuffer == nullptr)
 		return false;
 
 	if ((68 <= dwBytes) &&
@@ -2103,7 +2055,7 @@ bool COfficeFileFormatChecker::isMobiFormatFile(unsigned char *pBuffer, int dwBy
 }
 bool COfficeFileFormatChecker::isFB2FormatFile(unsigned char *pBuffer, int dwBytes)
 {
-	if (pBuffer == NULL || dwBytes < 11)
+	if (pBuffer == nullptr || dwBytes < 11)
 		return false;
 
 	bool tagOpen = false;
@@ -2123,24 +2075,24 @@ bool COfficeFileFormatChecker::isFB2FormatFile(unsigned char *pBuffer, int dwByt
 }
 bool COfficeFileFormatChecker::isXpsFile(const std::wstring &fileName)
 {
-	COfficeUtils OfficeUtils(NULL);
+	COfficeUtils OfficeUtils(nullptr);
 
 	ULONG nBufferSize = 0;
-	BYTE *pBuffer = NULL;
+	BYTE *pBuffer = nullptr;
 
 	HRESULT hresult = OfficeUtils.LoadFileFromArchive(fileName, L"_rels/.rels", &pBuffer, nBufferSize);
-	if (hresult == S_OK && pBuffer != NULL)
+	if (hresult == S_OK && pBuffer != nullptr)
 	{
 		// http://schemas.microsoft.com/xps/2005/06/fixedrepresentation
 		// http://schemas.openxps.org/oxps/v1.0/fixedrepresentation
-		if ((19 <= nBufferSize && NULL != strstr((char *)pBuffer, "fixedrepresentation") && (NULL != strstr((char *)pBuffer, "/xps/")) ||
-			(6 <= nBufferSize && NULL != strstr((char *)pBuffer, "/oxps/"))))
+		if ((19 <= nBufferSize && nullptr != strstr((char *)pBuffer, "fixedrepresentation") && (nullptr != strstr((char *)pBuffer, "/xps/")) ||
+			(6 <= nBufferSize && nullptr != strstr((char *)pBuffer, "/oxps/"))))
 		{
 			nFileType = AVS_OFFICESTUDIO_FILE_CROSSPLATFORM_XPS;
 		}
 
 		delete[] pBuffer;
-		pBuffer = NULL;
+		pBuffer = nullptr;
 
 		if (nFileType != AVS_OFFICESTUDIO_FILE_UNKNOWN)
 			return true;
@@ -2148,7 +2100,7 @@ bool COfficeFileFormatChecker::isXpsFile(const std::wstring &fileName)
 	else
 	{
 		HRESULT hresult = OfficeUtils.LoadFileFromArchive(fileName, L"_rels/.rels/[0].piece", &pBuffer, nBufferSize);
-		if (hresult == S_OK && pBuffer != NULL)
+		if (hresult == S_OK && pBuffer != nullptr)
 		{
 			nFileType = AVS_OFFICESTUDIO_FILE_CROSSPLATFORM_XPS;
 			return true;
@@ -2159,19 +2111,19 @@ bool COfficeFileFormatChecker::isXpsFile(const std::wstring &fileName)
 
 bool COfficeFileFormatChecker::isOFDFile(const std::wstring& fileName)
 {
-	COfficeUtils OfficeUtils(NULL);
+	COfficeUtils OfficeUtils(nullptr);
 
 	ULONG nBufferSize = 0;
-	BYTE *pBuffer = NULL;
+	BYTE *pBuffer = nullptr;
 
 	HRESULT hresult = OfficeUtils.LoadFileFromArchive(fileName, L"OFD.xml", &pBuffer, nBufferSize);
-	if (hresult == S_OK && pBuffer != NULL)
+	if (hresult == S_OK && pBuffer != nullptr)
 	{
-		if (19 <= nBufferSize && NULL != strstr((char *)pBuffer, "ofd:OFD"))
+		if (19 <= nBufferSize && nullptr != strstr((char *)pBuffer, "ofd:OFD"))
 			nFileType = AVS_OFFICESTUDIO_FILE_CROSSPLATFORM_OFD;
 
 		delete[] pBuffer;
-		pBuffer = NULL;
+		pBuffer = nullptr;
 
 		if (nFileType != AVS_OFFICESTUDIO_FILE_UNKNOWN)
 			return true;

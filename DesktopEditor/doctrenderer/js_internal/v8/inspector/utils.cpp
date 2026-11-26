@@ -26,7 +26,7 @@ namespace NSJSBase
 
 	v8::Local<v8::Object> parseJson(const v8::Local<v8::Context>& context, const std::string& sJson)
 	{
-		v8::MaybeLocal<v8::Value> jsonValue = v8::JSON::Parse(context, CreateV8String(context->GetIsolate(), sJson));
+		v8::MaybeLocal<v8::Value> jsonValue = v8::JSON::Parse(context, CreateV8String(CV8Worker::GetCurrent(), sJson));
 		if (jsonValue.IsEmpty())
 		{
 			return v8::Local<v8::Object>();

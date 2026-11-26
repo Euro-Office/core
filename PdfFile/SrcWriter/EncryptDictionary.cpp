@@ -29,7 +29,7 @@
 
 #include <ctime>
 
-#include "../../Common/3dParty/cryptopp/md5.h"
+#include <cryptopp/md5.h>
 #include "../../UnicodeConverter/UnicodeConverter.h"
 
 #define SET_BINARY_PARAM(Name, set_func, max_len) \
@@ -58,7 +58,7 @@ namespace PdfWriter
 	}
     void CEncryptDict::Fix()
     {
-        CObjectBase* pObj = NULL;
+        CObjectBase* pObj = nullptr;
 		SET_BINARY_PARAM("O", SetO, 48);
 		SET_BINARY_PARAM("U", SetU, 48);
 		SET_BINARY_PARAM("OE", SetOE, 32);
@@ -87,10 +87,10 @@ namespace PdfWriter
 		std::time_t oTime = time(0);
         hash.Update( (BYTE*)&oTime, sizeof(oTime));
 
-		// Создаем идентификатор файла по элементам библиотеки Info.
+		// Create a file identifier using the elements of the Info dictionary.
 		if (pInfo)
 		{
-			const char *sTemp = NULL;
+			const char *sTemp = nullptr;
 			unsigned int nLen = 0;
 
 			// Author
@@ -236,8 +236,8 @@ namespace PdfWriter
 			pStream->WriteEscapeName(oIter->first.c_str());
 			pStream->WriteChar(' ');
 			nBegin = pStream->Tell();
-			// Цифровая подпись не шифруется
-			pStream->Write(pObject, oIter->first == "Contents" ? NULL : pEncrypt);
+			// The digital signature isn't encrypted
+			pStream->Write(pObject, oIter->first == "Contents" ? nullptr : pEncrypt);
 			nEnd = pStream->Tell();
 			pStream->WriteStr("\012");
 			if (oIter->first == "Contents")
@@ -254,7 +254,7 @@ namespace PdfWriter
 	}
 	void CSignatureDict::WriteToStream(CStream* pStream, int nFileEnd)
     {
-        // Запись ByteRange
+        // ByteRange entry
         if (m_nByteRangeBegin > 0 && m_nByteRangeEnd > 0 && m_nByteRangeBegin < m_nByteRangeEnd && m_nByteRangeEnd < nFileEnd)
         {
             CArrayObject* pByteRange = new CArrayObject();
@@ -268,7 +268,7 @@ namespace PdfWriter
 				pByteRange->Add(nFileEnd - m_nOffset2);
 
                 pStream->Seek(m_nByteRangeBegin, EWhenceMode::SeekSet);
-                pStream->Write(pByteRange, NULL);
+                pStream->Write(pByteRange, nullptr);
 
                 int nEnd = pStream->Tell();
                 if (nEnd < m_nByteRangeEnd)
@@ -290,10 +290,10 @@ namespace PdfWriter
 		if (!pSignedData)
 			return false;
 
-		// Записываем подписанные данные в Contents
+		// Write signed data to Contents
 		if (dwDataLength > m_nContentsSize)
 		{
-			// Подпись не влезает! Ошибка расчета размера
+			// The signature doesn't fit! Size calculation error
 			return false;
 		}
 
@@ -302,11 +302,11 @@ namespace PdfWriter
 		if (!pContents)
 			return false;
 
-		// Цифровая подпись не шифруется
-		pStream->Write(pContents, NULL);
+		// The digital signature isn't encrypted
+		pStream->Write(pContents, nullptr);
 		delete pContents;
 
-		// Стираем лишний '>' если нужно
+		// Erase extra '>' if necessary
 		BYTE cChar = '0';
 		pStream->Seek(pStream->Tell() - 1, EWhenceMode::SeekSet);
 		pStream->Write(&cChar, 1);
@@ -332,8 +332,8 @@ namespace PdfWriter
 	}
 	void CSignatureDict::SetName(const std::string& sName)
     {
-        // Name - Cтрока, Имя лица или органа, подписавшего документ.
-        // Значение следует использовать когда невозможно извлечь имя из подписи или сертификата подписавшего.
+        // Name - String, Name of the person or body that signed the document.
+        // The value should be used when it isn't possible to extract the name from the signer's signature or certificate.
         Add("Name", new CStringObject(sName.c_str()));
     }
 	void CSignatureDict::SetLocation(const std::string& sLocation)
@@ -342,19 +342,19 @@ namespace PdfWriter
 	}
     void CSignatureDict::SetReason(const std::string& sReason)
     {
-        // Reason - Строка, Причина подписания, например (Я согласен)
+        // Reason - String, Reason for signing, for example (I agree)
         Add("Reason", new CStringObject(sReason.c_str()));
     }
     void CSignatureDict::SetContact(const std::string& sContacts)
     {
-        // ContactInfo - Строка, Информация, предоставленная подписывающей стороной,
-        // чтобы получатель мог связаться с подписывающей стороной для проверки подписи, например (номер_телефона)
+        // ContactInfo - String, Information provided by the signer,
+        // so that the recipient can contact the signer to verify the signature, for example (phone_number)
         Add("ContactInfo", new CStringObject(sContacts.c_str()));
     }
     void CSignatureDict::SetDate()
     {
-        // M - Дата, Время подписания
-        // Значение следует использовать когда время подписания недоступно в подписи
+        // M - Date, Time of signing
+        // The value should be used when the signing time isn't available in the signature
 
         Add("M", new CStringObject(DateNow().c_str()));
     }

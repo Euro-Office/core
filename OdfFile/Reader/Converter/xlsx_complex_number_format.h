@@ -37,10 +37,10 @@ public:
     ~complex_number_format();
     void reset();
 
-    // получить результирующий формат
+    // get the resulting format
     std::wstring result_value();
 
-    // добавить условный формат числа
+    // add conditional number format
     void add_format(std::wstring const & condition, std::wstring const & format);
 
 	std::wstring name;

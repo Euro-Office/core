@@ -622,15 +622,15 @@ void text_list_level_style_number::pptx_convert(oox::pptx_conversion_context & C
 	
 	CP_XML_WRITER(strm)
 	{ 	
-		if (style_text_properties * textProperties = dynamic_cast<style_text_properties *>(text_properties_.get()))///эти свойства относятся 
-			// к отрисовки значков !!! а не самого текста
+		if (style_text_properties * textProperties = dynamic_cast<style_text_properties *>(text_properties_.get()))///these properties refer
+			// to drawing icons!!! not the text itself
 	    {
 	        textProperties->content_.pptx_convert_as_list(Context);
 			strm << Context.get_text_context().get_styles_context().text_style().str();
 	    }
 		if (false == num_format.empty())
 		{
-			CP_XML_NODE(L"a:buAutoNum")//ms козлы !! для них оказыается ВАЖЕН порядок .. если записать это поле первым, а потом свойства - нихера в мс2010 не отображается верно !!!
+			CP_XML_NODE(L"a:buAutoNum")//MS Office is picky about order: if this field is written before the properties, MS 2010 does not display it correctly.
 			{
 				CP_XML_ATTR(L"startAt", number_attr_.text_start_value_);
 				CP_XML_ATTR(L"type", num_format);
@@ -656,20 +656,12 @@ std::wstring convert_bullet_char(std::wstring c)
 
 	for(size_t i = 0; i < c.size(); ++i)
 	{
+		// Symbol bullets (check marks, ballot boxes, arrows, circles) keep their Unicode code point. Mapping them to the
+		// Symbol/Wingdings private-use codes is only right together with a Symbol or Wingdings font, and the level keeps
+		// the font of the ODF list style, so the mapped code drew another glyph or none.
 		switch (c[i])
 		{
-		case L'\xE00C': res += L'\xF075';/*L'\xF0A8'*/; break;
-		case L'\xE00A': res += L'\xF0A7'; break;
-		case L'\x2611': res += L'\xF0FE'; break;
 		case L'\x2022': res += L'\x2022'; res += L'\x20'; break;
-		case L'\x25CF': res += L'\xF0B7'; break;
-		case L'\x27A2': res += L'\xF0D8'; break;
-		case L'\x2714': res += L'\xF0FC'; break;
-			/*case L'\x25A0': res = L'\xF0A7'; break; */
-		case L'\x25CB': res += L'\x006F'; break;
-		case L'\x2794': res += L'\xF0DA'; break;
-		case L'\x2717': res += L'\xF04F'; break;
-		case L'\x2013': res += L'\x2013'; break;
 		default:
 			res += c[i];
 			break;
@@ -797,8 +789,8 @@ void text_list_level_style_bullet::pptx_convert(oox::pptx_conversion_context & C
 		style_text_properties * textProperties = dynamic_cast<style_text_properties *>(text_properties_.get());
 		std::wstring bullet = bullet_attr_.text_bullet_char_.get_value_or(L"\x2022");
 	    
-		if (textProperties)///эти свойства относятся 
-			// к отрисовки значков !!! а не самого текста
+		if (textProperties)///these properties refer
+			// to drawing icons!!! not the text itself
 	    {
 	        textProperties->content_.pptx_convert_as_list(Context);
 			strm << Context.get_text_context().get_styles_context().text_style().str();
@@ -956,8 +948,8 @@ void text_list_level_style_image::pptx_convert(oox::pptx_conversion_context & Co
 			style_text_properties* textProperties = dynamic_cast<style_text_properties*>(text_properties_.get());
 			wchar_t bullet = L'\x2022';
 
-			if (textProperties)///эти свойства относятся 
-				// к отрисовки значков !!! а не самого текста
+			if (textProperties)///these properties refer
+				// to drawing icons!!! not the text itself
 			{
 				textProperties->content_.pptx_convert_as_list(Context);
 				strm << Context.get_text_context().get_styles_context().text_style().str();

@@ -32,17 +32,6 @@ window['AscCommon'].spellcheckGetLanguages = window['AscCommon']['spellcheckGetL
 
 function CSpellchecker(settings)
 {
-	this.useWasm = false;
-	var webAsmObj = window["WebAssembly"];
-	if (typeof webAsmObj === "object")
-	{
-		if (typeof webAsmObj["Memory"] === "function")
-		{
-			if ((typeof webAsmObj["instantiateStreaming"] === "function") || (typeof webAsmObj["instantiate"] === "function"))
-				this.useWasm = true;
-		}
-	}
-
 	this.enginePath = "./spell/";
 	if (settings && settings.enginePath)
 	{
@@ -96,8 +85,7 @@ function CSpellchecker(settings)
 	{
 		this.stop();
 
-		var worker_src = this.useWasm ? "spell.js" : "spell_ie.js";
-		worker_src = this.enginePath + worker_src;
+		var worker_src = this.enginePath + "spell.js";
 
 		if (this.isUseSharedWorker)
 		{
@@ -124,22 +112,14 @@ function CSpellchecker(settings)
 		{
 			this.worker = new Worker(worker_src);
 
-			var _t = this;
-
-			// для "обычного воркера" - обрабатываем ошибку, чтобы он не влиял на работу редактора
-			// и если ошибка из wasm модуля - то просто попробуем js версию - и рестартанем
+			// keep worker errors away from the editor
 			this.worker.onerror = function(e) {
 				if (e.preventDefault)
 					e.preventDefault();
 				if (e.stopPropagation)
 					e.stopPropagation();
-				
-				if (_t.useWasm)
-				{
-					_t.useWasm = false;
-					_t.restart();
-					_t.restartCallback && _t.restartCallback();
-				}
+
+				console.error("spellcheck worker error", e.message);
 			};
 
 			this._start(this.worker);

@@ -21,7 +21,7 @@ namespace NSGraphics
 		if (!m_pAppImage)
 			return;
 
-		if (NULL == m_pAppImage->GetFonts())
+		if (nullptr == m_pAppImage->GetFonts())
 		{
 			NSFonts::IApplicationFonts* pFonts = NSFonts::NSApplication::Create();
 			std::wstring sFontsDir = m_pAppImage->GetFontsDirectory();
@@ -42,6 +42,8 @@ namespace NSGraphics
 
 		m_pRenderer = NSGraphics::Create();
 		m_pRenderer->SetFontManager(pManager);
+		if (m_pAppImage->GetImageCache())
+			m_pRenderer->SetImageCache(m_pAppImage->GetImageCache());
 		RELEASEINTERFACE(pManager);
 
 		int nRasterW = (int)width_px;
@@ -53,8 +55,8 @@ namespace NSGraphics
 		if (nMax > nLimit)
 		{
 			double dKoef = (double)nLimit / nMax;
-			nRasterW = (int)(0.5 + dKoef * nRasterW);
-			nRasterH = (int)(0.5 + dKoef * nRasterH);
+			nRasterW = static_cast<int>(std::lround(dKoef * nRasterW));
+			nRasterH = static_cast<int>(std::lround(dKoef * nRasterH));
 
 			if (nRasterW < 1) nRasterW = 0;
 			if (nRasterH < 1) nRasterH = 0;
@@ -63,7 +65,7 @@ namespace NSGraphics
 		int nExistW = 0;
 		int nExistH = 0;
 		BYTE* pData =  m_pAppImage->GetBits(nExistW, nExistH);
-		if (pData != NULL)
+		if (pData != nullptr)
 		{
 			nRasterW = nExistW;
 			nRasterH = nExistH;
@@ -75,7 +77,7 @@ namespace NSGraphics
 
 		unsigned int back = 0xffffff;
 		unsigned int* pData32 = (unsigned int*)pData;
-		unsigned int* pData32End = pData32 + nRasterW * nRasterH;
+		unsigned int* pData32End = pData32 + static_cast<ptrdiff_t>(nRasterW) * nRasterH;
 		while (pData32 < pData32End)
 			*pData32++ = back;
 
@@ -1171,7 +1173,7 @@ namespace NSGraphics
 #endif
 		std::wstring sFormat = (type.length() > 6) ? type.substr(6) : type;
 
-		BYTE* pDataImage = NULL;
+		BYTE* pDataImage = nullptr;
 		int nDataImageSize = 0;
 		int nImageFormat = _CXIMAGE_FORMAT_PNG;
 		if ((L"jpg" == sFormat) ||(L"jpeg" == sFormat))
@@ -1180,7 +1182,7 @@ namespace NSGraphics
 		std::string sRes = "";
 		if (m_oFrame.Encode(pDataImage, nDataImageSize, nImageFormat))
 		{
-			char* cData64 = NULL;
+			char* cData64 = nullptr;
 			int nData64Dst = 0;
 			if (NSFile::CBase64Converter::Encode(pDataImage, nDataImageSize, cData64, nData64Dst, NSBase64::B64_BASE64_FLAG_NOCRLF))
 			{
@@ -1260,7 +1262,10 @@ namespace NSGraphics
 
 			std::wstring sName = strImage.substr(0, strImage.rfind(L'.') + 1);
 			std::wstring sExt = src.substr(src.rfind(L'.') + 1);
-			if (sExt == L"svg")
+			// The raster of a metafile is kept next to it: converting it again for each draw is slow
+			if (sExt == L"svg" && NSFile::CFileBinary::Exists(sName + L"texture.png"))
+				sName += L"texture.png";
+			else if (sExt == L"svg")
 			{
 				if (NSFile::CFileBinary::Exists(sName + L"wmf") && src.find(L"display") == 0)
 					strImage = sName + L"wmf";
@@ -1273,7 +1278,7 @@ namespace NSGraphics
 				double x = 0, y = 0, w = 0, h = 0;
 				pMetafile->GetBounds(&x, &y, &w, &h);
 
-				sName += L"png";
+				sName += L"texture.png";
 				MetaFile::ConvertToRasterMaxSize(pMetafile, sName.c_str(), 4, 1000);
 
 				RELEASEOBJECT(pMetafile);
@@ -1304,6 +1309,9 @@ namespace NSGraphics
 	}
 	void CGraphics::put_BrushGradient(LONG* pColors, double* pPositions, size_t nCount, double x0, double y0, double x1, double y1, double r0, double r1)
 	{
+#ifndef ENABLE_GR_LOGS
+		(void)r1;
+#endif
 #ifdef ENABLE_GR_LOGS
 		std::cout << "put_BrushGradient " << nCount << "  " << x0 << "  " << y0 << "  " << x1 << "  " << y1 << "  " << r0 << "  " << r1 << std::endl;
 		for (size_t i = 0; i < nCount; i++)
@@ -1312,7 +1320,7 @@ namespace NSGraphics
 #endif
 		if (std::isnan(r0))
 		{
-			// линейный
+			// linear
 			double dAngle = 0;
 			if (fabs(x1 - x0) >= FLT_EPSILON || fabs(y1 - y0) >= FLT_EPSILON)
 				dAngle = atan2(y1 - y0, x1 - x0) * 180 / M_PI;
@@ -1322,7 +1330,7 @@ namespace NSGraphics
 		}
 		else
 		{
-			// радиальный
+			// radial
 			m_pRenderer->put_BrushType(c_BrushTypePathGradient2);
 			m_pRenderer->put_BrushGradientColors(pColors, pPositions, nCount);
 		}

@@ -31,7 +31,7 @@ OOXFontSchemeReader::OOXFontSchemeReader(PPTX::nsTheme::FontScheme * ooxFontSche
 }
 bool OOXFontSchemeReader::Parse( ReaderParameter oParam )
 {
-	if (m_ooxFontScheme == NULL) return false;
+	if (m_ooxFontScheme == nullptr) return false;
 
 	oParam.oReader->m_smajorAscii = m_ooxFontScheme->majorFont.latin.typeface;
 	oParam.oReader->m_smajorHAnsi = m_ooxFontScheme->majorFont.latin.typeface;

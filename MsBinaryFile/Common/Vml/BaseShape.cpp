@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "BaseShape.h"
 
@@ -96,7 +95,7 @@ bool CBaseShape::SetType(NSBaseShape::ClassType ClassType, int ShapeType)
 }
 bool CBaseShape::SetProperties(CBaseShape* Shape)
 {
-	if( Shape == NULL)
+	if( Shape == nullptr)
 		return false;
 
 	m_oPath		= Shape->m_oPath;
@@ -141,7 +140,7 @@ bool CBaseShape::SetProperties(CBaseShape* Shape)
 }
 bool CBaseShape::SetToDublicate(CBaseShape* Shape)
 {
-	if( Shape == NULL)
+	if( Shape == nullptr)
 		return false;
 
 	Shape->m_oPath		= m_oPath;

@@ -66,30 +66,30 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
 	CDocument::CDocument()
 	{
-		m_pCatalog          = NULL;
-		m_pOutlines         = NULL;
-		m_pXref             = NULL;
-		m_pLastXref         = NULL;
-		m_pPageTree         = NULL;
-		m_pCurPage          = NULL;
+		m_pCatalog          = nullptr;
+		m_pOutlines         = nullptr;
+		m_pXref             = nullptr;
+		m_pLastXref         = nullptr;
+		m_pPageTree         = nullptr;
+		m_pCurPage          = nullptr;
 		m_nCurPageNum       = -1;
-		m_pCurImage         = NULL;
-		m_pInfo             = NULL;
-		m_pTrailer          = NULL;
-		m_pResources        = NULL;
-		m_pMetaData         = NULL;
+		m_pCurImage         = nullptr;
+		m_pInfo             = nullptr;
+		m_pTrailer          = nullptr;
+		m_pResources        = nullptr;
+		m_pMetaData         = nullptr;
 		m_bEncrypt          = false;
-		m_pEncryptDict      = NULL;
+		m_pEncryptDict      = nullptr;
 		m_unFormFields      = 0;
 		m_unCompressMode    = COMP_NONE;
 		memset((void*)m_sTTFontTag, 0x00, 8);
-		m_pJbig2            = NULL;
-		m_pDefaultCheckBoxFont = NULL;
-		m_pTransparencyGroup = NULL;
-		m_pFreeTypeLibrary  = NULL;
+		m_pJbig2            = nullptr;
+		m_pDefaultCheckBoxFont = nullptr;
+		m_pTransparencyGroup = nullptr;
+		m_pFreeTypeLibrary  = nullptr;
 		m_bPDFAConformance	= false;
-		m_pAcroForm         = NULL;
-		m_pFieldsResources  = NULL;
+		m_pAcroForm         = nullptr;
+		m_pFieldsResources  = nullptr;
 	}
 	CDocument::~CDocument()
 	{
@@ -167,35 +167,35 @@ namespace PdfWriter
 		m_vMetaOForms.clear();
 		m_vImages.clear();
 
-		m_pTransparencyGroup = NULL;
+		m_pTransparencyGroup = nullptr;
 
 		return true;
 	}
     void CDocument::Close()
 	{
-		// Все объекты удаляются внутри CXref
+		// All objects are deleted inside CXref
 		RELEASEOBJECT(m_pXref);
 
-		m_pLastXref         = NULL;
-		m_pTrailer          = NULL;
-		m_pResources        = NULL;
-		m_pCatalog          = NULL;
-		m_pOutlines         = NULL;
-		m_pPageTree         = NULL;
-		m_pCurPage          = NULL;
+		m_pLastXref         = nullptr;
+		m_pTrailer          = nullptr;
+		m_pResources        = nullptr;
+		m_pCatalog          = nullptr;
+		m_pOutlines         = nullptr;
+		m_pPageTree         = nullptr;
+		m_pCurPage          = nullptr;
 		m_nCurPageNum       = 0;
-		m_pCurImage         = NULL;
+		m_pCurImage         = nullptr;
 		m_unFormFields      = 0;
 		m_bEncrypt          = false;
-		m_pEncryptDict      = NULL;
-		m_pInfo             = NULL;
+		m_pEncryptDict      = nullptr;
+		m_pInfo             = nullptr;
 		m_unCompressMode    = COMP_NONE;
-		m_pJbig2            = NULL;
-		m_pTransparencyGroup= NULL;
-		m_pAcroForm         = NULL;
-		m_pFieldsResources  = NULL;
+		m_pJbig2            = nullptr;
+		m_pTransparencyGroup= nullptr;
+		m_pAcroForm         = nullptr;
+		m_pFieldsResources  = nullptr;
 		memset((void*)m_sTTFontTag, 0x00, 8);
-		m_pDefaultCheckBoxFont = NULL;
+		m_pDefaultCheckBoxFont = nullptr;
 
 		m_vExtGrStates.clear();
 		m_vStrokeAlpha.clear();
@@ -210,7 +210,7 @@ namespace PdfWriter
 		if (m_pFreeTypeLibrary)
 		{
 			FT_Done_FreeType(m_pFreeTypeLibrary);
-			m_pFreeTypeLibrary = NULL;
+			m_pFreeTypeLibrary = nullptr;
 		}
 	}
 	bool CDocument::SaveToFile(const std::wstring& wsPath)
@@ -250,7 +250,7 @@ namespace PdfWriter
 	{
 		m_pCatalog->AddMetadata(m_pXref, m_pInfo);
 
-		// Пишем заголовок
+		// Writing the header
 		if (IsPDFA())
 			pStream->WriteStr(c_sPdfAHeader);
 		else
@@ -262,12 +262,12 @@ namespace PdfWriter
 			pStream->WriteStr(sDocumentID.c_str());
 		}
 
-		// Добавляем в Trailer необходимые элементы 
+		// Adding the necessary elements to the Trailer
 		m_pTrailer->Add("Root", m_pCatalog);
 		m_pTrailer->Add("Info", m_pInfo);
 
-		// Шифруем документ, если это необходимо
-		CEncrypt* pEncrypt = NULL;
+		// Encrypt the document if necessary
+		CEncrypt* pEncrypt = nullptr;
 		if (m_bEncrypt)
 		{
 			pEncrypt = m_pEncryptDict->GetEncrypt();
@@ -284,7 +284,7 @@ namespace PdfWriter
 			return false;
 		m_pTrailer = pTrailer;
 
-		CEncrypt* pEncrypt = NULL;
+		CEncrypt* pEncrypt = nullptr;
 		if (!wsOwnerPassword.empty())
 		{
 			m_pEncryptDict = new CEncryptDict(_pXref);
@@ -413,19 +413,19 @@ namespace PdfWriter
 	CPage* CDocument::GetPage(const unsigned int &unPage)
 	{
 		if (unPage >= m_pPageTree->GetCount())
-			return NULL;
+			return nullptr;
 
 		return m_pPageTree->GetPage(unPage);
 	}
 	CObjectBase* CDocument::GetPageObj(const unsigned int& unPage)
 	{
 		if (unPage >= m_pPageTree->GetCount())
-			return NULL;
+			return nullptr;
 		return m_pPageTree->GetObj(unPage);
 	}
 	CPage* CDocument::GetEditPage(const unsigned int& unPage)
 	{
-		CPage* pRes = NULL;
+		CPage* pRes = nullptr;
 		std::map<int, CPage*>::iterator p = m_mEditPages.find(unPage);
 		if (p != m_mEditPages.end())
 			pRes = p->second;
@@ -514,7 +514,7 @@ namespace PdfWriter
 		if (!m_pMetaData)
 			return false;
 
-		CBinaryObject* sID = NULL;
+		CBinaryObject* sID = nullptr;
 		CArrayObject* pID = (CArrayObject*)m_pTrailer->Get("ID");
 		if (!pID)
 		{
@@ -540,7 +540,7 @@ namespace PdfWriter
 	{
 		CDictObject* pLabel = new CDictObject();
 		if (!pLabel)
-			return NULL;
+			return nullptr;
 
         eStyle = std::min(std::max(eStyle, pagenumstyle_Min), pagenumstyle_Max);
 		switch (eStyle)
@@ -570,7 +570,7 @@ namespace PdfWriter
 				if (m_pOutlines)
 					m_pCatalog->Add("Outlines", m_pOutlines);
 				else
-					return NULL;
+					return nullptr;
 			}
 
 			pParent = m_pOutlines;
@@ -582,11 +582,11 @@ namespace PdfWriter
 	{
 		if (pPage)
 			return new CDestination(pPage, m_pXref, bInline);
-		return NULL;
+		return nullptr;
 	}
     CExtGrState* CDocument::FindExtGrState(double dAlphaStroke, double dAlphaFill, EBlendMode eMode, int nStrokeAdjustment)
 	{
-		CExtGrState* pExtGrState = NULL;
+		CExtGrState* pExtGrState = nullptr;
 		for (unsigned int unIndex = 0, unCount = m_vExtGrStates.size(); unIndex < unCount; unIndex++)
 		{
 			pExtGrState = m_vExtGrStates.at(unIndex);
@@ -606,7 +606,7 @@ namespace PdfWriter
 			return pExtGrState;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 	void CDocument::AddExtGState(CExtGrState* pState)
 	{
@@ -620,7 +620,7 @@ namespace PdfWriter
 		{
 			pExtGrState = new CExtGrState(m_pXref);
 			if (!pExtGrState)
-				return NULL;
+				return nullptr;
 
 			if (-1 != dAlphaStroke)
 				pExtGrState->SetAlphaStroke(dAlphaStroke);
@@ -641,7 +641,7 @@ namespace PdfWriter
 	}
     CExtGrState* CDocument::GetStrokeAlpha(double dAlpha)
 	{
-		CExtGrState* pExtGrState = NULL;
+		CExtGrState* pExtGrState = nullptr;
 		for (unsigned int unIndex = 0, unCount = m_vStrokeAlpha.size(); unIndex < unCount; unIndex++)
 		{
 			pExtGrState = m_vStrokeAlpha.at(unIndex);
@@ -652,7 +652,7 @@ namespace PdfWriter
 
 		pExtGrState = new CExtGrState(m_pXref);
 		if (!pExtGrState)
-			return NULL;
+			return nullptr;
 
 		pExtGrState->SetAlphaStroke(dAlpha);
 
@@ -661,7 +661,7 @@ namespace PdfWriter
 	}
     CExtGrState* CDocument::GetFillAlpha(double dAlpha)
 	{
-		CExtGrState* pExtGrState = NULL;
+		CExtGrState* pExtGrState = nullptr;
 		for (unsigned int unIndex = 0, unCount = m_vFillAlpha.size(); unIndex < unCount; unIndex++)
 		{
 			pExtGrState = m_vFillAlpha.at(unIndex);
@@ -672,7 +672,7 @@ namespace PdfWriter
 
 		pExtGrState = new CExtGrState(m_pXref);
 		if (!pExtGrState)
-			return NULL;
+			return nullptr;
 
 		pExtGrState->SetAlphaFill(dAlpha);
 
@@ -681,7 +681,7 @@ namespace PdfWriter
 	}
 	CAnnotation* CDocument::CreateAnnot(BYTE m_nType)
 	{
-		CAnnotation* pAnnot = NULL;
+		CAnnotation* pAnnot = nullptr;
 		if (m_nType == 0)
 		{
 			pAnnot = new CTextAnnotation(m_pXref);
@@ -716,7 +716,7 @@ namespace PdfWriter
 		if (m_nType >= 26)
 		{
 			if (!CheckAcroForm())
-				return NULL;
+				return nullptr;
 
 			switch (m_nType)
 			{
@@ -795,7 +795,7 @@ namespace PdfWriter
 		case 14: return new CActionJavaScript(m_pXref);
 		}
 
-		return NULL;
+		return nullptr;
 	}
 	void CDocument::AddAnnotation(const int& nID, CAnnotation* pAnnot)
 	{
@@ -822,7 +822,7 @@ namespace PdfWriter
 	CXObject* CDocument::CreateForm(CImageDict* pImage, const std::string& sName)
 	{
 		if (!pImage)
-			return NULL;
+			return nullptr;
 
 		std::string sFrmName = "FRM" + sName;
 		std::string sImgName = "Img" + sName;
@@ -893,7 +893,7 @@ namespace PdfWriter
 			if (wsFontPath == oInfo.wsPath && unIndex == oInfo.unIndex)
 				return (CFont14*)oInfo.pFont;
 		}
-		return NULL;
+		return nullptr;
 	}
 	CFontEmbedded* CDocument::CreateFontEmbedded(const std::wstring& wsFontPath, unsigned int unIndex, const std::string& sFontKey, EFontType nType, CObjectBase* pObj,
 												 const std::map<unsigned int, unsigned int>& mCodeToWidth, const std::map<unsigned int, unsigned int>& mCodeToUnicode, const std::map<unsigned int, unsigned int>& mCodeToGID)
@@ -904,7 +904,7 @@ namespace PdfWriter
 			pFont->UpdateKey(sFontKey);
 			return pFont;
 		}
-		pFont = new CFontEmbedded(NULL, this);
+		pFont = new CFontEmbedded(nullptr, this);
 		pFont->LoadFont(sFontKey, nType, pObj, mCodeToWidth, mCodeToUnicode, mCodeToGID);
 		m_vFontsEmbedded.push_back(TFontInfo(wsFontPath, unIndex, pFont));
 		return pFont;
@@ -917,7 +917,7 @@ namespace PdfWriter
 			if (wsFontPath == oInfo.wsPath && unIndex == oInfo.unIndex)
 				return (CFontEmbedded*)oInfo.pFont;
 		}
-		return NULL;
+		return nullptr;
 	}
 	CFontCidTrueType* CDocument::CreateCidTrueTypeFont(const std::wstring& wsFontPath, unsigned int unIndex)
 	{
@@ -927,13 +927,13 @@ namespace PdfWriter
 
 		CFontFileTrueType* pFontTT = CFontFileTrueType::LoadFromFile(wsFontPath, unIndex);
 		if (!pFontTT)
-			return NULL;
+			return nullptr;
 
 		pFont = new CFontCidTrueType(m_pXref, this, wsFontPath, unIndex, pFontTT);
 		if (!pFont)
-			return NULL;
+			return nullptr;
 
-		// 0 GID всегда используется для .notdef символа, не используем данный код для настоящих символов
+		// 0 GID is always used for .notdef symbol, don't use this code for real symbols
 		unsigned int unUnicode = 0;
 		pFont->EncodeGID(0, &unUnicode, 1);
 
@@ -949,7 +949,7 @@ namespace PdfWriter
 				return (CFontCidTrueType*)oInfo.pFont;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 	CFontTrueType* CDocument::CreateTrueTypeFont(const std::wstring& wsFontPath, unsigned int unIndex)
 	{
@@ -962,7 +962,7 @@ namespace PdfWriter
 
 		CFontTrueType* pFont = new CFontTrueType(m_pXref, this, wsFontPath, unIndex);
 		if (!pFont)
-			return NULL;
+			return nullptr;
 
 		m_vTTFonts.push_back(TFontInfo(wsFontPath, unIndex, pFont));
 		return pFont;
@@ -978,7 +978,7 @@ namespace PdfWriter
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 	CFont14* CDocument::GetDefaultCheckboxFont()
 	{
@@ -1046,9 +1046,9 @@ namespace PdfWriter
 	{
 		if (m_pJbig2 && m_pJbig2->GetImagesCount() > 4)
 		{
-			// Удалять не надо, т.к. объект удалится в CXref
+			// There is no need to delete, because the object will be deleted in CXref
 			m_pJbig2->FlushStreams();
-			m_pJbig2 = NULL;
+			m_pJbig2 = nullptr;
 		}
 
 		if (!m_pJbig2)
@@ -1058,12 +1058,12 @@ namespace PdfWriter
 	}
     CShading* CDocument::CreateShading(CPage* pPage, double *pPattern, bool bAxial, unsigned char* pColors, unsigned char* pAlphas, double* pPoints, int nCount, CExtGrState*& pExtGrState)
 	{
-		pExtGrState = NULL;
+		pExtGrState = nullptr;
 
 		bool bNeedAlpha = false;
 		unsigned char* pA = new unsigned char[3 * nCount];
 		if (!pA)
-			return NULL;
+			return nullptr;
 
 		for (int nIndex = 0; nIndex < nCount; nIndex++)
 		{
@@ -1084,9 +1084,9 @@ namespace PdfWriter
 				return CreateRadialShading(pPattern[0], pPattern[1], pPattern[2], pPattern[3], pPattern[4], pPattern[5], pColors, pPoints, nCount);
 		}
 
-		// Создаем 2 shading-объекта, один цветной RGB, второй серый со значениями альфа-канала
-		CShading* pColorShading = NULL;
-		CShading* pAlphaShading = NULL;
+		// Create 2 shading objects, one RGB color, the second gray with alpha channel values
+		CShading* pColorShading = nullptr;
+		CShading* pAlphaShading = nullptr;
 
 		if (bAxial)
 		{
@@ -1115,7 +1115,7 @@ namespace PdfWriter
 		double dWidth  = pPage->GetWidth();
 		double dHeight = pPage->GetHeight();
 
-		// Создаем графический объект, который будет альфа-маской
+		// Create a graphic object that will be an alpha mask
 		CDictObject* pXObject = new CDictObject(m_pXref);
 		pXObject->Add("Type", "XObject");
 		pXObject->Add("Subtype", "Form");
@@ -1135,7 +1135,7 @@ namespace PdfWriter
 		pStream->WriteReal(dHeight);
 		pStream->WriteStr(" re\012W\012\n\012/S1 sh\012");
 
-		// Создаем обект-маску для графического состояние
+		// Create a mask object for the graphic state
 		CDictObject* pMask = new CDictObject();
 		m_pXref->Add(pMask);
 		pMask->Add("Type", "Mask");
@@ -1144,7 +1144,7 @@ namespace PdfWriter
 
 		if (!IsPDFA())
 		{
-			// Создаем ExtGState объект, в который мы запишем альфа-маску
+			// Create an ExtGState object into which we will write the alpha mask
 			pExtGrState = new CExtGrState(m_pXref);
 			pExtGrState->Add("BM", "Normal");
 			pExtGrState->Add("ca", 1);
@@ -1167,7 +1167,7 @@ namespace PdfWriter
 
 		CAxialShading* pShading = new CAxialShading(m_pXref, dX0, dY0, dX1, dY1);
 		if (!pShading)
-			return NULL;
+			return nullptr;
 
 		pShading->SetRgbColors(pColors, pPoints, nCount);
 		pShading->SetExtend(true, true);
@@ -1190,7 +1190,7 @@ namespace PdfWriter
 
 		CRadialShading* pShading = new CRadialShading(m_pXref, dX0, dY0, dR0, dX1, dY1, dR1);
 		if (!pShading)
-			return NULL;
+			return nullptr;
 
 		pShading->SetRgbColors(pColors, pPoints, nCount);
 		pShading->SetExtend(true, true);
@@ -1205,12 +1205,12 @@ namespace PdfWriter
 	}
 	CImageTilePattern*CDocument::CreateHatchPattern(double dW, double dH, const BYTE& nR1, const BYTE& nG1, const BYTE& nB1, const BYTE& nAlpha1, const BYTE& nR2, const BYTE& nG2, const BYTE& nB2, const BYTE& nAlpha2, const std::wstring& wsHatch)
 	{
-		// TODO: Надо бы сделать мап, чтобы не создавать одинаковых паттернов
+		// TODO: It would be necessary to make a map so as not to create identical patterns
 
 		CImageDict* pImage = CreateImage();
 		BYTE* pBuffer = new BYTE[3 * HATCH_TX_SIZE * HATCH_TX_SIZE];
 		if (!pBuffer)
-			return NULL;
+			return nullptr;
 
 		TColor oColor1(nR1, nG1, nB1);
 		TColor oColor2(nR2, nG2, nB2);
@@ -1229,7 +1229,7 @@ namespace PdfWriter
 			}
 		}
 
-		return CreateImageTilePattern(dW, dH, pImage, NULL, imagetilepatterntype_Default);
+		return CreateImageTilePattern(dW, dH, pImage, nullptr, imagetilepatterntype_Default);
 	}
     CShading* CDocument::CreateAxialShading(CPage* pPage, double dX0, double dY0, double dX1, double dY1, unsigned char* pColors, unsigned char* pAlphas, double* pPoints, int nCount, CExtGrState*& pExtGrState)
 	{
@@ -1246,7 +1246,7 @@ namespace PdfWriter
 		if (!m_pFieldsResources)
 		{
 			if (!CheckAcroForm())
-				return NULL;
+				return nullptr;
 			
 			m_pFieldsResources = new CResourcesDict(m_pXref, false, true);
 			m_pAcroForm->Add("DR", m_pFieldsResources);
@@ -1257,11 +1257,11 @@ namespace PdfWriter
 	CTextField* CDocument::CreateTextField()
 	{
 		if (!CheckAcroForm())
-			return NULL;
+			return nullptr;
 
 		CTextField* pField = new CTextField(m_pXref, this);
 		if (!pField)
-			return NULL;
+			return nullptr;
 
 		CArrayObject* ppFields = (CArrayObject*)m_pAcroForm->Get("Fields");
 		ppFields->Add(pField);
@@ -1271,11 +1271,11 @@ namespace PdfWriter
 	CChoiceField* CDocument::CreateChoiceField()
 	{
 		if (!CheckAcroForm())
-			return NULL;
+			return nullptr;
 
 		CChoiceField* pField = new CChoiceField(m_pXref, this);
 		if (!pField)
-			return NULL;
+			return nullptr;
 
 		CArrayObject* ppFields = (CArrayObject*)m_pAcroForm->Get("Fields");
 		ppFields->Add(pField);
@@ -1285,11 +1285,11 @@ namespace PdfWriter
 	CSignatureField* CDocument::CreateSignatureField()
 	{
 		if (!CheckAcroForm())
-			return NULL;
+			return nullptr;
 
 		CSignatureField* pField = new CSignatureField(m_pXref, this);
 		if (!pField)
-			return NULL;
+			return nullptr;
 
 		CArrayObject* ppFields = (CArrayObject*)m_pAcroForm->Get("Fields");
 		ppFields->Add(pField);
@@ -1299,11 +1299,11 @@ namespace PdfWriter
 	CDateTimeField* CDocument::CreateDateTimeField()
 	{
 		if (!CheckAcroForm())
-			return NULL;
+			return nullptr;
 		
 		CDateTimeField* pField = new CDateTimeField(m_pXref, this);
 		if (!pField)
-			return NULL;
+			return nullptr;
 		
 		CArrayObject* ppFields = (CArrayObject*)m_pAcroForm->Get("Fields");
 		ppFields->Add(pField);
@@ -1313,11 +1313,11 @@ namespace PdfWriter
 	CCheckBoxField* CDocument::CreateCheckBoxField()
 	{
 		if (!CheckAcroForm())
-			return NULL;
+			return nullptr;
 
 		CCheckBoxField* pField = new CCheckBoxField(m_pXref, this);
 		if (!pField)
-			return NULL;
+			return nullptr;
 
 		CArrayObject* ppFields = (CArrayObject*)m_pAcroForm->Get("Fields");
 		ppFields->Add(pField);
@@ -1330,11 +1330,11 @@ namespace PdfWriter
 		if (!pField)
 		{
 			if (!CheckAcroForm())
-				return NULL;
+				return nullptr;
 
 			pField = new CRadioGroupField(m_pXref, this);
 			if (!pField)
-				return NULL;
+				return nullptr;
 
 			m_vRadioGroups.push_back(pField);
 
@@ -1347,7 +1347,7 @@ namespace PdfWriter
 	}
 	CRadioGroupField* CDocument::FindRadioGroupField(const std::wstring& wsGroupName)
 	{
-		CRadioGroupField* pField = NULL;
+		CRadioGroupField* pField = nullptr;
 		for (unsigned int unIndex = 0, unCount = m_vRadioGroups.size(); unIndex < unCount; ++unIndex)
 		{
 			pField = m_vRadioGroups.at(unIndex);
@@ -1356,16 +1356,16 @@ namespace PdfWriter
 				return pField;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 	CPictureField* CDocument::CreatePictureField()
 	{
 		if (!CheckAcroForm())
-			return NULL;
+			return nullptr;
 
 		CPictureField* pField = new CPictureField(m_pXref, this);
 		if (!pField)
-			return NULL;
+			return nullptr;
 
 		CArrayObject* ppFields = (CArrayObject*)m_pAcroForm->Get("Fields");
 		ppFields->Add(pField);
@@ -1391,7 +1391,7 @@ namespace PdfWriter
 				return m_vImages[i].pImage;
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 	void CDocument::AddImage(const std::wstring& wsImagePath, BYTE nAlpha, CImageDict* pImage)
 	{
@@ -1413,7 +1413,7 @@ namespace PdfWriter
 		if (it2 != m_mEditPages.end())
 			m_mEditPages.erase(it2);
 		if (m_pCurPage == pObj)
-			m_pCurPage = NULL;
+			m_pCurPage = nullptr;
 		m_pXref->Remove(pObj);
 	}
 	bool CDocument::CheckFieldName(CFieldBase* pField, const std::string& sName)
@@ -1691,14 +1691,14 @@ namespace PdfWriter
 		std::map<int, CAnnotation*>::iterator p = m_mAnnotations.find(nID);
 		if (p != m_mAnnotations.end())
 			return p->second;
-		return NULL;
+		return nullptr;
 	}
 	CDictObject* CDocument::GetParent(int nID)
 	{
 		std::map<int, CDictObject*>::iterator p = m_mParents.find(nID);
 		if (p != m_mParents.end())
 			return p->second;
-		return NULL;
+		return nullptr;
 	}
 	std::string CDocument::SetParentKids(int nParentID)
 	{
@@ -1794,14 +1794,14 @@ namespace PdfWriter
 	CPage* CDocument::AddPage(int nPageIndex, CPage* _pNewPage)
 	{
 		if (!m_pPageTree)
-			return NULL;
+			return nullptr;
 
-		CPage* pNewPage = _pNewPage ? _pNewPage : new CPage(m_pXref, NULL, this);
+		CPage* pNewPage = _pNewPage ? _pNewPage : new CPage(m_pXref, nullptr, this);
 		if (!pNewPage)
-			return NULL;
+			return nullptr;
 		bool bRes = m_pPageTree->InsertPage(nPageIndex, pNewPage);
 		if (!bRes)
-			return NULL;
+			return nullptr;
 
 		if (!_pNewPage)
 			pNewPage->SetFilter(STREAM_FILTER_FLATE_DECODE);
@@ -1894,7 +1894,7 @@ namespace PdfWriter
 		pXref->SetPrev(m_pLastXref);
 		m_pLastXref = pXref;
 
-		// Вторая часть идентификатора должна обновляться
+		// The second part of the identifier must be updated
 		CObjectBase* pID = m_pTrailer->Get("ID");
 		if ((pID && pID->GetType() == object_type_ARRAY) || !m_vMetaOForms.empty())
 		{
@@ -1920,11 +1920,11 @@ namespace PdfWriter
 				m_vMetaOForms[i]->Add("ID", new CBinaryObject(arrId, 16));
 		}
 
-		CEncrypt* pEncrypt = NULL;
+		CEncrypt* pEncrypt = nullptr;
 		if (m_bEncrypt)
 			pEncrypt = m_pEncryptDict->GetEncrypt();
 
-		// Если m_pTrailer поток перекрестных ссылок, то при дозаписи тоже должен быть поток
+		// If m_pTrailer is a stream of cross-references, then the appended trailer should also be a stream
 		m_pTrailer->Remove("XRefStm");
 		bool bNeedStreamXRef = false;
 		pStream->WriteChar('\n');
@@ -1960,8 +1960,8 @@ namespace PdfWriter
 	}
 	bool CDocument::PrepareSignature(const std::wstring& wsPath)
 	{
-		// Сначала нужно сохранить основной файл
-		// Это должно быть сделано в AddToFile или SaveToFile ПЕРЕД вызовом этого метода
+		// First need to save the main file
+		// This must be done in AddToFile or SaveToFile BEFORE calling this method
 
 		if (m_vSignatures.empty() || wsPath.empty())
 			return false;
@@ -1971,7 +1971,7 @@ namespace PdfWriter
 		unsigned int nSizeXRef = pSI->nSizeXRef;
 		bool bNeedStreamXRef = pSI->bNeedStreamXRef;
 
-		// Создаем новый XRef для этой подписи
+		// Create a new XRef for this signature
 		CXref* pXrefBefore = m_pXref;
 		m_pXref = new CXref(this, nSizeXRef);
 		if (!m_pXref)
@@ -1983,7 +1983,7 @@ namespace PdfWriter
 			pSI->nPrevAddr = pXrefBefore->GetPrevAddr();
 		m_pXref->SetPrevAddr(pSI->nPrevAddr);
 
-		// Создаем поле подписи
+		// Create a signature field
 		CSignatureField* pField = CreateSignatureField();
 		if (!pField)
 		{
@@ -1992,7 +1992,7 @@ namespace PdfWriter
 			return false;
 		}
 
-		// Настраиваем поле
+		// Setting up the field
 		pSI->pField = pField;
 		m_pAcroForm->Add("SigFlags", 3);
 		pField->SetDate();
@@ -2010,7 +2010,7 @@ namespace PdfWriter
 		if (!pSI->wsLocation.empty())
 			pField->SetLocation(pSI->wsLocation);
 
-		// Открываем файл для дозаписи
+		// Opening the file for appending
 		CFileStream* pStream = new CFileStream();
 		if (!pStream || !pStream->OpenFile(wsPath, false))
 		{
@@ -2020,7 +2020,7 @@ namespace PdfWriter
 		}
 		pSI->nFileSizeBefore = pStream->Size();
 
-		// Вычисляем размер для Contents
+		// Calculating the size for Contents
 		unsigned int nContentsSize = 7000 + pStream->Size() / 1000 + 1000;
 		if (nContentsSize < 5000)
 			nContentsSize = 5000;
@@ -2028,7 +2028,7 @@ namespace PdfWriter
 			nContentsSize = 20000;
 		pField->GetSignatureDict()->SetContentsSize(nContentsSize);
 
-		// Записываем XRef и получаем информацию о расположении
+		// Write XRef and get location information
 		CXref* pXrefCatalog = new CXref(this, m_pCatalog->GetObjId());
 		if (pXrefCatalog)
 		{
@@ -2050,7 +2050,7 @@ namespace PdfWriter
 			CDictObject* pTrailer = pXref->GetTrailer();
 			m_pTrailer->Copy(pTrailer);
 
-			CEncrypt* pEncrypt = NULL;
+			CEncrypt* pEncrypt = nullptr;
 			if (m_pEncryptDict)
 				pEncrypt = m_pEncryptDict->GetEncrypt();
 
@@ -2060,7 +2060,7 @@ namespace PdfWriter
 
 		pField->GetSignatureDict()->WriteToStream(pStream, pStream->Size());
 
-		// Восстанавливаем XRef
+		// Restoring XRef
 		m_pXref = pXrefBefore;
 
 		delete pStream;
@@ -2078,12 +2078,12 @@ namespace PdfWriter
 		if (wsPath.empty() || !pSI->pField)
 			return false;
 
-		// Если подписание не удалось
+		// If signing fails
 		if (!pSignedData || dwDataLength == 0)
 		{
 			unsigned int nFileSizeBefore = pSI->nFileSizeBefore;
 
-			// Обрезаем файл
+			// Trimming the file
 			NSFile::CFileBinary::Truncate(wsPath, nFileSizeBefore);
 
 			CXref* pXref = pSI->pXref;
@@ -2107,7 +2107,7 @@ namespace PdfWriter
 				}
 			}
 
-			// Продолжаем со следующей подписью
+			// Continue with the next signature
 			if (!m_vSignatures.empty())
 			{
 				CXref* pPrev = pXref;
@@ -2119,7 +2119,7 @@ namespace PdfWriter
 			delete pSI;
 			delete pXref;
 
-			return true; // Успешно откатили
+			return true; // Successfully rolled back
 		}
 
 		CFileStream* pStream = new CFileStream();
@@ -2165,7 +2165,7 @@ namespace PdfWriter
 		CDictObject* pResources = (CDictObject*)m_pCurPage->GetResourcesItem();
 		if (!pResources)
 		{
-			pResources = new CResourcesDict(NULL, true, false);
+			pResources = new CResourcesDict(nullptr, true, false);
 			m_pCurPage->Add("Resources", pResources);
 		}
 		CDictObject* pProperties = (CDictObject*)pResources->Get("Properties");
@@ -2178,10 +2178,10 @@ namespace PdfWriter
 		if (pObj && pObj->GetType() != object_type_DICT)
 		{
 			pProperties->Remove("OShapes");
-			pObj = NULL;
+			pObj = nullptr;
 		}
 
-		CBinaryObject* sID = NULL;
+		CBinaryObject* sID = nullptr;
 		CArrayObject* pID = (CArrayObject*)m_pTrailer->Get("ID");
 		if (!pID)
 		{
@@ -2262,11 +2262,11 @@ namespace PdfWriter
 	}
 	CObjectBase* CDocument::FindObjByID(unsigned int nObjectId)
 	{
-		TXrefEntry* pRes = NULL;
+		TXrefEntry* pRes = nullptr;
 		if (m_pLastXref)
 			pRes = m_pLastXref->GetEntryByObjectId(nObjectId);
 		if (!pRes)
 			pRes = m_pXref->GetEntryByObjectId(nObjectId);
-		return pRes? pRes->pObject : NULL;
+		return pRes? pRes->pObject : nullptr;
 	}
 }

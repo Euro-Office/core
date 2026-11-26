@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "PptxFormula.h"
 
@@ -119,7 +118,7 @@ namespace NSGuidesOOXML
 
 		try
 		{
-			// теперь нужно просто посчитать
+			// now just count
 			switch (m_eFormulaType)
 			{
 			case ftOOXMLSum:			{ dRes = a + b - c;						break; }
@@ -151,7 +150,7 @@ namespace NSGuidesOOXML
 		if(m_lIndex < 0)
 		{
 			(*pManager->Guides)[-m_lIndex-1] = dRes;
-			// переопределим формулу
+			// redefine the formula
 					pManager->mapGuides.insert(std::pair<std::wstring, long>(m_sName, -m_lIndex-1));
 		}
 		else
@@ -240,6 +239,9 @@ namespace NSGuidesOOXML
 	}
 	CFormulaManager& CFormulaManager::operator =(const CFormulaManager& manager)
 	{
+		if (this == &manager)
+			return *this;
+
 		m_lShapeWidth = manager.m_lShapeWidth;
 		m_lShapeHeight = manager.m_lShapeWidth;
 
@@ -312,8 +314,8 @@ namespace NSGuidesOOXML
 								return;
 						}
 						*/
-		// формулы могут повторяться!!!
-		// тогда по мере расчитывания они перетирают друг друга
+		// formulas can be repeated!!!
+		// then as they calculate they overwrite each other
 		CFormula formula( -1 -(int)strGuides.size());
 		formula.m_sName = name;
 		formula.FromString(fmla);

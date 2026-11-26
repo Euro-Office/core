@@ -149,7 +149,7 @@ namespace XPS
 			m_vResourcesStack.pop_back();
 		}
 	}
-	void    CContextState::GetPathGeometry(const CWString& _wsKey, CWString& wsPathData, CWString& wsPathTransform)
+	void    CContextState::GetPathGeometry(const CWString& _wsKey, CWString& wsPathData, CWString& /*wsPathTransform*/)
 	{
 		if (_wsKey.size() < 17)
 			return;
@@ -166,10 +166,10 @@ namespace XPS
 	CBrush* CContextState::GetBrush(const CWString& _wsKey)
 	{
 		if (_wsKey.size() < 17)
-			return NULL;
+			return nullptr;
 
 		CWString wsKey((wchar_t*)(_wsKey.c_str() + 16), false, _wsKey.size() - 17);
-		CBrush* pBrush = NULL;
+		CBrush* pBrush = nullptr;
 		CStaticResource* pResource;
 
 		for (int nIndex = m_vResourcesStack.size() - 1; nIndex >= 0; nIndex--)
@@ -180,7 +180,7 @@ namespace XPS
 				return pBrush;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 	void    CContextState::GetTransform(const CWString& _wsKey, CWString& wsTransform)
 	{

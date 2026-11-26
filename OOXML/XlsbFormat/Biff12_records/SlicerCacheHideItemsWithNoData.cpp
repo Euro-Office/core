@@ -45,7 +45,7 @@ namespace XLSB
 
     void SlicerCacheHideItemsWithNoData::readFields(XLS::CFRecord& record)
     {
-        _UINT32 flags;
+        _UINT32 flags = 0;
 
         record >> FRTheader >> flags >> cHideItemLevelsCount;
 

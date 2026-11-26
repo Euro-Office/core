@@ -106,9 +106,9 @@ unsigned short lclGetHash( const unsigned char* pnPassData, size_t nBufferSize )
 
 
 XORCrypt::XORCrypt(int type, unsigned short key, unsigned short hash, std::wstring password) :
-    m_nOffset(0),
     m_nKey(0),
-    m_nHash(0)
+    m_nHash(0),
+    m_nOffset(0)
 {
     m_VerifyPassword = false;
 
@@ -167,6 +167,7 @@ void XORCrypt::Init(const unsigned long val)
 }
 void XORCrypt::Decrypt(char* data, const size_t size, const unsigned long block_index)
 {
+	(void)block_index;
 	unsigned char* pnData = (unsigned char*)data;
     
 	const unsigned char* pnCurrKey = m_pnKey + m_nOffset;
@@ -204,6 +205,7 @@ void XORCrypt::Decrypt(char* data, const size_t size, const unsigned long block_
 }
 void XORCrypt::Decrypt(char* data, const size_t size, const unsigned long stream_pos, const size_t block_size)
 {
+	(void)block_size;
 	Init(stream_pos + size);
 
 	unsigned char* pnData = (unsigned char*)data;

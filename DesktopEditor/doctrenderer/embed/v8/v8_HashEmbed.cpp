@@ -8,17 +8,17 @@ namespace NSHashEmbed
 {
 #define CURRENTWRAPPER CHashEmbed
 
-	FUNCTION_WRAPPER_V8_3(_hash, hash)
-	FUNCTION_WRAPPER_V8_4(_hash2, hash2)
+	FUNCTION_WRAPPER_V8_3(hashWrapper, hash)
+	FUNCTION_WRAPPER_V8_4(hash2Wrapper, hash2)
 
-	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
+	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);
 		result->SetInternalFieldCount(1);
 
-		NSV8Objects::Template_Set(result, "hash",	_hash);
-		NSV8Objects::Template_Set(result, "hash2",	_hash2);
+		NSV8Objects::Template_Set(result, "hash", hashWrapper);
+		NSV8Objects::Template_Set(result, "hash2", hash2Wrapper);
 
 		return handle_scope.Escape(result);
 	}

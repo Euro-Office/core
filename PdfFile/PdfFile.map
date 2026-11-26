@@ -1,0 +1,16 @@
+/*
+ * Export map for libPdfFile on Linux.
+ *
+ * PdfFile statically compiles a private FreeType (plus the zlib and brotli
+ * code it needs). FreeType marks its API with visibility("default"), so
+ * -fvisibility=hidden is not enough to keep it from interposing the system
+ * FreeType used by GTK, cairo, harfbuzz, etc.
+ *
+ * Only export the C++ API, hide everything else.
+ */
+{
+  global:
+    _Z*;
+  local:
+    *;
+};

@@ -34,7 +34,7 @@ OOXDrawingReader::OOXDrawingReader(OOX::Logic::CDrawing* ooxDrawing)
 }
 int OOXDrawingReader::Parse( ReaderParameter oParam , RtfShapePtr & pOutput)
 {
-	if (m_ooxDrawing == NULL) return 0;
+	if (m_ooxDrawing == nullptr) return 0;
 
 	if (m_ooxDrawing->m_oInline.IsInit())
 	{

@@ -84,7 +84,7 @@ private:
 
 	int m_nColDimension;
 
-	bool m_bIsWriteCell; // Нужно только для записи JSON-а
+	bool m_bIsWriteCell; // Only needed for writing JSON
 	bool m_bStartRow;
 	bool m_bStartCell;
 
@@ -131,12 +131,12 @@ void CSVWriter::Xlsx2Csv(const std::wstring &sFileDst, OOX::Spreadsheet::CXlsx &
 	if (oXlsx.m_pWorkbook)
 	{
 		LONG lActiveSheet = oXlsx.m_pWorkbook->GetActiveSheetIndex();
-		std::wstring sSheetRId = _T("Sheet1"); // Читаем не по rId, а по имени листа
-											   // Get active sheet rId (для конвертации в CSV нужно использовать name, т.к. это наш бинарник из js-скриптов и еще нет rId
-											   // А для json-а нужно пользовать rId, т.к. при открытии они используются
+		std::wstring sSheetRId = _T("Sheet1"); // Read not by rId, but by sheet name
+											   // Get active sheet rId (to convert to CSV need to use name, because this is our binary from js scripts and there is no rId yet
+											   // For JSON, rId must be used, because when opened they are used
 		if (oXlsx.m_pWorkbook->m_oSheets.IsInit() && !oXlsx.m_pWorkbook->m_oSheets->m_arrItems.empty())
 		{
-			OOX::Spreadsheet::CSheet* pSheet = NULL;
+			OOX::Spreadsheet::CSheet* pSheet = nullptr;
 			if (lActiveSheet >= 0 && lActiveSheet < (LONG)oXlsx.m_pWorkbook->m_oSheets->m_arrItems.size())
 			{
 				pSheet = oXlsx.m_pWorkbook->m_oSheets->m_arrItems[lActiveSheet];
@@ -152,7 +152,7 @@ void CSVWriter::Xlsx2Csv(const std::wstring &sFileDst, OOX::Spreadsheet::CXlsx &
 		if (pFind != oXlsx.m_mapWorksheets.end())
 		{
 			OOX::Spreadsheet::CWorksheet *pWorksheet = pFind->second;
-			if (NULL != pWorksheet && pWorksheet->m_oSheetData.IsInit())
+			if (nullptr != pWorksheet && pWorksheet->m_oSheetData.IsInit())
 			{
 				impl_->WriteSheetStart(pWorksheet);
 
@@ -219,7 +219,7 @@ void CSVWriter::SetColStartBeginning(int val)
 		impl_->m_nColStartBeginning = val;
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-static std::wstring replace_unwanted(boost::wsmatch const & what)
+static std::wstring replace_unwanted(boost::wsmatch const &  /*what*/)
 {
 	return L"";
 }
@@ -248,11 +248,15 @@ int CSVWriter::Impl::detect_format(std::wstring & format_code)
 			ss << std::hex << result[2];
 			ss >> language_code;
 		}
-		catch (...) {}
+		catch (...)
+		{
+			/* unparsable format code: keep the string as-is */
+			(void)0;
+		}
 
 		//format_code = boost::regex_replace( format_code,re,L"");
 	}
-	if (false == format_code.empty()) //any
+	if (!format_code.empty()) //any
 	{
 		boost::wregex re1(L"([mMhHs{2,}S{2,}]+)");
 		boost::wregex re2(L"([mMdDy{2,}Y{2,}]+)");
@@ -378,7 +382,6 @@ std::wstring CSVWriter::Impl::convert_date_time(const std::wstring & sValue, std
                             if (currentTime->tm_year >= 1000)
                             {
                                 auto sringYear = std::to_wstring(currentTime->tm_year);
-                                auto lastTwoChars = sringYear.substr(sringYear.length() - 2);
                                 date_str += sringYear;
                             }
                             else
@@ -398,12 +401,12 @@ std::wstring CSVWriter::Impl::convert_date_time(const std::wstring & sValue, std
 
                 }
 
-                //currentTime->tm_year = date_.year() - 1900;  // Устанавливаем год
-                //currentTime->tm_mon = date_.month() - 1;     // Устанавливаем месяц (от 0 до 11)
-                //currentTime->tm_mday = date_.day();          // Устанавливаем день
+                //currentTime->tm_year = date_.year() - 1900;  // Set the year
+                //currentTime->tm_mon = date_.month() - 1;     // Set the month (from 0 to 11)
+                //currentTime->tm_mday = date_.day();          // Set the day
 
 
-                //wss << std::put_time(currentTime, L"%x");  // Формат "%x" - формат даты для текущей локали
+                //wss << std::put_time(currentTime, L"%x");  // Format "%x" - date format for the current locale
 
                 //date_str = wss.str();
 			}
@@ -414,12 +417,12 @@ std::wstring CSVWriter::Impl::convert_date_time(const std::wstring & sValue, std
 
 				std::time_t now = std::time(nullptr);
 				std::tm* currentTime = std::localtime(&now);
-				currentTime->tm_hour = hours;     // Устанавливаем часы
-				currentTime->tm_min = minutes;    // Устанавливаем минуты
-				currentTime->tm_sec = sec;    // Устанавливаем секунды
+				currentTime->tm_hour = hours;     // Setting the hours
+				currentTime->tm_min = minutes;    // Setting the minutes
+				currentTime->tm_sec = sec;    // Setting the seconds
 
 				wss.imbue(loc_);
-				wss << std::put_time(currentTime, L"%X");  // Формат "%X" - формат времени для текущей локали
+				wss << std::put_time(currentTime, L"%X");  // Format "%X" - time format for the current locale
 
 				time_str = wss.str();
 			}
@@ -432,16 +435,12 @@ std::wstring CSVWriter::Impl::convert_date_time(const std::wstring & sValue, std
 				size_t pos = format_code.find(L"]");
 				format_code = format_code.substr(pos + 1);
 			}
-			int CodePage = 0;
 			std::string LCID;
 
 			if (language_code > 0 && language_code != 0xf800 && language_code != 0xf400)
 			{
 				unsigned short LanguageID = GETBITS(language_code, 0, 15);
-				BYTE CalendarType = GETBITS(language_code, 16, 23);
-				BYTE NumberType = GETBITS(language_code, 24, 31);
 
-				CodePage = m_lcidConverter.get_codepage(LanguageID);
 				std::wstring wsLCID = m_lcidConverter.get_wstring(LanguageID);
 
 				LCID = std::string(wsLCID.begin(), wsLCID.end());
@@ -648,7 +647,7 @@ void escapeJson(const std::wstring& sInput, NSStringUtils::CStringBuilder& oBuil
 }
 void WriteFile(NSFile::CFileBinary *pFile, wchar_t **pWriteBuffer, int &nCurrentIndex, const std::wstring &sWriteString, unsigned int &nCodePage, bool bIsEnd = false)
 {
-	if (NULL == pFile || NULL == pWriteBuffer)
+	if (nullptr == pFile || nullptr == pWriteBuffer)
 		return;
 	size_t nCountChars = sWriteString.length();
 	if (0 == nCountChars && !bIsEnd)
@@ -657,7 +656,7 @@ void WriteFile(NSFile::CFileBinary *pFile, wchar_t **pWriteBuffer, int &nCurrent
 	const size_t c_nSize = 1048576; // 1024 * 1024
 	const size_t nSizeWchar = sizeof(wchar_t);
 
-	if (NULL == *pWriteBuffer)
+	if (nullptr == *pWriteBuffer)
 	{
 		*pWriteBuffer = new wchar_t[c_nSize];
 		memset(*pWriteBuffer, 0, nSizeWchar * c_nSize);
@@ -666,8 +665,8 @@ void WriteFile(NSFile::CFileBinary *pFile, wchar_t **pWriteBuffer, int &nCurrent
 
 	if (nCountChars + nCurrentIndex > c_nSize || bIsEnd)
 	{
-		// Буффер заполнился, пишем
-		if (nCodePage == 48 && 2 == sizeof(wchar_t))//todo 48 временно CP_UTF16
+		// The buffer is full, write
+		if (nCodePage == 48 && 2 == sizeof(wchar_t))//todo 48 temporary CP_UTF16
 		{
 			pFile->WriteFile((BYTE*)*pWriteBuffer, sizeof(wchar_t) * nCurrentIndex);
 		}
@@ -691,7 +690,7 @@ void WriteFile(NSFile::CFileBinary *pFile, wchar_t **pWriteBuffer, int &nCurrent
 }
 CSVWriter::Impl::Impl(OOX::Spreadsheet::CXlsx &m_oXlsx, unsigned int m_nCodePage, const std::wstring& m_sDelimiter, int Lcid,  bool m_bJSON) : m_oXlsx(m_oXlsx), m_nCodePage(m_nCodePage), m_sDelimiter(m_sDelimiter), m_bJSON(m_bJSON), loc_(""), m_nLcid(Lcid)
 {
-	m_pWriteBuffer = NULL;
+	m_pWriteBuffer = nullptr;
 	m_nCurrentIndex = 0;
 	m_sEscape = _T("\"\n");
 	m_sEscape += m_sDelimiter;
@@ -714,18 +713,18 @@ bool CSVWriter::Impl::Start(const std::wstring &sFileDst)
 	bool res = m_oFile.CreateFileW(sFileDst);
 	if (!res) return false;
 
-	// Нужно записать шапку
-	if (46 == m_nCodePage)//todo 46 временно CP_UTF8
+	// Need to write the header
+	if (46 == m_nCodePage)//todo 46 temporarily CP_UTF8
 	{
 		BYTE arUTF8[3] = { 0xEF, 0xBB, 0xBF };
 		m_oFile.WriteFile(arUTF8, 3);
 	}
-	else if (48 == m_nCodePage)//todo 48 временно CP_UTF16
+	else if (48 == m_nCodePage)//todo 48 temporary CP_UTF16
 	{
 		BYTE arUTF16[2] = { 0xFF, 0xFE };
 		m_oFile.WriteFile(arUTF16, 2);
 	}
-	else if (49 == m_nCodePage)//todo 49 временно CP_unicodeFFFE
+	else if (49 == m_nCodePage)//todo 49 temporary CP_unicodeFFFE
 	{
 		BYTE arBigEndian[2] = { 0xFE, 0xFF };
 		m_oFile.WriteFile(arBigEndian, 2);
@@ -741,7 +740,7 @@ void CSVWriter::Impl::WriteSheetStart(OOX::Spreadsheet::CWorksheet* pWorksheet)
 		WriteFile(&m_oFile, &m_pWriteBuffer, m_nCurrentIndex, g_sBkt, m_nCodePage);
 	}
 	
-	if (pWorksheet && pWorksheet->m_oSheetViews.IsInit() && false == pWorksheet->m_oSheetViews->m_arrItems.empty())
+	if (pWorksheet && pWorksheet->m_oSheetViews.IsInit() && !pWorksheet->m_oSheetViews->m_arrItems.empty())
 	{
 		if (pWorksheet->m_oSheetViews->m_arrItems[0]->m_oShowFormulas.IsInit() &&
 			pWorksheet->m_oSheetViews->m_arrItems[0]->m_oShowFormulas->ToBool())
@@ -789,9 +788,9 @@ void CSVWriter::Impl::WriteCell(OOX::Spreadsheet::CCell *pCell)
 
 	while (nCol > m_nColCurrent)
 	{
-		if (m_bJSON && false == m_bIsWriteCell)
+		if (m_bJSON && !m_bIsWriteCell)
 		{
-			// Запишем пустые строки (для JSON-а)
+			// Write empty lines (for JSON)
 			WriteFile(&m_oFile, &m_pWriteBuffer, m_nCurrentIndex, g_sDoubleQuote, m_nCodePage);
 		}
 		// Write delimiter
@@ -831,7 +830,7 @@ void CSVWriter::Impl::WriteCell(OOX::Spreadsheet::CCell *pCell)
 			if (nValue >= 0 && nValue < (int)m_oXlsx.m_pSharedStrings->m_arrItems.size())
 			{
 				OOX::Spreadsheet::CSi *pSi = m_oXlsx.m_pSharedStrings->m_arrItems[nValue];
-				if (NULL != pSi)
+				if (nullptr != pSi)
 				{
 					sCellValue = pSi->ToString();
 					bString = true;
@@ -873,7 +872,7 @@ void CSVWriter::Impl::WriteCell(OOX::Spreadsheet::CCell *pCell)
 									}
 								}
 							}
-							else if(formatTypeIsDateTime) // если формат даты не задан явно, удаляем его и записываем дату в локальном формате
+							else if(formatTypeIsDateTime) // if the date format isn't set explicitly, delete it and write the date in the local format
 							{
 								format_code = L"";
 							}
@@ -912,13 +911,13 @@ void CSVWriter::Impl::WriteCell(OOX::Spreadsheet::CCell *pCell)
 	m_bIsWriteCell = true;
 	m_bStartCell = false;
 }
-void CSVWriter::Impl::WriteRowEnd(OOX::Spreadsheet::CRow* pWorksheet, bool bLast)
+void CSVWriter::Impl::WriteRowEnd(OOX::Spreadsheet::CRow*  /*pWorksheet*/, bool bLast)
 {
 	if (m_bJSON)
 		WriteFile(&m_oFile, &m_pWriteBuffer, m_nCurrentIndex, g_sEndJson, m_nCodePage);
 	else
 	{
-		while (m_nColDimension > m_nColCurrent && !bLast) // todooo - прописывать в бинарнике dimension - и данные брать оттуда
+		while (m_nColDimension > m_nColCurrent && !bLast) // TODO - write dimension in binary - and take data from there
 		{
 			// Write delimiter
 			++m_nColCurrent;
@@ -927,7 +926,7 @@ void CSVWriter::Impl::WriteRowEnd(OOX::Spreadsheet::CRow* pWorksheet, bool bLast
 		}
 	}
 }
-void CSVWriter::Impl::WriteSheetEnd(OOX::Spreadsheet::CWorksheet* pWorksheet)
+void CSVWriter::Impl::WriteSheetEnd(OOX::Spreadsheet::CWorksheet*  /*pWorksheet*/)
 {
 	if (m_bJSON)
 	{
@@ -937,7 +936,7 @@ void CSVWriter::Impl::WriteSheetEnd(OOX::Spreadsheet::CWorksheet* pWorksheet)
 }
 void CSVWriter::Impl::End()
 {
-	// Теперь мы пишем как MS Excel (новую строку записываем в файл)
+	// Now write like MS Excel (write a new line to the file)
 	if (!m_bJSON)
 	{
 		WriteFile(&m_oFile, &m_pWriteBuffer, m_nCurrentIndex, g_sNewLineN, m_nCodePage);
@@ -1034,7 +1033,7 @@ void CSVWriter::Impl::GetDefaultFormatCode(int numFmt, std::wstring & format_cod
 	case 47:	format_code = L"mmss.0";		format_type = SimpleTypes::Spreadsheet::celltypeTime; break;
 
 	default:
-		/////////////////////////////////// с неопределенным format_code .. он задается в файле
+		////////////////////////////////// with undefined format_code .. it is set in the file
 		if (numFmt >= 5 && numFmt <= 8)		format_type = SimpleTypes::Spreadsheet::celltypeCurrency;
 		if (numFmt >= 41 && numFmt <= 44)	format_type = SimpleTypes::Spreadsheet::celltypeCurrency;
 
@@ -1058,9 +1057,9 @@ void CSVWriter::Impl::GetDefaultFormatCode(int numFmt, std::wstring & format_cod
 }
 std::wstring CSVWriter::Impl::ConvertValueCellToString(const std::wstring &value, boost::optional<int> format_type, std::wstring format_code)
 {
-	if (false == format_code.empty())
+	if (!format_code.empty())
 	{
-		format_code.erase(std::remove(format_code.begin(), format_code.end(), L'"'), format_code.end());//удаляем экранирующие кавычки из формата
+		format_code.erase(std::remove(format_code.begin(), format_code.end(), L'"'), format_code.end());//remove escape quotes from format
 		std::vector<std::wstring> format_codes;
 		boost::algorithm::split(format_codes, format_code, boost::algorithm::is_any_of(L";"), boost::algorithm::token_compress_on);
 

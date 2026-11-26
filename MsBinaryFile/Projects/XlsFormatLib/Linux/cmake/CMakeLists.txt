@@ -8,9 +8,6 @@ include(${CORE_ROOT_DIR}/common.cmake)
 set(XLS_FILE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/XlsFile")
 set(COMMON_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/Common")
 
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 add_library(XlsFormatLib STATIC
     ${XLS_FILE_SOURCES_DIR}/Format/Auxiliary/HelpFunc.cpp
     ${XLS_FILE_SOURCES_DIR}/Format/Binary/CFRecord.cpp
@@ -117,7 +114,39 @@ target_precompile_headers(XlsFormatLib PRIVATE
     ../precompiled.h
 )
 
+# The -Werror=return-type guard below must survive EO_NO_WARNINGS. That option
+# adds a directory-level -w, and on GCC and the non-Apple clang versions tested
+# -w cancels -Werror= promotions no matter the order, so the guard would silently
+# do nothing in the CI builds that set it (#421). In that build, strip -w from
+# this target and keep the logs quiet another way: -Wreturn-type is on by
+# default, so the promotion still fires.
+# - GCC: drop the blanket -Wall/-Wextra. A few dozen default-on warnings remain.
+# - Clang: -Wall/-Wextra alone are not enough, clang turns hundreds of this
+#   target's warnings on by default, so add -Wno-everything. -Werror=return-type
+#   comes later on the command line and turns its warning back on as an error.
+# (add_compile_options(-w) is copied into the target's COMPILE_OPTIONS when the
+# target is created, so it is removed there; -Wall/-Wextra come from
+# set_default_options(), so they are dropped from COMMON_CXX_FLAGS before it runs.)
+if( EO_NO_WARNINGS AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" )
+    get_target_property( _xls_compile_options XlsFormatLib COMPILE_OPTIONS )
+    if( _xls_compile_options )
+        list( REMOVE_ITEM _xls_compile_options -w )
+        set_property( TARGET XlsFormatLib PROPERTY COMPILE_OPTIONS "${_xls_compile_options}" )
+    endif()
+    list( REMOVE_ITEM COMMON_CXX_FLAGS -Wall -Wextra )
+    if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
+        target_compile_options( XlsFormatLib PRIVATE -Wno-everything )
+    endif()
+endif()
+
 set_default_options(XlsFormatLib)
+
+if( MSVC )
+    target_compile_definitions( XlsFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
 
 target_include_directories(XlsFormatLib PRIVATE
     ${XLS_FILE_SOURCES_DIR}/Format
@@ -133,6 +162,17 @@ target_link_libraries(XlsFormatLib PRIVATE
     Boost::date_time
 )
 
+if( MSVC )
+    target_compile_options( XlsFormatLib PRIVATE /bigobj )
+endif()
+
+# A non-void function that runs off its end is undefined behaviour. GCC only warns, and at -O3 it treated the
+# missing `return` in PIVOTLI::saveContent as unreachable code: every XLS export of a pivot table crashed.
+# See the EO_NO_WARNINGS note above for why -w is stripped from this target so this promotion is not cancelled.
+if( CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" )
+    target_compile_options( XlsFormatLib PRIVATE -Werror=return-type )
+endif()
+
 set_property(TARGET XlsFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-copy_boost_libs(XlsFormatLib)
+declare_victory( XlsFormatLib )

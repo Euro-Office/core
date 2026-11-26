@@ -8,75 +8,75 @@ namespace NSDrawingFileEmbed
 {
 #define CURRENTWRAPPER CDrawingFileEmbed
 
-	FUNCTION_WRAPPER_V8_2(_OpenFile, OpenFile)
-	FUNCTION_WRAPPER_V8_0(_CloseFile, CloseFile)
-	FUNCTION_WRAPPER_V8_0(_GetType, GetType)
-	FUNCTION_WRAPPER_V8_0(_GetErrorCode, GetErrorCode)
-	FUNCTION_WRAPPER_V8_0(_GetInfo, GetInfo)
-	FUNCTION_WRAPPER_V8_4(_GetPixmap, GetPixmap)
-	FUNCTION_WRAPPER_V8_1(_DestroyPixmap, DestroyPixmap)
-	FUNCTION_WRAPPER_V8_1(_GetLinks, GetLinks)
-	FUNCTION_WRAPPER_V8_0(_GetStructure, GetStructure)
-	FUNCTION_WRAPPER_V8_0(_GetInteractiveFormsInfo, GetInteractiveFormsInfo)
-	FUNCTION_WRAPPER_V8_1(_GetInteractiveFormsFonts, GetInteractiveFormsFonts)
-	FUNCTION_WRAPPER_V8_7(_GetInteractiveFormsAP, GetInteractiveFormsAP)
-	FUNCTION_WRAPPER_V8_5(_GetButtonIcons, GetButtonIcons)
-	FUNCTION_WRAPPER_V8_1(_GetAnnotationsInfo, GetAnnotationsInfo)
-	FUNCTION_WRAPPER_V8_6(_GetAnnotationsAP, GetAnnotationsAP)
-	FUNCTION_WRAPPER_V8_1(_GetFontBinary, GetFontBinary)
-	FUNCTION_WRAPPER_V8_1(_GetGlyphs, GetGlyphs)
-	FUNCTION_WRAPPER_V8_0(_DestroyTextInfo, DestroyTextInfo)
-	FUNCTION_WRAPPER_V8_1(_GetGIDByUnicode, GetGIDByUnicode)
-	FUNCTION_WRAPPER_V8_0(_IsNeedCMap, IsNeedCMap)
-	FUNCTION_WRAPPER_V8_2(_ScanPage, ScanPage)
-	FUNCTION_WRAPPER_V8_1(_SetScanPageFonts, SetScanPageFonts)
-	FUNCTION_WRAPPER_V8_1(_GetImageBase64, GetImageBase64)
-	FUNCTION_WRAPPER_V8_1(_FreeWasmData, FreeWasmData)
-	FUNCTION_WRAPPER_V8_2(_SplitPages, SplitPages)
-	FUNCTION_WRAPPER_V8_3(_MergePages, MergePages)
-	FUNCTION_WRAPPER_V8_0(_UnmergePages, UnmergePages)
-	FUNCTION_WRAPPER_V8_3(_RedactPage, RedactPage)
-	FUNCTION_WRAPPER_V8_0(_UndoRedact, UndoRedact)
-	FUNCTION_WRAPPER_V8_1(_CheckOwnerPassword, CheckOwnerPassword)
-	FUNCTION_WRAPPER_V8_1(_CheckPerm, CheckPerm)
+	FUNCTION_WRAPPER_V8_2(OpenFileWrapper, OpenFile)
+	FUNCTION_WRAPPER_V8_0(CloseFileWrapper, CloseFile)
+	FUNCTION_WRAPPER_V8_0(GetTypeWrapper, GetType)
+	FUNCTION_WRAPPER_V8_0(GetErrorCodeWrapper, GetErrorCode)
+	FUNCTION_WRAPPER_V8_0(GetInfoWrapper, GetInfo)
+	FUNCTION_WRAPPER_V8_4(GetPixmapWrapper, GetPixmap)
+	FUNCTION_WRAPPER_V8_1(DestroyPixmapWrapper, DestroyPixmap)
+	FUNCTION_WRAPPER_V8_1(GetLinksWrapper, GetLinks)
+	FUNCTION_WRAPPER_V8_0(GetStructureWrapper, GetStructure)
+	FUNCTION_WRAPPER_V8_0(GetInteractiveFormsInfoWrapper, GetInteractiveFormsInfo)
+	FUNCTION_WRAPPER_V8_1(GetInteractiveFormsFontsWrapper, GetInteractiveFormsFonts)
+	FUNCTION_WRAPPER_V8_7(GetInteractiveFormsAPWrapper, GetInteractiveFormsAP)
+	FUNCTION_WRAPPER_V8_5(GetButtonIconsWrapper, GetButtonIcons)
+	FUNCTION_WRAPPER_V8_1(GetAnnotationsInfoWrapper, GetAnnotationsInfo)
+	FUNCTION_WRAPPER_V8_6(GetAnnotationsAPWrapper, GetAnnotationsAP)
+	FUNCTION_WRAPPER_V8_1(GetFontBinaryWrapper, GetFontBinary)
+	FUNCTION_WRAPPER_V8_1(GetGlyphsWrapper, GetGlyphs)
+	FUNCTION_WRAPPER_V8_0(DestroyTextInfoWrapper, DestroyTextInfo)
+	FUNCTION_WRAPPER_V8_1(GetGIDByUnicodeWrapper, GetGIDByUnicode)
+	FUNCTION_WRAPPER_V8_0(IsNeedCMapWrapper, IsNeedCMap)
+	FUNCTION_WRAPPER_V8_2(ScanPageWrapper, ScanPage)
+	FUNCTION_WRAPPER_V8_1(SetScanPageFontsWrapper, SetScanPageFonts)
+	FUNCTION_WRAPPER_V8_1(GetImageBase64Wrapper, GetImageBase64)
+	FUNCTION_WRAPPER_V8_1(FreeWasmDataWrapper, FreeWasmData)
+	FUNCTION_WRAPPER_V8_2(SplitPagesWrapper, SplitPages)
+	FUNCTION_WRAPPER_V8_3(MergePagesWrapper, MergePages)
+	FUNCTION_WRAPPER_V8_0(UnmergePagesWrapper, UnmergePages)
+	FUNCTION_WRAPPER_V8_3(RedactPageWrapper, RedactPage)
+	FUNCTION_WRAPPER_V8_0(UndoRedactWrapper, UndoRedact)
+	FUNCTION_WRAPPER_V8_1(CheckOwnerPasswordWrapper, CheckOwnerPassword)
+	FUNCTION_WRAPPER_V8_1(CheckPermWrapper, CheckPerm)
 
-	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
+	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);
 		result->SetInternalFieldCount(1);
 
-		NSV8Objects::Template_Set(result, "OpenFile",	_OpenFile);
-		NSV8Objects::Template_Set(result, "CloseFile",	_CloseFile);
-		NSV8Objects::Template_Set(result, "GetType",	_GetType);
-		NSV8Objects::Template_Set(result, "GetErrorCode",	_GetErrorCode);
-		NSV8Objects::Template_Set(result, "GetInfo",	_GetInfo);
-		NSV8Objects::Template_Set(result, "GetPixmap",	_GetPixmap);
-		NSV8Objects::Template_Set(result, "DestroyPixmap",	_DestroyPixmap);
-		NSV8Objects::Template_Set(result, "GetLinks",	_GetLinks);
-		NSV8Objects::Template_Set(result, "GetStructure",	_GetStructure);
-		NSV8Objects::Template_Set(result, "GetInteractiveFormsInfo",	_GetInteractiveFormsInfo);
-		NSV8Objects::Template_Set(result, "GetInteractiveFormsFonts",	_GetInteractiveFormsFonts);
-		NSV8Objects::Template_Set(result, "GetInteractiveFormsAP",	_GetInteractiveFormsAP);
-		NSV8Objects::Template_Set(result, "GetButtonIcons",	_GetButtonIcons);
-		NSV8Objects::Template_Set(result, "GetAnnotationsInfo",	_GetAnnotationsInfo);
-		NSV8Objects::Template_Set(result, "GetAnnotationsAP",	_GetAnnotationsAP);
-		NSV8Objects::Template_Set(result, "GetFontBinary",	_GetFontBinary);
-		NSV8Objects::Template_Set(result, "GetGlyphs",	_GetGlyphs);
-		NSV8Objects::Template_Set(result, "DestroyTextInfo",	_DestroyTextInfo);
-		NSV8Objects::Template_Set(result, "GetGIDByUnicode",	_GetGIDByUnicode);
-		NSV8Objects::Template_Set(result, "IsNeedCMap",	_IsNeedCMap);
-		NSV8Objects::Template_Set(result, "ScanPage",	_ScanPage);
-		NSV8Objects::Template_Set(result, "SetScanPageFonts",	_SetScanPageFonts);
-		NSV8Objects::Template_Set(result, "GetImageBase64",	_GetImageBase64);
-		NSV8Objects::Template_Set(result, "FreeWasmData",	_FreeWasmData);
-		NSV8Objects::Template_Set(result, "SplitPages",	_SplitPages);
-		NSV8Objects::Template_Set(result, "MergePages",	_MergePages);
-		NSV8Objects::Template_Set(result, "UnmergePages",	_UnmergePages);
-		NSV8Objects::Template_Set(result, "RedactPage",	_RedactPage);
-		NSV8Objects::Template_Set(result, "UndoRedact",	_UndoRedact);
-		NSV8Objects::Template_Set(result, "CheckOwnerPassword",	_CheckOwnerPassword);
-		NSV8Objects::Template_Set(result, "CheckPerm",	_CheckPerm);
+		NSV8Objects::Template_Set(result, "OpenFile", OpenFileWrapper);
+		NSV8Objects::Template_Set(result, "CloseFile", CloseFileWrapper);
+		NSV8Objects::Template_Set(result, "GetType", GetTypeWrapper);
+		NSV8Objects::Template_Set(result, "GetErrorCode", GetErrorCodeWrapper);
+		NSV8Objects::Template_Set(result, "GetInfo", GetInfoWrapper);
+		NSV8Objects::Template_Set(result, "GetPixmap", GetPixmapWrapper);
+		NSV8Objects::Template_Set(result, "DestroyPixmap", DestroyPixmapWrapper);
+		NSV8Objects::Template_Set(result, "GetLinks", GetLinksWrapper);
+		NSV8Objects::Template_Set(result, "GetStructure", GetStructureWrapper);
+		NSV8Objects::Template_Set(result, "GetInteractiveFormsInfo", GetInteractiveFormsInfoWrapper);
+		NSV8Objects::Template_Set(result, "GetInteractiveFormsFonts", GetInteractiveFormsFontsWrapper);
+		NSV8Objects::Template_Set(result, "GetInteractiveFormsAP", GetInteractiveFormsAPWrapper);
+		NSV8Objects::Template_Set(result, "GetButtonIcons", GetButtonIconsWrapper);
+		NSV8Objects::Template_Set(result, "GetAnnotationsInfo", GetAnnotationsInfoWrapper);
+		NSV8Objects::Template_Set(result, "GetAnnotationsAP", GetAnnotationsAPWrapper);
+		NSV8Objects::Template_Set(result, "GetFontBinary", GetFontBinaryWrapper);
+		NSV8Objects::Template_Set(result, "GetGlyphs", GetGlyphsWrapper);
+		NSV8Objects::Template_Set(result, "DestroyTextInfo", DestroyTextInfoWrapper);
+		NSV8Objects::Template_Set(result, "GetGIDByUnicode", GetGIDByUnicodeWrapper);
+		NSV8Objects::Template_Set(result, "IsNeedCMap", IsNeedCMapWrapper);
+		NSV8Objects::Template_Set(result, "ScanPage", ScanPageWrapper);
+		NSV8Objects::Template_Set(result, "SetScanPageFonts", SetScanPageFontsWrapper);
+		NSV8Objects::Template_Set(result, "GetImageBase64", GetImageBase64Wrapper);
+		NSV8Objects::Template_Set(result, "FreeWasmData", FreeWasmDataWrapper);
+		NSV8Objects::Template_Set(result, "SplitPages", SplitPagesWrapper);
+		NSV8Objects::Template_Set(result, "MergePages", MergePagesWrapper);
+		NSV8Objects::Template_Set(result, "UnmergePages", UnmergePagesWrapper);
+		NSV8Objects::Template_Set(result, "RedactPage", RedactPageWrapper);
+		NSV8Objects::Template_Set(result, "UndoRedact", UndoRedactWrapper);
+		NSV8Objects::Template_Set(result, "CheckOwnerPassword", CheckOwnerPasswordWrapper);
+		NSV8Objects::Template_Set(result, "CheckPerm", CheckPermWrapper);
 
 		return handle_scope.Escape(result);
 	}

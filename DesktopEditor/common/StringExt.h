@@ -118,7 +118,7 @@ public:
 		SINGLE_BYTE_ENCODING_CP874 = 0xDE,	 // THAI_CHARSET            222 (xDE)
 		SINGLE_BYTE_ENCODING_CP1361 = 0x82,	 // JOHAB_CHARSET	        130 (x82)
 		SINGLE_BYTE_ENCODING_CP1258 = 0xA3,	 // VIETNAMESE_CHARSET      163 (xA3)
-		SINGLE_BYTE_ENCODING_CP866 = 0xFF	 // OEM_CHARSET             255 (xFF) // Проверить, что OEM соответствует CP866
+		SINGLE_BYTE_ENCODING_CP866 = 0xFF	 // OEM_CHARSET 255 (xFF) // Check that OEM matches CP866
 	} ESingleByteEncoding;
 
 	static std::wstring GetUnicodeFromSingleByteString(const unsigned char* pData, long lCount, ESingleByteEncoding eType = SINGLE_BYTE_ENCODING_DEFAULT);

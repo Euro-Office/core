@@ -462,11 +462,11 @@ public:
 
 	virtual void serialize(std::wostream & strm);
 
-    office_element_ptr_array	style_master_page_;		// разметки тем
-    office_element_ptr			style_handout_master_;	// разметки для принтера - .. второстепенно
-    office_element_ptr			draw_layer_set_;		// необязательно .. так как слои все равно не поддерживаются в мс.
-													// то есть не будут объекты объеденены по признаку слоя
-													// зы. не путать с обычной группировкой
+    office_element_ptr_array	style_master_page_;		// theme layouts
+    office_element_ptr			style_handout_master_;	// markings for the printer - .. minor
+    office_element_ptr			draw_layer_set_;		// optional.. since layers aren't supported in ms anyway.
+													// that is, objects won't be combined based on the layer
+													// PS not to be confused with a regular group
 };
 CP_REGISTER_OFFICE_ELEMENT2(office_master_styles)
 //----------------------------------------------------------------------------------------------------
@@ -893,7 +893,7 @@ public:
 	virtual void serialize(std::wostream & strm);
 	virtual void create_child_element	( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element		( const office_element_ptr & child){}
-	//todooo <svg:definition-src> and <svg:font-face-src>
+	//TODO <svg:definition-src> and <svg:font-face-src>
     
     _CP_OPT(std::wstring)						style_name_;
     _CP_OPT(std::wstring)						style_font_adornments_;

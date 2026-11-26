@@ -52,7 +52,6 @@ const bool StreamCacheReader::checkNextRecord(const CFRecordType::TypeId desirab
 	// ANY_TYPE is checked just to make the fake read from stream and get an error if the stream is ended
 	for(std::list<CFRecordPtr>::const_iterator it = records_cache.begin(), itEnd = records_cache.end(); it != itEnd; ++it)
 	{
-		size_t type = (*it)->getTypeId();
 		if(desirable_type == (*it)->getTypeId() || desirable_type == CFRecordType::ANY_TYPE)
 		{
 			return true;
@@ -146,7 +145,7 @@ CFRecordPtr CFStreamCacheReader::getNextRecord(const CFRecordType::TypeId desira
 		//Log::warning(rec_name);
 
 		if (desirable_type == rt_MsoDrawingGroup ||
-			desirable_type == rt_GelFrame)	// объединяем c rt_Continue в один блок 
+			desirable_type == rt_GelFrame)	// combine with rt_Continue into one block
 		{
 			if (checkNextRecord(desirable_type, 1))
 			{				
@@ -189,7 +188,7 @@ CFRecordPtr CFStreamCacheReader::getNextRecord(const CFRecordType::TypeId desira
 	{
 		what_we_actually_read = records_cache.front()->getTypeId();
 
-		// if we get what was requested
+		// if get what was requested
 		if(desirable_type == what_we_actually_read || desirable_type == CFRecordType::ANY_TYPE)
 		{
 			CFRecordPtr ret = records_cache.front();
@@ -200,9 +199,7 @@ CFRecordPtr CFStreamCacheReader::getNextRecord(const CFRecordType::TypeId desira
 
 	if(gen_except)
 	{
-		// теги разные
-		std::string inType = XLS::CFRecordType::getStringById(desirable_type);
-		std::string outType = CFRecordType::getStringById(what_we_actually_read);		
+		// tags are different
 
 		Log::warning("The extracted record is not of requested type.\nRequested: \"" + 
 			XLS::CFRecordType::getStringById(desirable_type) + "\" Extracted: \"" + CFRecordType::getStringById(what_we_actually_read) + "\"");		
@@ -238,7 +235,6 @@ void CFStreamCacheReader::checkAndAppendContinueData()
 	for(std::list<CFRecordPtr>::iterator good = records_cache.begin(), it = ++records_cache.begin();
 		it != records_cache.end(); ++it, ++good)
 	{
-		size_t typeRecord = (*it)->getTypeId();
 		while(it != records_cache.end() && (rt_Continue == (*it)->getTypeId()) )
 		{
 			(*good)->appendRawData(*it);
@@ -255,7 +251,7 @@ void CFStreamCacheReader::checkAndAppendContinueData()
 
 bool CFStreamCacheReader::isEOF()
 {
-	if (stream_ == NULL) return true;
+	if (stream_ == nullptr) return true;
 
 	return !records_cache.size() && stream_->isEOF();
 }
@@ -289,7 +285,7 @@ CFRecordPtr FileStreamCacheReader::getNextRecord(const CFRecordType::TypeId desi
 
 		//Log::warning(rec_name);
 
-		if (desirable_type == rt_MsoDrawingGroup)	// объединяем rt_MsoDrawingGroup + rt_Continue в один блок 
+		if (desirable_type == rt_MsoDrawingGroup)	// combine rt_MsoDrawingGroup + rt_Continue into one block
 		{
 			if (checkNextRecord(desirable_type, 1))
 			{				
@@ -332,7 +328,7 @@ CFRecordPtr FileStreamCacheReader::getNextRecord(const CFRecordType::TypeId desi
 	{
 		what_we_actually_read = records_cache.front()->getTypeId();
 
-		// if we get what was requested
+		// if get what was requested
 		if ( desirable_type == what_we_actually_read || 
 			 desirable_type == CFRecordType::ANY_TYPE ||
 			(desirable_type == rt_BOF_BIFF8 && (what_we_actually_read == rt_BOF_BIFF4 ||
@@ -346,9 +342,7 @@ CFRecordPtr FileStreamCacheReader::getNextRecord(const CFRecordType::TypeId desi
 
 	if(gen_except)
 	{
-		// теги разные
-		std::string inType = XLS::CFRecordType::getStringById(desirable_type);
-		std::string outType = CFRecordType::getStringById(what_we_actually_read);		
+		// tags are different
 
 		Log::warning("The extracted record is not of requested type.\nRequested: \"" + 
 			XLS::CFRecordType::getStringById(desirable_type) + "\" Extracted: \"" + CFRecordType::getStringById(what_we_actually_read) + "\"");		
@@ -384,7 +378,6 @@ void FileStreamCacheReader::checkAndAppendContinueData()
 	for (std::list<CFRecordPtr>::iterator good = records_cache.begin(), it = ++records_cache.begin();
 		it != records_cache.end(); ++it, ++good)
 	{
-		size_t typeRecord = (*it)->getTypeId();
 		while (it != records_cache.end() && (rt_Continue == (*it)->getTypeId()) )
 		{
 			(*good)->appendRawData(*it);
@@ -426,11 +419,10 @@ CFRecordPtr BinaryStreamCacheReader::getNextRecord(const CFRecordType::TypeId de
 
     while(readFromStream(1))
     {
-        CFRecordType::TypeString rec_name = records_cache.front()->getTypeString();
 
         //Log::warning(rec_name);
 
-        /*if (desirable_type == rt_MsoDrawingGroup)	// объединяем rt_MsoDrawingGroup + rt_Continue в один блок
+        /*if (desirable_type == rt_MsoDrawingGroup) // combine rt_MsoDrawingGroup + rt_Continue into one block
         {
             if (checkNextRecord(desirable_type, 1))
             {
@@ -473,7 +465,7 @@ CFRecordPtr BinaryStreamCacheReader::getNextRecord(const CFRecordType::TypeId de
     {
         what_we_actually_read = records_cache.front()->getTypeId();
 
-        // if we get what was requested
+        // if get what was requested
         if ( desirable_type == what_we_actually_read ||
              desirable_type == CFRecordType::ANY_TYPE ||
             (desirable_type == rt_BOF_BIFF8 && (what_we_actually_read == rt_BOF_BIFF4 ||
@@ -487,9 +479,7 @@ CFRecordPtr BinaryStreamCacheReader::getNextRecord(const CFRecordType::TypeId de
 
     if(gen_except)
     {
-        // теги разные
-        std::string inType = XLS::CFRecordType::getStringById(desirable_type);
-        std::string outType = CFRecordType::getStringById(what_we_actually_read);
+        // tags are different
 
         Log::warning("The extracted record is not of requested type.\nRequested: \"" +
             XLS::CFRecordType::getStringById(desirable_type) + "\" Extracted: \"" + CFRecordType::getStringById(what_we_actually_read) + "\"");
@@ -538,7 +528,6 @@ void BinaryStreamCacheReader::checkAndAppendContinueData()
     for (std::list<CFRecordPtr>::iterator good = records_cache.begin(), it = ++records_cache.begin();
         it != records_cache.end(); ++it, ++good)
     {
-        size_t typeRecord = (*it)->getTypeId();
         while (it != records_cache.end() && (rt_Continue == (*it)->getTypeId()) )
         {
             (*good)->appendRawData(*it);

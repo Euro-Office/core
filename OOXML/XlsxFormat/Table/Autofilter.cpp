@@ -83,7 +83,7 @@ namespace OOX
 			{
 				toXMLWithNS(writer, L"", L"sortCondition", L"");
 			}
-			void CSortCondition::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring &child_ns) const
+			void CSortCondition::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring & /*child_ns*/) const
 			{
 				if(m_oDescending.IsInit() || m_oRef.IsInit() || m_oSortBy.IsInit() || m_oDxfId.IsInit())
 				{
@@ -122,11 +122,7 @@ namespace OOX
                     ptr->rfx = m_oRef->GetValue();
                 if(m_oSortBy.IsInit())
                 {
-                    if(m_oSortBy == SimpleTypes::Spreadsheet::ESortBy::sortbyValue)
-                    {
-                        ptr->sortOn = 0;
-                    }
-                    else if(m_oSortBy ==  SimpleTypes::Spreadsheet::ESortBy::sortbyCellColor)
+                    if(m_oSortBy ==  SimpleTypes::Spreadsheet::ESortBy::sortbyCellColor)
                     {
                         ptr->sortOn = 1;
                         ptr->condDataValue.condDataValue = m_oDxfId->GetValue();
@@ -223,7 +219,7 @@ namespace OOX
 			}
 			void CSortCondition::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("descending"),      m_oDescending )
@@ -261,6 +257,7 @@ namespace OOX
 								m_oSortBy = SimpleTypes::Spreadsheet::ESortBy::sortbyIcon;
 								//m_oDxfId  = ptr->cfflag;
 								break;
+							default: break;
 						}
 
 					}
@@ -289,6 +286,7 @@ namespace OOX
 								m_oSortBy = SimpleTypes::Spreadsheet::ESortBy::sortbyIcon;
 								//m_oDxfId  = ptr->cfflag;
 								break;
+							default: break;
 						}
 					}
 				}
@@ -385,10 +383,7 @@ namespace OOX
 					beginSortState->fCol = m_oColumnSort->GetValue();
                 else
                     beginSortState->fCol = false;
-				if(m_oSortMethod == SimpleTypes::Spreadsheet::ESortMethod::sortmethodStroke)
-					beginSortState->fAltMethod = true;
-				else
-					beginSortState->fAltMethod = false;
+				beginSortState->fAltMethod = m_oSortMethod == SimpleTypes::Spreadsheet::ESortMethod::sortmethodStroke;
 
 				auto sortConds(new XLSB::SORTCONDS);
 				ptr->m_source = XLS::BaseObjectPtr{sortConds};
@@ -453,7 +448,7 @@ namespace OOX
 			}
 			void CSortState::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("ref"),      m_oRef )
@@ -495,14 +490,14 @@ namespace OOX
 			{
 				toXMLWithNS(writer, L"", L"colorFilter", L"");
 			}
-			void CColorFilter::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring &child_ns) const
+			void CColorFilter::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring & /*child_ns*/) const
 			{
 				if(m_oDxfId.IsInit())
 				{
 					writer.StartNodeWithNS(node_ns, node_name);
 					writer.StartAttributes();
 					WritingStringAttrInt(L"dxfId", m_oDxfId->GetValue());
-					if(m_oCellColor.IsInit() && false == m_oCellColor->ToBool())
+					if(m_oCellColor.IsInit() && !m_oCellColor->ToBool())
 						writer.WriteString(L" cellColor=\"0\"");
 					writer.EndAttributesAndNode();
 				}
@@ -538,7 +533,7 @@ namespace OOX
 			}
 			void CColorFilter::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-							// Читаем атрибуты
+							// Reading the attributes
 							WritingElement_ReadAttributes_Start( oReader )
 
 							WritingElement_ReadAttributes_Read_if     ( oReader, _T("cellColor"),      m_oCellColor )
@@ -573,7 +568,7 @@ namespace OOX
 			{
 				toXMLWithNS(writer, L"", L"dynamicFilter", L"");
 			}
-			void CDynamicFilter::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring &child_ns) const
+			void CDynamicFilter::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring & /*child_ns*/) const
 			{
 				if(m_oType.IsInit())
 				{
@@ -696,7 +691,7 @@ namespace OOX
 			}
 			void CDynamicFilter::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("type"),      m_oType )
@@ -782,6 +777,7 @@ namespace OOX
 						   m_oType = SimpleTypes::Spreadsheet::EDynamicFilterType::dynamicfiltertypeM11; break;
 					   case 0x00000027:
 						   m_oType = SimpleTypes::Spreadsheet::EDynamicFilterType::dynamicfiltertypeM12; break;
+					   default: break;
 				   }
 
 				   m_oVal    = ptr->xNumValue.data.value;
@@ -807,7 +803,7 @@ namespace OOX
 			{
 				toXMLWithNS(writer, L"", L"customFilter", L"");
 			}
-			void CCustomFilter::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring &child_ns) const
+			void CCustomFilter::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring & /*child_ns*/) const
 			{
 				if(m_oOperator.IsInit() && m_oVal.IsInit())
 				{
@@ -906,7 +902,7 @@ namespace OOX
 			}
 			void CCustomFilter::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("operator"),      m_oOperator )
@@ -933,6 +929,7 @@ namespace OOX
 							m_oOperator = SimpleTypes::Spreadsheet::ECustomFilter::customfilterNotEqual; break;
 						case 0x06:
 							m_oOperator = SimpleTypes::Spreadsheet::ECustomFilter::customfilterGreaterThanOrEqual; break;
+						default: break;
 					}
 
 					if(ptr->vts == 0x00000004)
@@ -969,7 +966,7 @@ namespace OOX
 
 				writer.StartNodeWithNS(node_ns, node_name);
 				writer.StartAttributes();
-				if (m_oAnd.IsInit() && true == m_oAnd->ToBool())
+				if (m_oAnd.IsInit() && m_oAnd->ToBool())
 					writer.WriteString(L" and=\"1\"");
 				writer.EndAttributes();
 
@@ -1037,7 +1034,7 @@ namespace OOX
 			}
 			void CCustomFilters::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("and"),      m_oAnd )
@@ -1070,7 +1067,7 @@ namespace OOX
 			{
 				toXMLWithNS(writer, L"", L"filter", L"");
 			}
-			void CFilter::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring &child_ns) const
+			void CFilter::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring & /*child_ns*/) const
 			{
 				if(m_oVal.IsInit())
 				{
@@ -1118,7 +1115,7 @@ namespace OOX
 			}
 			void CFilter::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("val"),      m_oVal )
@@ -1151,7 +1148,7 @@ namespace OOX
 			{
 				toXMLWithNS(writer, L"", L"dateGroupItem", L"");
 			}
-			void CDateGroupItem::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring &child_ns) const
+			void CDateGroupItem::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring & /*child_ns*/) const
 			{
 				if(m_oDateTimeGrouping.IsInit())
 				{
@@ -1183,11 +1180,7 @@ namespace OOX
 				auto ptr(new XLSB::AFilterDateGroupItem);
 				XLS::BaseObjectPtr objectPtr(ptr);
 
-				if (m_oDateTimeGrouping == SimpleTypes::Spreadsheet::EDateTimeGroup::datetimegroupYear)
-				{
-					ptr->dntChecked = 0x00000000;
-				}
-				else if (m_oDateTimeGrouping == SimpleTypes::Spreadsheet::EDateTimeGroup::datetimegroupMonth)
+				if (m_oDateTimeGrouping == SimpleTypes::Spreadsheet::EDateTimeGroup::datetimegroupMonth)
 				{
 					ptr->dntChecked = 0x00000001;
 				}
@@ -1241,7 +1234,7 @@ namespace OOX
 			}
 			void CDateGroupItem::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("dateTimeGrouping"),      m_oDateTimeGrouping )
@@ -1273,6 +1266,7 @@ namespace OOX
 							m_oDateTimeGrouping = SimpleTypes::Spreadsheet::EDateTimeGroup::datetimegroupMinute; break;
 						case 0x00000005:
 							m_oDateTimeGrouping = SimpleTypes::Spreadsheet::EDateTimeGroup::datetimegroupSecond; break;
+						default: break;
 					}
 					m_oDay      = ptr->dom;
 					m_oHour     = ptr->hour;
@@ -1377,18 +1371,13 @@ namespace OOX
 			{
 				auto ptr(new XLSB::FILTERS);
 				XLS::BaseObjectPtr objectPtr(ptr);
-				if(m_oBlank.IsInit())
-				{
-					auto beginFilters(new XLSB::BeginFilters);
-					beginFilters->fBlank = m_oBlank->GetValue();
-				}
 				for(auto i: m_arrItems)
 				{
 					if (CFilter* cfilter = dynamic_cast<CFilter*>(i)) {
-						// Элемент является экземпляром класса CFilter
+						// The element is an instance of the CFilter class
 						ptr->m_arBrtFilter.push_back(cfilter->toBin());
 					} else if (CDateGroupItem* groupItem = dynamic_cast<CDateGroupItem*>(i)) {
-						// Элемент является экземпляром класса CDateGroupItem
+						// The element is an instance of the CDateGroupItem class
 						ptr->m_arBrtAFilterDateGroupItem.push_back(groupItem->toBin());
 					}
 				}
@@ -1400,7 +1389,7 @@ namespace OOX
 			}
 			void CFilters::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("blank"),      m_oBlank )
@@ -1433,15 +1422,15 @@ namespace OOX
 			{
 				toXMLWithNS(writer, L"", L"top10", L"");
 			}
-			void CTop10::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring &child_ns) const
+			void CTop10::toXMLWithNS(NSStringUtils::CStringBuilder& writer, const std::wstring &node_ns, const std::wstring &node_name, const std::wstring & /*child_ns*/) const
 			{
 				if(m_oVal.IsInit())
 				{
 					writer.StartNodeWithNS(node_ns, node_name);
 					writer.StartAttributes();
-					if(m_oTop.IsInit() && false == m_oTop->ToBool())
+					if(m_oTop.IsInit() && !m_oTop->ToBool())
 						writer.WriteString(L" top=\"0\"");
-					if(m_oPercent.IsInit() && true == m_oPercent->ToBool())
+					if(m_oPercent.IsInit() && m_oPercent->ToBool())
 						writer.WriteString(L" percent=\"1\"");
 					WritingStringNullableAttrDouble(L"val", m_oVal, m_oVal->GetValue());
 					WritingStringNullableAttrDouble(L"filterVal", m_oFilterVal, m_oFilterVal->GetValue());
@@ -1488,7 +1477,7 @@ namespace OOX
 			}
 			void CTop10::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("filterVal"),      m_oFilterVal )
@@ -1535,7 +1524,7 @@ namespace OOX
 					writer.StartNodeWithNS(node_ns, node_name);
 					writer.StartAttributes();
 					WritingStringNullableAttrInt(L"colId", m_oColId, m_oColId->GetValue());
-					if(m_oShowButton.IsInit() && false == m_oShowButton->ToBool())
+					if(m_oShowButton.IsInit() && !m_oShowButton->ToBool())
 						writer.WriteString(L" showButton=\"0\"");
 					WritingStringNullableAttrBool(L"hiddenButton", m_oHiddenButton);
 					writer.EndAttributes();
@@ -1645,7 +1634,7 @@ namespace OOX
 					else
 						ptr->ft = 2;
 					//auto dxfn = new XLS::DXFN12;
-					//todo: сделать копирование структуры dxfn12 из стилей по id
+					//todo: copy dxfn12 structure from styles by id
 				}
 				else if(m_oFilters.IsInit() || m_oCustomFilters.IsInit())
 				{
@@ -1677,7 +1666,7 @@ namespace OOX
 			}
 			void CFilterColumn::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("colId"),      m_oColId )

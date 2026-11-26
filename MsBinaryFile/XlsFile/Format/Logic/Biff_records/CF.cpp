@@ -134,7 +134,7 @@ int CF::serialize(std::wostream & stream)
 
 			if ((cfEx) && (cfEx->content.fHasDXF))
 			{
-				//cfEx->content.dxf.serialize(CP_XML_STREAM()); - вложенный формат низя?
+				//cfEx->content.dxf.serialize(CP_XML_STREAM()); - nested format not allowed?
 				
 				if (cfEx->dxfId_ >= 0 )
 					dxfId_ = cfEx->dxfId_;

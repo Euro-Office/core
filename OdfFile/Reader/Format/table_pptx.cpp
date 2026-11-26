@@ -176,7 +176,7 @@ void table_table::pptx_convert(oox::pptx_conversion_context & Context)
 		{
 			if (table_table_template* template_ = dynamic_cast<table_table_template *>(style.get()))
 			{	
-				//first row, columns, last row, columns, odd row, columns todoooo 
+				//first row, columns, last row, columns, odd row, columns TODO
 				if (template_->table_body_)
 				{
 					table_body_template* body_ = dynamic_cast<table_body_template* >(template_->table_body_.get());
@@ -351,7 +351,7 @@ void table_table_column::pptx_convert(oox::pptx_conversion_context & Context)
 
 			if ((inst) && (inst->content()))
             {
-				//column properies
+				//column properties
 				if (inst->content()->get_style_table_column_properties())
 				   inst->content()->get_style_table_column_properties()->pptx_convert(Context);				
             }

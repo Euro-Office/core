@@ -52,13 +52,13 @@ int main(int argc, char* argv[])
     NSWasm::CData oRes;
     for (const std::wstring& sFile : arrFiles)
     {
-        BYTE* pData = NULL;
+        BYTE* pData = nullptr;
         DWORD nSize;
         NSFile::CFileBinary oFile;
         if (oFile.ReadAllBytes(sFile, &pData, nSize))
         {
             std::wstring sFileName = NSFile::GetFileName(sFile);
-            BYTE* pStr = NULL;
+            BYTE* pStr = nullptr;
             LONG nStrSize;
             NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sFileName.c_str(), (LONG)sFileName.length(), pStr, nStrSize);
             oRes.WriteString(pStr, nStrSize);

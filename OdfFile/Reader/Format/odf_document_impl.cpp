@@ -709,7 +709,7 @@ void odf_document::Impl::parse_meta(office_element *element)
 
 		if (user_defined->meta_name_.empty()) continue;
 		
-		context_->DocProps().add_user_defined(user_defined->meta_name_, user_defined->content_);
+		context_->DocProps().add_user_defined(user_defined->meta_name_, user_defined->content_, user_defined->meta_value_type_);
 	}
 
 	dc_creator * dc_creator_ = dynamic_cast<dc_creator*>(meta->dc_creator_.get());
@@ -742,15 +742,26 @@ void odf_document::Impl::parse_meta(office_element *element)
 	
 	meta_template * meta_template_ = dynamic_cast<meta_template*>(meta->meta_template_.get());
 	if (meta_template_)
-		context_->DocProps().template_ = meta_generator_->content_;
+		context_->DocProps().template_ = meta_template_->xlink_title_;
 
 	meta_creation_date * meta_creation_date_ = dynamic_cast<meta_creation_date*>(meta->meta_creation_date_.get());
 	if (meta_creation_date_)
 		context_->DocProps().creation_date_ = meta_creation_date_->content_;
 	
-	meta_keyword * meta_keyword_ = dynamic_cast<meta_keyword*>(meta->meta_keyword_.get());
-	if (meta_keyword_)
-		context_->DocProps().keyword_ = meta_keyword_->content_;
+	meta_initial_creator * meta_initial_creator_ = dynamic_cast<meta_initial_creator*>(meta->meta_initial_creator_.get());
+	if (meta_initial_creator_)
+		context_->DocProps().initial_creator_ = meta_initial_creator_->content_;
+
+	// ODF has one meta:keyword element per keyword, OOXML one cp:keywords string: join them with a space.
+	for (size_t i = 0; i < meta->meta_keyword_.size(); i++)
+	{
+		meta_keyword * meta_keyword_ = dynamic_cast<meta_keyword*>(meta->meta_keyword_[i].get());
+		if (!meta_keyword_ || meta_keyword_->content_.empty()) continue;
+
+		if (!context_->DocProps().keyword_.empty())
+			context_->DocProps().keyword_ += L" ";
+		context_->DocProps().keyword_ += meta_keyword_->content_;
+	}
 	meta_document_statistic * meta_document_statistic_ = dynamic_cast<meta_document_statistic*>(meta->meta_document_statistic_.get());
 	if (meta_document_statistic_)
 	{
@@ -816,8 +827,8 @@ void odf_document::Impl::parse_styles(office_element *element)
 			}
 		}
 		
-        // parse automatic styles - эти стили используют объекты которые в оазис находятся в этом же документе
-		//переопределяем имя - иначе при поиске может возникнуть коллизия.
+        // parse automatic styles - these styles use objects that are in the oasis in the same document
+		//Redefine the name - otherwise a collision may occur during the search.
         do
         {
             office_automatic_styles * automaticStyles = dynamic_cast<office_automatic_styles *>( document->office_automatic_styles_.get() );
@@ -882,6 +893,18 @@ void odf_document::Impl::parse_styles(office_element *element)
                 }
 
                 context_->listStyleContainer().add_list_style(listStyle);
+            }
+            // data styles: LibreOffice may write a data style that a content.xml cell style uses only here.
+            // Added first, so a data style of the same name in office:styles or in content.xml replaces it.
+            for (size_t i = 0; i < automaticStyles->styles_.number_styles_.size(); i++)
+            {
+                office_element_ptr & elm = automaticStyles->styles_.number_styles_[i];
+
+                const number_style_base * style = dynamic_cast<const number_style_base *>(elm.get());
+                if (!style)
+                    continue;
+
+                context_->numberStyles().add(style->get_style_name(), elm);
             }
         }
         while(0); 
@@ -1226,9 +1249,9 @@ bool odf_document::Impl::docx_convert(oox::docx_conversion_context & Context)
    
 	Context.end_document();
 
-    // мы обрабатываем стили списка после того как сконвертировали документ,
-    // так как в процессе конвертации документа у нас могу добавиться стили — 
-    // в случае если используется text:start-value (начинаем нумерацию заново)
+    // Process the list styles after the document is converted,
+    // since during the document conversion process we can add styles -
+    // if text:start-value is used (start numbering again)
     Context.process_list_styles();
 
 	Context.add_jsaProject(jsaProject_bin_);

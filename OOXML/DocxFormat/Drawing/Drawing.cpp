@@ -571,7 +571,7 @@ namespace OOX
 			for ( unsigned int nIndex = 0; nIndex < m_arrLineTo.size(); nIndex++ )
 			{
 				if ( m_arrLineTo[nIndex] )delete m_arrLineTo[nIndex];
-				m_arrLineTo[nIndex] = NULL;
+				m_arrLineTo[nIndex] = nullptr;
 			}
 			m_arrLineTo.clear();
 		}
@@ -909,7 +909,7 @@ namespace OOX
 
 			if (m_oRelativeHeight.IsInit() && m_pMainDocument)
 			{
-				CDocument *pDocument = NULL;
+				CDocument *pDocument = nullptr;
 				OOX::CDocx* docx = dynamic_cast<OOX::CDocx*>(m_pMainDocument);
 				if (docx)
 				{
@@ -974,7 +974,7 @@ namespace OOX
 						m_oSizeRelH = oNode;
 					else if ( _T("sizeRelV") == sName )
 						m_oSizeRelV = oNode;
-					else if ( false == m_eWrapType.IsInit() )
+					else if ( !m_eWrapType.IsInit() )
 					{
 						if ( _T("wrapNone") == sName )
 						{
@@ -1035,8 +1035,8 @@ namespace OOX
 					m_oSizeRelV = oReader;
 				else if ( _T("mc:AlternateContent") == sName )
 				//ПРИВЛЕЧЕНИЕ СРЕДСТВ ИЗ МЕСТНЫХ ИСТОЧНИКОВ.docx
-				//вариативность на разные версии офиса части параметров - кстати ... это может встретиться в ЛЮБОМ месте
-				//todooo сделать чтение не обязательно fallback, по выбору версии нужной нам (w14, ..)
+				//variability in different versions of the office part of the parameters - by the way... this can occur in ANY place
+				//TODO make reading not necessarily fallback, depending on the version we need (w14, ..)
 				{
 					nCurDepth++;
 					while( oReader.ReadNextSiblingNode( nCurDepth ) )
@@ -1056,14 +1056,14 @@ namespace OOX
 								oSubReader.ReadNextNode();//fallback
 
 								fromXML(oSubReader);
-								//break чтобы не читать сразу оба Choice и Fallback
+								//break so as not to read both Choice and Fallback at once
 								break;
 							}
 						}
 					}
 					nCurDepth--;
 				}
-				else if ( false == m_eWrapType.IsInit() )
+				else if ( !m_eWrapType.IsInit() )
 				{
 					if ( _T("wp:wrapNone") == sName )
 					{
@@ -1227,11 +1227,11 @@ namespace OOX
 
 		CDrawing::CDrawing(XmlUtils::CXmlNode& oNode)
 		{
-			fromXML( oNode );
+			CDrawing::fromXML( oNode );
 		}
 		CDrawing::CDrawing(XmlUtils::CXmlLiteReader& oReader)
 		{
-			fromXML( oReader );
+			CDrawing::fromXML( oReader );
 		}
 		CDrawing::~CDrawing()
 		{

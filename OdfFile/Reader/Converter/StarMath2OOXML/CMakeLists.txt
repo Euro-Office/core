@@ -5,24 +5,13 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-# Ensure Qt core and gui are NOT included automatically if using a Qt-aware environment
-# (In CMake, you simply don't call find_package(Qt...) if you don't need it)
-
-# Remove UNICODE definition if it was inherited from directory properties
-remove_definitions(-DUNICODE -D_UNICODE)
-
-# TEMPLATE = lib, CONFIG += shared plugin
-# In CMake, MODULE is often used for plugins loaded at runtime, but SHARED is standard 
-# for dynamic libraries linked at compile time.
 add_library(StarMathConverter SHARED)
+
+set_default_options(StarMathConverter)
 
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
-
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 
 # Set target version
 set_target_properties(StarMathConverter PROPERTIES
@@ -32,26 +21,24 @@ set_target_properties(StarMathConverter PROPERTIES
 
 # HEADERS and SOURCES
 target_sources(StarMathConverter PRIVATE
-    cconversionsmtoooxml.cpp
-    ${CORE_ROOT_DIR}/OOXML/Base/Unit.cpp
-	conversionmathformula.cpp 
-    cstarmathpars.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/conversionmathformula.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/cconversionsmtoooxml.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/cstarmathpars.cpp
     
-    TextDirection.h
-    cconversionsmtoooxml.h
+	${CMAKE_CURRENT_SOURCE_DIR}/conversionmathformula.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/cconversionsmtoooxml.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/cstarmathpars.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/fontType.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/TextDirection.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/TFormulaSize.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/typeConversion.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/typeselements.h
+
+    ${CORE_ROOT_DIR}/OOXML/Base/Unit.cpp
+
     ${CORE_ROOT_DIR}/OOXML/Base/Unit.h
-	conversionmathformula.h
-    cstarmathpars.h
-    fontType.h
-    typeConversion.h
-    typeselements.h
-    TFormulaSize.h
 )
 
-
-# ADD_DEPENDENCY(kernel)
-# Replaces your custom kernel dependency. 
-# Assumes 'kernel' is another CMake target defined elsewhere in your project.
 target_link_libraries(StarMathConverter PRIVATE 
     Boost::system
     Boost::filesystem
@@ -60,19 +47,15 @@ target_link_libraries(StarMathConverter PRIVATE
     kernel
 )
 
-# core_windows { ... }
-if(WIN32)
-    target_compile_definitions(StarMathConverter PRIVATE SUPPORT_MS_CRYPTO)
-    target_sources(StarMathConverter PRIVATE src/Certificate_mscrypto.h)
-    
-    # LIBS += -lcrypt32 -lcryptui -lAdvapi32 -lws2_32 -lUser32
-    target_link_libraries(StarMathConverter PRIVATE
-        crypt32
-        cryptui
-        advapi32
-        ws2_32
-        user32
-    )
+target_compile_definitions(StarMathConverter PRIVATE
+    STARMATH_USE_DYNAMIC_LIBRARY
+)
+
+if( UNIX )
+    # Remove UNICODE definition if it was inherited from directory properties
+    remove_definitions(-DUNICODE -D_UNICODE)
 endif()
 
 copy_artifacts_to_folder("StarMathConverter" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( StarMathConverter )

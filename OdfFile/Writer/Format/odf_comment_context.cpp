@@ -89,7 +89,7 @@ void odf_comment_context::start_comment(office_element_ptr &elm, int oox_id)
 	odf_comment_state state;
 
 	impl_->comments_.push_back(state);
-	impl_->comments_.back().elements_.push_back(elm);//"0" - root comment eleemnt
+	impl_->comments_.back().elements_.push_back(elm);//"0" - root comment element
 	impl_->comments_.back().oox_id = oox_id < 0 ? impl_->comments_.back().elements_.size() : oox_id;
 	impl_->comments_.back().odf_name = L"comment_" + boost::lexical_cast<std::wstring>(oox_id);
 
@@ -120,7 +120,7 @@ void odf_comment_context::end_comment(office_element_ptr &elm, int oox_id)
 
 			comm->attr_.name_ = impl_->comments_[i].odf_name;
 
-			impl_->comments_[i].state = 2;//stoped
+			impl_->comments_[i].state = 2;//stopped
 
 			impl_->comments_[i].elements_.push_back(elm);
 			return;

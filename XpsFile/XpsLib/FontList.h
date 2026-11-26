@@ -64,7 +64,7 @@ namespace XPS
 				unsigned char sKey[16];
 				GetFontKey(wsName, sKey);
 
-				// Нужно подменить первые 32 байта файла
+				// Need to replace the first 32 bytes of the file
 				if (IFolder::iftFolder == pFolder->getType())
 				{
 					if (NSDirectory::Exists(wsFontPath))

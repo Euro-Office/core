@@ -110,9 +110,9 @@ void odp_slide_context::start_table()
 //--------------------------------------------------------------------
 	odf_style_state_ptr style_state;
 
-//общие свойства ячеек
+//general cell properties
 	styles_context_->create_style(L"", odf_types::style_family::TableCell, true, false, -1);
-					//ради нормального задания дефолтовых свойств на cells
+					//for the sake of normal setting of default properties on cells
 	style_state = styles_context_->last_state(style_family::TableCell);
 	if (style_state)
 	{
@@ -120,7 +120,7 @@ void odp_slide_context::start_table()
 		table_context()->set_default_cell_properties(style_state->get_name());
 	}
 
-//стиль создаем всегда	
+//Always create style
 	styles_context_->create_style(L"", odf_types::style_family::Table, true, false, -1); 
 	
 	style_state = styles_context_->last_state(style_family::Table);
@@ -146,7 +146,7 @@ void odp_slide_context::add_table_column(double width)
 
 	styles_context_->create_style(L"", style_family::TableColumn, true, false, -1);
 
-	//не срабатывает ..
+	//doesn't work..
 	//std::wstring parent_name = table_context()->get_default_cell_properties();
 
 	//if (parent_name.length() > 0) 
@@ -164,7 +164,7 @@ void odp_slide_context::add_table_column(double width)
 	table_context()->add_column(elm, true);
 		table_context()->set_column_width(width);
 
-	state().drawing_context()->start_element(elm); // для связи элментов
+	state().drawing_context()->start_element(elm); // for connecting elements
 	state().drawing_context()->end_element();
 }
 void odp_slide_context::end_table_columns()

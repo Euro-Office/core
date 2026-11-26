@@ -92,7 +92,7 @@ void CCtrlGeneralShape::ParseChildren(CXMLReader& oReader, EHanType eType)
 
 	const std::string sChildNodeName{oReader.GetName()};
 
-	//TODO:: выглядит не очень. Нужно вернуться и подумать как лучше иначе сделать
+	//TODO:: doesn't look very good. Revisit and find a better approach.
 	if (EHanType::HWPML == eType && "DRAWINGOBJECT" == sChildNodeName)
 	{
 		WHILE_READ_NEXT_NODE_WITH_NAME(oReader)
@@ -252,7 +252,7 @@ ELineArrowSize CCtrlGeneralShape::GetLineTailSize() const
 	return m_eLineTailSz;
 }
 
-CCtrlGeneralShape* CCtrlGeneralShape::Parse(CCtrlGeneralShape& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CCtrlGeneralShape* CCtrlGeneralShape::Parse(CCtrlGeneralShape& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 {
 	oBuffer.SavePosition();
 
@@ -262,10 +262,11 @@ CCtrlGeneralShape* CCtrlGeneralShape::Parse(CCtrlGeneralShape& oObj, int nSize, 
 	CCtrlGeneralShape *pShape = nullptr;
 
 	#define CREATE_AND_PARSE_SHAPE(type)\
-	pShape = new type(oObj); \
+	typedef type shape_type; \
+	pShape = new shape_type(oObj); \
 	\
 	if (nullptr != pShape) \
-		type::ParseCtrl((type&)(*pShape), nSize - oBuffer.GetDistanceToLastPos(), oBuffer, 0, nVersion); \
+		shape_type::ParseCtrl((shape_type&)(*pShape), nSize - oBuffer.GetDistanceToLastPos(), oBuffer, 0, nVersion); \
 	else \
 		oBuffer.Skip(nSize - oBuffer.GetDistanceToLastPos())
 
@@ -327,7 +328,7 @@ CCtrlGeneralShape* CCtrlGeneralShape::Parse(CCtrlGeneralShape& oObj, int nSize, 
 	return pShape;
 }
 
-int CCtrlGeneralShape::ParseListHeaderApend(CCtrlGeneralShape& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlGeneralShape::ParseListHeaderApend(CCtrlGeneralShape& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

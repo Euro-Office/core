@@ -313,7 +313,7 @@ namespace BinDocxRW
 		OOX::CDocument*					pDocument;
 		OOX::JsaProject*				pJsaProject;
 
-		bool							m_bWriteSectPr;//Записывать ли свойства верхнего уровня в данном экземпляре BinaryOtherTableWriter
+		bool							m_bWriteSectPr;//Whether to write top-level properties on this BinaryOtherTableWriter instance
 //---------------------------------
 		BinaryDocumentTableWriter(ParamsWriter& oParamsWriter, ParamsDocumentWriter& oParamsDocumentWriter, std::map<int, bool>* mapIgnoreComments, BinaryHeaderFooterTableWriter* oBinaryHeaderFooterTableWriter);
 	

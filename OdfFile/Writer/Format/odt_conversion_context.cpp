@@ -97,7 +97,7 @@ void odt_conversion_context::start_document()
 
 	page_layout_context()->set_styles_context(styles_context());
 
-/////////////////настройки дефолтовые
+/////////////////default settings
 
 	root_text_->office_text_attlist_.text_use_soft_page_breaks_ = true;
 }
@@ -237,7 +237,7 @@ void odt_conversion_context::add_text_content(const std::wstring & text)
 }
 void odt_conversion_context::add_to_root()
 {
-	if (!text_context_.empty()) return; // не root element (embedded) ????
+	if (!text_context_.empty()) return; // not root element (embedded) ????
 
 	if (comment_context_.is_started()) return;
 
@@ -354,17 +354,17 @@ void odt_conversion_context::add_paragraph_break(int type)
 		//text_p* para	= NULL;
 		//style * style_	= NULL;
 		//http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os-part1.html#__RefHeading__1415190_253892949
-		//нихере не работает !! в span, ... приходится генерить разрыв вручную !!
+		//it doesn't work!! in span, ... the break has to be generated manually!!
 
 		//if (para = dynamic_cast<text_p*>(current_root_elements_.back().elm.get()))
 		//{
-		//	style_ = dynamic_cast<style*>(current_root_elements_.back().style_elm.get());//для переноса свойств параграфа
+		//	style_ = dynamic_cast<style*>(current_root_elements_.back().style_elm.get());//to transfer paragraph properties
 		//	end_paragraph();
 		//}	
 		//else/* if (header = dynamic_cast<text_h*>(current_root_elements_.back().elm.get()))*/
 		//{
-			//тут получается что разрыв будет прописан внутри элемента (не параграфа) - так что вручную свойство запишем
-			//в случае разрыва параграфов оно запишется при старте после-разрывного параграфа
+			//here it turns out that the break will be written inside the element (not the paragraph) - so we'll write the property manually
+			//in case of a paragraph break, it will be written at the start of the post-break paragraph
 			//text_context()->set_type_break(type, 0);
 		text_context()->save_property_break();
 		//}
@@ -382,7 +382,7 @@ void odt_conversion_context::add_paragraph_break(int type)
 		//	{
 		//		style_paragraph_properties * new_props = NULL;
 		//		if (styles_context()->last_state())
-		//		{// нужна именно копия св-в так как будет добавочные свойства
+		//		{// a copy of the properties is needed since additional properties will be added
 		//			new_props = styles_context()->last_state()->get_paragraph_properties();				
 		//			if (new_props)new_props->apply_from(style_->content_.get_style_paragraph_properties());
 		//			
@@ -451,7 +451,7 @@ void odt_conversion_context::end_alphabetical_index()
 	create_element(L"text", L"alphabetical-index-source", elm, this);
 	
 	text_context()->start_element(elm);
-	//tempalte
+	//template
 	text_context()->end_element();
 	text_context()->end_element();
 }
@@ -630,7 +630,7 @@ void odt_conversion_context::end_hyperlink()
 	text_context()->level_hyperlink_ = 0;
 	text_context()->end_element(); //hyperlink_element
 
-	text_context()->is_hyperlink_ = false; //метка .. для гиперлинков в объектах - там не будет span
+	text_context()->is_hyperlink_ = false; //label .. for hyperlinks in objects - there will be no span there
 }
 void odt_conversion_context::start_drop_down()
 {
@@ -760,8 +760,17 @@ void odt_conversion_context::set_field_instr()
 
 	current_fields.back().status = 1; //prepare
 
+	// STYLEREF (a chapter field from ODT, or Word's) has no ODF counterpart here: its result is
+	// kept as text. Typed first, so that the searches below don't take its style name for
+	// HYPERLINK, REF, PAGE, TOC, ...
+	const bool bStyleRef = boost::algorithm::starts_with(boost::algorithm::trim_left_copy(instr), L"STYLEREF");
+	if (bStyleRef)
+	{
+		current_fields.back().type = fieldStyleRef;
+	}
+
 	size_t res1 = instr.find(L"HYPERLINK");
-	if (std::wstring::npos != res1)	
+	if (std::wstring::npos != res1 && !bStyleRef)
 	{
 		current_fields.back().type = fieldHyperlink;
 		current_fields.back().in_span = false;
@@ -1041,7 +1050,7 @@ void odt_conversion_context::set_field_item	(const std::wstring &value, const st
 void odt_conversion_context::start_field(bool in_span)
 {
 	if (false == current_fields.empty() && current_fields.back().status == 0 && current_fields.back().instrText.empty() )
-		return; //start_field из sdt 
+		return; //start_field from sdt
 
 	_field_state field;
 	current_fields.push_back(field);
@@ -1056,7 +1065,7 @@ void odt_conversion_context::separate_field()
 }
 void odt_conversion_context::set_master_page_name(std::wstring master_name)
 {
-	if (current_root_elements_.empty())// return; - эффект_штурмовика.docx - 1 страница !! (и ваще - 
+	if (current_root_elements_.empty())// return; - эффект_штурмовика.docx - 1 page!! (and finally -
 	{
 		is_paragraph_in_current_section_ = true;
 		return;
@@ -1254,6 +1263,10 @@ void odt_conversion_context::end_paragraph()
 {
 	//if (!current_fields.empty() && !current_fields.back().result) return;	//Стандартное_составное_письмо.docx
 	text_context()->end_paragraph();
+	// w:del parts of one deletion share a paragraph. A note or text box paragraph inside the
+	// deleted text ends deeper and leaves the deletions of the outer paragraph alone.
+	text_changes_state_.deletions.erase(text_changes_state_.deletions.lower_bound(std::make_pair(text_context_.size(), std::wstring())),
+		text_changes_state_.deletions.end());
 	
 	if (false == current_fields.empty() && current_fields.back().status == 3)	//prepare for delete
 	{
@@ -1279,7 +1292,7 @@ void odt_conversion_context::start_list_item(int level, std::wstring style_name 
 	//	add_to_root();
 	//	text_context()->start_list_item();
 	//}
-	level = level + 1; //отсчет от 1 (а не 0)
+	level = level + 1; //counting from 1 (not 0)
 
 	if (text_context()->list_state_.style_name != style_name && text_context()->list_state_.started_list)
 	{
@@ -1301,7 +1314,7 @@ void odt_conversion_context::start_list_item(int level, std::wstring style_name 
 	{
 		if (text_context()->start_list(style_name))
 		{
-			//text_context()->set_list_continue(true); //??? держать в памяти все списки????
+			//text_context()->set_list_continue(true); //??? keep all lists in memory????
 			add_to_root();
 		}
 		
@@ -1341,12 +1354,12 @@ void odt_conversion_context::flush_section()
 		for (size_t i = 0; i < current_root_elements_.size(); i++)
 		{
 			if ((sections_.back().continuous && i < 2) || !sections_.back().continuous)
-				// при вставлении параграфа возможен искусственный разрыв в параграфах - см add_page_break
+				// When inserting a paragraph, an artificial break in paragraphs is possible - see add_page_break
 			{
 				text_soft_page_break * break_ = dynamic_cast<text_soft_page_break*>(current_root_elements_[i].elm.get());
 				if (break_)
 				{
-					//необходимо добавить в свойства предыдущего параграфа	(если он есть, если нет - следующего), что брейк не нужен
+					//need to add to the properties of the previous paragraph (if there is one, if not - the next one) that a break isn't needed
 					//int paragraph_break = i-1;
 					//if (paragraph_break < 0) paragraph_break = i+1;
 					//style *style_ = dynamic_cast<style*>(current_root_elements_[paragraph_break].style_elm.get());
@@ -1393,7 +1406,7 @@ void odt_conversion_context::start_run(bool styled)
 			props->apply_from(dynamic_cast<style_text_properties*>(drop_cap_state_.text_properties.get())->content_);
 
 	}
-	if (!current_fields.empty() && current_fields.back().status == 1 && current_fields.back().in_span)//поле стартуется в span - нужно для сохранения стиля
+	if (!current_fields.empty() && current_fields.back().status == 1 && current_fields.back().in_span)//the field starts in span - needed to save the style
 	{
 		current_fields.back().status = 2;
 		current_fields.back().elm = text_context()->start_field(current_fields.back().type, current_fields.back().value, current_fields.back().format);
@@ -1434,7 +1447,7 @@ int odt_conversion_context::start_comment(int oox_comm_id)
 			start_paragraph();
 			text_context()->set_KeepNextParagraph(true);
 
-			//аннотацию нельзя добавить на верхний уровень - нет поддержки в open_format
+			//annotation can't be added to the top level - no support in open_format
 		}
 		text_context()->current_level_.back().elm->add_child_element(comm_elm);
 
@@ -1522,6 +1535,21 @@ void odt_conversion_context::end_note()
 	text_context()->current_level_.pop_back();
 }
 //--------------------------------------------------------------------------------------------------------
+namespace
+{
+	// The last child of the paragraph, heading, span or link open at the end of text, or an empty pointer.
+	office_element_ptr last_child(odf_text_context *text)
+	{
+		if (!text || text->current_level_.empty()) return office_element_ptr();
+		office_element *elm = text->current_level_.back().elm.get();
+		const office_element_ptr_array *content = NULL;
+		if (text_p *p = dynamic_cast<text_p*>(elm)) content = &p->paragraph_content_;
+		else if (text_h *h = dynamic_cast<text_h*>(elm)) content = &h->paragraph_content_;
+		else if (text_span *span = dynamic_cast<text_span*>(elm)) content = &span->content_;
+		else if (text_a *a = dynamic_cast<text_a*>(elm)) content = &a->paragraph_content_;
+		return (content && !content->empty()) ? content->back() : office_element_ptr();
+	}
+}
 bool odt_conversion_context::start_change (int id, int type, std::wstring &author, std::wstring &userId, std::wstring &date, std::wstring style_name)
 {
 	if (id < 0) return false;
@@ -1534,21 +1562,46 @@ bool odt_conversion_context::start_change (int id, int type, std::wstring &autho
 	//}
 	//if (!text_changes_state_.main_text_context) return;
 	
-	text_changes_state_.current_types.push_back(type);
-
 	std::wstring strId = L"ct" + boost::lexical_cast<std::wstring>(id);
+	const std::wstring deletion_key = strId;
+
+	if (type == 2)
+	{
+		// A deletion over a paragraph break comes as several w:del with the same id next to each other in one
+		// paragraph, one per deleted paragraph. Continue the region already written for that id with a new
+		// paragraph: a second region would repeat its xml:id, and other applications then drop the whole
+		// deletion. Only when nothing came between the two: a deletion elsewhere in the paragraph that reuses the
+		// id gets a region of its own, under an id of its own.
+		std::map<std::pair<size_t, std::wstring>, _text_changes_state::_deletion>::iterator deletion =
+			text_changes_state_.deletions.find(std::make_pair(text_context_.size(), deletion_key));
+		if (deletion != text_changes_state_.deletions.end())
+		{
+			if (deletion->second.mark && deletion->second.mark == last_child(text_context()))
+			{
+				text_changes_state_.current_types.push_back(type);
+
+				start_text_context();
+				text_context()->start_element(deletion->second.region);
+				text_context()->start_paragraph();
+				return true;
+			}
+			strId += L"_" + std::to_wstring(++text_changes_state_.repeated_ids);
+		}
+	}
+
+	text_changes_state_.current_types.push_back(type);
 //---------------------------------------------------------------------------------
 	office_element_ptr start_elm;
 
-	if (type == 2) create_element(L"text", L"change", start_elm, this); //место удаления ..
+	if (type == 2) create_element(L"text", L"change", start_elm, this); //removal site..
 	else			
-		create_element(L"text", L"change-start", start_elm, this);	//место изменения .... 
+		create_element(L"text", L"change-start", start_elm, this);	//place of change...
 
 	text_add_change* change = dynamic_cast<text_add_change*>(start_elm.get());
 	if (change) change->text_change_id_ = strId;
 
 	text_context()->start_element(start_elm);
-		add_to_root();//добавление/удаление параграфов и т д
+		add_to_root();//adding/deleting paragraphs, etc.
 	text_context()->end_element();	
 
 	//text_changes_state_.main_text_context->start_element(start_elm);
@@ -1595,7 +1648,7 @@ bool odt_conversion_context::start_change (int id, int type, std::wstring &autho
 
 	if (type == 3 && !style_name.empty())
 	{
-		//не по спецификации !!!
+		//not according to specification!!!
 		text_format_change * format_change = dynamic_cast<text_format_change*> (child_elm.get());
 		if (format_change)
 			format_change->text_style_name_ = style_name;
@@ -1604,9 +1657,11 @@ bool odt_conversion_context::start_change (int id, int type, std::wstring &autho
 
 	if (type == 2)//delete
 	{
+		text_changes_state_.deletions[std::make_pair(text_context_.size(), deletion_key)] = {child_elm, start_elm};
+
 		start_text_context();
 		text_context()->start_element(child_elm);
-		text_context()->start_paragraph();//ваще то не по стандарту .. может мы уже в параграфе (ради Libra! ... гы)
+		text_context()->start_paragraph();//actually it's not according to the standard .. maybe we're already in the paragraph (for the sake of LibreOffice!)
 	}
 	return true;
 }
@@ -1634,7 +1689,7 @@ void odt_conversion_context::end_change (int id, int type)
 			add_to_root();
 		text_context()->end_element();	
 	}
-	text_changes_state_.current_types.pop_back();//todooo map?? удаление без проверки чего удаляешь
+	text_changes_state_.current_types.pop_back();//TODO map?? deleting without checking what is being deleted
 }
 //bool odt_conversion_context::is_delete_changes()
 //{
@@ -1654,7 +1709,7 @@ text_format_properties* odt_conversion_context::get_drop_cap_properties()
 void odt_conversion_context::start_drop_cap(paragraph_format_properties *paragraph_properties)
 {
 	if (drop_cap_state_.enabled) 
-		end_drop_cap(); // 2 подряд ваще возможны ???
+		end_drop_cap(); // Is 2 in a row even possible???
 
 	if (paragraph_properties == NULL) return;
 
@@ -1693,7 +1748,7 @@ void odt_conversion_context::end_drop_cap()
 		}
 		if (drop_cap_state_.inline_style == false)
 		{
-			//сдвинуть первую строку - так чтоб буквица вся (что поместится) была на поле
+			//move the first line so that the entire drop cap (as much as fits) is in the margin
 			//double indent_pt = 0;
 			//double indent_percent = 0;
 			//if (drop_cap_state_.paragraph_properties->content_.fo_text_indent_)
@@ -1748,7 +1803,7 @@ void odt_conversion_context::add_table_column(double width)
 
 	styles_context()->create_style(L"", style_family::TableColumn, true, false, -1);
 
-	//не срабатывает ..
+	//doesn't work..
 	//std::wstring parent_name = table_context()->get_default_cell_properties();
 
 	//if (parent_name.length() > 0) 
@@ -1766,7 +1821,7 @@ void odt_conversion_context::add_table_column(double width)
 	table_context()->add_column(elm, true);
 		table_context()->set_column_width(width);
 
-	text_context()->start_element(elm); // для связи элментов
+	text_context()->start_element(elm); // for connecting elements
 	text_context()->end_element();
 }
 void odt_conversion_context::end_table_columns()

@@ -23,6 +23,8 @@
  *
  */
 
+#include <algorithm>
+#include <map>
 #include <iostream>
 
 #include <xml/utils.h>
@@ -76,7 +78,7 @@ void text_tracked_context::start_changes_content()
 
 void text_tracked_context::end_changes_content()
 {
-	docx_context_.finish_run();	//0106GS-GettingStartedWithWriter_el.odt - удаленный заголовок
+	docx_context_.finish_run();	//0106GS-GettingStartedWithWriter_el.odt - deleted header
 
 	current_state_.content.push_back(changes_stream_.str());
 	
@@ -144,6 +146,7 @@ docx_conversion_context::docx_conversion_context(odf_reader::odf_document * _odf
 	current_outline_level_		(-1),
 	is_rtl_						(false),
 	is_delete_text_				(false),
+	table_text_only_			(false),
 	delayed_converting_			(false),
 	process_headers_footers_	(false),
 	current_process_comment_	(false),
@@ -348,6 +351,16 @@ void docx_conversion_context::end_math_formula()
 }
 void docx_conversion_context::start_sdt(int type)
 {
+	// An index inside a tracked deletion is written as deleted runs at the position of its change
+	// mark, inside a paragraph, where no sdt and no paragraph of its own can stand. Write only the
+	// entries' text, as deleted paragraphs are written: no sdt, no field paragraphs.
+	// Each start_sdt is paired with one end_sdt; an index can hold another one (in a text box of an
+	// entry), so the decision is kept per index.
+	const bool textOnly = is_delete_text_ && state_.in_paragraph_;
+	index_text_only_.push_back(textOnly);
+	if (textOnly)
+		return;
+
 	in_table_content_ = true;
 
 	table_content_context_.type_table_content = type;
@@ -510,6 +523,15 @@ void docx_conversion_context::end_field()
 }
 void docx_conversion_context::end_sdt()
 {
+	const bool textOnly = !index_text_only_.empty() && index_text_only_.back();
+	if (!index_text_only_.empty())
+		index_text_only_.pop_back();
+	if (textOnly)
+	{
+		if (!in_table_content_) // no enclosing index writes its sdt and field: drop what the source set
+			table_content_context_.clear_all();
+		return;
+	}
 	if (!in_table_content_) return;
 
 	if (table_content_context_.type_table_content < 4)
@@ -621,7 +643,7 @@ void docx_conversion_context::end_alphabetical_index (const std::wstring &id)
 	if (mapAlphabeticals.empty())
 		current_alphabetic_index_.clear();
 	else
-		current_alphabetic_index_ = mapAlphabeticals.begin()->first; // todooo vector+map+level
+		current_alphabetic_index_ = mapAlphabeticals.begin()->first; // TODO vector+map+level
 }
 
 
@@ -632,7 +654,7 @@ void docx_conversion_context::start_chart(std::wstring  name)
 void docx_conversion_context::end_chart()
 {
 	//current_chart().set_drawing_link(current_sheet().get_drawing_link());
-	//излишняя инфа
+	//unnecessary information
 }
 oox_chart_context & docx_conversion_context::current_chart()
 {
@@ -743,7 +765,7 @@ void docx_conversion_context::start_document()
 
 
 	//apply page-default prop
-	//пока временно сюда воткнем обработку свойств документа в целом
+	//For now, let's temporarily include processing of the properties of the document as a whole here
 }
 
 
@@ -774,16 +796,7 @@ void docx_conversion_context::end_document()
 	output_document_->get_word_files().set_notes(notes_context_);
 
 	output_document_->get_docProps_files().set_app(package::simple_element::create(L"app.xml", dump_settings_app()));
-	output_document_->get_docProps_files().set_core(package::simple_element::create(L"core.xml", dump_settings_core()));
-
-	std::wstring settings_custom = dump_settings_custom();
-	if (false == settings_custom.empty())
-	{
-		output_document_->get_docProps_files().set_custom(package::simple_element::create(L"custom.xml", settings_custom));
-		output_document_->get_content_types_file().content()->add_override(L"/docProps/custom.xml", L"application/vnd.openxmlformats-officedocument.custom-properties+xml");
-		output_document_->get_rels_files().add(
-	relationship(L"rCstmId", L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/custom-properties", L"docProps/custom.xml"));
-	}
+	output_document_->set_doc_props(odf_document_->odf_context().DocProps().dump_core(), odf_document_->odf_context().DocProps().dump_custom());
 
 	for (size_t i = 0; i < charts_.size(); i++)
     {
@@ -866,7 +879,7 @@ std::wstring  docx_conversion_context::dump_settings_app()
 			{
 				CP_XML_NODE(L"Template")
 				{
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().template_;
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().template_);
 				}
 			}
 			if (odf_document_->odf_context().DocProps().revision_)
@@ -880,7 +893,7 @@ std::wstring  docx_conversion_context::dump_settings_app()
 			{
 				if (!odf_document_->odf_context().DocProps().application_.empty())
 				{
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().application_;
+					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().application_);
 				}
 				else
 				{
@@ -927,118 +940,6 @@ std::wstring  docx_conversion_context::dump_settings_app()
 				CP_XML_NODE(L"Paragraphs")
 				{
 					CP_XML_STREAM() << *odf_document_->odf_context().DocProps().paragraph_count_;
-				}
-			}
-		}
-	}
-	return output.str();
-}
-std::wstring  docx_conversion_context::dump_settings_custom()
-{
-	std::wstring user_defined = odf_document_->odf_context().DocProps().dump_user_defined();
-	if (user_defined.empty()) return L"";
-
-	std::wstringstream output;
-	CP_XML_WRITER(output)
-	{
-		CP_XML_NODE(L"Properties")
-		{
-			CP_XML_ATTR(L"xmlns", L"http://schemas.openxmlformats.org/officeDocument/2006/custom-properties");
-			CP_XML_ATTR(L"xmlns:vt", L"http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes");
-
-			CP_XML_STREAM() << user_defined;
-		}
-	}
-	return output.str();
-}
-std::wstring  docx_conversion_context::dump_settings_core()
-{
-	std::wstringstream output;
-	
-	CP_XML_WRITER(output)
-	{
-		CP_XML_NODE(L"cp:coreProperties")
-		{
-			CP_XML_ATTR(L"xmlns:cp", L"http://schemas.openxmlformats.org/package/2006/metadata/core-properties");
-			CP_XML_ATTR(L"xmlns:xsi", L"http://www.w3.org/2001/XMLSchema-instance");
-			CP_XML_ATTR(L"xmlns:dc", L"http://purl.org/dc/elements/1.1/");
-			CP_XML_ATTR(L"xmlns:dcmitype", L"http://purl.org/dc/dcmitype/");
-			CP_XML_ATTR(L"xmlns:dcterms", L"http://purl.org/dc/terms/");
-			
-			if (!odf_document_->odf_context().DocProps().creation_date_.empty())
-			{
-				CP_XML_NODE(L"dcterms:created")
-				{
-					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().creation_date_;
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_date_.empty())
-			{
-				CP_XML_NODE(L"dcterms:modified")
-				{
-					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().dc_date_;
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_creator_.empty())
-			{
-				CP_XML_NODE(L"dc:creator")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_creator_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_title_.empty())
-			{
-				CP_XML_NODE(L"dc:title")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_title_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_subject_.empty())
-			{
-				CP_XML_NODE(L"dc:subject")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_subject_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_description_.empty())
-			{
-				CP_XML_NODE(L"dc:description")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_description_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_language_.empty())
-			{
-				CP_XML_NODE(L"dc:language")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_language_);
-				}
-			}
-			CP_XML_NODE(L"cp:lastModifiedBy")
-			{
-				std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
-				if (sApplication.empty())
-					sApplication = NSSystemUtils::gc_EnvApplicationNameDefault;
-				CP_XML_STREAM() << sApplication;
-#if defined(INTVER)
-				std::string s = VALUE2STR(INTVER);
-				CP_XML_STREAM() << L"/" << std::wstring(s.begin(), s.end());
-#endif	
-			}
-			if (!odf_document_->odf_context().DocProps().keyword_.empty())
-			{
-				CP_XML_NODE(L"cp:keywords")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().keyword_);
-				}
-			}
-			if (odf_document_->odf_context().DocProps().revision_)
-			{
-				CP_XML_NODE(L"cp:revision")
-				{
-					CP_XML_STREAM() << *odf_document_->odf_context().DocProps().revision_;
 				}
 			}
 		}
@@ -1135,16 +1036,27 @@ std::wstring  docx_conversion_context::dump_settings_document()
 
 			_CP_OPT(double) tabDistance = root()->odf_context().Settings().get_tab_distance();
 
-			if (tabDistance)
+			if (tabDistance && *tabDistance >= 0)
 			{
 				CP_XML_NODE(L"w:defaultTabStop")
 				{
-					CP_XML_ATTR(L"w:val", *tabDistance);
+					// ST_TwipsMeasure: whole twips, rounded
+					CP_XML_ATTR(L"w:val", static_cast<int>(*tabDistance + 0.5));
 				}
 			}
 			
+			// ODF AddParaTableSpacing (true or missing: space below + space above of adjacent
+			// paragraphs add up) is Word's doNotUseHTMLParagraphAutoSpacing. Like LibreOffice, take
+			// only the exact value "true" as true.
+			_CP_OPT(std::wstring) addParaTableSpacing = root()->odf_context().Settings().find_by_name(L"AddParaTableSpacing");
+			const bool bAddParaTableSpacing = !addParaTableSpacing || *addParaTableSpacing == L"true";
+
 			CP_XML_NODE(L"w:compat")
 			{
+				if (bAddParaTableSpacing)
+				{
+					CP_XML_NODE(L"w:doNotUseHTMLParagraphAutoSpacing");
+				}
 				CP_XML_NODE(L"w:compatSetting")
 				{
 					CP_XML_ATTR(L"w:name",  L"compatibilityMode" );
@@ -1177,7 +1089,7 @@ void docx_conversion_context::end_office_text()
 {
 	finish_paragraph();
 
-	if (!delayed_converting_)//иначе возможно зацикливание
+	if (!delayed_converting_)//otherwise it may end up in a loop
 	{
 		docx_convert_delayed();
 	}
@@ -1461,7 +1373,9 @@ void docx_conversion_context::process_styles()
                     const std::wstring basedOnId = styles_map_.get(baseOn->name(), baseOn->type());
                     _Wostream << L"<w:basedOn w:val=\"" << basedOnId << "\"/>";
                 }
-				else if (!bDefault && !default_style.empty())
+				// default_style is a paragraph style: w:basedOn must name a style of the same type
+				else if (!bDefault && !default_style.empty() &&
+						 arStyles[i]->type() == odf_types::style_family::Paragraph)
 				{
 					_Wostream << L"<w:basedOn w:val=\"" << default_style << "\"/>";
 				}
@@ -1518,6 +1432,98 @@ void docx_conversion_context::start_process_style_content()
     styles_context_.start();
 }
 
+namespace
+{
+int twips(double points)
+{
+	return (int)(points * 20 + (points < 0 ? -0.5 : 0.5));
+}
+
+// Text width in points of a page layout (page width less the page margins), 0 if unknown.
+// Section margins are left out: a section of its own gets them neither in its w:pgMar.
+double text_width(odf_reader::page_layout_container & layouts, const std::wstring & page_layout_name)
+{
+	// a percentage has no defined base for a horizontal page margin; it counts as 0
+	auto points = [](const _CP_OPT(odf_types::length_or_percent) & margin)
+	{
+		return margin && margin->get_type() == odf_types::length_or_percent::Length
+			? margin->get_length().get_value_unit(odf_types::length::pt) : 0.;
+	};
+
+	const odf_reader::page_layout_instance * layout = page_layout_name.empty() ? NULL : layouts.page_layout_by_name(page_layout_name);
+	if (!layout)
+		layout = layouts.page_layout_first();
+	if (!layout || !layout->properties() || !layout->properties()->attlist_.fo_page_width_)
+		return 0;
+
+	const odf_reader::style_page_layout_properties_attlist & page = layout->properties()->attlist_;
+	const _CP_OPT(odf_types::length_or_percent) & left = page.common_horizontal_margin_attlist_.fo_margin_left_
+		? page.common_horizontal_margin_attlist_.fo_margin_left_ : page.common_margin_attlist_.fo_margin_;
+	const _CP_OPT(odf_types::length_or_percent) & right = page.common_horizontal_margin_attlist_.fo_margin_right_
+		? page.common_horizontal_margin_attlist_.fo_margin_right_ : page.common_margin_attlist_.fo_margin_;
+
+	return page.fo_page_width_->get_value_unit(odf_types::length::pt) - points(left) - points(right);
+}
+
+// True if the style:column elements (if any) have the same rel-width, up to LibreOffice's
+// rounding (it writes 32767* and 32768* for two equal columns): a relative tolerance, so that
+// small rel-widths such as 1* and 4* stay unequal.
+bool equal_rel_widths(const odf_reader::style_columns & columns)
+{
+	double low = 0, high = 0;
+	for (size_t i = 0; i < columns.style_columns_.size(); i++)
+	{
+		const odf_reader::style_column * col = dynamic_cast<const odf_reader::style_column *>(columns.style_columns_[i].get());
+		const double rel = col && col->style_rel_width_ ? col->style_rel_width_->get_value() : 0;
+		if (i == 0 || rel < low) low = rel;
+		if (i == 0 || rel > high) high = rel;
+	}
+	return high - low <= 0.001 * high;
+}
+
+// Text width and space to the next column of each style:column, in twips; empty if they
+// can't be computed.
+std::vector<std::pair<int, int>> column_widths(const odf_reader::style_columns & columns, double width)
+{
+	// ODF 1.4 §17.12/§17.13: a style:column gets rel-width / (sum of all rel-widths) of the
+	// width, its start and end indents included (style:rel-width is relative, not a percentage);
+	// in OOXML w:w is the text width of a column and w:space the gap to the next one.
+	std::vector<std::pair<int, int>> result;
+	if (width <= 0)
+		return result;
+
+	std::vector<const odf_reader::style_column *> cols;
+	double rel_sum = 0;
+	for (size_t i = 0; i < columns.style_columns_.size(); i++)
+	{
+		const odf_reader::style_column * col = dynamic_cast<const odf_reader::style_column *>(columns.style_columns_[i].get());
+		if (!col || !col->style_rel_width_ || col->style_rel_width_->get_value() <= 0)
+			return result;
+		rel_sum += col->style_rel_width_->get_value();
+		cols.push_back(col);
+	}
+
+	auto indent = [](const _CP_OPT(odf_types::length) & value)
+	{
+		return value ? value->get_value_unit(odf_types::length::pt) : 0.;
+	};
+
+	for (size_t i = 0; i < cols.size(); i++)
+	{
+		const double text = width * cols[i]->style_rel_width_->get_value() / rel_sum
+			- indent(cols[i]->fo_start_indent_) - indent(cols[i]->fo_end_indent_);
+		const double space = i + 1 < cols.size()
+			? indent(cols[i]->fo_end_indent_) + indent(cols[i + 1]->fo_start_indent_) : 0;
+
+		if (twips(text) <= 0)
+			return std::vector<std::pair<int, int>>();
+
+		result.push_back(std::make_pair(twips(text), (std::max)(0, twips(space))));
+	}
+	return result;
+}
+}
+
 void docx_conversion_context::process_section(std::wostream & strm, odf_reader::style_columns *columns_page)//from page layout
 {
 	if (root()->odf_context().pageLayoutContainer().linenumbering())
@@ -1529,6 +1535,9 @@ void docx_conversion_context::process_section(std::wostream & strm, odf_reader::
 	bool sep_columns = false;
 
 	oox::section_context::_section & section = get_section_context().get_last();
+
+	// the section's page layout, read before remove_section() drops the section
+	const std::wstring page_layout_name = get_page_properties();
 
 	odf_reader::style_columns *columns = columns_page;
 	//if (!columns)
@@ -1552,7 +1561,9 @@ void docx_conversion_context::process_section(std::wostream & strm, odf_reader::
 		}
 	}
 	
-	std::vector<std::pair<double, double>> width_space;
+	// text width (w:w) and space to the next column (w:space) of each column, in twips
+	std::vector<std::pair<int, int>> width_space;
+	int column_space = 708;
 	if (columns)
 	{
 		if (columns->fo_column_count_)
@@ -1564,60 +1575,18 @@ void docx_conversion_context::process_section(std::wostream & strm, odf_reader::
 			if (columns_sep->style_style_ != _T("none"))
 				sep_columns = true;
 		}
-
-		if (!columns->style_columns_.empty())
+		// fo:column-gap applies to columns without style:column elements (ODF 1.4 §19.233);
+		// LibreOffice writes it next to style:column elements of equal width, which then become
+		// equal columns with that gap, as in its DOCX export. Otherwise the style:column elements
+		// give each column's width and spacing (LibreOffice makes any columns with a gap equal).
+		const bool equal_columns = columns->fo_column_gap_ && equal_rel_widths(*columns);
+		if (count_columns > 1 && !equal_columns && columns->style_columns_.size() == (size_t)count_columns)
 		{
-			double page_width = 0;
-			const odf_reader::page_layout_instance * pp = root()->odf_context().pageLayoutContainer().page_layout_first();
-			
-			if ((pp) && (pp->properties()))
-			{
-				odf_reader::style_page_layout_properties_attlist & attr_page = pp->properties()->attlist_;
-				if (attr_page.fo_page_width_)
-				{
-					page_width = attr_page.fo_page_width_->get_value_unit(odf_types::length::pt);
-				}
-				if (attr_page.common_horizontal_margin_attlist_.fo_margin_left_)
-				{
-					page_width -= attr_page.common_horizontal_margin_attlist_.fo_margin_left_->get_length().get_value_unit(odf_types::length::pt);
-				}
-				if (attr_page.common_horizontal_margin_attlist_.fo_margin_right_)
-				{
-					page_width -= attr_page.common_horizontal_margin_attlist_.fo_margin_right_->get_length().get_value_unit(odf_types::length::pt);
-				}
-			}		
-			for (size_t i = 0; page_width > 0, i < columns->style_columns_.size(); i++)
-			{
-				odf_reader::style_column *col = dynamic_cast<odf_reader::style_column*>( columns->style_columns_[i].get());
-				if (!col) continue;
-
-				double percent = col->style_rel_width_ ? col->style_rel_width_->get_value() : 0;
-				if (percent > 0x7FFE)
-				{
-					//auto
-					break;
-				}
-				else
-				{
-					if (percent > 1000.) percent /= 100.;
-
-					double width = page_width * percent / 100.;
-
-					double space_end = col->fo_end_indent_ ? col->fo_end_indent_->get_value_unit(odf_types::length::pt) : 0;
-					double space_start = col->fo_start_indent_ ? col->fo_start_indent_->get_value_unit(odf_types::length::pt) : 0;
-
-					width -= space_end;
-					width -= space_start;
-
-					if (i < columns->style_columns_.size() - 1)
-					{
-						col = dynamic_cast<odf_reader::style_column*>(columns->style_columns_[i + 1].get());
-						space_start = col->fo_start_indent_ ? col->fo_start_indent_->get_value_unit(odf_types::length::pt) : 0;
-					}
-
-					width_space.push_back(std::make_pair(width, space_start + space_end));
-				}
-			}
+			width_space = column_widths(*columns, text_width(root()->odf_context().pageLayoutContainer(), page_layout_name));
+		}
+		if (count_columns > 1 && columns->fo_column_gap_ && width_space.empty())
+		{
+			column_space = (std::max)(0, twips(columns->fo_column_gap_->get_value_unit(odf_types::length::pt)));
 		}
 	}
 
@@ -1628,14 +1597,17 @@ void docx_conversion_context::process_section(std::wostream & strm, odf_reader::
 			CP_XML_ATTR(L"w:equalWidth", width_space.empty());
 			CP_XML_ATTR(L"w:num", count_columns);
 			CP_XML_ATTR(L"w:sep", sep_columns);
-			CP_XML_ATTR(L"w:space", 708);
+			CP_XML_ATTR(L"w:space", column_space);
 
 			for (size_t i = 0; i < width_space.size(); i++)
 			{
 				CP_XML_NODE(L"w:col")
 				{
-					CP_XML_ATTR(L"w:w", (int)(width_space[i].first * 20));	
-					CP_XML_ATTR(L"w:space", (int)(width_space[i].second * 20));	
+					CP_XML_ATTR(L"w:w", width_space[i].first);
+					if (i + 1 < width_space.size())
+					{
+						CP_XML_ATTR(L"w:space", width_space[i].second);
+					}
 				}
 			}
 		}
@@ -1683,7 +1655,7 @@ void docx_conversion_context::end_process_style_content(bool in_styles)
 
 void docx_conversion_context::serialize_paragraph_style(std::wostream & strm, const std::wstring & ParentId, bool in_styles)
  //in_styles = true -> styles.xml
-//почему то конструкция <pPr><rPr/></pPr><rPr/> "не работает" в части в rPr в ms2010 )
+//for some reason the construction <pPr><rPr/></pPr><rPr/> "doesn't work" in the part in rPr in ms2010)
 {
 	bool in_drawing	= false;
 
@@ -1694,12 +1666,18 @@ void docx_conversion_context::serialize_paragraph_style(std::wostream & strm, co
 	std::wstringstream & paragraph_style	= get_styles_context().paragraph_nodes();
  	std::wstringstream & run_style			= get_styles_context().text_style();
    
+	if (!in_styles && !header_footer_context_.edge_attr().empty())
+	{
+		// the style has no paragraph properties that wrote the header/footer distance with their own spacing
+		paragraph_style << L"<w:spacing " << header_footer_context_.edge_attr() << L"/>";
+		header_footer_context_.reset_edge_attr();
+	}
 	CP_XML_WRITER(strm)
 	{
 		////Tutor_Charlotte_Tutor_the_Entire_World_.odt
 		//if (get_section_context().dump_.empty() == false && (!ParentId.empty() || get_section_context().get().is_dump_ || in_header_) 
 		//	 && !get_table_context().in_table() && !in_drawing)
-		//{//две подряд секции или если стиль определен и в заголовки нельзя пихать !!!
+		//{//two sections in a row or if the style is defined and can't be inserted into the headers!!!
 		//	CP_XML_NODE(L"w:pPr")
 		//	{
 		//		CP_XML_STREAM() << get_section_context().dump_;
@@ -1857,7 +1835,7 @@ void docx_conversion_context::remove_page_properties()
 
 	if (s.page_properties_.size() > 1)
 	{
-		//первая общая (если есть) для всего документа - оставляем ее
+		//the first one is common (if any) for the entire document - leave it
 		s.page_properties_.erase(s.page_properties_.begin() + 1, s.page_properties_.begin() + 2);
 	}
 	else if (s.page_properties_.size() == 1)
@@ -2048,7 +2026,7 @@ int docx_conversion_context::process_paragraph_style(_CP_OPT(std::wstring) style
 
 				calc_tab_stops(styleInst, get_tabs_context());
 				
-				//вытаскивает rtl c цепочки стилей !! - просто прописать в наследуемом НЕЛЬЗЯ !!
+				//pulls out rtl from the style chain!! - it simply can't be registered in the inherited one!!
 				odf_reader::paragraph_format_properties properties = odf_reader::calc_paragraph_properties_content(styleInst);
 				if (properties.style_writing_mode_)
 				{
@@ -2101,6 +2079,45 @@ int docx_conversion_context::process_paragraph_style(_CP_OPT(std::wstring) style
 	}
 	return 0;
 }
+namespace
+{
+	// While the last paragraph of a header or the first paragraph of a footer is written, the distance between the
+	// header/footer and the page body waits in the header/footer context for the code that writes w:spacing.
+	// LibreOffice puts the distance below the last line of a header whatever bottom margin that paragraph has
+	// (unless the document asks for HeaderSpacingBelowLastPara), and above a footer in addition to the top margin of
+	// its first paragraph.
+	class header_footer_edge_spacing
+	{
+	public:
+		header_footer_edge_spacing(docx_conversion_context & Context, const odf_reader::text::paragraph_attrs *Attr,
+			const odf_reader::style_instance *styleInst) : context_(Context.get_header_footer_context())
+		{
+			const header_footer_context::edge_spacing & edge = context_.get_edge_spacing();
+			if (!Attr || edge.paragraph != Attr) return;
+
+			// the frame paragraph of a drop cap has its own fixed spacing, the paragraph after it gets the distance
+			if (Context.get_drop_cap_context().state() == 2) return;
+
+			double pt = edge.pt;
+			if (edge.add_own)
+			{
+				const odf_reader::paragraph_format_properties properties =
+					odf_reader::calc_paragraph_properties_content(styleInst);
+				const _CP_OPT(odf_types::length_or_percent) & own =
+					edge.header ? properties.fo_margin_bottom_ : properties.fo_margin_top_;
+				if (own && own->get_type() == odf_types::length_or_percent::Length)
+					pt += own->get_length().get_value_unit(odf_types::length::pt);
+			}
+			// w:before and w:after hold at most 1584pt
+			if (pt < 0)		pt = 0;
+			if (pt > 1584)	pt = 1584;
+			context_.set_edge_attr(edge.header ? L"w:after" : L"w:before", (int)(0.5 + 20.0 * pt));
+		}
+		~header_footer_edge_spacing() { context_.reset_edge_attr(); }
+	private:
+		header_footer_context & context_;
+	};
+}
 int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_attrs *Attr)
 {
 	if (!Attr) return 0;
@@ -2126,6 +2143,8 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 			if (font_size > 0) current_fontSize.push_back(font_size);
 			
 			_CP_OPT(int) outline_level = calc_outline_level(Attr->outline_level_, styleInst);
+
+			header_footer_edge_spacing edge_spacing(*this, Attr, styleInst);
 			
 			process_page_break_after(styleInst);
 
@@ -2150,7 +2169,7 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 
 					calc_tab_stops(styleInst, get_tabs_context());
 					
-					//вытаскивает rtl c цепочки стилей !! - просто прописать в наследуемом НЕЛЬЗЯ !!
+					//pulls out rtl from the style chain!! - it simply can't be registered in the inherited one!!
 					odf_reader::paragraph_format_properties properties = odf_reader::calc_paragraph_properties_content(styleInst);
 					if (properties.style_writing_mode_)
 					{
@@ -2222,7 +2241,7 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 			{
 				const std::wstring id = styles_map_.get( styleInst->name(), styleInst->type() );
 				output_stream() << L"<w:pPr>";
-	//todooo причесать			
+	//TODO clean up
 				if (!get_section_context().dump_.empty()
 					&& !get_table_context().in_table()
 					&& (get_process_note() == oox::docx_conversion_context::noNote)
@@ -2253,9 +2272,10 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 				}
 
 				serialize_list_properties(output_stream());
-				
+
 				//if ((Attr->outline_level_) && (*Attr->outline_level_ > 0))
-				if ( outline_level && status_para[id] == false )
+				const bool write_outline = outline_level && status_para[id] == false;
+				if (write_outline)
 				{
 					odf_reader::list_style_container & list_styles = root()->odf_context().listStyleContainer();
 					
@@ -2266,6 +2286,15 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 						output_stream() << L"<w:numId w:val=\"" << list_styles.id_outline() << L"\"/>"; // check bug 51965
 						output_stream() << L"</w:numPr>";
 					}
+				}
+				// after w:numPr, before w:outlineLvl
+				if (!header_footer_context_.edge_attr().empty())
+				{
+					output_stream() << L"<w:spacing " << header_footer_context_.edge_attr() << L"/>";
+					header_footer_context_.reset_edge_attr();
+				}
+				if (write_outline)
+				{
 					output_stream() << L"<w:outlineLvl w:val=\"" << *outline_level << L"\"/>";
 				}
 
@@ -2281,16 +2310,28 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 			}
 		}
 	}
+	// A paragraph without a style, or with one that is not known or has no content, wrote no properties so far: the
+	// distance between a header/footer and the page body is all it gets.
+	header_footer_edge_spacing edge_spacing(*this, Attr, NULL);
+	const std::wstring edge_attr = header_footer_context_.edge_attr();
+
 	if (!get_section_context().dump_.empty() 
 		&& !get_table_context().in_table()
 		&& (get_process_note() == oox::docx_conversion_context::noNote)
 		&& !in_drawing)
 	{
         output_stream() << L"<w:pPr>";
+			if (!edge_attr.empty())
+				output_stream() << L"<w:spacing " << edge_attr << L"/>";
 			output_stream() << get_section_context().dump_;
 			get_section_context().dump_.clear();
-			//todooo выяснить реальны ли заголовки без стилей и свойств
+			//TODO find out if headers are real without styles and properties
 		output_stream() << L"</w:pPr>";
+		return 3;
+	}
+	if (!edge_attr.empty())
+	{
+		output_stream() << L"<w:pPr><w:spacing " << edge_attr << L"/></w:pPr>";
 		return 3;
 	}
 
@@ -2358,9 +2399,9 @@ void docx_conversion_context::docx_convert_delayed()
 {
 	if (delayed_elements_.empty()) return;
 
-	if (delayed_converting_) return; //зацикливание иначе
+	if (delayed_converting_) return; //looping otherwise
 	if (get_drawing_context().get_current_level() > 0 )
-		return; //вложенный frame
+		return; //nested frame
 
 	delayed_converting_ = true;
     while(!delayed_elements_.empty())
@@ -2399,16 +2440,16 @@ void section_context::remove_section()
 	//sections_.erase(sections_.begin(), sections_.begin() + 1);
 	if (sections_.empty())
 	{
-		//после оканчания разметки секциями и начале (возобновлении) основного раздела нужен разрыв (хотя настройки страницы могут и не поменяться)
-		//щас разрыв на текущей странице
-		//todooo проверить - может типо если следующий будет заголовок - разорвать
+		//after finishing section marking and starting (resuming) the main section, a break is needed (although the page settings may not change)
+		//there is a gap on the current page right now
+		//TODO check - maybe if the next one is a title - break it
 		main_section_.is_dump_ = false;
 	}
 }
 namespace 
 {
-    // обработка Header/Footer
-    // конвертируем содержимое header/footer и сохраняем результат в виде строки
+    // Header/Footer processing
+    // convert the contents of header/footer and save the result as a string
     void process_one_header_footer(docx_conversion_context & Context, const std::wstring & styleName, odf_reader::office_element *elm, headers_footers::Type type)
     {
         if (!elm) return;
@@ -2420,7 +2461,7 @@ namespace
         
 		const std::wstring & dbgStr = newXml->str();
        
-		//слить если есть mediaitems, добавить релсы и обнулить их для основного документа.
+		//merge if there are mediaitems, add rels and reset them to zero for the main document.
 		rels internal_rels;
 
 		Context.get_mediaitems()->dump_rels(internal_rels, oox::header_footer_place);
@@ -2448,7 +2489,7 @@ void docx_conversion_context::process_headers_footers()
     odf_reader::odf_read_context & context =  doc->odf_context();
     odf_reader::page_layout_container & pageLayouts = context.pageLayoutContainer();
 
-    // проходим по всем page layout
+    // go through all page layouts
 	std::vector<odf_reader::style_master_page*> & master_pages = pageLayouts.master_pages();
 
 	bool bOddEvenPages = false;
@@ -2460,6 +2501,12 @@ void docx_conversion_context::process_headers_footers()
 	if (bOddEvenPages)
 	{
 		set_settings_property(odf_reader::_property(L"evenAndOddHeaders", true));
+	}
+	// master pages per page layout: no section starts between master pages that share one
+	std::map<std::wstring, size_t> layout_users;
+	for (size_t i = 0; i < master_pages.size(); i++)
+	{
+		layout_users[pageLayouts.page_layout_name_by_style(master_pages[i]->attlist_.style_name_.get_value_or(L""))]++;
 	}
  	for (size_t i = 0; i < master_pages.size(); i++)
 	{
@@ -2483,9 +2530,18 @@ void docx_conversion_context::process_headers_footers()
 		if (!master_pages[i]->style_header_ && !master_pages[i]->style_footer_ && !master_pages[i]->style_header_first_ && !master_pages[i]->style_footer_first_
 			&& !master_pages[i]->style_header_left_ && !master_pages[i]->style_footer_left_)
 		{
-			//отключенные колонтитулы
+			//disabled headers and footers
 			rels rels_;
 			get_headers_footers().add(styleName, L"", headers_footers::none, rels_);
+		}
+		// A master page that is followed by itself has no header or footer where it defines none. One that hands
+		// over to another master page, or shares its page layout with one, is left as it is: its section can also
+		// hold pages of the other one.
+		const _CP_OPT(std::wstring) & nextStyleName = master_pages[i]->attlist_.style_next_style_name_;
+		if ((!nextStyleName || nextStyleName->empty() || *nextStyleName == styleName) &&
+			layout_users[masterPageNameLayout] == 1)
+		{
+			get_headers_footers().set_no_inherit(styleName);
 		}
 		
 		remove_page_properties();
@@ -2615,7 +2671,7 @@ void docx_conversion_context::start_changes(bool in_para)
 	{
 		text_tracked_context::_state  &state = it->second;
 
-		if (state.type == 0)	continue; //unknown change ... todooo
+		if (state.type == 0)	continue; //unknown change ... TODO
 		if (state.active)		continue;
 
 		state.in_para = in_para;
@@ -2740,7 +2796,7 @@ void docx_conversion_context::end_changes(bool in_para)
 	{
 		text_tracked_context::_state  &state = it->second;
 
-		if (state.type	== 0)			continue; //unknown change ... libra format change skip
+		if (state.type	== 0)			continue; //unknown change ... LibreOffice format change skip
 		if (state.type	== 3)			continue;
 		if (!state.active)				continue;
 		if (state.in_para != in_para)	continue;

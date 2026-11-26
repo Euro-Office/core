@@ -37,7 +37,7 @@
 #include "../Math/oMathPara.h"
 #include "../Math/OMath.h"
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>
@@ -93,7 +93,7 @@ namespace OOX
 					if (oItem.IsValid())
 					{
 						std::wstring sName = oItem.GetName();
-						WritingElement *pItem = NULL;
+						WritingElement *pItem = nullptr;
 
 						if ( L"w:bdo" == sName )
 							AssignPtrXmlContent(pItem, CBdo, oItem)
@@ -184,13 +184,11 @@ namespace OOX
 			if ( oReader.IsEmptyNode() )
 				return;
 
-			OOX::Document* document = WritingElement::m_pMainDocument;
-
 			int nParentDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nParentDepth ) )
 			{
 				std::wstring sName = oReader.GetName();
-				WritingElement *pItem = NULL;
+				WritingElement *pItem = nullptr;
 
 				if ( L"w:bdo" == sName )
 					AssignPtrXmlContent(pItem, CBdo, oReader)

@@ -32,7 +32,7 @@ OOXLevelReader::OOXLevelReader(OOX::Numbering::CLvl* ooxLvlNum)
 }
 bool OOXLevelReader::Parse( ReaderParameter oParam, RtfListLevelProperty& oLevelProperty )
 {
-	if (m_ooxLvlNum == NULL) return false;
+	if (m_ooxLvlNum == nullptr) return false;
 
 	if (m_ooxLvlNum->m_oIlvl.IsInit())
 		oLevelProperty.m_nLevel = *m_ooxLvlNum->m_oIlvl;
@@ -46,7 +46,7 @@ bool OOXLevelReader::Parse( ReaderParameter oParam, RtfListLevelProperty& oLevel
 		{
 		case SimpleTypes::jcCenter          : oLevelProperty.m_nJustification = 1; break;
 		case SimpleTypes::jcEnd             : oLevelProperty.m_nJustification = 2; break;
-		case SimpleTypes::jcStart           : oLevelProperty.m_nJustification = 0; break;
+		case SimpleTypes::jcStart           :
 		case SimpleTypes::jcLeft            : oLevelProperty.m_nJustification = 0; break;
 		case SimpleTypes::jcRight           : oLevelProperty.m_nJustification = 2; break;
 		}
@@ -56,7 +56,7 @@ bool OOXLevelReader::Parse( ReaderParameter oParam, RtfListLevelProperty& oLevel
 		int nVal = *m_ooxLvlNum->m_oLvlRestart->m_oVal;
 		if( 0 == nVal )
 			oLevelProperty.m_nNoRestart = 0;
-		//todooo непонятка что будет если рестарт списка с не "0"
+		//TODO it's not clear what will happen if the list is restarted from something other than "0"
 	}
 	if (m_ooxLvlNum->m_oIsLgl.IsInit() )
 		oLevelProperty.m_nLegal = m_ooxLvlNum->m_oIsLgl->m_oVal.ToBool() ? 1 : 0;
@@ -64,7 +64,7 @@ bool OOXLevelReader::Parse( ReaderParameter oParam, RtfListLevelProperty& oLevel
 	if (m_ooxLvlNum->m_oLvlText.IsInit() && m_ooxLvlNum->m_oLvlText->m_sVal.IsInit())
 	{
 		oLevelProperty.SetLevelTextOOX( *m_ooxLvlNum->m_oLvlText->m_sVal);
-		//null???? todooo
+		//null???? TODO
 	}
 	if (m_ooxLvlNum->m_oNumFmt.IsInit() && m_ooxLvlNum->m_oNumFmt->m_oVal.IsInit())
 	{
@@ -103,7 +103,7 @@ bool OOXLevelReader::Parse( ReaderParameter oParam, RtfListLevelProperty& oLevel
 		OOXrPrReader orPrReader(m_ooxLvlNum->m_oRPr.GetPointer());
 		orPrReader.m_bDefStyle = false;
 
-		if( true == orPrReader.Parse( oParam, oNewProperty ) )
+		if( orPrReader.Parse( oParam, oNewProperty ) )
 			oLevelProperty.m_oCharProp = oNewProperty;
 	}
 
@@ -113,7 +113,7 @@ bool OOXLevelReader::Parse( ReaderParameter oParam, RtfListLevelProperty& oLevel
 		OOXpPrReader opPrReader(m_ooxLvlNum->m_oPPr.GetPointer());
 
 		CcnfStyle style;
-		if( true == opPrReader.Parse( oParam, oNewProperty, style) )
+		if( opPrReader.Parse( oParam, oNewProperty, style) )
 		{
 			oLevelProperty.m_nFirstIndent	= oNewProperty.m_nIndFirstLine;
 			oLevelProperty.m_nIndent		= oNewProperty.m_nIndLeft;

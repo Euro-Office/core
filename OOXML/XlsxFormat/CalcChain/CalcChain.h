@@ -66,7 +66,7 @@ namespace OOX
 			nullable<SimpleTypes::COnOff>					m_oNewThread;
 		};
 
-		//необработанные child:
+		//raw child:
 		//<extLst>
 		class CCalcChain : public OOX::File, public OOX::IFileContainer
 		{

@@ -127,7 +127,7 @@ namespace MetaFile
 		virtual std::wstring ConvertToSvg(unsigned int unWidth = 0, unsigned int unHeight = 0) = 0;
 		virtual void SetTempDirectory(const std::wstring& dir) = 0;
 
-		//Для тестов
+		//For tests
 	#ifdef METAFILE_SUPPORT_WMF_EMF
 		virtual void ConvertToXml(const wchar_t *wsFilePath) = 0;
 		virtual void ConvertToXmlAndRaster(const wchar_t *wsXmlFilePath, const wchar_t* wsOutFilePath, unsigned int unFileType, int nWidth, int nHeight = -1) = 0;

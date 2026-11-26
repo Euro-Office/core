@@ -35,6 +35,8 @@ void PPT::CorrectPlaceholderType(int& type)
     case PT_MasterSubTitle:			type = PT_SubTitle;			break;
     case PT_MasterNotesSlideImage:	type = PT_NotesSlideImage;	break;
     case PT_MasterNotesBody:		type = PT_NotesBody;		break;
+    default:
+        break;
     }
 }
 
@@ -94,12 +96,12 @@ void PPT::CLayout::Clear()
 
 void PPT::CLayout::CreateDublicateElements()
 {
-    // просто из всех своих элементов делаем дубликата
+    // Just make a duplicate of all our elements
 
     for (size_t nIndex = 0; nIndex < m_arElements.size(); ++nIndex)
     {
         CElementPtr pElem = m_arElements[nIndex];
-        if (NULL != pElem)
+        if (nullptr != pElem)
         {
             m_arElements[nIndex] = pElem->CreateDublicate();
         }

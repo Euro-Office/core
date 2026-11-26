@@ -50,9 +50,9 @@ namespace NFileWriter
 
 		NSFile::CFileBinary m_oFile;
 
-		LONG64 m_lBufferSize;							// Размер буффера
-		BYTE* m_lpBuffer;								// Сам буффер
-		LONG64 m_lWritePointer;							// Позиция для записи данных в буффер
+		LONG64 m_lBufferSize;							// Buffer size
+		BYTE* m_lpBuffer;								// The buffer itself
+		LONG64 m_lWritePointer;							// Position for writing data to the buffer
 
 	public :
 
@@ -77,7 +77,7 @@ namespace NFileWriter
 
 		virtual ~CBufferedFileWriter ()
 		{
-			Flush();
+			CBufferedFileWriter::Flush();
 			m_oFile.CloseFile();
 
 			RELEASEARRAYOBJECTS(m_lpBuffer);

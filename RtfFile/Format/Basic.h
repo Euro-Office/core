@@ -111,7 +111,7 @@ public:
 	}
 	int Find( T piRend )
 	{
-		//todooo - add map for seach
+		//TODO - add map for search
 
 		for (size_t i = 0; i < m_aArray.size(); i++ )
 		{
@@ -196,7 +196,7 @@ public:
 template<class T> class ItemSingleContainer: public ItemContainer<T>
 {
 public: 
-	//todooo -> to map with hash
+	//TODO -> to map with hash
     int AddItem( T piRend)
 	{
         for( int i = 0; i < (int)ItemContainer<T>::m_aArray.size(); i++ )

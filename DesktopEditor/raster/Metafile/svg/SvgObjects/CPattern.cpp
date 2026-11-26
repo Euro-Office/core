@@ -1,13 +1,13 @@
 #include "CPattern.h"
 #include <iostream>
 
-#include "../../../graphics/pro/Graphics.h"
+#include "../../../../graphics/pro/Graphics.h"
 
 namespace SVG
 {
 	CPattern::CPattern(CSvgReader& oReader, NSFonts::IFontManager *pFontManager)
 		: CAppliedObject(oReader), m_oContainer(oReader), m_pFontManager(pFontManager),
-		  m_pImage(NULL), m_enPatternUnits(objectBoundingBox)
+		  m_pImage(nullptr), m_enPatternUnits(objectBoundingBox)
 	{}
 
 	CPattern::~CPattern()
@@ -15,7 +15,7 @@ namespace SVG
 		RELEASEINTERFACE(m_pImage);
 	}
 
-	void CPattern::SetData(const std::map<std::wstring, std::wstring> &mAttributes, unsigned short ushLevel, bool bHardMode)
+	void CPattern::SetData(const std::map<std::wstring, std::wstring> &mAttributes, unsigned short  /*ushLevel*/, bool  /*bHardMode*/)
 	{
 		if (mAttributes.end() != mAttributes.find(L"patternUnits"))
 		{
@@ -30,7 +30,7 @@ namespace SVG
 
 	void CPattern::Update(const CSvgFile *pFile, const TBounds &oObjectBounds)
 	{
-		if (NULL != m_pImage)
+		if (nullptr != m_pImage)
 			RELEASEINTERFACE(m_pImage);
 
 		NSGraphics::IGraphicsRenderer* pGrRenderer = NSGraphics::Create();
@@ -54,13 +54,13 @@ namespace SVG
 		if (0 == nWidth || 0 == nHeight)
 			return;
 
-		BYTE* pBgraData = new(std::nothrow) BYTE[nWidth * nHeight * 4];
+		BYTE* pBgraData = new(std::nothrow) BYTE[static_cast<size_t>(nWidth) * nHeight * 4];
 
 		if (!pBgraData)
 			return;
 
 		unsigned int alfa = 0xffffff;
-		//дефолтный тон должен быть прозрачным, а не белым
+		//default tone should be transparent, not white
 		//memset(pBgraData, 0xff, nWidth * nHeight * 4);
 		for (int i = 0; i < nWidth * nHeight; i++)
 			((unsigned int*)pBgraData)[i] = alfa;
@@ -80,13 +80,13 @@ namespace SVG
 
 		pGrRenderer->SetTransform(dMMtoPx, 0., 0., dMMtoPx, 0., 0.);
 
-		//Отрисовка
+		//Rendering
 		m_oContainer.Draw(pGrRenderer, pFile);
 
 		pGrRenderer->EndCommand(c_nImageType);
 		RELEASEINTERFACE(pGrRenderer);
 
-		oFrame.put_Data(NULL);
+		oFrame.put_Data(nullptr);
 
 		m_pImage = new Aggplus::CImage;
 		m_pImage->Create(pBgraData, oFrame.get_Width(), oFrame.get_Height(), oFrame.get_Stride());
@@ -96,7 +96,7 @@ namespace SVG
 	{
 		Update(pFile, oObjectBounds);
 
-		if (NULL == pRenderer || NULL == m_pImage)
+		if (nullptr == pRenderer || nullptr == m_pImage)
 			return false;
 
 		pRenderer->put_BrushType(c_BrushTypeTexture);

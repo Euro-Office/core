@@ -35,6 +35,7 @@
 #include "style_text_properties.h"
 
 #include <iostream>
+#include <set>
 
 namespace cpdoccore {
 
@@ -42,7 +43,7 @@ namespace cpdoccore {
 
 namespace odf_writer {
 
-static int style_family_counts_[1024]={};//согласно количеству разных стилей
+static int style_family_counts_[1024]={};//according to the number of different styles
 
 
 void calc_paragraph_properties_content(std::vector<paragraph_format_properties*> & parProps, paragraph_format_properties * result)
@@ -147,7 +148,7 @@ void odf_style_context::reset_defaults()
 }
 
 void odf_style_context::process_automatic_for_styles(office_element_ptr root )
-{//автоматические стили для эементнов стилей
+{//automatic styles for element styles
 	for (size_t i =0; i < style_state_list_.size(); i++)
 	{
 		if (style_state_list_[i]->writable_ == false) continue;
@@ -157,7 +158,7 @@ void odf_style_context::process_automatic_for_styles(office_element_ptr root )
 	}
 }
 void odf_style_context::process_automatic_styles(office_element_ptr root )
-{//автоматические стили для элементов
+{//automatic styles for elements
 	for (size_t i =0; i < style_state_list_.size(); i++)
 	{
 		if (style_state_list_[i]->writable_ == false) continue;
@@ -382,7 +383,7 @@ std::wstring odf_style_context::get_name_family(style_family::type family)
 		case style_family::PageLayout:				return L"Mpm";
 		case style_family::MasterPage:				return L"MasterPage";
 		case style_family::HandoutMaster:			return L"Handout";
-		case style_family::LayerSet:				return L"";//нету
+		case style_family::LayerSet:				return L"";//no
 		case style_family::PresentationPageLayout:	return L"AL";
 		case style_family::LineNumbering:			return L"Line_20_numbering";
 
@@ -396,7 +397,7 @@ std::wstring odf_style_context::find_free_name(style_family::type  family)
 	std::wstring name = get_name_family(family);
 	int count = style_family_counts_[(int)family];
 
-	//доооолго .. проще хранить
+	//long time .. easier to store
 	//for (size_t i=0;i<style_state_list_.size(); i++)
 	//{
 	//	if ((style_state_list_[i]->odf_style_) && (style_state_list_[i]->get_family_type() == family))
@@ -420,7 +421,7 @@ office_element_ptr & odf_style_context::add_or_find(std::wstring name, style_fam
 				
 				if ((name.length() >= 0 && style_state_list_[i]->odf_style_->get_name() == name)
 					&& style_state_list_[i]->root_ == root)	return style_state_list_[i]->get_office_element();
-				//во избежания имена генерим уникальные (в принципе для root и остальных - можно одинаковые)
+				//To avoid this, we generate unique names (in principle, they can be the same for root and others)
 			}
 				
 		}
@@ -432,11 +433,13 @@ office_element_ptr & odf_style_context::add_or_find(std::wstring name, style_fam
 void odf_style_context::calc_text_properties(std::wstring style_name, odf_types::style_family::type family, text_format_properties * result)
 {
     std::vector<text_format_properties*> textProps;
+	std::set<const style*> visited; // parent chains from the input can form a loop
 	
 	while (!style_name.empty())
     {
 		style *style_ = NULL;
 		if (!find_odf_style(style_name, family, style_) || !style_)break;
+		if (!visited.insert(style_).second)break;
 
        if (text_format_properties * textProp = style_->content_.add_get_style_text_properties())
 			textProps.push_back(textProp);
@@ -450,11 +453,13 @@ void odf_style_context::calc_text_properties(std::wstring style_name, odf_types:
 void odf_style_context::calc_paragraph_properties(std::wstring style_name, style_family::type family, paragraph_format_properties * result)
 {
     std::vector<paragraph_format_properties*> parProps;
+	std::set<const style*> visited; // parent chains from the input can form a loop
 	
 	while (!style_name.empty())
     {
 		style *style_ = NULL;
 		if (!find_odf_style(style_name, family, style_) || !style_)break;
+		if (!visited.insert(style_).second)break;
 
        if (paragraph_format_properties* parProp = style_->content_.add_get_style_paragraph_properties())
 			parProps.push_back(parProp);

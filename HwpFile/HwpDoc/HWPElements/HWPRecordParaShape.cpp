@@ -85,7 +85,7 @@ EVerticalAlign GetVerticalAlign(const std::string& sValue, EHanType eType)
 	return EVerticalAlign::TOP;
 }
 
-CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 	: CHWPRecord(nTagNum, nLevel, nSize), m_pParent(&oDocInfo)
 {
 	int nTypeBits;
@@ -115,7 +115,7 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, int nTagNum, int
 
 	if (nVersion < 5025)
 	{
-		m_nLineSpacingType = (HWP_BYTE)(nTypeBits & 0x03);
+		m_nLineSpacingType = (unsigned char)(nTypeBits & 0x03);
 		oBuffer.ReadInt(m_nLineSpacing);
 	}
 	else
@@ -146,7 +146,7 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, int nTagNum, int
 		int nAttrBits;
 		oBuffer.ReadInt(nAttrBits);
 
-		m_nLineSpacingType = (HWP_BYTE)(nAttrBits & 0x0F);
+		m_nLineSpacingType = (unsigned char)(nAttrBits & 0x0F);
 		oBuffer.ReadInt(m_nLineSpacing);
 	}
 	else
@@ -160,8 +160,8 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, CXMLReader& oRea
       m_bConnect(false), m_bIgnoreMargin(false), m_bParaTailShape(false), m_nIndent(0), m_nMarginLeft(0),
       m_nMarginRight(0), m_nMarginPrev(0), m_nMarginNext(0)
 {
-	//В HWPX  в данной ноде данный пишутся по типу данный в нодах
-	//В HWPML в данной ноде данные пишутся по типу данные в аргументах
+	//In HWPX, in this node, data is written according to the type specified in the nodes
+	//In HWPML in this node, data is written according to the data type in the arguments
 	
 	if (EHanType::HWPX == eType)
 	{
@@ -209,10 +209,6 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 			else if ("Hyphenation" == sType)
 				m_chBreakLatinWord = 2;
 		}
-		else if ("BreakNonLatinWord" == sAttributeName)
-		{
-			//TODO:: проверить соответсвие hwpx и hwpml
-		}
 		else if ("Condense" == sAttributeName)
 			m_chCondense = (HWP_BYTE)oReader.GetInt();
 		else if ("WidowOrphan" == sAttributeName)
@@ -220,7 +216,7 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 		else if ("KeepWithNext" == sAttributeName)
 			m_bKeepWithNext = oReader.GetBool();
 		else if ("KeepLines" == sAttributeName)
-		{ /*TODO:: проверить соответсвие hwpx и hwpml*/ }
+		{ /*TODO:: check hwpx and hwpml matches*/ }
 		else if ("PageBreakBefore" == sAttributeName)
 			m_bPageBreakBefore = oReader.GetBool();
 		else if ("FontLineHeight" == sAttributeName)

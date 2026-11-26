@@ -57,7 +57,7 @@ void CRecordDocument::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStre
     for (size_t nIndexList = 0; nIndexList < oArraySlideWithText.size(); ++nIndexList)
     {
         CRecordSlideListWithText* pAtom = oArraySlideWithText[nIndexList];
-        std::vector<SSlidePersist>* pArray = NULL;
+        std::vector<SSlidePersist>* pArray = nullptr;
 
         switch (pAtom->m_Type)
         {
@@ -75,7 +75,7 @@ void CRecordDocument::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStre
             }break;
             default:
             {
-                // этого не может быть...
+                // this can't be...
                 continue;
             }
         };

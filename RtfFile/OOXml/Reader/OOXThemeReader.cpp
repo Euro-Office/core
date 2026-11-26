@@ -31,7 +31,7 @@ OOXThemeReader::OOXThemeReader( PPTX::Theme* ooxTheme)
 }
 bool OOXThemeReader::Parse( ReaderParameter oParam )
 {
-	if (m_ooxTheme == NULL) return false;
+	if (m_ooxTheme == nullptr) return false;
 
 	{
 		OOXColorSchemeReader oColorSchemeReader (&m_ooxTheme->themeElements.clrScheme);

@@ -100,7 +100,6 @@ namespace NSBinPptxRW
 			if (cur_pos == len || cur_pos == start_pos)
 				return;
 
-			std::string __str_ppty((char*)(pBuffer + start_pos), cur_pos - start_pos);
 			start_pos = cur_pos + 1;
 
 			cur_pos = start_pos;
@@ -110,7 +109,7 @@ namespace NSBinPptxRW
 			if (cur_pos == len || cur_pos == start_pos)
 				return;
 
-			std::string __str_version((char*)(pBuffer + start_pos), cur_pos - start_pos);
+			std::string str_version((char*)(pBuffer + start_pos), cur_pos - start_pos);
 			start_pos = cur_pos + 1;
 
 			cur_pos = start_pos;
@@ -120,23 +119,23 @@ namespace NSBinPptxRW
 			if (cur_pos == len || cur_pos == start_pos)
 				return;
 
-			std::string __str_decode_len_ansi((char*)(pBuffer + start_pos), cur_pos - start_pos);
-			std::wstring  __str_decode_len = std::wstring(__str_decode_len_ansi.begin(), __str_decode_len_ansi.end());
+			std::string str_decode_len_ansi((char*)(pBuffer + start_pos), cur_pos - start_pos);
+			std::wstring  str_decode_len = std::wstring(str_decode_len_ansi.begin(), str_decode_len_ansi.end());
 			start_pos = cur_pos + 1;
 
 			pBuffer += start_pos;
 			len -= start_pos;
-			int dstLenTemp = XmlUtils::GetInteger(__str_decode_len);
+			int dstLenTemp = XmlUtils::GetInteger(str_decode_len);
 			//int dstLenTemp = Base64DecodeGetRequiredLength(len);
 
 			int nVersion = 1;
-			if (__str_version.length() > 1)
+			if (str_version.length() > 1)
 			{
-				nVersion = std::stoi(__str_version.substr(1).c_str());
+				nVersion = std::stoi(str_version.substr(1).c_str());
 			}
 			bool bIsNoBase64 = nVersion == g_nFormatVersionNoBase64;
 
-			BYTE* pDstBuffer = NULL;
+			BYTE* pDstBuffer = nullptr;
 			int dstLen = 0;
 			if (!bIsNoBase64)
 			{
@@ -160,7 +159,7 @@ namespace NSBinPptxRW
 			{
 				BYTE _type = 0;
 
-				if (false == m_oReader.GetUCharWithResult(&_type))
+				if (!m_oReader.GetUCharWithResult(&_type))
 					break;
 
 				if (0 == _type)
@@ -173,7 +172,7 @@ namespace NSBinPptxRW
 
 			CXmlWriter oXmlWriter;
 
-			// первым делом определим количество необходимого. если хоть одно из этих чисел - ноль, то ппту не корректный
+			// First of all, let's determine the amount needed. if at least one of these numbers is zero, then the ppt isn't correct
 			LONG nCountThemes = 0;
 			LONG nCountMasters = 0;
 			LONG nCountLayouts = 0;
@@ -211,7 +210,7 @@ namespace NSBinPptxRW
 				return;
 			}
 
-			// теперь создадим массивы для рельсов
+			// Now create arrays for the rels
 			for (LONG i = 0; i < nCountMasters; ++i)
 			{
 				_slideMasterInfo elm;
@@ -237,12 +236,12 @@ namespace NSBinPptxRW
 				LONG _count = m_oReader.GetLong();
 				for (LONG i = 0; i < _count; ++i)
 				{
-					BYTE _master_type = m_oReader.GetUChar(); // must be 0
+					m_oReader.GetUChar(); // must be 0; the call advances the stream
 					ReadMasterInfo(i);
 				}
 			}
 
-	// нужно проставить всем шаблонам мастер.
+	// need to assign a master to all templates.
 			for (LONG i = 0; i < nCountMasters; ++i)
 			{
 				size_t _countL = m_arSlideMasters_Theme[i].m_arLayouts.size();
@@ -252,12 +251,12 @@ namespace NSBinPptxRW
 
 					if (index >= 0 && index < (int)m_arSlideLayouts_Master.size())
 					{
-						m_arSlideLayouts_Master[index] = (LONG)i;
+						m_arSlideLayouts_Master[index] = i;
 					}
 				}
 			}
 
-	// готово, теперь нужно слайдам проставить шаблоны
+	// done, now need to assign templates to the slides
 			pPair = m_mainTables.find(NSBinPptxRW::NSMainTables::SlideRels);
 			if (m_mainTables.end() != pPair)
 			{
@@ -271,7 +270,7 @@ namespace NSBinPptxRW
 					if (_at == NSBinPptxRW::g_nodeAttributeEnd)
 						break;
 
-					//m_arSlides_Layout[_at] = m_oReader.GetULong(); тут прописан не индекс, а тип - смотри - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
+					//m_arSlides_Layout[_at] = m_oReader.GetULong(); it isn't the index that is specified here, but the type - see - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
 					if (index < m_arSlides_Layout.size())
 						m_arSlides_Layout[index++] = m_oReader.GetULong();
 				}
@@ -289,7 +288,7 @@ namespace NSBinPptxRW
 					if (_at == NSBinPptxRW::g_nodeAttributeEnd)
 						break;
 
-					//m_arSlides_Layout[_at] = m_oReader.GetULong(); тут прописан не индекс, а тип - смотри - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
+					//m_arSlides_Layout[_at] = m_oReader.GetULong(); it isn't the index that is specified here, but the type - see - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
 					if (index < m_arSlides_Notes.size())
 						m_arSlides_Notes[index++] = m_oReader.GetULong();
 				}
@@ -328,7 +327,7 @@ namespace NSBinPptxRW
 				}
 			}
 			
-	// теперь нужно удалить все themes, которые не ведут на мастерслайды
+	// now remove all themes that don't lead to masterslides
 			std::vector<LONG> arThemes;
 			std::vector<LONG> arThemesDst;
 			std::vector<bool> arThemesSave;
@@ -371,7 +370,7 @@ namespace NSBinPptxRW
 				arThemesDst[i] = lCurrectTheme;
 				++lCurrectTheme;
 			}
-	// теперь нужно перебить ссылки
+	// now need to break the links
 			for (LONG i = 0; i < nCountMasters && i < arThemesDst.size(); ++i)
 			{
 				m_arSlideMasters_Theme[i].m_lThemeIndex = arThemesDst[i];
@@ -393,7 +392,7 @@ namespace NSBinPptxRW
 				{
 					if (!arThemesSave[i])
 					{
-						// это ненужная тема
+						// this is an unnecessary topic
 						continue;
 					}
 
@@ -408,6 +407,8 @@ namespace NSBinPptxRW
 					}
 					catch (...)
 					{
+						/* malformed record: keep whatever was parsed so far */
+						(void)0;
 					}
 
 					std::wstring strMasterXml = L"theme" + std::to_wstring(i + 1) + L".xml";
@@ -437,7 +438,7 @@ namespace NSBinPptxRW
 				m_oReader.Seek(pPair->second);
 				m_oReader.Skip(4);
 
-				LONG __nCountLayouts = 0;
+				LONG nCountLayouts = 0;
 
 				for (LONG i = 0; i < nCountMasters; ++i)
 				{
@@ -452,6 +453,8 @@ namespace NSBinPptxRW
 					}
 					catch (...)
 					{
+						/* malformed record: keep whatever was parsed so far */
+						(void)0;
 					}
 
 					std::vector<PPTX::Logic::XmlId>& arrLays = m_arSlideMasters[i].sldLayoutIdLst;
@@ -460,12 +463,12 @@ namespace NSBinPptxRW
 					{
 						arrLays.push_back(PPTX::Logic::XmlId(L"p:sldLayoutId"));
 
-						std::wstring sId = std::to_wstring((_UINT64)(0x80000000 + __nCountLayouts + j + 1));
+						std::wstring sId = std::to_wstring((_UINT64)(0x80000000 + nCountLayouts + j + 1));
 
 						arrLays[j].id = sId;
 						arrLays[j].rid = (size_t)(j + 1);
 					}
-					__nCountLayouts += (LONG)(lLayouts + 1);
+					nCountLayouts += (LONG)(lLayouts + 1);
 
 					m_oReader.m_pRels->CloseRels();
 
@@ -508,6 +511,8 @@ namespace NSBinPptxRW
 					}
 					catch (...)
 					{
+						/* malformed record: keep whatever was parsed so far */
+						(void)0;
 					}
 					m_oReader.m_pRels->CloseRels();
 
@@ -547,7 +552,7 @@ namespace NSBinPptxRW
 
 						size_t indexSlide = 0;
 						for (indexSlide = 0; indexSlide < m_arSlides_Notes.size(); indexSlide++)
-						{//todooo -> make map
+						{//TODO -> make map
 							if (m_arSlides_Notes[indexSlide] == i)
 							{
 								break;
@@ -561,6 +566,8 @@ namespace NSBinPptxRW
 						}
 						catch (...)
 						{
+							/* malformed record: keep whatever was parsed so far */
+							(void)0;
 						}
 
 						m_oReader.m_pRels->CloseRels();
@@ -585,7 +592,7 @@ namespace NSBinPptxRW
 				m_oReader.Seek(pPair->second);
 				LONG lCount = m_oReader.GetLong();
 
-				if (lCount > 0 || m_arNotesSlides.size() > 0)//один элемент
+				if (lCount > 0 || m_arNotesSlides.size() > 0)//one element
 				{
 					OOX::CPath pathFolder = m_strDstFolder + FILE_SEPARATOR_STR + L"ppt" + FILE_SEPARATOR_STR + L"notesMasters";
 					OOX::CPath pathFolderRels = pathFolder + FILE_SEPARATOR_STR + L"_rels";
@@ -608,6 +615,8 @@ namespace NSBinPptxRW
 						}
 						catch (...)
 						{
+							/* malformed record: keep whatever was parsed so far */
+							(void)0;
 						}
 						m_oReader.m_pRels->CloseRels();
 
@@ -659,6 +668,8 @@ namespace NSBinPptxRW
 						}
 						catch (...)
 						{
+							/* malformed record: keep whatever was parsed so far */
+							(void)0;
 						}
 						m_oReader.m_pRels->CloseRels();
 
@@ -708,6 +719,8 @@ namespace NSBinPptxRW
 					}
 					catch (...)
 					{
+						/* malformed record: keep whatever was parsed so far */
+						(void)0;
 					}
 
 					if (m_arSlides[i].comments.is_init())
@@ -765,6 +778,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 				SetRequiredDefaultsApp();
 			}
@@ -780,6 +795,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 				SetRequiredDefaultsCore();
 			}
@@ -795,6 +812,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 			}
 			else
@@ -812,6 +831,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 			}
 			else
@@ -829,6 +850,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 			}
 			if (m_oTableStyles.Styles.empty())
@@ -879,6 +902,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 			}
 			if (m_oCustomProperties.IsInit())
@@ -904,7 +929,7 @@ namespace NSBinPptxRW
 
 				for (int i = 0; i < nCountCustoms; ++i)
 				{
-					smart_ptr<OOX::CCustomXML> pCustomXml = new OOX::CCustomXML(NULL, false);
+					smart_ptr<OOX::CCustomXML> pCustomXml = new OOX::CCustomXML(nullptr, false);
 
 					pCustomXml->fromPPTY(&m_oReader);
 
@@ -938,6 +963,8 @@ namespace NSBinPptxRW
 				}
 				catch (...)
 				{
+					/* malformed record: keep whatever was parsed so far */
+					(void)0;
 				}
 				m_oPresentation.sldMasterIdLst.clear();
 				LONG nCountLayouts = 0;
@@ -1016,7 +1043,7 @@ namespace NSBinPptxRW
 
 				OOX::CPath pathPresentation = pathFolder / m_oPresentation.DefaultFileName();
 
-				// todooo втащить все как сделано для Custom
+				// TODO include everything as done for Custom
 				//m_oPresentation.write(pathPresentation, m_oPresentation.DefaultDirectory(), *m_oImageManager.m_pContentTypes);
 				oXmlWriter.ClearNoAttack();
 				m_oPresentation.toXmlWriter(&oXmlWriter);
@@ -1143,11 +1170,11 @@ namespace NSBinPptxRW
 					}
 					case 1:
 					{
-						std::string strMaster64 = m_oReader.GetString2A();
+						m_oReader.GetString2A(); // value unused: the call still advances the stream
 						break;
 					}
-					default:
-						break;
+				default:
+					break;
 				}
 			}
 
@@ -1172,11 +1199,11 @@ namespace NSBinPptxRW
 						}
 						case 1:
 						{
-							std::string strLayout64 = m_oReader.GetString2A();
+							m_oReader.GetString2A(); // value unused: the call still advances the stream
 							break;
 						}
-						default:
-							break;
+					default:
+						break;
 					}
 				}
 			}
@@ -1185,7 +1212,7 @@ namespace NSBinPptxRW
 		}
 		void CPPTXWriter::SetRequiredDefaultsApp()
 		{
-			m_oApp.m_sAppVersion.reset(NULL);
+			m_oApp.m_sAppVersion.reset(nullptr);
 			std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
 			if (sApplication.empty())
 				sApplication = NSSystemUtils::gc_EnvApplicationNameDefault;

@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "PptShape.h"
 #include "../../../DocFile/OfficeDrawing/PresetShapeTypes.h"
@@ -48,9 +47,9 @@
 using namespace ODRAW;
 
 _3dOptions::_3dOptions() : bEnabled(false), bMetallic(false), bExtrusionColor(false), bLightFace(true),
-	bConstrainRotation(true), bRotationCenterAuto(false), bParallel(true), bFillHarsh(true), bKeyHarsh(true),
-	nRenderMode(0), dSpecularAmt(0), nEdgeThickness(0x0000319C), nExtrudeForward(0), nExtrudeBackward(0x0006F9F0),
-	nSkewAmount(0x32)
+	bConstrainRotation(true), bRotationCenterAuto(false), bParallel(true), bKeyHarsh(true), bFillHarsh(true),
+	dSpecularAmt(0), nEdgeThickness(0x0000319C), nExtrudeForward(0), nExtrudeBackward(0x0006F9F0),
+	nRenderMode(0), nSkewAmount(0x32)
 {
 	dFillIntensity = FixedPointToDouble(0x00009470);
 	dKeyX		= FixedPointToDouble(0x0000C350);
@@ -93,7 +92,7 @@ bool CPPTShape::LoadFromXML(XmlUtils::CXmlNode& oNodePict)
 {
 	std::wstring id = oNodePict.GetAttributeOrValue(L"type");
 	bool isPathList = false;
-	if (false == id.empty())
+	if (!id.empty())
 	{
 		SetShapeType((PPTShapes::ShapeType)XmlUtils::GetInteger(id));
 	}
@@ -112,7 +111,7 @@ bool CPPTShape::LoadFromXML(XmlUtils::CXmlNode& oNodePict)
 			}
 
 			std::wstring strPath = oNodeTemplate.GetAttributeOrValue(L"path");
-			if (false == strPath.empty())
+			if (!strPath.empty())
 			{
 				LoadPathList(strPath);
 				isPathList = true;
@@ -124,7 +123,7 @@ bool CPPTShape::LoadFromXML(XmlUtils::CXmlNode& oNodePict)
 	if (oNodePict.GetNode(L"path", oNodeGuides))
 	{
 		std::wstring strPath = oNodeGuides.GetAttributeOrValue(L"val");
-		if (false == strPath.empty())
+		if (!strPath.empty())
 		{
 			LoadPathList(strPath);
 			isPathList = true;
@@ -136,13 +135,13 @@ bool CPPTShape::LoadFromXML(XmlUtils::CXmlNode& oNodePict)
 	return true;
 }
 bool CPPTShape::LoadFromXMLShapeType(XmlUtils::CXmlNode& oNodeShapeType) // vml object
-{		// из за особенносей форматирования vmlDrawing могут вылезти пустые текстовые значения - value ..
+{		// Due to the formatting features of vmlDrawing, empty text values may appear - value ..
 	std::wstring sId = oNodeShapeType.GetAttribute(L"o:spt");
 
 	bool bIsNeedRecalc = true;
 	bool bCustomSet = false;
 
-	if (false == sId.empty())
+	if (!sId.empty())
 	{
 		int id = XmlUtils::GetInteger(sId);
 		if (id > 0)
@@ -154,7 +153,7 @@ bool CPPTShape::LoadFromXMLShapeType(XmlUtils::CXmlNode& oNodeShapeType) // vml 
 		}
 	}
 	std::wstring strAdj = oNodeShapeType.GetAttribute(L"adj");
-	if (false == strAdj.empty())
+	if (!strAdj.empty())
 		LoadAdjustValuesList(strAdj);
 
 	XmlUtils::CXmlNode oNodeGuides;
@@ -167,12 +166,12 @@ bool CPPTShape::LoadFromXMLShapeType(XmlUtils::CXmlNode& oNodeShapeType) // vml 
 	if (oNodeShapeType.GetNode(L"v:path", oNodePath))
 	{
 		std::wstring strPath = oNodePath.GetAttribute(L"v");
-		if (false == strPath.empty())
+		if (!strPath.empty())
 		{
 			bCustomSet = LoadPathList(strPath);
 		}
 		std::wstring strTextR = oNodePath.GetAttribute(L"textboxrect");
-		if (false == strTextR.empty())
+		if (!strTextR.empty())
 			bCustomSet = LoadTextRect(strTextR);
 	}
 
@@ -183,7 +182,7 @@ bool CPPTShape::LoadFromXMLShapeType(XmlUtils::CXmlNode& oNodeShapeType) // vml 
 	}
 
 	std::wstring strPath = oNodeShapeType.GetAttribute(L"path");
-	if (false == strPath.empty())
+	if (!strPath.empty())
 	{
 		bCustomSet = LoadPathList(strPath);
 	}
@@ -219,7 +218,7 @@ bool CPPTShape::LoadFromXMLShapeType(XmlUtils::CXmlNode& oNodeShapeType) // vml 
 		}
 		nullable_string oStyle;
 		XmlMacroReadAttributeBase(oNodeTextPath, L"style", oStyle);
-		if (oStyle.is_init() && (false == oStyle->empty()))
+		if (oStyle.is_init() && (!oStyle->empty()))
 		{
 			if (m_textPath.sStyle)
 				m_textPath.sStyle = (*m_textPath.sStyle) + L";" + (*oStyle);
@@ -231,20 +230,14 @@ bool CPPTShape::LoadFromXMLShapeType(XmlUtils::CXmlNode& oNodeShapeType) // vml 
 	std::wstring strFilled = oNodeShapeType.GetAttribute(L"filled");
 	std::wstring strStroked = oNodeShapeType.GetAttribute(L"stroked");
 
-	if (false == strFilled.empty())
+	if (!strFilled.empty())
 	{
-		if (strFilled == L"false" || strFilled == L"f")
-			m_bIsFilled = false;
-		else
-			m_bIsFilled = true;
+		m_bIsFilled = !(strFilled == L"false" || strFilled == L"f");
 	}
 
-	if (false == strStroked.empty())
+	if (!strStroked.empty())
 	{
-		if (strStroked == L"false" || strStroked == L"f")
-			m_bIsStroked = false;
-		else
-			m_bIsStroked = true;
+		m_bIsStroked = !(strStroked == L"false" || strStroked == L"f");
 	}
 	XmlUtils::CXmlNode oNodeSignature;
 	if (oNodeShapeType.GetNode(L"o:signatureline", oNodeSignature))
@@ -326,10 +319,10 @@ bool CPPTShape::LoadGuidesList(const std::wstring& xml)
 	std::wstring sFormulasTemp = sBegin + xml + sEnd;
 
 	XmlUtils::CXmlNode oNodeRoot;
-	if (oNodeRoot.FromXmlString(sFormulasTemp) == false) return false;
+	if (!oNodeRoot.FromXmlString(sFormulasTemp)) return false;
 
 	XmlUtils::CXmlNode oNodeGuides;
-	if (oNodeRoot.GetNode(_T("v:formulas"), oNodeGuides) == false) return false;
+	if (!oNodeRoot.GetNode(_T("v:formulas"), oNodeGuides)) return false;
 
 	if (L"v:formulas" == oNodeGuides.GetName())
 	{
@@ -360,6 +353,7 @@ void CPPTShape::AddGuide(const std::wstring& strGuide)
 }
 bool CPPTShape::LoadAdjustHandlesList(const std::wstring& xml)
 {
+	(void)xml;
 	return true;
 }
 void CPPTShape::LoadAHList(XmlUtils::CXmlNode& oNode)
@@ -388,6 +382,7 @@ void CPPTShape::LoadAHList(XmlUtils::CXmlNode& oNode)
 }
 bool CPPTShape::LoadConnectorsList(const std::wstring& xml)
 {
+	(void)xml;
 	return true;
 }
 bool CPPTShape::LoadTextRect(const std::wstring& xml)
@@ -426,7 +421,7 @@ bool CPPTShape::SetAdjustment(long index, long value)
 }
 std::wstring CPPTShape::ToXML(CGeomShapeInfo& GeomInfo, double StartTime, double EndTime, CBrush& Brush, CPen& Pen)
 {
-	if (false == m_strPathLimoX.empty() || false == m_strPathLimoY.empty())
+	if (!m_strPathLimoX.empty() || !m_strPathLimoY.empty())
 	{
 		m_strPath = (GeomInfo.m_dWidth >= GeomInfo.m_dHeight) ? m_strPathLimoX : m_strPathLimoY;
 		ReCalculate();
@@ -442,7 +437,7 @@ void CPPTShape::ReCalculate()
 	if (!m_bIsShapeType)
 		m_oManager.CalculateResults();
 
-	if (false == m_strPath.empty())
+	if (!m_strPath.empty())
 	{
 		LoadPathList(m_strPath);
 	}
@@ -453,7 +448,7 @@ const ClassType CPPTShape::GetClassType() const
 }
 bool CPPTShape::SetProperties(CBaseShape* Shape)
 {
-	if (Shape == NULL)
+	if (Shape == nullptr)
 		return false;
 
 	if (Shape->GetClassType() != NSBaseShape::ppt)
@@ -471,7 +466,7 @@ bool CPPTShape::SetProperties(CBaseShape* Shape)
 }
 bool CPPTShape::SetToDublicate(CBaseShape* Shape)
 {
-	if (Shape == NULL)
+	if (Shape == nullptr)
 		return false;
 
 	if (Shape->GetClassType() != NSBaseShape::ppt)
@@ -553,10 +548,7 @@ void CPPTShape::CalcTextRectOffsets(double& dPercentLeft, double& dPercentTop, d
 }
 bool CPPTShape::IsWordArt()
 {
-	if ((m_eType >= PPTShapes::ShapeType::sptCTextPlain && m_eType <= PPTShapes::ShapeType::sptCTextCanDown) || (m_textPath.bEnabled))
-		return true;
-	else
-		return false;
+	return (m_eType >= PPTShapes::ShapeType::sptCTextPlain && m_eType <= PPTShapes::ShapeType::sptCTextCanDown) || (m_textPath.bEnabled);
 }
 bool CPPTShape::GetPos(std::wstring str, LONG& lValue)
 {
@@ -591,7 +583,7 @@ bool CPPTShape::GetPos(std::wstring str, LONG& lValue)
 }
 CPPTShape* CPPTShape::CreateByShapeType(DocFileFormat::ShapeType* pShapeType)
 {
-	CPPTShape* pShape = NULL;
+	CPPTShape* pShape = nullptr;
 
 	if (pShapeType)
 	{
@@ -621,18 +613,18 @@ CPPTShape* CPPTShape::CreateByShapeType(DocFileFormat::ShapeType* pShapeType)
 		}
 
 		// Connectors
-		if (false == pShapeType->ConnectorLocations.empty())
+		if (!pShapeType->ConnectorLocations.empty())
 		{
 			pShape->LoadConnectorsList(pShapeType->ConnectorLocations);
 		}
 
 		// TextRect
-		if (false == pShapeType->TextBoxRectangle.empty())
+		if (!pShapeType->TextBoxRectangle.empty())
 		{
 			pShape->LoadTextRect(pShapeType->TextBoxRectangle);
 		}
 
-		// Handles  // todooo - убрать лишнее определение Handle !!!
+		// Handles // TODO - remove unnecessary Handle definition!!!
 		for (size_t i = 0; i < pShapeType->Handles.size(); ++i)
 		{
 			CHandle_ oHandle;
@@ -657,7 +649,7 @@ CPPTShape* CPPTShape::CreateByShapeType(DocFileFormat::ShapeType* pShapeType)
 		pShape->m_arConnectorAngles = pShapeType->ConnectorAngles;
 
 		// Limo
-		if (false == pShapeType->Limo.empty())
+		if (!pShapeType->Limo.empty())
 		{
 			std::vector<std::wstring> limoArray;
 			boost::algorithm::split(limoArray, pShapeType->Limo, boost::algorithm::is_any_of(L","), boost::algorithm::token_compress_on);
@@ -673,10 +665,10 @@ CPPTShape* CPPTShape::CreateByShapeType(DocFileFormat::ShapeType* pShapeType)
 }
 CBaseShapePtr CPPTShape::CreateByType(PPTShapes::ShapeType type)
 {	
-	CPPTShape* pShape = NULL;
-	DocFileFormat::ShapeType* pShapeType = NULL;
+	CPPTShape* pShape = nullptr;
+	DocFileFormat::ShapeType* pShapeType = nullptr;
 
-	switch (type)
+	switch (static_cast<ODRAW::eSPT>(type))
 	{
 		// msosptNotchedCircularArrow	0x00000064 A value that SHOULD NOT be used.
 		// msosptHostControl			0x000000C9 A value that SHOULD NOT be used.
@@ -684,10 +676,16 @@ CBaseShapePtr CPPTShape::CreateByType(PPTShapes::ShapeType type)
 		case sptHostControl:
 		{ pShape = new CPPTShape();  pShape->m_eType = type; break; }
 
-		CREATE_BY_SPT(0, DocFileFormat::RectangleType)
-		
+		case 0:
 		case sptNotchedCircularArrow:
-		CREATE_BY_SPT(sptPictureFrame, DocFileFormat::RectangleType)
+		case sptPictureFrame:
+		{
+			pShapeType = new DocFileFormat::RectangleType();
+			pShape = CreateByShapeType(pShapeType);
+			delete pShapeType;
+			pShapeType = nullptr;
+			break;
+		}
 
 		CREATE_BY_SPT(sptAccentBorderCallout90, DocFileFormat::AccentBorderCallout90)
 		CREATE_BY_SPT(sptAccentBorderCallout1, DocFileFormat::AccentBorderCallout1)
@@ -908,7 +906,7 @@ CBaseShapePtr CPPTShape::CreateByType(PPTShapes::ShapeType type)
 		default: break;
 	};
 
-	if (NULL != pShape)
+	if (nullptr != pShape)
 		pShape->m_eType = type;
 
 	return CBaseShapePtr(pShape);

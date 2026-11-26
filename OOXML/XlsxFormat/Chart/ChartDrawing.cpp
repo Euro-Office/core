@@ -221,14 +221,14 @@ namespace OOX
 					//	m_nId = shape->nvSpPr.cNvPr.id;
 					//	if (shape->nvSpPr.cNvPr.vmlSpid.IsInit())
 					//	{
-					//		//ссылка на объект или шейп в vmlDrawing
+					//		//link to an object or shape in vmlDrawing
 					//		m_sVmlSpId = shape->nvSpPr.cNvPr.vmlSpid.get();
 					//	}
 					//}
 					//smart_ptr<PPTX::Logic::GraphicFrame> frame = m_oElement->GetElem().smart_dynamic_cast<PPTX::Logic::GraphicFrame>();
 					//if ((frame.IsInit()) && (frame->vmlSpid.IsInit()))
 					//{
-					//	//ссылка на объект или шейп в vmlDrawing
+					//	//link to an object or shape in vmlDrawing
 					//	m_sVmlSpId = frame->vmlSpid.get();
 					//}
 				}
@@ -305,14 +305,14 @@ namespace OOX
 					//	m_nId = shape->nvSpPr.cNvPr.id;
 					//	if (shape->nvSpPr.cNvPr.vmlSpid.IsInit())
 					//	{
-					//		//ссылка на объект или шейп в vmlDrawing
+					//		//link to an object or shape in vmlDrawing
 					//		m_sVmlSpId = shape->nvSpPr.cNvPr.vmlSpid.get();
 					//	}
 					//}
 					//smart_ptr<PPTX::Logic::GraphicFrame> frame = m_oElement->GetElem().smart_dynamic_cast<PPTX::Logic::GraphicFrame>();
 					//if ((frame.IsInit()) && (frame->vmlSpid.IsInit()))
 					//{
-					//	//ссылка на объект или шейп в vmlDrawing
+					//	//link to an object or shape in vmlDrawing
 					//	m_sVmlSpId = frame->vmlSpid.get();
 					//}
 				}
@@ -330,8 +330,8 @@ namespace OOX
 	}
 	CChartDrawing::CChartDrawing(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 	{
-		m_bDocument = (NULL != dynamic_cast<OOX::CDocument*>(pMain));
-		read( oRootPath, oPath );
+		m_bDocument = (nullptr != dynamic_cast<OOX::CDocument*>(pMain));
+		CChartDrawing::read( oRootPath, oPath );
 	}
 	CChartDrawing::~CChartDrawing()
 	{
@@ -376,7 +376,7 @@ namespace OOX
 			{
 				sName = XmlUtils::GetNameNoNS(oReader.GetName());
 
-				CSizeAnchor *pItem = NULL;
+				CSizeAnchor *pItem = nullptr;
 
 				if ( L"relSizeAnchor" == sName )
 				{

@@ -49,7 +49,7 @@ namespace DocFileFormat
         m_pXmlWriter->WriteNodeEnd( L"", TRUE, FALSE );
 
 		//convert the footer text
-		_lastValidPapx = (*(m_document->AllPapxFkps->begin()))->grppapx[0];
+		_lastValidPapx = FormattedDiskPagePAPX::GetFirstPapx(m_document->AllPapxFkps);
 		int cp		=	_ftr.GetCharacterPosition();
 		int cpMax	=	_ftr.GetCharacterPosition() + _ftr.GetCharacterCount();
 

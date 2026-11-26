@@ -120,7 +120,7 @@ bool CDocument::DrawPage(IRenderer* pRenderer, int nPageIndex) const
 
 	itFound->second->Draw(pRenderer, m_oCommonData, EPageType::Page);
 
-	m_oAnnotation.Draw(pRenderer, m_oCommonData, EPageType::Anotation);
+	m_oAnnotation.Draw(pRenderer, m_oCommonData, EPageType::Annotation);
 
 	return true;
 }

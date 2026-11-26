@@ -97,7 +97,7 @@ namespace OOX
 			nullable<std::wstring>							m_oName;
 			nullable<SimpleTypes::COnOff>					m_oPivot;
 			nullable<SimpleTypes::COnOff>					m_oTable;
-			nullable<std::wstring>							m_oDisplayName; // Используется только для дефалтовых стилей
+			nullable<std::wstring>							m_oDisplayName; // Used only for default styles
 		};
 
 		class CTableStyles : public WritingElementWithChilds<CTableStyle>

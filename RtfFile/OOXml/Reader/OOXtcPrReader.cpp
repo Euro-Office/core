@@ -33,10 +33,10 @@ OOXtcPrReader::OOXtcPrReader(OOX::Logic::CTableCellProperties* ooxTableCellProps
 }
 bool OOXtcPrReader::Parse( ReaderParameter oParam ,RtfCellProperty& oOutputProperty,  CcnfStyle& oConditionalTableStyle, int nCurCell, int nCellCount, int nCurRow, int nRowCount  )
 {
-	if (m_ooxTableCellProps == NULL) return false;
+	if (m_ooxTableCellProps == nullptr) return false;
 
-	//ищем cnfStyle  и применяем внешний стиль
-	if( NULL != oParam.poTableStyle )
+	//look for cnfStyle and apply the external style
+	if( nullptr != oParam.poTableStyle )
 	{
 		if( m_ooxTableCellProps->m_oCnfStyle.IsInit() )
 		{
@@ -48,7 +48,7 @@ bool OOXtcPrReader::Parse( ReaderParameter oParam ,RtfCellProperty& oOutputPrope
 		}
 	}
 	RtfTableStylePtr oResultStyle = oConditionalTableStyle.ApplyTableStyle( oParam.poTableStyle );
-	if( NULL != oResultStyle )
+	if( nullptr != oResultStyle )
 		oOutputProperty.Merge( oResultStyle->m_oCellProp );
 	oConditionalTableStyle.ApplyTableStyleToCellBorder( oParam.poTableStyle, oOutputProperty, nCurCell, nCellCount, nCurRow, nRowCount );
 
@@ -123,7 +123,7 @@ bool OOXtcPrReader::Parse( ReaderParameter oParam ,RtfCellProperty& oOutputPrope
 	else if ((m_ooxTableProps) && (m_ooxTableProps->m_oTblBorders.IsInit()))
 	{
 		//from table props
-		//todoo last, first !!!!
+		//TODO last, first !!!!
 		//if( m_ooxTableProps->m_oTblBorders->m_oTop.IsInit() )
 		//{
 		//	OOXBorderReader oBorderReader(m_ooxTableProps->m_oTblBorders->m_oTop.GetPointer());
@@ -198,10 +198,10 @@ bool OOXtcPrReader::Parse( ReaderParameter oParam ,RtfCellProperty& oOutputPrope
 void OOXtcPrReader::Parse(ComplexTypes::Word::CTblWidth* margin, int& type, int& value, bool full )
 {
 	if (!margin) return;
-	if (false == margin->m_oType.IsInit())	return;
-	if (false == margin->m_oW.IsInit())		return;
+	if (!margin->m_oType.IsInit())	return;
+	if (!margin->m_oW.IsInit())		return;
 	
-	if (full == true)
+	if (full)
 	{
 		switch (margin->m_oType->GetValue())
 		{
@@ -225,5 +225,5 @@ void OOXtcPrReader::Parse(ComplexTypes::Word::CTblWidth* margin, int& type, int&
 		value = (int)margin->m_oW->GetValue();
 	}
 
-	//todooo сделать реализацию с процентами
+	//TODO implement percentage support
 }

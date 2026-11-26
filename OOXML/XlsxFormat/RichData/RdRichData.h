@@ -279,7 +279,7 @@ namespace OOX
 			nullable_uint m_oS;
 			
 			nullable<CRichValueFallback> m_oFb;
-			std::vector<std::wstring> m_arrV; //todooo types ...
+			std::vector<std::wstring> m_arrV; //TODO types ...
 		};
 //------------------------------------------------------------------------------------------------------------------------
 		class CRichValueData : public WritingElementWithChilds<CRichValue>

@@ -259,7 +259,12 @@ void ods_conversion_context::start_row(int _start_row, int repeated, int level, 
 			row_properties->style_table_row_properties_attlist_.common_break_attlist_.fo_break_before_ = fo_break(fo_break::Auto);
 	}
 	in_header_row_ = false;
-	if (_start_row == 1 && (false == current_table()->table_parts().empty()) && (false == current_table()->table_parts().back().columns.empty()))
+	// Header rows and columns mark the series names and categories of a chart's local table (the only
+	// converter that turns repeat_at_lasts_ off). In a sheet they would be print titles the XLSX file
+	// does not have.
+	if (_start_row == 1 && false == repeat_at_lasts_ &&
+		(false == current_table()->table_parts().empty()) &&
+		(false == current_table()->table_parts().back().columns.empty()))
 	{
 		in_header_row_ = true;
 		repeated = 1;
@@ -283,8 +288,9 @@ void ods_conversion_context::end_row()
 {
 	if (repeat_at_lasts_)
 	{
-		//add default last cells
-		int repeated = 1024;// max dimension columns???
+		//add default last cells up to the columns of the table (see end_columns), so that a row formatted
+		//to the end of the sheet stays formatted to its end
+		int repeated = current_table()->columns_count - current_table()->current_column();
 
 		current_table()->add_default_cell(repeated);
 	}
@@ -338,7 +344,7 @@ void ods_conversion_context::add_hyperlink(const std::wstring & ref, const std::
 	boost::algorithm::split(ref_cells, ref, boost::algorithm::is_any_of(L":"), boost::algorithm::token_compress_on);
 	if (ref_cells.size() > 1)
 	{
-	//в ооx можно воткнуть на диапазон одну ссылку, в оо нельзя - ссылку вствляем, текст не меням
+	//in oox one link per range can be inserted, but in oo it can't - we insert the link and don't change the text
 		int start_col = -1, start_row = -1;
 		int end_col = -1, end_row = -1;
 		
@@ -350,7 +356,7 @@ void ods_conversion_context::add_hyperlink(const std::wstring & ref, const std::
 			for (long row = start_row; row <= end_row; row++)
 			{
 				current_table()->add_hyperlink(ref, col, row, link, location);
-				//ссылка одна, а вот отображаемый текст - разный
+				//the link is the same, but the displayed text is different
 			}
 		}
 	}
@@ -402,7 +408,7 @@ void ods_conversion_context::add_merge_cells(const std::wstring & ref)
  	std::vector<std::wstring> ref_cells;
 	boost::algorithm::split(ref_cells, ref, boost::algorithm::is_any_of(L":"), boost::algorithm::token_compress_on);
 
-	if (ref_cells.size() != 2) return;//тута однозначно .. по правилам оохml
+	if (ref_cells.size() != 2) return;//Definitely here .. according to OOXML rules
 
 	int start_col = -1, start_row = -1;
 	int end_col = -1, end_row = -1;
@@ -419,19 +425,21 @@ void ods_conversion_context::start_cell(std::wstring & ref, int xfd_style)
 	int col = 0, row = 0, spanned_rows = 0, spanned_cols = 0;
 	utils::parsing_ref ( ref, col, row);
 
+	// Write the missing cells before this one first: they may still be covered by a cell merged before them, and
+	// a cell merged from here on must not cover them.
+	if (col > current_table()->current_column() + 1)
+	{
+		int repeated = col - current_table()->current_column() - 1;
+		
+		current_table()->add_default_cell(repeated);
+	}
+
 	bool bCovered = false;
 	bool bSpanned = current_table()->isSpannedCell(col, row, spanned_cols, spanned_rows);
 
 	if (!bSpanned)
 	{
 		bCovered = current_table()->isCoveredCell(col, row);
-	}
-
-	if (col > current_table()->current_column() + 1)
-	{
-		int repeated = col - current_table()->current_column() - 1;
-		
-		current_table()->add_default_cell(repeated);//, bCovered);
 	}
 
 	office_element_ptr style_elm;
@@ -491,8 +499,8 @@ void ods_conversion_context::start_columns()
 }
 void ods_conversion_context::end_columns()
 {
-	//add default last column  - ЕСЛИ они не прописаны в исходном (1024 - от  балды)
-	//вопрос - если и добавлять то  с каким стилем???
+	//add default last column - IF they aren't registered in the source (1024 - at random)
+	//The question is - if adding it, then with what style???
 	//if (current_table()->current_column() < 1 )
 	//	add_column(current_table()->current_column() + 1,1024, 0, true);
 	//else
@@ -506,18 +514,39 @@ void ods_conversion_context::end_columns()
 	}
 	if (repeat_at_lasts_)
 	{
-		int repeat = (std::max)(current_table()->dimension_columns, 1024) - current_table()->current_column();
-		if (repeat < 0) repeat = 1;
+		//default columns not past the last column of a sheet (XFD)
+		int columns = (std::min)((std::max)(current_table()->dimension_columns, 1024), 16384);
+		int repeat = columns - current_table()->current_column();
 
-		add_column(current_table()->current_column() + 1, repeat, 0, true);
+		if (repeat > 0)
+			add_column(current_table()->current_column() + 1, repeat, 0, true);
 	}
+	//rows are padded up to here (end_row); a <col> past XFD in the source must not take them past it
+	current_table()->columns_count = (std::min)(current_table()->current_column(), 16384);
+}
+void ods_conversion_context::add_repeated_cells(int repeated, int xfd_style)
+{
+	if (repeated < 1) return;
+
+	std::wstring style_cell_name;
+	if (xfd_style >= 0)
+	{
+		odf_style_state_ptr style_state;
+		styles_context()->find_odf_style_state(xfd_style, style_family::TableCell, style_state, false, true);
+		if (style_state)
+			style_cell_name = style_state->get_name();
+	}
+	current_table()->add_default_cell(repeated, style_cell_name);
 }
 void ods_conversion_context::start_rows()
 {
 }
-void ods_conversion_context::add_default_row(int repeated)
+void ods_conversion_context::add_default_row(int repeated, bool check_last)
 {
 	if (repeated < 1) return;
+	// No rows after a row element repeated 1024 times or more. Checked once for the whole gap: the pieces of a split gap
+	// are written together, or a long first piece would drop the rest and move the rows after the gap up.
+	if (check_last && current_table()->get_last_row_repeated() >= 1024) return;
 
 	if (repeated > 1)
 	{
@@ -536,18 +565,27 @@ void ods_conversion_context::add_default_row(int repeated)
 			}
 		}
 		if (row_split > current_table()->current_row() && row_split_repeated != repeated)
-		{//делим на 3 - до, с --, после;			
+		{//divide by 3 - before, with --, after;
 			int r = current_table()->current_row();
 
-			add_default_row(row_split - r - 1);
-			add_default_row(row_split_repeated);
-			add_default_row(repeated + r + row_split_repeated - row_split - 1);
+			add_default_row(row_split - r - 1, false);
+			add_default_row(row_split_repeated, false);
+			add_default_row(repeated - (row_split - r - 1) - row_split_repeated, false);
 
+			return;
+		}
+		// A range merged across rows that ends inside the gap: write its rows apart from the rows after it, so that
+		// only they are covered (one row element is covered as a whole).
+		const _INT32 covered = current_table()->get_covered_rows_ahead();
+		if (covered > 0 && covered < repeated)
+		{
+			add_default_row(covered, false);
+			add_default_row(repeated - covered, false);
 			return;
 		}
 	}
 	
-	if (repeated > 0 && current_table()->get_last_row_repeated() < 1024 && repeat_at_lasts_)
+	if (repeated > 0 && repeat_at_lasts_)
 	{
 		start_row(current_table()->current_row() + 1, repeated, 0, true);
 		end_row();
@@ -617,8 +655,8 @@ void ods_conversion_context::add_column(int start_column, int repeated, int leve
 	}
 	else
 	{
-		//по сути в этом стиле раличные опции ширины колонок тока .. а если свойства совпадают - можно сгенерить один, хотя выше и указано что стили разные.
-		//то есть в оо разделяют оох стиль на 2 (для колонки собственно, и описалово ячеек в колонки)
+		//In fact, in this style there are only different column-width options .. and if the properties match, one can be generated, although it is indicated above that the styles are different.
+		//that is, in oo they divide the oox style into 2 (for the column itself, and to describe the cells in the columns)
 		styles_context()->create_style(L"", style_family::TableColumn, true, false, -1);
 		style_elm = styles_context()->last_state()->get_office_element();
 		
@@ -636,7 +674,10 @@ void ods_conversion_context::add_column(int start_column, int repeated, int leve
 	office_element_ptr column_elm;
 	create_element(L"table", L"table-column", column_elm, this);
 
-	if (start_column == 1 && (false == current_table()->table_parts().empty()) && (false == current_table()->table_parts().back().columns.empty()))
+	// Chart local tables only, see start_row.
+	if (start_column == 1 && false == repeat_at_lasts_ &&
+		(false == current_table()->table_parts().empty()) &&
+		(false == current_table()->table_parts().back().columns.empty()))
 	{
 		office_element_ptr column_headers_elm;
 		create_element(L"table", L"table-header-columns", column_headers_elm, this);
@@ -724,8 +765,8 @@ void ods_conversion_context::start_cell_text()
 		text_a_->common_xlink_attlist_.type_ = xlink_type(xlink_type::Simple);
 		text_a_->common_xlink_attlist_.href_ = state.link;
 		
-		text_context()->start_element(text_a_elm); // может быть стоит сделать собственый???
-		// libra дурит если в табличках будет вложенный span в гиперлинк ... оО (хотя это разрешено в спецификации!!!)
+		text_context()->start_element(text_a_elm); // maybe it's worth making its own???
+		// LibreOffice acts up if the tables have a nested span in the hyperlink... oO (although this is allowed in the specification!!!)
 
 		text_context()->single_paragraph_ = true;
 	}

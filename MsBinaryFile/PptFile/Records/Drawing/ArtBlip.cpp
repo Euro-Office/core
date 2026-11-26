@@ -42,7 +42,7 @@ void CRecordOfficeArtBlip::ReadFromStream(SRecordHeader & oHeader, POLE::Stream*
 {
 	if ((oHeader.RecVersion == PSFLAG_CONTAINER) || ((oHeader.RecVersion & 0x0F) == 0x0F)) return;
 	
-	CRYPT::ECMADecryptor *pDecryptor = m_pDocumentInfo ? m_pDocumentInfo->m_arUsers[0]->m_pDecryptor : NULL;
+	CRYPT::ECMADecryptor *pDecryptor = m_pDocumentInfo ? m_pDocumentInfo->m_arUsers[0]->m_pDecryptor : nullptr;
 
 	CMetaFileBuffer	oMetaFile;
 	std::wstring sExt = L".jpg";
@@ -67,10 +67,10 @@ void CRecordOfficeArtBlip::ReadFromStream(SRecordHeader & oHeader, POLE::Stream*
 			Gdiplus::ENHMETAHEADER3 oEmfHeader;
 			oMetaHeader.ToEMFHeader(&oEmfHeader);
 
-			oMetaFile.SetHeader(NULL, 0);
+			oMetaFile.SetHeader(nullptr, 0);
 
 			int nDataSize = oHeader.RecLen - lOffset;
-			BYTE* pData = (nDataSize > 0 && nDataSize < 0xffffff ) ? (new BYTE[nDataSize]) : NULL;
+			BYTE* pData = (nDataSize > 0 && nDataSize < 0xffffff ) ? (new BYTE[nDataSize]) : nullptr;
 			
 			if (pData)
 			{
@@ -101,7 +101,7 @@ void CRecordOfficeArtBlip::ReadFromStream(SRecordHeader & oHeader, POLE::Stream*
 			oMetaHeader.ToWMFHeader(&oWmfHeader);
 			
 			LONG lLenHeader = 22;
-			BYTE* pMetaHeader = new BYTE[lLenHeader]; // удалится в oMetaFile
+			BYTE* pMetaHeader = new BYTE[lLenHeader]; // will be deleted in oMetaFile
 			memcpy(pMetaHeader, (void*)(&oWmfHeader), lLenHeader);
 
 			oMetaFile.SetHeader(pMetaHeader, lLenHeader);
@@ -204,7 +204,7 @@ void CRecordOfficeArtBlip::ReadFromStream(SRecordHeader & oHeader, POLE::Stream*
 	}
 	else if (oHeader.RecType == RECORD_TYPE_ESCHER_BLIP_PICT)
 	{
-		unsigned char* newData = NULL;
+		unsigned char* newData = nullptr;
 		unsigned int newDataSize = oMetaFile.ToBuffer(newData);
 
 		std::wstring strFile = L"Image " + std::to_wstring(nImagesCount + 1) + sExt;
@@ -230,6 +230,7 @@ void CRecordOfficeArtBlip::ReadFromStream(SRecordHeader & oHeader, POLE::Stream*
 		}
 		catch (...)
 		{
+			(void)0;
 		}
 		m_fileName = strFile;
 	}
@@ -247,8 +248,9 @@ void CRecordOfficeArtBlip::ReadFromStream(SRecordHeader & oHeader, POLE::Stream*
 		if (oHeader.RecType == RECORD_TYPE_ESCHER_BLIP_PNG)
 		{
 			std::string test((char*)pImage, (std::min)((int)oHeader.RecLen - lOffset, 4096));
-			if (std::string::npos != (lOffset2 = test.find("GIF89")))
-			{//gif in png chuncks - todooo from read header, chunks ....
+			lOffset2 = test.find("GIF89");
+			if (std::string::npos != lOffset2)
+			{//gif in png chunks - TODO read from header, chunks ....
 				sExt = L".gif";
 				lOffset += lOffset2;
 			}
@@ -276,7 +278,7 @@ void CRecordOfficeArtBlip::ReadFromStream(SRecordHeader & oHeader, POLE::Stream*
 			fileImage.CloseFile();
 		}
 		if (pImage)delete[] pImage;
-		pImage = NULL;	
+		pImage = nullptr;	
 
 		m_fileName = strFile;
 	}

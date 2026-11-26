@@ -32,13 +32,13 @@ namespace DocFileFormat
 		RELEASEOBJECT( Reader );
 	}
 	Record::Record():
-		HeaderSize(0), BodySize(0), RawData(NULL), SiblingIdx(0), TypeCode(0), Version(0), Instance(0), Reader(NULL),
-		_ParentRecord(NULL)
+		Reader(nullptr), HeaderSize(0), RawData(nullptr), SiblingIdx(0), TypeCode(0), Version(0), Instance(0), BodySize(0),
+		_ParentRecord(nullptr)
 	{
 	}
 	Record::Record( IBinaryReader* _reader, unsigned int bodySize, unsigned int typeCode, unsigned int version, unsigned int instance ):
-		HeaderSize(Record::HEADER_SIZE_IN_BYTES), BodySize(bodySize), RawData(NULL), SiblingIdx(0), TypeCode(typeCode), Version(version), Instance(instance), Reader(NULL),
-		_ParentRecord(NULL)
+		Reader(nullptr), HeaderSize(Record::HEADER_SIZE_IN_BYTES), RawData(nullptr), SiblingIdx(0), TypeCode(typeCode), Version(version), Instance(instance), BodySize(bodySize),
+		_ParentRecord(nullptr)
 	{
 		HeaderSize = Record::HEADER_SIZE_IN_BYTES;
 

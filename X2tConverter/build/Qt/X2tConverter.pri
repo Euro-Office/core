@@ -136,7 +136,7 @@ LIBS += -L$$CORE_BUILDS_LIBRARIES_PATH -lCryptoPPLib
 ADD_DEPENDENCY(graphics, kernel, UnicodeConverter, kernel_network, Fb2File, PdfFile, HtmlFile2, EpubFile, XpsFile, OFDFile, DjVuFile, doctrenderer, DocxRenderer, IWorkFile, HWPFile, StarMathConverter, ooxmlsignature)
 
 #####################################################
-# внешнее подключение сторонних библиотек
+# external connection of third-party libraries
 
 #BOOST
 CONFIG += core_boost_regex

@@ -22,8 +22,8 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#ifndef _PDF_FILE_H
-#define _PDF_FILE_H
+#ifndef PDF_FILE_H
+#define PDF_FILE_H
 
 #ifndef PDFFILE_USE_DYNAMIC_LIBRARY
 #define PDFFILE_DECL_EXPORT
@@ -63,19 +63,19 @@ public:
 
 namespace PdfFile
 {
-	typedef enum
+	typedef enum : unsigned char
 	{
-		errorNone          = 0, // Нет ошибок
-		errorOpenFile      = 1, // Ошибка при открытии PDF файла
+		errorNone          = 0, // No errors
+		errorOpenFile      = 1, // Error opening PDF file
 		errorBadCatalog    = 2, // Couldn't read the page catalog
-		errorDamaged       = 3, // PDF файл был поврежден и его невозможно восстановить
-		errorEncrypted     = 4, // Файл зашифрован, авторизация не пройдена
+		errorDamaged       = 3, // The PDF file has been damaged and can't be recovered.
+		errorEncrypted     = 4, // The file is encrypted, authorization failed
 		errorHighlightFile = 5, // Nonexistent or invalid highlight file
-		errorBadPrinter    = 6, // Плохой принтер
-		errorPrinting      = 7, // Ошибка во время печати
-		errorPermission    = 8, // Ошибка связанная с ограничениями наложенными на файл
-		errorBadPageNum    = 9, // Неверное количество страниц
-		errorFileIO        = 10,// Ошибка при чтении/записи
+		errorBadPrinter    = 6, // Invalid printer
+		errorPrinting      = 7, // Error during printing
+		errorPermission    = 8, // Error related to file restrictions
+		errorBadPageNum    = 9, // Invalid number of pages
+		errorFileIO        = 10,// Read/write error
 		errorMemory        = 11 // Memory exceed
 	} EError;
 }
@@ -86,16 +86,16 @@ public:
 	CPdfFile(NSFonts::IApplicationFonts* pAppFonts);
 	virtual ~CPdfFile();
 	NSFonts::IFontManager* GetFontManager();
-	// В режиме для чтения закрытие reader, есть возможность открыть новый
-	// В режиме для редактирования закрытие writer, есть возможность использования reader
+	// In reading mode, closing the reader, it is possible to open a new one
+	// In editing mode, closing writer, it is possible to use reader
 	virtual void Close();
 
 	// --- EDIT ---
-	// Переходит в режим редактирования. Pdf уже должен быть открыт на чтение - LoadFromFile/LoadFromMemory
+	// Switches to editing mode. Pdf should already be open for reading - LoadFromFile/LoadFromMemory
 	bool EditPdf(const std::wstring& wsDstFile = L"");
 	void EditClose();
 	void SetEditType(int nType);
-	// Манипуляции со страницами возможны в режиме редактирования
+	// Manipulations with pages are possible in editing mode
 	bool EditPage  (int nPageIndex);
 	bool DeletePage(int nPageIndex);
 	bool AddPage   (int nPageIndex);
@@ -114,8 +114,8 @@ public:
 	void ToXml(const std::wstring& sFile, bool bSaveStreams = false);
 
 	static bool GetMetaData(const std::wstring& sFile, const std::wstring& sMetaName, BYTE** pMetaData, DWORD& nMetaLength);
-	virtual bool LoadFromFile  (const std::wstring& file, const std::wstring& options = L"", const wchar_t* owner_password = NULL, const wchar_t* user_password = NULL);
-	virtual bool LoadFromMemory(BYTE* data, DWORD length, const std::wstring& options = L"", const wchar_t* owner_password = NULL, const wchar_t* user_password = NULL);
+	virtual bool LoadFromFile  (const std::wstring& file, const std::wstring& options = L"", const wchar_t* owner_password = nullptr, const wchar_t* user_password = nullptr);
+	virtual bool LoadFromMemory(BYTE* data, DWORD length, const std::wstring& options = L"", const wchar_t* owner_password = nullptr, const wchar_t* user_password = nullptr);
 	virtual NSFonts::IApplicationFonts* GetFonts();
 
 	virtual OfficeDrawingFileType GetType();
@@ -125,16 +125,16 @@ public:
 
 	virtual int GetPagesCount();
 	virtual void GetPageInfo(int nPageIndex, double* pdWidth, double* pdHeight, double* pdDpiX, double* pdDpiY);
-	virtual void DrawPageOnRenderer(IRenderer* pRenderer, int nPageIndex, bool* pBreak, COfficeDrawingPageParams* pParams = NULL);
+	virtual void DrawPageOnRenderer(IRenderer* pRenderer, int nPageIndex, bool* pBreak, COfficeDrawingPageParams* pParams = nullptr);
 	virtual std::wstring GetInfo();
 	virtual BYTE* GetStructure();
 	virtual BYTE* GetLinks(int nPageIndex);
 
 	bool ValidMetaData();
-	// Захватывает полученную память malloc data
+	// Captures the received memory malloc data
 	bool MergePages(BYTE* data, DWORD length, int nMaxID = 0, const std::string& sPrefixForm = "");
 	bool UnmergePages();
-	bool RedactPage(int nPageIndex, double* arrRedactBox, int nLengthX8, BYTE* pChanges = NULL, int nLength = 0);
+	bool RedactPage(int nPageIndex, double* arrRedactBox, int nLengthX8, BYTE* pChanges = nullptr, int nLength = 0);
 	bool UndoRedact();
 	bool CheckOwnerPassword(const wchar_t* sPassword);
 	bool CheckPerm(int nPerm);
@@ -145,11 +145,11 @@ public:
 	BYTE* GetAnnotEmbeddedFonts();
 	BYTE* GetAnnotStandardFonts();
 	BYTE* GetAnnots    (int nPageIndex = -1);
-	BYTE* SplitPages   (const int* arrPageIndex, unsigned int unLength, BYTE* pChanges = NULL, DWORD nLength = 0);
+	BYTE* SplitPages   (const int* arrPageIndex, unsigned int unLength, BYTE* pChanges = nullptr, DWORD nLength = 0);
 	BYTE* VerifySign   (const std::wstring& sFile, ICertificate* pCertificate, int nWidget = -1);
-	BYTE* GetAPWidget  (int nRasterW, int nRasterH, int nBackgroundColor, int nPageIndex, int nWidget  = -1, const char* sView  = NULL, const char* sBView = NULL);
-	BYTE* GetAPAnnots  (int nRasterW, int nRasterH, int nBackgroundColor, int nPageIndex, int nAnnot   = -1, const char* sView  = NULL);
-	BYTE* GetButtonIcon(int nBackgroundColor, int nPageIndex, bool bBase64 = false, int nBWidget = -1, const char* sIView = NULL);
+	BYTE* GetAPWidget  (int nRasterW, int nRasterH, int nBackgroundColor, int nPageIndex, int nWidget  = -1, const char* sView  = nullptr, const char* sBView = nullptr);
+	BYTE* GetAPAnnots  (int nRasterW, int nRasterH, int nBackgroundColor, int nPageIndex, int nAnnot   = -1, const char* sView  = nullptr);
+	BYTE* GetButtonIcon(int nBackgroundColor, int nPageIndex, bool bBase64 = false, int nBWidget = -1, const char* sIView = nullptr);
 	BYTE* GetGIDByUnicode(const std::wstring& wsFontName);
 	std::wstring GetFontPath(const std::wstring& wsFontName);
 	std::wstring GetEmbeddedFontPath(const std::wstring& wsFontName);
@@ -161,26 +161,26 @@ public:
 	void RotatePage   (int nRotate);
 	void SetPassword  (const std::wstring& wsPassword);
 	void SetDocumentID(const std::wstring& wsDocumentID);
-	void Sign(const double& dX = 0, const double& dY = 0, const double& dW = 0, const double& dH = 0, const std::wstring& wsPicturePath = L"", CPDFSignatureInfo* pSigInfo = NULL);
+	void Sign(const double& dX = 0, const double& dY = 0, const double& dW = 0, const double& dH = 0, const std::wstring& wsPicturePath = L"", CPDFSignatureInfo* pSigInfo = nullptr);
 	bool PrepareSignature(const std::wstring& wsPath);
 	bool FinalizeSignature(BYTE* pSignedData, DWORD dwDataLength);
 	void SetDocumentInfo(const std::wstring& wsTitle, const std::wstring& wsCreator, const std::wstring& wsSubject, const std::wstring& wsKeywords);
 	void AddMetaData(const std::wstring& sMetaName, BYTE* pMetaData, DWORD nMetaLength);
 
-	HRESULT OnlineWordToPdf          (const std::wstring& wsSrcFile, const std::wstring& wsDstFile, CConvertFromBinParams* pParams = NULL);
-	HRESULT OnlineWordToPdfFromBinary(const std::wstring& wsSrcFile, const std::wstring& wsDstFile, CConvertFromBinParams* pParams = NULL);
-	HRESULT AddToPdfFromBinary(BYTE* pBuffer, unsigned int nLen, CConvertFromBinParams* pParams = NULL);
+	HRESULT OnlineWordToPdf          (const std::wstring& wsSrcFile, const std::wstring& wsDstFile, CConvertFromBinParams* pParams = nullptr);
+	HRESULT OnlineWordToPdfFromBinary(const std::wstring& wsSrcFile, const std::wstring& wsDstFile, CConvertFromBinParams* pParams = nullptr);
+	HRESULT AddToPdfFromBinary(BYTE* pBuffer, unsigned int nLen, CConvertFromBinParams* pParams = nullptr);
 	HRESULT DrawImageWith1bppMask(IGrObject* pImage, NSImages::CPixJbig2* pMaskBuffer, const unsigned int& unMaskWidth, const unsigned int& unMaskHeight, const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT DrawImage1bpp(NSImages::CPixJbig2* pImageBuffer, const unsigned int& unWidth, const unsigned int& unHeight, const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT SetLinearGradient(const double& dX1, const double& dY1, const double& dX2, const double& dY2);
 	HRESULT SetRadialGradient(const double& dX1, const double& dY1, const double& dR1, const double& dX2, const double& dY2, const double& dR2);
 
 	//----------------------------------------------------------------------------------------
-	// Тип рендерера
+	// Renderer type
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT get_Type(LONG* lType);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы со страницей
+	// Functions for working with the page
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT NewPage();
 	virtual HRESULT get_Height(double* dHeight);
@@ -190,7 +190,7 @@ public:
 	virtual HRESULT get_DpiX(double* dDpiX);
 	virtual HRESULT get_DpiY(double* dDpiY);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с Pen
+	// Pen functions
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT get_PenColor(LONG* lColor);
 	virtual HRESULT put_PenColor(const LONG& lColor);
@@ -214,7 +214,7 @@ public:
 	virtual HRESULT put_PenMiterLimit(const double& dMiter);
 	virtual HRESULT PenDashPattern(double* pPattern, LONG lCount);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с Brush
+	// Functions for working with Brush
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT get_BrushType(LONG* lType);
 	virtual HRESULT put_BrushType(const LONG& lType);
@@ -246,7 +246,7 @@ public:
 	virtual HRESULT get_BrushScale(bool& isScale, double& scaleX, double& scaleY) const;
 	virtual HRESULT put_BrushScale(bool isScale, const double& scaleX, const double& scaleY);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы со шрифтами
+	// Functions for working with fonts
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT get_FontName(std::wstring* wsName);
 	virtual HRESULT put_FontName(const std::wstring& wsName);
@@ -263,7 +263,7 @@ public:
 	virtual HRESULT get_FontFaceIndex(int* lFaceIndex);
 	virtual HRESULT put_FontFaceIndex(const int& lFaceIndex);
 	//----------------------------------------------------------------------------------------
-	// Функции для вывода текста
+	// Functions for text output
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT CommandDrawTextCHAR  (const LONG& lUnicode,                   const double& dX, const double& dY, const double& dW, const double& dH);
 	virtual HRESULT CommandDrawTextExCHAR(const LONG& lUnicode, const LONG& lGid, const double& dX, const double& dY, const double& dW, const double& dH);
@@ -271,12 +271,12 @@ public:
 	virtual HRESULT CommandDrawTextEx    (const std::wstring& wsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& dX, const double& dY, const double& dW, const double& dH);
 	virtual HRESULT CommandDrawTextCHAR2 (unsigned int* unUnicode, const unsigned int& unUnicodeCount, const unsigned int& unGid, const double& dX, const double& dY, const double& dW, const double& dH);
 	//----------------------------------------------------------------------------------------
-	// Маркеры команд
+	// Command markers
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT BeginCommand(const DWORD& lType);
 	virtual HRESULT EndCommand(const DWORD& lType);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с патом
+	// Functions for working with paths
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT PathCommandMoveTo(const double& dX, const double& dY);
 	virtual HRESULT PathCommandLineTo(const double& dX, const double& dY);
@@ -294,23 +294,23 @@ public:
 	virtual HRESULT PathCommandText      (const std::wstring& wsUnicodeText,                                                           const double& dX, const double& dY, const double& dW, const double& dH);
 	virtual HRESULT PathCommandTextEx    (const std::wstring& wsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& dX, const double& dY, const double& dW, const double& dH);
 	//----------------------------------------------------------------------------------------
-	// Функции для вывода изображений
+	// Functions for displaying images
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT DrawImage(IGrObject* pImage, const double& dX, const double& dY, const double& dW, const double& dH);
 	virtual HRESULT DrawImageFromFile(const std::wstring& wsImagePath, const double& dX, const double& dY, const double& dW, const double& dH, const BYTE& nAlpha = 255);
 	//----------------------------------------------------------------------------------------
-	// Функции для выставления преобразования
+	// Functions for setting conversion
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT SetTransform(const double& dM11, const double& dM12, const double& dM21, const double& dM22, const double& dX, const double& dY);
 	virtual HRESULT GetTransform(double* dM11, double* dM12, double* dM21, double* dM22, double* dX, double* dY);
 	virtual HRESULT ResetTransform();
 	//----------------------------------------------------------------------------------------
-	// Тип клипа
+	// Clip type
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT get_ClipMode(LONG* lMode);
 	virtual HRESULT put_ClipMode(const LONG& lMode);
 	//----------------------------------------------------------------------------------------
-	// Дополнительные функции
+	// Additional features
 	//----------------------------------------------------------------------------------------
 	virtual HRESULT CommandLong(const LONG& lType, const LONG& lCommand);
 	virtual HRESULT CommandDouble(const LONG& lType, const double& dCommand);
@@ -323,4 +323,4 @@ private:
 	CPdfFile_Private* m_pInternal;
 };
 
-#endif // _PDF_FILE_H
+#endif // PDF_FILE_H

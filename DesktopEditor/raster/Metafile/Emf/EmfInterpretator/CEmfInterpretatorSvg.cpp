@@ -29,7 +29,7 @@ namespace MetaFile
 
 	void CEmfInterpretatorSvg::ChangeConditional()
 	{
-		if (NULL == m_oSecondConditional.m_pParser)
+		if (nullptr == m_oSecondConditional.m_pParser)
 			return;
 
 		std::swap(m_pParser, m_oSecondConditional.m_pParser);
@@ -94,19 +94,19 @@ namespace MetaFile
 		m_pXmlWriter->WriteNodeEnd(L"svg", false, false);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_RESTOREDC(const int &nIndexDC)
+	void CEmfInterpretatorSvg::HANDLE_EMR_RESTOREDC(const int & /*nIndexDC*/)
 	{
 		CInterpretatorSvgBase::ResetClip();
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_FILLPATH(const TRectL &oBounds)
+	void CEmfInterpretatorSvg::HANDLE_EMR_FILLPATH(const TRectL & /*oBounds*/)
 	{
-		if (NULL == m_pParser)
+		if (nullptr == m_pParser)
 			return;
 
 		const CPath* pPath = m_pParser->GetPath();
 		
-		if (NULL == pPath)
+		if (nullptr == pPath)
 			return;
 
 		const std::wstring wsValue = CreatePath(*pPath);
@@ -124,17 +124,17 @@ namespace MetaFile
 		WriteNode(L"path" , arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_SELECTCLIPPATH(const unsigned int &unRegionMode)
+	void CEmfInterpretatorSvg::HANDLE_EMR_SELECTCLIPPATH(const unsigned int & /*unRegionMode*/)
 	{
 		m_bUpdatedClip = false;
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_EXCLUDECLIPRECT(const TRectL &oClip)
+	void CEmfInterpretatorSvg::HANDLE_EMR_EXCLUDECLIPRECT(const TRectL & /*oClip*/)
 	{
 		m_bUpdatedClip = false;
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_EXTSELECTCLIPRGN(const unsigned int &unRgnDataSize, const unsigned int &unRegionMode, CDataStream &oDataStream)
+	void CEmfInterpretatorSvg::HANDLE_EMR_EXTSELECTCLIPRGN(const unsigned int & /*unRgnDataSize*/, const unsigned int & /*unRegionMode*/, CDataStream & /*oDataStream*/)
 	{
 		m_bUpdatedClip = false;
 	}
@@ -144,7 +144,7 @@ namespace MetaFile
 		m_bUpdatedClip = false;
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_INTERSECTCLIPRECT(const TRectL &oClip)
+	void CEmfInterpretatorSvg::HANDLE_EMR_INTERSECTCLIPRECT(const TRectL & /*oClip*/)
 	{
 		m_bUpdatedClip = false;
 	}
@@ -203,7 +203,7 @@ namespace MetaFile
 		double dStartAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oStart.X, oStart.Y);
 		double dSweepAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oEnd.X, oEnd.Y);
 
-		if (NULL != m_pParser && m_pParser->GetTransform().M22 < 0)
+		if (nullptr != m_pParser && m_pParser->GetTransform().M22 < 0)
 		{
 			dStartAngle *= -1;
 			dSweepAngle *= -1;
@@ -267,7 +267,7 @@ namespace MetaFile
 		double dStartAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oStart.X, oStart.Y);
 		double dSweepAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oEnd.X, oEnd.Y);
 
-		if (NULL != m_pParser && m_pParser->GetTransform().M22 < 0)
+		if (nullptr != m_pParser && m_pParser->GetTransform().M22 < 0)
 		{
 			dStartAngle *= -1;
 			dSweepAngle *= -1;
@@ -317,7 +317,7 @@ namespace MetaFile
 
 	void CEmfInterpretatorSvg::HANDLE_EMR_CHORD(const TRectL &oBox, const TPointL &oStart, const TPointL &oEnd)
 	{
-		//TODO:: реализовать
+		//TODO::implement
 	}
 
 	void CEmfInterpretatorSvg::HANDLE_EMR_ELLIPSE(const TRectL &oBox)
@@ -343,7 +343,7 @@ namespace MetaFile
 
 		std::vector<double> arDx(0);
 
-		if (NULL != oTEmfExtTextoutA.oEmrText.pOutputDx)
+		if (nullptr != oTEmfExtTextoutA.oEmrText.pOutputDx)
 			arDx = std::vector<double>(oTEmfExtTextoutA.oEmrText.pOutputDx, oTEmfExtTextoutA.oEmrText.pOutputDx + oTEmfExtTextoutA.oEmrText.unChars);
 
 		WriteText(wsText, TPointD(oTEmfExtTextoutA.oEmrText.oReference.X, oTEmfExtTextoutA.oEmrText.oReference.Y), oTEmfExtTextoutA.oBounds, TPointD(oTEmfExtTextoutA.dExScale, oTEmfExtTextoutA.dEyScale), arDx, oTEmfExtTextoutA.oEmrText.unOptions & 0x00000010);
@@ -355,7 +355,7 @@ namespace MetaFile
 
 		std::vector<double> arDx(0);
 
-		if (NULL != oTEmfExtTextoutW.oEmrText.pOutputDx)
+		if (nullptr != oTEmfExtTextoutW.oEmrText.pOutputDx)
 			arDx = std::vector<double>(oTEmfExtTextoutW.oEmrText.pOutputDx, oTEmfExtTextoutW.oEmrText.pOutputDx + oTEmfExtTextoutW.oEmrText.unChars);
 
 		WriteText(wsText, TPointD(oTEmfExtTextoutW.oEmrText.oReference.X, oTEmfExtTextoutW.oEmrText.oReference.Y), oTEmfExtTextoutW.oBounds, TPointD(oTEmfExtTextoutW.dExScale, oTEmfExtTextoutW.dEyScale), arDx, oTEmfExtTextoutW.oEmrText.unOptions & 0x00000010);
@@ -409,7 +409,7 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYBEZIER(const TRectL &oBounds, const std::vector<TPointL> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYBEZIER(const TRectL & /*oBounds*/, const std::vector<TPointL> &arPoints)
 	{
 		if (arPoints.size() < 4)
 			return;
@@ -432,7 +432,7 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYBEZIER(const TRectL &oBounds, const std::vector<TPointS> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYBEZIER(const TRectL & /*oBounds*/, const std::vector<TPointS> &arPoints)
 	{
 		if (arPoints.size() < 4)
 			return;
@@ -455,7 +455,7 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYBEZIERTO(const TRectL &oBounds, const std::vector<TPointL> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYBEZIERTO(const TRectL & /*oBounds*/, const std::vector<TPointL> &arPoints)
 	{
 		if (arPoints.size() < 4)
 			return;
@@ -478,7 +478,7 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYBEZIERTO(const TRectL &oBounds, const std::vector<TPointS> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYBEZIERTO(const TRectL & /*oBounds*/, const std::vector<TPointS> &arPoints)
 	{
 		if (arPoints.size() < 4)
 			return;
@@ -501,9 +501,9 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYDRAW(const TRectL &oBounds, TPointL *arPoints, const unsigned int &unCount, const unsigned char *pAbTypes)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYDRAW(const TRectL & /*oBounds*/, TPointL *arPoints, const unsigned int &unCount, const unsigned char *pAbTypes)
 	{
-		if (0 == unCount || NULL == arPoints || NULL == pAbTypes)
+		if (0 == unCount || nullptr == arPoints || nullptr == pAbTypes)
 			return;
 
 		std::wstring wsValue;
@@ -552,9 +552,9 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYDRAW(const TRectL &oBounds, TPointS *arPoints, const unsigned int &unCount, const unsigned char *pAbTypes)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYDRAW(const TRectL & /*oBounds*/, TPointS *arPoints, const unsigned int &unCount, const unsigned char *pAbTypes)
 	{
-		if (0 == unCount || NULL == arPoints || NULL == pAbTypes)
+		if (0 == unCount || nullptr == arPoints || nullptr == pAbTypes)
 			return;
 
 		std::wstring wsValue;
@@ -603,7 +603,7 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYGON(const TRectL &oBounds, const std::vector<TPointL> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYGON(const TRectL & /*oBounds*/, const std::vector<TPointL> &arPoints)
 	{
 		if (arPoints.empty())
 			return;
@@ -624,7 +624,7 @@ namespace MetaFile
 		WriteNode(L"polygon", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYGON(const TRectL &oBounds, const std::vector<TPointS> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYGON(const TRectL & /*oBounds*/, const std::vector<TPointS> &arPoints)
 	{
 		if (arPoints.empty())
 			return;
@@ -645,7 +645,7 @@ namespace MetaFile
 		WriteNode(L"polygon", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYLINE(const TRectL &oBounds, const std::vector<TPointL> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYLINE(const TRectL & /*oBounds*/, const std::vector<TPointL> &arPoints)
 	{
 		if (arPoints.empty())
 			return;
@@ -666,7 +666,7 @@ namespace MetaFile
 		WriteNode(L"polyline", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYLINE(const TRectL &oBounds, const std::vector<TPointS> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYLINE(const TRectL & /*oBounds*/, const std::vector<TPointS> &arPoints)
 	{
 		if (arPoints.empty())
 			return;
@@ -689,7 +689,7 @@ namespace MetaFile
 		WriteNode(L"polyline", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYLINETO(const TRectL &oBounds, const std::vector<TPointL> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYLINETO(const TRectL & /*oBounds*/, const std::vector<TPointL> &arPoints)
 	{
 		if (arPoints.empty())
 			return;
@@ -712,7 +712,7 @@ namespace MetaFile
 		WriteNode(L"polyline", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYLINETO(const TRectL &oBounds, const std::vector<TPointS> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYLINETO(const TRectL & /*oBounds*/, const std::vector<TPointS> &arPoints)
 	{
 		if (arPoints.empty())
 			return;
@@ -735,7 +735,7 @@ namespace MetaFile
 		WriteNode(L"polyline", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYPOLYGON(const TRectL &oBounds, const std::vector<std::vector<TPointL>> &arPolygons)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYPOLYGON(const TRectL & /*oBounds*/, const std::vector<std::vector<TPointL>> &arPolygons)
 	{
 		std::wstring wsValue;
 
@@ -765,7 +765,7 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYPOLYGON(const TRectL &oBounds, const std::vector<std::vector<TPointS>> &arPolygons)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYPOLYGON(const TRectL & /*oBounds*/, const std::vector<std::vector<TPointS>> &arPolygons)
 	{
 		std::wstring wsValue;
 
@@ -795,7 +795,7 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYPOLYLINE(const TRectL &oBounds, const std::vector<std::vector<TPointL>> &arPolygons)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYPOLYLINE(const TRectL & /*oBounds*/, const std::vector<std::vector<TPointL>> &arPolygons)
 	{
 		std::wstring wsValue;
 
@@ -825,7 +825,7 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_POLYPOLYLINE(const TRectL &oBounds, const std::vector<std::vector<TPointS>> &arPolygons)
+	void CEmfInterpretatorSvg::HANDLE_EMR_POLYPOLYLINE(const TRectL & /*oBounds*/, const std::vector<std::vector<TPointS>> &arPolygons)
 	{
 		std::wstring wsValue;
 
@@ -905,12 +905,12 @@ namespace MetaFile
 
 	void CEmfInterpretatorSvg::HANDLE_EMR_STROKEANDFILLPATH(const TRectL &oBounds)
 	{
-		if (NULL == m_pParser)
+		if (nullptr == m_pParser)
 			return;
 
 		const CPath* pPath = m_pParser->GetPath();
 		
-		if (NULL == pPath)
+		if (nullptr == pPath)
 			return;
 		
 		const std::wstring wsValue = CreatePath(*pPath);;
@@ -929,14 +929,14 @@ namespace MetaFile
 		WriteNode(L"path" , arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_STROKEPATH(const TRectL &oBounds)
+	void CEmfInterpretatorSvg::HANDLE_EMR_STROKEPATH(const TRectL & /*oBounds*/)
 	{
-		if (NULL == m_pParser)
+		if (nullptr == m_pParser)
 			return;
 
 		const CPath* pPath = m_pParser->GetPath();
 		
-		if (NULL == pPath)
+		if (nullptr == pPath)
 			return;
 		
 		const std::wstring wsValue = CreatePath(*pPath);
@@ -955,7 +955,7 @@ namespace MetaFile
 		WriteNode(L"path" , arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_GRADIENTFILL(const std::vector<TTriVertex> &arVertex, const std::vector<std::pair<int, int> > &arIndexes, unsigned int unFillMode)
+	void CEmfInterpretatorSvg::HANDLE_EMR_GRADIENTFILL(const std::vector<TTriVertex> &arVertex, const std::vector<std::pair<int, int> > & /*arIndexes*/, unsigned int  /*unFillMode*/)
 	{
 		if (arVertex.empty())
 			return;
@@ -992,7 +992,7 @@ namespace MetaFile
 		}
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_FILLRGN(const TRectL &oBounds, unsigned int unIhBrush, const TRegionDataHeader &oRegionDataHeader, const std::vector<TRectL> &arRects)
+	void CEmfInterpretatorSvg::HANDLE_EMR_FILLRGN(const TRectL & /*oBounds*/, unsigned int  /*unIhBrush*/, const TRegionDataHeader &oRegionDataHeader, const std::vector<TRectL> &arRects)
 	{
 		if (0x00000020 != oRegionDataHeader.unSize || 0x00000001 != oRegionDataHeader.unType || arRects.empty())
 			return;
@@ -1022,7 +1022,7 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_PAINTRGN(const TRectL &oBounds, const TRegionDataHeader &oRegionDataHeader, const std::vector<TRectL> &arRects)
+	void CEmfInterpretatorSvg::HANDLE_EMR_PAINTRGN(const TRectL & /*oBounds*/, const TRegionDataHeader &oRegionDataHeader, const std::vector<TRectL> &arRects)
 	{
 		if (0x00000020 != oRegionDataHeader.unSize || 0x00000001 != oRegionDataHeader.unType || arRects.empty())
 			return;
@@ -1052,12 +1052,12 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMR_FRAMERGN(const TRectL &oBounds, unsigned int unIhBrush, int nWidth, int nHeight, const TRegionDataHeader &oRegionDataHeader, const std::vector<TRectL> &arRects)
+	void CEmfInterpretatorSvg::HANDLE_EMR_FRAMERGN(const TRectL & /*oBounds*/, unsigned int  /*unIhBrush*/, int  /*nWidth*/, int  /*nHeight*/, const TRegionDataHeader & /*oRegionDataHeader*/, const std::vector<TRectL> & /*arRects*/)
 	{
 		m_bUpdatedClip = false;
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_OFFSETCLIP(double dX, double dY)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_OFFSETCLIP(double  /*dX*/, double  /*dY*/)
 	{
 		m_bUpdatedClip = false;
 	}
@@ -1067,17 +1067,17 @@ namespace MetaFile
 		m_bUpdatedClip = false;
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_SETCLIPPATH(short unShFlags, const CEmfPlusPath *pPath)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_SETCLIPPATH(short  /*unShFlags*/, const CEmfPlusPath * /*pPath*/)
 	{
 		m_bUpdatedClip = false;
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_SETCLIPRECT(short shCM, const TEmfPlusRectF &oRect)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_SETCLIPRECT(short  /*shCM*/, const TEmfPlusRectF & /*oRect*/)
 	{
 		m_bUpdatedClip = false;
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_SETCLIPREGION(short shObjectIndex, short shCM, const CEmfPlusRegion *pRegion)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_SETCLIPREGION(short  /*shObjectIndex*/, short  /*shCM*/, const CEmfPlusRegion * /*pRegion*/)
 	{
 		m_bUpdatedClip = false;
 	}
@@ -1097,11 +1097,11 @@ namespace MetaFile
 
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWARC(BYTE chOgjectIndex, double dStartAngle, double dSweepAngle, const TEmfPlusRectF &oRect)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWARC(BYTE  /*chOgjectIndex*/, double dStartAngle, double dSweepAngle, const TEmfPlusRectF &oRect)
 	{
 		TRectD oNewRect = oRect.ToRectD();
 
-		if (NULL != m_pParser && m_pParser->GetTransform().M22 < 0)
+		if (nullptr != m_pParser && m_pParser->GetTransform().M22 < 0)
 		{
 			dStartAngle *= -1;
 			dSweepAngle *= -1;
@@ -1143,7 +1143,7 @@ namespace MetaFile
 		WriteNode(L"path" , arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWBEZIERS(short shOgjectIndex, const std::vector<TEmfPlusPointF> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWBEZIERS(short  /*shOgjectIndex*/, const std::vector<TEmfPlusPointF> &arPoints)
 	{
 		if (arPoints.size() < 4)
 			return;
@@ -1176,14 +1176,14 @@ namespace MetaFile
 
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWDRIVERSTRING(short shOgjectIndex, unsigned int unBrushId, unsigned int unDriverStringOptionsFlags, unsigned int unMatrixPresent, TXForm *pMatrix, const std::wstring &wsString, const std::vector<TPointD> &arGlyphPos)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWDRIVERSTRING(short  /*shOgjectIndex*/, unsigned int  /*unBrushId*/, unsigned int  /*unDriverStringOptionsFlags*/, unsigned int  /*unMatrixPresent*/, TXForm * /*pMatrix*/, const std::wstring &wsString, const std::vector<TPointD> &arGlyphPos)
 	{
-		if (NULL == m_pParser || wsString.size() != arGlyphPos.size())
+		if (nullptr == m_pParser || wsString.size() != arGlyphPos.size())
 			return;
 
 		const IFont *pFont = m_pParser->GetFont();
 
-		if (NULL == pFont)
+		if (nullptr == pFont)
 			return;
 
 		const std::wstring wsText = StringNormalization(wsString);
@@ -1219,7 +1219,7 @@ namespace MetaFile
 
 			NSFonts::CFontInfo *pFontInfo = m_pParser->GetFontManager()->GetFontInfoByParams(oFormat);
 
-			if (NULL != pFontInfo && !StringEquals(*oFormat.wsName, pFontInfo->m_wsFontName))
+			if (nullptr != pFontInfo && !StringEquals(*oFormat.wsName, pFontInfo->m_wsFontName))
 			{
 				oFontName.Clear();
 				oFontName.WriteEncodeXmlString(L"\'");
@@ -1265,7 +1265,7 @@ namespace MetaFile
 		WriteNode(L"text", arNodeAttributes, wsText);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWELLIPSE(short shOgjectIndex, const TEmfPlusRectF &oRect)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWELLIPSE(short  /*shOgjectIndex*/, const TEmfPlusRectF &oRect)
 	{
 		TRectD oNewRect = oRect.ToRectD();
 
@@ -1282,7 +1282,7 @@ namespace MetaFile
 		WriteNode(L"ellipse", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWLINES(short shOgjectIndex, const std::vector<TEmfPlusPointF> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWLINES(short  /*shOgjectIndex*/, const std::vector<TEmfPlusPointF> &arPoints)
 	{
 		if (arPoints.empty())
 			return;
@@ -1303,9 +1303,9 @@ namespace MetaFile
 		WriteNode(L"polyline", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWPATH(short shOgjectIndex, unsigned int unPenId, const CPath *pPath)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWPATH(short  /*shOgjectIndex*/, unsigned int  /*unPenId*/, const CPath *pPath)
 	{
-		if (NULL == m_pParser || NULL == pPath)
+		if (nullptr == m_pParser || nullptr == pPath)
 			return;
 
 		const std::wstring wsValue = CreatePath(*pPath);
@@ -1327,10 +1327,10 @@ namespace MetaFile
 
 	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWPIE(short shOgjectIndex, double dStartAngle, double dSweepAngle, const TEmfPlusRectF &oRect)
 	{
-		//TODO: Реализовать при встрече
+		//TODO: Implement when encountered
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWRECTS(short shOgjectIndex, const std::vector<TEmfPlusRectF> &arRects)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWRECTS(short  /*shOgjectIndex*/, const std::vector<TEmfPlusRectF> &arRects)
 	{
 		std::wstring wsValue;
 
@@ -1358,7 +1358,7 @@ namespace MetaFile
 		WriteNode(L"path", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWSTRING(short shOgjectIndex, unsigned int unBrushId, unsigned int unFormatID, const std::wstring &wsString, const TEmfPlusRectF &oRect)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_DRAWSTRING(short  /*shOgjectIndex*/, unsigned int  /*unBrushId*/, unsigned int  /*unFormatID*/, const std::wstring &wsString, const TEmfPlusRectF &oRect)
 	{
 		WriteText(wsString, TPointD(oRect.dX, oRect.dY), oRect.ToRectL(), TPointD(m_pParser->GetTransform().M11, m_pParser->GetTransform().M22));
 	}
@@ -1368,7 +1368,7 @@ namespace MetaFile
 
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_FILLELLIPSE(unsigned int unBrushId, const TEmfPlusRectF &oRect)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_FILLELLIPSE(unsigned int  /*unBrushId*/, const TEmfPlusRectF &oRect)
 	{
 		TRectD oNewRect = oRect.ToRectD();
 
@@ -1385,9 +1385,9 @@ namespace MetaFile
 		WriteNode(L"ellipse", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_FILLPATH(short shOgjectIndex, unsigned int unBrushId, const CEmfPlusPath *pPath)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_FILLPATH(short  /*shOgjectIndex*/, unsigned int  /*unBrushId*/, const CEmfPlusPath *pPath)
 	{
-		if (NULL == m_pParser || NULL == pPath)
+		if (nullptr == m_pParser || nullptr == pPath)
 			return;
 
 		std::wstring wsValue = CreatePath(*pPath);
@@ -1412,7 +1412,7 @@ namespace MetaFile
 
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_FILLPOLYGON(unsigned int unBrushId, const std::vector<TEmfPlusPointF> &arPoints)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_FILLPOLYGON(unsigned int  /*unBrushId*/, const std::vector<TEmfPlusPointF> &arPoints)
 	{
 		if (arPoints.empty())
 			return;
@@ -1434,7 +1434,7 @@ namespace MetaFile
 		WriteNode(L"polygon", arAttributes);
 	}
 
-	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_FILLRECTS(unsigned int unBrushId, const std::vector<TEmfPlusRectF> &arRects)
+	void CEmfInterpretatorSvg::HANDLE_EMFPLUS_FILLRECTS(unsigned int  /*unBrushId*/, const std::vector<TEmfPlusRectF> &arRects)
 	{
 		if (arRects.empty())
 			return;

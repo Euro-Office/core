@@ -1,22 +1,22 @@
+#ifndef _BUILD_RASTER_HEIF_H_
+#define _BUILD_RASTER_HEIF_H_
+
 #include "../BgraFrame.h"
-#include "../../Common/3dParty/heif/libheif/libheif/api/libheif/heif.h"
-#include "../../UnicodeConverter/UnicodeConverter.h"
 
 namespace NSHeif {
-	class GRAPHICS_DECL CHeifFile {
+	class CHeifFile {
 	private:
 		CHeifFile() = delete;
 	public:
+		// HEIF images libheif can decode: HEIC (HEVC) and AVIF (AV1)
 		static bool isHeif(const std::wstring& fileName);
 		static bool isHeif(BYTE* buffer, DWORD size);
 
+		// The primary image as 8-bit RGBA (not premultiplied), rotated and
+		// mirrored as the file says
 		static bool Open(CBgraFrame* frame, const std::wstring& fileName, bool isRGBA);
 		static bool Open(CBgraFrame* frame, BYTE* buffer, DWORD size, bool isRGBA);
-		static bool Save(const BYTE* source, int width, int height, int sourceStride, const std::wstring& dstPath, bool isRGBA);
-
-	private:
-		static bool IsError(heif_error err);
-		static bool Decode(heif_context* ctx, CBgraFrame* frame, bool isRGBA);
-		static NSUnicodeConverter::CUnicodeConverter m_oConverter;
 	};
 }
+
+#endif // _BUILD_RASTER_HEIF_H_

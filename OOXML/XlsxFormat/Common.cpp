@@ -37,7 +37,7 @@ char* gcvt(double x, int n, char* b)
 
 #ifndef _gcvt
 #include "stdlib.h"
-#define _CVTBUFSIZE  128
+#define _CVTBUFSIZE  128 // NOLINT(bugprone-reserved-identifier): mirrors MSVC stdlib's _CVTBUFSIZE, which is used on Windows where this block is skipped
 #define _gcvt gcvt
 #endif
 
@@ -46,7 +46,7 @@ char* gcvt(double x, int n, char* b)
 
 std::wstring OOX::Spreadsheet::SpreadsheetCommon::WriteDouble(double dVal)
 {
-	//согласно http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n2005.pdf
+	//according to http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n2005.pdf
 	//DBL_MAX = 15 digits, DBL_MAXDIG10 = 17 digits.
 	char buffer[_CVTBUFSIZE];
 	_gcvt( dVal, DBL_MAXDIG10, buffer );

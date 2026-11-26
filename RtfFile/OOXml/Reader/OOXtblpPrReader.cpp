@@ -29,9 +29,9 @@ OOXtblpPrReader::OOXtblpPrReader(ComplexTypes::Word::CTblPPr * ooxTblPr)
 {
 	m_ooxTblPr = ooxTblPr;
 }
-bool OOXtblpPrReader::Parse( ReaderParameter oParam , RtfTableProperty& oOutputProperty)
+bool OOXtblpPrReader::Parse( ReaderParameter  /*oParam*/ , RtfTableProperty& oOutputProperty)
 {
-	if (m_ooxTblPr == NULL) return false;
+	if (m_ooxTblPr == nullptr) return false;
 
 	if(m_ooxTblPr->m_oLeftFromText.IsInit() )
 		oOutputProperty.m_nWrapLeft = m_ooxTblPr->m_oLeftFromText->ToTwips();

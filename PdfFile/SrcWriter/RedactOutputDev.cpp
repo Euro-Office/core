@@ -270,7 +270,7 @@ void SaveRGBAToStream(CDocument* pDocument, CDictObject* pDictObj, BYTE* pRGBA, 
 	oFrame.put_IsRGBA(true);
 
 	oFrame.SetJpegQuality(85.0);
-	BYTE* pBuffer = NULL;
+	BYTE* pBuffer = nullptr;
 	int nBufferSize = 0;
 	if (!oFrame.Encode(pBuffer, nBufferSize, _CXIMAGE_FORMAT_JPG))
 		return;
@@ -394,7 +394,7 @@ void SaveImageMaskToStream(CDocument* pDocument, CDictObject* pDictObj, BYTE* pM
 }
 void ApplyRedactToRGBA(const std::vector<double>& arrQuadPoints, BYTE* pImage, int nWidth, int nHeight, const std::vector<CPoint>& imagePolygon)
 {
-	// Находим все области редоктирования, которые пересекаются с изображением
+	// Finding all edit areas that intersect with the image
 	std::vector<std::vector<CPoint>> imageSpaceRedacts;
 
 	for (int j = 0; j < arrQuadPoints.size(); j += 8)
@@ -407,7 +407,7 @@ void ApplyRedactToRGBA(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 			CPoint(arrQuadPoints[j + 6], arrQuadPoints[j + 7])
 		};
 
-		// Преобразуем в координаты изображения
+		// Convert to image coordinates
 		std::vector<CPoint> imageSpaceRedact;
 		for (const CPoint& point : redactPolygon)
 		{
@@ -416,15 +416,15 @@ void ApplyRedactToRGBA(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 			imageSpaceRedact.push_back(CPoint(x, y));
 		}
 
-		// Проверяем, что область хоть частично внутри изображения
+		// Check that the area is at least partially inside the image
 		if (PdfWriter::SAT(imageSpaceRedact, {CPoint(0, 0), CPoint(0, nHeight), CPoint(nWidth, nHeight), CPoint(nWidth, 0)}))
 			imageSpaceRedacts.push_back(imageSpaceRedact);
 	}
 
-	// Закрашиваем области редоктирования черным цветом
+	// Paint the edited areas black
 	for (const auto& redact : imageSpaceRedacts)
 	{
-		// Находим bounding box области редоктирования в координатах изображения
+		// Finding the bounding box of the editing area in image coordinates
 		double minX = nWidth, minY = nHeight, maxX = 0, maxY = 0;
 		for (const CPoint& p : redact)
 		{
@@ -434,25 +434,25 @@ void ApplyRedactToRGBA(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 			if (p.y > maxY) maxY = p.y;
 		}
 
-		// Ограничиваем bounding box размерами изображения
+		// Limit the bounding box to the size of the image
 		int startX = std::max(0, (int)minX);
 		int startY = std::max(0, (int)minY);
 		int endX = std::min(nWidth  - 1, (int)maxX);
 		int endY = std::min(nHeight - 1, (int)maxY);
 
-		// Закрашиваем прямоугольную область
+		// Painting a rectangular area
 		for (int y = startY; y <= endY; ++y)
 		{
 			for (int x = startX; x <= endX; ++x)
 			{
-				// Проверяем, что пиксель внутри полигона редоктирования
+				// Checking that the pixel is inside the edit polygon
 				if (PdfWriter::isPointInQuad(x, y, redact[0].x, redact[0].y, redact[1].x, redact[1].y, redact[2].x, redact[2].y, redact[3].x, redact[3].y))
 				{
 					int nIndex = ((nHeight - 1 - y) * nWidth + x) * 4;
 					pImage[nIndex + 0] = 0; // R
 					pImage[nIndex + 1] = 0; // G
 					pImage[nIndex + 2] = 0; // B
-					// Alpha оставляем 255
+					// Alpha is left at 255
 				}
 			}
 		}
@@ -460,7 +460,7 @@ void ApplyRedactToRGBA(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 }
 void ApplyRedactToGray(const std::vector<double>& arrQuadPoints, BYTE* pImage, int nWidth, int nHeight, const std::vector<CPoint>& imagePolygon)
 {
-	// Преобразуем области редоктирования в координаты маски
+	// Converting edit areas to mask coordinates
 	std::vector<std::vector<CPoint>> maskSpaceRedacts;
 
 	for (int j = 0; j < arrQuadPoints.size(); j += 8)
@@ -473,7 +473,7 @@ void ApplyRedactToGray(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 			CPoint(arrQuadPoints[j + 6], arrQuadPoints[j + 7])
 		};
 
-		// Преобразуем в координаты маски
+		// Convert to mask coordinates
 		std::vector<CPoint> maskSpaceRedact;
 		for (const CPoint& point : redactPolygon)
 		{
@@ -488,7 +488,7 @@ void ApplyRedactToGray(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 
 	for (const auto& redact : maskSpaceRedacts)
 	{
-		// Находим bounding box
+		// Finding the bounding box
 		double minX = nWidth, minY = nHeight, maxX = 0, maxY = 0;
 		for (const CPoint& p : redact)
 		{
@@ -513,21 +513,21 @@ void ApplyRedactToGray(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 //----- constructor/destructor
 RedactOutputDev::RedactOutputDev(CPdfWriter* pRenderer, CObjectsManager* pObjMng, int nStartRefID)
 {
-	m_pXref = NULL;
+	m_pXref = nullptr;
 
 	m_pRenderer = pRenderer;
 	m_mObjManager = pObjMng;
 	m_nStartRefID = nStartRefID;
 	m_pDoc = m_pRenderer->GetDocument();
-	m_pPage = NULL;
+	m_pPage = nullptr;
 
 	m_bUpdateAll = false;
 }
 RedactOutputDev::~RedactOutputDev()
 {
-	m_pRenderer = NULL;
-	m_pDoc = NULL;
-	m_pPage = NULL;
+	m_pRenderer = nullptr;
+	m_pDoc = nullptr;
+	m_pPage = nullptr;
 }
 void RedactOutputDev::SetRedact(const std::vector<double>& arrQuadPoints)
 {
@@ -563,7 +563,7 @@ void RedactOutputDev::startPage(int nPageIndex, GfxState *pGState)
 void RedactOutputDev::endPage()
 {
 	m_pRenderer->m_oCommandManager.Flush();
-	m_pPage = NULL;
+	m_pPage = nullptr;
 }
 //----- save/restore graphics state
 void RedactOutputDev::saveState(GfxState *pGState)
@@ -581,7 +581,7 @@ void RedactOutputDev::restoreState(GfxState *pGState)
 	updateAll(pGState);
 
 	if (m_sStates.empty())
-		return; // Несбалансированный q/Q - сломанный файл
+		return; // Unbalanced q/Q - broken file
 	m_sStates.pop_back();
 }
 //----- update graphics state
@@ -613,7 +613,7 @@ void RedactOutputDev::updateAll(GfxState *pGState)
 }
 void RedactOutputDev::updateLineDash(GfxState *pGState)
 {
-	double* pDash  = NULL;
+	double* pDash  = nullptr;
 	int     nSize  = 0;
 	double  dStart = 0;
 	pGState->getLineDash(&pDash, &nSize, &dStart);
@@ -1080,7 +1080,7 @@ void RedactOutputDev::setShading(GfxState *pGState, const char* name)
 	double dShiftX = 0, dShiftY = 0;
 	DoTransform(pGState->getCTM(), &dShiftX, &dShiftY, true);
 
-	// TODO Нужно проверять Shading на отсечение?
+	// TODO Need to check Shading for clipping?
 
 	m_pPage->GrSave();
 	UpdateTransform();
@@ -1102,14 +1102,14 @@ void RedactOutputDev::drawImageMask(GfxState *pGState, Gfx *gfx, Object *pRef, S
 	DoTransform(pGState->getCTM(), &dShiftX, &dShiftY, true);
 
 	PdfWriter::CDocument* pDocument = m_pRenderer->GetDocument();
-	PdfWriter::CObjectBase* pObj = NULL;
+	PdfWriter::CObjectBase* pObj = nullptr;
 	std::vector<CPoint> imagePolygon = GetImagePolygon(m_arrMatrix);
 	if (CheckFullRedact(m_arrQuadPoints, imagePolygon))
 		return;
 
 	bool bHasRedact = CheckPartialRedact(m_arrQuadPoints, imagePolygon);
 	if (!pRef || bInlineImage || bHasRedact)
-		pObj = CreateImage(gfx, nWidth, nHeight, STREAM_FILTER_FLATE_DECODE, 1, NULL);
+		pObj = CreateImage(gfx, nWidth, nHeight, STREAM_FILTER_FLATE_DECODE, 1, nullptr);
 	else
 		pObj = m_mObjManager->GetObj(pRef->getRefNum() + m_nStartRefID);
 
@@ -1143,7 +1143,7 @@ void RedactOutputDev::drawImage(GfxState *pGState, Gfx *gfx, Object *pRef, Strea
 	DoTransform(pGState->getCTM(), &dShiftX, &dShiftY, true);
 
 	PdfWriter::CDocument* pDocument = m_pRenderer->GetDocument();
-	PdfWriter::CObjectBase* pObj = NULL;
+	PdfWriter::CObjectBase* pObj = nullptr;
 	std::vector<CPoint> imagePolygon = GetImagePolygon(m_arrMatrix);
 	if (CheckFullRedact(m_arrQuadPoints, imagePolygon))
 		return;
@@ -1189,7 +1189,7 @@ void RedactOutputDev::drawSoftMaskedImage(GfxState *pGState, Gfx *gfx, Object *p
 	DoTransform(pGState->getCTM(), &dShiftX, &dShiftY, true);
 
 	PdfWriter::CDocument* pDocument = m_pRenderer->GetDocument();
-	PdfWriter::CObjectBase* pObj = NULL;
+	PdfWriter::CObjectBase* pObj = nullptr;
 	std::vector<CPoint> imagePolygon = GetImagePolygon(m_arrMatrix);
 	if (CheckFullRedact(m_arrQuadPoints, imagePolygon))
 		return;
@@ -1222,7 +1222,7 @@ void RedactOutputDev::drawSoftMaskedImage(GfxState *pGState, Gfx *gfx, Object *p
 	{
 		if (nWidth != nMaskWidth || nHeight != nMaskHeight)
 		{
-			// Простое масштабирование (ближайший сосед)
+			// Simple scaling (nearest neighbor)
 			BYTE* pDstMask = new BYTE[nWidth * nHeight];
 			if (!pDstMask)
 			{
@@ -1240,7 +1240,7 @@ void RedactOutputDev::drawSoftMaskedImage(GfxState *pGState, Gfx *gfx, Object *p
 					int srcX = (int)(dstX * dScaleX);
 					int srcY = (int)(dstY * dScaleY);
 
-					// Ограничиваем координаты
+					// Limiting the coordinates
 					srcX = std::min(srcX, nMaskWidth  - 1);
 					srcY = std::min(srcY, nMaskHeight - 1);
 
@@ -1401,7 +1401,7 @@ void RedactOutputDev::drawForm(GfxState *pGState, Gfx *gfx, Ref id, const char* 
 	oForm.streamGetDict()->lookup("Resources", &resourcesObj);
 
 	PDFRectangle pBBox = { 0, 0, dXmax - dXmin, dYmax - dYmin };
-	Gfx* _gfx = new Gfx(gfx->getDoc(), pFormOutputDev, resourcesObj.isDict() ? resourcesObj.getDict() : NULL, &pBBox, NULL);
+	Gfx* _gfx = new Gfx(gfx->getDoc(), pFormOutputDev, resourcesObj.isDict() ? resourcesObj.getDict() : nullptr, &pBBox, nullptr);
 	_gfx->takeContentStreamStack(gfx);
 	Object oFormRef;
 	oFormRef.initRef(id.num, id.gen);
@@ -1432,18 +1432,18 @@ bool SkipPath(const std::vector<CSegment>& arrForStroke, const CPoint& P1, const
 	{
 		CPoint P3 = arrForStroke[i].start;
 		CPoint P4 = arrForStroke[i].end;
-		// Вычисляем коэффициенты A, B, C для уравнения прямой P3P4: Ax + By + C = 0
+		// Calculate the coefficients A, B, C for the equation of the straight line P3P4: Ax + By + C = 0
 		double A = P4.y - P3.y;
 		double B = P3.x - P4.x;
 		double C = P4.x * P3.y - P3.x * P4.y;
 
-		// Проверяем, лежит ли точка P1 на прямой P3P4
+		// Checking whether point P1 lies on line P3P4
 		double check1 = A * P1.x + B * P1.y + C;
 
-		// Проверяем, лежит ли точка P2 на прямой P3P4
+		// Checking whether point P2 lies on line P3P4
 		double check2 = A * P2.x + B * P2.y + C;
 
-		// Если обе проверки близки к нулю (в пределах эпсилон), то лежит
+		// If both checks are close to zero (within epsilon), then lies
 		if ((std::abs(check1) < 0.006) && (std::abs(check2) < 0.006))
 			return true;
 	}
@@ -1701,7 +1701,7 @@ void RedactOutputDev::DoPathRedact(GfxState* pGState, GfxPath* pPath, double* pC
 					++nCurPointIndex;
 				}
 			}
-			// if (pSubpath->isClosed()) Принудительное замыкание фигур для CGraphicsPath
+			// if (pSubpath->isClosed()) Force closed shapes for CGraphicsPath
 				oPath.CloseFigure();
 		}
 
@@ -1881,7 +1881,7 @@ CObjectBase* RedactOutputDev::CreateImage(Gfx *gfx, int nWidth, int nHeight, uns
 }
 CResourcesDict* RedactOutputDev::GetResources(Gfx *gfx)
 {
-	PdfWriter::CResourcesDict* pResources = NULL;
+	PdfWriter::CResourcesDict* pResources = nullptr;
 	Object* pContent = gfx->getTopContentStreamStack();
 	if (pContent && pContent->isRef())
 	{
@@ -1893,7 +1893,7 @@ CResourcesDict* RedactOutputDev::GetResources(Gfx *gfx)
 			pResources = dynamic_cast<PdfWriter::CResourcesDict*>(pResourcesForm);
 			if (!pResources)
 			{
-				pResources = new PdfWriter::CResourcesDict(NULL, true, false);
+				pResources = new PdfWriter::CResourcesDict(nullptr, true, false);
 				pDictForm->Add("Resources", pResources);
 			}
 		}

@@ -448,13 +448,9 @@ void WorkBookStream::UpdateXtiWrite(XLS::GlobalWorkbookInfo* global_info_)
 				}
 				val_1.link = strRange;
 			}
-			else if (xti->itabFirst == -1)
+			else if (xti->itabFirst == -1 || xti->itabFirst == -2)
 			{
-				//sheet not found
-			}
-			else if (xti->itabFirst == -2)
-			{
-				//Workbook-level
+				//sheet not found or workbook-level
 			}
 			global_info_->arXti_External.push_back(val_1);
 			GlobalWorkbookInfo::arXti_External_static.push_back(val_1);
@@ -522,13 +518,9 @@ void WorkBookStream::UpdateXti(XLS::GlobalWorkbookInfo* global_info_)
                 }
                 val_1.link = strRange;
             }
-            else if (xti->itabFirst == -1)
+            else if (xti->itabFirst == -1 || xti->itabFirst == -2)
             {
-                //sheet not found
-            }
-            else if (xti->itabFirst == -2)
-            {
-                //Workbook-level
+                //sheet not found or workbook-level
             }
             global_info_->arXti_External.push_back(val_1);
         }
@@ -603,7 +595,7 @@ void WorkBookStream::UpdateDefineNames(XLS::GlobalWorkbookInfo* global_info_)
                 name = L"_xludf." + name;
             }
         }
-        global_info_->arDefineNames.push_back(name);// для имен функций - todooo ... не все функции корректны !! БДИ !!
+        global_info_->arDefineNames.push_back(name);// for function names - TODO... not all functions are correct!! BDI!!
     }
 }
 

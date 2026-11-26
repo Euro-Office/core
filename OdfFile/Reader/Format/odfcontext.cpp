@@ -116,7 +116,7 @@ namespace cpdoccore {
 
 			if (Name == ParentStyleName)
 			{
-				ParentStyleName = L"";//иначе в коде возможно зацикливание.
+				ParentStyleName = L"";//otherwise the code may end up in a loop.
 			}
 			style_instance_ptr newStyle = style_instance_ptr(new style_instance(this, Name, DisplayName, Type, Content, IsAutomatic, IsDefault,
 				ParentStyleName, NextStyleName, DataStyleName, PercentageDataStyleName, StyleClass, ListStyleName, ListLevel, OutlineLevel));
@@ -129,7 +129,7 @@ namespace cpdoccore {
 				std::wstring n = Name + L":" + boost::lexical_cast<std::wstring>(style_family(Type));
 				map_[n] = pos;
 
-				// TODO: как правильно??
+				// TODO: which is correct??
 				std::wstring lName = XmlUtils::GetLower(Name);
 				//if ( boost::algorithm::contains(lName, L"internet_20_link") )
 				if (lName == L"internet_20_link")///???????????????
@@ -377,13 +377,15 @@ namespace cpdoccore {
 			return dynamic_cast<style_page_layout_properties*>(style_page_layout_->style_page_layout_properties_.get());
 		}
 
-		void page_layout_instance::xlsx_serialize(std::wostream& strm, oox::xlsx_conversion_context& Context)
+		void page_layout_instance::xlsx_serialize(std::wostream& strm, oox::xlsx_conversion_context& Context,
+												  bool header_on, bool footer_on)
 		{
 			const style_header_style* headerStyle = dynamic_cast<style_header_style*>(style_page_layout_->style_header_style_.get());
 			const style_footer_style* footerStyle = dynamic_cast<style_footer_style*>(style_page_layout_->style_footer_style_.get());
 
-			style_header_footer_properties* headerProp = headerStyle ? dynamic_cast<style_header_footer_properties*>(headerStyle->style_header_footer_properties_.get()) : NULL;
-			style_header_footer_properties* footerProp = footerStyle ? dynamic_cast<style_header_footer_properties*>(footerStyle->style_header_footer_properties_.get()) : NULL;
+			// A header or footer that the master page switches off takes no space on the page.
+			style_header_footer_properties* headerProp = headerStyle && header_on ? dynamic_cast<style_header_footer_properties*>(headerStyle->style_header_footer_properties_.get()) : NULL;
+			style_header_footer_properties* footerProp = footerStyle && footer_on ? dynamic_cast<style_header_footer_properties*>(footerStyle->style_header_footer_properties_.get()) : NULL;
 
 			if (headerProp)
 			{

@@ -24,7 +24,7 @@ namespace NSJSBase
 	public:
 		CCacheDataScript(const std::wstring& sPath)
 		{
-			Data = NULL;
+			Data = nullptr;
 			Length = 0;
 
 			Path = sPath;
@@ -66,7 +66,7 @@ namespace NSJSBase
 			if (NSFile::CFileBinary::Exists(Path))
 			{
 				// load cache from file
-				BYTE* _data = NULL;
+				BYTE* _data = nullptr;
 				DWORD _data_length = 0;
 				if (NSFile::CFileBinary::ReadAllBytes(Path, &_data, _data_length))
 				{
@@ -86,18 +86,31 @@ namespace NSJSBase
 			{
 				v8::ScriptCompiler::CachedData* pCacheData = nullptr;
 
-				// save cache to file
-				NSFile::CFileBinary oFileTest;
-				if (oFileTest.CreateFileW(Path))
-				{
-					// create cache data
-					v8::ScriptCompiler::Source oSource(source);
-					v8::Local<v8::Script> pScriptCache = v8::ScriptCompiler::Compile(_context, &oSource, v8::ScriptCompiler::kNoCompileOptions).ToLocalChecked();
-					pCacheData = v8::ScriptCompiler::CreateCodeCache(pScriptCache->GetUnboundScript());
+				// Compile once to produce the code cache.
+				//
+				// The result must be checked before ToLocalChecked(): a JS syntax error
+				// makes Compile() return an empty MaybeLocal, and ToLocalChecked() turns
+				// that recoverable parse error into a V8 CHECK failure, i.e. an abort
+				// (SIGILL/SIGTRAP) whose only trace is "Fatal error in v8::ToLocalChecked
+				// / Empty MaybeLocal". Returning the empty script instead lets the
+				// caller's CJSTryCatch report the actual SyntaxError, matching the three
+				// sibling compile paths in this function.
+				v8::ScriptCompiler::Source oSource(source);
+				v8::MaybeLocal<v8::Script> scriptCacheMB = v8::ScriptCompiler::Compile(_context, &oSource, v8::ScriptCompiler::kNoCompileOptions);
+				if (scriptCacheMB.IsEmpty())
+					return script;
 
-					if (pCacheData)
+				pCacheData = v8::ScriptCompiler::CreateCodeCache(scriptCacheMB.ToLocalChecked()->GetUnboundScript());
+
+				// Create the cache file only once there is something to write into it.
+				// Creating it up-front left a zero-length .cache behind whenever the
+				// compile above failed, and the next run then took the Exists(Path)
+				// branch and handed that empty buffer to kConsumeCodeCache.
+				if (pCacheData)
+				{
+					NSFile::CFileBinary oFileTest;
+					if (oFileTest.CreateFileW(Path))
 					{
-						// save cache to file
 						oFileTest.WriteFile(pCacheData->data, (DWORD)pCacheData->length);
 						oFileTest.CloseFile();
 					}
@@ -142,7 +155,7 @@ namespace NSJSBase
 
 		bool IsInit()
 		{
-			return Data != NULL && Length > 0;
+			return Data != nullptr && Length > 0;
 		}
 	};
 
@@ -190,12 +203,12 @@ namespace NSJSBase
 
 	void CJSContext::Initialize(const std::wstring& snapshotPath)
 	{
-		if (m_internal->m_isolate == NULL)
+		if (m_internal->m_isolate == nullptr)
 		{
 #ifdef V8_SUPPORT_SNAPSHOTS
 			if (!snapshotPath.empty())
 			{
-				BYTE* data = NULL;
+				BYTE* data = nullptr;
 				DWORD dataLength = 0;
 				if (NSFile::CFileBinary::ReadAllBytes(snapshotPath, &data, dataLength))
 				{
@@ -222,33 +235,6 @@ namespace NSJSBase
 		}
 	}
 
-	class WeakHandleVisitor : public v8::PersistentHandleVisitor
-	{
-	private:
-		WeakHandleVisitor() = default;
-
-	public:
-		void VisitPersistentHandle(v8::Persistent<v8::Value>* value, uint16_t class_id) override
-		{
-			if (class_id == CJSEmbedObjectPrivate::kWeakHandleId)
-			{
-				v8::Isolate* isolate = v8::Isolate::GetCurrent();
-				v8::HandleScope scope(isolate);
-				v8::Local<v8::Object> handle = value->Get(isolate).As<v8::Object>();
-				v8::Local<v8::External> field = v8::Local<v8::External>::Cast(handle->GetInternalField(0));
-				CJSEmbedObject* native = static_cast<CJSEmbedObject*>(field->Value());
-				delete native;
-			}
-		}
-
-	public:
-		static WeakHandleVisitor* getInstance()
-		{
-			static WeakHandleVisitor visitor;
-			return &visitor;
-		}
-	};
-
 	void CJSContext::Dispose()
 	{
 #ifdef V8_INSPECTOR
@@ -261,15 +247,16 @@ namespace NSJSBase
 		v8::Isolate* isolate = m_internal->m_isolate;
 		{
 			v8::Isolate::Scope scope(isolate);
-			isolate->VisitHandlesWithClassIds(WeakHandleVisitor::getInstance());
+			v8::HandleScope handle_scope(isolate);
+			CJSEmbedObjectPrivate::DestroyAll(isolate);
 		}
 		isolate->Dispose();
-		m_internal->m_isolate = NULL;
+		m_internal->m_isolate = nullptr;
 	}
 
 	bool CJSContext::isSnapshotUsed()
 	{
-		return m_internal->m_startup_data.data != NULL;
+		return m_internal->m_startup_data.data != nullptr;
 	}
 
 	JSSmart<CJSObject> CJSContext::GetGlobal()
@@ -457,8 +444,16 @@ namespace NSJSBase
 	{
 #ifdef V8_SUPPORT_SNAPSHOTS
 		bool result = false;
+		bool bCompiled = false;
 		// Snapshot creator should be in its own scope, because it handles entering, exiting and disposing the isolate
+#ifdef V8_VERSION_121_PLUS
+		std::unique_ptr<v8::ArrayBuffer::Allocator> allocator(v8::ArrayBuffer::Allocator::NewDefaultAllocator());
+		v8::Isolate::CreateParams createParams;
+		createParams.array_buffer_allocator = allocator.get();
+		v8::SnapshotCreator snapshotCreator(createParams);
+#else
 		v8::SnapshotCreator snapshotCreator;
+#endif
 		v8::Isolate* isolate = snapshotCreator.GetIsolate();
 		{
 			CV8TryCatch try_catch(isolate);
@@ -476,16 +471,48 @@ namespace NSJSBase
 
 			// Compile
 			v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, script.c_str()).ToLocalChecked();
-			v8::Local<v8::Script> script = v8::Script::Compile(context, source).ToLocalChecked();
-			// Run
-			script->Run(context).IsEmpty();
+
+			// Guarded for the same reason as CCacheDataScript::Compile() above:
+			// this compiles the very same GetAllScript() bundle (via
+			// GenerateEditorSnapshot()), so a bundle the engine cannot parse
+			// would otherwise abort the process here through ToLocalChecked()
+			// instead of being reported. try_catch is already live above.
+			//
+			// Deliberately not an early return: SetDefaultContext() must still be
+			// called before CreateBlob(), and SnapshotCreator's destructor expects
+			// a blob to have been created, so the creator's lifecycle is completed
+			// either way. The failure is carried out in bCompiled, and the snapshot
+			// file is simply not written -- emitting one built from a context the
+			// script never ran in would be worse than emitting none, because it
+			// would be consumed happily on the next start.
+			v8::MaybeLocal<v8::Script> scriptMB = v8::Script::Compile(context, source);
+			if (!scriptMB.IsEmpty())
+			{
+				bCompiled = true;
+				// Run
+				scriptMB.ToLocalChecked()->Run(context).IsEmpty();
+			}
+
+			// Surface whatever was caught -- the compile failure above, or a throw
+			// out of Run(). CV8TryCatch's destructor does not check, so without this
+			// the pending exception is discarded and a bundle the engine cannot parse
+			// produces no diagnostic at all: silence in place of the abort removed
+			// above, which is not an improvement. Check() prints the message, line
+			// and stack to stderr, is a no-op when nothing was caught, and has to run
+			// while the Context::Scope is still alive.
+			//
+			// It deliberately does not feed back into bCompiled: a runtime throw out
+			// of Run() did not stop the snapshot being written before this change,
+			// and quietly changing that could withhold snapshots that are fine today.
+			// Only a compile failure suppresses the write.
+			try_catch.Check();
 
 			snapshotCreator.SetDefaultContext(context);
 		}
 		v8::StartupData data = snapshotCreator.CreateBlob(v8::SnapshotCreator::FunctionCodeHandling::kKeep);
 		// Save snapshot to file
 		NSFile::CFileBinary snapshotFile;
-		if (data.data && snapshotFile.CreateFile(snapshotPath))
+		if (bCompiled && data.data && snapshotFile.CreateFile(snapshotPath))
 		{
 			snapshotFile.WriteFile(data.data, (DWORD)data.raw_size);
 			snapshotFile.CloseFile();
@@ -553,7 +580,7 @@ namespace NSJSBase
 			return "";
 
 		v8::String::Utf8Value data(V8IsolateFirstArg result.ToLocalChecked());
-		return std::string((char*)(*data), data.length());
+		return std::string(*data, data.length());
 	}
 
 	void CJSContext::MoveToThread(ASC_THREAD_ID* id)
@@ -614,9 +641,9 @@ namespace NSJSBase
 	};
 
 	// this function is called when method from embedded object is called
-	void _Call(const v8::FunctionCallbackInfo<v8::Value>& args)
+	void CallWrapper(const v8::FunctionCallbackInfo<v8::Value>& args)
 	{
-		CJSEmbedObject* _this = (CJSEmbedObject*)unwrap_native(args.Holder());
+		CJSEmbedObject* _this = (CJSEmbedObject*)unwrap_native(args.This());
 		CJSFunctionArgumentsV8 _args(&args, 0);
 		JSSmart<CJSValue> funcIndex = js_value(args.Data());
 		CJSEmbedObjectAdapterV8* _adapter = static_cast<CJSEmbedObjectAdapterV8*>(_this->getAdapter());
@@ -624,7 +651,7 @@ namespace NSJSBase
 		js_return(args, ret);
 	}
 
-	v8::Handle<v8::ObjectTemplate> CreateEmbedObjectTemplate(v8::Isolate* isolate, CJSEmbedObject* pNativeObj)
+	v8::Local<v8::ObjectTemplate> CreateEmbedObjectTemplate(v8::Isolate* isolate, CJSEmbedObject* pNativeObj)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		CJSEmbedObjectAdapterV8* pAdapter = static_cast<CJSEmbedObjectAdapterV8*>(pNativeObj->getAdapter());
@@ -637,7 +664,7 @@ namespace NSJSBase
 		for (int i = 0, len = arNames.size(); i < len; ++i)
 		{
 			// associate all methods with corresponding Call() index
-			result->Set(CreateV8String(isolate, arNames[i].c_str()), v8::FunctionTemplate::New(isolate, _Call, v8::Integer::New(isolate, i)));
+			result->Set(CreateV8String(isolate, arNames[i].c_str()), v8::FunctionTemplate::New(isolate, CallWrapper, v8::Integer::New(isolate, i)));
 		}
 
 		return handle_scope.Escape(result);
@@ -656,8 +683,8 @@ namespace NSJSBase
 
 		std::string sName;
 		v8::String::Utf8Value data(V8IsolateFirstArg args[0]);
-		if (NULL != *data)
-			sName = std::string((char*)*data, data.length());
+		if (nullptr != *data)
+			sName = std::string(*data, data.length());
 
 		CEmbedObjectRegistrator& oRegistrator = CEmbedObjectRegistrator::getInstance();
 		CEmbedObjectRegistrator::store_t::iterator itFound = oRegistrator.m_infos.find(sName);
@@ -669,7 +696,7 @@ namespace NSJSBase
 
 		CEmbedObjectRegistrator::CEmdedClassInfo& oInfo = itFound->second;
 
-		if (oInfo.m_bIsCreationAllowed == false)
+		if (!oInfo.m_bIsCreationAllowed)
 		{
 			args.GetReturnValue().Set(v8::Undefined(isolate));
 			return;
@@ -706,8 +733,7 @@ namespace NSJSBase
 		}
 
 		v8::Local<v8::Object> obj = args[0].As<v8::Object>();
-		v8::Local<v8::External> field = v8::Local<v8::External>::Cast(obj->GetInternalField(0));
-		CJSEmbedObject* native = static_cast<CJSEmbedObject*>(field->Value());
+		CJSEmbedObject* native = static_cast<CJSEmbedObject*>(V8ExternalValue(GetEmbedField(obj)));
 		delete native;
 		// weak persistent handle will be cleared and removed in CJSEmbedObjectPrivate destructor
 	}

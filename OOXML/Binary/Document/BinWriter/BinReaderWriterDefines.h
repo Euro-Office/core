@@ -119,8 +119,8 @@ extern int g_nCurFormatVersion;
 		HdrFtr_Even = 3,
 		HdrFtr_Odd = 4,
 		HdrFtr_Content = 5,
-		HdrFtr_Y2 = 6,//устарел
-		HdrFtr_Y = 7//устарел
+		HdrFtr_Y2 = 6,//outdated
+		HdrFtr_Y = 7//outdated
 	};}
 	namespace c_oSerCnf {enum c_oSerCnf
 	{
@@ -1383,7 +1383,7 @@ extern int g_nCurFormatVersion;
 		{
 			AlgorithmName = 0,
 			Edit = 1,
-			Enforcment = 2,
+			Enforcement = 2,
 			Formatting = 3,
 			HashValue = 4,
 			SaltValue = 5,

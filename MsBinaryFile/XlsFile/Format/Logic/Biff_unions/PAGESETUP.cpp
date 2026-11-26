@@ -273,7 +273,7 @@ int PAGESETUP::serialize(std::wostream & stream)
 
 			if (false == setup->fNoPls)
 			{	
-				CP_XML_NODE(L"pageSetup")// - для chartsheet аккуратнее
+				CP_XML_NODE(L"pageSetup")// - for chartsheet more careful
 				{
 					CP_XML_ATTR(L"paperSize", setup->iPaperSize);
 					CP_XML_ATTR(L"firstPageNumber", setup->iPageStart);

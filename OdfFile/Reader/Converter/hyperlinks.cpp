@@ -57,7 +57,7 @@ void hyperlinks::dump_rels(rels & Rels, _rels_type_place type_place)
     size_t i = 0;
     for (size_t i = 0; i < hrefs_.size(); i++)
     {
- 		if (hrefs_[i].used_rels)continue; // уже использовали этот релс
+		if (hrefs_[i].used_rels)continue; // have already used this rel
 
 		if (hrefs_[i].type_place == type_place)
 		{

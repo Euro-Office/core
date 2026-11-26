@@ -39,57 +39,57 @@ namespace DocFileFormat
 {
 	static const int aCodePages[][2] = {
 		//charset	codepage
-		0,	1252, //ANSI
-		1,	0,//Default
-		2,	42,//Symbol
-		77,	10000,//Mac Roman
-		78,	10001,//Mac Shift Jis
-		79,	10003,//Mac Hangul
-		80,	10008,//Mac GB2312
-		81,	10002,//Mac Big5
-		83,	10005,//Mac Hebrew
-		84,	10004,//Mac Arabic
-		85,	10006,//Mac Greek
-		86,	10081,//Mac Turkish
-		87,	10021,//Mac Thai
-		88,	10029,//Mac East Europe
-		89,	10007,//Mac Russian
-		128,	932,//Shift JIS
-		129,	949,//Hangul
-		130,	1361,//Johab
-		134,	936,//GB2312
-		136,	950,//Big5
-		238,	1250,//Greek
-		161,	1253,//Greek
-		162,	1254,//Turkish
-		163,	1258,//Vietnamese
-		177,	1255,//Hebrew
-		178,	1256, //Arabic
-		186,	1257,//Baltic
-		204,	1251,//Russian
-		222,	874,//Thai
-		238,	1250,//Eastern European
-		254,	437,//PC 437
-		255,	850//OEM
+		{0,	1252}, //ANSI
+		{1,	0},//Default
+		{2,	42},//Symbol
+		{77,	10000},//Mac Roman
+		{78,	10001},//Mac Shift Jis
+		{79,	10003},//Mac Hangul
+		{80,	10008},//Mac GB2312
+		{81,	10002},//Mac Big5
+		{83,	10005},//Mac Hebrew
+		{84,	10004},//Mac Arabic
+		{85,	10006},//Mac Greek
+		{86,	10081},//Mac Turkish
+		{87,	10021},//Mac Thai
+		{88,	10029},//Mac East Europe
+		{89,	10007},//Mac Russian
+		{128,	932},//Shift JIS
+		{129,	949},//Hangul
+		{130,	1361},//Johab
+		{134,	936},//GB2312
+		{136,	950},//Big5
+		{238,	1250},//Greek
+		{161,	1253},//Greek
+		{162,	1254},//Turkish
+		{163,	1258},//Vietnamese
+		{177,	1255},//Hebrew
+		{178,	1256}, //Arabic
+		{186,	1257},//Baltic
+		{204,	1251},//Russian
+		{222,	874},//Thai
+		{238,	1250},//Eastern European
+		{254,	437},//PC 437
+		{255,	850}//OEM
 	};
-	WordDocument::WordDocument (const std::wstring & sTempFolder, const int userLCID) :	
-		m_PieceTable(NULL), WordDocumentStream(NULL), TableStream(NULL), DataStream(NULL),  FIB(NULL), 
-		Text(NULL), RevisionAuthorTable(NULL), FontTable(NULL), BookmarkNames(NULL), AutoTextNames(NULL), 
-		IndividualFootnotesPlex(NULL), FootnoteReferenceCharactersPlex(NULL), IndividualEndnotesPlex(NULL),
-		EndnoteReferenceCharactersPlex(NULL), FieldsPlex(NULL), FootnoteDocumentFieldsPlex(NULL),
-		EndnoteDocumentFieldsPlex(NULL), HeadersAndFootersDocumentFieldsPlex(NULL), HeaderStoriesPlex(NULL), AnnotationsFieldsPlex(NULL),
-		AnnotationsReferencePlex(NULL), AnnotationsReferencesEx(NULL), IndividualCommentsPlex(NULL), TextboxBreakPlex(NULL), TextboxBreakPlexHeader(NULL),
-		TextboxIndividualPlex(NULL),AssocNames(NULL), BkmkAnnotNames(NULL), Captions(NULL), AutoCaptions(NULL), ListPlex(NULL),
-		OfficeDrawingPlex(NULL), OfficeDrawingPlexHeader(NULL), SectionPlex(NULL), BookmarkStartPlex(NULL), BookmarkEndPlex(NULL),
-		AutoTextPlex(NULL), AllPapxFkps(NULL), AllChpxFkps(NULL), AllPapx(NULL), AllPapxVector(NULL), AllSepx(NULL), Styles(NULL), listTable(NULL),
-		AnnotationOwners(NULL), DocProperties(NULL), listFormatOverrideTable(NULL), headerAndFooterTable(NULL),
-		AnnotStartPlex(NULL), AnnotEndPlex(NULL), encryptionHeader(NULL), BkmkProt(NULL), BkmkProtUser(NULL), BookmarkProtStartPlex(NULL), BookmarkProtEndPlex(NULL) 
+	WordDocument::WordDocument (const std::wstring & sTempFolder, const int userLCID) :
+		WordDocumentStream(nullptr), TableStream(nullptr), DataStream(nullptr), Text(nullptr), AllPapxFkps(nullptr), AllChpxFkps(nullptr),
+		AllPapx(nullptr), AllSepx(nullptr), AllPapxVector(nullptr), FIB(nullptr), Styles(nullptr), m_PieceTable(nullptr), listFormatOverrideTable(nullptr),
+		headerAndFooterTable(nullptr), AnnotationOwners(nullptr), listTable(nullptr), DocProperties(nullptr), encryptionHeader(nullptr),
+		RevisionAuthorTable(nullptr), FontTable(nullptr), BookmarkNames(nullptr), AutoTextNames(nullptr), AssocNames(nullptr), BkmkAnnotNames(nullptr),
+		Captions(nullptr), AutoCaptions(nullptr), BkmkProt(nullptr), BkmkProtUser(nullptr), IndividualFootnotesPlex(nullptr),
+		FootnoteReferenceCharactersPlex(nullptr), IndividualEndnotesPlex(nullptr), EndnoteReferenceCharactersPlex(nullptr), HeaderStoriesPlex(nullptr),
+		IndividualCommentsPlex(nullptr), TextboxIndividualPlex(nullptr), TextboxBreakPlex(nullptr), TextboxBreakPlexHeader(nullptr),
+		OfficeDrawingPlex(nullptr), OfficeDrawingPlexHeader(nullptr), SectionPlex(nullptr), BookmarkStartPlex(nullptr), BookmarkEndPlex(nullptr),
+		AnnotStartPlex(nullptr), AnnotEndPlex(nullptr), BookmarkProtStartPlex(nullptr), BookmarkProtEndPlex(nullptr), ListPlex(nullptr),
+		FieldsPlex(nullptr), FootnoteDocumentFieldsPlex(nullptr), EndnoteDocumentFieldsPlex(nullptr), HeadersAndFootersDocumentFieldsPlex(nullptr),
+		AnnotationsFieldsPlex(nullptr), AnnotationsReferencePlex(nullptr), AutoTextPlex(nullptr), AnnotationsReferencesEx(nullptr)
 	{
 		m_sTempFolder		= sTempFolder;
 		m_nUserLCID			= userLCID;
 		
-		m_pStorage			= NULL;
-		officeArtContent	= NULL;
+		m_pStorage			= nullptr;
+		officeArtContent	= nullptr;
 		nWordVersion		= 0;
 		
 		bDocumentCodePage	= false;
@@ -124,16 +124,16 @@ namespace DocFileFormat
             return AVS_ERROR_FILEFORMAT;
 		}
 
-		if (m_pStorage->SetFile (m_sFileName.c_str()) == false)
+		if (!m_pStorage->SetFile (m_sFileName.c_str()))
 		{
-			if (false == LoadDocumentFlat())
+			if (!LoadDocumentFlat())
 			{
 				Clear();
 				return AVS_ERROR_FILEFORMAT;
 			}
 		}
 //-----------------------------------------------------------------------------------------------------------------
-		if (m_pStorage->GetStream (L"WordDocument", &WordDocumentStream) == false)
+		if (!m_pStorage->GetStream (L"WordDocument", &WordDocumentStream))
 		{
 			Clear();
             return AVS_ERROR_FILEFORMAT;
@@ -177,14 +177,14 @@ namespace DocFileFormat
 		{
 			if (!m_pStorage->GetStream (L"1Table", &TableStream))
 			{
-				res	=	m_pStorage->GetStream (L"0Table", &TableStream);
+				m_pStorage->GetStream (L"0Table", &TableStream);
 			}
 		}
 		else
 		{
 			if (!m_pStorage->GetStream (L"0Table", &TableStream))
 			{
-				res	=	m_pStorage->GetStream (L"1Table", &TableStream);
+				m_pStorage->GetStream (L"1Table", &TableStream);
 			}
 		}
 
@@ -196,20 +196,20 @@ namespace DocFileFormat
 			{
 				CRYPT::XORDecryptor Decryptor(1, encryptionHeader->crypt_data_xor.key, encryptionHeader->crypt_data_xor.hash, m_sPassword);
 
-				if (Decryptor.IsVerify() == false) 
+				if (!Decryptor.IsVerify()) 
 				{
 					Clear();
 
 					if (m_sPassword.empty() )	return AVS_ERROR_DRM;
 					else						return AVS_ERROR_PASSWORD;
 				}
-				if (DecryptOfficeFile(&Decryptor) == false)	return AVS_ERROR_DRM;
+				if (!DecryptOfficeFile(&Decryptor))	return AVS_ERROR_DRM;
 			}
 			else if (encryptionHeader->bStandard)
 			{
 				CRYPT::RC4Decryptor Decryptor(encryptionHeader->crypt_data_rc4, m_sPassword);
 
-				if (Decryptor.IsVerify() == false) 
+				if (!Decryptor.IsVerify()) 
 				{
 					Clear();
 
@@ -217,7 +217,7 @@ namespace DocFileFormat
 					else						return AVS_ERROR_PASSWORD;
 				}
 				
-				if (DecryptOfficeFile(&Decryptor) == false)	return AVS_ERROR_DRM;
+				if (!DecryptOfficeFile(&Decryptor))	return AVS_ERROR_DRM;
 			}
 			else if (encryptionHeader->bAES)
 			{
@@ -225,22 +225,22 @@ namespace DocFileFormat
 
 				Decryptor.SetCryptData(encryptionHeader->crypt_data_aes);
 
-				if (Decryptor.SetPassword(m_sPassword) == false)
+				if (!Decryptor.SetPassword(m_sPassword))
 				{
 					Clear();
 
 					if (m_sPassword.empty() )	return AVS_ERROR_DRM;
 					else						return AVS_ERROR_PASSWORD;
 				}
-				if (DecryptOfficeFile(&Decryptor) == false)	return AVS_ERROR_DRM;
+				if (!DecryptOfficeFile(&Decryptor))	return AVS_ERROR_DRM;
 			}
 			
 			FIB->reset(VirtualStreamReader(WordDocumentStream, (nWordVersion > 0) ? 36 : 68, false));
 		}
 
 //------------------------------------------------------------------------------------------------------------------
-		POLE::Stream * Summary		= NULL;
-		POLE::Stream * DocSummary	= NULL;
+		POLE::Stream * Summary		= nullptr;
+		POLE::Stream * DocSummary	= nullptr;
 		
 		m_pStorage->GetStream (L"SummaryInformation",			&Summary);
 		m_pStorage->GetStream (L"DocumentSummaryInformation",	&DocSummary);
@@ -307,7 +307,7 @@ namespace DocFileFormat
 		}
 		catch (...)
 		{
-			DataStream = NULL;
+			DataStream = nullptr;
 		}
 
 		if (TableStream->size() < 1 && nWordVersion > 0)
@@ -400,7 +400,8 @@ namespace DocFileFormat
 			BookmarkFirst* pBookmark = static_cast<BookmarkFirst*>(AnnotStartPlex->Elements[i]);
 			if (pBookmark)
 			{
-				short bmc = *((short*)bookmarks[i]); //0x0100 always тут
+				short bmc = *((short*)bookmarks[i]); //0x0100 always here
+				(void)bmc;
 				_UINT32 lTag = *((_UINT32*)(bookmarks[i] + 2));
 
 				if (i < AnnotStartPlex->CharacterPositions.size() - 1 )
@@ -522,7 +523,7 @@ namespace DocFileFormat
 			{
 				WideString* bookmarkName = static_cast<WideString*>(BookmarkNames->operator[]( i ));
 
-                if ( ( bookmarkName != NULL ) && ( *bookmarkName == L"_PictureBullets" ) )
+                if ( ( bookmarkName != nullptr ) && ( *bookmarkName == L"_PictureBullets" ) )
 				{
 					for (size_t j = BookmarkStartEndCPs[i].start, k = 0; j < Text->size(); ++j, ++k )
 					{
@@ -582,7 +583,7 @@ namespace DocFileFormat
 	{
 		NSFile::CFileBinary file;
 
-		if (false == file.OpenFile(m_sFileName)) return false;
+		if (!file.OpenFile(m_sFileName)) return false;
 
 		DWORD sz_read = 0;
 		unsigned short wIdent = 0;
@@ -653,7 +654,12 @@ namespace DocFileFormat
 		POLE::Storage *storageIn = m_pStorage->GetStorage();
 		CFCPP::CompoundFile* storageOut = new CFCPP::CompoundFile(CFCPP::Ver_3, CFCPP::Default);
 
-		if (!storageOut || !storageIn) return false;
+		if (!storageOut) return false;
+		if (!storageIn)
+		{
+			delete storageOut;
+			return false;
+		}
 		
 		DecryptStream( 0, L"/", storageIn, storageOut->RootStorage(), Decryptor);
 
@@ -687,7 +693,7 @@ namespace DocFileFormat
 		
 		m_pStorage->SetFile(m_sTempDecryptFileName.c_str());
 		
-		if (m_pStorage->GetStream (L"WordDocument", &WordDocumentStream) == false) return false;
+		if (!m_pStorage->GetStream (L"WordDocument", &WordDocumentStream)) return false;
 
 		if (FIB->m_FibBase.fWhichTblStm)
 		{
@@ -766,7 +772,7 @@ namespace DocFileFormat
 		unsigned char* data_stream = new unsigned char[size_stream];
 		stream->read(data_stream, size_stream);
 
-		unsigned char* data_store = NULL;
+		unsigned char* data_store = nullptr;
 		int size_data_store = 0;		
 		
 		if ( std::wstring::npos != streamName_open.find(L"WordDocument") )
@@ -939,14 +945,9 @@ namespace DocFileFormat
 
 			for (int j = 0; j < max_; ++j)
 			{
-				if ( ( fkp->rgfc[j] < fcMin ) && ( fkp->rgfc[j + 1] > fcMin ) )
+				if ( (( fkp->rgfc[j] < fcMin ) && ( fkp->rgfc[j + 1] > fcMin )) ||
+					 (( fkp->rgfc[j] >= fcMin ) && ( fkp->rgfc[j] < fcMax )) )
 				{
-					//this chpx starts before fcMin
-					intVector->push_back( fkp->rgfc[j] );
-				}
-				else if ( ( fkp->rgfc[j] >= fcMin ) && ( fkp->rgfc[j] < fcMax ) )
-				{
-					//this chpx is in the range
 					intVector->push_back( fkp->rgfc[j] );
 				}
 			}
@@ -964,7 +965,7 @@ namespace DocFileFormat
 		return intVector;
 	}
 
-	// Returnes a list of all CharacterPropertyExceptions which correspond to text 
+	// Returns a list of all CharacterPropertyExceptions which correspond to text 
 
 	std::vector<CharacterPropertyExceptions*>* WordDocument::GetCharacterPropertyExceptions(int fcMin, int fcMax)
 	{
@@ -977,14 +978,9 @@ namespace DocFileFormat
 // get the CHPX
 			for (unsigned int j = 0; j < fkp->grpchpxSize; ++j)
 			{
-				if ( ( fkp->rgfc[j] < fcMin ) && ( fkp->rgfc[j + 1] > fcMin ) )
+				if ( (( fkp->rgfc[j] < fcMin ) && ( fkp->rgfc[j + 1] > fcMin )) ||
+					 (( fkp->rgfc[j] >= fcMin ) && ( fkp->rgfc[j] < fcMax )) )
 				{
-					//this chpx starts before fcMin
-					cpeList->push_back( fkp->grpchpx[j] );
-				}
-				else if ( ( fkp->rgfc[j] >= fcMin ) && ( fkp->rgfc[j] < fcMax ) )
-				{
-					//this chpx is in the range
 					cpeList->push_back( fkp->grpchpx[j] );
 				}
 			}
@@ -1068,7 +1064,7 @@ namespace DocFileFormat
 			double			opacity = 0;
 		};
 
-		if (false == color.sColorRGB.empty()) return;
+		if (!color.sColorRGB.empty()) return;
 
 		if (color.fSysIndex)
 		{
@@ -1165,7 +1161,7 @@ namespace DocFileFormat
 
 				sys_color.SetRGB((BYTE)nR, (BYTE)nG, (BYTE)nB);
 			}break;
-			case 0x04:     // substract grey level RGB(p,p,p)
+			case 0x04:     // subtract grey level RGB(p,p,p)
 			{
 				short nR = (short)sys_color.GetR() - (short)nParameter;
 				short nG = (short)sys_color.GetG() - (short)nParameter;
@@ -1175,7 +1171,7 @@ namespace DocFileFormat
 				if (nB < 0) nB = 0;
 				sys_color.SetRGB((BYTE)nR, (BYTE)nG, (BYTE)nB);
 			}	break;
-			case 0x05:     // substract from gray level RGB(p,p,p)
+			case 0x05:     // subtract from gray level RGB(p,p,p)
 			{
 				short nR = (short)nParameter - (short)sys_color.GetR();
 				short nG = (short)nParameter - (short)sys_color.GetG();
@@ -1193,6 +1189,7 @@ namespace DocFileFormat
 
 				sys_color.SetRGB(R, G, B);
 			}break;
+			default: break;
 			}
 			if (nAdditionalFlags & 0x40)                  // top-bit invert
 				sys_color.SetRGB(sys_color.GetR() ^ 0x80, sys_color.GetG() ^ 0x80, sys_color.GetB() ^ 0x80);

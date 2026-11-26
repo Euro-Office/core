@@ -39,7 +39,7 @@ public:
 		none = 0b00,
 		vert = 0b01,
 		horz = 0b10,
-		hove = (horz | vert)
+		both = (horz | vert)
 	};
 
 	enum eBorderPossition

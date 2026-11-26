@@ -22,27 +22,27 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#ifndef _PDF_EDITOR_H
-#define _PDF_EDITOR_H
+#ifndef PDF_EDITOR_H
+#define PDF_EDITOR_H
 
 #include "PdfWriter.h"
 #include "PdfReader.h"
 
-HRESULT _ChangePassword(const std::wstring& wsPath, const std::wstring& wsPassword, CPdfReader* _pReader, CPdfWriter* _pWriter);
+HRESULT ChangePdfPassword(const std::wstring& wsPath, const std::wstring& wsPassword, CPdfReader* _pReader, CPdfWriter* _pWriter);
 
 struct CObjectInfo
 {
 	PdfWriter::CObjectBase* pObj;
 	int nRefCount;
 
-	CObjectInfo() { pObj = NULL; nRefCount = 0; }
+	CObjectInfo() { pObj = nullptr; nRefCount = 0; }
 	CObjectInfo(PdfWriter::CObjectBase* _pObj, int _nRefCount) : pObj(_pObj), nRefCount(_nRefCount) {}
 };
 
 class CObjectsManager
 {
 public:
-	CObjectsManager() : m_pDoc(NULL) {}
+	CObjectsManager() : m_pDoc(nullptr) {}
 
 	void AddObj(int nID, PdfWriter::CObjectBase* pObj);
 	void RemoveObj(int nID);
@@ -57,13 +57,13 @@ public:
 
 private:
 	PdfWriter::CDocument* m_pDoc;
-	std::map<int, CObjectInfo> m_mUniqueRef; // map уникальных объектов
+	std::map<int, CObjectInfo> m_mUniqueRef; // map of unique objects
 };
 
 class CPdfEditor
 {
 public:
-	enum class Mode
+	enum class Mode : unsigned char
 	{
 		Unknown,
 		ReadOnly,
@@ -83,7 +83,7 @@ public:
 	bool AddPage(int nPageIndex);
 	bool MovePage(int nPageIndex, int nPos);
 	bool EditAnnot(int nPageIndex, int nID);
-	bool DeleteAnnot(int nID, Object* oAnnots = NULL);
+	bool DeleteAnnot(int nID, Object* oAnnots = nullptr);
 	bool EditWidgets(IAdvancedCommand* pCommand);
 	int  GetPagesCount();
 	void GetPageInfo(int nPageIndex, double* pdWidth, double* pdHeight, double* pdDpiX, double* pdDpiY);
@@ -105,7 +105,7 @@ public:
 private:
 	bool IncrementalUpdates();
 	void NewFrom();
-	void GetPageTree(XRef* xref, Object* pPagesRefObj, PdfWriter::CPageTree* pPageParent = NULL);
+	void GetPageTree(XRef* xref, Object* pPagesRefObj, PdfWriter::CPageTree* pPageParent = nullptr);
 	bool SplitPages(const int* arrPageIndex, unsigned int unLength, PDFDoc* _pDoc, int nStartRefID);
 	bool ChangeFullNameParent(int nParent, const std::string& sPrefixForm, std::vector<int>& arrRename);
 	void ScanAndProcessFonts(PDFDoc* pPDFDocument, XRef* xref, Dict* pResources, int nDepth, std::vector<int>& arrUniqueResources, PdfReader::CPdfFontList* pFontList, int nStartRefID);
@@ -130,11 +130,11 @@ private:
 	CPdfWriter* m_pWriter;
 
 	int m_nError;
-	// 0 - Дозапись. pReader и pWriter работают с одним файлом
-	// 1 - Split. pReader и pWriter работают с разными файлами
+	// 0 - Append mode. pReader and pWriter work with the same file
+	// 1 - Split. pReader and pWriter work with different files
 	Mode m_nMode;
 	int m_nEditPage;
 	int m_nOriginIndex;
 };
 
-#endif // _PDF_EDITOR_H
+#endif // PDF_EDITOR_H

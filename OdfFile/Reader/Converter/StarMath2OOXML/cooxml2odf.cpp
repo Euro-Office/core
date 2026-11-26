@@ -33,7 +33,7 @@ namespace StarMath
 		m_pXmlWrite->WriteString(m_wsAnnotationStarMath);
 		EndOdf();
 	}
-	void COOXml2Odf::NodeDefinition(OOX::WritingElement *pNode,const bool& bMatrix)
+	void COOXml2Odf::NodeDefinition(OOX::WritingElement *pNode,const bool& /*bMatrix*/)
 	{
 		if(pNode == nullptr)
 			return;
@@ -159,7 +159,7 @@ namespace StarMath
 			m_pXmlWrite->WriteNodeBegin(L"mrow",false);
 		}
 		ConversionVectorWritingElement(pMath->m_arrItems);
-		if(bMrow == true)
+		if(bMrow)
 			m_pXmlWrite->WriteNodeEnd(L"mrow",false,false);
 	}
 	void COOXml2Odf::ConversionMathPara(OOX::Logic::COMathPara *pMathPara)
@@ -211,12 +211,12 @@ namespace StarMath
 			m_pXmlWrite->WriteNodeEnd(L"mtable",false,false);
 		}
 	}
-	std::vector<COneElement*> COOXml2Odf::ConversionMT(OOX::Logic::CMText *pMt, const StValuePr* pValue, const bool& bMRpr)
+	std::vector<COneElement*> COOXml2Odf::ConversionMT(OOX::Logic::CMText *pMt, const StValuePr* pValue, const bool& /*bMRpr*/)
 	{
 		std::vector<COneElement*> arLine;
 		if(pMt == nullptr)
 			return arLine;
-		std::wstring wsText = pMt->m_sText,wsElement,wsTextUTF16;
+		std::wstring wsElement,wsTextUTF16;
 		wsTextUTF16 = COOXml2Odf::TransformationUTF32(pMt->m_sText);
 		std::wstring::iterator itStart = wsTextUTF16.begin(),itEnd = wsTextUTF16.end();
 		COneElement* pRightTempElement = nullptr;
@@ -397,7 +397,7 @@ namespace StarMath
 	}
 	std::wstring COOXml2Odf::ConversionType(OOX::Logic::CType *pType)
 	{
-		if(pType == nullptr)
+		if(pType == nullptr || pType->m_val.GetPointer() == nullptr)
 			return L"";
 		std::wstring wsType = pType->m_val->ToString();
 		return wsType;
@@ -690,7 +690,7 @@ namespace StarMath
 	//annotation?
 	std::wstring COOXml2Odf::ConversionChr(OOX::Logic::CChr *pChr)
 	{
-		if(pChr == nullptr) return L"";
+		if(pChr == nullptr || pChr->m_val.GetPointer() == nullptr) return L"";
 		return pChr->m_val->GetValue();
 	}
 	std::wstring COOXml2Odf::ToStringChr(const std::wstring &wsChr)
@@ -732,15 +732,10 @@ namespace StarMath
 			return true;
 		if(pRight != nullptr && pLeft != nullptr)
 		{
-			 if(pRight->m_wsColor != pLeft->m_wsColor)
-				 return false;
-			 else if(pRight->m_iSize != pLeft->m_iSize)
-				 return false;
-			 else if(pRight->m_enStyle != pLeft->m_enStyle)
-				 return false;
-			 else if(pRight->m_enFont != pLeft->m_enFont)
-				 return false;
-			 else return true;
+			 return pRight->m_wsColor == pLeft->m_wsColor
+				 && pRight->m_iSize == pLeft->m_iSize
+				 && pRight->m_enStyle == pLeft->m_enStyle
+				 && pRight->m_enFont == pLeft->m_enFont;
 		}
 		else 
 			return false;
@@ -786,7 +781,11 @@ namespace StarMath
 	}
 	void COOXml2Odf::ConversionAcc(OOX::Logic::CAcc *pAcc)
 	{
-		std::wstring wsSymbol = pAcc->m_oAccPr->m_oChr.IsInit() ? pAcc->m_oAccPr->m_oChr.get().m_val->GetValue() : L"\u005E",wsSign;
+		if(pAcc == nullptr)
+			return;
+		std::wstring wsSymbol = L"\u005E",wsSign;
+		if(pAcc->m_oAccPr.IsInit() && pAcc->m_oAccPr->m_oChr.IsInit() && pAcc->m_oAccPr->m_oChr->m_val.IsInit())
+			wsSymbol = pAcc->m_oAccPr->m_oChr->m_val->GetValue();
 		wsSign = TranslationDiacritSign(wsSymbol);
 		if(wsSign.empty())
 		{
@@ -869,7 +868,7 @@ namespace StarMath
 		StValuePr* stTempPr = new StValuePr;
 		if(pRPr == nullptr)
 		{
-			stTempPr->Release();
+			delete stTempPr;
 			return nullptr;
 		}
 		bool bRpr(false);
@@ -919,11 +918,11 @@ namespace StarMath
 			stTempPr->m_enUnderLine = pRPr->m_oU->m_oVal->GetValue();
 			bRpr = true;
 		}
-		if(bRpr == true)
+		if(bRpr)
 			return stTempPr;
 		else
 		{
-			stTempPr->Release();
+			delete stTempPr;
 			return nullptr;
 		}
 	}
@@ -931,7 +930,8 @@ namespace StarMath
 	{
 		if(pMRpr == nullptr)
 			return ;
-		if(pMRpr->m_oSty.GetPointer() != nullptr && pMRpr->m_oSty.GetPointer()->m_val.GetPointer()->GetValue() != SimpleTypes::EStyle::stylePlain)
+		if(pMRpr->m_oSty.GetPointer() != nullptr && pMRpr->m_oSty->m_val.GetPointer() != nullptr &&
+			pMRpr->m_oSty.GetPointer()->m_val.GetPointer()->GetValue() != SimpleTypes::EStyle::stylePlain)
 		{
 			if(pValue == nullptr)
 				pValue = new StValuePr;
@@ -1368,7 +1368,7 @@ namespace StarMath
 		StStyleMenClose stStyle;
 		if(pRadPr == nullptr)
 			return stStyle;
-		bDeg = pRadPr->m_oDegHide.GetPointer() != nullptr ? true:false;
+		bDeg = pRadPr->m_oDegHide.GetPointer() != nullptr;
 		return ConversionCtrlPr(dynamic_cast<OOX::Logic::CCtrlPr*>(pRadPr->m_oCtrlPr.GetPointer()));
 	}
 	void COOXml2Odf::ConversionDeg(OOX::Logic::CDeg *pDeg)
@@ -1451,11 +1451,11 @@ namespace StarMath
 		StValuePr stGroupPr;
 		if(pGroupPr == nullptr)
 			return stGroupPr;
-		if(pGroupPr->m_oChr.GetPointer()!= nullptr)
+		if(pGroupPr->m_oChr.GetPointer()!= nullptr && pGroupPr->m_oChr->m_val.GetPointer() != nullptr)
 			stGroupPr.m_wsChr = pGroupPr->m_oChr.GetPointer()->m_val.GetPointer()->GetValue();
-		if(pGroupPr->m_oPos.GetPointer() != nullptr)
+		if(pGroupPr->m_oPos.GetPointer() != nullptr && pGroupPr->m_oPos->m_val.GetPointer() != nullptr)
 			stGroupPr.m_enPos = pGroupPr->m_oPos.GetPointer()->m_val.GetPointer()->GetValue();
-		if(pGroupPr->m_oVertJc.GetPointer() != nullptr)
+		if(pGroupPr->m_oVertJc.GetPointer() != nullptr && pGroupPr->m_oVertJc->m_val.GetPointer() != nullptr)
 			stGroupPr.m_enVert = pGroupPr->m_oVertJc.GetPointer()->m_val.GetPointer()->GetValue();
 		return stGroupPr;
 	}
@@ -1484,8 +1484,8 @@ namespace StarMath
 		}
 		m_pXmlWrite->WriteNodeBegin(wsNode,true);
 		pBarPr.m_enPos == SimpleTypes::ETopBot::tbTop ? m_pXmlWrite->WriteAttribute(L"accent",L"true"): m_pXmlWrite->WriteAttribute(L"accentunder",L"true");
-		ConversionElement(pBar->m_oElement.GetPointer());
 		m_pXmlWrite->WriteNodeEnd(L"w",true,false);
+		ConversionElement(pBar->m_oElement.GetPointer());
 		m_pXmlWrite->WriteNodeBegin(L"mo",false);
 		pBarPr.m_enPos == SimpleTypes::ETopBot::tbTop ? m_pXmlWrite->WriteString(L"\u203E"):m_pXmlWrite->WriteString(L"\u005F");
 		m_pXmlWrite->WriteNodeEnd(L"mo",false,false);
@@ -1714,14 +1714,11 @@ namespace StarMath
 		std::wstring wsText16;
 		for(unsigned int i = 0;i < oString32.length();i++)
 		{
-			//Mathematical Bold Capital
-			if(oString32[i] >= 119808 && oString32[i] <= 119833)
+			//Mathematical Bold Capital, Sans-Serif Bold Small Alpha
+			if((oString32[i] >= 119808 && oString32[i] <= 119833) || (oString32[i] >= 120688 && oString32[i] <= 120712))
 				wsText16.push_back((wchar_t)((unsigned int) oString32[i] - 119743));
-			//Italic Small Dotless I
-			else if(oString32[i] == 120484)
-				wsText16.push_back((wchar_t)((unsigned int) oString32[i] - 120379));
-			//Italic Small Dotless J
-			else if(oString32[i] == 120485)
+			//Italic Small Dotless I, Italic Small Dotless J
+			else if(oString32[i] == 120484 || oString32[i] == 120485)
 				wsText16.push_back((wchar_t)((unsigned int) oString32[i] - 120379));
 			//Bold Nabla
 			else if(oString32[i] == 120513)
@@ -1834,9 +1831,6 @@ namespace StarMath
 			//Sans-Serif Bold Capital Alpha
 			else if(oString32[i] >= 120662 && oString32[i] <= 120686)
 				wsText16.push_back((wchar_t)((unsigned int) oString32[i] - 119749));
-			//Sans-Serif Bold Small Alpha
-			else if(oString32[i] >= 120688 && oString32[i] <= 120712)
-				wsText16.push_back((wchar_t)((unsigned int) oString32[i] - 119743));
 			//Sans-Serif Bold Italic Capital Alpha
 			else if(oString32[i] >= 120720 && oString32[i] <= 120744)
 				wsText16.push_back((wchar_t)((unsigned int) oString32[i] - 119807));
@@ -1864,9 +1858,9 @@ namespace StarMath
 		return wsText16;
 	}
 //class COneElement
-	COneElement::COneElement():m_stAttribute(nullptr),m_iStyle(0)
+	COneElement::COneElement():m_enType(TypeElement::undefine),m_stAttribute(nullptr),m_iStyle(0)
 	{}
-	COneElement::COneElement(std::wstring &wsOneElement):m_stAttribute(nullptr),m_iStyle(0)
+	COneElement::COneElement(std::wstring & /*wsOneElement*/):m_enType(TypeElement::undefine),m_stAttribute(nullptr),m_iStyle(0)
 	{
 	}
 	COneElement::~COneElement()
@@ -2273,11 +2267,9 @@ namespace StarMath
 	}
 	std::wstring CBinOperator::BinOperatorSymbolForAnnotation(const std::wstring &wsSymbol)
 	{
-		if(wsSymbol == L"+") return wsSymbol;
-		else if(wsSymbol == L"-") return wsSymbol;
+		if(wsSymbol == L"+" || wsSymbol == L"-" || L"*" == wsSymbol) return wsSymbol;
 		else if(L"\u00B1" == wsSymbol) return L"+-";
 		else if(L"\u2213" == wsSymbol) return L"-+";
-		else if(L"*" == wsSymbol) return wsSymbol;
 		else if(L"\u00B7" == wsSymbol) return L"cdot";
 		else if(L"\u00D7" == wsSymbol) return L"times";
 		else if(L"\u00F7" == wsSymbol) return L"div";
@@ -2603,7 +2595,7 @@ namespace StarMath
 		else if(L"\u03BF" == wsSymbol) return L"%omicron";
 		else if(L"\u03A3" == wsSymbol) return L"%SIGMA";
 		else if(L"\u03C3" == wsSymbol) return L"%sigma";
-		else if(L"\u03C6" == wsSymbol) return L"%varphi";
+		else if(L"\u03C6" == wsSymbol || L"\u03D6" == wsSymbol) return L"%varphi";
 		else if(L"\u0393" == wsSymbol) return L"%GAMMA";
 		else if(L"\u03B3" == wsSymbol) return L"%gamma";
 		else if(L"\u0398" == wsSymbol) return L"%THETA";
@@ -2619,7 +2611,6 @@ namespace StarMath
 		else if(L"\u03C4" == wsSymbol) return L"%tau";
 		else if(L"\u03A9" == wsSymbol) return L"%OMEGA";
 		else if(L"\u03C9" == wsSymbol) return L"%omega";
-		else if(L"\u03D6" == wsSymbol) return L"%varphi";
 		else if(L"\u0395" == wsSymbol) return L"%EPSILON";
 		else if(L"\u03B5" == wsSymbol) return L"%epsilon";
 		else if(L"\u03A5" == wsSymbol) return L"%UPSILON";

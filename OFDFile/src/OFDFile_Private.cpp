@@ -9,7 +9,7 @@ COFDFile_Private::COFDFile_Private(NSFonts::IApplicationFonts* pFonts)
 	if (nullptr == pFonts)
 		return;
 
-	// Создаем менеджер шрифтов с собственным кэшем
+	// Creating a font manager with its own cache
 	m_pFontManager = pFonts->GenerateFontManager();
 	NSFonts::IFontsCache* pMeasurerCache = NSFonts::NSFontCache::Create();
 	pMeasurerCache->SetStreams(pFonts->GetStreams());
@@ -72,9 +72,9 @@ bool COFDFile_Private::LoadFromFile(const std::wstring& wsFilePath)
 
 	Close();
 
-	COfficeUtils oUtils(NULL);
+	COfficeUtils oUtils(nullptr);
 
-	if (S_OK != oUtils.ExtractToDirectory(wsFilePath, m_pTempFolder->getFullFilePath(L""), NULL, 0))
+	if (S_OK != oUtils.ExtractToDirectory(wsFilePath, m_pTempFolder->getFullFilePath(L""), nullptr, 0))
 		return false;
 
 	return Read(m_pTempFolder);

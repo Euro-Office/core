@@ -46,11 +46,11 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		class CDataValidationFormula : public WritingElement //тоже что и CFormulaCF
+		class CDataValidationFormula : public WritingElement //same as CFormulaCF
 		{
 		public:
 			WritingElement_AdditionMethods(CDataValidationFormula)
-			CDataValidationFormula(OOX::Document *pMain = NULL);
+			CDataValidationFormula(OOX::Document *pMain = nullptr);
 			virtual ~CDataValidationFormula();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -71,7 +71,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CDataValidation)
             WritingElement_XlsbConstructors(CDataValidation)
-			CDataValidation(OOX::Document *pMain = NULL);
+			CDataValidation(OOX::Document *pMain = nullptr);
 			virtual ~CDataValidation();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -108,7 +108,7 @@ namespace OOX
 			nullable<SimpleTypes::COnOff>									m_oShowErrorMessage;
 			nullable<SimpleTypes::COnOff>									m_oShowInputMessage;
 
-			nullable_string									m_oSqRef; // ToDo переделать на тип "sqref" (18.18.76) - последовательность "ref", разделенные пробелом
+			nullable_string									m_oSqRef; // Convert ToDo to type "sqref" (18.18.76) - sequence of "refs" separated by a space
 			nullable_string									m_oList;
 			mutable nullable_string							m_oUuid;
 			nullable<CDataValidationFormula>				m_oFormula1;
@@ -120,7 +120,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CDataValidations)
             WritingElement_XlsbConstructors(CDataValidations)
-			CDataValidations(OOX::Document *pMain = NULL);
+			CDataValidations(OOX::Document *pMain = nullptr);
 			virtual ~CDataValidations();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

@@ -34,7 +34,7 @@ namespace PPT
 class CRecordVisualSoundAtom : public CUnknownRecord
 {
 public:
-    // Привязка звука через этот объект к ID объекту
+    // Linking sound through this object to an ID object
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
 
 

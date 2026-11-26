@@ -163,6 +163,19 @@ AscFonts.FT_Get_Glyph_Render_Buffer = function(face, size)
 	var pointer = Module["_ASC_FT_Get_Glyph_Render_Buffer"](face);
 	return new Uint8Array(Module["HEAP8"].buffer, pointer, size);
 };
+AscFonts.FT_Get_Glyph_Color_Render = function(face, gid, foreground)
+{
+	let pointer = Module["_ASC_FT_Get_Glyph_Color_Render"](face, gid, foreground >>> 0);
+	if (!pointer)
+		return null;
+
+	let header = new Int32Array(Module["HEAP8"].buffer, pointer, 4);
+	let info = { left : header[0], top : header[1], width : header[2], rows : header[3], data : null };
+	let start = pointer + 16;
+	info.data = new Uint8ClampedArray(Module["HEAPU8"].slice(start, start + 4 * info.width * info.rows));
+	Module["_ASC_FT_Free"](pointer);
+	return info;
+};
 
 let hb_cache_languages = {};
 // (AscFonts.HB_FontFree also set in onRuntimeInitialized)
@@ -202,7 +215,7 @@ AscFonts.HB_ShapeText = function(fontFile, text, features, script, direction, la
  */
 function ZLib()
 {
-	this.engine = 0; // указатель на нативный класс Zlib
+	this.engine = 0; // pointer to native Zlib class
 	this.files = {};
 }
 
@@ -229,17 +242,17 @@ ZLib.prototype.open = function(buf)
 
 	var arrayBuffer = (undefined !== buf.byteLength) ? new Uint8Array(buf) : buf;
 
-	// TODO: открыли архив, и заполнили this.files
-	// объектами { path : null }
+	// TODO: opened the archive and filled in this.files
+	// objects { path : null }
 
-	// копируем память в память webasm
+	// copy memory to webasm memory
 	var FileRawDataSize = arrayBuffer.length;
 	var FileRawData = Module["_Zlib_Malloc"](FileRawDataSize);
 	if (0 == FileRawData)
 		return false;
 	Module["HEAP8"].set(arrayBuffer, FileRawData);
 
-	// грузим данные
+	// loading data
 	this.engine = Module["_Zlib_Open"](FileRawData, FileRawDataSize);
 	if (0 == this.engine)
 	{
@@ -247,7 +260,7 @@ ZLib.prototype.open = function(buf)
 		return false;
 	}
 
-	// получаем пути в архиве
+	// get the paths in the archive
 	var pointer = Module["_Zlib_GetPaths"](this.engine);
 	if (0 == pointer)
 	{
@@ -337,11 +350,11 @@ ZLib.prototype.getFile = function(path)
 	if (!this.isModuleInit || !this.engine)
 		return null;
 
-	// проверяем - есть ли файл вообще?
+	// check to see if the file exists at all?
 	if (undefined === this.files[path])
 		return null;
 
-	// проверяем - может мы уже его разжимали?
+	// Check - maybe it may already have been decompressed?
 	if (null !== this.files[path])
 	{
 		if (this.files[path].l > 0)
@@ -391,7 +404,7 @@ ZLib.prototype.addFile = function(path, data)
 	if (!data)
 		return false;
 
-	// проверяем - может такой файл уже есть? тогда его надо сначала удалить?
+	// Check - maybe such a file already exists? should it be removed first then?
 	if (undefined !== this.files[path])
 		this.removeFile(path);
 
@@ -429,7 +442,7 @@ ZLib.prototype.removeFile = function(path)
 	if (!this.isModuleInit || !this.engine)
 		return false;
 
-	// проверяем - может такого файла и нет?
+	// Check - maybe there is no such file?
 	if (undefined === this.files[path])
 		return false;
 		

@@ -38,11 +38,11 @@ namespace MetaFile
 		IOutputDevice() {}
 		virtual ~IOutputDevice() {}
 
-		// Начало и окончание работы устройства
+		// Start and end of device operation
 		virtual void Begin() = 0;
 		virtual void End() = 0;
 
-		// pBuffer - BGRA картинка размерами ulWidth, ulHeight, которую надо нарисовать в заданном ректе
+		// pBuffer - BGRA image with dimensions ulWidth, ulHeight, which should be drawn in the given rect
 		virtual void DrawBitmap(double dX, double dY, double dW, double dH, BYTE* pBuffer, unsigned int unWidth, unsigned int unHeight, unsigned int nBlendMode) = 0;
 
 		virtual void DrawString(std::wstring& wsText, unsigned int unCharsCount, double dX, double dY, double* pDx,

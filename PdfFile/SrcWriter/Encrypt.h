@@ -74,7 +74,7 @@ namespace PdfWriter
         class Impl;
         Impl *impl;
 
-        bool MakeFileKey3(const std::string &sPassword, unsigned char *pHash, int nHashSize, unsigned char *pHash2 = NULL, int nHashSize2 = 0);
+        bool MakeFileKey3(const std::string &sPassword, unsigned char *pHash, int nHashSize, unsigned char *pHash2 = nullptr, int nHashSize2 = 0);
         bool MakeFileKey2(BYTE* sUserPassword, int nLength);
 		
         unsigned int    m_unKeyLen;

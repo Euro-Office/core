@@ -60,7 +60,7 @@ namespace OOX
 	CPath::CPath(const CPath& oSrc)
 	{
 		*this = oSrc;
-		//считаем вызывать ли Normalize решает oSrc
+		//whether to call Normalize is determined by oSrc
 		//Normalize();
 	}
 
@@ -68,7 +68,7 @@ namespace OOX
 	{
 		m_strFilename = oSrc.m_strFilename;
 		m_bIsRoot = oSrc.m_bIsRoot;
-		//считаем вызывать ли Normalize решает oSrc
+		//whether to call Normalize is determined by oSrc
 		//Normalize();
 		return *this;
 	}
@@ -96,7 +96,7 @@ namespace OOX
 		if (0 == m_strFilename.length())
 			return;
 
-		//todooo оптимизировать
+		//TODO optimize
 		XmlUtils::replace_all(m_strFilename, L"/", FILE_SEPARATOR_STR);
 		XmlUtils::replace_all(m_strFilename, L"\\", FILE_SEPARATOR_STR);
 
@@ -291,10 +291,7 @@ namespace OOX
 
 	void CPath::CheckIsRoot()
 	{
-		if(m_strFilename.length() > 0 && ( '/' == m_strFilename[0] ))
-			m_bIsRoot = true;
-		else
-			m_bIsRoot = false;
+		m_bIsRoot = m_strFilename.length() > 0 && ( '/' == m_strFilename[0] );
 	}
 
 	void CPath::SetName(std::wstring sName, bool bNormalize)
@@ -344,7 +341,7 @@ namespace OOX
 		return NSDirectory::CreateDirectory(oPath.GetPath());
 	}
 
-	void CSystemUtility::ReplaceExtention(std::wstring& strName, std::wstring& str1, std::wstring& str2)
+	void CSystemUtility::ReplaceExtention(std::wstring&  /*strName*/, std::wstring&  /*str1*/, std::wstring&  /*str2*/)
 	{
 		return;
 	}

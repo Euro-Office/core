@@ -42,8 +42,8 @@ PPTX::Logic::Timing Timing::Convert(PPT::CExMedia *pExMedia, CRelsGenerator *pRe
     this->pExMedia = pExMedia;
     this->pRels = pRels;
 
-    if (TryToConvertTiming2010() == false)
-        if (TryToConvertTiming1995() == false)
+    if (!TryToConvertTiming2010())
+        if (!TryToConvertTiming1995())
             return {};
 
     if (timing.bldLst.IsInit() && timing.bldLst->list.empty())    // You can't leave an empty tag <p:bldLst/>
@@ -54,10 +54,7 @@ PPTX::Logic::Timing Timing::Convert(PPT::CExMedia *pExMedia, CRelsGenerator *pRe
 
 bool Timing::HasAnimation() const
 {
-    if (slideAnim.arrAnim_1995.empty() && (slideAnim.pAnim_2010 == nullptr || slideAnim.pAnim_2010->m_haveExtTime == false))
-        return false;
-    else
-        return true;
+    return !slideAnim.arrAnim_1995.empty() || (slideAnim.pAnim_2010 != nullptr && slideAnim.pAnim_2010->m_haveExtTime);
 }
 
 bool Timing::TryToConvertTiming2010()

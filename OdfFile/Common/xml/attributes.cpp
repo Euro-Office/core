@@ -33,7 +33,7 @@
 namespace cpdoccore {
 namespace xml {
 
-/// Вектор для обеспечения контроля доступа для всех прочитанных атрибутов
+///Vector to provide access control for all read attributes
 template <class T>
 class attribute_debug_vector
 {
@@ -96,7 +96,7 @@ public:
     
 public:
     virtual value_type get(const std::wstring & QualifiedName) const ;
-    virtual const key_value & at(size_t _Pos) const;
+    virtual const key_value & at(size_t pos) const;
     virtual size_t size() const;
     
     virtual bool check() const
@@ -159,9 +159,9 @@ attributes_impl::value_type attributes_impl::get(const std::wstring & QualifiedN
         return attr_str_type();
 }
 
-const attributes_impl::key_value & attributes_impl::at(size_t _Pos) const
+const attributes_impl::key_value & attributes_impl::at(size_t pos) const
 {
-    return values_[_Pos];
+    return values_[pos];
 }
 
 size_t attributes_impl::size() const

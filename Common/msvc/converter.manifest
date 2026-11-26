@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <assemblyIdentity type="win32" name="converter"
+                    version="1.0.0.0" processorArchitecture="amd64"/>
+  <file name="DjVuFile.dll"/>
+  <file name="doctrenderer.dll"/>
+  <file name="DocxRenderer.dll"/>
+  <file name="EpubFile.dll"/>
+  <file name="Fb2File.dll"/>
+  <file name="graphics.dll"/>
+  <file name="HtmlFile2.dll"/>
+  <file name="HWPFile.dll"/>
+  <file name="icudt74.dll"/>
+  <file name="icuin74.dll"/>
+  <file name="icuio74.dll"/>
+  <file name="icutest74.dll"/>
+  <file name="icutu74.dll"/>
+  <file name="icuuc74.dll"/>
+  <file name="IWorkFile.dll"/>
+  <file name="kernel.dll"/>
+  <file name="kernel_network.dll"/>
+  <file name="OFDFile.dll"/>
+  <file name="ooxmlsignature.dll"/>
+  <file name="PdfFile.dll"/>
+  <file name="StarMathConverter.dll"/>
+  <file name="UnicodeConverter.dll"/>
+  <file name="x2tlib.dll"/>
+  <file name="XpsFile.dll"/>
+</assembly>

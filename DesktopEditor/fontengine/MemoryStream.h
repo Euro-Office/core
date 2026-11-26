@@ -65,7 +65,7 @@ namespace NSMemoryStream
 	class CMemoryStream : public IGrObject
 	{
 	private:
-		// сам метафайл
+		// the metafile itself
 		BYTE* m_pBuffer;
 		BYTE* m_pBufferMem;
 

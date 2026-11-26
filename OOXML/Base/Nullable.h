@@ -41,12 +41,12 @@ namespace NSCommon
 	public:
 		nullable_base()
 		{
-			m_pPointer = NULL;
+			m_pPointer = nullptr;
 		}
 		nullable_base(const nullable_base<Type>& oOther)
 		{
-			m_pPointer = NULL;
-			if ( NULL != oOther.m_pPointer )
+			m_pPointer = nullptr;
+			if ( nullptr != oOther.m_pPointer )
 				m_pPointer = new Type( (const Type&)*(oOther.m_pPointer) );
 		}
 		virtual ~nullable_base()
@@ -85,14 +85,14 @@ namespace NSCommon
 		}
 		bool IsInit() const
 		{
-			return (NULL != m_pPointer);
+			return (nullptr != m_pPointer);
 		}
 		bool is_init() const
 		{
 			return IsInit();
 		}
 
-		void reset(Type* pType = NULL)
+		void reset(Type* pType = nullptr)
 		{
 			RELEASEOBJECT(m_pPointer);
 			m_pPointer = pType;
@@ -108,8 +108,8 @@ namespace NSCommon
 		}
 		nullable(const nullable<Type>& oOther)
 		{
-			if ( NULL == oOther.m_pPointer )
-				this->m_pPointer = NULL;
+			if ( nullptr == oOther.m_pPointer )
+				this->m_pPointer = nullptr;
 			else
 				this->m_pPointer = new Type( (const Type&)*(oOther.m_pPointer) );
 		}
@@ -206,7 +206,7 @@ namespace NSCommon
 		nullable<Type>& operator=(const wchar_t* cwsValue)
 		{
 			RELEASEOBJECT(this->m_pPointer);
-			if (NULL != cwsValue)
+			if (nullptr != cwsValue)
 				this->m_pPointer = new Type( cwsValue );
 			return *this;
 		}
@@ -215,7 +215,7 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(this->m_pPointer);
 
-			if ( NULL != oOther.m_pPointer )
+			if ( nullptr != oOther.m_pPointer )
 				this->m_pPointer = new Type( (const Type&)*(oOther.m_pPointer) );
 
 			return *this;
@@ -295,12 +295,12 @@ namespace NSCommon
 		{
 			return this->m_pPointer;
 		}
-		//GetPointerEmptyNullable - небезопасная операция, использовать при крайней необходимости
-		//Передает указатель и очищает nullable, в дальнейшем память надо удалять самостоятельно
+		//GetPointerEmptyNullable - unsafe operation, use only when absolutely necessary
+		//Passes a pointer and clears nullable, in the future the memory must be deleted independently
 		Type* GetPointerEmptyNullable()
 		{
 			Type* pOldPointer = this->m_pPointer;
-			this->m_pPointer = NULL;
+			this->m_pPointer = nullptr;
 			return pOldPointer;
 		}
 	};
@@ -340,7 +340,7 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(this->m_pPointer);
 
-			if ( NULL != oSrc.m_pPointer )
+			if ( nullptr != oSrc.m_pPointer )
 			{
 				this->m_pPointer = new Type();
 				this->m_pPointer->set(oSrc->get());
@@ -397,7 +397,7 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if ( NULL != cwsValue )
+			if ( nullptr != cwsValue )
 				m_pPointer = new int(XmlUtils::GetInteger(cwsValue));
 
 			return *this;
@@ -420,7 +420,7 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if (NULL != oSrc.m_pPointer )
+			if (nullptr != oSrc.m_pPointer )
 				m_pPointer = new int(*oSrc);
 			return *this;
 		}
@@ -440,7 +440,7 @@ namespace NSCommon
 		}
 		int get_value_or(const int& value) const
 		{
-			if (NULL == m_pPointer)
+			if (nullptr == m_pPointer)
 			{
 				int ret = value;
 				return ret;
@@ -492,7 +492,7 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if ( NULL != cwsValue )
+			if ( nullptr != cwsValue )
 				m_pPointer = new unsigned int(XmlUtils::GetUInteger(cwsValue));
 
 			return *this;
@@ -512,19 +512,19 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if (NULL != oSrc.m_pPointer )
+			if (nullptr != oSrc.m_pPointer )
 				m_pPointer = new unsigned int(*oSrc);
 			return *this;
 		}
 		unsigned int* GetPointerEmptyNullable()
 		{
 			unsigned int* pOldPointer = this->m_pPointer;
-			this->m_pPointer = NULL;
+			this->m_pPointer = nullptr;
 			return pOldPointer;
 		}
 		unsigned int get_value_or(const unsigned int& value) const
 		{
-			if (NULL == m_pPointer)
+			if (nullptr == m_pPointer)
 			{
 				unsigned int ret = value;
 				return ret;
@@ -567,7 +567,7 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if ( NULL != cwsValue )
+			if ( nullptr != cwsValue )
 				m_pPointer = new _INT64(XmlUtils::GetInteger64(cwsValue));
 
 			return *this;
@@ -587,7 +587,7 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if (NULL != oSrc.m_pPointer )
+			if (nullptr != oSrc.m_pPointer )
 				m_pPointer = new _INT64(*oSrc);
 			return *this;
 		}
@@ -601,7 +601,7 @@ namespace NSCommon
 		}
 		_INT64 get_value_or(const _INT64& value) const
 		{
-			if (NULL == m_pPointer)
+			if (nullptr == m_pPointer)
 			{
 				int ret = (int)value;
 				return ret;
@@ -649,14 +649,14 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if ( NULL != oSrc.m_pPointer )
+			if ( nullptr != oSrc.m_pPointer )
 				m_pPointer = new size_t(*oSrc);
 
 			return *this;
 		}
 		size_t get_value_or(const size_t& value) const
 		{
-			if (NULL == m_pPointer)
+			if (nullptr == m_pPointer)
 			{
 				size_t ret = value;
 				return ret;
@@ -721,14 +721,14 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if ( NULL != oSrc.m_pPointer )
+			if ( nullptr != oSrc.m_pPointer )
 				m_pPointer = new double(*oSrc);
 
 			return *this;
 		}
 		double get_value_or(const double& value) const
 		{
-			if (NULL == m_pPointer)
+			if (nullptr == m_pPointer)
 			{
 				double ret = value;
 				return ret;
@@ -738,7 +738,7 @@ namespace NSCommon
 		double* GetPointerEmptyNullable()
 		{
 			double* pOldPointer = this->m_pPointer;
-			this->m_pPointer = NULL;
+			this->m_pPointer = nullptr;
 			return pOldPointer;
 		}
 		double& operator*()  { return *m_pPointer; }
@@ -758,9 +758,7 @@ namespace NSCommon
 	protected:
 		bool set(const std::wstring& value)
 		{
-			if ((L"true" == value) || (L"1" == value))
-				return true;
-			return false;
+			return (L"true" == value) || (L"1" == value);
 		}
 	public:
 		nullable_bool& operator=(const std::wstring &sValue)
@@ -776,7 +774,7 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if ( NULL != cwsValue )
+			if ( nullptr != cwsValue )
 				m_pPointer = new bool(XmlUtils::GetBoolean2(cwsValue));
 
 			return *this;
@@ -791,7 +789,7 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if ( NULL != oSrc.m_pPointer )
+			if ( nullptr != oSrc.m_pPointer )
 				m_pPointer = new bool(*oSrc);
 
 			return *this;
@@ -806,7 +804,7 @@ namespace NSCommon
 		}
 		bool get_value_or(const bool& value) const
 		{
-			if (NULL == m_pPointer)
+			if (nullptr == m_pPointer)
 			{
 				bool ret = value;
 				return ret;
@@ -816,7 +814,7 @@ namespace NSCommon
 		bool* GetPointerEmptyNullable()
 		{
 			bool* pOldPointer = this->m_pPointer;
-			this->m_pPointer = NULL;
+			this->m_pPointer = nullptr;
 			return pOldPointer;
 		}
 		bool& operator*()  { return *m_pPointer; }
@@ -836,8 +834,8 @@ namespace NSCommon
 		}
 		nullable_string(const nullable_string& oOther)
 		{
-			if (NULL == oOther.m_pPointer)
-				m_pPointer = NULL;
+			if (nullptr == oOther.m_pPointer)
+				m_pPointer = nullptr;
 			else
 				m_pPointer = new std::wstring(*oOther.m_pPointer);
 		}
@@ -848,7 +846,7 @@ namespace NSCommon
 		}
 		void operator+=(const std::wstring& value)
 		{
-			if (NULL == m_pPointer)
+			if (nullptr == m_pPointer)
 				m_pPointer = new std::wstring(value);
 			else
 				*m_pPointer += value;
@@ -862,7 +860,7 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if (NULL != oSrc.m_pPointer)
+			if (nullptr != oSrc.m_pPointer)
 				m_pPointer = new std::wstring(*oSrc);
 			return *this;
 		}
@@ -882,7 +880,7 @@ namespace NSCommon
 		}
 		std::wstring get_value_or(const std::wstring& value) const
 		{
-			if (NULL == m_pPointer)
+			if (nullptr == m_pPointer)
 			{
 				std::wstring ret = value;
 				return ret;
@@ -900,7 +898,7 @@ namespace NSCommon
 		std::wstring* GetPointerEmptyNullable()
 		{
 			std::wstring* pOldPointer = this->m_pPointer;
-			this->m_pPointer = NULL;
+			this->m_pPointer = nullptr;
 			return pOldPointer;
 		}
 		std::wstring& operator*()  { return *m_pPointer; }
@@ -919,8 +917,8 @@ namespace NSCommon
 		}
 		nullable_astring(const nullable_astring& oOther)
 		{
-			if (NULL == oOther.m_pPointer)
-				m_pPointer = NULL;
+			if (nullptr == oOther.m_pPointer)
+				m_pPointer = nullptr;
 			else
 				m_pPointer = new std::string(*oOther.m_pPointer);
 		}
@@ -931,7 +929,7 @@ namespace NSCommon
 		}
 		void operator+=(const std::string& value)
 		{
-			if (NULL == m_pPointer)
+			if (nullptr == m_pPointer)
 				m_pPointer = new std::string(value);
 			else
 				*m_pPointer += value;
@@ -945,7 +943,7 @@ namespace NSCommon
 		{
 			RELEASEOBJECT(m_pPointer);
 
-			if (NULL != oSrc.m_pPointer)
+			if (nullptr != oSrc.m_pPointer)
 				m_pPointer = new std::string(*oSrc);
 			return *this;
 		}
@@ -965,7 +963,7 @@ namespace NSCommon
 		}
 		std::string get_value_or(const std::string& value) const
 		{
-			if (NULL == m_pPointer)
+			if (nullptr == m_pPointer)
 			{
 				std::string ret = value;
 				return ret;
@@ -983,7 +981,7 @@ namespace NSCommon
 		std::string* GetPointerEmptyNullable()
 		{
 			std::string* pOldPointer = this->m_pPointer;
-			this->m_pPointer = NULL;
+			this->m_pPointer = nullptr;
 			return pOldPointer;
 		}
 		std::string& operator*() { return *m_pPointer; }

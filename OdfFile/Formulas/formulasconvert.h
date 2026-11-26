@@ -32,9 +32,15 @@ namespace cpdoccore {
 
 namespace formulasconvert {
 
+// Function names that differ between OpenFormula and OOXML, in a formula whose string literals are masked:
+// COM.MICROSOFT.CONCAT( <-> _xlfn.CONCAT(, LEGACY.FDIST( <-> FDIST(, FDIST( <-> _xlfn.F.DIST(
+std::wstring odf2oox_function_names(const std::wstring& expr);
+// mask, if given, replaces each converted name, so that later steps don't take LOG10 for a cell reference
+std::wstring oox2odf_function_names(const std::wstring& expr, void (*mask)(std::wstring&) = nullptr);
 
-// Работа с форумулами OpenOffice, преобразование.
-// Примеры см. в тесте ut_formulasconvert.cpp
+
+// Working with OpenOffice formulas, conversion.
+// For examples, see the test ut_formulasconvert.cpp
 class odf2oox_converter
 {
 public:
@@ -44,7 +50,7 @@ public:
     // of:=SUM([.DDA1:.BA3]) -> SUM(DDA1:BA3)
     std::wstring convert(std::wstring const & expr);
     
-    // $Лист1.$A$1 -> Лист1!$A$1
+    // $Sheet1.$A$1 -> Sheet1!$A$1
 	std::wstring convert_named_ref(std::wstring const & expr, bool withTableName = true, std::wstring separator = L" ", bool bAbsoluteAlways = false);
 	std::wstring get_table_name();
 
@@ -86,7 +92,7 @@ public:
  	
 	std::wstring convert_conditional_formula(std::wstring const & expr);
   
-    // Лист1!$A$1 -> $Лист1.$A$1 
+    // Sheet1!$A$1 -> $Sheet1.$A$1
     std::wstring convert_named_ref(std::wstring const & expr);
 	std::wstring convert_named_formula(std::wstring const & expr);
 	bool is_simple_ref(std::wstring const & expr);

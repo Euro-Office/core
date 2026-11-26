@@ -53,7 +53,7 @@
 	  || 'e' == (X)\
 	  || 'E' == (X))
 
-#define GetChar(STRING, POS) STRING[POS++]
+#define GetChar(STRING, POS) ((STRING)[(POS)++])
 #define LookChar(STRING, POS) STRING[POS]
 
 #ifndef SQR
@@ -68,8 +68,8 @@ namespace XPSEllipse
 {
 	double AngToEllPrm     (double fAngle, double fXRad, double fYRad)
 	{
-		// Функция для перевода реального угла в параметрическое задание эллписа
-		// т.е. x= a cos(t) y = b sin(t) - параметрическое задание эллписа.
+		// Function for converting a real angle into a parametric ellipse specification
+		// i.e. x= a cos(t) y = b sin(t) - parametric specification of the ellipse.
 		// x = r cos(p), y = r sin(p) => t = atan2( sin(p) / b, cos(p) / a );
 		return atan2(sin(fAngle) / fYRad, cos(fAngle) / fXRad);
 	}
@@ -92,7 +92,7 @@ namespace XPSEllipse
 	}
 	void   EllipseArc3     (IRenderer* pRenderer, Aggplus::CMatrix& oTransform, double fX, double fY, double fXRad, double fYRad, double dAngle1, double dAngle2, double *pfXCur, double *pfYCur, bool bClockDirection)
 	{
-		// Рассчитаем начальную, конечную и контрольные точки
+		// Calculate the start, end and control points
 		double fX1  = 0.0, fX2  = 0.0, fY1  = 0.0, fY2  = 0.0;
 		double fCX1 = 0.0, fCX2 = 0.0, fCY1 = 0.0, fCY2 = 0.0;
 
@@ -129,16 +129,16 @@ namespace XPSEllipse
 	}
 	void   EllipseArc2     (IRenderer* pRenderer, Aggplus::CMatrix& oTransform, double fX, double fY, double fXRad, double fYRad, double fAngle1, double fAngle2, bool bClockDirection)
 	{
-		// переведем углы в радианы
+		// convert angles to radians
 		double dAngle1 = fAngle1 * 3.141592 / 180;
 		double dAngle2 = fAngle2 * 3.141592 / 180;
 
-		// Выясним в каких четвертях находятся начальная и конечная точки
+		// Find out in which quarters the starting and ending points are located
 		unsigned int nFirstPointQuard  = int(fAngle1) / 90 + 1;
 		unsigned int nSecondPointQuard = int(fAngle2) / 90 + 1;
 		nSecondPointQuard = std::min((unsigned int)4, std::max((unsigned int)1, nSecondPointQuard));
 		nFirstPointQuard  = std::min((unsigned int)4, std::max((unsigned int)1, nFirstPointQuard));
-		// Проведем линию в начальную точку дуги
+		// Draw a line to the starting point of the arc
 		double fStartX = 0.0, fStartY = 0.0, fEndX = 0.0, fEndY = 0.0;
 
 		fStartX = fX + fXRad * cos(AngToEllPrm(dAngle1, fXRad, fYRad));
@@ -146,9 +146,8 @@ namespace XPSEllipse
 
 		LineTo(pRenderer, oTransform, fStartX, fStartY);
 
-		// Дальше рисуем по четверям
+		// Next, draw by quadrants
 
-		double fCurX = fStartX, fCurY = fStartY;
 		double dStartAngle = dAngle1;
 		double dEndAngle = 0;
 
@@ -233,11 +232,11 @@ namespace XPSEllipse
 		if (fXRad <= 0 || fYRad <= 0)
 			return;
 
-		if (fabs(fEndAngle - fStartAngle) >= 360) // Целый эллипс
+		if (fabs(fEndAngle - fStartAngle) >= 360) // Whole ellipse
 		{
 			Ellipse(pRenderer, oTransform, fX, fY, fXRad, fYRad);
 		}
-		else // Дуга эллипса
+		else // Ellipse arc
 		{
 			EllipseArc(pRenderer, oTransform, fX, fY, fXRad, fYRad, fStartAngle, fEndAngle, bClockDirection);
 		}
@@ -248,7 +247,7 @@ namespace XPSEllipse
 		dA1 = -dX1 / dY1 * SQR(dRadY) / SQR(dRadX);
 		dB1 = (SQR(dX1) / SQR(dRadX) + SQR(dY1) / SQR(dRadY)) * SQR(dRadY) / (2 * dY1);
 
-		// Получаем квадратное уравнение A2 * X^2 + B2 * X + C2 = 0 (причем A2 != 0 в нашей ситуации)
+		// Get the quadratic equation A2 * X^2 + B2 * X + C2 = 0 (and A2 != 0 in our situation)
 		dA2 = SQR(dA1) / SQR(dRadY) + 1 / SQR(dRadX);
 		dB2 = 2 * dA1 * dB1 / SQR(dRadY);
 		dC2 = SQR(dB1) / SQR(dRadY) - 1;
@@ -261,12 +260,12 @@ namespace XPSEllipse
 		GetEllipseKoefs(dX1, dY1, dRadX, dRadY, dA1, dB1, dA2, dB2, dC2, dRoot);
 		if (dRoot < 0)
 		{
-			double dK1 = (SQR(dA1) + SQR(dRadY) / SQR(dRadX)); // dK1 всегда положительное (поэтому спокойно на него делим)
+			double dK1 = (SQR(dA1) + SQR(dRadY) / SQR(dRadX)); // dK1 is always positive (so we safely divide by it)
 			double dK2 = 2 * dA1 * dB1;
 			double dK3 = SQR(dB1);
 			double dK4 = dK3 - SQR(dK2) / (4 * dK1);
 			if (dK4 < 0)
-				return false; // Такого быть не должно
+				return false; // This shouldn't happen
 
 			double dNewRadY = SQRT(dK4);
 			double dKoef = dNewRadY / dRadY;
@@ -280,7 +279,7 @@ namespace XPSEllipse
 
 		if (dRoot < -0.001)
 		{
-			// Такого быть не должно
+			// This shouldn't happen
 			return false;
 		}
 		else if (dRoot < 0)
@@ -303,7 +302,7 @@ namespace XPSEllipse
 		if (abs(dX1) < 0.001)
 			return false;
 
-		// Центры искомых эллипсов лежат на вертикальной прямой
+		// The centers of the required ellipses lie on a vertical line
 		dCx1 = dX1 / 2;
 		dCx2 = dCx1;
 
@@ -322,7 +321,7 @@ namespace XPSEllipse
 
 		if (dRoot < -0.001)
 		{
-			// Такого быть не должно
+			// This shouldn't happen
 			return false;
 		}
 		else if (dRoot < 0)
@@ -349,9 +348,9 @@ namespace XPSEllipse
 namespace XPS
 {
 
-	static inline double GetEllipseAngle(const double& dCx, const double& dCy, const double& dRadX, const double dRadY, const double& dX, const double& dY)
+	static inline double GetEllipseAngle(const double& dCx, const double& dCy, const double& /*dRadX*/, const double /*dRadY*/, const double& dX, const double& dY)
 	{
-		// Определим квадрант
+		// Define a quadrant
 		int nQuarter = -1;
 		if (dX >= dCx)
 		{
@@ -377,6 +376,7 @@ namespace XPS
 			case 1: dAngle = 180 - dAngle; break;
 			case 2: dAngle = 180 + dAngle; break;
 			case 3: dAngle = 360 - dAngle; break;
+			default: break;
 		}
 
 		return dAngle;
@@ -489,7 +489,7 @@ namespace XPS
 				dScale *= 0.1;
 			}
 
-			return (bNegative ? (double)(-dFloat) : (double)dFloat);
+			return (bNegative ? -dFloat : dFloat);
 
 		doExponent:
 
@@ -519,7 +519,7 @@ namespace XPS
 				nExp = nExp * 10 + (wChar - '0');
 			}
 
-			dFloat = (bNegative ? (double)(-dFloat) : (double)dFloat);
+			dFloat = (bNegative ? -dFloat : dFloat);
 			nExp = std::max(20, std::min(0, nExp));
 
 			while (nExp)
@@ -598,10 +598,7 @@ namespace XPS
 		}
 
 		CWString wsBool(pBuffer, false, nBufPos);
-		if ((wsBool == L"true") || (wsBool == L"t") || (wsBool == L"1") || (wsBool == L"on"))
-			return true;
-
-		return false;
+		return ((wsBool == L"true") || (wsBool == L"t") || (wsBool == L"1") || (wsBool == L"on"));
 	}
 	static inline void   AppendArcTo(const wchar_t* wsString, int& nPos, const int& nLen, double& dCurX, double& dCurY, IRenderer* pRenderer,bool bRelative)
 	{
@@ -633,7 +630,7 @@ namespace XPS
 			return;
 		}
 
-		// Точку X0, Y0 переносим в начало координат и поворачиваем на обратный угол, чтобы искомые эллипсы встали правильно
+		// Move the point X0, Y0 to the origin of coordinates and rotate it to the opposite angle so that the required ellipses line up correctly
 		Aggplus::CMatrix oTransform, oInverse;
 		oTransform.Rotate(-dAngle);
 		oTransform.Translate(-dX0, -dY0);
@@ -645,10 +642,10 @@ namespace XPS
 		oInverse.TransformPoint(dTestX, dTestY);
 
 		double dCx1, dCy1, dCx2, dCy2;
-		// Ищем эллипсы, точками пересечения которых являются (0, 0) и (dX1, dY1)
+		// Find ellipses whose intersection points are (0, 0) and (dX1, dY1)
 		if (!XPSEllipse::GetEllipses(dX1, dY1, dRadX, dRadY, dCx1, dCy1, dCx2, dCy2))
 		{
-			// Такого не должно быть
+			// This shouldn't happen
 			pRenderer->PathCommandLineTo(_dX1, _dY1);
 			dCurX = _dX1;
 			dCurY = _dY1;
@@ -660,8 +657,8 @@ namespace XPS
 		//double dTest3 = SQR(dCx2) / SQR(dRadX) + SQR(dCy2) / SQR(dRadY);
 		//double dTest4 = SQR(dCx2 - dX1) / SQR(dRadX) + SQR(dCy2 - dY1) / SQR(dRadY);
 
-		// Теперь у нас есть 2 эллипса, нужно определить дугу, которую нам и надо отрисовать.
-		// Для начала найдем углы начальной и конечной точек для обоих эллипсов.
+		// Now there are 2 ellipses; determine the arc that needs to be drawn.
+		// First, find the angles of the starting and ending points for both ellipses.
 		double dAngleStart1 = GetEllipseAngle(dCx1, dCy1, dRadX, dRadY, 0, 0);
 		double dAngleEnd1   = GetEllipseAngle(dCx1, dCy1, dRadX, dRadY, dX1, dY1);
 
@@ -691,7 +688,7 @@ namespace XPS
 			dAngleEnd   = dAngleEnd2;
 		}
 
-		// Аппроксимируем эллипс кривыми Безье
+		// Approximating an ellipse with Bezier curves
 		XPSEllipse::AppendEllipseArc(pRenderer, oInverse, dCx, dCy, dRadX, dRadY, dAngleStart, dAngleEnd, bClockwise);
 		dCurX = _dX1;
 		dCurY = _dY1;
@@ -732,10 +729,7 @@ namespace XPS
 	{
 		std::wstring wsStr = wsString;
 		NSStringExt::ToLower(wsStr);
-		if ((wsStr == L"true") || (wsStr == L"t") || (wsStr == L"1") || (wsStr == L"on"))
-			return true;
-
-		return false;
+		return ((wsStr == L"true") || (wsStr == L"t") || (wsStr == L"1") || (wsStr == L"on"));
 	}
 	void   GetBgra(const std::wstring& wsString, int& nBgr, int& nAlpha)
 	{
@@ -1014,6 +1008,7 @@ namespace XPS
 									dCurY += GetDouble(wsString, nPos, nLen);
 									break;
 								}
+								default: break;
 							}
 
 							pRenderer->PathCommandLineTo(xpsUnitToMM(dCurX), xpsUnitToMM(dCurY));
@@ -1034,7 +1029,7 @@ namespace XPS
 							break;
 
 						if (IsNumber(LookChar(wsString, nPos)))
-							AppendArcTo(wsString, nPos, nLen, dCurX, dCurY, pRenderer, 'a' == wChar ? true : false);
+							AppendArcTo(wsString, nPos, nLen, dCurX, dCurY, pRenderer, 'a' == wChar);
 						else
 							break;
 					}
@@ -1178,6 +1173,7 @@ namespace XPS
 					bPrevCommandIsCurve = false;
 					break;
 				}
+				default: break;
 			}
 		}
 
@@ -1238,7 +1234,7 @@ namespace XPS
 
 			wChar = LookChar(wsIndices, nIndicesPos);
 			if (')' != wChar)
-				return false; // Такого не должно быть
+				return false; // This shouldn't happen
 
 			nIndicesPos++;
 		}
@@ -1252,10 +1248,10 @@ namespace XPS
 		if (nCodeUnitCount > 0 && nGlyphCount > 0)
 		{
 			oEntry.vRemainUnicodes.clear();
-			// Нам нужно прочитать сколько реальных юникодных значений лежит в
-			// промежутке [pUnicode + nUnicodePos, pUnicode + nUnicodePos + nCodeUnitCount]
+			// Need to read how many real Unicode values are in
+			// span [pUnicode + nUnicodePos, pUnicode + nUnicodePos + nCodeUnitCount]
 			int nUnicodesCount = 0;
-			unsigned int* pUnicodes = NULL;
+			unsigned int* pUnicodes = nullptr;
 			nCodeUnitCount = std::min(nUtf16Len - nUtf16Pos, nCodeUnitCount);
 			if (nCodeUnitCount)
 			{
@@ -1275,7 +1271,7 @@ namespace XPS
 					}
 					else if (ushLeading >= 0xDC00)
 					{
-						// Такого не должно быть
+						// This shouldn't happen
 						continue;
 					}
 					else
@@ -1287,7 +1283,7 @@ namespace XPS
 						ushTraling =  pUtf16[nUtf16Pos + nCodeUnitPos++];
 						if (ushTraling < 0xDC00 || ushTraling > 0xDFFF)
 						{
-							// Такого не должно быть
+							// This shouldn't happen
 							continue;
 						}
 						else
@@ -1298,8 +1294,8 @@ namespace XPS
 				}
 			}
 
-			// Равномерно распределяем юникоды по глифам, в идеале их количество должно совпадать.
-			// Если юникодов больше, то лишние удаляем, если их меньше, то недостающие заполняем пробелами.
+			// Distribute Unicodes evenly among the glyphs; ideally, their number should match.
+			// If there are more Unicodes, then delete the extra ones, if there are fewer of them, then fill the missing ones with spaces.
 			nUnicodesCount = std::min(nUnicodesCount, nGlyphCount);
 			for (int nIndex = 0; nIndex < nGlyphCount; nIndex++)
 			{
@@ -1318,7 +1314,7 @@ namespace XPS
 		if (oEntry.vRemainUnicodes.size() <= 0)
 			return false;
 
-		// Теперь мы читаем ровно 1 глиф с возможными метриками
+		// Now read exactly 1 glyph with possible metrics
 		oEntry.nUnicode = oEntry.vRemainUnicodes.at(0);
 		oEntry.vRemainUnicodes.erase(oEntry.vRemainUnicodes.begin());
 
@@ -1413,7 +1409,7 @@ namespace XPS
 			return true;
 		}
 		else
-			return false; // Такого не должно быть
+			return false; // This shouldn't happen
 	}
 	void ReadMatrixTransform(XmlUtils::CXmlLiteReader& oReader, CWString& wsTransform, CWString* pwsKey)
 	{
@@ -1470,7 +1466,7 @@ namespace XPS
 				else if (wsAttrName == L"FillRule")
 				{
 					CWString wsFillingRule = oReader.GetText();
-					bEvenOdd = wsFillingRule == L"EvenOdd" ? true : false;
+					bEvenOdd = wsFillingRule == L"EvenOdd";
 				}
 
 				if (!oReader.MoveToNextAttribute())
@@ -1500,7 +1496,7 @@ namespace XPS
 	}
 	void ReadPathFigure     (XmlUtils::CXmlLiteReader& oReader, std::wstring& wsData, bool bEvenOdd)
 	{
-		// TODO: Улучшить здесь сложение строк и хождение по атрибутам
+		// TODO: Improve string addition and attribute traversal here
 		if (oReader.IsEmptyNode())
 			return;
 
@@ -1519,7 +1515,7 @@ namespace XPS
 		while (oReader.ReadNextSiblingNode(nCurDepth))
 		{
 			wsNodeName = oReader.GetNameNoNS();
-			wsText.empty();
+			wsText.clear();
 			if (L"PolyLineSegment" == wsNodeName)
 			{
 				ReadAttribute(oReader, L"Points", wsText);
@@ -1537,7 +1533,7 @@ namespace XPS
 			}
 			else if (L"ArcSegment" == wsNodeName)
 			{
-				std::wstring wsSize, wsRotationAngle, wsIsLargeArc, wsSweepDirection, wsPoint, wsIsStroked;
+				std::wstring wsSize, wsRotationAngle, wsIsLargeArc, wsSweepDirection, wsPoint;
 				if (oReader.MoveToFirstAttribute())
 				{
 					std::wstring wsAttrName = oReader.GetName();

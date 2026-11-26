@@ -46,7 +46,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CStylisticSets)
-			CStylisticSets(OOX::Document *pMain = NULL);
+			CStylisticSets(OOX::Document *pMain = nullptr);
 			virtual ~CStylisticSets();
 
 			virtual std::wstring toXML() const;
@@ -118,7 +118,7 @@ namespace OOX
 			}
 			static const CRunProperty Merge(const CRunProperty& oPrev, const CRunProperty& oCurrent);
 
-			bool m_bRPRChange = false; // Является ли данный w:rPr дочерним по отношению к w:rPrChange
+			bool m_bRPRChange = false; // Is this w:rPr a child of w:rPrChange
 
 			nullable<ComplexTypes::Word::COnOff2>	m_oBold;
 			nullable<ComplexTypes::Word::COnOff2>	m_oBoldCs;
@@ -178,7 +178,7 @@ namespace OOX
 			nullable<PPTX::Logic::Sp3d>				m_oProps3d;
 			nullable<PPTX::Logic::Scene3d>			m_oScene3d;
 
-			OOX::WritingElement*	m_pText = NULL; //temp ... for Run object -> XpertdocOnlineDemoEn.docx
+			OOX::WritingElement*	m_pText = nullptr; //temp ... for Run object -> XpertdocOnlineDemoEn.docx
 		};
 
 	} // namespace Logic

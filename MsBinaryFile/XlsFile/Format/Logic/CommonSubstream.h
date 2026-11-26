@@ -41,7 +41,7 @@ public:
 	GlobalWorkbookInfoPtr			global_info_;
 	size_t							ws_index_;
 	
-	std::vector<BiffStructurePtr>	m_arHFPictureDrawing; // тут OfficeArtDgContainer - описания шейпов ...
+	std::vector<BiffStructurePtr>	m_arHFPictureDrawing; // here OfficeArtDgContainer - descriptions of shapes...
 
 	BaseObjectPtr					m_PAGESETUP;
 	BaseObjectPtr					m_PROTECTION;

@@ -37,7 +37,7 @@ void CRecordTimeStringListContainer::ReadFromStream(SRecordHeader &oHeader, POLE
 
     while ( lCurLen < m_oHeader.RecLen )
     {
-        if (ReadHeader.ReadFromStream(pStream) == false)
+        if (!ReadHeader.ReadFromStream(pStream))
             break;
 
         CRecordTimeVariantString Element;

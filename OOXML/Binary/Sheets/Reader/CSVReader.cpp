@@ -51,7 +51,7 @@ public:
 private:
 	int AddCell(std::wstring &sText, INT nStartCell, std::stack<INT> &oDeleteChars, OOX::Spreadsheet::CRow &oRow, INT nRow, INT nCol, bool bIsWrap);
 
-	std::shared_ptr<CellFormatController>  cellFormatController_ = NULL;
+	std::shared_ptr<CellFormatController>  cellFormatController_ = nullptr;
 //---------------------------------------------------------------------------------------------------------
 	const std::wstring ansi_2_unicode(const unsigned char* data, DWORD data_size)
 	{
@@ -83,6 +83,8 @@ private:
 			eUnicodeConversionResult = ConvertUTF8toUTF16 (&pStrUtf8_Conv,	 &pStrUtf8[nLength]
 					, &pStrUtf16_Conv, &((UTF16 *)wStr.data())[nLength]
 					, strictConversion);
+			if (conversionOK == eUnicodeConversionResult)
+				wStr.resize(pStrUtf16_Conv - (UTF16 *)wStr.data());
 		}
 		else //utf8 -> utf32
 		{
@@ -98,6 +100,8 @@ private:
 			eUnicodeConversionResult = ConvertUTF8toUTF32 (&pStrUtf8_Conv, &pStrUtf8[nLength]
 					, &pStrUtf32_Conv, &((UTF32 *)wStr.data())[nLength]
 					, strictConversion);
+			if (conversionOK == eUnicodeConversionResult)
+				wStr.resize(pStrUtf32_Conv - (UTF32 *)wStr.data());
 		}
 		if (conversionOK != eUnicodeConversionResult)
 		{
@@ -186,14 +190,14 @@ int CSVReader::Impl::AddCell(std::wstring &sText, INT nStartCell, std::stack<INT
 	}
 	size_t length = sText.length();
 
-// Пустую не пишем
+// Don't write empty words
 	if ((0 == length) || (sText[0] == L'\0'))
 		return result;
 
 	OOX::Spreadsheet::CCell *pCell = new OOX::Spreadsheet::CCell();
 	pCell->m_oType.Init();
 
-	pCell->m_oCacheValue = sText; // как есть
+	pCell->m_oCacheValue = sText; // as is
 
 	pCell->setRowCol(nRow, nCol);
 	result = cellFormatController_->ProcessCellType(pCell, sText, bIsWrap);
@@ -205,16 +209,16 @@ int CSVReader::Impl::AddCell(std::wstring &sText, INT nStartCell, std::stack<INT
 _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::CXlsx &oXlsx, _UINT32 nCodePage, const std::wstring& sDelimiter, _INT32 lcid, bool readToCache)
 {
 	NSFile::CFileBinary oFile;
-	if (false == oFile.OpenFile(sFileName)) return AVS_FILEUTILS_ERROR_CONVERT;
+	if (!oFile.OpenFile(sFileName)) return AVS_FILEUTILS_ERROR_CONVERT;
 	//-----------------------------------------------------------------------------------
-	// Создадим Workbook
+	// Create a Workbook
 	oXlsx.CreateWorkbook();
-	// Создадим стили
+	// Create styles
 	oXlsx.CreateStyles();
 
 	cellFormatController_ = std::make_shared<CellFormatController>(oXlsx.m_pStyles, lcid);
 
-	smart_ptr<OOX::Spreadsheet::CWorksheet> pWorksheet(new OOX::Spreadsheet::CWorksheet(NULL));
+	smart_ptr<OOX::Spreadsheet::CWorksheet> pWorksheet(new OOX::Spreadsheet::CWorksheet(nullptr));
 	pWorksheet->m_oSheetData.Init();
 	pWorksheet->m_oSheetFormatPr.Init();
 	pWorksheet->m_oSheetFormatPr->m_oBaseColWidth = 9;
@@ -242,6 +246,10 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 
 	std::wstring sFileDataW;
 
+	// 1000 has its own conversion and anything past the table has no entry, so
+	// neither may index Encodings[]
+	const bool bIsTableCodePage = nCodePage != 1000 && nCodePage < UNICODE_CONVERTER_ENCODINGS_COUNT;
+
 	if (nCodePage == 1000)
 	{
 		sFileDataW = ansi_2_unicode(pInputBuffer, nInputBufferSize);
@@ -258,7 +266,7 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 	{
 		sFileDataW = utf32_2_unicode(pInputBuffer, nInputBufferSize);
 	}
-	else
+	else if (bIsTableCodePage)
 	{
 		const NSUnicodeConverter::EncodindId& oEncodindId = NSUnicodeConverter::Encodings[nCodePage];
 
@@ -266,12 +274,10 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 		sFileDataW = oUnicodeConverter.toUnicode((const char*)pInputBuffer, nInputBufferSize, oEncodindId.Name);
 	}
 	//------------------------------------------------------------------------------------------------------------------------------
-	delete[]pFileData;
-
 	size_t nSize = sFileDataW.length();
 
-	if (nSize < 1 && nInputBufferSize > 0)
-	{//для синхронности вывода превью и нормального результата
+	if (nSize < 1 && nInputBufferSize > 0 && bIsTableCodePage)
+	{//for synchronization of preview output and normal result
 		const NSUnicodeConverter::EncodindId& oEncodindId = NSUnicodeConverter::Encodings[nCodePage];
 
 		NSUnicodeConverter::CUnicodeConverter oUnicodeConverter;
@@ -280,6 +286,9 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 		nSize = sFileDataW.length();
 		//return AVS_FILEUTILS_ERROR_CONVERT_ICU;
 	}
+
+	// the ICU fallback above reads pInputBuffer, so the file data has to stay alive until here
+	delete[]pFileData;
 
 	WCHAR wcDelimiterLeading = L'\0';
 	WCHAR wcDelimiterTrailing = L'\0';
@@ -361,12 +370,12 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 					pRow->storeXmlCache();
 					pWorksheet->m_oSheetData->AddRowToCache(*pRow);
 					delete pRow;
-					pRow = NULL;
+					pRow = nullptr;
 				}
 				else
 				{
 					pWorksheet->m_oSheetData->m_arrItems.push_back(pRow);
-					pRow = NULL;
+					pRow = nullptr;
 				}
 			}
 
@@ -384,7 +393,7 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 		{
 			if (bInQuote)
 			{
-				// Добавим Wrap
+				// Add Wrap
 				bIsWrap = true;
 				continue;
 			}
@@ -401,7 +410,7 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 
 			if (wcNewLineR == wcCurrent && nIndex + 1 != nSize && wcNewLineN == pTemp[nIndex + 1])
 			{
-				// На комбинацию \r\n должен быть только 1 перенос
+				// There should be only 1 carriage return per combination \r\n
 				++nIndex;
 			}
 
@@ -419,7 +428,7 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 				pRow->storeXmlCache();
 				pWorksheet->m_oSheetData->AddRowToCache(*pRow);
 				delete pRow;
-				pRow = NULL;
+				pRow = nullptr;
 			}
 			else
 				pWorksheet->m_oSheetData->m_arrItems.push_back(pRow);
@@ -432,24 +441,24 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 			if (pWorksheet->m_oSheetData->m_arrItems.size() > 1048576)
 			{
 				bMsLimit = true;
-				break; // ограниечние мс
+				break; // ms limits
 			}
 		}
 		else if (wcQuote == wcCurrent)
 		{
 			// Quote
-			if (false == bInQuote && nStartCell == nIndex && nIndex + 1 != nSize)
+			if (!bInQuote && nStartCell == nIndex && nIndex + 1 != nSize)
 			{
-				// Начало новой ячейки (только если мы сразу после разделителя и не в конце файла)
+				// Start of a new cell (only if we are immediately after the delimiter and not at the end of the file)
 				bInQuote = !bInQuote;
 				nStartCell = nIndex + 1;
 			}
 			else if (bInQuote)
 			{
-				// Нужно удалить кавычку ограничитель
+				// Need to remove the quote delimiter
 				oDeleteChars.push(nIndex);
 
-				// Если следующий символ кавычка, то мы не закончили ограничитель строки (1997,Ford,E350,"Super, ""luxurious"" truck")
+				// If the next character is a quote, then we haven't completed the quoted field (1997,Ford,E350,"Super, ""luxurious"" truck")
 				if (nIndex + 1 != nSize && wcQuote == pTemp[nIndex + 1])
 					++nIndex;
 				else
@@ -481,7 +490,7 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 			pRow->storeXmlCache();
 			pWorksheet->m_oSheetData->AddRowToCache(*pRow);
 			delete pRow;
-			pRow = NULL;
+			pRow = nullptr;
 		}
 		else
 			pWorksheet->m_oSheetData->m_arrItems.push_back(pRow);

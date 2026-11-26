@@ -91,12 +91,12 @@ std::vector<std::map<std::wstring, std::wstring>> FormulaController::mapReplacem
 CellFormatController::CellFormatController(OOX::Spreadsheet::CStyles *styles, _INT32 lcid):
     m_pStyles{styles}, lcid_{lcid}, dateReader_{lcid_}
 {
-	// Добавим стили для wrap-а
+	// Add styles for wrap
 	m_pStyles->m_oCellXfs.Init();
 	m_pStyles->m_oCellXfs->m_oCount.Init();
 	m_pStyles->m_oCellXfs->m_oCount->SetValue(2);
 
-	// Normall default
+	// Normal default
 	auto pXfs = new OOX::Spreadsheet::CXfs();
 	pXfs->m_oBorderId.Init();		pXfs->m_oBorderId->SetValue(0);
 	pXfs->m_oFillId.Init();			pXfs->m_oFillId->SetValue(0);
@@ -128,7 +128,7 @@ int CellFormatController::ProcessCellType(OOX::Spreadsheet::CCell *pCell, const 
 	int result = 0; // ok
 	const auto maxCustomWidthRow = 40;
 	pCell_ = pCell;
-	/// формат для булева значения в верхнем регистре
+	/// format for uppercase boolean value
 	if(value == L"true" || value == L"false")
 	{
 		pCell_->m_oType->SetValue(SimpleTypes::Spreadsheet::celltypeInlineStr);
@@ -272,7 +272,7 @@ int CellFormatController::ProcessCellType(OOX::Spreadsheet::CCell *pCell, const 
 		{
 			sFormula = ConvertFormulaArguments(value.substr(1));
 		}
-		if (false == sFormula.empty())
+		if (!sFormula.empty())
 		{
 			pCell_->m_oFormula.Init(); 
 			pCell_->m_oFormula->m_sText = sFormula;
@@ -323,10 +323,7 @@ std::wstring FormulaController::shielding_text(boost::wsmatch const& what)
 }
 bool CellFormatController::isFormula(const std::wstring& formula)
 {
-	if (std::wstring::npos != formula.find(L"=")) return false;
-
-	// ...
-	return true;
+	return std::wstring::npos == formula.find(L"=");
 }
 std::wstring CellFormatController::ConvertFormulaArguments(const std::wstring& formula)
 {
@@ -338,7 +335,7 @@ std::wstring CellFormatController::ConvertFormulaArguments(const std::wstring& f
 		boost::wregex(L"('.*?')|(\".*?\")"),
 		&FormulaController::shielding_text, boost::match_default | boost::format_all);
 
-	if (true == isFormula(res))
+	if (isFormula(res))
 	{
 		XmlUtils::replace_all(res, L";", L","); // in {} ? ->shielding
 
@@ -387,7 +384,7 @@ void CellFormatController::addCustomColWidth(OOX::Spreadsheet::CCell *pCell, dou
 {
 	if(m_pWorksheet == nullptr || pCell == nullptr || !pCell->m_oCol.IsInit())
 		return;
-	//не сужаем колонки, только расширяем
+	//Don't narrow the columns, we just expand them
 	if(m_pWorksheet->m_oSheetFormatPr.IsInit() && m_pWorksheet->m_oSheetFormatPr->m_oBaseColWidth.IsInit() &&
 		m_pWorksheet->m_oSheetFormatPr->m_oBaseColWidth.get() > width)
 		return;

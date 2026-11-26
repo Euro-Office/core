@@ -36,8 +36,6 @@
 #include "../../Enums/_includer.h"
 #include "../RecordsIncluder.h"
 
-#define FIXED_POINT_unsigned(val) (double)((WORD)(val >> 16) + ((WORD)(val) / 65536.0))
-
 ULONG xmlName = 1;
 
 using namespace ODRAW;
@@ -120,7 +118,7 @@ CColor CPPTElement::CorrectSysColor(int nColorCode, CElementPtr pElement, CTheme
     if (color.m_lSchemeIndex != -1 &&
             (int)pTheme->m_arColorScheme.size() > color.m_lSchemeIndex)
     {
-        //вытащить цвет (
+        //extract color (
 
         color = pTheme->m_arColorScheme[color.m_lSchemeIndex];
     }
@@ -163,7 +161,7 @@ CColor CPPTElement::CorrectSysColor(int nColorCode, CElementPtr pElement, CTheme
         color.SetRGB( (BYTE)nR, (BYTE)nG, (BYTE)nB );
     }
         break;
-    case 0x04 :     // substract grey level RGB(p,p,p)
+    case 0x04 :     // subtract grey level RGB(p,p,p)
     {
         short nR = (short)color.GetR() - (short)nParameter;
         short nG = (short)color.GetG() - (short)nParameter;
@@ -174,7 +172,7 @@ CColor CPPTElement::CorrectSysColor(int nColorCode, CElementPtr pElement, CTheme
         color.SetRGB( (BYTE)nR, (BYTE)nG, (BYTE)nB );
     }
         break;
-    case 0x05 :     // substract from gray level RGB(p,p,p)
+    case 0x05 :     // subtract from gray level RGB(p,p,p)
     {
         short nR = (short)nParameter - (short)color.GetR();
         short nG = (short)nParameter - (short)color.GetG();
@@ -191,6 +189,8 @@ CColor CPPTElement::CorrectSysColor(int nColorCode, CElementPtr pElement, CTheme
         color.SetG( color.GetG() < nParameter ? 0x00 : 0xff );
         color.SetB( color.GetB() < nParameter ? 0x00 : 0xff );
     }
+        break;
+    default:
         break;
     }
     if ( nAdditionalFlags & 0x40 )                  // top-bit invert
@@ -230,7 +230,7 @@ void CPPTElement::SetUpProperties(CElementPtr pElement, CTheme* pTheme, CSlideIn
         {
             SetUpPropertyImage(pElement, pTheme, pWrapper, pSlide, &pProperties->m_arProperties[i]);
         }
-        if (false == pElement->m_bIsFilled)
+        if (!pElement->m_bIsFilled)
         {
             pElement->m_oBrush.Type = c_BrushTypeNoFill;
         }
@@ -268,7 +268,7 @@ void CPPTElement::SetUpProperties(CElementPtr pElement, CTheme* pTheme, CSlideIn
         CShapeElement* pShapeElem = dynamic_cast<CShapeElement*>(pElement.get());
         CPPTShape* pPPTShape = dynamic_cast<CPPTShape*>(pShapeElem->m_pShape->getBaseShape().get());
 
-        if (NULL != pPPTShape)
+        if (nullptr != pPPTShape)
         {
             pPPTShape->m_oCustomVML.SetAdjusts(&pPPTShape->m_arAdjustments);
         }
@@ -278,7 +278,7 @@ void CPPTElement::SetUpProperties(CElementPtr pElement, CTheme* pTheme, CSlideIn
             SetUpPropertyShape(pElement, pTheme, pWrapper, pSlide, &pProperties->m_arProperties[i]);
         }
 
-        if (false == pElement->m_bIsFilled)
+        if (!pElement->m_bIsFilled)
         {
             pElement->m_oBrush.Type = c_BrushTypeNoFill;
         }
@@ -288,7 +288,7 @@ void CPPTElement::SetUpProperties(CElementPtr pElement, CTheme* pTheme, CSlideIn
             pElement->m_oBrush.Type = c_BrushTypeSolid;
         }
 
-        if (NULL != pPPTShape)
+        if (nullptr != pPPTShape)
         {
             pPPTShape->m_oCustomVML.ToCustomShape(pPPTShape, pPPTShape->m_oManager);
             pPPTShape->ReCalculate();
@@ -367,6 +367,8 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
         {
             pElement->m_oBrush.Type = c_BrushTypeNoFill;
         }break;
+        default:
+            break;
         }
     }break;
     case fillBlip:
@@ -492,17 +494,8 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
         pElement->m_oBrush.Rect.Height	= pProperty->m_lValue - pElement->m_oBrush.Rect.Y;
         pElement->m_oBrush.Rectable		= true;
     }break;
-    case fillBackground:
-    {
-    }break;
     case fillShadeType:
     {
-        bool bShadeNone		= GETBIT(pProperty->m_lValue, 31);
-        bool bShadeGamma	= GETBIT(pProperty->m_lValue, 30);
-        bool bShadeSigma	= GETBIT(pProperty->m_lValue, 29);
-        bool bShadeBand		= GETBIT(pProperty->m_lValue, 28);
-        bool bShadeOneColor	= GETBIT(pProperty->m_lValue, 27);
-
     }break;
     case fillFocus://relative position of the last color in the shaded fill
     {
@@ -532,21 +525,9 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
         BYTE flag1 = (BYTE)(pProperty->m_lValue);
         BYTE flag2 = (BYTE)(pProperty->m_lValue >> 16);
 
-        bool bNoFillHitTest			= (0x01 == (0x01 & flag1));
-        bool bFillUseRect			= (0x02 == (0x02 & flag1));
-        bool bFillShape				= (0x04 == (0x04 & flag1));
-        bool bHitTestFill			= (0x08 == (0x08 & flag1));
         bool bFilled				= (0x10 == (0x10 & flag1));
-        bool bUseShapeAnchor		= (0x20 == (0x20 & flag1));
-        bool bRecolorFillAsPictures = (0x40 == (0x40 & flag1));
 
-        bool bUsebNoFillHitTest			= (0x01 == (0x01 & flag2));
-        bool bUsebFillUseRect			= (0x02 == (0x02 & flag2));
-        bool bUsebFillShape				= (0x04 == (0x04 & flag2));
-        bool bUsebHitTestFill			= (0x08 == (0x08 & flag2));
         bool bUsebFilled				= (0x10 == (0x10 & flag2));
-        bool bUsebUseShapeAnchor		= (0x20 == (0x20 & flag2));
-        bool bUsebRecolorFillAsPictures = (0x40 == (0x40 & flag2));
 
         if (bUsebFilled)
         {
@@ -561,26 +542,14 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
     case ODRAW::geometryBooleanProperties:
     {
         BYTE flag1 = (BYTE)(pProperty->m_lValue);
-        BYTE flag2 = (BYTE)(pProperty->m_lValue >> 8);
         BYTE flag3 = (BYTE)(pProperty->m_lValue >> 16);
-        BYTE flag4 = (BYTE)(pProperty->m_lValue >> 24);
 
         bool bFillOk					= (0x01 == (0x01 & flag1));
-        bool bFillShadeShapeOk			= (0x02 == (0x02 & flag1));
-        bool bGTextOk					= (0x04 == (0x04 & flag1));
-        bool bLineOk					= (0x08 == (0x08 & flag1));
-        bool b3DOk						= (0x10 == (0x10 & flag1));
-        bool bShadowOk					= (0x20 == (0x20 & flag1));
 
         bool bUseFillOk					= (0x01 == (0x01 & flag3));
-        bool bUseFillShadeShapeOk		= (0x02 == (0x02 & flag3));
-        bool bUseGTextOk				= (0x04 == (0x04 & flag3));
-        bool bUseLineOk					= (0x08 == (0x08 & flag3));
-        bool bUse3DOk					= (0x10 == (0x10 & flag3));
-        bool bUseShadowOk				= (0x20 == (0x20 & flag3));
 
         //if (bUseLineOk)
-        //	pElement->m_bLine = bLineOk;//?? todooo проверить - не сраюатывает ! 1 (82).ppt
+        //	pElement->m_bLine = bLineOk;//?? TODO check - it doesn't work! 1 (82).ppt
 
         if (bUseFillOk)
             pElement->m_bIsFilled = bFillOk;
@@ -590,23 +559,9 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
         // line --------------------------------------------------------
     case lineStyleBooleanProperties: //Line Style Boolean Properties
     {
-        bool bUsefLineOpaqueBackColor = GETBIT(pProperty->m_lValue, 25);
-        bool bUsefInsetPen			= GETBIT(pProperty->m_lValue, 22);
-        bool bUsefInsetPenOK		= GETBIT(pProperty->m_lValue, 21);
-        bool bUsefArrowheadsOK		= GETBIT(pProperty->m_lValue, 20);
         bool bUsefLine				= GETBIT(pProperty->m_lValue, 19);
-        bool bUsefHitTestLine		= GETBIT(pProperty->m_lValue, 18);
-        bool bUsefLineFillShape		= GETBIT(pProperty->m_lValue, 17);
-        bool bUsefNoLineDrawDash	= GETBIT(pProperty->m_lValue, 16);
 
-        bool bLineOpaqueBackColor	= GETBIT(pProperty->m_lValue, 9);
-        bool bInsetPen				= GETBIT(pProperty->m_lValue, 6);
-        bool bInsetPenOK			= GETBIT(pProperty->m_lValue, 5);
-        bool bArrowheadsOK			= GETBIT(pProperty->m_lValue, 4);
         bool bLine					= GETBIT(pProperty->m_lValue, 3);
-        bool bHitTestLine			= GETBIT(pProperty->m_lValue, 2);
-        bool bLineFillShape			= GETBIT(pProperty->m_lValue, 1);
-        bool bNoLineDrawDash		= GETBIT(pProperty->m_lValue, 0);
 
         if (bUsefLine)
             pElement->m_bLine = bLine;
@@ -717,7 +672,7 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
     }break;
     case shadowHighlight:
     {
-        //оттенок двойной тени
+        //double shadow shade
     }break;
     case shadowOffsetX:
     {//signed
@@ -763,67 +718,21 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
 
         if (!fUsefShadow && fUsefshadowObscured)
         {
-            //контурная
+            //contour
             pElement->m_oShadow.Visible = fshadowObscured;
         }
     }break;
     case shapeBoolean:
     {
-        bool fUsefPolicyLabel	= GETBIT(pProperty->m_lValue, 25);
-        bool fUsefPolicyBarcode	= GETBIT(pProperty->m_lValue, 24);
-        bool fUsefFlipHOverride	= GETBIT(pProperty->m_lValue, 23);
-        bool fUsefFlipVOverride	= GETBIT(pProperty->m_lValue, 22);
-        bool fUsefOleIcon		= GETBIT(pProperty->m_lValue, 21);
-        bool fUsefPreferRelativeResize	= GETBIT(pProperty->m_lValue, 20);
-        bool fUsefLockShapeType		= GETBIT(pProperty->m_lValue, 19);
-        bool fUsefInitiator		= GETBIT(pProperty->m_lValue, 18);
-        bool fUsefBackground	= GETBIT(pProperty->m_lValue, 16);
 
-        bool fPolicyLabel		= fUsefPolicyLabel		? GETBIT(pProperty->m_lValue, 9) : false;
-        bool fPolicyBarcode		= fUsefPolicyBarcode	? GETBIT(pProperty->m_lValue, 8) : false;
-        bool fFlipHOverride		= fUsefFlipHOverride	? GETBIT(pProperty->m_lValue, 7) : false;
-        bool fFlipVOverride		= fUsefFlipVOverride	? GETBIT(pProperty->m_lValue, 6) : false;
-        bool fOleIcon			= fUsefOleIcon			? GETBIT(pProperty->m_lValue, 5) : false;
-        bool fPreferRelativeResize = fUsefPreferRelativeResize ? GETBIT(pProperty->m_lValue, 4) : false;
-        bool fLockShapeType		= fUsefLockShapeType	? GETBIT(pProperty->m_lValue, 3) : false;
-        bool fInitiator			= fUsefInitiator		? GETBIT(pProperty->m_lValue, 2) : false;
-        bool fBackground		= fUsefBackground		? GETBIT(pProperty->m_lValue, 0) : false;
     }break;
     case groupShapeBooleanProperties:
     {
-        bool fUsefLayoutInCell		= GETBIT(pProperty->m_lValue, 31);
         bool fUsefIsBullet			= GETBIT(pProperty->m_lValue, 30);
-        bool fUsefStandardHR		= GETBIT(pProperty->m_lValue, 29);
-        bool fUsefNoshadeHR			= GETBIT(pProperty->m_lValue, 28);
-        bool fUsefHorizRule			= GETBIT(pProperty->m_lValue, 27);
-        bool fUsefUserDrawn			= GETBIT(pProperty->m_lValue, 26);
-        bool fUsefAllowOverlap		= GETBIT(pProperty->m_lValue, 25);
-        bool fUsefReallyHidden		= GETBIT(pProperty->m_lValue, 24);
-        bool fUsefScriptAnchor		= GETBIT(pProperty->m_lValue, 23);
-        bool fUsefEditedWrap		= GETBIT(pProperty->m_lValue, 22);
-        bool fUsefBehindDocument	= GETBIT(pProperty->m_lValue, 21);
-        bool fUsefOnDblClickNotify	= GETBIT(pProperty->m_lValue, 20);
-        bool fUsefIsButton			= GETBIT(pProperty->m_lValue, 19);
-        bool fUsefOneD				= GETBIT(pProperty->m_lValue, 18);
         bool fUsefHidden			= GETBIT(pProperty->m_lValue, 17);
-        bool fUsefPrint				= GETBIT(pProperty->m_lValue, 16);
 
-        bool fLayoutInCell		= fUsefLayoutInCell	? GETBIT(pProperty->m_lValue, 15)	: true;
         bool fIsBullet			= fUsefIsBullet		? GETBIT(pProperty->m_lValue, 14)	: false;
-        bool fStandardHR		= fUsefStandardHR	? GETBIT(pProperty->m_lValue, 13)	: false;
-        bool fNoshadeHR			= fUsefNoshadeHR	? GETBIT(pProperty->m_lValue, 12)	: false;
-        bool fHorizRule			= fUsefHorizRule	? GETBIT(pProperty->m_lValue, 11)	: false;
-        bool fUserDrawn			= fUsefUserDrawn	? GETBIT(pProperty->m_lValue, 10)	: false;
-        bool fAllowOverlap		= fUsefAllowOverlap	? GETBIT(pProperty->m_lValue, 9)	: true;
-        bool fReallyHidden 		= fUsefReallyHidden		? GETBIT(pProperty->m_lValue, 8) : false;
-        bool fScriptAnchor		= fUsefScriptAnchor		? GETBIT(pProperty->m_lValue, 7) : false;
-        bool fEditedWrap		= fUsefEditedWrap		? GETBIT(pProperty->m_lValue, 6) : false;
-        bool fBehindDocument	= fUsefBehindDocument	? GETBIT(pProperty->m_lValue, 5) : false;
-        bool fOnDblClickNotify	= fUsefOnDblClickNotify ? GETBIT(pProperty->m_lValue, 4) : false;
-        bool fIsButton			= fUsefIsButton		? GETBIT(pProperty->m_lValue, 3)	: false;
-        bool fOneD				= fUsefOneD			? GETBIT(pProperty->m_lValue, 2)	: false;
         bool fHidden			= fUsefHidden		? GETBIT(pProperty->m_lValue, 1)	: false;
-        bool fPrint				= fUsefPrint		? GETBIT(pProperty->m_lValue, 0)	: true;
 
         pElement->m_bHidden = fHidden || fIsBullet;
         //presentation_ticio_20100610.ppt
@@ -871,7 +780,7 @@ void CPPTElement::SetUpPropertyImage(CElementPtr pElement, CTheme* pTheme, CSlid
     case pibName:
     {
         image_element->m_sImageName = NSFile::CUtf8Converter::GetWStringFromUTF16((unsigned short*)pProperty->m_pOptions, pProperty->m_lValue /2-1);
-        // TextMining05.ppt, слайд 20  - некорректное имя ( - todooo потом подчистить его
+        // TextMining05.ppt, slide 20 - incorrect name ( - TODO then clean it up
     }break;
     case cropFromTop:
     {
@@ -902,9 +811,8 @@ void CPPTElement::SetUpPropertyImage(CElementPtr pElement, CTheme* pTheme, CSlid
     case pictureBrightness:
         image_element->m_lpictureBrightness = (_INT32)pProperty->m_lValue;
         break;
+    // TODO to fix 53541
     case fillBackColor:
-        // TODO to fix 53541
-        break;
     default:
         break;
     }
@@ -916,12 +824,12 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
     CShapeElement* shape_element = dynamic_cast<CShapeElement*>(pElement.get());
 
     CShapePtr pParentShape = shape_element->m_pShape;
-    if (NULL == pParentShape)
+    if (nullptr == pParentShape)
         return;
 
     CPPTShape* pShape = dynamic_cast<CPPTShape*>(pParentShape->getBaseShape().get());
 
-    if (NULL == pShape)
+    if (nullptr == pShape)
         return;
 
     switch (pProperty->m_ePID)
@@ -936,9 +844,9 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
             file.WriteFile(pProperty->m_pOptions, pProperty->m_lValue);
             file.CloseFile();
         }
-        COfficeUtils officeUtils(NULL);
+        COfficeUtils officeUtils(nullptr);
 
-        BYTE *utf8Data = NULL;
+        BYTE *utf8Data = nullptr;
         ULONG utf8DataSize = 0;
         if (S_OK != officeUtils.LoadFileFromArchive(tempFileName, L"drs/shapexml.xml", &utf8Data, utf8DataSize))
         {
@@ -1035,14 +943,7 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
     case ODRAW::adjust10Value:
     {
         LONG lIndexAdj = pProperty->m_ePID - ODRAW::adjustValue;
-        if (lIndexAdj >= 0 && lIndexAdj < (LONG)pShape->m_arAdjustments.size())
-        {
-            pShape->m_oCustomVML.LoadAdjusts(lIndexAdj, (LONG)pProperty->m_lValue);
-        }
-        else
-        {
-            pShape->m_oCustomVML.LoadAdjusts(lIndexAdj, (LONG)pProperty->m_lValue);
-        }
+        pShape->m_oCustomVML.LoadAdjusts(lIndexAdj, (LONG)pProperty->m_lValue);
     }break;
         //--------------------------------------------------------------------------------------------------------------------
     case lTxid:
@@ -1180,21 +1081,18 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
     }
     case ODRAW::geometryTextBooleanProperties:
     {
-        // вот здесь - нужно единицы перевести в пикселы
+        // here - convert the units to pixels
         BYTE flag1 = (BYTE)(pProperty->m_lValue);
         BYTE flag2 = (BYTE)(pProperty->m_lValue >> 8);
         BYTE flag3 = (BYTE)(pProperty->m_lValue >> 16);
         BYTE flag4 = (BYTE)(pProperty->m_lValue >> 24);
 
         bool bStrikethrought			= (0x01 == (0x01 & flag1));
-        bool bSmallCaps					= (0x02 == (0x02 & flag1));
-        bool bShadow					= (0x04 == (0x04 & flag1));
         bool bUnderline					= (0x08 == (0x08 & flag1));
         bool bItalic					= (0x10 == (0x10 & flag1));
         bool bBold						= (0x20 == (0x20 & flag1));
 
         bool bUseStrikethrought			= (0x01 == (0x01 & flag3));
-        bool bUseSmallCaps				= (0x02 == (0x02 & flag3));
         bool bUseShadow					= (0x04 == (0x04 & flag3));
         bool bUseUnderline				= (0x08 == (0x08 & flag3));
         bool bUseItalic					= (0x10 == (0x10 & flag3));
@@ -1225,7 +1123,7 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
         }
         if (bUseVertical)
         {
-            pParentShape->m_oText.m_bVertical = (true == bVertical) ? true : false;
+            pParentShape->m_oText.m_bVertical = bVertical;
         }
     }break;
     case ODRAW::cdirFont:
@@ -1242,6 +1140,8 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
             pParentShape->m_oText.m_bVertical = true;
             pParentShape->m_oText.m_oAttributes.m_dTextRotate = 180;
             break;
+        default:
+            break;
         }
     }break;
     case ODRAW::txflTextFlow:
@@ -1251,17 +1151,13 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
     case ODRAW::textBooleanProperties:
     {
         BYTE flag1 = (BYTE)(pProperty->m_lValue);
-        BYTE flag2 = (BYTE)(pProperty->m_lValue >> 8);
         BYTE flag3 = (BYTE)(pProperty->m_lValue >> 16);
-        BYTE flag4 = (BYTE)(pProperty->m_lValue >> 24);
 
         bool bFitShapeToText		= (0x02 == (0x02 & flag1));
         bool bAutoTextMargin		= (0x08 == (0x08 & flag1));
-        bool bSelectText			= (0x10 == (0x10 & flag1));
 
         bool bUseFitShapeToText		= (0x02 == (0x02 & flag3));
         bool bUseAutoTextMargin		= (0x08 == (0x08 & flag3));
-        bool bUseSelectText			= (0x10 == (0x10 & flag3));
 
         if (bUseAutoTextMargin)
         {
@@ -1508,8 +1404,6 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
     }break;
     default:
     {
-        int unknown_value = pProperty->m_lValue;
-        unknown_value = unknown_value;
     }break;
     }
 }
@@ -1518,13 +1412,13 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
 CRecordShapeContainer::CRecordShapeContainer()
 {
     bGroupShape = false;
-    m_pStream = NULL;
+    m_pStream = nullptr;
 
 }
 
 CRecordShapeContainer::~CRecordShapeContainer()
 {
-    m_pStream = NULL;
+    m_pStream = nullptr;
 }
 
 void CRecordShapeContainer::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStream)
@@ -1533,7 +1427,7 @@ void CRecordShapeContainer::ReadFromStream(SRecordHeader &oHeader, POLE::Stream 
     CRecordsContainer::ReadFromStream(oHeader, pStream);
 }
 
-CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
+CElementPtr CRecordShapeContainer::GetElement (bool  /*inGroup*/, CExMedia* pMapIDs,
                                                CTheme* pTheme, CLayout* pLayout,
                                                CSlideInfo* pThemeWrapper, CSlideInfo* pSlideWrapper, CSlide* pSlide)
 {
@@ -1559,7 +1453,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
 
     CElementPtr pElementLayout;
 
-    if (NULL != pSlide)
+    if (nullptr != pSlide)
     {
         bool bIsMaster = oArrayShape[0]->m_bHaveMaster;
         if (bIsMaster && elType !=etPicture)
@@ -1583,9 +1477,9 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
                                     (	placeholder_id < 0 || pLayout->m_arElements[nIndex]->m_lPlaceholderID < 0 ||
                                         placeholder_id == pLayout->m_arElements[nIndex]->m_lPlaceholderID))
                             {
-                                if (pLayout->m_arElements[nIndex]->m_bPlaceholderSet == false)
+                                if (!pLayout->m_arElements[nIndex]->m_bPlaceholderSet)
                                 {
-                                    pElementLayout			= pLayout->m_arElements[nIndex]; //для переноса настроек
+                                    pElementLayout			= pLayout->m_arElements[nIndex]; //to transfer settings
                                     pElementLayout->m_lID	= lMasterID;
 
                                     if (placeholder_id >= 0 && pLayout->m_arElements[nIndex]->m_lPlaceholderID < 0 )
@@ -1597,7 +1491,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
                                 if (elType == etShape)
                                 {
                                     CShapeElement* pShape = dynamic_cast<CShapeElement*>(pElement.get());
-                                    if (NULL != pShape)
+                                    if (nullptr != pShape)
                                         pShape->m_pShape->m_oText.m_arParagraphs.clear();
                                 }
 
@@ -1612,7 +1506,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
     }
     if (!pElement)
     {
-        switch (eType)
+        switch (static_cast<ODRAW::eSPT>(eType))
         {
         case sptMax:
         case sptNil:
@@ -1624,10 +1518,10 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
 
             CExFilesInfo oInfo;
             CExFilesInfo oInfoDefault;
-            // по умолчанию картинка (или оле объект)
+            // default image (or ole object)
             CExFilesInfo::ExFilesType exType = CExFilesInfo::eftNone;
             CExFilesInfo* pInfo = pMapIDs->Lock(0xFFFFFFFF, exType);
-            if (NULL != pInfo)
+            if (nullptr != pInfo)
             {
                 oInfo			= *pInfo;
                 oInfoDefault	= oInfo;
@@ -1636,7 +1530,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
             if (0 != oArrayEx.size())
             {
                 pInfo = pMapIDs->Lock(oArrayEx[0]->m_nExObjID, exType);
-                if (NULL != pInfo)
+                if (nullptr != pInfo)
                 {
                     oInfo = *pInfo;
                 }
@@ -1664,7 +1558,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
 
                 pAudioElem->m_bLoop				= oInfo.m_bLoop;
 
-                if (NULL != pSlide)
+                if (nullptr != pSlide)
                 {
                     pAudioElem->m_dStartTime	= pSlide->m_dStartTime;
                     pAudioElem->m_dEndTime		= pSlide->m_dEndTime;
@@ -1716,7 +1610,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
                 CShapeElement* pShape = new CShapeElement(NSBaseShape::ppt, eType);
                 CPPTShape *ppt_shape = dynamic_cast<CPPTShape *>(pShape->m_pShape->getBaseShape().get());
 
-                if ( (ppt_shape) && (OOXMLShapes::sptCustom == ppt_shape->m_eType))
+                if ( (ppt_shape) && (static_cast<PPTShapes::ShapeType>(OOXMLShapes::sptCustom) == ppt_shape->m_eType))
                 {
                     pShape->m_bShapePreset = true;
                 }
@@ -1732,12 +1626,12 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
     pElement->m_lID			= oArrayShape[0]->m_nID;
     pElement->m_lLayoutID	= lMasterID;
 
-    //---------внешние ссылки
+    //---------external links
     {
         CExFilesInfo::ExFilesType exType		= CExFilesInfo::eftNone;
         CExFilesInfo			* pTextureInfo	= pMapIDs->Lock(0xFFFFFFFF, exType);
 
-        if (NULL != pTextureInfo)
+        if (nullptr != pTextureInfo)
         {
             pElement->m_oBrush.TexturePath = pTextureInfo->m_strFilePath + FILE_SEPARATOR_STR;
         }
@@ -1759,7 +1653,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
     // placeholders
     if (0 < oArrayPlaceHolder.size())
     {
-        pElement->m_bLine					= false; //по умолчанию у них нет линий
+        pElement->m_bLine					= false; //by default they have no lines
         pElement->m_lPlaceholderID			= oArrayPlaceHolder[0]->m_nPosition;
         pElement->m_lPlaceholderType		= oArrayPlaceHolder[0]->m_nPlacementID;
         pElement->m_lPlaceholderSizePreset	= oArrayPlaceHolder[0]->m_nSize;
@@ -1811,7 +1705,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
         if (format_data)
         {
             pElement->m_nFormatDate			= 1;
-            //todooo сделать форматированый вывод
+            //TODO make formatted output
         }
         else
         {
@@ -1819,7 +1713,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
             pElement->m_nFormatDate			= 2;
         }
     }
-    //------------- привязки ---------------------------------------------------------------------------------
+    //------------- bindings ------------------------------------------------------------------
     std::vector<CRecordGroupShape*> oArrayGroupShape;
     this->GetRecordsByType(&oArrayGroupShape, true, true);
 
@@ -1861,8 +1755,8 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
     pElement->m_bFlipH = oArrayShape[0]->m_bFlipH;
     pElement->m_bFlipV = oArrayShape[0]->m_bFlipV;
 
-    pElement->m_bIsBackground	=	(true == oArrayShape[0]->m_bBackground);
-    pElement->m_bHaveAnchor		=	(true == oArrayShape[0]->m_bHaveAnchor);
+    pElement->m_bIsBackground	=	(oArrayShape[0]->m_bBackground);
+    pElement->m_bHaveAnchor		=	(oArrayShape[0]->m_bHaveAnchor);
 
     if (pElementLayout && (pElement->m_bAnchorEnabled || pElement->m_bChildAnchorEnabled))
     {
@@ -1890,10 +1784,10 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
     }
 
 
-    //--------- наличие текста --------------------------------------------------------------------------
+    //--------- Availability of text --------------------------------------------------------------------------
     CShapeElement* pShapeElem = dynamic_cast<CShapeElement*>(pElement.get());
 
-    if (NULL != pShapeElem)
+    if (nullptr != pShapeElem)
     {
         CElementInfo oElementInfo;
 
@@ -1902,7 +1796,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
         pShapeElem->m_pShape->m_dWidthLogic  = ShapeSizeVML;
         pShapeElem->m_pShape->m_dHeightLogic = ShapeSizeVML;
 
-        // проверка на textheader present
+        // check for textheader present
         std::vector<CRecordTextHeaderAtom*> oArrayTextHeader;
         GetRecordsByType(&oArrayTextHeader, true, true);
 
@@ -1919,7 +1813,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
             oElementInfo.m_lMasterTextType					= NoPresent;
         }
 
-        // проверка на ссылку в персист
+        // check for link in persistent
         std::vector<CRecordOutlineTextRefAtom*> oArrayTextRefs;
         GetRecordsByType(&oArrayTextRefs, true, true);
 
@@ -1928,7 +1822,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
             oElementInfo.m_lPersistIndex = oArrayTextRefs[0]->m_nIndex;
         }
 
-        // сам текст...
+        // the text itself...
         std::vector<CRecordTextBytesAtom*> oArrayTextBytes;
         GetRecordsByType(&oArrayTextBytes, true, true);
         if (0 < oArrayTextBytes.size() && strShapeText.empty())
@@ -1989,7 +1883,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
 
         if (oArrayTextBox.size())
         {
-            // It's differance records
+            // It's difference records
             oArrayTextBox[0]->GetRecordsByType(&oArrayTextInteractive, false);
             oArrayTextBox[0]->GetRecordsByType(&oArrayInteractiveCont, false);
         }
@@ -2063,7 +1957,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
         std::vector<CRecordMasterTextPropAtom*> oArrayMasterTextProp;
         GetRecordsByType(&oArrayMasterTextProp, true);
 
-        CRecordMasterTextPropAtom* master_level = NULL;
+        CRecordMasterTextPropAtom* master_level = nullptr;
         if (!oArrayMasterTextProp.empty())
             master_level = oArrayMasterTextProp[0];
 
@@ -2082,7 +1976,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
         pElement->m_lLayoutID = lMasterID;
     }
     //----------------------------------------------------------------------------------------------------
-    if (NULL != pSlide)
+    if (nullptr != pSlide)
     {
         pElement->m_dStartTime		= pSlide->m_dStartTime;
         pElement->m_dEndTime		= pSlide->m_dEndTime;
@@ -2155,8 +2049,8 @@ std::wstring CRecordShapeContainer::getTableXmlStr() const
     if (oArrayOptions.size() > 1 &&
             oArrayOptions[1]->m_oProperties.m_arProperties.size() > 2)
     {
-        COfficeUtils officeUtils(NULL);
-        BYTE *utf8Data = NULL;
+        COfficeUtils officeUtils(nullptr);
+        BYTE *utf8Data = nullptr;
         ULONG utf8DataSize = 0;
         auto& xmlProp = oArrayOptions[1]->m_oProperties.m_arProperties[2]; //id == 0x2065 ?
 
@@ -2189,7 +2083,7 @@ std::wstring CRecordShapeContainer::getTableXmlStr() const
 void CRecordShapeContainer::ApplyThemeStyle(CElementPtr pElem, CTheme* pTheme, CRecordMasterTextPropAtom* master_levels)
 {
     CShapeElement* pShape = dynamic_cast<CShapeElement*>(pElem.get());
-    if (NULL == pShape)
+    if (nullptr == pShape)
         return;
 
     CTextAttributesEx* pText = &(pShape->m_pShape->m_oText);
@@ -2213,44 +2107,41 @@ void CRecordShapeContainer::ApplyThemeStyle(CElementPtr pElem, CTheme* pTheme, C
 }
 void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme, CLayout* pLayout, CElementPtr pElem, CSlideInfo* pThemeWrapper, CSlideInfo* pSlideWrapper, CSlide* pSlide, CRecordMasterTextPropAtom* master_levels)
 {
-    // сначала проверяем на shape
-    // затем применяем все настройки по-очереди
+    // first check for shape
+    // then apply all the settings one by one
     // 1) master + TextMasterStyles
     // 2) persist + TextMasterStyles
-    // 3) свои настройки + TextMasterStyles
-    // причем "свои настройки" - это чисто "продвинутые настройки"
-    // потому что все общие ( через проперти ) - уже установлены
+    // 3) own settings + TextMasterStyles
+    // Moreover, "own settings" are purely "advanced settings"
+    // because all common ones (through properties) are already set
 
-    if (NULL == pElem)
+    if (nullptr == pElem)
         return;
 
     if (etShape != pElem->m_etType)
         return;
 
     CShapeElement* pShape = dynamic_cast<CShapeElement*>(pElem.get());
-    if (NULL == pShape)
+    if (nullptr == pShape)
         return;
 
     CTextAttributesEx* pTextSettings = &(pShape->m_pShape->m_oText);
 
-    // сначала применим ссылки на masterstyle (для шаблонного элемента)
-    // как узнать - просто есть ли массивы (т.к. они могли появиться пока только оттуда)
-    // - теперь этого делать не нужно - т.к. в мастере тоже вызывается эта функция -
-    // и там все это должно уже примениться
-    bool bIsPersistPresentSettings	= false;
-    bool bIsOwnPresentSettings		= false;
+    // first apply references to masterstyle (for template element)
+    // how to find out whether there are simply arrays (since they could only appear from there so far)
+    // - now this no longer needs to be done - because this function is also called in the master -
+    // and all this should already apply there
 
     TextTypeEnum eTypeMaster	= NoPresent;
     TextTypeEnum eTypePersist	= NoPresent;
     TextTypeEnum eTypeOwn		= (TextTypeEnum)pTextSettings->m_lTextType;
 
-    CShapeElement* pElementLayoutPH = NULL;
+    CShapeElement* pElementLayoutPH = nullptr;
 
-    // выставим тип мастера
-    if (NULL != pSlide)
+    // set the master type
+    if (nullptr != pSlide)
     {
         int ph_type		= pShape->m_lPlaceholderType;
-        int ph_pos		= pShape->m_lPlaceholderID;
 
         pTextSettings->m_lPlaceholderType = pShape->m_lPlaceholderType;
 
@@ -2261,7 +2152,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
             for (size_t i = 0; i < pLayout->m_arElements.size(); ++i)
             {
                 CElementPtr & pPh = pLayout->m_arElements[i];
-                if ((etShape == pPh->m_etType) && (ph_type == pPh->m_lPlaceholderType) && (/*ph_pos == pPh->m_lPlaceholderID*/true))
+                if ((etShape == pPh->m_etType) && (ph_type == pPh->m_lPlaceholderType))
                 {
                     pElementLayoutPH = dynamic_cast<CShapeElement*>(pPh.get());
                     eTypeMaster = (TextTypeEnum)pElementLayoutPH->m_pShape->m_oText.m_lTextMasterType;
@@ -2299,13 +2190,12 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
             pShape->m_oTextActions.m_arRanges = pSettings->m_arRanges;
         }
 
-        bIsPersistPresentSettings = ((NULL != pSettings->m_pTextStyleProp) && (0 < pSettings->m_pTextStyleProp->m_lCount));
     }
     //  ------------------------------------------------------------------------------
 
-    if (NULL != oElemInfo.m_pStream && -1 != oElemInfo.m_lOffsetTextStyle)
+    if (nullptr != oElemInfo.m_pStream && -1 != oElemInfo.m_lOffsetTextStyle)
     {
-        // теперь нужно загрузить стили текста из стрима.
+        // Now we need to load text styles from the stream.
         LONG lPosition = 0; StreamUtils::StreamPosition(lPosition, oElemInfo.m_pStream);
 
         StreamUtils::StreamSeek(oElemInfo.m_lOffsetTextStyle - 8, oElemInfo.m_pStream);
@@ -2322,7 +2212,6 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
             PPT::ConvertPPTTextToEditorStructure(pStyle->m_arrPFs, pStyle->m_arrCFs, strText, pShape->m_pShape->m_oText);
 
-            bIsOwnPresentSettings = (0 < pStyle->m_lCount);
 
             RELEASEOBJECT(pStyle);
         }
@@ -2331,8 +2220,8 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     //  ------------------------------------------------------------------------------
 
-    // теперь выставляем все настройки текста (стили)
-    if (NULL == pSlide)
+    // Now set all the text settings (styles)
+    if (nullptr == pSlide)
     {
         int nTextMasterType = (int)eTypeMaster;
         if (-1 != pShape->m_lPlaceholderType)
@@ -2342,19 +2231,6 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
             case PT_Title:
             case PT_MasterTitle:
             case PT_VerticalTitle:
-            {
-                pTextSettings->m_lStyleThemeIndex = 1;
-
-                if (Tx_TYPE_TITLE != eTypeMaster)
-                {
-                    if (0 <= nTextMasterType && nTextMasterType < 9)
-                    {
-                        if (pThemeWrapper->m_pStyles[nTextMasterType].is_init())
-                            pTextSettings->m_oStyles = pThemeWrapper->m_pStyles[nTextMasterType].get();
-                    }
-                }
-                break;
-            }
             case PT_CenterTitle:
             case PT_MasterCenterTitle:
             {
@@ -2422,7 +2298,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
             //}
         }
 
-        // теперь смотрим все остальные стили (persist и own) - просто применяем их к m_oStyles
+        // now look at all the other styles (persist and own) - just apply them to m_oStyles
         if (eTypePersist != NoPresent && eTypePersist != eTypeMaster)
         {
             int nIndexType = (int)eTypePersist;
@@ -2446,7 +2322,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
     {
         if (-1 != pShape->m_lPlaceholderType)
         {
-            if (NULL != pElementLayoutPH)
+            if (nullptr != pElementLayoutPH)
             {
                 pTextSettings->m_oLayoutStyles		= pElementLayoutPH->m_pShape->m_oText.m_oStyles;
                 pTextSettings->m_lTextType			= pElementLayoutPH->m_pShape->m_oText.m_lTextType;
@@ -2459,10 +2335,6 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
                 case PT_Title:
                 case PT_MasterTitle:
                 case PT_VerticalTitle:
-                {
-                    pTextSettings->m_lStyleThemeIndex = 1;
-                    break;
-                }
                 case PT_CenterTitle:
                 case PT_MasterCenterTitle:
                 {
@@ -2491,7 +2363,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
             pTextSettings->m_lStyleThemeIndex = -1;
         }
 
-        // теперь смотрим все остальные стили (persist и own) - просто применяем их к m_oStyles
+        // now look at all the other styles (persist and own) - just apply them to m_oStyles
         if (eTypePersist != NoPresent && eTypePersist != eTypeMaster)
         {
             int nIndexType = (int)eTypePersist;
@@ -2524,7 +2396,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     if ((L"" != strText) && 0 == pTextSettings->m_arParagraphs.size())
     {
-        // значит никаких своих настроек нету. Значит просто пустые свои настройки
+        // This means there are no settings of its own. It means its own settings are just empty
         std::vector<CTextPFRunRecord> oArrayPF;
 
         CTextPFRunRecord elm;
@@ -2544,9 +2416,9 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
         PPT::ConvertPPTTextToEditorStructure(oArrayPF, oArrayCF, strText, *pTextSettings);
     }
 
-    if (NULL != oElemInfo.m_pStream && -1 != oElemInfo.m_lOffsetTextProp)
+    if (nullptr != oElemInfo.m_pStream && -1 != oElemInfo.m_lOffsetTextProp)
     {
-        //языковые настройки текта
+        //text language settings
         LONG lPosition = 0; StreamUtils::StreamPosition(lPosition, oElemInfo.m_pStream);
 
         StreamUtils::StreamSeek(oElemInfo.m_lOffsetTextProp - 8, oElemInfo.m_pStream);
@@ -2572,11 +2444,11 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     if (pShape->m_oTextActions.m_bPresent)
     {
-        //todooo разобраться нужно ли менять цвет на гиперлинк - 1-(34).ppt
+        //TODO figure out whether the hyperlink color needs to change - 1-(34).ppt
         ODRAW::CColor oColor;
-        if ((NULL != pSlide) && !pSlide->m_bUseLayoutColorScheme)			oColor = pSlide->GetColor(11);
-        else if ((NULL != pLayout) && (!pLayout->m_bUseThemeColorScheme))	oColor = pLayout->GetColor(11);
-        else if (NULL != pTheme)											oColor = pTheme->GetColor(11);
+        if ((nullptr != pSlide) && !pSlide->m_bUseLayoutColorScheme)			oColor = pSlide->GetColor(11);
+        else if ((nullptr != pLayout) && (!pLayout->m_bUseThemeColorScheme))	oColor = pLayout->GetColor(11);
+        else if (nullptr != pTheme)											oColor = pTheme->GetColor(11);
         oColor.m_lSchemeIndex = 11;
 
         ApplyHyperlink(pShape, oColor);
@@ -2584,9 +2456,9 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     CPPTShape* pPPTShape = dynamic_cast<CPPTShape*>(pShape->m_pShape->getBaseShape().get());
 
-    if (NULL != pPPTShape)		// проверка на wordart
+    if (nullptr != pPPTShape)		// check on wordart
     {
-        switch (pPPTShape->m_eType)
+        switch (static_cast<ODRAW::eSPT>(pPPTShape->m_eType))
         {
         case sptTextPlainText:
         case sptTextStop:
@@ -2649,7 +2521,7 @@ void CRecordShapeContainer::ApplyHyperlink(CShapeElement* pShape, CColor& oColor
     const auto& originalText = oTextAttributes.m_originalText;
 
 
-    // lenght these ones shoud be equal
+    // length these ones should be equal
     const auto& arrRanges	= pShape->m_oTextActions.m_arRanges;
     const auto arrSplitedInteractive = splitInteractive(pShape->m_textHyperlinks);
 
@@ -2682,7 +2554,7 @@ void CRecordShapeContainer::ApplyHyperlink(CShapeElement* pShape, CColor& oColor
 
             const bool isNeedToSplit = posBlockEnd < posOrigSpanEnd && isHyperlink;
 
-            // Skiping span with '\r'
+            // Skipping span with '\r'
             if (iterSpan->m_strText.size() && (int)iterSpan->m_strText.find(L"\r") != -1)
                 continue;
 
@@ -2750,7 +2622,7 @@ void CRecordShapeContainer::addHyperlinkToSpan(CSpan &oSpan, const std::vector<C
     if (isRealHyperlink(arrInteractive))
     {
         oSpan.m_oRun.Color = oColor;
-        oSpan.m_oRun.FontUnderline = (bool)true;
+        oSpan.m_oRun.FontUnderline = true;
         oSpan.m_arrInteractive = arrInteractive;
     }
 }
@@ -2779,18 +2651,21 @@ bool CRecordShapeContainer::isRealHyperlink(const std::vector<CInteractiveInfo> 
 
 std::vector<std::vector<CInteractiveInfo> > CRecordShapeContainer::splitInteractive(const std::vector<CInteractiveInfo> &arrInteractive)
 {
-    std::vector<std::vector<CInteractiveInfo> > splited;
+    std::vector<std::vector<CInteractiveInfo> > parts;
     std::vector<CInteractiveInfo> inserting;
     for (const auto& interactive : arrInteractive)
     {
         if (interactive.m_eActivation == interactive.click && !inserting.empty())
-            splited.push_back(std::move(inserting));
+        {
+            parts.push_back(std::move(inserting));
+            inserting = std::vector<CInteractiveInfo>();
+        }
         inserting.push_back(interactive);
     }
     if (!inserting.empty())
-        splited.push_back(std::move(inserting));
+        parts.push_back(std::move(inserting));
 
-    return splited;
+    return parts;
 }
 
 void CRecordShapeContainer::ConvertInteractiveInfo(CInteractiveInfo &interactiveInfo, const CRecordMouseInteractiveInfoContainer *interactiveCont, CExMedia *pMapIDs)
@@ -2803,18 +2678,18 @@ void CRecordShapeContainer::ConvertInteractiveInfo(CInteractiveInfo &interactive
     if (pMapIDs)
     {
         CExFilesInfo* pInfo1 = pMapIDs->LockAudioFromCollection(interactiveAtom.m_nSoundIdRef);
-        if (NULL != pInfo1)
+        if (nullptr != pInfo1)
         {
             interactiveInfo.m_strAudioFileName = pInfo1->m_strFilePath;
             interactiveInfo.m_strAudioName = pInfo1->m_name;
         }
         CExFilesInfo* pInfo2 = pMapIDs->LockSlide(interactiveAtom.m_nExHyperlinkIdRef);
-        if (NULL != pInfo2)
+        if (nullptr != pInfo2)
         {
             interactiveInfo.m_strHyperlink = pInfo2->m_strFilePath;
         } else {
             pInfo2 = pMapIDs->LockHyperlink(interactiveAtom.m_nExHyperlinkIdRef);
-            if (NULL != pInfo2)
+            if (nullptr != pInfo2)
             {
                 interactiveInfo.m_strHyperlink = pInfo2->m_strFilePath;
             }

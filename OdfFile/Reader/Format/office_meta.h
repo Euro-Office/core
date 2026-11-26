@@ -49,7 +49,7 @@ public:
 	office_element_ptr			meta_template_;
 	office_element_ptr			meta_printed_by_;
 	office_element_ptr			meta_print_date_;
-	office_element_ptr			meta_keyword_;
+	office_element_ptr_array	meta_keyword_;
 	office_element_ptr			meta_initial_creator_;
 	office_element_ptr			meta_hyperlinkbehaviour_;
 	office_element_ptr			meta_editing_duration_;
@@ -128,6 +128,10 @@ public:
 	static const wchar_t * ns;
 	static const wchar_t * name;
 	static const ElementType type = typeOfficeMetaTemplate;
+
+	std::wstring xlink_title_;
+private:
+	virtual void add_attributes(const xml::attributes_wc_ptr & Attributes);
 };
 CP_REGISTER_OFFICE_ELEMENT2(meta_template);
 //  meta:editing-cycles

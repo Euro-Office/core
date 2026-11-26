@@ -220,6 +220,7 @@ namespace STR
 
 const std::string int2str(const int val, const int radix)
 {
+    (void)radix;
     static char num_buf[10]={};
 #if defined(_WIN32) || defined(_WIN64)
     _itoa_s(val, num_buf, 9, radix);
@@ -232,6 +233,7 @@ const std::string int2str(const int val, const int radix)
 
 const std::wstring int2wstr(const int val, const int radix)
 {
+    (void)radix;
 #if defined(_WIN32) || defined(_WIN64)
     static wchar_t num_buf[20]={};
     _itow_s(val, num_buf, 19, radix);
@@ -247,7 +249,7 @@ const std::wstring int2wstr(const int val, const int radix)
 
 const std::wstring double2str(const double val)
 {
-	return boost::lexical_cast<std::wstring>(val);// std::to_wstring(val); - округление (
+	return boost::lexical_cast<std::wstring>(val);// std::to_wstring(val); - rounding (
 }
 
 
@@ -372,8 +374,8 @@ const std::wstring escape_ST_Xstring(const std::wstring& wstr)
 	for (size_t i = 0; i < wstr.length(); i++)
 	{
 		wchar_t in_symb = wstr[i];
-		if (in_symb < 0x0009 || in_symb == 0x000B || in_symb == 0x000C || in_symb > 0x000D && in_symb < 0x0020 ||
-			in_symb > 0xD7FF && in_symb < 0xE000 || in_symb > 0xFFFD)
+		if (in_symb < 0x0009 || in_symb == 0x000B || in_symb == 0x000C || (in_symb > 0x000D && in_symb < 0x0020) ||
+			(in_symb > 0xD7FF && in_symb < 0xE000) || in_symb > 0xFFFD)
 		{
 			ret_val += L"_x" + wchar_t2hex_str(in_symb) + L"_";
 		}

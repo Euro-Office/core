@@ -31,7 +31,7 @@ using namespace NSDoctRenderer;
 int main(int argc, char *argv[])
 {
 	std::wstring sProcessDirectory = NSUtils::GetProcessDirectory();
-    // для дебага БЕЗ x2t - подкидываем билдер в папку builder к тестовому примеру
+    // for debugging WITHOUT x2t - add the builder to the builder folder for the test example
 	std::wstring sWorkDirectory = NSUtils::GetBuilderDirectory();
 
     CDocBuilder::Initialize(sWorkDirectory.c_str());

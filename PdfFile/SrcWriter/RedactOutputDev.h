@@ -162,8 +162,8 @@ namespace PdfWriter
 		virtual void type3D0(GfxState *pGState, double wx, double wy) override;
 		virtual void type3D1(GfxState *pGState, double wx, double wy, double llx, double lly, double urx, double ury) override;
 		//----- form XObjects
-		virtual void drawForm(GfxState *pGState, Gfx *gfx, Ref id, const char *name = NULL) override;
-		virtual void drawImage(GfxState *pGState, Gfx *gfx, Ref id, const char* name = NULL) override;
+		virtual void drawForm(GfxState *pGState, Gfx *gfx, Ref id, const char *name = nullptr) override;
+		virtual void drawImage(GfxState *pGState, Gfx *gfx, Ref id, const char* name = nullptr) override;
 		//----- transparency groups and soft masks
 		// beginTransparencyGroup -> drawForm
 		// endTransparencyGroup   -> drawForm
@@ -177,7 +177,7 @@ namespace PdfWriter
 			GfxClip* m_pClip;
 			std::vector< std::pair<std::string, std::string> > m_arrOp;
 
-			GfxRedactState() : m_pClip(NULL) {}
+			GfxRedactState() : m_pClip(nullptr) {}
 			~GfxRedactState()
 			{
 				RELEASEOBJECT(m_pClip);

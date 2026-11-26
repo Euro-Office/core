@@ -1229,7 +1229,9 @@ bool CxImagePSD::Decode(CxFile *hFile)
 
 	context->state = PSD_FILE_HEADER;
 	context->stream.file_length = hFile->Size();
-	context->load_tag = psd_load_tag_all;
+	// Only the merged image: parsing the layers is not needed, and libpsd fails
+	// on the layer sections of many files
+	context->load_tag = psd_load_tag_merged;
 	status = psd_main_loop(context);
 	
 	if(status != psd_status_done){
@@ -1242,9 +1244,12 @@ bool CxImagePSD::Decode(CxFile *hFile)
 	uint8_t* alpha = NULL;
 	if (context->alpha_channel_info)
 		alpha = (uint8_t*)context->alpha_channel_info->channel_data;
+	// Otherwise an RGB image with a fourth channel has its transparency in
+	// the merged colors
+	const bool merged_alpha = !alpha && context->color_mode == psd_color_mode_rgb && context->color_channels == 4;
 
 #if CXIMAGE_SUPPORT_ALPHA
-	if (alpha)
+	if (alpha || merged_alpha)
 		AlphaCreate();
 #endif
 
@@ -1252,15 +1257,17 @@ bool CxImagePSD::Decode(CxFile *hFile)
 	RGBQUAD c;
 	c.rgbReserved = 0;
 	if (rgba){
-		for(y =context->height-1; y--;){
+		// Top row first; CxImage rows go bottom-up
+		for(y =context->height; y--;){
 			for (x=0; x<context->width; x++){
 				c.rgbBlue  = *rgba++;
 				c.rgbGreen = *rgba++;
 				c.rgbRed   = *rgba++;
-				rgba++;
+				const uint8_t merged_alpha_value = *rgba++;
 				SetPixelColor(x,y,c);
 #if CXIMAGE_SUPPORT_ALPHA
 				if (alpha) AlphaSet(x,y,*alpha++);
+				else if (merged_alpha) AlphaSet(x,y,merged_alpha_value);
 #endif //CXIMAGE_SUPPORT_ALPHA
 			}
 		}

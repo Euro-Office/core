@@ -211,7 +211,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CCell)
-			CCell(OOX::Document *pMain = NULL);
+			CCell(OOX::Document *pMain = nullptr);
 			virtual ~CCell();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -276,18 +276,18 @@ namespace OOX
 			nullable<CSi>			m_oRichText;
 			nullable<CText>			m_oValue;
 //-----------------------------
-            //число повторов чтобы хранить одинаковые в одной
+            //number of repetitions to store identical ones in one
             nullable_uint           m_oRepeated;
 			nullable_string			m_oCacheValue;
 		};
 
-		//необработано:
+		//raw:
 		//<extLst>
 		class CRow : public WritingElementWithChilds<CCell>
 		{
 		public:
 			WritingElement_AdditionMethods(CRow)
-			CRow(OOX::Document *pMain = NULL);
+			CRow(OOX::Document *pMain = nullptr);
 			virtual ~CRow();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -307,7 +307,7 @@ namespace OOX
 			XLS::BaseObjectPtr toXLS();
             void toBin(XLS::StreamCacheWriterPtr& writer);
             void WriteAttributes(XLS::StreamCacheWriterPtr& writer);
-            //удалить хранимые ячейки и кэшировать данные для экономии памяти
+            //delete stored cells and cache data to save memory
             void storeXmlCache();
 			virtual EElementType getType () const;
 
@@ -317,7 +317,7 @@ namespace OOX
 			void ReadAttributes(XLS::BaseObjectPtr& obj);
 			void CheckIndex();
             bool compressCell(CCell* pCell);
-            //xml кэш чтобы не хранить ячеки
+            //xml cache so as not to store cells
             nullable_string           m_oDataCache;
 
 		public:
@@ -333,7 +333,7 @@ namespace OOX
 			nullable<SimpleTypes::COnOff>					m_oThickBot;
 			nullable<SimpleTypes::COnOff>					m_oThickTop;
 			nullable<SimpleTypes::CDouble>					m_oDyDescent;
-            //число повторов для сжатия пустых строк
+            //number of repetitions to compress empty strings
             nullable_uint           m_oRepeated;
 		};
 
@@ -342,7 +342,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CSheetData)
             //WritingElement_XlsbConstructors(CSheetData)
-			CSheetData(OOX::Document *pMain = NULL);
+			CSheetData(OOX::Document *pMain = nullptr);
 			virtual ~CSheetData();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -351,7 +351,7 @@ namespace OOX
 			virtual void toXML(NSStringUtils::CStringBuilder& writer) const;
 			virtual void toXMLStart(NSStringUtils::CStringBuilder& writer) const;
 			virtual void toXMLEnd(NSStringUtils::CStringBuilder& writer) const;
-            //добавить кэшированное xml значение строки для экономии памяти
+            //add cached xml string value to save memory
             void AddRowToCache(CRow &row);
 
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);

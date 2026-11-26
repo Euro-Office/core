@@ -30,8 +30,8 @@ namespace Aggplus
 {
 	CGraphics::CGraphics()
 	{
-		m_pPixels	= NULL;
-		m_pDib		= NULL;
+		m_pPixels	= nullptr;
+		m_pDib		= nullptr;
 		
 		m_dWidthPix			= 0;
 		m_dHeightPix		= 0;
@@ -60,8 +60,8 @@ namespace Aggplus
 
 		m_dDpiTile = -1;
 
-		m_pAlphaMask = NULL;
-		m_pSoftMask  = NULL;
+		m_pAlphaMask = nullptr;
+		m_pSoftMask  = nullptr;
 
 		m_nTextRenderMode = FT_RENDER_MODE_NORMAL;
 		m_nBlendMode = agg::comp_op_src_over;
@@ -79,7 +79,7 @@ namespace Aggplus
 
 		m_ePageUnits		= UnitPixel;
 
-		m_pPixels	= NULL;
+		m_pPixels	= nullptr;
 
 		m_bIntegerGrid		= false;
 
@@ -99,8 +99,8 @@ namespace Aggplus
 
 		m_dDpiTile = -1;
 
-		m_pAlphaMask = NULL;
-		m_pSoftMask  = NULL;
+		m_pAlphaMask = nullptr;
+		m_pSoftMask  = nullptr;
 
 		m_nTextRenderMode = FT_RENDER_MODE_NORMAL;
 		m_nBlendMode = agg::comp_op_src_over;
@@ -124,7 +124,7 @@ namespace Aggplus
 
 		m_ePageUnits		= UnitPixel;
 
-		m_pPixels	= NULL;
+		m_pPixels	= nullptr;
 
 		m_bIntegerGrid		= false;
 		
@@ -143,8 +143,8 @@ namespace Aggplus
 
 		m_dDpiTile = -1;
 
-		m_pAlphaMask = NULL;
-		m_pSoftMask  = NULL;
+		m_pAlphaMask = nullptr;
+		m_pSoftMask  = nullptr;
 
 		m_nTextRenderMode = FT_RENDER_MODE_NORMAL;
 		m_nBlendMode = agg::comp_op_src_over;
@@ -171,21 +171,14 @@ namespace Aggplus
 
 	INT CGraphics::IsDib()
 	{
-		return (NULL != m_pDib);
+		return (nullptr != m_pDib);
 	}
 
-	Status CGraphics::Create(BYTE* pPixels, int lWidth, int lHeight, int lStride, LONG lPitch)
+	Status CGraphics::Create(BYTE* pPixels, int lWidth, int lHeight, int lStride, LONG  /*lPitch*/)
 	{
-		if (lStride < 0)
-		{
-			//BYTE* pBuffer = pPixels + (lHeight - 1) * lStride;
-			//m_frame_buffer.create(lWidth, lHeight, false, lStride, pBuffer);
-			m_frame_buffer.create(lWidth, lHeight, false, lStride, pPixels);
-		}
-		else
-		{
-			m_frame_buffer.create(lWidth, lHeight, false, lStride, pPixels);
-		}
+		//BYTE* pBuffer = pPixels + (lHeight - 1) * lStride;
+		//m_frame_buffer.create(lWidth, lHeight, false, lStride, pBuffer);
+		m_frame_buffer.create(lWidth, lHeight, false, lStride, pPixels);
 
 		m_dWidthPix					= (double)lWidth;
 		m_dHeightPix				= (double)lHeight;
@@ -204,19 +197,12 @@ namespace Aggplus
 		return Ok;
 	}
 
-	Status CGraphics::Create2(BYTE* pPixels, int lWidth, int lHeight, int lStride, LONG lPitch, LONG x, LONG y, LONG w, LONG h, double dW, double dH, CDIB* pDib)
+	Status CGraphics::Create2(BYTE* pPixels, int lWidth, int lHeight, int lStride, LONG  /*lPitch*/, LONG x, LONG y, LONG w, LONG h, double dW, double dH, CDIB* pDib)
 	{
-		if (lStride < 0)
-		{
-			m_frame_buffer.create(lWidth, lHeight, false, lStride, pPixels);
-		}
-		else
-		{
-			m_frame_buffer.create(lWidth, lHeight, false, lStride, pPixels);
-		}
+		m_frame_buffer.create(lWidth, lHeight, false, lStride, pPixels);
 
-		m_dWidthPix					= (double)dW;
-		m_dHeightPix				= (double)dH;
+		m_dWidthPix					= dW;
+		m_dHeightPix				= dH;
 
 		m_rasterizer.get_rasterizer().clip_box(x, y, w + x, h + y);
 		m_rasterizer.get_rasterizer().gamma(agg::gamma_none());
@@ -233,16 +219,14 @@ namespace Aggplus
 #ifdef _WINDOW_GDIPLUS_USE_
 		RELEASEOBJECT(m_pGraphics);
 		RELEASEOBJECT(m_pBitmap);
-#endif
 
 		BYTE* pBuffer = pPixels;
 		if (0 > lStride)
 		{
-			// переворачиваем изображение для GDI+
+			// flip the image for GDI+
 			pBuffer += 4 * lWidth * (lHeight - 1);
 		}
 
-#ifdef _WINDOW_GDIPLUS_USE_
 		m_pBitmap	= new Gdiplus::Bitmap(lWidth, lHeight, lStride, PixelFormat32bppARGB, pBuffer);
 		m_pGraphics = new Gdiplus::Graphics(m_pBitmap);
 
@@ -256,10 +240,10 @@ namespace Aggplus
 		return Ok;
 	}
 
-	Status CGraphics::CreatePart(LONG lLeft, LONG lTop, LONG lWidth, LONG lHeight, CGraphics** ppPart)
+	Status CGraphics::CreatePart(LONG  /*lLeft*/, LONG  /*lTop*/, LONG  /*lWidth*/, LONG  /*lHeight*/, CGraphics**  /*ppPart*/)
 	{
-		// здесь минимум кода. Просто сделать дубликат - и выставить ему правильные границы.
-		// а потом уже и dpi и все настройки.
+		// there is a minimum of code here. Just make a duplicate and set the correct boundaries for it.
+		// and then dpi and all the settings.
 		return Ok;
 	}
 
@@ -290,7 +274,7 @@ namespace Aggplus
 	
 	Status CGraphics::SetPageWidth(double lWidth, LONG lUnit)
 	{
-		// вычисилить dpi и выставить его
+		// calculate dpi and set it
 		switch (lUnit)
 		{
 		case UnitPoint:
@@ -320,7 +304,7 @@ namespace Aggplus
 	}
 	Status CGraphics::SetPageHeight(double lHeight, LONG lUnit)
 	{
-		// вычисилить dpi и выставить его
+		// calculate dpi and set it
 		switch (lUnit)
 		{
 		case UnitPoint:
@@ -407,7 +391,7 @@ namespace Aggplus
 		return Ok;
 	}
 	
-	// функции отсечения
+	// clipping functions
 	Status CGraphics::SetClipRect(double dLeft, double dTop, double dWidth, double dHeight)
 	{
 		double dx1 = dLeft;
@@ -468,7 +452,7 @@ namespace Aggplus
 
 	Status CGraphics::SetClip(CGraphicsPath* pPath)
 	{
-		if (NULL == pPath)
+		if (nullptr == pPath)
 			return InvalidParameter;
 		
 		m_oClip.GenerateClip(pPath, &m_oFullTransform);
@@ -484,7 +468,7 @@ namespace Aggplus
 
 	Status CGraphics::ExclugeClip(CGraphicsPath* pPath)
 	{
-		if (NULL == pPath)
+		if (nullptr == pPath)
 			return InvalidParameter;
 		
 		CGraphicsPath oMemory;
@@ -498,12 +482,12 @@ namespace Aggplus
 	Status CGraphics::CombineClip(CGraphicsPath* pPath, agg::sbool_op_e op, NSStructures::CPen* pPen)
 	{
 		Aggplus::CMatrix m;
-		return InternalClip(pPath, (m_bIntegerGrid || pPath->m_internal->m_pTransform != NULL) ? &m : &m_oFullTransform, op, pPen);
+		return InternalClip(pPath, (m_bIntegerGrid || pPath->m_internal->m_pTransform != nullptr) ? &m : &m_oFullTransform, op, pPen);
 	}
 
 	Status CGraphics::InternalClip(CGraphicsPath* pPath, CMatrix* pTransform, agg::sbool_op_e op, NSStructures::CPen* pPen)
 	{
-		if (NULL == pPath)
+		if (nullptr == pPath)
 			return InvalidParameter;
 
 		bool bTempRasterizer = false;
@@ -515,7 +499,7 @@ namespace Aggplus
 			bTempRasterizer = true;
 		}
 
-		agg::trans_affine* pAffine = NULL;
+		agg::trans_affine* pAffine = nullptr;
 		if (pPen)
 			pAffine = DoStrokePath(pPen, pPath, pRasterizer);
 		else
@@ -533,8 +517,8 @@ namespace Aggplus
 
 		// write to clips history
 		CGraphics_ClipStateRecord* pRecord = new CGraphics_ClipStateRecord();
-		pRecord->Path = (NULL != pPath) ? pPath->Clone() : NULL;
-		pRecord->Transform = (NULL != pTransform) ? new CMatrix(*pTransform) : new CMatrix();
+		pRecord->Path = (nullptr != pPath) ? pPath->Clone() : nullptr;
+		pRecord->Transform = (nullptr != pTransform) ? new CMatrix(*pTransform) : new CMatrix();
 		pRecord->Operation = op;
 		m_oClipState.AddRecord(pRecord);
 
@@ -548,7 +532,7 @@ namespace Aggplus
 
 	INT CGraphics::MeasureString(const std::wstring& strText, CFontManager* pManager, double* lWidth, double* lHeight)
 	{
-		if (NULL == pManager || NULL == lWidth || NULL == lHeight)
+		if (nullptr == pManager || nullptr == lWidth || nullptr == lHeight)
 			return FALSE;
 
 		pManager->LoadString1(strText, 0, 0);
@@ -626,7 +610,7 @@ namespace Aggplus
 	}
 	Status CGraphics::DrawPath(NSStructures::CPen* pPen, CGraphicsPath* pPath, const double& gamma)
 	{
-		if (NULL == pPen || NULL == pPath)
+		if (nullptr == pPen || nullptr == pPath)
 			return InvalidParameter;
 
 		m_rasterizer.get_rasterizer().reset();
@@ -653,7 +637,7 @@ namespace Aggplus
 
 	Status CGraphics::DrawPathNoTransform(NSStructures::CPen* pPen, CGraphicsPath* pPath)
 	{
-		if (NULL == pPen || NULL == pPath)
+		if (nullptr == pPen || nullptr == pPath)
 			return InvalidParameter;
 
 		m_rasterizer.get_rasterizer().reset();
@@ -770,7 +754,7 @@ namespace Aggplus
 	}
 	Status CGraphics::FillPath(CBrush* pBrush, CGraphicsPath* pPath)
 	{
-		if (NULL == pBrush)
+		if (nullptr == pBrush)
 			return InvalidParameter;
 
 		m_rasterizer.get_rasterizer().reset();
@@ -778,8 +762,8 @@ namespace Aggplus
 		agg::path_storage p2(pPath->m_internal->m_agg_ps);
 		typedef agg::conv_transform<agg::path_storage> trans_type;
 
-		trans_type* ptrans			= NULL;
-		agg::trans_affine* paffine	= NULL;
+		trans_type* ptrans			= nullptr;
+		agg::trans_affine* paffine	= nullptr;
 		if (!m_bIntegerGrid)
 			ptrans = new trans_type(p2, m_oFullTransform.m_internal->m_agg_mtx);
 		else
@@ -857,7 +841,7 @@ namespace Aggplus
 	}
 
 
-	// отрисовка картинки
+	// drawing an image
 	Status CGraphics::DrawImage(CImage* pImage, double x, double y, double width, double height)
 	{
 		if (!pImage || pImage->GetLastStatus() != Ok)
@@ -877,7 +861,7 @@ namespace Aggplus
 		FillPath(&oBrush, &oPath);
 		return Ok;
 	}
-	Status CGraphics::DrawMeta(const std::wstring& strFile, double x, double y, double width, double height)
+	Status CGraphics::DrawMeta(const std::wstring&  /*strFile*/, double  /*x*/, double  /*y*/, double  /*width*/, double  /*height*/)
 	{
 		return Ok;
 	}
@@ -918,7 +902,7 @@ namespace Aggplus
 	}
 #endif
 
-	INT CGraphics::DrawImageUnscaled(CImage* pImage, double x, double y)
+	INT CGraphics::DrawImageUnscaled(CImage*  /*pImage*/, double  /*x*/, double  /*y*/)
 	{
 		return TRUE;
 	}
@@ -952,14 +936,14 @@ namespace Aggplus
 
 		while (TRUE)
 		{
-			TGlyph* pGlyph = NULL;
+			TGlyph* pGlyph = nullptr;
 
 			bRes = pFont->GetNextChar2(pGlyph, fX, fY);
 
 			if (FALSE == bRes)
 				break;
 
-			if (NULL != pGlyph)
+			if (nullptr != pGlyph)
 			{
 				FillGlyph2((int)fX, (int)fY, pGlyph, pBrush);
 			}
@@ -996,14 +980,14 @@ namespace Aggplus
 
 		while (TRUE)
 		{
-			TGlyph* pGlyph = NULL;
+			TGlyph* pGlyph = nullptr;
 
 			bRes = pFont->GetNextChar2(pGlyph, fX, fY);
 
 			if (FALSE == bRes)
 				break;
 
-			if (NULL != pGlyph)
+			if (nullptr != pGlyph)
 			{
 				FillGlyph2((int)fX, (int)fY, pGlyph, pBrush);
 			}
@@ -1041,14 +1025,14 @@ namespace Aggplus
 
 		while (TRUE)
 		{
-			TGlyph* pGlyph = NULL;
+			TGlyph* pGlyph = nullptr;
 
 			bRes = pFont->GetNextChar2(pGlyph, fX, fY);
 
 			if (FALSE == bRes)
 				break;
 
-			if (NULL != pGlyph)
+			if (nullptr != pGlyph)
 			{
 				FillGlyph2((int)fX, (int)fY, pGlyph, pBrush);
 			}
@@ -1129,7 +1113,7 @@ namespace Aggplus
 	CSoftMask* CGraphics::CreateSoftMask(bool bAlpha)
 	{
 		if (m_arLayers.empty())
-			return NULL;
+			return nullptr;
 
 		CGraphicsLayer *pCurrentGraphicsLayer = m_arLayers.top();
 		m_arLayers.pop();
@@ -1137,7 +1121,7 @@ namespace Aggplus
 		if (pCurrentGraphicsLayer->Empty())
 		{
 			RELEASEINTERFACE(pCurrentGraphicsLayer);
-			return NULL;
+			return nullptr;
 		}
 
 		BYTE* pBuffer = pCurrentGraphicsLayer->GetBuffer();
@@ -1154,7 +1138,7 @@ namespace Aggplus
 		if (!pBuffer)
 		{
 			RELEASEINTERFACE(pCurrentGraphicsLayer);
-			return NULL;
+			return nullptr;
 		}
 
 		m_frame_buffer.ren_buf().attach(pBuffer, unWidth, unHeight, m_frame_buffer.ren_buf().stride());
@@ -1178,7 +1162,7 @@ namespace Aggplus
 
 	Status CGraphics::AddLayer(CGraphicsLayer *pGraphicsLayer)
 	{
-		if (NULL == pGraphicsLayer || pGraphicsLayer->Empty())
+		if (nullptr == pGraphicsLayer || pGraphicsLayer->Empty())
 			return InvalidParameter;
 
 		m_arLayers.push(pGraphicsLayer);
@@ -1219,14 +1203,14 @@ namespace Aggplus
 		CGraphicsLayer *pCurrentGraphicsLayer = m_arLayers.top();
 		m_arLayers.pop();
 
-		BYTE* pBuffer = NULL;
+		BYTE* pBuffer = nullptr;
 
 		if (!m_arLayers.empty())
 			pBuffer = m_arLayers.top()->GetBuffer();
 		else
 			pBuffer = m_pPixels;
 
-		if (NULL == pBuffer)
+		if (nullptr == pBuffer)
 		{
 			RELEASEINTERFACE(pCurrentGraphicsLayer);
 			return WrongState;
@@ -1283,14 +1267,14 @@ namespace Aggplus
 		CGraphicsLayer *pCurrentGraphicsLayer = m_arLayers.top();
 		m_arLayers.pop();
 
-		BYTE* pBuffer = NULL;
+		BYTE* pBuffer = nullptr;
 
 		if (!m_arLayers.empty())
 			pBuffer = m_arLayers.top()->GetBuffer();
 		else
 			pBuffer = m_pPixels;
 
-		if (NULL == pBuffer)
+		if (nullptr == pBuffer)
 		{
 			RELEASEINTERFACE(pCurrentGraphicsLayer);
 			return WrongState;
@@ -1468,8 +1452,8 @@ namespace Aggplus
 
 		span_gen.SetDirection(rect, (double)pBrush->GetAngle(), oMatrix.m_internal->m_agg_mtx);
 
-		agg::rgba8* pSubColors = NULL;
-		float* pSubBlends = NULL;
+		agg::rgba8* pSubColors = nullptr;
+		float* pSubBlends = nullptr;
 		
 		int nCountSubColors = pBrush->GetInterpolationColorsCount();
 		if( nCountSubColors > 0 )
@@ -1549,8 +1533,8 @@ namespace Aggplus
 
 		span_gen.SetDirection(rect, oMatrix.m_internal->m_agg_mtx);
 
-		agg::rgba8* pSubColors = NULL;
-		float* pSubBlends = NULL;
+		agg::rgba8* pSubColors = nullptr;
+		float* pSubBlends = nullptr;
 		
 		int nCountSubColors = pBrush->GetInterpolationColorsCount();
 		if( nCountSubColors > 0 )
@@ -1650,7 +1634,7 @@ namespace Aggplus
 		agg::rgba8 c1 = agg::rgba8(pBrush->m_dwColor1.GetR(), pBrush->m_dwColor1.GetG(), pBrush->m_dwColor1.GetB(), pBrush->m_dwColor1.GetA());
 		agg::rgba8 c2 = agg::rgba8(pBrush->m_dwColor2.GetR(), pBrush->m_dwColor2.GetG(), pBrush->m_dwColor2.GetB(), pBrush->m_dwColor2.GetA());
 
-		BYTE* pPattern = new BYTE[HATCH_TX_SIZE * HATCH_TX_SIZE * 4];
+		BYTE* pPattern = new BYTE[static_cast<size_t>(HATCH_TX_SIZE) * HATCH_TX_SIZE * 4];
 		agg::GetHatchPattern(pBrush->m_name, (agg::rgba8*)pPattern, c1, c2);
 
 		agg::trans_affine mtx_Work(m_oTransform.m_internal->m_agg_mtx);
@@ -2013,7 +1997,7 @@ namespace Aggplus
 
 	void CGraphics::DoFillPath(const CBrush* Brush)
 	{
-		if (NULL == Brush)
+		if (nullptr == Brush)
 			return;
 
 		Aggplus::BrushType eBrushType = Brush->GetType();
@@ -2124,8 +2108,12 @@ namespace Aggplus
 				invert.transform_2x2(&dX, &dY);
 				dWidth = std::min(abs(dX), abs(dY));
 			}
-			else if (0 != dSqrtDet && dWidth < (dWidthMinSize = 1.0 / dSqrtDet))
-				dWidth = dWidthMinSize;
+			else if (0 != dSqrtDet)
+			{
+				dWidthMinSize = 1.0 / dSqrtDet;
+				if (dWidth < dWidthMinSize)
+					dWidth = dWidthMinSize;
+			}
 		}
 
 		double dblMiterLimit = pPen->MiterLimit;
@@ -2160,7 +2148,7 @@ namespace Aggplus
 
 		if (DashStyleCustom == eStyle)
 		{
-			if (0 == pPen->Count || NULL == pPen->DashPattern)
+			if (0 == pPen->Count || nullptr == pPen->DashPattern)
 			{
 				eStyle = DashStyleSolid;
 			}
@@ -2277,7 +2265,7 @@ namespace Aggplus
 			pRasterizer->add_path(trans);
 		}
 
-		return bIsUseIdentity ? pAffine : NULL;
+		return bIsUseIdentity ? pAffine : nullptr;
 	}
 	// text methods
 	int CGraphics::FillGlyph2(int nX, int nY, TGlyph* pGlyph, Aggplus::CBrush* pBrush)
@@ -2290,10 +2278,10 @@ namespace Aggplus
 		int nFrameW = (int)m_frame_buffer.width();
 		int nFrameH = (int)m_frame_buffer.height();
 
-		if (NULL == pData)
+		if (nullptr == pData)
 			return 0;
 
-		if (NULL == pData || (nX + lWidth < 0) || (nX >= nFrameW) || (nY + lHeight < 0))
+		if (nullptr == pData || (nX + lWidth < 0) || (nX >= nFrameW) || (nY + lHeight < 0))
 			return 0;
 		
 		if (!m_oClip.IsClip() && (0 <= nX) && (0 <= nY) && ((nX + lWidth) < nFrameW) && ((nY + lHeight) < nFrameH))
@@ -2310,7 +2298,7 @@ namespace Aggplus
 		{
 			agg::scanline_p8 sl;
 			sl.reset(nX, nX + lWidth);
-			sl.add_cells(nX, lWidth, pData + j * lWidth);
+			sl.add_cells(nX, lWidth, pData + static_cast<ptrdiff_t>(j) * lWidth);
 
 			sl.finalize(nY + j);
 
@@ -2360,7 +2348,7 @@ namespace Aggplus
 		m_rasterizer.get_scanline().reset(x, x + width);
 		for (int j = 0; j < pGlyph->nHeight; ++j)
 		{
-			m_rasterizer.get_scanline().add_cells(x + j * width, width, pGlyph->pData + j * width);
+			m_rasterizer.get_scanline().add_cells(x + j * width, width, pGlyph->pData + static_cast<ptrdiff_t>(j) * width);
 		}
 
 		m_rasterizer.get_scanline().finalize(y);
@@ -2369,7 +2357,7 @@ namespace Aggplus
 
 	void CGraphics::UpdateUnits()
 	{
-		// здесь - пересчет координат
+		// here - recalculation of coordinates
 		m_oCoordTransform.Reset();
 
 		double dScaleX = 1.0;
@@ -2445,8 +2433,8 @@ namespace Aggplus
 
 		span_gen.SetDirection(rect, oMatrix.m_internal->m_agg_mtx, m_bSwapRGB);
 		span_gen.SetGradientInfo(pBrush->m_oGradientInfo, pBrush->GetType());
-		agg::rgba8* pSubColors = NULL;
-		float* pSubBlends = NULL;
+		agg::rgba8* pSubColors = nullptr;
+		float* pSubBlends = nullptr;
 		
 		int nCountSubColors = pBrush->GetInterpolationColorsCount();
 		if( nCountSubColors > 0 )

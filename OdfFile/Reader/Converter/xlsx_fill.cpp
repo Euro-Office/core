@@ -75,7 +75,7 @@ std::size_t hash_value(xlsx_patternFill const & val)
 
 void xlsx_serialize(std::wostream & _Wostream, const xlsx_gradientFill & gradientFill)
 {
-    // todooo  
+    // TODO
 }
 
 std::size_t hash_value(xlsx_gradientFill const & val)

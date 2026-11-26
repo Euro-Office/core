@@ -18,10 +18,6 @@ if(NOT TARGET UnicodeConverter)
     add_subdirectory(${CORE_ROOT_DIR}/UnicodeConverter UnicodeConverter)
 endif()
 
-
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 add_library(OdfFormatLib STATIC
     ${CMAKE_CURRENT_LIST_DIR}/odf_converter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/odf_datatypes.cpp
@@ -472,13 +468,26 @@ add_library(OdfFormatLib STATIC
 
 set_default_options(OdfFormatLib)
 
+if( MSVC )
+    target_compile_definitions( OdfFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_include_directories(OdfFormatLib PRIVATE
 	${ODF_FILE_ROOT_DIR}/Common
+	${CRYPTOPP_INCLUDE_DIR} # object_package.cpp; linked by x2t through CryptoPPLib
 )
 
 target_precompile_headers(OdfFormatLib PRIVATE
+    ${CORE_ROOT_DIR}/msvc_fix.h
     precompiled.h
 )
+
+if( MSVC )
+    target_compile_options( OdfFormatLib PRIVATE /bigobj )
+endif()
 
 target_link_libraries(OdfFormatLib PUBLIC
     UnicodeConverter
@@ -491,4 +500,4 @@ target_link_libraries(OdfFormatLib PUBLIC
 
 set_property(TARGET OdfFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-copy_boost_libs(OdfFormatLib)
+declare_victory( OdfFormatLib )

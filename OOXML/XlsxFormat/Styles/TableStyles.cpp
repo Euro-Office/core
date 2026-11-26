@@ -129,8 +129,6 @@ namespace OOX
 					ptr->tseType = 17;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeThirdSubtotalRow)
 					ptr->tseType = 18;
-				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeBlankRow)
-					ptr->tseType = 19;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeFirstColumnSubheading)
 					ptr->tseType = 20;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeSecondColumnSubheading)
@@ -204,8 +202,6 @@ namespace OOX
 					ptr->tseType = 17;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeThirdSubtotalRow)
 					ptr->tseType = 18;
-				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeBlankRow)
-					ptr->tseType = 19;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeFirstColumnSubheading)
 					ptr->tseType = 20;
 				else if (m_oType == SimpleTypes::Spreadsheet::ETableStyleType::tablestyletypeSecondColumnSubheading)
@@ -234,7 +230,7 @@ namespace OOX
 		}
 		void CTableStyleElement::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-							// Читаем атрибуты
+							// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 
 				WritingElement_ReadAttributes_Read_if     ( oReader, _T("dxfId"),      m_oDxfId )
@@ -566,7 +562,7 @@ namespace OOX
 		}
 		void CTableStyles::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 
 				WritingElement_ReadAttributes_Read_if     ( oReader, _T("count"),      m_oCount )

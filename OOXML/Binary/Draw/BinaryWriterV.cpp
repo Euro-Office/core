@@ -83,7 +83,7 @@ namespace BinVsdxRW
 		WriteItemWithLengthEnd(nCurPos);
 	}
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-BinaryFileWriter::BinaryFileWriter(DocWrapper::FontProcessor& oFontProcessor) : m_oBcw(NULL), m_oFontProcessor(oFontProcessor)
+BinaryFileWriter::BinaryFileWriter(DocWrapper::FontProcessor& oFontProcessor) : m_oBcw(nullptr), m_oFontProcessor(oFontProcessor)
 {
 	m_nRealTableCount = 0;
 }
@@ -96,7 +96,7 @@ _UINT32 BinaryFileWriter::Open(const std::wstring& sInputDir, const std::wstring
 	_UINT32 result = 0;
 
 	OOX::CPath pathDst(sFileDst);
-//создаем папку для media
+//create a folder for media
     std::wstring mediaDir = pathDst.GetDirectory() + L"media";
 	NSDirectory::CreateDirectory(mediaDir);
 
@@ -120,8 +120,6 @@ _UINT32 BinaryFileWriter::Open(const std::wstring& sInputDir, const std::wstring
 	{
 		oBufferedStream.WriteStringUtf8(WriteFileHeader(0, g_nFormatVersionNoBase64));
 	}
-	int nHeaderLen = oBufferedStream.GetPosition();
-
 	WriteMainTableStart(oBufferedStream);
 	WriteContent(pVsdx, pOfficeDrawingConverter);
 	WriteMainTableEnd();
@@ -141,7 +139,7 @@ _UINT32 BinaryFileWriter::Open(const std::wstring& sInputDir, const std::wstring
 	{
 		int nBase64BufferLen = Base64::Base64EncodeGetRequiredLength(nBinBufferLen, Base64::B64_BASE64_FLAG_NOCRLF);
 		BYTE* pbBase64Buffer = new BYTE[nBase64BufferLen + 64];
-		if (true == Base64_1::Base64Encode(pbBinBuffer, nBinBufferLen, pbBase64Buffer, &nBase64BufferLen))
+		if (Base64_1::Base64Encode(pbBinBuffer, nBinBufferLen, pbBase64Buffer, &nBase64BufferLen))
 		{
 			NSFile::CFileBinary oFile;
 			oFile.CreateFileW(sFileDst);
@@ -162,7 +160,7 @@ _UINT32 BinaryFileWriter::Open(const std::wstring& sInputDir, const std::wstring
 	return result;
 }
 
-void BinaryFileWriter::WriteContent(OOX::Document *pDocument, NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter)
+void BinaryFileWriter::WriteContent(OOX::Document *pDocument, NSBinPptxRW::CDrawingConverter*  /*pOfficeDrawingConverter*/)
 {
 	OOX::Draw::CVsdx *pVsdx = dynamic_cast<OOX::Draw::CVsdx*>(pDocument);
 
@@ -213,7 +211,7 @@ void BinaryFileWriter::WriteMainTableStart(NSBinPptxRW::CBinaryFileWriter &oBuff
 
 	m_nRealTableCount = 0;
 	m_nMainTableStart = m_oBcw->m_oStream.GetPosition();
-	//вычисляем с какой позиции можно писать таблицы
+	//calculate from what position tables can be written
 	m_nLastFilePos = m_nMainTableStart + GetMainTableSize();
 	//Write mtLen
 	m_oBcw->m_oStream.WriteBYTE(0);
@@ -240,18 +238,18 @@ int BinaryFileWriter::WriteTableStart(BYTE type, int nStartPos)
 	m_oBcw->m_oStream.WriteLONG(m_nLastFilePos);
 
 	//Write table
-	//Запоминаем позицию в MainTable
+	//Remember the position in MainTable
 	int nCurPos = m_oBcw->m_oStream.GetPosition();
-	//Seek в свободную область
+	//Seek to a free area
 	m_oBcw->m_oStream.SetPosition(m_nLastFilePos);
 	return nCurPos;
 }
 void BinaryFileWriter::WriteTableEnd(int nCurPos)
 {
-	//сдвигаем позицию куда можно следующую таблицу
+	//move the position to where the next table can go
 	m_nLastFilePos = m_oBcw->m_oStream.GetPosition();
 	m_nRealTableCount++;
-	//Seek вобратно в MainTable
+	//Seek back to MainTable
 	m_oBcw->m_oStream.SetPosition(nCurPos);
 }
 

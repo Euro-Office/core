@@ -31,7 +31,7 @@ OOXNumberingMapReader::OOXNumberingMapReader(OOX::Numbering::CNum *ooxNum)
 }
 bool OOXNumberingMapReader::Parse( ReaderParameter oParam )
 {
-	if (m_ooxNum == NULL) return false;
+	if (m_ooxNum == nullptr) return false;
 
 	RtfListOverrideProperty oNewOverride;
 	if (m_ooxNum->m_oNumId.IsInit())
@@ -42,7 +42,7 @@ bool OOXNumberingMapReader::Parse( ReaderParameter oParam )
 
 	for (size_t i = 0 ; i < m_ooxNum->m_arrLvlOverride.size(); i++)
 	{
-		if (m_ooxNum->m_arrLvlOverride[i] == NULL) continue;
+		if (m_ooxNum->m_arrLvlOverride[i] == nullptr) continue;
 
 		RtfListOverrideProperty::ListOverrideLevels::ListOverrideLevel oOverrideLevel;
 

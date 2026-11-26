@@ -73,7 +73,7 @@ namespace OOX
 			nullable<SimpleTypes::Spreadsheet::CHorizontalAlignment>		m_oHorizontal;
 			nullable_uint													m_oIndent;
 			nullable<SimpleTypes::COnOff>									m_oJustifyLastLine;
-			nullable_uint													m_oReadingOrder; //todooo to simple
+			nullable_uint													m_oReadingOrder; //TODO to simple
 			nullable_int													m_oRelativeIndent;
 			nullable<SimpleTypes::COnOff>									m_oShrinkToFit;
 			nullable_uint													m_oTextRotation;
@@ -112,7 +112,7 @@ namespace OOX
 			nullable<SimpleTypes::COnOff> m_oLocked;
 		};
 
-		//нереализован:
+		//not implemented:
 		//<extLst>
 		class CXfs : public WritingElement
 		{
@@ -137,6 +137,7 @@ namespace OOX
 		private:
 			void ReadAttributes(XmlUtils::CXmlLiteReader& oReader);
 			void ReadAttributes(XLS::BaseObjectPtr& obj);
+			void ReadExtLst(XmlUtils::CXmlLiteReader& oReader);
 
 		public:
 			nullable<SimpleTypes::COnOff>					m_oApplyAlignment;
@@ -157,6 +158,10 @@ namespace OOX
 			nullable<CAligment>								m_oAligment;
 			nullable<CProtection>							m_oProtection;
 
+			// cell checkbox (resolved from the featurePropertyBag xfComplement extension)
+			nullable_bool									m_oCellControl;
+			// raw <xfpb:xfComplement i="..."/> index, resolved via CFeaturePropertyBagFile
+			nullable_int									m_oXfComplementIndex;
 		};
 
 		class CCellXfs  : public WritingElementWithChilds<CXfs>

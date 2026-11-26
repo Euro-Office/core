@@ -38,7 +38,7 @@ namespace XmlUtils
 	const char* GetNameNoNS(const char* strNodeName)
 	{
 		const char* find = strchr(strNodeName, ':');
-		if (NULL != find)
+		if (nullptr != find)
 		{
 			return find + 1;
 		}
@@ -81,32 +81,32 @@ namespace XmlUtils
 
 	CXmlNodeBase::CXmlNodeBase()
 	{
-		m_pDocument = NULL;
+		m_pDocument = nullptr;
 		m_sText = "";
 		m_sName = L"";
 	}
 	CXmlNodeBase::~CXmlNodeBase()
 	{
-		if (NULL != m_pDocument)
+		if (nullptr != m_pDocument)
 			m_pDocument->Release();
 
 		int nCount = (int)m_nodes.size();
 		for (int i = 0; i < nCount; ++i)
 		{
 			CXmlNodeBase* pNode = m_nodes[i];
-			if (NULL != pNode)
+			if (nullptr != pNode)
 				pNode->Release();
 		}
 	}
 
 	void CXmlNodeBase::AddRefDoc()
 	{
-		if (NULL != m_pDocument)
+		if (nullptr != m_pDocument)
 			m_pDocument->AddRef();
 	}
 	void CXmlNodeBase::ReleaseDoc()
 	{
-		if (NULL != m_pDocument)
+		if (nullptr != m_pDocument)
 			m_pDocument->Release();
 	}
 
@@ -160,8 +160,8 @@ namespace XmlUtils
 	public:
 		CXmlDOMDocument() : IXmlDOMDocument()
 		{
-			m_pNode = NULL;
-			m_pCurrentNode = NULL;
+			m_pNode = nullptr;
+			m_pCurrentNode = nullptr;
 		}
 		virtual ~CXmlDOMDocument()
 		{
@@ -169,7 +169,7 @@ namespace XmlUtils
 
 		void WriteElement()
 		{
-			if (NULL == m_pCurrentNode)
+			if (nullptr == m_pCurrentNode)
 			{
 				m_pNode = new CXmlNodeBase();
 				m_pNode->m_pDocument = this;
@@ -179,7 +179,7 @@ namespace XmlUtils
 			}
 			else
 			{
-				// это m_pCurrentNode
+				// this is m_pCurrentNode
 				CXmlNodeBase* pNewBase = new CXmlNodeBase();
 				pNewBase->m_pDocument = this;
 				pNewBase->m_pDocument->AddRef();
@@ -235,7 +235,7 @@ namespace XmlUtils
 				XmlNodeType eNodeType = XmlNodeType_None;
 
 				int nCurDepth = -1;
-				// У закрывающего тэга глубина на 1 больше, чем у открывающего
+				// The closing tag has a depth of 1 greater than the opening tag
 				while (true)
 				{
 					if (1 != xmlTextReaderRead(reader))
@@ -246,12 +246,8 @@ namespace XmlUtils
 						break;
 					eNodeType = (XmlNodeType)nTempType;
 
-					nCurDepth = GetDepth();
-					if (eNodeType == XmlNodeType_Text || eNodeType == XmlNodeType_Whitespace || eNodeType == XmlNodeType_SIGNIFICANT_WHITESPACE)
-					{
-						m_pCurrentNode->m_sText += GetTextA();
-					}
-					else if (eNodeType == XmlNodeType_CDATA)
+					if (eNodeType == XmlNodeType_Text || eNodeType == XmlNodeType_Whitespace ||
+						eNodeType == XmlNodeType_SIGNIFICANT_WHITESPACE || eNodeType == XmlNodeType_CDATA)
 					{
 						m_pCurrentNode->m_sText += GetTextA();
 					}
@@ -291,11 +287,11 @@ namespace XmlUtils
 {
 	CXmlNode::CXmlNode()
 	{
-		m_pBase = NULL;
+		m_pBase = nullptr;
 	}
 	CXmlNode::CXmlNode(const CXmlNode& oSrc)
 	{
-		m_pBase = NULL;
+		m_pBase = nullptr;
 		SetBase(oSrc.m_pBase);
 	}
 	CXmlNode::~CXmlNode()
@@ -307,13 +303,13 @@ namespace XmlUtils
 	{
 		return FromXmlFile(std::wstring(sFile), bRemoveRootNode);
 	}
-	bool CXmlNode::FromXmlFile(const std::wstring& sFile, bool bRemoveRootNode)
+	bool CXmlNode::FromXmlFile(const std::wstring& sFile, bool  /*bRemoveRootNode*/)
 	{
 		// ignore bRemoveRootNode
 		CXmlDOMDocument* m_pDocument = new CXmlDOMDocument();
 		bool bRes = m_pDocument->FromFile(sFile);
 
-		if (false == bRes)
+		if (!bRes)
 		{
 			delete m_pDocument;
 			return false;
@@ -321,14 +317,14 @@ namespace XmlUtils
 
 		m_pDocument->Parse();
 
-		if (NULL == m_pDocument->m_pNode)
+		if (nullptr == m_pDocument->m_pNode)
 		{
 			delete m_pDocument;
 			return false;
 		}
-		// присваиваем m_pBase без AddRef, чтобы при удалении CXmlNode начался удаляться m_pBase(после конструктора RefCount==1, а если сделать AddRef то не удалится)
+		// Assign m_pBase without AddRef, so that when CXmlNode is deleted, m_pBase is deleted (after the constructor RefCount==1, and if AddRef is added it won't be deleted)
 		m_pBase = m_pDocument->m_pNode;
-		// после Parse все Node из m_pDocument сделали ему AddRef, поэтому можем вызвать Release(потому что напрямую нигде его не используем), а окончательно он удалится после удаления всех Node
+		// after Parse, all Nodes from m_pDocument have called AddRef on it, so Release can be called (because it isn't used directly anywhere), and it is finally deleted after all Nodes are removed
 		m_pDocument->Release();
 
 		return true;
@@ -339,7 +335,7 @@ namespace XmlUtils
 		CXmlDOMDocument* m_pDocument = new CXmlDOMDocument();
 		bool bRes = m_pDocument->FromStringA(sString);
 
-		if (false == bRes)
+		if (!bRes)
 		{
 			delete m_pDocument;
 			return false;
@@ -347,14 +343,14 @@ namespace XmlUtils
 
 		m_pDocument->Parse();
 
-		if (NULL == m_pDocument->m_pNode)
+		if (nullptr == m_pDocument->m_pNode)
 		{
 			delete m_pDocument;
 			return false;
 		}
-		// присваиваем m_pBase без AddRef, чтобы при удалении CXmlNode начался удаляться m_pBase(после конструктора RefCount==1, а если сделать AddRef то не удалится)
+		// Assign m_pBase without AddRef, so that when CXmlNode is deleted, m_pBase is deleted (after the constructor RefCount==1, and if AddRef is added it won't be deleted)
 		m_pBase = m_pDocument->m_pNode;
-		// после Parse все Node из m_pDocument сделали ему AddRef, поэтому можем вызвать Release(потому что напрямую нигде его не используем), а окончательно он удалится после удаления всех Node
+		// after Parse, all Nodes from m_pDocument have called AddRef on it, so Release can be called (because it isn't used directly anywhere), and it is finally deleted after all Nodes are removed
 		m_pDocument->Release();
 		return true;
 	}
@@ -369,11 +365,11 @@ namespace XmlUtils
 
 	bool CXmlNode::IsValid() const
 	{
-		return (NULL != m_pBase);
+		return (nullptr != m_pBase);
 	}
 	void CXmlNode::Clear()
 	{
-		this->SetBase(NULL);
+		this->SetBase(nullptr);
 	}
 	std::wstring CXmlNode::GetName()
 	{
@@ -470,7 +466,7 @@ namespace XmlUtils
 
 		return pFind->second;
 	}
-	std::string CXmlNode::GetAttributeA(const std::wstring& sName, const std::string& _default)
+	std::string CXmlNode::GetAttributeA(const std::wstring& sName, const std::string&  /*_default*/)
 	{
 		return GetAttributeA(NSFile::CUtf8Converter::GetUtf8StringFromUnicode2(sName.c_str(), (LONG)sName.length()));
 	}
@@ -656,7 +652,7 @@ namespace XmlUtils
 	{
 		return ReadValueString(strName);
 	}
-	std::wstring CXmlNode::ReadValueString(const std::wstring& sName, const std::wstring& nDef)
+	std::wstring CXmlNode::ReadValueString(const std::wstring& sName, const std::wstring&  /*nDef*/)
 	{
 		CXmlNode oTemp;
 		if (GetNode(sName, oTemp))
@@ -832,6 +828,9 @@ namespace XmlUtils
 
 	CXmlNode& CXmlNode::operator=(const CXmlNode& oSrc)
 	{
+		if (this == &oSrc)
+			return *this;
+
 		this->SetBase(oSrc.m_pBase);
 		return *this;
 	}
@@ -842,7 +841,7 @@ namespace XmlUtils
 	}
 	std::wstring CXmlNode::private_GetXml(const std::wstring& strDefaultValue)
 	{
-		if (NULL == m_pBase)
+		if (nullptr == m_pBase)
 			return strDefaultValue;
 		return m_pBase->GetXml();
 	}
@@ -852,7 +851,7 @@ namespace XmlUtils
 	}
 	std::wstring CXmlNode::private_GetXmlFast(const std::wstring& strDefaultValue)
 	{
-		if (NULL == m_pBase)
+		if (nullptr == m_pBase)
 			return strDefaultValue;
 		NSStringUtils::CStringBuilder oWriter;
 		m_pBase->GetXml(oWriter);
@@ -863,9 +862,9 @@ namespace XmlUtils
 	{
 		CXmlNodeBase* pBaseOld = m_pBase;
 		m_pBase = pBase;
-		if (NULL != m_pBase)
+		if (nullptr != m_pBase)
 			m_pBase->AddRef();
-		if (NULL != pBaseOld)
+		if (nullptr != pBaseOld)
 			pBaseOld->Release();
 	}
 	std::wstring CXmlNode::GetNamespace(const std::wstring& strNodeName)
@@ -900,13 +899,13 @@ namespace XmlUtils
 		}
 	};
 
-	static int buffer_xmlBufferIOWrite(CXmlBuffer* buf, const char* buffer, int len)
+	static int buffer_xmlBufferIOWrite(void* buf, const char* buffer, int len)
 	{
-		buf->builder.WriteString(buffer, (size_t)len);
+		static_cast<CXmlBuffer*>(buf)->builder.WriteString(buffer, static_cast<size_t>(len));
 		return len;
 	}
 
-	static int buffer_xmlBufferIOClose(CXmlBuffer* buf)
+	static int buffer_xmlBufferIOClose(void* buf)
 	{
 		XML_UNUSED(buf);
 		return 0;
@@ -933,14 +932,15 @@ namespace XmlUtils
 	std::string NSXmlCanonicalizator::Execute(const std::string& sXml, int mode, bool withComments)
 	{
 #ifdef LIBXML_C14N_ENABLED
-		xmlDocPtr xmlDoc = xmlParseMemory((char*)sXml.c_str(), (int)sXml.length());
+		xmlDocPtr xmlDoc = xmlReadMemory(sXml.c_str(), (int)sXml.length(), nullptr, nullptr, 0);
 
 		CXmlBuffer bufferC14N;
-		xmlOutputBufferPtr _buffer = xmlOutputBufferCreateIO((xmlOutputWriteCallback)buffer_xmlBufferIOWrite, (xmlOutputCloseCallback)buffer_xmlBufferIOClose, &bufferC14N, NULL);
+		xmlOutputBufferPtr _buffer = xmlOutputBufferCreateIO(buffer_xmlBufferIOWrite, buffer_xmlBufferIOClose, &bufferC14N, nullptr);
 
-		xmlC14NExecute(xmlDoc, buffer_xmlC14NIsVisibleCallback, NULL, mode, NULL, withComments ? 1 : 0, _buffer);
+		xmlC14NExecute(xmlDoc, buffer_xmlC14NIsVisibleCallback, nullptr, mode, nullptr, withComments ? 1 : 0, _buffer);
 
 		xmlOutputBufferClose(_buffer);
+		xmlFreeDoc(xmlDoc);
 
 		return bufferC14N.builder.GetData();
 #else
@@ -966,7 +966,7 @@ std::string XmlUtils::GetUtf8FromFileContent(unsigned char* pData, unsigned int 
 	}
 
 	char markerUtf16 = 0;
-	if (pData[0] == 0xFF && pData[1] == 0xFE && !(pData[2] == 0x00 && pData[3] == 0x00))
+	if (pData[0] == 0xFF && pData[1] == 0xFE && (pData[2] != 0x00 || pData[3] != 0x00))
 		markerUtf16 = 1;
 	if (pData[0] == 0xFE && pData[1] == 0xFF)
 		markerUtf16 = 2;

@@ -57,7 +57,7 @@ namespace odf_writer {
 	_INT32 ods_table_state::tmp_column_ =0;
 	_INT32 ods_table_state::tmp_row_ =0;
 
-namespace utils//////////////////////////////////////////// ОБЩАЯ хрень .. вытащить что ли в utils ???
+namespace utils////////////////////////////////////////// GENERAL helpers .. pull something out in utils ???
 
 {
 	bool convert_date(__int64 date, std::wstring & date_str)
@@ -130,6 +130,40 @@ namespace utils//////////////////////////////////////////// ОБЩАЯ хрен�
 
 		bool res = true;
 
+		// cells of type "d" hold an ISO 8601 date or date-time instead of a serial number
+		static const boost::wregex iso_date_time(
+			L"((\\d{4})-(\\d{2})-(\\d{2})(T(\\d{2}):(\\d{2})(:(\\d{2})(\\.\\d+)?)?)?)Z?");
+		boost::wsmatch iso_match;
+		// cheap pre-check: serial numbers (the common case) never get to the regex
+		if (oox_date_time.size() >= 10 && oox_date_time[4] == L'-' &&
+			boost::regex_match(oox_date_time, iso_match, iso_date_time))
+		{
+			bool valid = true;
+			try
+			{
+				// throws for an impossible date such as 2023-02-30
+				boost::gregorian::date(std::stoi(iso_match[2].str()), std::stoi(iso_match[3].str()),
+					std::stoi(iso_match[4].str()));
+			}
+			catch (...)
+			{
+				valid = false;
+			}
+			if (iso_match[5].matched && (std::stoi(iso_match[6].str()) > 23 || std::stoi(iso_match[7].str()) > 59 ||
+				(iso_match[8].matched && std::stoi(iso_match[9].str()) > 59)))
+			{
+				valid = false;
+			}
+			if (valid)
+			{
+				odf_type = office_value_type::Date;
+				odf_date_time = iso_match[1].str();
+				if (iso_match[5].matched && !iso_match[8].matched)
+					odf_date_time += L":00"; // xsd:dateTime requires the seconds
+				return true;
+			}
+		}
+
 		if (std::wstring::npos != oox_date_time.find(L"."))
 		{
 			try
@@ -138,6 +172,7 @@ namespace utils//////////////////////////////////////////// ОБЩАЯ хрен�
 			}
 			catch (...)
 			{
+				odf_type = office_value_type::String;
 				odf_date_time = oox_date_time;
 				return false;
 			}
@@ -146,7 +181,16 @@ namespace utils//////////////////////////////////////////// ОБЩАЯ хрен�
 		}
 		else
 		{
-			nDate = boost::lexical_cast<__int64>(oox_date_time);
+			try
+			{
+				nDate = boost::lexical_cast<__int64>(oox_date_time);
+			}
+			catch (...)
+			{
+				odf_type = office_value_type::String;
+				odf_date_time = oox_date_time;
+				return false;
+			}
 		}
 
 		std::wstring sDate, sTime;
@@ -201,6 +245,7 @@ ods_table_state::ods_table_state(odf_conversion_context * Context, office_elemen
 
 	current_table_row_ = 0;
 	current_table_column_ = 0;
+	current_covered_cols_ = 0;
 
 	current_level_.push_back(office_table_);
 
@@ -342,7 +387,7 @@ void ods_table_state::set_table_style(office_element_ptr & elm)
 	if (table == NULL)return;
 	
 	table->attlist_.table_style_name_ = office_table_style_->style_name_;
-	//потом в принципе и по имени можно будет связать(найти)
+	//then, in principle, it will be possible to connect (find) by name
 }
 void ods_table_state::start_group(office_element_ptr & elm)
 {
@@ -480,10 +525,11 @@ void ods_table_state::add_row(office_element_ptr & elm, _UINT32 repeated, office
     current_table_row_		+= repeated;
 	current_covered_cols_	= 0;
 
+	// the element may stand for several rows (a gap of default rows): count all of them
 	for (size_t i = 0; i < current_covered_rows_.size(); ++i)
 	{
-		current_covered_rows_[i].count_rows--;
-		if (current_covered_rows_[i].count_rows <= 0)
+		current_covered_rows_[i].count_rows -= (_INT32)(std::min)(repeated, (_UINT32)0x7FFFFFFF);
+		if (current_covered_rows_[i].count_rows < 0) // 0: this is the last row of the merged range
 		{
 			current_covered_rows_.erase(current_covered_rows_.begin() + i);
 			i--;
@@ -520,7 +566,7 @@ void ods_table_state::add_row_repeated()
 	for (size_t i = 0; i < current_covered_rows_.size(); ++i)
 	{
 		current_covered_rows_[i].count_rows--;
-		if (current_covered_rows_[i].count_rows <= 0)
+		if (current_covered_rows_[i].count_rows < 0) // 0: this is the last row of the merged range
 		{
 			current_covered_rows_.erase(current_covered_rows_.begin() + i);
 			i--;
@@ -611,6 +657,46 @@ _INT32 ods_table_state::is_row_validation(_INT32 row, _INT32 & repeate_row)
 	}
 	return -1;
 }
+// Rows [row, row + count) without a comment, data validation, hyperlink, merged cell or row break, and not
+// reached by a cell merged across rows above them: one row element repeated writes them all.
+bool ods_table_state::is_rows_plain(_INT32 row, _INT32 count)
+{
+	if (count < 1 || row < 0 || row > 0x7FFFFFFF - count) return false;
+
+	if (is_row_comment(row, count) >= 0) return false;
+
+	_INT32 repeated = count;
+	if (is_row_validation(row, repeated) >= 0) return false;
+
+	for (size_t i = 0; i < hyperlinks_.size(); i++)
+	{
+		if (hyperlinks_[i].row >= row && hyperlinks_[i].row < row + count) return false;
+	}
+	for (size_t i = 0; i < row_breaks_.size(); i++)
+	{
+		if (row_breaks_[i] >= row && row_breaks_[i] < row + count) return false;
+	}
+	std::map<_INT32, std::map<_INT32, _spanned_info>>::iterator pFindRow = map_merged_cells.lower_bound(row);
+	if (pFindRow != map_merged_cells.end() && pFindRow->first < row + count) return false;
+
+	// count_rows = rows still covered below the current row; add_row of the first row drops the entries at 0
+	for (size_t i = 0; i < current_covered_rows_.size(); i++)
+	{
+		if (current_covered_rows_[i].count_rows > 0) return false;
+	}
+	return true;
+}
+// The number of rows below the current row that a range merged across rows still covers (the nearest end), 0 if none.
+_INT32 ods_table_state::get_covered_rows_ahead()
+{
+	_INT32 result = 0;
+	for (size_t i = 0; i < current_covered_rows_.size(); i++)
+	{
+		if (current_covered_rows_[i].count_rows > 0 && (result == 0 || current_covered_rows_[i].count_rows < result))
+			result = current_covered_rows_[i].count_rows;
+	}
+	return result;
+}
 _INT32 ods_table_state::is_cell_comment(_INT32 col, _INT32 row, _UINT32 repeate_col)
 {
 	for (size_t i = 0; i < comments_.size(); i++)
@@ -651,7 +737,7 @@ _UINT32 ods_table_state::get_last_row_repeated ()
 
 void ods_table_state::set_row_default_cell_style(std::wstring & style_name)
 {
-	row_default_cell_style_name_= style_name;	//обязательно нужно определить default-style (table_cell)!!!
+	row_default_cell_style_name_= style_name;	//Need to define default-style (table_cell)!!!
 	
 	//if (style_name.length() < 1) return;
 
@@ -759,7 +845,7 @@ void ods_table_state::set_cell_type(int type)
 	case 2:// error-type
 	case 3:// inline
 	case 5:// shared
-	case 6:// обычная строка
+	case 6:// regular string
 		cell_type = office_value_type(office_value_type::String);
 		break;
 	}
@@ -891,7 +977,7 @@ void ods_table_state::check_spanned_cells()
 			_INT32 start_col = jt->first;
 			_INT32 end_col = jt->first + jt->second.spanned_cols;
 
-			for (size_t i = 0; i < cells_.size(); ++i) //todooo cells_ vector -> map by row
+			for (size_t i = 0; i < cells_.size(); ++i) //TODO cells_ vector -> map by row
 			{
 				if (cells_[i].row > end_row) break;
 
@@ -942,7 +1028,7 @@ void ods_table_state::set_merge_cells(_INT32 start_col, _INT32 start_row, _INT32
 			pFindRow->second.insert(std::make_pair(start_col, info));
 			
 		}
-		//else нереально pFindCol->second.insert(info);
+		//else unrealistic pFindCol->second.insert(info);
 	}
 }
 bool ods_table_state::isSpannedCell(_INT32 col, _INT32 row, _INT32&spanned_cols, _INT32&spanned_rows )
@@ -987,11 +1073,13 @@ bool ods_table_state::isCoveredCell(_INT32 col, _INT32 repeated_cols)
 {
 	if (current_covered_cols_ > 0) return true;
 
+	// col is 1-based (from the cell reference), start_col is 0-based (the column before the merged cell)
+	const _INT32 col0 = col - 1;
 	for (size_t i = 0; i < current_covered_rows_.size(); i++)
 	{
-		if (current_covered_rows_[i].start_col <= col && col < current_covered_rows_[i].start_col + current_covered_rows_[i].count_cols)
+		if (current_covered_rows_[i].start_col <= col0 && col0 < current_covered_rows_[i].start_col + current_covered_rows_[i].count_cols)
 		{
-			current_covered_cols_ = current_covered_rows_[i].count_cols - (col - current_covered_rows_[i].start_col);
+			current_covered_cols_ = current_covered_rows_[i].count_cols - (col0 - current_covered_rows_[i].start_col);
 			return true;
 		}
 	}
@@ -1010,7 +1098,7 @@ void ods_table_state::set_cell_formula(std::wstring & formula)
 {
 	if (formula.empty()) return;
 
-	//todooo used tabled columns in formula - TableName[TableColumn]
+	//TODO used table columns in formula - TableName[TableColumn]
 	for (size_t i = 0; i < table_parts_.size(); ++i)
 	{
 		if (std::wstring::npos != formula.find(table_parts_[i].name + L"["))
@@ -1069,7 +1157,7 @@ void ods_table_state::set_cell_formula(std::wstring & formula)
 				for (size_t j = 0; j < table_parts_[i].columns.size(); j ++)
 				{
 					std::wstring name = table_parts_[i].name + L"[" + table_parts_[i].columns[j].first + L"]";
-					//Таблица1[ Сумма за кв. 3 ]
+					//Table1[ Amount per sq. 3 ]
 
 					XmlUtils::replace_all(odfFormula, name, table_parts_[i].columns[j].second);
 				}
@@ -1091,7 +1179,7 @@ std::wstring ods_table_state::replace_cell_row(boost::wsmatch const & what)
 	{
 		std::wstring ref_formula = what[1].str();
 		_INT32 col_formula = 0, row_formula = 0;
-		utils::parsing_ref(ref_formula, col_formula, row_formula);col_formula--;//инче отсчет с 1
+		utils::parsing_ref(ref_formula, col_formula, row_formula);col_formula--;//Otherwise count from 1
 	
 		ref_formula = utils::getColAddress(col_formula) + std::to_wstring(row_formula + current_table_row_ - tmp_row_);
 
@@ -1165,7 +1253,7 @@ void ods_table_state::add_or_find_cell_shared_formula(std::wstring & formula, st
 		{
 			odf_formula = pFind->second.formula;
 
-			//поменять по ref формулу !!!
+			//change the ref formula!!!
 			if (pFind->second.moving_type == 1)
 			{
 				tmp_column_ = pFind->second.base_column;
@@ -1199,7 +1287,7 @@ void ods_table_state::set_cell_array_formula(std::wstring & formula, std::wstrin
 {
 	set_cell_formula(formula);
 
-	//; ??? C2:D5 или D1;F1;G; ... ???
+	//; ??? C2:D5 or D1;F1;G; ...???
 
  	std::vector<std::wstring> ref_cells;
 	boost::algorithm::split(ref_cells,ref, boost::algorithm::is_any_of(L":"), boost::algorithm::token_compress_on);
@@ -1241,7 +1329,7 @@ void ods_table_state::add_child_element( const office_element_ptr & child_elemen
 	office_table_->add_child_element(child_element);
 }
 
-void ods_table_state::convert_position(oox_table_position & oox_pos, double & x, double & y)//c 0 отсчет
+void ods_table_state::convert_position(oox_table_position & oox_pos, double & x, double & y)//c 0 count
 {
 	double sz_col=0;
     size_t curr_col = 0, i;
@@ -1345,7 +1433,7 @@ void ods_table_state::set_cell_value(const std::wstring & value, bool need_cash)
 	{
 		cell->attlist_.common_value_and_type_attlist_ = common_value_and_type_attlist();
 		cell->attlist_.common_value_and_type_attlist_->office_value_type_ = office_value_type(office_value_type::Float);
-		//временно... пока нет определялки типов
+		//temporarily... no type definition yet
 	}
 	cells_.back().empty = false;
 	
@@ -1378,13 +1466,8 @@ void ods_table_state::set_cell_value(const std::wstring & value, bool need_cash)
 			}
 			else
 			{
-				context_->start_text_context();
-				start_cell_text();
-				context_->text_context()->add_text_content(sVal); // "#FMT"
-				end_cell_text();
-
-				set_cell_text(context_->text_context(), true);
-				context_->end_text_context();
+				// not a date: keep the value as text, written once by the cached values block below
+				need_cash = true;
 			}
 		}break;
 		case office_value_type::Currency:
@@ -1401,7 +1484,7 @@ void ods_table_state::set_cell_value(const std::wstring & value, bool need_cash)
 		//general !!
 	}
 	
-	//кэшированные значения
+	//cached values
 	if (false == value.empty())
 	{
 		if (is_cell_hyperlink())
@@ -1486,8 +1569,8 @@ void ods_table_state::start_cell_text()
 		text_a_->common_xlink_attlist_.type_ = xlink_type(xlink_type::Simple);
 		text_a_->common_xlink_attlist_.href_ = state.link;
 		
-		context_->text_context()->start_element(text_a_elm); // может быть стоит сделать собственый???
-		// libra дурит если в табличках будет вложенный span в гиперлинк ... оО (хотя это разрешено в спецификации!!!)
+		context_->text_context()->start_element(text_a_elm); // maybe it's worth making its own???
+		// LibreOffice acts up if the tables have a nested span in the hyperlink... oO (although this is allowed in the specification!!!)
 
 		context_->text_context()->single_paragraph_ = true;
 	}
@@ -1529,19 +1612,19 @@ void ods_table_state::end_cell()
 	}
 }
 
-void ods_table_state::add_default_cell(_INT32 repeated)
+void ods_table_state::add_default_cell(_INT32 repeated, const std::wstring & style_name)
 {
 	if (repeated < 1) return;
 
 	_INT32 comment_idx = is_cell_comment(current_table_column_ + 1, current_table_row_, repeated);
 	if (comment_idx  >= 0 && repeated > 1)
 	{
-		//делим на 3 - до, с комметом, после;
+		//divide by 3 - before, with a comment, after;
 		_INT32 c = current_table_column_;
 
-		add_default_cell(comments_[comment_idx].col - c - 1);
-		add_default_cell(1);
-		add_default_cell(repeated + c - comments_[comment_idx].col);
+		add_default_cell(comments_[comment_idx].col - c - 1, style_name);
+		add_default_cell(1, style_name);
+		add_default_cell(repeated + c - comments_[comment_idx].col, style_name);
 
 		return;
 	}
@@ -1557,12 +1640,12 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 			{
 				if (repeated > 1)
 				{
-					//делим на 3 - до, с spanned, после;
+					//divide by 3 - before, with spanned, after;
 					_INT32 c = current_table_column_;
 
-					add_default_cell(it->first - c - 1);
-					add_default_cell(1);
-					add_default_cell(repeated + c - current_table_column_);
+					add_default_cell(it->first - c - 1, style_name);
+					add_default_cell(1, style_name);
+					add_default_cell(repeated + c - current_table_column_, style_name);
 
 					return;
 				}
@@ -1582,18 +1665,29 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 
 	if (data_validation_idx >= 0 && repeated > 1 && repeated_validation != repeated)
 	{
-		//делим на 3 - до, с validation, после;
+		//divide by 3 - before, with validation, after;
 		_INT32 c = current_table_column_;
 
-		add_default_cell(ref.col_start - c - 1);
-		add_default_cell(repeated_validation);
-		add_default_cell(repeated + c - current_table_column_);
+		add_default_cell(ref.col_start - c - 1, style_name);
+		add_default_cell(repeated_validation, style_name);
+		add_default_cell(repeated + c - current_table_column_, style_name);
 
 		return;
 	}
 //-----------------------------------------------------------------------------------------
-	bool bCovered = false;
-	if (!bSpanned)
+	// Columns still covered by a cell merged across columns of this row (isSpannedCell sets the count):
+	// these cells are covered, and the next cell after them is not.
+	if (!bSpanned && current_covered_cols_ > 0 && repeated > current_covered_cols_)
+	{
+		_INT32 covered = current_covered_cols_;
+
+		add_default_cell(covered, style_name);
+		add_default_cell(repeated - covered, style_name);
+
+		return;
+	}
+	bool bCovered = !bSpanned && current_covered_cols_ > 0;
+	if (!bSpanned && !bCovered)
 	{
 		for (size_t i = 0; i < current_covered_rows_.size(); i++)
 		{
@@ -1612,14 +1706,18 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 
 				if (split != current_table_column_ && split != current_table_column_ + repeated)
 				{
-					add_default_cell(split - c);
-					add_default_cell(repeated + c - split);
+					add_default_cell(split - c, style_name);
+					add_default_cell(repeated + c - split, style_name);
 					return;
 				}
 			}
 		}		
 	}
 //-----------------------------------------------------------------------------------------
+	// A given style (empty cells of one style folded together by the XLSX reader) is written as it is,
+	// even where it equals the column default: the run may span columns with other defaults.
+	const std::wstring & cell_style_name = style_name.empty() ? row_default_cell_style_name_ : style_name;
+
 	office_element_ptr default_cell_elm;
 	if (bCovered)
 	{
@@ -1665,15 +1763,15 @@ void ods_table_state::add_default_cell(_INT32 repeated)
 	{
 		cell->attlist_.table_number_columns_repeated_ = repeated;
 
-		if (!row_default_cell_style_name_.empty())
-			cell->attlist_.table_style_name_ = row_default_cell_style_name_;
+		if (!cell_style_name.empty())
+			cell->attlist_.table_style_name_ = cell_style_name;
 	}
 	if (covered_cell)
 	{
 		covered_cell->attlist_.table_number_columns_repeated_ = repeated;
 
-		if (!row_default_cell_style_name_.empty())
-			covered_cell->attlist_.table_style_name_ = row_default_cell_style_name_;
+		if (!cell_style_name.empty())
+			covered_cell->attlist_.table_style_name_ = cell_style_name;
 
 		current_covered_cols_ -= repeated;
 	}
@@ -1965,7 +2063,7 @@ void ods_table_state::start_conditional_format(const std::wstring& ref)
 		std::wstring out = converter.convert_ref_distances(ref, L" ", L" ");
 
 		cond_format->calcext_target_range_address_ = out;
-		//проверить конвертацию на диапазонах с именами листов в кавычках и с пробелами
+		//check conversion on ranges with sheet names in quotes and with spaces
 	}
 }
 void ods_table_state::end_conditional_format()
@@ -1991,16 +2089,16 @@ void ods_table_state::start_conditional_rule(int rule_type, _CP_OPT(unsigned int
 			if ((condition_fmt) && (condition_fmt->calcext_target_range_address_))
 			{
 				std::wstring cell, table,test = *condition_fmt->calcext_target_range_address_;
-				std::vector< std::wstring > splitted;
+				std::vector< std::wstring > split;
 			
-				boost::algorithm::split(splitted, test, boost::algorithm::is_any_of(L"!"), boost::algorithm::token_compress_on);
-    			if (splitted.size()>1)
+				boost::algorithm::split(split, test, boost::algorithm::is_any_of(L"!"), boost::algorithm::token_compress_on);
+    			if (split.size()>1)
 				{
-					table = splitted[0];
-					test = splitted[1];
+					table = split[0];
+					test = split[1];
 				}else table = office_table_name_;
-				boost::algorithm::split(splitted, test, boost::algorithm::is_any_of(L":"), boost::algorithm::token_compress_on);
-				cell = splitted[0];
+				boost::algorithm::split(split, test, boost::algorithm::is_any_of(L":"), boost::algorithm::token_compress_on);
+				cell = split[0];
 
 				std::wstring col, row;
 
@@ -2236,7 +2334,7 @@ void ods_table_state::set_conditional_value(int type, const std::wstring& value 
 			}
 			entry->calcext_value_ = value;
 		}
-		///color???? - прихоодят выше уровнем !!
+		///color???? - they come to a higher level!!
 	}
 }
 void ods_table_state::set_conditional_show_value(bool value)

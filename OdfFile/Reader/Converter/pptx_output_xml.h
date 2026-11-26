@@ -276,8 +276,8 @@ public:
 	};
     void write_to(std::wostream & strm);
 
-	std::pair<int,int> add_or_find(std::wstring name);//возвращает 2 индекса - автора - и последний idx от автора
-	//так как учет индексов идет по всем слайдам, замечаниям, ....
+	std::pair<int,int> add_or_find(std::wstring name);//returns 2 indexes - the author - and the last idx from the author
+	//since indexes are taken into account for all slides, comments, ....
 	
 	static pptx_xml_authors_comments_ptr create();
 

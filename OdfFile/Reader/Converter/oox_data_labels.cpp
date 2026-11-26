@@ -30,7 +30,7 @@
 namespace cpdoccore {
 namespace oox {
 
-oox_data_labels::oox_data_labels()//подписи на значениях
+oox_data_labels::oox_data_labels()//labels on values
 {
 	showBubbleSize_		= false;
 	showCatName_		= false;

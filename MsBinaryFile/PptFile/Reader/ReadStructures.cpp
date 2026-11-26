@@ -22,7 +22,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-#pragma once
 
 #include "ReadStructures.h"
 
@@ -106,8 +105,6 @@ void Read(POLE::Stream* pStream, PPT::CTextRuler& oRun)
     _UINT32 dwFlags = StreamUtils::ReadDWORD(pStream);
     BYTE flag1 = (BYTE)(dwFlags);
     BYTE flag2 = (BYTE)(dwFlags >> 8);
-    BYTE flag3 = (BYTE)(dwFlags >> 16);
-    BYTE flag4 = (BYTE)(dwFlags >> 24);
 
     bool bDefaultTabSize_ = (0x01 == (0x01 & flag1));
     bool bCLevels_ = (0x02 == (0x02 & flag1));
@@ -138,12 +135,11 @@ void Read(POLE::Stream* pStream, PPT::CTextRuler& oRun)
         for (WORD i = 0; i < tabStopsCount; ++i)
         {
             WORD tabPos = StreamUtils::ReadWORD(pStream);
-            WORD tabType = StreamUtils::ReadWORD(pStream);
+            StreamUtils::ReadWORD(pStream);
 
             if ((tabPos & 0xff00) == 0xff00)
                 break;
-            tabType = 0x0000;
-            oRun.tabsStops.push_back(std::pair<int, int>(tabPos * dScaleX, tabType));
+            oRun.tabsStops.push_back(std::pair<int, int>(tabPos * dScaleX, 0));
         }
     }
 
@@ -204,8 +200,6 @@ void Read(POLE::Stream* pStream, PPT::CTextSIRun& oRun, bool bIsIndentation)
     {
         _UINT32 dwFlags = StreamUtils::ReadDWORD(pStream);
         BYTE flag1 = (BYTE)(dwFlags);
-        BYTE flag2 = (BYTE)(dwFlags >> 8);
-        BYTE flag3 = (BYTE)(dwFlags >> 16);
         BYTE flag4 = (BYTE)(dwFlags >> 24);
 
         oRun.pp10runid = (0x0F & flag1);
@@ -285,9 +279,8 @@ void CTextPFRunRecord::LoadFromStream(POLE::Stream* pStream, bool bIsIndentation
     BYTE flag1 = (BYTE)(dwFlags);
     BYTE flag2 = (BYTE)(dwFlags >> 8);
     BYTE flag3 = (BYTE)(dwFlags >> 16);
-    BYTE flag4 = (BYTE)(dwFlags >> 24);
 
-    //флаги чтения
+    //read flags
     bool hasBullet_ = (0x01 == (0x01 & flag1));
     bool bulletHasFont_ = (0x02 == (0x02 & flag1));
     bool bulletHasColor_ = (0x04 == (0x04 & flag1));
@@ -314,10 +307,7 @@ void CTextPFRunRecord::LoadFromStream(POLE::Stream* pStream, bool bIsIndentation
     bool tabStops_ = (0x10 == (0x10 & flag3));
     bool textDirection_ = (0x20 == (0x20 & flag3));
     //reserved
-    bool bulletBlip_ = (0x80 == (0x80 & flag3));
 
-    bool bulletScheme_ = (0x01 == (0x01 & flag4));
-    bool bulletHasScheme_ = (0x02 == (0x02 & flag4));
 
     WORD bulletFlag = 0;
 
@@ -471,7 +461,6 @@ void CTextCFRunRecord::LoadFromStream(POLE::Stream* pStream, bool bIsIndentation
     BYTE flag1 = (BYTE)(dwFlags);
     BYTE flag2 = (BYTE)(dwFlags >> 8);
     BYTE flag3 = (BYTE)(dwFlags >> 16);
-    BYTE flag4 = (BYTE)(dwFlags >> 24);
 
     bool hasBold = (0x01 == (0x01 & flag1));
     bool hasItalic = (0x02 == (0x02 & flag1));
@@ -496,9 +485,6 @@ void CTextCFRunRecord::LoadFromStream(POLE::Stream* pStream, bool bIsIndentation
     bool AnsiFontRef_ = (0x40 == (0x40 & flag3));
     bool SymbolFontRef_ = (0x80 == (0x80 & flag3));
 
-    bool hasNewEATypeface = (0x01 == (0x01 & flag4));
-    bool hasCsTypeface = (0x02 == (0x02 & flag4));
-    bool hasPp11ext = (0x04 == (0x04 & flag4));
 
     bool bIsFontStylePresent = (hasBold || hasItalic || hasUnderline || hasShadow ||
                                 hasFehint || hasKimi || hasEmboss || hasStyle != 0);
@@ -556,7 +542,7 @@ void CTextCFRunRecord::LoadFromStream(POLE::Stream* pStream, bool bIsIndentation
     if (BaseLineOffset_)
         m_oRun.BaseLineOffset = (double)StreamUtils::ReadSHORT(pStream);
 
-    // или два последних наоборот????
+    // or the last two are the other way around????
 }
 
 
@@ -696,7 +682,7 @@ void CMetaHeader::FromStream(POLE::Stream* pStream, CRYPT::ECMADecryptor *pDecry
 
 void CMetaHeader::ToEMFHeader(Gdiplus::ENHMETAHEADER3* pHeader)
 {
-    if (NULL == pHeader)
+    if (nullptr == pHeader)
         return;
 
     pHeader->iType = 0x00000001;
@@ -707,7 +693,7 @@ void CMetaHeader::ToEMFHeader(Gdiplus::ENHMETAHEADER3* pHeader)
     pHeader->rclBounds.right = rcBounds.right;
     pHeader->rclBounds.bottom = rcBounds.bottom;
 
-    // нужно перевести в мм
+    // need to be converted to mm
     pHeader->rclFrame.left = rcBounds.left;
     pHeader->rclFrame.top = rcBounds.top;
     pHeader->rclFrame.right = rcBounds.right;
@@ -730,14 +716,14 @@ void CMetaHeader::ToEMFHeader(Gdiplus::ENHMETAHEADER3* pHeader)
     pHeader->szlDevice.cx = 200;
     pHeader->szlDevice.cy = 200;
 
-    // нужно перевести в мм
+    // need to be converted to mm
     pHeader->szlMillimeters.cx = 100;
     pHeader->szlMillimeters.cy = 100;
 }
 
 void CMetaHeader::ToWMFHeader(Gdiplus::WmfPlaceableFileHeader* pHeader)
 {
-    if (NULL == pHeader)
+    if (nullptr == pHeader)
         return;
 
     pHeader->Key = 0x9AC6CDD7;
@@ -770,10 +756,10 @@ void CMetaHeader::ToWMFHeader(Gdiplus::WmfPlaceableFileHeader* pHeader)
 #define CLIPSIZE 12
 #define PIXMAPRECSIZE 50
 #define HEADERSIZE 40
-#define MAXCOLORTABLESIZE 256*8+8
-#define OPCODEMISCSIZE 2+8+8+2	/* opcode+srcRect+dstRect+mode */
+#define MAXCOLORTABLESIZE (256*8+8)
+#define OPCODEMISCSIZE (2+8+8+2)	/* opcode+srcRect+dstRect+mode */
 #define ENDOFPICTSIZE 2
-#define PICSIZE PIXMAPRECSIZE + HEADERSIZE + MAXCOLORTABLESIZE + ENDOFPICTSIZE + OPCODEMISCSIZE + CLIPSIZE
+#define PICSIZE (PIXMAPRECSIZE + HEADERSIZE + MAXCOLORTABLESIZE + ENDOFPICTSIZE + OPCODEMISCSIZE + CLIPSIZE)
 
 void CMetaHeader::ToPICTHeader(BYTE *& pHeader, int & size)
 {
@@ -788,7 +774,7 @@ void CMetaHeader::ToPICTHeader(BYTE *& pHeader, int & size)
     //Skip picSize and put out picFrame (10 bytes).
     picPtr = (short *)pHeader;
 
-    *picPtr++ = (short)myRowBytes;
+    *picPtr++ = myRowBytes;
 
     *picPtr++ = (short)rcBounds.top;
     *picPtr++ = (short)rcBounds.left;
@@ -848,8 +834,8 @@ CMetaFileBuffer::CMetaFileBuffer()
     m_bIsCompressed = false;
     m_bIsValid = false;
 
-    m_pMetaHeader = NULL;
-    m_pMetaFile = NULL;
+    m_pMetaHeader = nullptr;
+    m_pMetaFile = nullptr;
 
     m_lMetaHeaderSize = 0;
     m_lMetaFileSize = 0;
@@ -903,20 +889,20 @@ int CMetaFileBuffer::ToBuffer(BYTE*& Data)
 {
     int sz = 0;
 
-    if (NULL != m_pMetaHeader)	sz += m_lMetaHeaderSize;
-    if (NULL != m_pMetaFile)	sz += m_lMetaFileSize;
+    if (nullptr != m_pMetaHeader)	sz += m_lMetaHeaderSize;
+    if (nullptr != m_pMetaFile)	sz += m_lMetaFileSize;
 
     Data = new BYTE[sz];
     int pos = 0;
 
-    if (NULL != m_pMetaHeader)
+    if (nullptr != m_pMetaHeader)
     {
-        memcpy(Data, (BYTE*)m_pMetaHeader, m_lMetaHeaderSize);
+        memcpy(Data, m_pMetaHeader, m_lMetaHeaderSize);
         pos += m_lMetaHeaderSize;
     }
-    if (NULL != m_pMetaFile)
+    if (nullptr != m_pMetaFile)
     {
-        memcpy(Data + pos, (BYTE*)m_pMetaFile, m_lMetaFileSize);
+        memcpy(Data + pos, m_pMetaFile, m_lMetaFileSize);
     }
 
     return sz;
@@ -924,11 +910,11 @@ int CMetaFileBuffer::ToBuffer(BYTE*& Data)
 
 void CMetaFileBuffer::ToFile(NSFile::CFileBinary *pFile)
 {
-    if (NULL != m_pMetaHeader)
+    if (nullptr != m_pMetaHeader)
     {
         pFile->WriteFile(m_pMetaHeader, m_lMetaHeaderSize);
     }
-    if (NULL != m_pMetaFile)
+    if (nullptr != m_pMetaFile)
     {
         pFile->WriteFile(m_pMetaFile, m_lMetaFileSize);
     }

@@ -1,4 +1,11 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+
 cmake_minimum_required(VERSION 3.10)
+
+# Else CMAKE_MSVC_RUNTIME_LIBRARY is ignored: a core package would have the
+# static runtime, and the desktop build that links it the DLL one
+cmake_policy(SET CMP0091 NEW)
 
 project(core)
 
@@ -6,7 +13,14 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-# platform-specific compile flags
+# Only the third-party libraries (build.sh --third-party-only), which
+# common.cmake built and uploaded to the remote cache
+if(EO_THIRD_PARTY_ONLY)
+    return()
+endif()
+
+option(EO_BUILD_TESTS "Build C++ unit tests and register them with CTest" OFF)
+
 if(EMSCRIPTEN)
 
     add_subdirectory( "${CORE_ROOT_DIR}/OfficeUtils/js" zlib )
@@ -15,6 +29,12 @@ if(EMSCRIPTEN)
     add_subdirectory( "${CORE_ROOT_DIR}/Common/3dParty/hunspell" spell )
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/fontengine/js" fonts )
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/graphics/pro/js/" drawingfile )
+
+elseif(ANDROID)
+
+    # Only the converter libraries; the tools are built for the host
+    add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/build/cmake" x2t )
+
 else()
 
     add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/build/cmake" x2t )
@@ -25,50 +45,53 @@ else()
     add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/Resources/CMapMemory" cmapbin )
     add_subdirectory( "${CORE_ROOT_DIR}/Test/Applications/x2tTester" x2ttester )
 
-    #[[
-    set( ALL_ARTIFACTS
-        UnicodeConverter
-        kernel
-        kernel_network
-        Fb2File
-        PdfFile
-        HtmlFile2
-        EpubFile
-        XpsFile
-        OFDFile
-        DjVuFile
-        DocxRenderer
-        doctrenderer
-        IWorkFile
-        HWPFile
-        graphics
-        x2tlib
-        allfontsgen
-        allthemesgen
-        pluginsmanager
-        docbuilder
-        x2t
-    )
+    eo_core_converter_assembly()
+    include( "${CORE_ROOT_DIR}/cmake/core-package.cmake" )
 
-    add_custom_target(copy_artifacts ALL
-        COMMENT "Copying all artifacts into ${EO_CORE_OUTPUT_DIR}"
-    )
+    if(EO_BUILD_TESTS)
+        enable_testing()
+        find_package(GTest CONFIG REQUIRED)
 
-    add_dependencies(copy_artifacts ${ALL_ARTIFACTS})
+        add_subdirectory( "${CORE_ROOT_DIR}/Common/cfcpp/test" cfcpp_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/graphics/tests/BooleanOperations_Unit-tests" booleanoperations_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Reader/Converter/StarMath2OOXML/TestSMConverter" starmath_smconverter_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Reader/Converter/StarMath2OOXML/TestEQNtoOOXML" starmath_eqntoooxml_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OOXML/test" ooxml_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OOXML/DocxFormat/test" docx_numbering_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OOXML/Binary/Sheets/Reader/test" csv_reader_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OfficeUtils/tests" officeutils_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OfficeCryptReader/tests" officecrypt_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OOXML/XlsxFormat/Worksheets/test" xlsx_condfmt_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Reader/Converter/SMCustomShape2OOXML/TestSMCustomShape" starmath_smcustomshape_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/test_odf" test_odf )
+        add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/test/TestOOOXml2Odf" ooxml2odf_math_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/Test" odf_regression_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/test" xmlsec_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/number_formats" odf_number_formats_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/MsBinaryFile/DocFile/test" doc_fkp_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/RtfFile/Format/test" rtf_lex_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg/test" openjpeg_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/MsBinaryFile/PptFile/test" pptfile_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/raster/test" raster_formats_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/fontengine/test" fontengine_test )
 
-    foreach(artifact ${ALL_ARTIFACTS})
-        add_custom_command(TARGET copy_artifacts POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
-            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${artifact}> "${EO_CORE_OUTPUT_DIR}/"
-            COMMENT "Copying ${artifact} to ${EO_CORE_OUTPUT_DIR}"
-        )
-    endforeach()
+        # doctrenderer (V8) gtest suites. The V8 monolith is built in CI by
+        # common.cmake (build_3rdparty.py) and is self-contained at run time:
+        # the x64-linux build sets v8_use_external_startup_data=false (snapshot
+        # embedded in the monolith) and v8_enable_i18n_support=false (no external
+        # icudtl.dat), so CJSContext initializes with no external runtime data
+        # files. These suites build all JS inline via runScript() — no fixtures.
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/json" doctrenderer_json_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/js_internal" doctrenderer_jsinternal_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/embed/internal/hash" doctrenderer_hash_test )
+        # The JS engine embedding itself: run these first after updating V8
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/engine" doctrenderer_engine_test )
 
-    add_custom_command(TARGET copy_artifacts POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
-        COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
-        COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
-    )
-    ]]
+        add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test" pdffile_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test/jbig2" pdf_jbig2_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DjVuFile/test" djvu_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/osign/test" osign_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/Common/Network/tests" kernel_network_socketio_url_test )
+    endif()
 
 endif()

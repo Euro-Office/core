@@ -47,7 +47,7 @@ namespace NSFontConverter
 		StringExt    *seValue;
 	};
 
-	enum StringExtFormatType
+	enum StringExtFormatType : unsigned char
 	{
 		fmtIntDecimal,
 		fmtIntHex,
@@ -82,7 +82,7 @@ namespace NSFontConverter
 		"s",
 		"t",
 		"w",
-		NULL
+		nullptr
 	};
 
 	//------------------------------------------------------------------------
@@ -97,7 +97,7 @@ namespace NSFontConverter
 
 	inline void StringExt::Resize(int nLength)
 	{
-		char *sTemp = NULL;
+		char *sTemp = nullptr;
 
 		if ( !m_sData )
 			m_sData = new char[Size(nLength)];
@@ -118,7 +118,7 @@ namespace NSFontConverter
 
 	StringExt::StringExt()
 	{
-		m_sData = NULL;
+		m_sData = nullptr;
 		Resize( m_nLength = 0 );
 		m_sData[0] = '\0';
 	}
@@ -127,14 +127,14 @@ namespace NSFontConverter
 	{
 		int nLen = (int)strlen( sSrc );
 
-		m_sData = NULL;
+		m_sData = nullptr;
 		Resize(m_nLength = nLen);
 		memcpy(m_sData, sSrc, nLen + 1);
 	}
 
 	StringExt::StringExt(const char *sSrc, int nLength)
 	{
-		m_sData = NULL;
+		m_sData = nullptr;
 		Resize( m_nLength = nLength );
 		memcpy( m_sData, sSrc, m_nLength * sizeof(char) );
 		m_sData[m_nLength] = '\0';
@@ -142,7 +142,7 @@ namespace NSFontConverter
 
 	StringExt::StringExt(StringExt *seSrc, int nIndex, int nLength)
 	{
-		m_sData = NULL;
+		m_sData = nullptr;
 		Resize( m_nLength = nLength );
 		memcpy( m_sData, seSrc->GetBuffer() + nIndex, m_nLength);
 		m_sData[ m_nLength ] = '\0';
@@ -150,7 +150,7 @@ namespace NSFontConverter
 
 	StringExt::StringExt(StringExt *seSrc)
 	{
-		m_sData = NULL;
+		m_sData = nullptr;
 		Resize( m_nLength = seSrc->GetLength() );
 		memcpy( m_sData, seSrc->GetBuffer(), m_nLength + 1);
 	}
@@ -160,7 +160,7 @@ namespace NSFontConverter
 		int nLen1 = seString1->GetLength();
 		int nLen2 = seString2->GetLength();
 
-		m_sData = NULL;
+		m_sData = nullptr;
 		Resize( m_nLength = nLen1 + nLen2 );
 		memcpy( m_sData, seString1->GetBuffer(), nLen1 );
 		memcpy( m_sData + nLen1, seString2->GetBuffer(), nLen2 + 1 );
@@ -169,7 +169,7 @@ namespace NSFontConverter
 	StringExt *StringExt::FromInt(int nValue)
 	{
 		char sBuffer[24];
-		char *pData = NULL;
+		char *pData = nullptr;
 		int   nLen;
 
 		FormatInt( nValue, sBuffer, sizeof( sBuffer ), false, 0, 10, &pData, &nLen);
@@ -278,8 +278,8 @@ namespace NSFontConverter
 				}
 				else
 				{
-					// Разбираем форматированную строку
-					if ( !(*pCur >= '0' && *pCur <= '9') )
+					// Parsing a formatted string
+					if ( *pCur < '0' || *pCur > '9' )
 						break;
 					nIndex = *pCur - '0';
 					for (++pCur; *pCur >= '0' && *pCur <= '9'; ++pCur )
@@ -466,7 +466,7 @@ namespace NSFontConverter
 						nWidth = uArg.iValue;
 						break;
 					}
-					// Добавляем аргумент в нужном формате, с нужным прилеганием
+					// Add an argument in the required format, with the required alignment
 					if ( !bReverseAlign && nLen < nWidth )
 					{
 						for (int nCounter = nLen; nCounter < nWidth; ++nCounter )
@@ -505,7 +505,8 @@ namespace NSFontConverter
 		int nStart;
 
 		int nCur = nBufferSize;
-		if ( ( bNegative = nValue < 0 ) )
+		bNegative = nValue < 0;
+		if ( bNegative )
 		{
 			nValue = -nValue;
 		}
@@ -571,7 +572,8 @@ namespace NSFontConverter
 		double dTemp = 0;
 		int nInt;
 
-		if ( bNegative = ( dValue < 0 ) )
+		bNegative = ( dValue < 0 );
+		if ( bNegative )
 			dValue = -dValue;
 
 		dValue = floor( dValue * pow( (double)10, nPrecision) + 0.5);

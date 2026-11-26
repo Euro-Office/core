@@ -226,7 +226,7 @@ namespace codegen
         GenClassPivot PreProcessClass(List<GenClassPivot> aGenClasses, CodeTypeDeclaration type)
         {
             GenClassPivot oGenClass = null;
-            //получаем xml namespace
+            //get xml namespace
             string sNamespace = null;
             bool bIncludeInSchema = true;
             string sRootName = "";
@@ -281,7 +281,7 @@ namespace codegen
                     for (int i = 0; i < type.Members.Count; ++i)
                     {
                         CodeTypeMember member = type.Members[i];
-                        //CodeMemberField пропускаем
+                        //CodeMemberField skipped
                         CodeMemberProperty codeMemberProperty = member as CodeMemberProperty;
                         if (codeMemberProperty != null)
                         {
@@ -313,7 +313,7 @@ namespace codegen
                     oGenMember.bQualified = false;
                     oGenMember.bIsAttribute = true;
                     ParseArguments(attribute.Arguments, oGenMember);
-                    //todo могут быть повторы имен атрибутов и child nodes.
+                    //todo there may be repetitions of attribute names and child nodes.
                 }
                 else if (attribute.Name == "System.ComponentModel.DefaultValueAttribute")
                 {
@@ -346,7 +346,7 @@ namespace codegen
                 {
                     ParseArguments(attribute.Arguments, oGenMember);
                 }
-                //todo не всегда прописан
+                //todo isn't always registered
                 //else if (attribute.Name == "System.Xml.Serialization.XmlChoiceIdentifierAttribute")
                 //{
                 //    if (attribute.Arguments.Count > 0)

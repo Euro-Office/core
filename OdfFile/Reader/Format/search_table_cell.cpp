@@ -61,7 +61,7 @@ typedef shared_ptr<const office_element>::Type office_element_ptr_const;
             if (elm) \
                 elm->accept(*this); \
         }
-// обход таблицы
+// table traversal
 class table_round : public base_visitor, 
     public const_visitor<office_body>,
     public const_visitor<office_spreadsheet>,
@@ -103,7 +103,7 @@ public:
 private:
     virtual void on_not_impl(std::string const & message)
     {
-        _CP_LOG << L"[table_round visitor] : not impliment for \"" << utf8_to_utf16(message) << L"\"" << std::endl;
+        _CP_LOG << L"[table_round visitor] : not implement for \"" << utf8_to_utf16(message) << L"\"" << std::endl;
     }
 
 public:    

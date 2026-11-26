@@ -62,7 +62,7 @@ namespace PdfWriter
 		
 	private:
 
-		bool           m_bRgb;            // Rgb или Gray
+		bool           m_bRgb;            // RGB or Gray
 		unsigned char* m_pColors;
 		double*        m_pColorsPoints;
 		int            m_nColorsCount;

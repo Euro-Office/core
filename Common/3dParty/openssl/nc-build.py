@@ -1,0 +1,196 @@
+#!/usr/bin/env python3
+
+import sys
+import shutil
+import os
+from pathlib import Path
+
+script_path = Path(sys.argv[0]).resolve()
+script_dir = script_path.parent
+
+third_party_root = ( script_dir / ".." ).resolve()
+if str( third_party_root ) not in sys.path:
+    sys.path.insert( 0, str( third_party_root ) )
+import build_3rdparty_common as nc
+
+nc.init_for_dep(
+    depname = "OpenSSL",
+    workdir = Path( sys.argv[1] ).resolve(),
+    installdir = Path( sys.argv[2] ).resolve(),
+    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
+    version = "2"
+)
+
+def fetch_and_patch():
+    nc.create_workdir()
+
+    nc.run_command(
+        [   "git", "-c", "core.autocrlf=false", "-c", "core.eol=lf",
+            "clone", "--depth", "1",
+            "--branch", "openssl-4.0.1",
+            "https://github.com/openssl/openssl.git",
+            str(nc.work_dir)
+        ],
+        "Clone repo"
+    )
+    
+    nc.create_work_dir_ok_marker()
+
+    print( "Fetch & patch completed" )
+
+
+def openssl_windows_target() -> str:
+    """Windows-only. OpenSSL Configure target matching the target arch."""
+    return {
+        "x64":   "VC-WIN64A",
+        "arm64": "VC-WIN64-ARM",
+        "x86":   "VC-WIN32",
+    }[ nc.target_arch() ]
+
+
+def build_and_install():
+    nc.create_install_dir()
+    
+    if nc.is_android():
+        # OpenSSL's android-* targets find clang through ANDROID_NDK_ROOT and PATH
+        env = {
+            "ANDROID_NDK_ROOT": str( nc.android_ndk_root() ),
+            "PATH": f"{ nc.android_toolchain_bin() }{ os.pathsep }{ os.environ[ 'PATH' ] }",
+        }
+        ossl_target = { "arm64": "android-arm64", "x64": "android-x86_64" }[ nc.target_arch() ]
+
+        nc.run_command(
+            [   "./Configure",
+                ossl_target,
+                f"-D__ANDROID_API__={ nc.ANDROID_API_LEVEL }",
+                f"--prefix={nc.install_dir}",
+                f"--openssldir={nc.install_dir}",
+                "--libdir=lib64",
+                "enable-md2",
+                "no-shared",
+                "no-asm",
+            ],
+            "Configure",
+            nc.work_dir,
+            env = env
+        )
+
+        nc.run_command(
+            [ "make", f"-j{os.cpu_count()}" ],
+            "Build",
+            nc.work_dir,
+            env = env
+        )
+
+        # install_sw skips the man pages
+        nc.run_command(
+            [ "make", "install_sw" ],
+            "Install",
+            nc.work_dir,
+            env = env
+        )
+
+    elif nc.is_linux():
+        nc.run_command(
+            [   "./config",
+                f"--prefix={nc.install_dir}",
+                f"--openssldir={nc.install_dir}",
+                "--libdir=lib64",
+                "enable-md2",
+                "no-shared",
+                "no-asm",
+                # On the command line, so it adds to Configure's default
+                # CFLAGS (-Wall -O3)
+                *nc.baseline_arch_flags(),
+            ],
+            "Configure",
+            nc.work_dir,
+            # Configure replaces its default CFLAGS with these from the
+            # environment (common.cmake sets them), which drops -O3
+            env = { "CFLAGS": "", "CXXFLAGS": "" }
+        )
+
+        nc.run_command(
+            [ "make", f"-j{os.cpu_count()}" ],
+            "Build",
+            nc.work_dir
+        )
+
+        nc.run_command(
+            [ "make", "install" ],
+            "Install",
+            nc.work_dir
+        )
+
+    elif nc.is_apple_silicon():
+        nc.run_command(
+            [   "./config",
+                f"--prefix={nc.install_dir}",
+                f"--openssldir={nc.install_dir}",
+                "enable-md2",
+                "no-shared",
+            ],
+            "Configure",
+            nc.work_dir
+        )
+
+        nc.run_command(
+            [ "make", f"-j{os.cpu_count()}" ],
+            "Build",
+            nc.work_dir
+        )
+
+        nc.run_command(
+            [ "make", "install" ],
+            "Install",
+            nc.work_dir
+        )
+
+    elif nc.is_windows():
+        ossl_target = openssl_windows_target()
+        nc.run_command(
+            [   shutil.which("perl"),
+                "Configure",
+                ossl_target,
+                f"--prefix={nc.install_dir}",
+                f"--openssldir={nc.install_dir}",
+                "enable-md2",
+                "no-shared",
+                "no-asm",
+            ],
+            "Configure",
+            nc.work_dir
+        )
+
+        nc.run_command(
+            [ "nmake" ],
+            "Build",
+            nc.work_dir
+        )
+
+        nc.run_command(
+            [ "nmake", "install" ],
+            "Install",
+            nc.work_dir
+        )
+
+    else:
+        nc.abort_op( f"Unkown target platform: {sys.platform}" )
+
+    nc.create_install_dir_ok_marker()
+    
+    print( "Build and install completed" )
+
+def build_all():
+    if not nc.work_dir_looks_ok():
+        fetch_and_patch()
+
+    if not nc.install_dir_looks_ok():
+        if nc.is_windows() and shutil.which("nmake") is None:
+            raise RuntimeError(
+                "MSVC environment is not set up: 'nmake' not found in PATH.\n"
+                "Run 'vcvarsx86_amd64.bat' or use 'x64 Native Tools Command Prompt'."
+            )
+        build_and_install()
+    
+nc.ensure_dep( build_all )

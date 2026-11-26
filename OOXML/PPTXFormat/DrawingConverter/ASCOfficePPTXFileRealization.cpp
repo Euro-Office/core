@@ -30,7 +30,7 @@
     #include <shlobj.h>
     #include <shlwapi.h>
     #pragma comment( lib, "Rpcrt4.lib" )
-    #pragma comment( lib, "shell32.lib" ) // добавить shell32.lib
+    #pragma comment( lib, "shell32.lib" ) // add shell32.lib
     #pragma comment( lib, "Shlwapi.lib" )
 #else
 #endif
@@ -241,9 +241,9 @@ _UINT32 CPPTXFile::OpenDirectoryToPPTY(std::wstring bsInput, std::wstring bsOutp
 	return S_OK;
 }
 
-_UINT32 CPPTXFile::ConvertPPTYToPPTX(std::wstring bsInput, std::wstring bsOutput, std::wstring bsThemesFolder)//bsOutput и файл и директория может быть 
+_UINT32 CPPTXFile::ConvertPPTYToPPTX(std::wstring bsInput, std::wstring bsOutput, std::wstring bsThemesFolder)//bsOutput can be either a file or a directory
 {
-	OOX::CPath pathLocalTempDirectory = bsOutput; //выходной файл - папка
+	OOX::CPath pathLocalTempDirectory = bsOutput; //output file - folder
 	
 	NSBinPptxRW::CPPTXWriter oWriter;
 	oWriter.Init(pathLocalTempDirectory.GetPath(), m_bIsMacro);
