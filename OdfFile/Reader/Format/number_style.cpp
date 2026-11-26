@@ -39,6 +39,9 @@
 #include "style_text_properties.h"
 #include "style_map.h"
 
+#include <algorithm>
+#include <cwctype>
+
 namespace cpdoccore { 
 
 	using namespace odf_types;
@@ -101,10 +104,47 @@ void number_style_base::oox_convert_impl(oox::num_format_context & Context)
     Context.end_format();
 }
 
+namespace
+{
+// A style:map condition in lower case and without blanks, as num_format_context compares it.
+std::wstring plain_condition(std::wstring condition)
+{
+    condition.erase(std::remove_if(condition.begin(), condition.end(),
+                                   [](wchar_t c) { return c == L' ' || c == L'\t'; }),
+                    condition.end());
+    std::transform(condition.begin(), condition.end(), condition.begin(),
+                   [](wchar_t c) { return static_cast<wchar_t>(std::towlower(c)); });
+    return condition;
+}
+
+// True when the maps have a format for the positive numbers and one for the negative numbers.
+bool maps_cover_positive_and_negative(const office_element_ptr_array & maps)
+{
+    bool positive = false;
+    bool negative = false;
+    for (const office_element_ptr & map : maps)
+    {
+        if (const style_map * styleMap = dynamic_cast<const style_map *>(map.get()))
+        {
+            const std::wstring condition = plain_condition(styleMap->style_condition_);
+            positive = positive || condition == L"value()>0" || condition == L"value()>=0";
+            negative = negative || condition == L"value()<0" || condition == L"value()<=0";
+        }
+    }
+    return positive && negative;
+}
+}
+
 void number_style_base::oox_convert(oox::num_format_context & Context)
 {
     if (!style_map_.empty())
     {
+        // LibreOffice reads the last map of a text style as "all other numbers", whatever its condition says.
+        // When the maps cover the positive and the negative numbers, their conditions are kept: zero then goes to
+        // the first part, as in LibreOffice, which shows zero with the first part for maps "value()>0", "value()<0".
+        const bool lastMapForOtherNumbers =
+            get_type() == typeNumberTextStyle && !maps_cover_positive_and_negative(style_map_);
+
 		for (size_t i = 0; i < style_map_.size(); i++)
 		{
             if (const style_map * styleMap = dynamic_cast<const style_map *>(style_map_[i].get()))
@@ -118,8 +158,10 @@ void number_style_base::oox_convert(oox::num_format_context & Context)
                     {
                         concrete_num_style->oox_convert_impl(Context);
 
+                        const bool otherNumbers = lastMapForOtherNumbers && i + 1 == style_map_.size();
+
                         const std::wstring num_format = Context.get_last_format();
-                        Context.add_format(condition, num_format);
+                        Context.add_format(otherNumbers ? L"" : condition, num_format);
                     }
                 }
             }
@@ -128,8 +170,12 @@ void number_style_base::oox_convert(oox::num_format_context & Context)
 
     oox_convert_impl(Context);
     const std::wstring num_format = Context.get_last_format();
-    Context.add_format(L"", num_format);
 
+    // The content of a text style with maps is the text part; it must not replace the number part of the maps.
+    if (get_type() == typeNumberTextStyle && !style_map_.empty())
+        return;
+
+    Context.add_format(L"", num_format);
 }
 
 
