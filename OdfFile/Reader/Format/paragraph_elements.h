@@ -651,8 +651,11 @@ public:
 	CPDOCCORE_DEFINE_VISITABLE();
     CPDOCCORE_OFFICE_DOCUMENT_IMPL_NAME_FUNCS_; 
 
+    virtual void docx_convert(oox::docx_conversion_context & Context);
     virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
 
+    // the content of text:ruby-base, or NULL when there is none
+    const office_element_ptr_array * base_content() const;
     virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
     virtual void xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context);
 

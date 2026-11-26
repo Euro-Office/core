@@ -71,7 +71,7 @@ PPT::Intermediate::ShapeAnim PPT::Intermediate::ParseExisting5Level_ETNC(const C
 
 bool PPT::Intermediate::operator==(const ShapeAnim &s1, const ShapeAnim &s2)
 {
-    if (s1.IsValid() == false)
+    if (!s1.IsValid())
         return false;
 
     return s1.spid == s2.spid && (s1.presetID == s2.presetID || s1.presetID == 1 || s2.presetID == 1);  /// 1 - Appear

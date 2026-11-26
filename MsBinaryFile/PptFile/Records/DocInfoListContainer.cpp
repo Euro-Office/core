@@ -95,7 +95,7 @@ IRecord *CRecordDocInfoListContainer::getDocBinaryTagExtension(const std::wstrin
 {
     for (auto* pChild : m_rgChildRec)
     {
-        if(pChild == nullptr || pChild->m_record.IsInit() == false)
+        if(pChild == nullptr || !pChild->m_record.IsInit())
             continue;
 
         auto* pDocProgTagsCont = dynamic_cast<CRecordDocProgTagsContainer*>(pChild->m_record.GetPointer());

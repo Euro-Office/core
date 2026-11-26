@@ -61,6 +61,7 @@ namespace DocFileFormat
 
 			//skip 4 bytes
 			unsigned int skip = reader->ReadUInt32();
+			(void)skip;
 
 			newObject->m_BookmarkId = reader->ReadInt32(); //-1 - comment is on a length zero text range in the Main Document
 		}
@@ -70,7 +71,7 @@ namespace DocFileFormat
 	}
 	AnnotationReferenceExDescriptors::AnnotationReferenceExDescriptors(size_t count, POLE::Stream* stream, unsigned int fc, unsigned int lcb)
 	{
-		if ((lcb > 0) && (NULL != stream))
+		if ((lcb > 0) && (nullptr != stream))
 		{
 			VirtualStreamReader reader(stream, (ULONG)fc, 0);
 

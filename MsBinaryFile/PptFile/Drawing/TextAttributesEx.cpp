@@ -172,7 +172,7 @@ void CTextAttributesEx::RecalcParagraphsPPT()
 
     void CTextAttributesEx::ApplyThemeStyle(CTheme* pTheme)
     {
-        if (NULL != pTheme)
+        if (nullptr != pTheme)
         {
             size_t nCountPFs = m_arParagraphs.size();
             for (size_t nIndexP = 0; nIndexP < nCountPFs; ++nIndexP)
@@ -352,12 +352,12 @@ void CTextAttributesEx::RecalcParagraphsPPT()
         {
             for (long i = 0; i < 9 ;i++)
             {
-                if (m_oStyles.m_pLevels[i].is_init() == false)
+                if (pTheme && !m_oStyles.m_pLevels[i].is_init())
                 {
                     m_oStyles.m_pLevels[i] = pTheme->m_pStyles[0].m_pLevels[i];
                 }
 
-                if (m_oStyles.m_pLevels[i].is_init() == false) continue;
+                if (!m_oStyles.m_pLevels[i].is_init()) continue;
 
                 if (m_oRuler.tabsStops.size() > 0)
                 {
@@ -519,7 +519,7 @@ void CTextAttributesEx::RecalcParagraphsPPT()
 
     bool CTextAttributesEx::IsEmptyText()
     {
-        return (0 == m_arParagraphs.size()) ? true : false;
+        return 0 == m_arParagraphs.size();
     }
 
 }

@@ -31,7 +31,7 @@ namespace DocFileFormat
 	class CharacterPropertyExceptions: public PropertyExceptions
 	{
 		public:
-		  /// Creates a CHPX wich doesn't modify anything.
+		  /// Creates a CHPX which doesn't modify anything.
 		  /// The grpprl list is empty
 		CharacterPropertyExceptions();
 

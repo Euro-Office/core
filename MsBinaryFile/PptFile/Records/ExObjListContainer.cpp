@@ -47,7 +47,7 @@ namespace
     // lets a stored object of about 128 KiB claim this much, and a worker runs
     // several conversions at once, so it is kept well below what the 32-bit size
     // field allows.
-    const POLE::uint64 MAX_EX_OBJ_STG_SIZE = 128 * 1024 * 1024;
+    const POLE::uint64 MAX_EX_OBJ_STG_SIZE = 128ULL * 1024 * 1024;
 
     // Both callers pass a constant name today. It is still cut to its last part,
     // so that a name ever taken from the file cannot carry a path: whatever
@@ -99,7 +99,7 @@ void CRecordExObjStg::ReadFromStream(SRecordHeader& oHeader, POLE::Stream* pStre
     // file only once the object is in it, and every refusal leaves it empty.
     m_sFileName.clear();
 
-    if (NULL == pStream)
+    if (nullptr == pStream)
         return;
 
     const bool bCompressed = (0x01 == m_oHeader.RecInstance);

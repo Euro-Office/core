@@ -51,7 +51,7 @@ void CRecordTimeAnimationValueListContainer::ReadFromStream(SRecordHeader &oHead
     SRecordHeader ReadHeader;
     while ( lCurLen < m_oHeader.RecLen )
     {
-        if ( ReadHeader.ReadFromStream(pStream) == false )
+        if ( !ReadHeader.ReadFromStream(pStream) )
         {
             break;
         }

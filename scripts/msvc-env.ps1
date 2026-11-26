@@ -27,7 +27,7 @@ function Find-VisualStudio {
 function Import-VcVars {
     param(
         [ValidateSet('x64', 'arm64')][string]$Arch,
-        [string]$SdkVersion = '10.0.19041.0',
+        [string]$SdkVersion = '10.0.22621.0',
         [string]$VcToolsVersion = ''   # e.g. 14.44; empty = newest in Visual Studio 2022
     )
     $vs = Find-VisualStudio -VcToolsVersion $VcToolsVersion

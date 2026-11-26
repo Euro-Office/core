@@ -37,56 +37,54 @@ CompoundFile::~CompoundFile()
 	streams.clear();
 
 	if (storage_)delete storage_;
-	storage_ = NULL;
+	storage_ = nullptr;
 }
 
 bool CompoundFile::isError()
 {
-	if (storage_ != NULL) return false;
-	return true;	
+	return storage_ == nullptr;	
 }
 
 bool CompoundFile::Open(const std::wstring & file_path, const ReadWriteMode mode)
 {
 	if (storage_) delete storage_;
-	storage_ = NULL;
+	storage_ = nullptr;
 
 	rwMode = mode;
 
 	unsigned int grfMode = 0;
 
 	storage_ = new POLE::Storage(file_path.c_str());
-	if (storage_ == NULL) return false;
+	if (storage_ == nullptr) return false;
 
 	switch(rwMode)
 	{		
 		case cf_ReadMode:
 		{
-			if (storage_->open(false, false) == false)
+			if (!storage_->open(false, false))
 			{
 				delete storage_;
-				storage_ = NULL;
+				storage_ = nullptr;
 			}
 			
 		}break;
 		case cf_WriteMode:
 		{
-			if (storage_->open(true, true) == false)
+			if (!storage_->open(true, true))
 			{
 				delete storage_;
-				storage_ = NULL;
+				storage_ = nullptr;
 			}
 		}break;
 	}
 
-	if (storage_ == NULL) return false;
-	return true;
+	return storage_ != nullptr;
 }
 
 
 CompoundFile::CompoundFile(const std::wstring & file_path, const ReadWriteMode mode)
 {
-	storage_ = NULL;
+	storage_ = nullptr;
 	Open(file_path, mode);
 }
 
@@ -98,7 +96,7 @@ void CompoundFile::copy_stream(std::wstring streamNameOpen, std::wstring streamN
 	stream->seek(0);
 	POLE::uint64 size_stream = stream->size();
 
-	if (bWithRoot == false)
+	if (!bWithRoot)
 	{
 		int pos = streamNameCreate.find(L"/");
 		if (pos >= 0)
@@ -186,13 +184,13 @@ CFStreamPtr CompoundFile::getWorkbookStream()
 {
 	CFStreamPtr stream = getNamedStream(L"Workbook");
 
-	if (stream == NULL) 
+	if (stream == nullptr) 
 		stream = getNamedStream(L"WORKBOOK"); //6447323.xls
-	if (stream == NULL) 
+	if (stream == nullptr) 
 		stream = getNamedStream(L"Book");
-	if (stream == NULL) 
+	if (stream == nullptr) 
 		stream = getNamedStream(L"BOOK");//file(6).xls
-	if (stream == NULL) 
+	if (stream == nullptr) 
 		stream = getNamedStream(L"book");
 	return stream;
 }
@@ -229,28 +227,28 @@ void CompoundFile::closeNamedStream(const std::wstring& name)
 // Opens a stream in the storage (shall be called not more than once per stream)
 POLE::Stream* CompoundFile::openStream(const std::wstring & stream_name)
 {
-	if (storage_ == NULL) return NULL;
+	if (storage_ == nullptr) return nullptr;
 
 	POLE::Stream* pStream = new POLE::Stream(storage_, stream_name);
-	if(pStream == NULL)
+	if(pStream == nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
 	if ((pStream) && (pStream->size() > 0))
 		return pStream;
-	else return NULL;
+	else return nullptr;
 }
 
 
 // Creates a new stream in the storage
 POLE::Stream* CompoundFile::createStream(const std::wstring & stream_name)
 {
-	if (storage_ == NULL) return NULL;
+	if (storage_ == nullptr) return nullptr;
 
 	POLE::Stream* pStream = new POLE::Stream(storage_, stream_name, true);
-	if(pStream == NULL)
+	if(pStream == nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
 	return pStream;
 }

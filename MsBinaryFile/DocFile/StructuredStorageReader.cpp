@@ -27,7 +27,7 @@
 
 namespace DocFileFormat
 {	
-	StructuredStorageReader::StructuredStorageReader () : m_pStorage(NULL)
+	StructuredStorageReader::StructuredStorageReader () : m_pStorage(nullptr)
 	{
 
 	}
@@ -36,7 +36,7 @@ namespace DocFileFormat
 		if(m_pStorage)
 		{
 			delete m_pStorage;
-			m_pStorage = NULL;
+			m_pStorage = nullptr;
 		}
 	}
 
@@ -59,7 +59,7 @@ namespace DocFileFormat
 
 	bool StructuredStorageReader::GetStream (const std::wstring & path, POLE::Stream** ppStream)
 	{
-		if (( m_pStorage != NULL ) && ( !path.empty() ))
+		if (( m_pStorage != nullptr ) && ( !path.empty() ))
 		{
 			*ppStream = new POLE::Stream(m_pStorage, path.c_str());
 		}
@@ -113,7 +113,7 @@ namespace DocFileFormat
 		stream->seek(0);
 		POLE::int64 size_stream = stream->size();
 
-		if (withRoot == false)
+		if (!withRoot)
 		{
 			int pos = (int)streamName.find(L"/");
 			if (pos >= 0)
@@ -131,7 +131,7 @@ namespace DocFileFormat
 			streamNew->write(data_stream, size_stream);
 
 			delete []data_stream;
-			data_stream = NULL;
+			data_stream = nullptr;
 		}
 
 		streamNew->flush();
