@@ -28,6 +28,11 @@ jobs:
     # A manual run only builds the third-party libraries
     name: ${{ github.event_name == 'workflow_dispatch' && 'third-party' || 'build' }} (windows, ${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
+    # actions: write lets the leg delete its previous cache before saving
+    permissions:
+      actions: write
+      contents: read
+      packages: read
     environment: ${{ github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/stable-')) && 'build-assets' || '' }}
 
     env:
@@ -283,20 +288,40 @@ jobs:
         shell: pwsh
         run: ccache --show-stats --verbose
 
+      # Only the newest commit's run saves (.github/actions/branch-head)
+      - name: Check branch head
+        if: always()
+        id: branch-head
+        uses: ./.github/actions/branch-head
+
+      # Delete the leg's previous cache first (.github/actions/drop-caches)
+      - name: Drop old vcpkg binary cache
+        if: always() && steps.vcpkg-key.outputs.prefix != '' && hashFiles('.cache/vcpkg/**') != '' && hashFiles('.cache/vcpkg/**') != steps.vcpkg-restored.outputs.hash && steps.branch-head.outputs.head == 'true'
+        uses: ./.github/actions/drop-caches
+        with:
+          prefix: vcpkg-windows-${{ matrix.arch }}-
+
       # Only when vcpkg added packages: not empty, not what was restored
       - name: Save vcpkg binary cache
-        if: always() && steps.vcpkg-key.outputs.prefix != '' && hashFiles('.cache/vcpkg/**') != '' && hashFiles('.cache/vcpkg/**') != steps.vcpkg-restored.outputs.hash
+        if: always() && steps.vcpkg-key.outputs.prefix != '' && hashFiles('.cache/vcpkg/**') != '' && hashFiles('.cache/vcpkg/**') != steps.vcpkg-restored.outputs.hash && steps.branch-head.outputs.head == 'true'
         uses: actions/cache/save@v4
         with:
           path: ${{ github.workspace }}/.cache/vcpkg
           key: ${{ steps.vcpkg-key.outputs.prefix }}${{ github.run_id }}
+
+      # Delete the leg's previous cache first (.github/actions/drop-caches)
+      - name: Drop old ccache
+        if: always() && steps.ccache.outcome == 'success' && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-')) && steps.branch-head.outputs.head == 'true'
+        uses: ./.github/actions/drop-caches
+        with:
+          prefix: ccache-windows-${{ matrix.arch }}-
 
       # Even when the build fails or is cancelled, so the next run reuses it,
       # but not after an unfinished restore: a partial cache would shadow main's.
       # A PR that started from main's cache doesn't save its own: the repo's
       # 10 GB of caches would evict main's, which every new PR starts from.
       - name: Save ccache
-        if: always() && steps.ccache.outcome == 'success' && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
+        if: always() && steps.ccache.outcome == 'success' && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-')) && steps.branch-head.outputs.head == 'true'
         uses: actions/cache/save@v4
         with:
           path: ${{ env.CCACHE_DIR }}

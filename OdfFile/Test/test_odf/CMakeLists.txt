@@ -132,10 +132,12 @@ add_core_gtest(
             odf_font_family.cpp
             docx2odt_line_break_after_text.cpp
             odt2docx_character_style_based_on.cpp
+            odt2docx_ruby.cpp
             docx2odt_style_based_on.cpp
             odf_bitmap_fill_size.cpp
             xlsx2ods_fit_to_pages.cpp
             ods2xlsx_styles_auto_data_style.cpp
+            odt2docx_tracked_deleted_table.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )

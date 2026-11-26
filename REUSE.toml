@@ -472,6 +472,16 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_index.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_nested_index.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_table.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_text_box_table.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
     "OOXML/test/ExampleFiles/activex_groupname/groupname.docx",
     "OOXML/test/ExampleFiles/docx2odt/vml_margin.docx",
     "OOXML/test/ExampleFiles/pivot_show_data_as/runTotal.xlsx",
@@ -508,5 +518,10 @@ path = [
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_rules.xlsx",
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_x14.xlsx",
 ]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/ruby_base_text.odt"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
