@@ -19,6 +19,11 @@ jobs:
     # A manual run only builds the third-party libraries (job third-party)
     if: github.event_name != 'workflow_dispatch'
     runs-on: ${{ matrix.runner }}
+    # actions: write lets the leg delete its previous cache before saving
+    permissions:
+      actions: write
+      contents: read
+      packages: read
     strategy:
       fail-fast: false
       matrix:
@@ -162,6 +167,13 @@ jobs:
       with:
         path: ${{ github.workspace }}/.cache/vcpkg
         key: vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', '.docker/core.bake.Dockerfile') }}
+
+    # Delete the leg's previous cache first (.github/actions/drop-caches)
+    - name: Drop old ccache
+      if: always() && steps.ccache.outcome == 'success' && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-')) && steps.branch-head.outputs.head == 'true'
+      uses: ./.github/actions/drop-caches
+      with:
+        prefix: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-
 
     # Even when the build fails or is cancelled, so the next run reuses it.
     # A PR that started from main's cache doesn't save its own: the repo's
