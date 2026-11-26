@@ -25,6 +25,8 @@
 #include "DocxConverter.h"
 #include "../../Common/utils.h"
 
+#include <cmath>
+
 #include "../../../OOXML/DocxFormat/Docx.h"
 #include "../../../OOXML/DocxFormat/DocxFlat.h"
 #include "../../../OOXML/DocxFormat/Document.h"
@@ -822,6 +824,8 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 
 	current_bidi_set = (oox_paragraph->m_oParagraphProperty && oox_paragraph->m_oParagraphProperty->m_oBidi.IsInit() && oox_paragraph->m_oParagraphProperty->m_oBidi->m_oVal.ToBool());
 
+	// the old (tracked) properties below push their sizes too: they must not become the size of the paragraph's runs
+	const size_t font_size_depth_before_changes = current_font_size.size();
 	if (oox_paragraph->m_oParagraphProperty)
 	{//chain of format changes in deleted chunks of LibreOffice (and OO) isn't supported -
 		int id;
@@ -856,6 +860,8 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 		if (id >= 0)	
 			id_change_properties.push_back(std::pair<int, int> (3, id));
 	}	
+	if (current_font_size.size() > font_size_depth_before_changes)
+		current_font_size.resize(font_size_depth_before_changes);
 //---------------------------------------------------------------------------------------------------------------------
 	if (oox_paragraph->m_oParagraphProperty && odt_context->text_context()->get_list_item_state() == false)
 	{
@@ -1026,6 +1032,11 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 	}
 
 //---------------------------------------------------------------------------------------------------------------------
+	// runs push their sizes onto current_font_size; a run without one has the size of the paragraph, not of the run
+	// before it (paragraphs in text boxes of a run nest)
+	const double outer_paragraph_font_size = paragraph_font_size_;
+	paragraph_font_size_ = current_font_size.empty() ? 0. : current_font_size.back();
+
 	for (size_t i = 0; i < oox_paragraph->m_arrItems.size(); ++i)
 	{
 		//those elements that are only for Paragraph are here - the rest are in the general heap
@@ -1040,6 +1051,7 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 				break;
 		}
 	}
+	paragraph_font_size_ = outer_paragraph_font_size;
 //---------------------------------------------------------------------------------------------------------------------
 	if (odt_context->in_drop_cap())
 	{
@@ -1089,7 +1101,25 @@ void DocxConverter::convert(OOX::Logic::CRun *oox_run)//wordprocessing 22.1.2.87
 		odt_context->styles_context()->create_style(L"", odf_types::style_family::Text, true, false, -1);					
 		odf_writer::text_format_properties *text_properties = odt_context->styles_context()->last_state()->get_text_properties();
 
+		const size_t font_size_depth = current_font_size.size();
 		convert(oox_run->m_oRunProperty, text_properties);
+
+		// w:position raises or lowers the run by a length; ODF gives it in percent of the run's font size. As in
+		// LibreOffice, it replaces a w:vertAlign of the run and leaves the font size as it is, and 0 means none.
+		if (oox_run->m_oRunProperty->m_oPosition.IsInit() && oox_run->m_oRunProperty->m_oPosition->m_oVal.IsInit()
+			&& text_properties)
+		{
+			const double position_pt = oox_run->m_oRunProperty->m_oPosition->m_oVal->ToPoints();
+			const double font_size_pt = current_font_size.size() > font_size_depth ? current_font_size.back()
+				: paragraph_font_size_;	// the run's own size or that of its character style, else the paragraph's
+			if (position_pt != 0)
+			{
+				double percent = font_size_pt > 0 ? std::round(position_pt / font_size_pt * 100) : (position_pt > 0 ? 33 : -8);
+				percent = (std::max)(-13999., (std::min)(13999., percent));
+
+				text_properties->style_text_position_ = odf_types::text_position(percent, 100.);
+			}
+		}
 	}
 
 	odt_context->start_run(styled);
@@ -3160,13 +3190,7 @@ void DocxConverter::convert(OOX::Logic::CRunProperty *oox_run_pr, odf_writer::te
 		double spacing = oox_run_pr->m_oSpacing->m_oVal->ToPoints();
 		text_properties->fo_letter_spacing_ = odf_types::letter_spacing(odf_types::length(spacing, odf_types::length::pt));
 	}
-	//if (oox_run_pr->m_oPosition.IsInit() && oox_run_pr->m_oPosition->m_oVal.IsInit())
-	//{
-	//	double position_pt = oox_run_pr->m_oPosition->m_oVal->ToPoints();
-	//	double percent = current_font_size.empty() ? 0 : position_pt / current_font_size.back() * 100;
-
-	//	text_properties->style_text_position_ = odf_types::text_position(percent, 100.);
-	//}
+	// w:position is written by convert(CRun): the percentage needs the size the run ends up with
 	if (oox_run_pr->m_oBdr.IsInit())
 	{
 		std::wstring odf_border;
@@ -3919,12 +3943,22 @@ void DocxConverter::convert_styles()
 {
 	if (!odt_context) return;
 
+	// The bottom of current_font_size is the document's default size: every paragraph keeps only that one. Numbering
+	// levels, converted before, may have pushed their own sizes.
+	current_font_size.clear();
+
 	OOX::CStyles* styles = docx_document ? docx_document->m_oMain.styles : (docx_flat_document ? docx_flat_document->m_pStyles.GetPointer() : nullptr);
-	if (!styles)return;
+	if (!styles)
+	{
+		current_font_size.push_back(10.);
+		return;
+	}
 
 	//nullable<OOX::CLatentStyles > m_oLatentStyles;
 
 	convert(styles->m_oDocDefaults.GetPointer(), styles);
+	if (current_font_size.empty())
+		current_font_size.push_back(10.);	// docDefaults without a size: 10 pt, as the default paragraph style gets
 
 	for (size_t i = 0; i < styles->m_arrStyle.size(); i++)
 	{
@@ -4834,12 +4868,15 @@ void DocxConverter::convert_hdr_ftr(std::wstring sId)
 
 	const size_t back_tables = tables_around_hdr_ftr;
 	tables_around_hdr_ftr = odt_context->table_context()->depth();
+	// converted while a body paragraph's properties are: its paragraphs reset the font size stack and push their own
+	const std::vector<double> back_font_size = current_font_size;
 
     for (size_t i = 0; i < oox_hdr_ftr->m_arrItems.size(); ++i)
 	{
 		convert(oox_hdr_ftr->m_arrItems[i]);
 	}
 	tables_around_hdr_ftr = back_tables;
+	current_font_size = back_font_size;
 	oox_current_child_document  = back_document;
 }
 bool DocxConverter::in_table()
