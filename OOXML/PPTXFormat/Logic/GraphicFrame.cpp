@@ -128,6 +128,14 @@ namespace PPTX
 				olePic->oleObject->m_oDrawAspect = (BYTE)1;
 			}
 		}
+		void GraphicFrame::ReadAttributesLink(XmlUtils::CXmlLiteReader& oReader)
+		{
+			nullable_bool oUpdateAutomatic;
+			WritingElement_ReadAttributes_Start(oReader)
+				WritingElement_ReadAttributes_ReadSingle(oReader, L"updateAutomatic", oUpdateAutomatic)
+			WritingElement_ReadAttributes_End(oReader)
+			olePic->oleObject->setLink(oUpdateAutomatic.get_value_or(false));
+		}
 		void GraphicFrame::ReadAttributes3(XmlUtils::CXmlLiteReader& oReader)
 		{
 			WritingElement_ReadAttributes_Start( oReader )
@@ -212,6 +220,8 @@ namespace PPTX
 							if (xfrm.IsInit())
 								xfrm->Merge(olePic->spPr.xfrm);
 						}
+						else if (strName1 == L"link")
+							ReadAttributesLink(oReader);
 					}
 				}
 				else if (strName == L"relIds")

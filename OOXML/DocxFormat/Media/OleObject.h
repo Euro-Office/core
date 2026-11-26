@@ -51,6 +51,7 @@ namespace OOX
 
 		CPath filename_cache();
 		bool isMsPackage();
+		bool isLink();
 
 	protected:
 		CPath	m_filenameCache; //image
