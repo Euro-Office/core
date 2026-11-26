@@ -763,6 +763,24 @@ std::wstring CellNumFormat(oox::xlsx_conversion_context & Context, const std::ws
 	return num_format;
 }
 
+// Whether a cell keeps the number format of its data style when its value type differs from the type of that format.
+// As in LibreOffice, a float cell always keeps it, and a percentage, date or time cell keeps it unless it is the
+// standard format; then, and for a currency cell, the cell takes a format of its own value type.
+bool KeepsStyleNumFormat(office_value_type::type cell_type, const std::wstring & num_format)
+{
+	switch (cell_type)
+	{
+	case office_value_type::Float:
+		return true;
+	case office_value_type::Percentage:
+	case office_value_type::Date:
+	case office_value_type::Time:
+		return num_format != L"General";
+	default:
+		return false;
+	}
+}
+
 // The xf of an empty cell (no value, formula or paragraphs) with a cell style, as table_table_cell::xlsx_convert
 // computes it.
 size_t EmptyStyledCellXf(oox::xlsx_conversion_context & Context, const std::wstring & columnStyleName,
@@ -1191,7 +1209,8 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 			if (attr.office_value_type_)
 			{
-				if (attr.office_value_type_.get() != num_format_type && num_format_type != office_value_type::Custom)
+				if (attr.office_value_type_.get() != num_format_type && num_format_type != office_value_type::Custom &&
+					!KeepsStyleNumFormat(attr.office_value_type_->get_type(), num_format))
 				{// reset from cell
 					num_format_type = attr.office_value_type_->get_type();
 					num_format.clear();
