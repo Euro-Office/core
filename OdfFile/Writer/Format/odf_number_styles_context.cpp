@@ -297,7 +297,9 @@ namespace
 				continue;
 
 			// The limit is written into the ODF condition as it is, so it must be a plain number (1, -5, 0.5, .5, 1E+3).
-			static const boost::wregex number(L"[+-]?([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+-]?[0-9]+)?");
+			// Every choice of the pattern is unambiguous: an ambiguous one backtracks on a long run of digits and Boost
+			// throws instead of matching.
+			static const boost::wregex number(L"[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?");
 			const std::wstring limit = boost::algorithm::trim_copy(token.substr(o.size()));
 			if (!boost::regex_match(limit, number))
 				return L"";

@@ -295,3 +295,24 @@ TEST(XlsxToOdsNumberFormatSections, ConditionLimitIsNoNumber)
 	}
 	EXPECT_TRUE(found) << "[>1-2]0.0000;-0.0000";
 }
+
+// [>111...(1100 digits)x]0;-0, a crafted format code far above Excel's limit of 255 characters: the limit is no number,
+// the file converts and the format keeps its default conditions.
+TEST(XlsxToOdsNumberFormatSections, LongConditionLimitIsNoNumber)
+{
+	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/number_format_long_condition.xlsx");
+	ASSERT_FALSE(dir.empty()) << "XLSX -> ODS conversion failed";
+	const std::wstring xml = read_part(dir, L"styles.xml");
+	ASSERT_TRUE(is_well_formed(xml));
+
+	bool found = false;
+	for (const DataStyle& style : data_styles(xml))
+	{
+		EXPECT_EQ(style.xml.find(L"value()&gt;1"), std::wstring::npos) << style.xml.substr(0, 300);
+		if (map_target(style, L"value()&gt;=0").empty())
+			continue;
+		found = true;
+		EXPECT_NE(style.xml.find(kMinus), std::wstring::npos) << style.xml.substr(0, 300);
+	}
+	EXPECT_TRUE(found) << "[>111...x]0;-0";
+}
