@@ -18,6 +18,7 @@ SOURCES += main.cpp\
            checkbox.cpp\
            richvalue.cpp\
            conversion.cpp\
+           docx_vml_textbox_tracked_changes.cpp\
            editorbin_pivots.cpp\
            parameter_type.cpp\
            editorbin_source_file_type.cpp\
