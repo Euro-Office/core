@@ -132,6 +132,7 @@ add_core_gtest(
             odf_font_family.cpp
             docx2odt_line_break_after_text.cpp
             odt2docx_character_style_based_on.cpp
+            odt2docx_ruby.cpp
             docx2odt_style_based_on.cpp
             odf_bitmap_fill_size.cpp
             xlsx2ods_fit_to_pages.cpp
