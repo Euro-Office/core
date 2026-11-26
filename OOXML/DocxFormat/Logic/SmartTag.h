@@ -36,7 +36,7 @@ namespace OOX
 		class CSmartTag : public WritingElementWithChilds<>
 		{
 		public:
-			CSmartTag(OOX::Document *pMain = NULL);			
+			CSmartTag(OOX::Document *pMain = nullptr);			
 			virtual ~CSmartTag();
 
 			const CSmartTag &operator =(const XmlUtils::CXmlNode& oNode);
@@ -55,7 +55,7 @@ namespace OOX
 			nullable<std::wstring> m_sElement;
 			nullable<std::wstring> m_sUri;
 
-			// Childs
+			// Children
 		};
 	} // namespace Logic
 } // namespace OOX

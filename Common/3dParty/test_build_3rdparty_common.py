@@ -5,6 +5,7 @@
 
 import datetime
 import io
+import runpy
 import tempfile
 import unittest
 from pathlib import Path
@@ -132,6 +133,41 @@ class RemoteCacheTest( unittest.TestCase ):
             req = backend._request( "GET", query={ "max-keys": "2", "prefix": "J" } )
         self.assertTrue( req.get_header( "Authorization" ).endswith(
             "Signature=34b48302e7b5fa45bde8084f4b7868a86f0a534bc59db6670ed5711ef69dc6f7" ) )
+
+
+class BaselineArchFlagsTest( unittest.TestCase ):
+    def setUp( self ):
+        for name, value in { "is_linux": lambda: True, "is_android": lambda: False,
+                             "target_arch": lambda: "x64" }.items():
+            p = mock.patch.object( nc, name, value )
+            p.start()
+            self.addCleanup( p.stop )
+
+    def test_linux_x64_pins_baseline( self ):
+        self.assertEqual( nc.baseline_arch_flags(), [ "-march=x86-64" ] )
+
+    def test_wasm_gets_no_flags( self ):
+        with mock.patch.object( nc, "CROSS_TARGET", "wasm" ):
+            self.assertEqual( nc.baseline_arch_flags(), [] )
+
+    def test_openssl_configure_ignores_env_cflags( self ):
+        # OpenSSL's Configure replaces its default CFLAGS (-O3) with $CFLAGS
+        calls = []
+        script = Path( __file__ ).parent / "openssl" / "nc-build.py"
+        with mock.patch.object( nc, "init_for_dep" ), \
+             mock.patch.object( nc, "ensure_dep" ), \
+             mock.patch.object( nc, "create_install_dir" ), \
+             mock.patch.object( nc, "create_install_dir_ok_marker" ), \
+             mock.patch.object( nc, "is_apple_silicon", lambda: False ), \
+             mock.patch.object( nc, "install_dir", Path( "/nonexistent" ), create=True ), \
+             mock.patch.object( nc, "work_dir", Path( "/nonexistent" ), create=True ), \
+             mock.patch.object( nc, "run_command", lambda cmd, desc, *a, **kw: calls.append( ( desc, cmd, kw.get( "env" ) ) ) ), \
+             mock.patch( "sys.argv", [ str( script ), "/w", "/i" ] ):
+            runpy.run_path( str( script ) )[ "build_and_install" ]()
+        _, cmd, env = calls[ 0 ]
+        self.assertIn( "-march=x86-64", cmd )
+        self.assertEqual( ( env or {} ).get( "CFLAGS" ), "" )
+        self.assertEqual( ( env or {} ).get( "CXXFLAGS" ), "" )
 
 
 if __name__ == "__main__":

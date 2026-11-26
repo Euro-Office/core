@@ -86,9 +86,7 @@ namespace OOX
 			else
 				ptr->iTabID = 0;
 
-			if(m_oState == SimpleTypes::Spreadsheet::EVisibleType::visibleVisible)
-				ptr->hsState = XLSB::BundleSh::ST_SheetState::VISIBLE;
-			else if(m_oState == SimpleTypes::Spreadsheet::EVisibleType::visibleHidden)
+			if(m_oState == SimpleTypes::Spreadsheet::EVisibleType::visibleHidden)
 				ptr->hsState = XLSB::BundleSh::ST_SheetState::HIDDEN;
 			else if(m_oState == SimpleTypes::Spreadsheet::EVisibleType::visibleVeryHidden)
 				ptr->hsState = XLSB::BundleSh::ST_SheetState::VERYHIDDEN;
@@ -132,6 +130,7 @@ namespace OOX
 				case XLSB::BundleSh::ST_SheetState::VERYHIDDEN:
 					m_oState = SimpleTypes::Spreadsheet::EVisibleType::visibleVeryHidden;
 					break;
+				default: break;
 			}
 
 		}
@@ -211,14 +210,15 @@ namespace OOX
 				objectVector.push_back(i->toBin());
 			return objectVector;
 		}
-		void CSheets::toXLS(XLS::BaseObjectPtr stream, const std::vector<_UINT16> &SheetTypes)
+		void CSheets::toXLS(XLS::BaseObjectPtr stream, const std::vector<std::pair<CSheet*, _UINT16>> &sheets)
 		{
 			auto streamPtr = static_cast<XLS::GlobalsSubstream*>(stream.get());
 			auto tabIdArray = new XLS::RRTabId;
 			streamPtr->m_RRTabId = XLS::BaseObjectPtr(tabIdArray);
 			auto SheetNum = 1;
-			for(auto i: m_arrItems)
+			for(const auto& sheet: sheets)
 				{
+					auto i = sheet.first;
 					auto tempSheet = new XLS::BoundSheet8;
 					auto tempSheetUnion = new XLS::BUNDLESHEET;
 					tempSheetUnion->bundleSheetRecord = XLS::BaseObjectPtr(tempSheet);
@@ -235,8 +235,7 @@ namespace OOX
 					else
 						tempSheet->name_ = std::wstring(L"sheet" + std::to_wstring(SheetNum));
 					streamPtr->m_arBUNDLESHEET.push_back(XLS::BaseObjectPtr(tempSheetUnion));
-					if(SheetTypes.size() > SheetNum-1)
-						tempSheet->dt = SheetTypes.at(SheetNum-1);
+					tempSheet->dt = sheet.second;
 					SheetNum++;
 				}
 		}

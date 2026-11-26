@@ -26,7 +26,7 @@
 
 using namespace PPT;
 
-CPPTDocumentInfo::CPPTDocumentInfo() : m_oCurrentUser(), m_bMacroEnabled(true), m_pStream(NULL)
+CPPTDocumentInfo::CPPTDocumentInfo() : m_oCurrentUser(), m_bMacroEnabled(true), m_pStream(nullptr)
 {
 }
 
@@ -40,7 +40,7 @@ void CPPTDocumentInfo::Clear()
     size_t nCount = m_arUsers.size();
     while(0 != nCount)
     {
-        if (NULL != m_arUsers[nCount-1])
+        if (nullptr != m_arUsers[nCount-1])
             RELEASEOBJECT(m_arUsers[nCount-1])
 
                     m_arUsers.pop_back();
@@ -81,10 +81,10 @@ bool CPPTDocumentInfo::ReadFromStream(CRecordCurrentUserAtom *pCurrentUser, POLE
         offsetToEdit = pInfo->m_oUser.m_nOffsetLastEdit;
         m_oCurrentUser.m_bIsEncrypt = pInfo->m_bEncrypt;
 
-        if (bResult == false)
+        if (!bResult)
         {
             delete pInfo;
-            pInfo = NULL;   // may not work
+            pInfo = nullptr;   // may not work
 
             if (m_oCurrentUser.m_bIsEncrypt)
                 return false;
@@ -96,7 +96,7 @@ bool CPPTDocumentInfo::ReadFromStream(CRecordCurrentUserAtom *pCurrentUser, POLE
         // Now need to set its parameters for other users
         pInfo->m_lIndexThisUser = m_arUsers.size() - 1;
 
-        pInfo = NULL;
+        pInfo = nullptr;
     }
     return true;
 }

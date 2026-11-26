@@ -92,6 +92,7 @@ enum ElementType
 	typeTextSenderStateOrProvince,
 	typeTextAuthorInitials,
 	typeTextAuthorName,
+	typeTextDatabaseDisplay,
 
     typeTextSequenceDecls,
     typeTextSequenceDecl,

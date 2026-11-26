@@ -48,7 +48,7 @@ namespace XLSB
     {
         record >> ixf;
 
-        _UINT16     flag;
+        _UINT16     flag = 0;
         record >> flag;
 
         fBuiltIn          = GETBIT(flag, 0);

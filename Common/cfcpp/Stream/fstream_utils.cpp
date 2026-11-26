@@ -80,10 +80,10 @@ CFCPP::Stream CFCPP::OpenFileStream(const std::string & filename, bool bRewrite,
 _INT64 CFCPP::FileLenght(const std::wstring & filename)
 {
     auto stream = OpenFileStream(filename);
-    auto lenght = Length(stream);
+    auto length = Length(stream);
     stream->close();
 
-    return lenght;
+    return length;
 }
 
 ULONG64 CFCPP::FileFNVHash(const std::wstring & filename, _INT64 len, _INT64 offset)

@@ -29,7 +29,7 @@ namespace DocFileFormat
 {	
 	OleObjectMapping::OleObjectMapping(XMLTools::CStringXmlWriter* writer, ConversionContext* context, PictureDescriptor* pict, IMapping* caller, const std::wstring& shapeId)
 		:
-	OleObjectMapping::AbstractOpenXmlMapping(writer), m_context(NULL), _pict(NULL), _caller(NULL), _shapeId(shapeId)
+	OleObjectMapping::AbstractOpenXmlMapping(writer), m_context(nullptr), _pict(nullptr), _shapeId(shapeId), _caller(nullptr)
 	{
 		m_context	=	context;
 		_pict		=	pict;
@@ -137,7 +137,7 @@ namespace DocFileFormat
 
 	void OleObjectMapping::copyEmbeddedObject( const OleObject* ole )
 	{
-		if ( ole == NULL ) return;
+		if ( ole == nullptr ) return;
 
 		std::wstring clsid;
 		std::wstring exelChart = L"Excel.Chart";

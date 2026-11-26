@@ -118,6 +118,14 @@ namespace NExtractTools
 					case AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLTM:
 					case AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSB:
 					{
+						// Given by file names only, the source type is still unknown here; the workbook needs it
+						// for its SourceFileType record
+						if (params.m_nFormatFrom && AVS_OFFICESTUDIO_FILE_UNKNOWN == *params.m_nFormatFrom)
+						{
+							COfficeFileFormatChecker oSourceChecker;
+							if (oSourceChecker.isOfficeFile(sFrom))
+								*params.m_nFormatFrom = oSourceChecker.nFileType;
+						}
 						convertParams.m_bTempIsXmlOptions = false;
 						return xlsx_dir2xlst_bin(sTempUnpackedOox, sTo, params, convertParams);
 					}

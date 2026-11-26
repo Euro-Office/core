@@ -25,6 +25,7 @@
 #ifndef PDF_WRITER_H
 #define PDF_WRITER_H
 
+#include <map>
 #include <string>
 #include <vector>
 #include <math.h>
@@ -245,7 +246,8 @@ private:
 	bool SkipRedact(const double& dX, const double& dY);
 	PdfWriter::CImageDict* LoadImage(Aggplus::CImage* pImage, BYTE nAlpha);
 	PdfWriter::CImageDict* DrawImage(Aggplus::CImage* pImage, const double& dX, const double& dY, const double& dW, const double& dH, const BYTE& nAlpha);
-	bool DrawText(unsigned char* pCodes, const unsigned int& unLen, const double& dX, const double& dY, const std::string& sPUA);
+	bool DrawText(unsigned char* pCodes, const unsigned int& unLen, const double& dX, const double& dY, const std::string& sPUA, bool bInvisible = false);
+	bool DrawColorGlyph(const unsigned int& unGID, const double& dX, const double& dY);
 	bool DrawTextToRenderer(const unsigned int* unGid, const unsigned int& unLen, const double& dX, const double& dY, const std::wstring& wsUnicodeText = L"");
 	bool PathCommandDrawText(unsigned int* pUnicodes, unsigned int unLen, const double& dX, const double& dY, const unsigned int* pGids = nullptr);
 	int  IsEmbeddedBase14(const std::wstring& wsFontName);
@@ -295,6 +297,12 @@ private:
 	CPath                        m_oPath;
 	CTransform                   m_oTransform;
 	bool                         m_bNeedUpdateTextFont;
+	std::wstring                 m_wsColorFontPath; // current font, set when it has COLR glyphs
+	LONG                         m_lColorFaceIndex;
+	struct TColorGlyph { int nLeft, nTop, nWidth, nHeight; }; // nWidth 0: refused, draw as text
+	std::map<std::wstring, bool>        m_mIsColorFont;  // path#face
+	std::map<std::wstring, TColorGlyph> m_mColorGlyphs;  // image key
+	long long                           m_nColorGlyphBytes = 0;
 	bool                         m_bNeedAddHelvetica;
 	double                       m_dPageHeight;
 	double                       m_dPageWidth;

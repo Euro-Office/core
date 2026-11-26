@@ -56,6 +56,7 @@ std::vector<int> XmlUtils::FindAttrValuesInt(const std::wstring &xml, std::wstri
         try {
             vecIntValues.push_back(std::stoi(strValue));
         } catch (...) {
+            (void)0;
         }
     }
     return vecIntValues;

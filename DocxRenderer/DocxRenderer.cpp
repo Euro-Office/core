@@ -29,8 +29,9 @@
 #include "src/logic/Document.h"
 #include "../DesktopEditor/graphics/commands/DocInfo.h"
 #include <algorithm>
+#include <cstdint>
 
-enum class ShapeSerializeType
+enum class ShapeSerializeType : std::uint8_t
 {
 	sstBinary,
 	sstXml
@@ -225,7 +226,7 @@ HRESULT CDocxRenderer::IsSupportAdvancedCommand(const IAdvancedCommand::Advanced
 
 HRESULT CDocxRenderer::AdvancedCommand(IAdvancedCommand* command)
 {
-	if (NULL == command)
+	if (nullptr == command)
 		return S_FALSE;
 
 	switch (command->GetCommandType())
@@ -523,7 +524,7 @@ HRESULT CDocxRenderer::put_BrushTextureImage(Aggplus::CImage* pImage)
 {
 	RELEASEINTERFACE(m_pInternal->m_oDocument.m_oCurrentPage.m_oBrush.Image);
 
-	if (NULL == pImage)
+	if (nullptr == pImage)
 		return S_FALSE;
 
 	m_pInternal->m_oDocument.m_oCurrentPage.m_oBrush.Image = pImage;
@@ -531,11 +532,11 @@ HRESULT CDocxRenderer::put_BrushTextureImage(Aggplus::CImage* pImage)
 
 	return S_OK;
 }
-HRESULT CDocxRenderer::get_BrushTransform(Aggplus::CMatrix& oMatrix)
+HRESULT CDocxRenderer::get_BrushTransform(Aggplus::CMatrix& /*oMatrix*/)
 {
 	return S_OK;
 }
-HRESULT CDocxRenderer::put_BrushTransform(const Aggplus::CMatrix& oMatrix)
+HRESULT CDocxRenderer::put_BrushTransform(const Aggplus::CMatrix& /*oMatrix*/)
 {
 	return S_OK;
 }
@@ -692,7 +693,7 @@ HRESULT CDocxRenderer::DrawImage(IGrObject* pImage, const double& dX, const doub
 {
 	return m_pInternal->m_oDocument.DrawImage(pImage, dX, dY, dW, dH);
 }
-HRESULT CDocxRenderer::DrawImageFromFile(const std::wstring& wsImagePath, const double& dX, const double& dY, const double& dW, const double& dH, const BYTE& nAlpha)
+HRESULT CDocxRenderer::DrawImageFromFile(const std::wstring& wsImagePath, const double& dX, const double& dY, const double& dW, const double& dH, const BYTE& /*nAlpha*/)
 {
 	return m_pInternal->m_oDocument.DrawImageFromFile(wsImagePath,dX, dY, dW, dH);
 }
@@ -719,7 +720,7 @@ HRESULT CDocxRenderer::put_ClipMode(const LONG& lMode)
 	return m_pInternal->m_oDocument.put_ClipMode(lMode);
 }
 
-HRESULT CDocxRenderer::CommandLong(const LONG& lType, const LONG& lCommand)
+HRESULT CDocxRenderer::CommandLong(const LONG& lType, const LONG& /*lCommand*/)
 {
 	if (c_nSupportPathTextAsText == lType)
 	{
@@ -743,11 +744,11 @@ HRESULT CDocxRenderer::CommandLong(const LONG& lType, const LONG& lCommand)
 	}
 	return S_OK;
 }
-HRESULT CDocxRenderer::CommandDouble(const LONG& lType, const double& dCommand)
+HRESULT CDocxRenderer::CommandDouble(const LONG& /*lType*/, const double& /*dCommand*/)
 {
 	return S_OK;
 }
-HRESULT CDocxRenderer::CommandString(const LONG& lType, const std::wstring& sCommand)
+HRESULT CDocxRenderer::CommandString(const LONG& /*lType*/, const std::wstring& /*sCommand*/)
 {
 	return S_OK;
 }

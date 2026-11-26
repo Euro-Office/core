@@ -182,7 +182,7 @@ namespace Base64
         // walk the source buffer
         // each four character sequence is converted to 3 bytes
         // CRLFs and =, and any characters not in the encoding table
-        // are skiped
+        // are skipped
 
         if (szSrc == NULL || pnDestLen == NULL)
             return false;

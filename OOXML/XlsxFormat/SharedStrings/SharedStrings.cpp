@@ -61,7 +61,7 @@ namespace OOX
 			if ((xlsx) && (!xlsx->m_pSharedStrings))
 				xlsx->m_pSharedStrings = this;
 
-			read( oRootPath, oPath );
+			CSharedStrings::read( oRootPath, oPath );
 		}
 		CSharedStrings::~CSharedStrings()
 		{
@@ -265,7 +265,7 @@ namespace OOX
 			{
 				if ( m_arrItems[i] )delete m_arrItems[i];
 
-				m_arrItems[i] = NULL;
+				m_arrItems[i] = nullptr;
 			}
 			m_arrItems.clear();
 		}

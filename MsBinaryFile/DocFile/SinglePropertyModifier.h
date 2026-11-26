@@ -49,7 +49,7 @@ namespace DocFileFormat
 	public:
 		int nWordVersion;
 		/// The operation code identifies the property of the 
-		/// PAP/CHP/PIC/SEP/TAP which sould be modified
+		/// PAP/CHP/PIC/SEP/TAP which should be modified
 		OperationCode OpCode;
 		/// This SPRM requires special handling
 		bool fSpec;

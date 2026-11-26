@@ -451,7 +451,7 @@ void odt_conversion_context::end_alphabetical_index()
 	create_element(L"text", L"alphabetical-index-source", elm, this);
 	
 	text_context()->start_element(elm);
-	//tempalte
+	//template
 	text_context()->end_element();
 	text_context()->end_element();
 }
@@ -1095,6 +1095,9 @@ int odt_conversion_context::get_current_section_columns()
 }
 void odt_conversion_context::add_section(bool continuous)
 {
+	// Elements still open (a table whose first paragraph starts the new section) go to the end of the previous
+	// section, so they keep their order; only elements before the first section go to the root.
+	flush_section();
 //--dump first elements to root------------------------------------------------
 	for (size_t i = 0; i< current_root_elements_.size(); i++)
 	{
@@ -1107,6 +1110,7 @@ void odt_conversion_context::add_section(bool continuous)
 	
 	state.empty			= true;
 	state.continuous	= continuous;
+	state.count_columns	= 1;
 //----------------------------------------------------------------
 	styles_context()->create_style(L"", odf_types::style_family::Section, true, false, -1);		
 
@@ -1159,6 +1163,22 @@ void odt_conversion_context::add_section_columns(int count, double space_pt, boo
 			sep->style_color_			= color(L"#000000");	
 		}
 	}
+}
+void odt_conversion_context::set_section_margins(double left_pt, double right_pt)
+{
+	if (sections_.empty() || (left_pt == 0 && right_pt == 0)) return;
+
+	style* style_ = dynamic_cast<style*>(sections_.back().style_elm.get());
+	if (!style_)return;
+
+	style_section_properties* section_properties = style_->content_.add_get_style_section_properties();
+
+	if (left_pt != 0)
+		section_properties->common_horizontal_margin_attlist_.fo_margin_left_ =
+			length(length(left_pt, length::pt).get_value_unit(length::cm), length::cm);
+	if (right_pt != 0)
+		section_properties->common_horizontal_margin_attlist_.fo_margin_right_ =
+			length(length(right_pt, length::pt).get_value_unit(length::cm), length::cm);
 }
 void odt_conversion_context::add_section_column(std::vector<std::pair<double, double>> width_space)
 {
@@ -1263,6 +1283,10 @@ void odt_conversion_context::end_paragraph()
 {
 	//if (!current_fields.empty() && !current_fields.back().result) return;	//Стандартное_составное_письмо.docx
 	text_context()->end_paragraph();
+	// w:del parts of one deletion share a paragraph. A note or text box paragraph inside the
+	// deleted text ends deeper and leaves the deletions of the outer paragraph alone.
+	text_changes_state_.deletions.erase(text_changes_state_.deletions.lower_bound(std::make_pair(text_context_.size(), std::wstring())),
+		text_changes_state_.deletions.end());
 	
 	if (false == current_fields.empty() && current_fields.back().status == 3)	//prepare for delete
 	{
@@ -1531,6 +1555,21 @@ void odt_conversion_context::end_note()
 	text_context()->current_level_.pop_back();
 }
 //--------------------------------------------------------------------------------------------------------
+namespace
+{
+	// The last child of the paragraph, heading, span or link open at the end of text, or an empty pointer.
+	office_element_ptr last_child(odf_text_context *text)
+	{
+		if (!text || text->current_level_.empty()) return office_element_ptr();
+		office_element *elm = text->current_level_.back().elm.get();
+		const office_element_ptr_array *content = NULL;
+		if (text_p *p = dynamic_cast<text_p*>(elm)) content = &p->paragraph_content_;
+		else if (text_h *h = dynamic_cast<text_h*>(elm)) content = &h->paragraph_content_;
+		else if (text_span *span = dynamic_cast<text_span*>(elm)) content = &span->content_;
+		else if (text_a *a = dynamic_cast<text_a*>(elm)) content = &a->paragraph_content_;
+		return (content && !content->empty()) ? content->back() : office_element_ptr();
+	}
+}
 bool odt_conversion_context::start_change (int id, int type, std::wstring &author, std::wstring &userId, std::wstring &date, std::wstring style_name)
 {
 	if (id < 0) return false;
@@ -1543,9 +1582,34 @@ bool odt_conversion_context::start_change (int id, int type, std::wstring &autho
 	//}
 	//if (!text_changes_state_.main_text_context) return;
 	
-	text_changes_state_.current_types.push_back(type);
-
 	std::wstring strId = L"ct" + boost::lexical_cast<std::wstring>(id);
+	const std::wstring deletion_key = strId;
+
+	if (type == 2)
+	{
+		// A deletion over a paragraph break comes as several w:del with the same id next to each other in one
+		// paragraph, one per deleted paragraph. Continue the region already written for that id with a new
+		// paragraph: a second region would repeat its xml:id, and other applications then drop the whole
+		// deletion. Only when nothing came between the two: a deletion elsewhere in the paragraph that reuses the
+		// id gets a region of its own, under an id of its own.
+		std::map<std::pair<size_t, std::wstring>, _text_changes_state::_deletion>::iterator deletion =
+			text_changes_state_.deletions.find(std::make_pair(text_context_.size(), deletion_key));
+		if (deletion != text_changes_state_.deletions.end())
+		{
+			if (deletion->second.mark && deletion->second.mark == last_child(text_context()))
+			{
+				text_changes_state_.current_types.push_back(type);
+
+				start_text_context();
+				text_context()->start_element(deletion->second.region);
+				text_context()->start_paragraph();
+				return true;
+			}
+			strId += L"_" + std::to_wstring(++text_changes_state_.repeated_ids);
+		}
+	}
+
+	text_changes_state_.current_types.push_back(type);
 //---------------------------------------------------------------------------------
 	office_element_ptr start_elm;
 
@@ -1613,6 +1677,8 @@ bool odt_conversion_context::start_change (int id, int type, std::wstring &autho
 
 	if (type == 2)//delete
 	{
+		text_changes_state_.deletions[std::make_pair(text_context_.size(), deletion_key)] = {child_elm, start_elm};
+
 		start_text_context();
 		text_context()->start_element(child_elm);
 		text_context()->start_paragraph();//actually it's not according to the standard .. maybe we're already in the paragraph (for the sake of LibreOffice!)

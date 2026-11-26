@@ -53,7 +53,8 @@ target_include_directories(pdffile_test PRIVATE
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/include
 )
 
-# A small TrueType font (5 glyphs) for the text tests, read in place
+# Small TrueType and COLRv1 fonts for the text tests, read in place
 target_compile_definitions(pdffile_test PRIVATE
     PDFFILE_TEST_TRUETYPE_FONT="${CORE_ROOT_DIR}/DesktopEditor/fontengine/test/fonts/EOTestTrueType.ttf"
+    PDFFILE_TEST_COLR_FONT="${CORE_ROOT_DIR}/DesktopEditor/fontengine/test/fonts/EOTestColrV1.ttf"
 )

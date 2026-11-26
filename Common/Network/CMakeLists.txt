@@ -10,31 +10,13 @@ if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
 
-set(SOCKETIO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/socketio")
-get_filename_component(SOCKETIO_INSTALL_DIR_ABS "${SOCKETIO_INSTALL_DIR}" ABSOLUTE)
+set(OPENSSL_ROOT_DIR "${OPENSSL_INSTALL_DIR_ABS}")
+find_package(sioxx REQUIRED)
 
 add_library(kernel_network SHARED
-    ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_client_impl.cpp
-    ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_client_impl.h
-    ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_packet.cpp
-    ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_packet.h
-    ${SOCKETIO_INSTALL_DIR}/src_no_tls/sio_client.cpp
-    ${SOCKETIO_INSTALL_DIR}/src_no_tls/sio_client.h
-    ${SOCKETIO_INSTALL_DIR}/src_no_tls/sio_message.h
-    ${SOCKETIO_INSTALL_DIR}/src_no_tls/sio_socket.cpp
-    ${SOCKETIO_INSTALL_DIR}/src_no_tls/sio_socket.h
-    ${SOCKETIO_INSTALL_DIR}/src/internal/sio_client_impl.cpp
-    ${SOCKETIO_INSTALL_DIR}/src/internal/sio_client_impl.h
-    ${SOCKETIO_INSTALL_DIR}/src/internal/sio_packet.cpp
-    ${SOCKETIO_INSTALL_DIR}/src/internal/sio_packet.h
-    ${SOCKETIO_INSTALL_DIR}/src/sio_client.cpp
-    ${SOCKETIO_INSTALL_DIR}/src/sio_client.h
-    ${SOCKETIO_INSTALL_DIR}/src/sio_message.h
-    ${SOCKETIO_INSTALL_DIR}/src/sio_socket.cpp
-    ${SOCKETIO_INSTALL_DIR}/src/sio_socket.h
-
     WebSocket/src/managerWebSocket.cpp
     WebSocket/src/socketio/socketio_internal.cpp
+    WebSocket/src/socketio/socketio_internal_private.cpp
 
     WebSocket/include/websocket.h
 	WebSocket/src/websocketbase.h
@@ -46,7 +28,7 @@ add_library(kernel_network SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/Session.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/manager.cpp
-    
+
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/include/FileTransporter.h
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/include/manager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_private.h
@@ -77,21 +59,10 @@ if( MSVC )
         PROPERTIES
             COMPILE_DEFINITIONS "UNICODE;_UNICODE"
     )
-    ## enforce little endian for arm64
-    target_compile_definitions(kernel_network PRIVATE RAPIDJSON_ENDIAN=0)
 endif()
 
 target_compile_definitions(kernel_network PRIVATE
     KERNEL_USE_DYNAMIC_LIBRARY_BUILDING
-    BOOST_DATE_TIME_NO_LIB
-    BOOST_REGEX_NO_LIB
-    ASIO_STANDALONE
-    _WEBSOCKETPP_CPP11_STL_
-    _WEBSOCKETPP_CPP11_FUNCTIONAL_
-    _WEBSOCKETPP_CPP11_TYPE_TRAITS_
-    _WEBSOCKETPP_CPP11_CHRONO_
-    SIO_TLS=1
-    SIO_TLS_NO=0
     USE_IOWEBSOCKET
 )
 
@@ -103,12 +74,9 @@ endif()
 
 target_include_directories(kernel_network PRIVATE
     ${OPENSSL_INSTALL_DIR_ABS}/include
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}
-    ${SOCKETIO_INSTALL_DIR_ABS}/lib/websocketpp
-    ${SOCKETIO_INSTALL_DIR_ABS}/lib/rapidjson/include
-    ${SOCKETIO_INSTALL_DIR_ABS}/lib/asio/asio/include
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter
+    ${CORE_ROOT_DIR}
 )
 
 if( NOT MSVC )
@@ -118,6 +86,7 @@ if( NOT MSVC )
 endif()
 
 target_link_libraries(kernel_network PRIVATE
+    sioxx::sioxx
     ${OPENSSL_LIBSSL}
     ${OPENSSL_LIBCRYPTO}
 )

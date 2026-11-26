@@ -46,7 +46,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CDocPartTypes)
 
-			CDocPartTypes(OOX::Document *pMain = NULL);
+			CDocPartTypes(OOX::Document *pMain = nullptr);
 			virtual ~CDocPartTypes();
 
 			virtual std::wstring toXML() const;
@@ -66,7 +66,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CDocPartBehaviors)
 
-			CDocPartBehaviors(OOX::Document *pMain = NULL);
+			CDocPartBehaviors(OOX::Document *pMain = nullptr);
 			virtual ~CDocPartBehaviors();
 
 			virtual std::wstring toXML() const;
@@ -81,7 +81,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CDocPartCategory)
 
-			CDocPartCategory(OOX::Document *pMain = NULL);
+			CDocPartCategory(OOX::Document *pMain = nullptr);
 			virtual ~CDocPartCategory();
 
 			virtual std::wstring toXML() const;
@@ -99,7 +99,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CDocPartPr)
 
-			CDocPartPr(OOX::Document *pMain = NULL);
+			CDocPartPr(OOX::Document *pMain = nullptr);
 			virtual ~CDocPartPr();
 
 			virtual std::wstring toXML() const;
@@ -122,7 +122,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CDocPartBody)
 
-			CDocPartBody(OOX::Document *pMain = NULL);
+			CDocPartBody(OOX::Document *pMain = nullptr);
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
@@ -136,7 +136,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CDocPart)
 
-			CDocPart(OOX::Document *pMain = NULL);
+			CDocPart(OOX::Document *pMain = nullptr);
 			virtual ~CDocPart();
 
 			virtual std::wstring toXML() const;
@@ -154,7 +154,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CDocParts)
 
-			CDocParts(OOX::Document *pMain = NULL);
+			CDocParts(OOX::Document *pMain = nullptr);
 			virtual ~CDocParts();
 
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);

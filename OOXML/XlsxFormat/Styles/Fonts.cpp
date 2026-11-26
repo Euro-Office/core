@@ -468,6 +468,7 @@ namespace OOX
 						m_oUnderline->m_oUnderline = SimpleTypes::Spreadsheet::EUnderline::underlineSingleAccounting; break;
 					case 34:
 						m_oUnderline->m_oUnderline = SimpleTypes::Spreadsheet::EUnderline::underlineDoubleAccounting; break;
+					default: break;
 				}
 
 				m_oFamily.Init();
@@ -489,6 +490,7 @@ namespace OOX
 						m_oScheme->m_oFontScheme = SimpleTypes::Spreadsheet::EFontScheme::fontschemeMajor; break;
 					case 2:
 						m_oScheme->m_oFontScheme = SimpleTypes::Spreadsheet::EFontScheme::fontschemeMinor; break;
+					default: break;
 				}
 
 				m_oRFont.Init();
@@ -504,6 +506,7 @@ namespace OOX
 						m_oVertAlign->m_oVerticalAlign->SetValue(SimpleTypes::EVerticalAlignRun::verticalalignrunSuperscript); break;
 					case 2:
 						m_oVertAlign->m_oVerticalAlign->SetValue(SimpleTypes::EVerticalAlignRun::verticalalignrunSubscript); break;
+					default: break;
 				}
 
 			}
@@ -604,7 +607,7 @@ namespace OOX
 		void CFonts::AddFont (CFont* pFont)
 		{
 			m_arrItems.push_back(pFont);
-			if(false == m_oCount.IsInit())
+			if(!m_oCount.IsInit())
 				m_oCount.Init();
 			m_oCount->SetValue((unsigned int)m_arrItems.size());
 		}

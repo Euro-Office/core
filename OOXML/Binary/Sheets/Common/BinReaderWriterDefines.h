@@ -136,8 +136,10 @@ namespace BinXlsxRW
 		PivotButton = 10,
 		QuotePrefix = 11,
 		XfId = 12,
-		Aligment = 13,
-		Protection = 14
+		Alignment = 13,
+		Protection = 14,
+		// Euro-Office only: a reserved id far from upstream growth (upstream uses 15 for Complement)
+		CellControl = 100
 	};}
 	namespace c_oSerProtectionTypes {enum c_oSerProtectionTypes
 	{
@@ -234,7 +236,10 @@ namespace BinXlsxRW
 		XmlMap = 30,
 		RdRichValue = 31,
 		RdRichValueStructure = 32,
-		RdRichValueTypes = 33
+		RdRichValueTypes = 33,
+		// Euro-Office extension: kept far above the ids above so that a record added later in the
+		// same sequence cannot take it
+		SourceFileType = 100
 	};}
 	namespace c_oSerWorkbookProtection {enum c_oSerWorkbookProtection{
 		AlgorithmName = 0,
@@ -1423,7 +1428,7 @@ namespace BinXlsxRW
 		ErrorStyle = 9,
 		ImeMode = 10,
 		Operator = 11,
-		Promt = 12,
+		Prompt = 12,
 		PromptTitle = 13,
 		ShowDropDown = 14,
 		ShowErrorMessage = 15,

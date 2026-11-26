@@ -27,7 +27,7 @@
 
 namespace DocFileFormat
 {
-	NumberingMapping::NumberingMapping(ConversionContext* context) : AbstractOpenXmlMapping(new XMLTools::CStringXmlWriter()), m_context(context), m_document(NULL), m_xmldocument(NULL)
+	NumberingMapping::NumberingMapping(ConversionContext* context) : AbstractOpenXmlMapping(new XMLTools::CStringXmlWriter()), m_context(context), m_document(nullptr), m_xmldocument(nullptr)
 	{
 		if (m_context)
 		{
@@ -46,12 +46,12 @@ namespace DocFileFormat
 {
 	void NumberingMapping::Apply(IVisitable* visited)
 	{
-		if ((NULL == m_document) || (NULL == m_xmldocument))
+		if ((nullptr == m_document) || (nullptr == m_xmldocument))
 			return;
 
 		ListTable* rglst = static_cast<ListTable*>(visited);
 
-		if ((rglst != NULL) && (!rglst->listData.empty() || !rglst->listNumbering.empty()))
+		if ((rglst != nullptr) && (!rglst->listData.empty() || !rglst->listNumbering.empty()))
 		{
 			m_xmldocument->RegisterNumbering();
 
@@ -238,7 +238,7 @@ namespace DocFileFormat
 	{
 		std::wstring ret;
 
-		if (lvl != NULL)
+		if (lvl != nullptr)
 		{
 			if (lvl->nfc == 0x17)
 			{
@@ -247,7 +247,7 @@ namespace DocFileFormat
 					wchar_t xchBullet = lvl->xst[0];
 
 					// In a symbolic font need to trim, in other cases - not
-					if (true == bIsSymbol && (xchBullet & 0xF000) != 0)
+					if (bIsSymbol && (xchBullet & 0xF000) != 0)
 					{
 						xchBullet &= 0x0FFF;
 					}
@@ -328,14 +328,9 @@ namespace DocFileFormat
 
 	bool NumberingMapping::IsPlaceholder(wchar_t symbol)
 	{
-		if ((symbol == (wchar_t)0x0000) || (symbol == (wchar_t)0x0001) || (symbol == (wchar_t)0x0002) || 
+		return (symbol == (wchar_t)0x0000) || (symbol == (wchar_t)0x0001) || (symbol == (wchar_t)0x0002) || 
 			(symbol == (wchar_t)0x0003) || (symbol == (wchar_t)0x0004) || (symbol == (wchar_t)0x0005) || 
-			(symbol == (wchar_t)0x0006) || (symbol == (wchar_t)0x0007) || (symbol == (wchar_t)0x0008))
-		{
-			return true;  
-		}
-
-		return false;
+			(symbol == (wchar_t)0x0006) || (symbol == (wchar_t)0x0007) || (symbol == (wchar_t)0x0008);
 	}
 
 
@@ -532,7 +527,7 @@ namespace DocFileFormat
         m_pXmlWriter->WriteNodeEnd(L"w:pPr");
 
 //  rPr
-		if (false == lvl->rPr.empty())
+		if (!lvl->rPr.empty())
 		{
 			m_pXmlWriter->WriteString( lvl->rPr );
 		}
@@ -620,7 +615,7 @@ namespace DocFileFormat
         m_pXmlWriter->WriteNodeEnd( L"", TRUE );
 // pPr
 		bool isBidi = false;
-		ParagraphPropertiesMapping oppMapping(m_pXmlWriter, m_context, m_document, NULL, isBidi, NULL, -1, false);
+		ParagraphPropertiesMapping oppMapping(m_pXmlWriter, m_context, m_document, nullptr, isBidi, nullptr, -1, false);
 		lvl->grpprlPapx->Convert(&oppMapping);
 
 // write rPr
@@ -641,11 +636,11 @@ namespace DocFileFormat
 
 			std::vector<CharacterPropertyExceptions*>* chpxs = m_document->GetCharacterPropertyExceptions(fc, fcEnd);
 
-			if ((chpxs != NULL) && (!chpxs->empty()))
+			if ((chpxs != nullptr) && (!chpxs->empty()))
 			{
 				PictureDescriptor pict(chpxs->front(), m_document->DataStream, fcEnd - fc, m_document->nWordVersion);
 
-				if ((pict.mfp.mm > 98) && (pict.shapeContainer != NULL))
+				if ((pict.mfp.mm > 98) && (pict.shapeContainer != nullptr))
 				{
                     m_pXmlWriter->WriteNodeBegin( L"w:numPicBullet", TRUE );
                     m_pXmlWriter->WriteAttribute( L"w:numPicBulletId", FormatUtils::IntToWideString( iter->first ));
@@ -653,7 +648,7 @@ namespace DocFileFormat
                     m_pXmlWriter->WriteNodeBegin( L"w:pict" );
 
 					//inline picture + bullete props
-					if (pict.blipStoreEntry != NULL)
+					if (pict.blipStoreEntry != nullptr)
 					{
 						VMLPictureMapping oPicture(m_context, m_pXmlWriter, false, this, true);
 						oPicture.m_isBullete = true;
@@ -662,7 +657,7 @@ namespace DocFileFormat
 					}
 					else
 					{
-						VMLShapeMapping oShape (m_context, m_pXmlWriter, NULL, &pict, this, true);
+						VMLShapeMapping oShape (m_context, m_pXmlWriter, nullptr, &pict, this, true);
 						oShape.m_isBullete = true;
 						pict.shapeContainer->Convert(&oShape);
 					}
@@ -701,7 +696,7 @@ namespace DocFileFormat
 				}
 			}
 
-			if (isPictureBullet && false == m_document->PictureBulletsCPsMap.empty())
+			if (isPictureBullet && !m_document->PictureBulletsCPsMap.empty())
 			{
                 m_pXmlWriter->WriteNodeBegin(L"w:lvlPicBulletId",TRUE);
                 m_pXmlWriter->WriteAttribute(L"w:val",FormatUtils::IntToWideString(index));

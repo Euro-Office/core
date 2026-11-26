@@ -85,7 +85,7 @@ EVerticalAlign GetVerticalAlign(const std::string& sValue, EHanType eType)
 	return EVerticalAlign::TOP;
 }
 
-CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, int nTagNum, int nLevel, int nSize, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 	: CHWPRecord(nTagNum, nLevel, nSize), m_pParent(&oDocInfo)
 {
 	int nTypeBits;
@@ -115,7 +115,7 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, int nTagNum, int
 
 	if (nVersion < 5025)
 	{
-		m_nLineSpacingType = (HWP_BYTE)(nTypeBits & 0x03);
+		m_nLineSpacingType = (unsigned char)(nTypeBits & 0x03);
 		oBuffer.ReadInt(m_nLineSpacing);
 	}
 	else
@@ -146,7 +146,7 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, int nTagNum, int
 		int nAttrBits;
 		oBuffer.ReadInt(nAttrBits);
 
-		m_nLineSpacingType = (HWP_BYTE)(nAttrBits & 0x0F);
+		m_nLineSpacingType = (unsigned char)(nAttrBits & 0x0F);
 		oBuffer.ReadInt(m_nLineSpacing);
 	}
 	else
@@ -208,10 +208,6 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 				m_chBreakLatinWord = 1;
 			else if ("Hyphenation" == sType)
 				m_chBreakLatinWord = 2;
-		}
-		else if ("BreakNonLatinWord" == sAttributeName)
-		{
-			//TODO:: check hwpx and hwpml matches
 		}
 		else if ("Condense" == sAttributeName)
 			m_chCondense = (HWP_BYTE)oReader.GetInt();

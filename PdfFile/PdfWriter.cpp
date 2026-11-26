@@ -779,7 +779,8 @@ HRESULT CPdfWriter::CommandDrawTextExCHAR(const LONG& lUnicode, const LONG& lGid
 	unsigned char* pCodes = EncodeGID(unGID, &unUnicode, 1);
 	if (!pCodes)
 		return DrawTextToRenderer(&unGID, 1, dX, dY) ? S_OK : S_FALSE;
-	return DrawText(pCodes, 2, dX, dY, UnicodePUA(unUnicode) ? NSStringExt::CConverter::GetUtf8FromUTF32(&unUnicode, 1) : "") ? S_OK : S_FALSE;
+	bool bColor = DrawColorGlyph(unGID, dX, dY);
+	return DrawText(pCodes, 2, dX, dY, UnicodePUA(unUnicode) ? NSStringExt::CConverter::GetUtf8FromUTF32(&unUnicode, 1) : "", bColor) ? S_OK : S_FALSE;
 }
 HRESULT CPdfWriter::CommandDrawTextEx(const std::wstring& wsUnicodeText, const unsigned int* pGids, const unsigned int unGidsCount, const double& dX, const double& dY, const double& dW, const double& dH)
 {
@@ -837,7 +838,8 @@ HRESULT CPdfWriter::CommandDrawTextCHAR2(unsigned int* pUnicodes, const unsigned
 	unsigned char* pCodes = EncodeGID(unGid, pUnicodes, unUnicodeCount);
 	if (!pCodes)
 		return DrawTextToRenderer(&unGid, 1, dX, dY) ? S_OK : S_FALSE;
-	return DrawText(pCodes, 2, dX, dY, UnicodesPUA(pUnicodes, unUnicodeCount) ? NSStringExt::CConverter::GetUtf8FromUTF32(pUnicodes, unUnicodeCount) : "") ? S_OK : S_FALSE;
+	bool bColor = DrawColorGlyph(unGid, dX, dY);
+	return DrawText(pCodes, 2, dX, dY, UnicodesPUA(pUnicodes, unUnicodeCount) ? NSStringExt::CConverter::GetUtf8FromUTF32(pUnicodes, unUnicodeCount) : "", bColor) ? S_OK : S_FALSE;
 }
 //----------------------------------------------------------------------------------------
 // Command markers
@@ -3474,7 +3476,7 @@ PdfWriter::CImageDict* CPdfWriter::DrawImage(Aggplus::CImage* pImage, const doub
 	
 	return pPdfImage;
 }
-bool CPdfWriter::DrawText(unsigned char* pCodes, const unsigned int& unLen, const double& dX, const double& dY, const std::string& sPUA)
+bool CPdfWriter::DrawText(unsigned char* pCodes, const unsigned int& unLen, const double& dX, const double& dY, const std::string& sPUA, bool bInvisible)
 {
 	if (!pCodes || !unLen)
 	{
@@ -3507,7 +3509,78 @@ bool CPdfWriter::DrawText(unsigned char* pCodes, const unsigned int& unLen, cons
 	pText->SetNeedDoBold(m_oFont.IsNeedDoBold());
 	pText->SetNeedDoItalic(m_oFont.IsNeedDoItalic());
 	pText->SetPUA(sPUA);
+	if (bInvisible)
+		pText->SetMode(PdfWriter::textrenderingmode_Invisible);
 
+	return true;
+}
+bool CPdfWriter::DrawColorGlyph(const unsigned int& unGID, const double& dX, const double& dY)
+{
+	if (m_wsColorFontPath.empty() || SkipRedact(dX, dY))
+		return false;
+
+	// ponytail: fixed 300 dpi bitmap. Vector paths (gradients as PDF shadings)
+	// if print quality needs it
+	const double dDpi = 300.0;
+	double dPixelsPerEm = m_oFont.GetSize() * dDpi / 72.0;
+	LONG lColor = m_oBrush.GetColor1();
+	unsigned int unForeground = ((unsigned int)(lColor & 0xFF) << 24) | ((unsigned int)((lColor >> 8) & 0xFF) << 16) |
+								((unsigned int)((lColor >> 16) & 0xFF) << 8) | ((unsigned int)m_oBrush.GetAlpha1() & 0xFF);
+
+	std::wstring wsKey = L"colr:" + m_wsColorFontPath + L"#" + std::to_wstring(m_lColorFaceIndex) + L":" + std::to_wstring(unGID) + L":" +
+						 std::to_wstring((int)dPixelsPerEm) + L":" + std::to_wstring(unForeground);
+	double dMMPerPixel = 25.4 / dDpi;
+	std::map<std::wstring, TColorGlyph>::const_iterator itGlyph = m_mColorGlyphs.find(wsKey);
+	if (itGlyph != m_mColorGlyphs.end())
+	{
+		const TColorGlyph& oGlyph = itGlyph->second;
+		if (!oGlyph.nWidth || !m_pDocument->HasImage(wsKey, 255))
+			return false;
+		double dImageW = oGlyph.nWidth * dMMPerPixel, dImageH = oGlyph.nHeight * dMMPerPixel;
+		double dImageX = dX + oGlyph.nLeft * dMMPerPixel, dImageY = dY - oGlyph.nTop * dMMPerPixel;
+		m_oCommandManager.Flush();
+		m_pPage->GrSave();
+		UpdateTransform();
+		m_pPage->DrawImage(m_pDocument->GetImage(wsKey, 255), MM_2_PT(dImageX), MM_2_PT(m_dPageHeight - dImageY - dImageH), MM_2_PT(dImageW), MM_2_PT(dImageH));
+		m_pPage->GrRestore();
+		return true;
+	}
+
+	// Each distinct glyph, size and color is rasterized once; refused glyphs are
+	// remembered too, so a hostile font cannot make every occurrence expensive.
+	// The raw bitmaps are capped per document, the rest is drawn as text.
+	const long long c_nMaxColorGlyphBytes = 128LL * 1024 * 1024;
+	TColorGlyph oGlyph = { 0, 0, 0, 0 };
+	m_mColorGlyphs[wsKey] = oGlyph;
+	if (m_nColorGlyphBytes >= c_nMaxColorGlyphBytes ||
+		!m_pFontManager->LoadFontFromFile(m_wsColorFontPath, m_lColorFaceIndex, m_oFont.GetSize(), 72, 72) || !m_pFontManager->GetFile())
+		return false;
+
+	int nLeft = 0, nTop = 0, nWidth = 0, nHeight = 0;
+	BYTE* pRgba = m_pFontManager->GetFile()->GetColorGlyphRGBA(unGID, dPixelsPerEm, unForeground, nLeft, nTop, nWidth, nHeight);
+	if (!pRgba)
+		return false;
+	m_nColorGlyphBytes += 4LL * nWidth * nHeight;
+
+	double dImageX = dX + nLeft * dMMPerPixel;
+	double dImageY = dY - nTop * dMMPerPixel;
+	double dImageW = nWidth * dMMPerPixel;
+	double dImageH = nHeight * dMMPerPixel;
+	m_oCommandManager.Flush();
+
+	// Lossless Flate RGB + soft mask, JPEG blurs the hard edges of emoji.
+	// Both read RGBA top row first: LoadRaw the first three bytes, LoadSMask the fourth
+	PdfWriter::CImageDict* pPdfImage = m_pDocument->CreateImage();
+	pPdfImage->LoadSMask(pRgba, nWidth, nHeight);
+	pPdfImage->LoadRaw(pRgba, nWidth, nHeight);
+	RELEASEARRAYOBJECTS(pRgba);
+
+	m_pPage->GrSave();
+	UpdateTransform();
+	m_pPage->DrawImage(pPdfImage, MM_2_PT(dImageX), MM_2_PT(m_dPageHeight - dImageY - dImageH), MM_2_PT(dImageW), MM_2_PT(dImageH));
+	m_pPage->GrRestore();
+	m_pDocument->AddImage(wsKey, 255, pPdfImage);
+	m_mColorGlyphs[wsKey] = { nLeft, nTop, nWidth, nHeight };
 	return true;
 }
 bool CPdfWriter::DrawTextToRenderer(const unsigned int* unGid, const unsigned int& unLen, const double& dX, const double& dY, const std::wstring& wsUnicodeText)
@@ -3651,6 +3724,7 @@ bool CPdfWriter::UpdateFont()
 	m_bNeedUpdateTextFont = false;
 	m_pFont14 = nullptr;
 	m_pFontEmbedded = nullptr;
+	m_wsColorFontPath.clear();
 
 	std::wstring wsFontPath = m_oFont.GetPath();
 	LONG lFaceIndex         = m_oFont.GetFaceIndex();
@@ -3684,6 +3758,19 @@ bool CPdfWriter::UpdateFont()
 		m_pFont = GetFont(wsFontPath, lFaceIndex);
 		if (m_pFont)
 		{
+			std::wstring wsFontKey = wsFontPath + L"#" + std::to_wstring(lFaceIndex);
+			std::map<std::wstring, bool>::iterator itColor = m_mIsColorFont.find(wsFontKey);
+			if (itColor == m_mIsColorFont.end())
+			{
+				bool bColor = m_pFontManager->LoadFontFromFile(wsFontPath, lFaceIndex, m_oFont.GetSize(), 72, 72) && m_pFontManager->GetFile() && m_pFontManager->GetFile()->HasColorGlyphs();
+				itColor = m_mIsColorFont.insert(std::make_pair(wsFontKey, bColor)).first;
+			}
+			if (itColor->second)
+			{
+				m_wsColorFontPath = wsFontPath;
+				m_lColorFaceIndex = lFaceIndex;
+			}
+
 			if (m_oFont.IsItalic() && !m_pFont->IsItalic())
 				m_oFont.SetNeedDoItalic(true);
 

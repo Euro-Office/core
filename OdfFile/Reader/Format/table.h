@@ -61,10 +61,10 @@ public:
 
 	bool					table_use_first_row_styles_;		// default false;
     bool					table_use_last_row_styles_;		    // default false;
-	bool					table_use_banding_rows_styles_;		// defualt false;
+	bool					table_use_banding_rows_styles_;		// default false;
     bool                    table_use_last_column_styles_;      // default false;
-	bool					table_use_first_column_styles_;		// defualt false;
-	bool					table_use_banding_columns_styles_;	// defualt false;
+	bool					table_use_first_column_styles_;		// default false;
+	bool					table_use_banding_columns_styles_;	// default false;
 
     friend class table_table;    
 };
@@ -357,6 +357,7 @@ public:
 	bool empty();
 	bool empty_content_cells(bool bWithCellStyle = true);
 	bool trailing_cells_format(oox::xlsx_conversion_context & Context, size_t & xf);
+	bool cells_padded(oox::xlsx_conversion_context & Context);
 
 	bool bHeader = false;
 

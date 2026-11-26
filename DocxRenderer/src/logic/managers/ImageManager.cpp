@@ -1,5 +1,7 @@
 #include "ImageManager.h"
 
+#include <cstddef>
+
 #include "../../../../DesktopEditor/common/Directory.h"
 #include "../../../../DesktopEditor/raster/BgraFrame.h"
 
@@ -83,12 +85,12 @@ namespace NSDocxRenderer
 				oBgraFrame.Resize(lW, lH, false);
 			}
 
-			BYTE* pEncodeBuffer = NULL;
+			BYTE* pEncodeBuffer = nullptr;
 			int nEncodeBufferSize = 0;
 			oBgraFrame.Encode(pEncodeBuffer, nEncodeBufferSize, (pInfo->m_eType == CImageInfo::itJPG) ? 3 : 4);
 
 			if (!bIsResized)
-				oBgraFrame.put_Data(NULL);
+				oBgraFrame.put_Data(nullptr);
 
 			int nBase64DataSize = NSBase64::Base64EncodeGetRequiredLength(nEncodeBufferSize);
 			int nHeaderSize = (pInfo->m_eType == CImageInfo::itPNG) ? 22 : 23;
@@ -113,7 +115,7 @@ namespace NSDocxRenderer
 		{
 			std::map<int, std::string>::iterator iter = m_mapImages.find(nRId - c_iStartingIdForImages);
 			if (iter == m_mapImages.end())
-				return NULL;
+				return nullptr;
 
 			return &iter->second;
 		}
@@ -136,7 +138,7 @@ namespace NSDocxRenderer
 		m_mapImageData.clear();
 	}
 
-	std::shared_ptr<CImageInfo> CImageManager::WriteImage(Aggplus::CImage* pImage, double& x, double& y, double& width, double& height)
+	std::shared_ptr<CImageInfo> CImageManager::WriteImage(Aggplus::CImage* pImage, double& /*x*/, double& y, double& /*width*/, double& height)
 	{
 		if (height < 0)
 		{
@@ -230,7 +232,7 @@ namespace NSDocxRenderer
 		BYTE* pBuffer = pFrame->GetData();
 
 		BYTE* pBufferMem = pBuffer + 3;
-		LONG lCountPix = w * h;
+		LONG lCountPix = static_cast<LONG>(w) * h;
 
 		for (LONG i = 0; i < lCountPix; ++i, pBufferMem += 4)
 		{
@@ -258,7 +260,7 @@ namespace NSDocxRenderer
 
 		BYTE* pBufferMem = new BYTE[stride];
 
-		BYTE* pBufferEnd = pBuffer + stride * (h - 1);
+		BYTE* pBufferEnd = pBuffer + static_cast<std::ptrdiff_t>(stride) * (h - 1);
 
 		LONG lCountV = h / 2;
 

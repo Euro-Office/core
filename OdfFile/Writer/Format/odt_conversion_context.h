@@ -137,6 +137,7 @@ public:
 	void	add_section					(bool continuous);
 	void	add_section_columns			(int count, double space_pt, bool separator, bool flag );
 	void	add_section_column			(std::vector<std::pair<double,double>> width_space);
+	void	set_section_margins			(double left_pt, double right_pt);
 	int		get_current_section_columns	();
 	void	flush_section				();
 
@@ -263,6 +264,14 @@ private:
 	{
 		odf_text_context	*main_text_context;
 		std::vector<int>	current_types;
+		struct _deletion
+		{
+			office_element_ptr region;	// the text:deletion
+			office_element_ptr mark;	// its text:change in the paragraph
+		};
+		// the last text:deletion by text context depth and change id, for the paragraph open at that depth
+		std::map<std::pair<size_t, std::wstring>, _deletion> deletions;
+		size_t repeated_ids = 0;		// suffix for the id of a deletion that reuses an id elsewhere in its paragraph
 	}text_changes_state_;
 
 	bool table_row_header_state_ = false;

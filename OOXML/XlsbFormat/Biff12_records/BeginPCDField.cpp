@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginPCDField::readFields(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
         _UINT32 value;
         record >> flags;
 

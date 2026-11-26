@@ -51,13 +51,13 @@ namespace OOX
 			if (docx->m_bGlossaryRead)	docx->m_oGlossary.footnotes= this;
 			else						docx->m_oMain.footnotes = this;
 		}
-		read( oRootPath, oPath );
+		CFootnotes::read( oRootPath, oPath );
 	}
 	CFootnotes::~CFootnotes()
 	{
 		for (size_t nIndex = 0; nIndex < m_arrFootnote.size(); nIndex++ )
 		{
-			if ( m_arrFootnote[nIndex] ) delete m_arrFootnote[nIndex]; m_arrFootnote[nIndex] = NULL;
+			if ( m_arrFootnote[nIndex] ) delete m_arrFootnote[nIndex]; m_arrFootnote[nIndex] = nullptr;
 		}
 
 		m_arrFootnote.clear();
@@ -139,7 +139,7 @@ namespace OOX
 	OOX::CFtnEdn* CFootnotes::Find(const OOX::Logic::CFootnoteReference& oReference)
 	{
 		if ( !oReference.m_oId.IsInit() )
-			return NULL;
+			return nullptr;
 
 		//for ( size_t nIndex = 0; nIndex < m_arrFootnote.size(); nIndex++ )
 		//{
@@ -150,7 +150,7 @@ namespace OOX
 		std::map<int, OOX::CFtnEdn*>::iterator pFind = m_mapFootnote.find(oReference.m_oId->GetValue());
 
 		if (pFind != m_mapFootnote.end())	return pFind->second;
-		else								return NULL;
+		else								return nullptr;
 	}
 	void CFootnotes::Add(OOX::CFtnEdn* pFootnote)
 	{

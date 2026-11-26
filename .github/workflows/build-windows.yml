@@ -23,15 +23,22 @@ jobs:
         include:
           # The arm64 image has only Visual Studio 2026, with the v143
           # toolset of Visual Studio 2022 (14.44) and no Windows 10 SDK
-          - { arch: x64,   runner: windows-2022,   sdk: 10.0.19041.0, vc_tools: '' }
+          - { arch: x64,   runner: windows-2022,   sdk: 10.0.22621.0, vc_tools: '' }
           - { arch: arm64, runner: windows-11-arm, sdk: 10.0.22621.0, vc_tools: '14.44' }
-    name: build (windows, ${{ matrix.arch }})
+    # A manual run only builds the third-party libraries
+    name: ${{ github.event_name == 'workflow_dispatch' && 'third-party' || 'build' }} (windows, ${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
-    environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
+    # actions: write lets the leg delete its previous cache before saving
+    permissions:
+      actions: write
+      contents: read
+      packages: read
+    environment: ${{ github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/stable-')) && 'build-assets' || '' }}
 
     env:
       PYTHONUTF8: "1"
-      # Only set on a manual run, through the build-assets environment: that
+      # Only set on a manual run of main or stable-* (build-assets accepts only
+      # protected branches), through that environment: that
       # run uploads missing third-party builds, every other run only reads.
       REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
       REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
@@ -128,9 +135,9 @@ jobs:
           "VSPATH=$installPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       # ------------------------------------------------------------------ #
-      # 5. Install Windows SDK 10.0.19041.0
+      # 5. Install Windows SDK 10.0.22621.0
       # ------------------------------------------------------------------ #
-      - name: Install Windows SDK 10.0.19041.0
+      - name: Install Windows SDK 10.0.22621.0
         if: matrix.arch == 'x64'
         shell: pwsh
         run: |
@@ -139,7 +146,7 @@ jobs:
           Write-Host "VS install path: $installPath"
           & $vsInstaller modify `
             --installPath $installPath `
-            --add Microsoft.VisualStudio.Component.Windows10SDK.19041 `
+            --add Microsoft.VisualStudio.Component.Windows11SDK.22621 `
             --quiet --norestart --force
           if ($LASTEXITCODE -notin @(0, 3010)) {
             Write-Warning "vs_installer returned $LASTEXITCODE — SDK may already be installed, continuing."
@@ -233,19 +240,33 @@ jobs:
       # ------------------------------------------------------------------ #
       # 8. ccache: build.ps1 installs it and sets up the rest
       # ------------------------------------------------------------------ #
+      # Keyed by runner image: during a rollout, runners on the old and the
+      # new image (compiler) would otherwise overwrite each other's cache.
+      # A new image falls back to the previous one's, still a hit when the
+      # compiler is unchanged.
+      - name: ccache key
+        id: ccache-key
+        shell: pwsh
+        run: |
+          "prefix=ccache-windows-${{ matrix.arch }}-$env:ImageVersion-" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
       - name: Restore ccache
+        if: github.event_name != 'workflow_dispatch'
         id: ccache
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ccache-windows-${{ matrix.arch }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
-          restore-keys: ccache-windows-${{ matrix.arch }}-
+          key: ${{ steps.ccache-key.outputs.prefix }}${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
+          restore-keys: |
+            ${{ steps.ccache-key.outputs.prefix }}
+            ccache-windows-${{ matrix.arch }}-
 
       # ------------------------------------------------------------------ #
       # 9. Build: the MSVC environment of the toolset of step 4, Ninja,
       #    as in DesktopEditors
       # ------------------------------------------------------------------ #
       - name: Build
+        if: github.event_name != 'workflow_dispatch'
         shell: pwsh
         run: |
           # Here, not in env: run-vcpkg sets it for the later steps
@@ -254,33 +275,63 @@ jobs:
           $env:VCPKG_BINARY_SOURCES = "clear;files,$vcpkgCache,readwrite"
           scripts/build.ps1 -Arch ${{ matrix.arch }} -SdkVersion ${{ matrix.sdk }} -VcToolsVersion '${{ matrix.vc_tools }}' -Ccache '-DEO_NO_WARNINGS=ON'
 
+      # A manual run only builds the third-party libraries, the desktop app's
+      # (Qt, CEF) included, and uploads the ones missing from the remote cache
+      - name: Build the third-party libraries
+        if: github.event_name == 'workflow_dispatch'
+        shell: pwsh
+        run: |
+          scripts/build.ps1 -Arch ${{ matrix.arch }} -SdkVersion ${{ matrix.sdk }} -VcToolsVersion '${{ matrix.vc_tools }}' -ThirdPartyOnly '-DBUILD_DESKTOP=ON'
+
       - name: ccache statistics
-        if: always()
+        if: always() && github.event_name != 'workflow_dispatch'
         shell: pwsh
         run: ccache --show-stats --verbose
 
+      # Only the newest commit's run saves (.github/actions/branch-head)
+      - name: Check branch head
+        if: always()
+        id: branch-head
+        uses: ./.github/actions/branch-head
+
+      # Delete the leg's previous cache first (.github/actions/drop-caches)
+      - name: Drop old vcpkg binary cache
+        if: always() && steps.vcpkg-key.outputs.prefix != '' && hashFiles('.cache/vcpkg/**') != '' && hashFiles('.cache/vcpkg/**') != steps.vcpkg-restored.outputs.hash && steps.branch-head.outputs.head == 'true'
+        uses: ./.github/actions/drop-caches
+        with:
+          prefix: vcpkg-windows-${{ matrix.arch }}-
+
       # Only when vcpkg added packages: not empty, not what was restored
       - name: Save vcpkg binary cache
-        if: always() && steps.vcpkg-key.outputs.prefix != '' && hashFiles('.cache/vcpkg/**') != '' && hashFiles('.cache/vcpkg/**') != steps.vcpkg-restored.outputs.hash
+        if: always() && steps.vcpkg-key.outputs.prefix != '' && hashFiles('.cache/vcpkg/**') != '' && hashFiles('.cache/vcpkg/**') != steps.vcpkg-restored.outputs.hash && steps.branch-head.outputs.head == 'true'
         uses: actions/cache/save@v4
         with:
           path: ${{ github.workspace }}/.cache/vcpkg
           key: ${{ steps.vcpkg-key.outputs.prefix }}${{ github.run_id }}
 
-      # Even when the build fails or is cancelled, so the next run reuses it.
+      # Delete the leg's previous cache first (.github/actions/drop-caches)
+      - name: Drop old ccache
+        if: always() && steps.ccache.outcome == 'success' && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-')) && steps.branch-head.outputs.head == 'true'
+        uses: ./.github/actions/drop-caches
+        with:
+          prefix: ccache-windows-${{ matrix.arch }}-
+
+      # Even when the build fails or is cancelled, so the next run reuses it,
+      # but not after an unfinished restore: a partial cache would shadow main's.
       # A PR that started from main's cache doesn't save its own: the repo's
       # 10 GB of caches would evict main's, which every new PR starts from.
       - name: Save ccache
-        if: always() && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-'))
+        if: always() && steps.ccache.outcome == 'success' && !(github.event_name == 'pull_request' && steps.ccache.outputs.cache-matched-key != '' && !contains(steps.ccache.outputs.cache-matched-key, '-pr-')) && steps.branch-head.outputs.head == 'true'
         uses: actions/cache/save@v4
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ccache-windows-${{ matrix.arch }}-${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
+          key: ${{ steps.ccache-key.outputs.prefix }}${{ github.event_name == 'pull_request' && 'pr-' || '' }}${{ github.run_id }}
 
       # ------------------------------------------------------------------ #
       # 10. Upload build artifacts
       # ------------------------------------------------------------------ #
       - name: Upload build output
+        if: github.event_name != 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: build-output-windows-${{ matrix.arch }}

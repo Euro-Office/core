@@ -330,6 +330,7 @@ namespace XMLTools
 	}
 	void CStringXmlWriter::WriteInteger(int Value, int Base)
 	{
+		(void)Base;
 		m_str += std::to_wstring(Value);
 	}
 	void CStringXmlWriter::WriteDouble(double Value)

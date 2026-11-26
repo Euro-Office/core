@@ -31,7 +31,7 @@ CElementInfo::CElementInfo()
     m_lOffsetTextStyle	= -1;
     m_lOffsetTextProp	= -1;
     m_lPersistIndex		= -1;
-    m_pStream			= NULL;
+    m_pStream			= nullptr;
 
     m_lMasterTextType			= -1;
     m_lMasterPlaceholderType	= -1;
@@ -44,6 +44,9 @@ CElementInfo::CElementInfo(const CElementInfo &oSrc)
 
 CElementInfo &CElementInfo::operator=(const CElementInfo &oSrc)
 {
+    if (this == &oSrc)
+        return *this;
+
     m_lOffsetTextStyle	= oSrc.m_lOffsetTextStyle;
     m_lOffsetTextProp	= oSrc.m_lOffsetTextProp;
     m_lPersistIndex		= oSrc.m_lPersistIndex;
@@ -74,6 +77,9 @@ CSlideInfo::CSlideInfo(const CSlideInfo &oSrc)
 
 CSlideInfo &CSlideInfo::operator=(const CSlideInfo &oSrc)
 {
+    if (this == &oSrc)
+        return *this;
+
     m_arTextPlaceHolders = oSrc.m_arTextPlaceHolders;
 
     m_parEmptyPictures	= oSrc.m_parEmptyPictures;
@@ -102,7 +108,7 @@ std::wstring CSlideInfo::GetFileNamePicture(_UINT32 lIndex)
 
 int CSlideInfo::GetIndexPicture(int lIndex)
 {
-    if (NULL == m_parEmptyPictures)
+    if (nullptr == m_parEmptyPictures)
         return -1;
     if ( m_parEmptyPictures->size() < 1 )
         return -1;

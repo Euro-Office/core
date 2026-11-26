@@ -113,7 +113,6 @@ namespace SimpleTypes
 		else if ( L"hijri"                == sValue ) this->m_eValue = calendartypeHijri;
 		else if ( L"japan"                == sValue ) this->m_eValue = calendartypeJapan;
 		else if ( L"korea"                == sValue ) this->m_eValue = calendartypeKorea;
-		else if ( L"none"                 == sValue ) this->m_eValue = calendartypeNone;
 		else if ( L"saka"                 == sValue ) this->m_eValue = calendartypeSaka;
 		else if ( L"taiwan"               == sValue ) this->m_eValue = calendartypeTaiwan;
 		else if ( L"thai"                 == sValue ) this->m_eValue = calendartypeThai;
@@ -151,7 +150,6 @@ namespace SimpleTypes
 	EConformanceClass CConformanceClass::FromString(const std::wstring &sValue)
 	{
 		if      ( L"strict"       == sValue )	this->m_eValue = conformanceclassStrict;
-		else if ( L"transitional" == sValue )	this->m_eValue = conformanceclassTransitional;
 		else									this->m_eValue = conformanceclassTransitional;
 
 		return this->m_eValue;
@@ -418,21 +416,12 @@ namespace SimpleTypes
 
 	COnOff::COnOff(const bool & bVal)
 	{
-		this->m_eValue = (false != bVal) ? onoffTrue : onoffFalse;
+		this->m_eValue = (bVal) ? onoffTrue : onoffFalse;
 	}
 
 	EOnOff COnOff::FromString(const std::wstring &sValue)
 	{
-		if      ( L"true"  == sValue ) this->m_eValue = onoffTrue;
-		else if ( L"True"  == sValue ) this->m_eValue = onoffTrue;
-		else if ( L"1"     == sValue ) this->m_eValue = onoffTrue;
-		else if ( L"t"     == sValue ) this->m_eValue = onoffTrue;
-		else if ( L"on"    == sValue ) this->m_eValue = onoffTrue;
-		else if ( L"f"     == sValue ) this->m_eValue = onoffFalse;
-		else if ( L"0"     == sValue ) this->m_eValue = onoffFalse;
-		else if ( L"false" == sValue ) this->m_eValue = onoffFalse;
-		else if ( L"False" == sValue ) this->m_eValue = onoffFalse;
-		else if ( L"off"   == sValue ) this->m_eValue = onoffFalse;
+		if ((L"true"  == sValue) || (L"True"  == sValue) || (L"1"     == sValue) || (L"t"     == sValue) || (L"on"    == sValue)) this->m_eValue = onoffTrue;
 		else                              this->m_eValue = onoffFalse;
 
 		return this->m_eValue;
@@ -457,16 +446,7 @@ namespace SimpleTypes
 
 	EOnOff COnOff::FromStringA(const char* sValue)
 	{
-		if		(strcmp("1",		sValue) == 0) this->m_eValue = onoffTrue;
-		else if	(strcmp("0",		sValue) == 0) this->m_eValue = onoffFalse;
-		else if	(strcmp("true",		sValue) == 0) this->m_eValue = onoffTrue;
-		else if	(strcmp("True",		sValue) == 0) this->m_eValue = onoffTrue;
-		else if	(strcmp("t",		sValue) == 0) this->m_eValue = onoffTrue;
-		else if	(strcmp("on",		sValue) == 0) this->m_eValue = onoffTrue;
-		else if	(strcmp("f",		sValue) == 0) this->m_eValue = onoffFalse;
-		else if	(strcmp("false",	sValue) == 0) this->m_eValue = onoffFalse;
-		else if	(strcmp("False",	sValue) == 0) this->m_eValue = onoffFalse;
-		else if	(strcmp("off",		sValue) == 0) this->m_eValue = onoffFalse;
+		if ((strcmp("1",		sValue) == 0) || (strcmp("true",		sValue) == 0) || (strcmp("True",		sValue) == 0) || (strcmp("t",		sValue) == 0) || (strcmp("on",		sValue) == 0)) this->m_eValue = onoffTrue;
 		else this->m_eValue = onoffFalse;
 
 		return this->m_eValue;
@@ -571,14 +551,14 @@ namespace SimpleTypes
 
 	void COnOff::FromBool(bool bVal)
 	{
-		this->m_eValue = (false != bVal) ? onoffTrue : onoffFalse;
+		this->m_eValue = (bVal) ? onoffTrue : onoffFalse;
 	}
 
 	CBool::CBool() {}
 
 	CBool::CBool(const bool & bVal)
 	{
-		this->m_eValue = (false != bVal) ? onoffTrue : onoffFalse;
+		this->m_eValue = (bVal) ? onoffTrue : onoffFalse;
 	}
 	std::wstring CBool::ToString() const
 	{
@@ -643,8 +623,8 @@ namespace SimpleTypes
 
 		nIndex = (std::max)( 0, (std::min)( 9, nIndex ) );
 
-		unsigned int unChar1 = XmlUtils::GetDigit( m_sValue[2 * nIndex] );
-		unsigned int unChar2 = XmlUtils::GetDigit( m_sValue[2 * nIndex + 1] );
+		unsigned int unChar1 = XmlUtils::GetDigit( m_sValue[2 * static_cast<size_t>(nIndex)] );
+		unsigned int unChar2 = XmlUtils::GetDigit( m_sValue[2 * static_cast<size_t>(nIndex) + 1] );
 
 		return (unChar2 + (unsigned char)(unChar1 << 4));
 	}
@@ -721,6 +701,8 @@ namespace SimpleTypes
 		}
 		catch(...)
 		{
+			// try the 64-bit parser below
+			(void)0;
 		}
 
 		try
@@ -746,8 +728,7 @@ namespace SimpleTypes
 
 	EVerticalAlignRun CVerticalAlignRun::FromString(const std::wstring &sValue)
 	{
-		if      ( L"baseline"    == sValue || L"None" == sValue)		this->m_eValue = verticalalignrunBaseline;
-		else if ( L"subscript"   == sValue || L"Subscript" == sValue)	this->m_eValue = verticalalignrunSubscript;
+		if (L"subscript"   == sValue || L"Subscript" == sValue)	this->m_eValue = verticalalignrunSubscript;
 		else if ( L"superscript" == sValue || L"Superscript" == sValue)	this->m_eValue = verticalalignrunSuperscript;
 		else this->m_eValue = verticalalignrunBaseline;
 
@@ -773,7 +754,6 @@ namespace SimpleTypes
 	{
 		if      ( L"center"  == sValue )	this->m_eValue = xalignCenter;
 		else if ( L"inside"  == sValue )	this->m_eValue = xalignInside;
-		else if ( L"left"    == sValue )	this->m_eValue = xalignLeft;
 		else if ( L"outside" == sValue )	this->m_eValue = xalignOutside;
 		else if ( L"right"   == sValue )	this->m_eValue = xalignRight;
 		else								this->m_eValue = xalignLeft;
@@ -800,13 +780,11 @@ namespace SimpleTypes
 
 	EYAlign CYAlign::FromString(const std::wstring &sValue)
 	{
-		if      ( L"bottom"		== sValue ) this->m_eValue = yalignBottom;
-		else if ( L"bot"		== sValue ) this->m_eValue = yalignBottom;
+		if ((L"bottom"		== sValue) || (L"bot"		== sValue)) this->m_eValue = yalignBottom;
 		else if ( L"center"		== sValue ) this->m_eValue = yalignCenter;
 		else if ( L"inline"		== sValue ) this->m_eValue = yalignInline;
 		else if ( L"inside"		== sValue ) this->m_eValue = yalignInside;
 		else if ( L"outside"	== sValue ) this->m_eValue = yalignOutside;
-		else if ( L"top"		== sValue ) this->m_eValue = yalignTop;
 		else								this->m_eValue = yalignTop;
 
 		return this->m_eValue;
@@ -821,7 +799,6 @@ namespace SimpleTypes
 		case yalignInline  : return L"inline";
 		case yalignInside  : return L"inside";
 		case yalignOutside : return L"outside";
-		case yalignTop     : return L"top";
 		default            : return L"top";
 		}
 	}
@@ -1076,13 +1053,7 @@ namespace SimpleTypes
 
 	ETrueFalse CTrueFalse::FromString(const std::wstring &sValue)
 	{
-		if      ( L"t"     == sValue )	this->m_eValue = booleanTrue;
-		else if ( L"true"  == sValue )	this->m_eValue = booleanTrue;
-		else if ( L"True"  == sValue )	this->m_eValue = booleanTrue;
-		else if ( L""      == sValue )	this->m_eValue = booleanFalse;
-		else if ( L"f"     == sValue )	this->m_eValue = booleanFalse;
-		else if ( L"false" == sValue )	this->m_eValue = booleanFalse;
-		else if ( L"False" == sValue )	this->m_eValue = booleanFalse;
+		if ((L"t"     == sValue) || (L"true"  == sValue) || (L"True"  == sValue))	this->m_eValue = booleanTrue;
 		else							this->m_eValue = booleanFalse;
 
 		return this->m_eValue;

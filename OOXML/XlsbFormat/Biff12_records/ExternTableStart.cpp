@@ -45,7 +45,7 @@ namespace XLSB
 
     void ExternTableStart::readFields(XLS::CFRecord& record)
     {
-        BYTE    flags;
+        BYTE    flags = 0;
 
         record >> iTab >> flags;
 

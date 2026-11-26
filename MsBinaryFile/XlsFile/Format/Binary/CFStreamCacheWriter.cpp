@@ -82,6 +82,7 @@ const size_t CFStreamCacheWriter::GetRecordPosition()
 // Actual transporting record to the CFStream and then to IStream
 const size_t CFStreamCacheWriter::writeToStream(const size_t num_of_records_min_necessary)
 {
+	(void)num_of_records_min_necessary;
 	return 0;
 }
 

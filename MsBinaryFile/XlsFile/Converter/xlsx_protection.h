@@ -41,7 +41,7 @@ struct xlsx_protection
     bool operator == (const xlsx_protection & rVal) const;
     bool operator != (const xlsx_protection & rVal) const;
     
-    friend void xlsx_serialize(std::wostream & _Wostream, const xlsx_protection & font);
+    friend void xlsx_serialize(std::wostream & wostream_, const xlsx_protection & font);
     friend std::size_t hash_value(xlsx_protection const & val);
 };
 

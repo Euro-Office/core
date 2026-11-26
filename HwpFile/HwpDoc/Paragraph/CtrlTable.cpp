@@ -178,7 +178,7 @@ CTblCell* CCtrlTable::GetLastCell()
 	return (!m_arCells.empty()) ? m_arCells.back() : nullptr;
 }
 
-int CCtrlTable::ParseCtrl(CCtrlTable& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlTable::ParseCtrl(CCtrlTable& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int nVersion)
 {
 	oBuffer.SavePosition();
 
@@ -227,7 +227,7 @@ int CCtrlTable::ParseCtrl(CCtrlTable& oObj, int nSize, CHWPStream& oBuffer, int 
 	return nSize;
 }
 
-int CCtrlTable::ParseListHeaderAppend(CCtrlTable& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlTable::ParseListHeaderAppend(CCtrlTable& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	if (24 != nSize)
 	{

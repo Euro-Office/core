@@ -31,7 +31,7 @@ CCtrlShapeVideo::CCtrlShapeVideo(const HWP_STRING& sCtrlID, CXMLReader& oReader,
 		else if ("fileIDRef" == sAttributeName)
 			m_shVideoBinID = oReader.GetInt();
 		else if ("imageIDRef" == sAttributeName)
-			m_sThumnailBinID = oReader.GetInt();
+			m_sThumnailBinID = std::to_wstring(oReader.GetInt());
 		else if ("tag" == sAttributeName)
 			m_sWebURL = oReader.GetText();
 	}
@@ -67,7 +67,7 @@ HWP_STRING CCtrlShapeVideo::GetThumnailBinID() const
 	return m_sThumnailBinID;
 }
 
-int CCtrlShapeVideo::ParseElement(CCtrlShapeVideo& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlShapeVideo::ParseElement(CCtrlShapeVideo& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

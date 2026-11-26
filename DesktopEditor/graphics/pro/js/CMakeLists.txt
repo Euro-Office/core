@@ -125,6 +125,7 @@ set(SOURCES
 
     ${DESKTOP_ROOT}/fontengine/GlyphString.cpp
     ${DESKTOP_ROOT}/fontengine/FontManager.cpp
+    ${DESKTOP_ROOT}/fontengine/ColrV1Renderer.cpp
     ${DESKTOP_ROOT}/fontengine/FontFile.cpp
     ${DESKTOP_ROOT}/fontengine/FontPath.cpp
     ${DESKTOP_ROOT}/fontengine/ApplicationFonts.cpp

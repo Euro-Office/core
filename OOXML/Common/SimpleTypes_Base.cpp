@@ -356,6 +356,8 @@ namespace SimpleTypes
 		}
 		catch (...)
 		{
+			// try the 64-bit parser below
+			(void)0;
 		}
 
 		try

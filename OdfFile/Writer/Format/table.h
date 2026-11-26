@@ -66,9 +66,9 @@ public:
 	_CP_OPT(std::wstring)		table_protection_key_digest_algorithm_;
     
 	bool table_use_first_row_styles_;		// default false;
-	bool table_use_banding_rows_styles_;	// defualt false;
-	bool table_use_first_column_styles_;	// defualt false;
-	bool table_use_banding_columns_styles_; // defualt false;
+	bool table_use_banding_rows_styles_;	// default false;
+	bool table_use_first_column_styles_;	// default false;
+	bool table_use_banding_columns_styles_; // default false;
 
  	void serialize(CP_ATTR_NODE);    
 

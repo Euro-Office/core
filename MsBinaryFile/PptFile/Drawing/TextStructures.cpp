@@ -26,17 +26,17 @@
 
 
 #define DEFAULT_BEFORE(EXIST_PARAM, PARAM)  \
-if (!EXIST_PARAM && oSrc.##EXIST_PARAM)     \
+if (!(EXIST_PARAM) && oSrc.##EXIST_PARAM)   \
 {										    \
-    EXIST_PARAM = true;						\
-    PARAM = oSrc.##PARAM;					\
+    (EXIST_PARAM) = true;					\
+    (PARAM) = oSrc.##PARAM;					\
 }
 
 #define APPLY_AFTER(EXIST_PARAM, PARAM)		\
 if (oSrc.##EXIST_PARAM)						\
 {										    \
-    EXIST_PARAM = true;						\
-    PARAM = oSrc.##PARAM;					\
+    (EXIST_PARAM) = true;					\
+    (PARAM) = oSrc.##PARAM;					\
 }
 
 std::wstring ToNode(const NSCommon::nullable_base<WORD>& prop, const std::wstring& strName)
@@ -218,11 +218,9 @@ void PPT::CTextCFRun::ApplyAfter(const CTextCFRun& oSrc)
     if (oSrc.FontShadow.is_init())			FontShadow = oSrc.FontShadow;
     if (oSrc.pp9rt.is_init())               pp9rt = oSrc.pp9rt;
 
-    bool bFontRefSetUp = false;
     if (oSrc.fontRef.is_init())
     {
         fontRef = oSrc.fontRef;
-        bFontRefSetUp = true;
     }
     if (oSrc.eaFontRef.is_init())		eaFontRef = oSrc.eaFontRef;
     if (oSrc.ansiFontRef.is_init())		ansiFontRef = oSrc.ansiFontRef;
@@ -356,7 +354,7 @@ void PPT::CTextPFRun::ApplyAfter(const CTextPFRun& oSrc)
     if (!oSrc.tabStops.empty())				tabStops = oSrc.tabStops;
 }
 
-std::wstring PPT::CTextPFRun::ToString(LONG lCount)
+std::wstring PPT::CTextPFRun::ToString(LONG  /*lCount*/)
 {
     return L"";
 }
@@ -584,7 +582,7 @@ PPT::CTextStyles::CTextStyles()
 {
     for (int i = 0; i < 10; ++i)
     {
-        m_pLevels[i] = NULL;
+        m_pLevels[i] = nullptr;
     }
 }
 
@@ -595,6 +593,9 @@ PPT::CTextStyles::CTextStyles(const CTextStyles& oSrc)
 
 PPT::CTextStyles& PPT::CTextStyles::operator=(const CTextStyles& oSrc)
 {
+    if (this == &oSrc)
+        return *this;
+
     for (int i = 0; i < 10; ++i)
     {
         m_pLevels[i] = oSrc.m_pLevels[i];

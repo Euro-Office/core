@@ -600,9 +600,7 @@ namespace OOX
 			int nCurDepth = oReader.GetDepth();
 			while (oReader.ReadNextSiblingNode(nCurDepth))
 			{
-				std::wstring sName = XmlUtils::GetNameNoNS(oReader.GetName());
-				//if (L"tables" == sName)
-				//	m_oTables = oReader;
+				// child nodes are not read
 			}
 		}
 		void CWebPr::fromBin(XLS::BaseObjectPtr& obj)
@@ -807,7 +805,7 @@ namespace OOX
 			else
 				ptr->data.chDecimal = '.';
 			if(m_oDelimiter.IsInit())
-				ptr->data.chCustom = m_oDelimiter.get()[0];
+				ptr->data.chCustom = m_oDelimiter.get()[0]; // NOLINT(bugprone-signed-char-misuse): delimiter is a single ASCII character; casting to unsigned char would change the stored value for bytes >= 0x80
 			else
 			{
 				ptr->data.chCustom = 0;
@@ -919,7 +917,7 @@ namespace OOX
 		}
 		void CConnection::toXML(NSStringUtils::CStringBuilder& writer) const
 		{
-			if (false == m_oName.IsInit()) return;
+			if (!m_oName.IsInit()) return;
 
 			writer.WriteString(L"<connection");
 			WritingStringNullableAttrInt(L"id", m_oId, m_oId->GetValue())
@@ -1301,7 +1299,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 							delete connPtr;
 							continue;
 						}
-						m_arrItems.push_back(new CConnection(connection));
+						m_arrItems.push_back(connPtr);
 					}
 				}
 			}
@@ -1330,7 +1328,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 		CConnectionsFile::CConnectionsFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::FileGlobalEnumerated(pMain), OOX::IFileContainer(pMain)
 		{
 			m_bSpreadsheets = true;
-			read(oRootPath, oPath);
+			CConnectionsFile::read(oRootPath, oPath);
 		}
 		CConnectionsFile::~CConnectionsFile()
 		{
@@ -1388,7 +1386,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 		}
 		void CConnectionsFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 		{
-			if (false == m_oConnections.IsInit() || !m_oConnections.get().m_arrItems.size()) return;
+			if (!m_oConnections.IsInit() || !m_oConnections.get().m_arrItems.size()) return;
 
 			CXlsb* xlsb = dynamic_cast<CXlsb*>(File::m_pMainDocument);
 			if ((xlsb) && (xlsb->m_bWriteToXlsb))

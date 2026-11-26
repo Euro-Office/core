@@ -81,7 +81,7 @@ VECTOR<HWP_BYTE> CCtrlShapeCurve::GetSegmentsType() const
 	return m_arSegmentType;
 }
 
-int CCtrlShapeCurve::ParseElement(CCtrlShapeCurve& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)
+int CCtrlShapeCurve::ParseElement(CCtrlShapeCurve& oObj, int nSize, CHWPStream& oBuffer, int /*nOff*/, int /*nVersion*/)
 {
 	oBuffer.SavePosition();
 

@@ -69,7 +69,7 @@ namespace DocFileFormat
         m_pXmlWriter->WriteNodeEnd( L"w:docDefaults" );
 
 		//write the default styles
-		if ( (sheet->Styles->size() < 12) || (sheet->Styles->at( 11 ) == NULL ))
+		if ( (sheet->Styles->size() < 12) || (sheet->Styles->at( 11 ) == nullptr ))
 		{
 			//NormalTable
 			writeNormalTableStyle();
@@ -116,7 +116,7 @@ namespace DocFileFormat
 			}
 			m_pXmlWriter->WriteNodeEnd(L"", true);
 
-			if (false == sAliases.empty())
+			if (!sAliases.empty())
 			{
 				m_pXmlWriter->WriteNodeBegin(L"w:aliases", true);
 				m_pXmlWriter->WriteAttribute(L"w:val", sAliases);
@@ -193,16 +193,16 @@ namespace DocFileFormat
 				m_pXmlWriter->WriteNodeEnd(L"", true);
 			}
 			//write paragraph properties
-			if (style->papx != NULL)
+			if (style->papx != nullptr)
 			{
 				bool isBidi = false;
-				ParagraphPropertiesMapping* ppMappingnew = new ParagraphPropertiesMapping(m_pXmlWriter, _ctx, m_document, NULL, isBidi, false);
+				ParagraphPropertiesMapping* ppMappingnew = new ParagraphPropertiesMapping(m_pXmlWriter, _ctx, m_document, nullptr, isBidi, false);
 				style->papx->Convert(ppMappingnew);
 				RELEASEOBJECT(ppMappingnew);
 			}
 
 			//write character properties
-			if (style->chpx != NULL)
+			if (style->chpx != nullptr)
 			{
 				RevisionData rev;
 				rev.Type = NoRevision;
@@ -211,7 +211,7 @@ namespace DocFileFormat
 				RELEASEOBJECT(cpMapping);
 			}
 			//write table properties
-			if (style->tapx != NULL)
+			if (style->tapx != nullptr)
 			{
 				std::vector<short> tableGrid;
 				TablePropertiesMapping* tpMapping = new TablePropertiesMapping(m_pXmlWriter, sheet, &tableGrid, false);
@@ -233,7 +233,7 @@ namespace DocFileFormat
 	{
 		std::wstring ret;
 
-		if ( std != NULL )
+		if ( std != nullptr )
 		{
 			if ( ( std->sti != User ) && ( std->sti != Null ) )
 			{
@@ -257,7 +257,7 @@ namespace DocFileFormat
 				}
 				else
 				{
-					//genarate new
+					//generate new
 					m_mapStyleIdLock.Enter();
 					int nIndex = m_mapStyleId.size();
                     ret = L"UserStyle_" + FormatUtils::IntToWideString( nIndex );
@@ -318,6 +318,7 @@ namespace DocFileFormat
 
 	void StyleSheetMapping::writeParagraphDefaults( StyleSheet* sheet )
 	{
+		(void)sheet;
 		//if there is no pPrDefault, Word will not used the default paragraph settings.
 		//writing an empty pPrDefault will cause Word to load the default paragraph settings.
         m_pXmlWriter->WriteNodeBegin( L"w:pPrDefault" );
@@ -334,7 +335,7 @@ namespace DocFileFormat
 		std::wstring id;
 		std::wstring name;
 
-		if ( std != NULL )
+		if ( std != nullptr )
 		{
 			name =  std->xstzName;
 
@@ -363,7 +364,7 @@ namespace DocFileFormat
 				}
 				else
 				{
-					//genarate new
+					//generate new
 					m_mapStyleIdLock.Enter();
 					int nIndex = m_mapStyleId.size();
                     id = L"UserStyle_" + FormatUtils::IntToWideString( nIndex );

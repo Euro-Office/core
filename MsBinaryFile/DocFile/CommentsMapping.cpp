@@ -38,7 +38,7 @@ namespace DocFileFormat
 		_UINT64 x = 0x10000001;
 		std::vector<std::wstring> arrParaId;
 
-		if ( ( m_document != NULL ) && ( m_document->FIB->m_RgLw97.ccpAtn > 0 ) )
+		if ( ( m_document != nullptr ) && ( m_document->FIB->m_RgLw97.ccpAtn > 0 ) )
 		{
 			m_context->_docx->RegisterComments();
 
@@ -120,7 +120,7 @@ namespace DocFileFormat
 					}
 				}
 
-				if (false == _paraId.empty())
+				if (!_paraId.empty())
 					arrParaId.push_back(_paraId);
 
 				m_pXmlWriter->WriteNodeEnd(L"w:comment" );
@@ -130,7 +130,7 @@ namespace DocFileFormat
 
 			m_pXmlWriter->Clear();
 
-			if (false == arrParaId.empty() && (m_document->AnnotationsReferencesEx) && (false == m_document->AnnotationsReferencesEx->m_ReferencesEx.empty()))
+			if (!arrParaId.empty() && (m_document->AnnotationsReferencesEx) && (!m_document->AnnotationsReferencesEx->m_ReferencesEx.empty()))
 			{
 				m_context->_docx->RegisterCommentsExtended();
 

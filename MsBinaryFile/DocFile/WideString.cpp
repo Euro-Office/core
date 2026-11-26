@@ -29,6 +29,8 @@ namespace DocFileFormat
 {	
 	WideString::WideString( VirtualStreamReader reader, int length ): std::wstring()
 	{
+		(void)reader;
+		(void)length;
 	}
 	WideString::WideString(): std::wstring()
 	{
@@ -41,7 +43,7 @@ namespace DocFileFormat
 	{
 		WideString* newObject = new WideString();
 
-		unsigned char *bytes = NULL;
+		unsigned char *bytes = nullptr;
 		bytes = reader->ReadBytes( length, true );
 
 		//It's a real string table

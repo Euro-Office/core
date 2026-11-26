@@ -30,8 +30,8 @@
 #include <sstream>
 
 #include "hyphen/hnjalloc.h"
-#include "hyphen/hnjalloc.c"
-#include "hyphen/hyphen.c"
+#include "hyphen/hnjalloc.c" // NOLINT(bugprone-suspicious-include): C sources built into this TU
+#include "hyphen/hyphen.c" // NOLINT(bugprone-suspicious-include): C sources built into this TU
 
 #ifndef HYPHEN_ENGINE_DISABLE_FILESYSTEM
 #include "../common/Directory.h"
@@ -59,17 +59,17 @@ HyphenDict* hnj_hyphen_load_stream(std::istream &in)
 		dict[k] = (HyphenDict *) hnj_malloc (sizeof(HyphenDict));
 		dict[k]->num_states = 1;
 		dict[k]->states = (HyphenState *) hnj_malloc (sizeof(HyphenState));
-		dict[k]->states[0].match = NULL;
-		dict[k]->states[0].repl = NULL;
+		dict[k]->states[0].match = nullptr;
+		dict[k]->states[0].repl = nullptr;
 		dict[k]->states[0].fallback_state = -1;
 		dict[k]->states[0].num_trans = 0;
-		dict[k]->states[0].trans = NULL;
-		dict[k]->nextlevel = NULL;
+		dict[k]->states[0].trans = nullptr;
+		dict[k]->nextlevel = nullptr;
 		dict[k]->lhmin = 0;
 		dict[k]->rhmin = 0;
 		dict[k]->clhmin = 0;
 		dict[k]->crhmin = 0;
-		dict[k]->nohyphen = NULL;
+		dict[k]->nohyphen = nullptr;
 		dict[k]->nohyphenl = 0;
 
 	/* read in character set info */
@@ -101,11 +101,11 @@ HyphenDict* hnj_hyphen_load_stream(std::istream &in)
 	{
 		while (in.getline(buf, sizeof(buf), '\n'))
 		{
-			if(strlen(buf) < sizeof(buf))
-				strcat(buf, "\n");
+			if (strlen(buf) < sizeof(buf))
+				strncat(buf, "\n", sizeof(buf) - strlen(buf) - 1);
 
 			/* discard lines that don't fit in buffer */
-			if (!in.eof() && strchr(buf, '\n') == NULL)
+			if (!in.eof() && strchr(buf, '\n') == nullptr)
 			{
 				int c;
 				while ((c = in.get()) != '\n' && c != EOF);
@@ -244,7 +244,7 @@ namespace NSHyphen
 			memset(m_pHyphenVector, 0, m_nHyphenVectorSize);
 
 			m_nLastLang = 0;
-			m_pLastDict = NULL;
+			m_pLastDict = nullptr;
 
 #ifndef HYPHEN_ENGINE_DISABLE_FILESYSTEM
 			m_nCacheSize = 5;
@@ -275,7 +275,7 @@ namespace NSHyphen
 		int LoadDictionary(const int& lang)
 		{
 			m_nLastLang = lang;
-			m_pLastDict = NULL;
+			m_pLastDict = nullptr;
 
 #ifndef HYPHEN_ENGINE_DISABLE_FILESYSTEM
 			std::wstring sFilePath = GetDictionaryPath(m_nLastLang);
@@ -285,7 +285,7 @@ namespace NSHyphen
 			if (NSFile::CFileBinary::Exists(sFilePath))
 			{
 				FILE* f = NSFile::CFileBinary::OpenFileNative(sFilePath, L"r");
-				if (f == NULL)
+				if (f == nullptr)
 					return 1;
 
 				m_pLastDict = hnj_hyphen_load_file(f);
@@ -295,12 +295,12 @@ namespace NSHyphen
 
 			AddLast();
 
-			return (NULL == m_pLastDict) ? 1 : 0;
+			return (nullptr == m_pLastDict) ? 1 : 0;
 		}
 		int LoadDictionary(const int& lang, const unsigned char* data, const unsigned int& data_len)
 		{
 			m_nLastLang = lang;
-			m_pLastDict = NULL;
+			m_pLastDict = nullptr;
 
 			std::stringstream ss;
 			ss.write((const char*)data, data_len);
@@ -308,10 +308,10 @@ namespace NSHyphen
 			m_pLastDict = hnj_hyphen_load_stream(ss);
 			AddLast();
 
-			return (NULL == m_pLastDict) ? 1 : 0;
+			return (nullptr == m_pLastDict) ? 1 : 0;
 		}
 #ifndef HYPHEN_ENGINE_DISABLE_FILESYSTEM
-		std::wstring GetDictionaryPath(const int& lang)
+		std::wstring GetDictionaryPath(const int&  /*lang*/)
 		{
 			if (m_sDirectory.empty())
 				m_sDirectory = NSFile::GetProcessDirectory() + L"/dictionaries";
@@ -336,7 +336,7 @@ namespace NSHyphen
 			if (len + 5 > m_nHyphenVectorSize)
 			{
 				delete[] m_pHyphenVector;
-				m_nHyphenVectorSize = 2 * (len + 5);
+				m_nHyphenVectorSize = static_cast<size_t>(2) * (len + 5);
 				m_pHyphenVector = new char[m_nHyphenVectorSize];
 
 				memset(m_pHyphenVector, 0, m_nHyphenVectorSize);
@@ -370,15 +370,15 @@ namespace NSHyphen
 
 			if (m_pLastDict)
 			{
-				char **rep = NULL;
-				int *pos = NULL;
-				int *cut = NULL;
+				char **rep = nullptr;
+				int *pos = nullptr;
+				int *cut = nullptr;
 
-				hnj_hyphen_hyphenate2(m_pLastDict, word, len, m_pHyphenVector, NULL, &rep, &pos, &cut);
+				hnj_hyphen_hyphenate2(m_pLastDict, word, len, m_pHyphenVector, nullptr, &rep, &pos, &cut);
 				return m_pHyphenVector;
 			}
 
-			return NULL;
+			return nullptr;
 		}
 	};
 
