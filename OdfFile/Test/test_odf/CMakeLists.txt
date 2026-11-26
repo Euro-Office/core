@@ -65,6 +65,7 @@ add_core_gtest(
             docx2odt_deletion_paragraphs.cpp
             docx2odt_page_background.cpp
             docx2odt_section_footers.cpp
+            docx2odt_continuous_sections.cpp
             docx2odt_add_para_table_spacing.cpp
             docx2odt_section_header_and_footer.cpp
             math_bar.cpp
