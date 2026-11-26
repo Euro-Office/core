@@ -44,6 +44,7 @@ namespace PPTX
 	class NotesMaster;
 	class Presentation;
 	class Comments;
+	class Slide;
 
 	namespace Logic
 	{
@@ -228,6 +229,8 @@ private:
 		std::wstring									interactive_animation_element_id;
 		
 		void convert_slides ();
+		std::wstring master_base_name(const PPTX::Slide & slide) const;
+		std::wstring master_page_name(const PPTX::Slide & slide) const;
 		void convert_styles ();
 		void convert_settings ();
 		void convert_layouts ();
