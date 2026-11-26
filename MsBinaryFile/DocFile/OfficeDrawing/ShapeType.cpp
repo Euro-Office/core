@@ -36,7 +36,7 @@ namespace DocFileFormat
 		xrange		=	xRange;
 	}
 
-	ShapeType::ShapeType (unsigned int typeCode) : Filled(true), Stroked(true), TypeCode(typeCode), Joins(miter), ShapeConcentricFill(false)
+	ShapeType::ShapeType (unsigned int typeCode) : Joins(miter), ShapeConcentricFill(false), Filled(true), Stroked(true), TypeCode(typeCode)
 	{
 	}
 	ShapeType::~ShapeType()

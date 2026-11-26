@@ -138,7 +138,6 @@ void oox_activeX_context::write_to(std::wostream & strm)
 {
 	//https://msdn.microsoft.com/en-us/library/ff533853(v=office.12).aspx
 
-	bool badClassId = false;
 	CP_XML_WRITER(strm)    
 	{
 		CP_XML_NODE(L"ax:ocx")
@@ -226,7 +225,6 @@ void oox_activeX_context::write_to(std::wostream & strm)
 			if (classId.empty())
 			{
 				classId = L"{00024500-0000-0000-C000-000000000046}";
-				badClassId = true;
 			}
 			CP_XML_ATTR(L"ax:classid", classId);
 

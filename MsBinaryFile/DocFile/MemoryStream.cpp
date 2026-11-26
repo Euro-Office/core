@@ -26,9 +26,9 @@
 #include "MemoryStream.h"
 #include "../XlsFile/Format/Logging/Log.h"
 
-MemoryStream::MemoryStream (unsigned char* data, unsigned long size, bool bMemCopy) : m_Data(NULL), m_Size(0), m_Position(0), bMemoryCopy(bMemCopy)
+MemoryStream::MemoryStream (unsigned char* data, unsigned long size, bool bMemCopy) : m_Data(nullptr), m_Size(0), m_Position(0), bMemoryCopy(bMemCopy)
 {
-	if ( ( data != NULL ) && ( size != 0 ) )
+	if ( ( data != nullptr ) && ( size != 0 ) )
 	{
 		m_Size = size;
 
@@ -198,11 +198,11 @@ unsigned char MemoryStream::ReadByte()
 
 unsigned char* MemoryStream::ReadBytes (unsigned int count, bool isResultNeeded)
 {
-	if (!m_Data) return NULL;
+	if (!m_Data) return nullptr;
 
 	unsigned int size = ( count <= (m_Size - m_Position) ) ? (count) : (m_Size - m_Position);
 
-	unsigned char* pBytes = (isResultNeeded && count > 0) ? new unsigned char[count] : NULL;
+	unsigned char* pBytes = (isResultNeeded && count > 0) ? new unsigned char[count] : nullptr;
 
 	if (pBytes)
 	{
@@ -240,7 +240,7 @@ int MemoryStream::Seek (int offset, int origin)
 	if (origin == 2) offset = m_Position + offset;
 	if (origin == 1) offset = m_Size - offset;
 
-	if ( (m_Data != NULL) && (offset >= 0) && ((unsigned int)offset < m_Size) )
+	if ( (m_Data != nullptr) && (offset >= 0) && ((unsigned int)offset < m_Size) )
 		return m_Position = offset;
 
 	return 0;

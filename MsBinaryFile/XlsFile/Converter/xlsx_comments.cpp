@@ -137,9 +137,9 @@ bool xlsx_comments::empty() const
 {
     return impl_->empty();
 }
-void xlsx_comments::serialize(std::wostream & _Wostream)
+void xlsx_comments::serialize(std::wostream & wostream_)
 {
-	impl_->serialize(_Wostream);
+	impl_->serialize(wostream_);
 }
 
 xlsx_comments_ptr xlsx_comments::create()

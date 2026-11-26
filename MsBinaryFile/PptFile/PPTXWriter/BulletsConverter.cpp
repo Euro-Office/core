@@ -179,10 +179,10 @@ void BulletsConverter::FillBuChar(PPTX::Logic::Bullet &oBullet, WCHAR symbol, CT
 
 void BulletsConverter::ConvertAllBullets(PPTX::Logic::TextParagraphPr &oPPr, CTextPFRun *pPF)
 {
-    if (pPF->hasBullet.is_init() == false)
+    if (!pPF->hasBullet.is_init())
         return;
 
-    if (pPF->hasBullet.get() == false)
+    if (!pPF->hasBullet.get())
     {
         oPPr.buTypeface.m_Typeface.reset(new PPTX::Logic::BuNone);
         return;
@@ -199,11 +199,7 @@ void BulletsConverter::ConvertAllBullets(PPTX::Logic::TextParagraphPr &oPPr, CTe
             pBuSize = new PPTX::Logic::BuSzPct;
             static_cast<PPTX::Logic::BuSzPct*>(pBuSize)->val = pPF->bulletSize.get() * 1000 ;
         }
-        if (pPF->bulletSize.get() < 0 && pPF->bulletSize.get() > -4001)
-        {
-            pBuSize = new PPTX::Logic::BuSzPts;
-            static_cast<PPTX::Logic::BuSzPts*>(pBuSize)->val = - (pPF->bulletSize.get());
-        }
+        // bulletSize is WORD (unsigned), so the negative (points) range can never match here
         if (pBuSize != nullptr)
             oPPr.buSize.m_Size = pBuSize;
     }

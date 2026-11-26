@@ -3,10 +3,12 @@
 
 #include "../../Reader/Converter/xlsx_numFmts.h"
 #include "../../DataTypes/officevaluetype.h"
+#include "../../Common/CPColorUtils.h"
 
 #include <iostream>
 #include <set>
 #include <sstream>
+#include <string>
 #include <stdexcept>
 #include <vector>
 
@@ -207,6 +209,34 @@ void percentage_custom_formats()
                 "Custom percentage format code must survive serialization unchanged");
     }
 }
+
+void number_format_colours()
+{
+    struct Colour
+    {
+        const char* label;
+        int r, g, b;
+        const wchar_t* expected;
+    };
+    // the eight colours of an Excel number format, and two colours close to red and cyan
+    const Colour colours[] = {
+        {"black", 0, 0, 0, L"Black"},
+        {"white", 255, 255, 255, L"White"},
+        {"red", 255, 0, 0, L"Red"},
+        {"green", 0, 255, 0, L"Green"},
+        {"blue", 0, 0, 255, L"Blue"},
+        {"yellow", 255, 255, 0, L"Yellow"},
+        {"magenta", 255, 0, 255, L"Magenta"},
+        {"cyan", 0, 255, 255, L"Cyan"},
+        {"near red", 240, 20, 10, L"Red"},
+        {"near cyan", 10, 230, 250, L"Cyan"}
+    };
+    for (const auto& colour : colours)
+    {
+        if (cpdoccore::RGBToString(colour.r, colour.g, colour.b) != colour.expected)
+            throw std::runtime_error(std::string("Wrong number format colour for ") + colour.label);
+    }
+}
 }
 
 int main()
@@ -225,7 +255,8 @@ int main()
         {"scientific serialization", scientific_serialization},
         {"scientific repeated lookup", scientific_repeated_lookup},
         {"percentage built-in formats", percentage_builtin_formats},
-        {"percentage custom formats", percentage_custom_formats}
+        {"percentage custom formats", percentage_custom_formats},
+        {"number format colours", number_format_colours}
     };
     int failures = 0;
     for (const auto& test : tests)

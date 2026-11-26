@@ -35,12 +35,14 @@ namespace DocFileFormat
 	  }
 	  ByteStructure* AtnBookmark::ConstructObject(VirtualStreamReader* reader, int length)
 	  {
+	  	(void)length;
 		  AtnBookmark *newObject = new AtnBookmark();
 
 		  newObject->bmc = reader->ReadUInt16(); //0x0100
 		  newObject->lTag = reader->ReadUInt32();
 
 		  unsigned int lTagOld = reader->ReadUInt32();
+		  (void)lTagOld;
 
 		  return static_cast<ByteStructure*>(newObject);
 	  }
@@ -77,6 +79,7 @@ namespace DocFileFormat
 	  }
 	  ByteStructure* BookmarkFirst::ConstructObject(VirtualStreamReader* reader, int length)
 	  {
+	  	(void)length;
 		  BookmarkFirst *newObject = new BookmarkFirst();
 
 		  newObject->id = reader->ReadUInt32();

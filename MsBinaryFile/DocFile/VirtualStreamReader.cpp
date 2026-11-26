@@ -26,9 +26,9 @@
 #include "VirtualStreamReader.h"
 
 VirtualStreamReader::VirtualStreamReader (POLE::Stream* _stream, ULONG _position , int _nWordVersion) :
-	nWordVersion(_nWordVersion), stream(_stream), position(_position)
+	nWordVersion(_nWordVersion), position(_position), stream(_stream)
 {
-	if ( stream == NULL )return;
+	if ( stream == nullptr )return;
 
 	stream->seek(position);
 }
@@ -41,7 +41,7 @@ unsigned short VirtualStreamReader::ReadUInt16()
 {
 	unsigned short rdUShort = 0;
 
-	if (( stream != NULL ) && (position + 2 < stream->size()))
+	if (( stream != nullptr ) && (position + 2 < stream->size()))
 	{
 		stream->seek( position );
 		stream->read((unsigned char*)(&rdUShort), sizeof( rdUShort ));
@@ -55,7 +55,7 @@ short VirtualStreamReader::ReadInt16()
 {
 	short rdShort = 0;
 
-	if (( stream != NULL ) && (position + 2 < stream->size()))
+	if (( stream != nullptr ) && (position + 2 < stream->size()))
 	{
 		stream->seek( position );
 		stream->read((unsigned char*)(&rdShort), sizeof( rdShort ));
@@ -70,7 +70,7 @@ int VirtualStreamReader::ReadInt32()
 {
 	_INT32 rdInt = 0;
 
-	if (( stream != NULL ) && (position + 4 < stream->size()))
+	if (( stream != nullptr ) && (position + 4 < stream->size()))
 	{
 		stream->seek( position );
 		stream->read( (unsigned char*) &rdInt, sizeof( rdInt ) );
@@ -85,7 +85,7 @@ unsigned int VirtualStreamReader::ReadUInt32()
 {
 	_UINT32 rdUInt = 0;
 
-	if (( stream != NULL ) && (position + 4 < stream->size()))
+	if (( stream != nullptr ) && (position + 4 < stream->size()))
 	{
 		stream->seek( position );
 		stream->read((unsigned char*) &rdUInt, sizeof( rdUInt ) );
@@ -100,10 +100,10 @@ unsigned char VirtualStreamReader::ReadByte()
 {
 	unsigned char rdByte = 0;
 
-	if (( stream != NULL ) && (position + 1 < stream->size()))
+	if (( stream != nullptr ) && (position + 1 < stream->size()))
 	{
 		stream->seek( position);
-		stream->read( (unsigned char*)&rdByte, sizeof( rdByte ) );
+		stream->read( (&rdByte), sizeof( rdByte ) );
 
 	}
 	position += sizeof( rdByte );
@@ -113,7 +113,7 @@ unsigned char VirtualStreamReader::ReadByte()
 
 unsigned char* VirtualStreamReader::ReadBytes( unsigned int count, bool isResultNeeded )
 {
-	unsigned char *rdBytes = NULL;
+	unsigned char *rdBytes = nullptr;
 
 	if ( count > 0  && isResultNeeded)
 	{
@@ -125,7 +125,7 @@ unsigned char* VirtualStreamReader::ReadBytes( unsigned int count, bool isResult
 		rdBytes = new unsigned char[count];
 	}
 
-	if ( stream != NULL  && rdBytes != NULL )
+	if ( stream != nullptr  && rdBytes != nullptr )
 	{
 		stream->seek( position );
 		count = (unsigned int)stream->read( rdBytes, count );
@@ -145,7 +145,7 @@ unsigned long VirtualStreamReader::GetSize() const
 {
 	unsigned long size = 0;
 
-	if ( stream != NULL )
+	if ( stream != nullptr )
 	{
 		size = (unsigned long)stream->size();
 	}
@@ -155,7 +155,7 @@ unsigned long VirtualStreamReader::GetSize() const
 
 int VirtualStreamReader::Seek( int offset, int origin )
 {
-	if ( stream != NULL )
+	if ( stream != nullptr )
 	{
 		if (origin > 1)
 		{
@@ -176,8 +176,8 @@ std::wstring VirtualStreamReader::ReadXst()
 	if (!stream) return L"";
 	std::wstring wstrResult;
 
-	unsigned char* xstz = NULL;
-	unsigned char* cch	= NULL;
+	unsigned char* xstz = nullptr;
+	unsigned char* cch	= nullptr;
 
 	if (nWordVersion > 0)
 	{
@@ -239,7 +239,7 @@ std::wstring VirtualStreamReader::ReadLengthPrefixedAnsiString(unsigned int max_
 
 	unsigned int cch = ReadUInt32();
 
-	unsigned char* stringBytes = NULL;
+	unsigned char* stringBytes = nullptr;
 
 	if (cch > max_size)
 	{
@@ -248,10 +248,11 @@ std::wstring VirtualStreamReader::ReadLengthPrefixedAnsiString(unsigned int max_
 		unsigned int pos = 0;
 		
 		stringBytes = ReadBytes( max_size, true );
+		unsigned int readSize = GetPosition() - pos_orinal;
 
 		if (stringBytes)
 		{
-			while(pos < max_size)
+			while(pos < readSize)
 			{
 				if (stringBytes[pos] == 0)
 					break;

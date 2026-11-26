@@ -28,7 +28,7 @@ namespace DocFileFormat
 {
 	typedef enum OperationCode
 	{ 
-//verison 1995 and earler
+//version 1995 and earlier
 		sprmOldPIstd			=	2,
 		sprmOldPIstdPermute		=	3,
 		sprmOldPIncLvl			=	4,

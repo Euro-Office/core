@@ -89,11 +89,11 @@ namespace ODRAW
 	}
 	CGraphicPath::CGraphicPath()
 	{
-		InternalClear();
+		CGraphicPath::InternalClear();
 	}
 	void CGraphicPath::Draw(IRenderer* pRenderer)
 	{
-		if (NULL == pRenderer)
+		if (nullptr == pRenderer)
 			return;
 
 		// In general, pen/brush can be set every time.
@@ -219,7 +219,7 @@ namespace ODRAW
 	}
 	void CGraphicPath::CPart::CheckLastPoint(IRenderer* pRenderer, CDoublePoint& pointCur)
 	{
-		if (NULL == pRenderer)
+		if (nullptr == pRenderer)
 			return;
 
 		pRenderer->PathCommandGetCurrentPoint(&pointCur.dX, &pointCur.dY);
@@ -256,11 +256,7 @@ namespace ODRAW
 
 		double fAngle = atan(dY / dX);
 		fAngle *= double(180 / M_PI);
-		if (dX > 0 && dY > 0)
-		{
-			return fAngle;
-		}
-		else if (dX > 0 && dY < 0)
+		if ((dX > 0 && dY > 0) || (dX > 0 && dY < 0))
 		{
 			return fAngle;
 		}
@@ -360,12 +356,13 @@ namespace ODRAW
 	}
 	void CGraphicPath::CPart::GetSafearrayPoints(IRenderer* pRenderer, double** ppArray, size_t& nCountOut, CDoublePoint& pointCur, bool bR)
 	{
-		if (NULL == ppArray)
+		(void)pRenderer;
+		if (nullptr == ppArray)
 			return;
 
 		int nCount = (int)this->m_arPoints.size();
 
-		nCountOut = 2 * (nCount + 1);
+		nCountOut = 2 * (static_cast<size_t>(nCount) + 1);
 
 		double* pArray = new double [nCountOut];
 		double* pBuffer = pArray;
@@ -422,11 +419,11 @@ namespace ODRAW
 		}
 		case rtLineTo:
 		{
-			double* pArray = NULL;
+			double* pArray = nullptr;
 			size_t nCount = 0;
 			GetSafearrayPoints(pRenderer, &pArray, nCount, pointCur);
 
-			if (NULL != pArray)
+			if (nullptr != pArray)
 			{
 				pRenderer->PathCommandLinesTo(pArray, (int)nCount /*this->m_arPoints.size()*/);
 			}
@@ -435,11 +432,11 @@ namespace ODRAW
 		}
 		case rtCurveTo:
 		{
-			double* pArray = NULL;
+			double* pArray = nullptr;
 			size_t nCount = 0;
 			GetSafearrayPoints(pRenderer, &pArray, nCount, pointCur);
 
-			if (NULL != pArray)
+			if (nullptr != pArray)
 			{
 				pRenderer->PathCommandCurvesTo (pArray, (int)nCount/*this->m_arPoints.size()*/);
 			}
@@ -463,11 +460,11 @@ namespace ODRAW
 		}
 		case rtRLineTo:
 		{
-			double* pArray = NULL;
+			double* pArray = nullptr;
 			size_t nCount = 0;
 			GetSafearrayPoints(pRenderer, &pArray, nCount, pointCur, TRUE);
 
-			if (NULL != pArray)
+			if (nullptr != pArray)
 			{
 				pRenderer->PathCommandLinesTo(pArray, (int)nCount/*this->m_arPoints.size()*/);
 			}
@@ -476,11 +473,11 @@ namespace ODRAW
 		}
 		case rtRCurveTo:
 		{
-			double* pArray = NULL;
+			double* pArray = nullptr;
 			size_t nCount = 0;
 			GetSafearrayPoints(pRenderer, &pArray, nCount, pointCur, TRUE);
 
-			if (NULL != pArray)
+			if (nullptr != pArray)
 			{
 				pRenderer->PathCommandCurvesTo(pArray, (int)nCount/*this->m_arPoints.size()*/);
 			}
@@ -678,11 +675,11 @@ namespace ODRAW
 		}
 		case rtQuadrBesier:
 		{
-			double* pArray = NULL;
+			double* pArray = nullptr;
 			size_t nCount = 0;
 			GetSafearrayPoints(pRenderer, &pArray, nCount, pointCur, TRUE);
 
-			if (NULL != pArray)
+			if (nullptr != pArray)
 			{
 				pRenderer->PathCommandLinesTo(pArray, (int)nCount/*this->m_arPoints.size()*/);
 			}
@@ -722,8 +719,6 @@ namespace ODRAW
 
 	void CGraphicPath::AddRuler(const RulesType& eType)
 	{
-		int lCount = (int)m_arParts.size();
-
 		CPart oPart;
 		oPart.m_eType = eType;
 
