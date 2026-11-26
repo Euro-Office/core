@@ -23,6 +23,8 @@
  *
  */
 
+// Amalgamation translation unit: each .cpp below is intentionally included.
+// NOLINTBEGIN(bugprone-suspicious-include)
 #include "../../Reader/Format/abstract_xml.cpp"
 #include "../../Reader/Format/anim_elements.cpp"
 #include "../../Reader/Format/calcs_styles.cpp"
@@ -100,3 +102,4 @@
 #include "../../Reader/Format/table_database_ranges.cpp"
 #include "../../Reader/Format/math_elements.cpp"
 #include "../../Reader/Format/odf_document_impl.cpp"
+// NOLINTEND(bugprone-suspicious-include)

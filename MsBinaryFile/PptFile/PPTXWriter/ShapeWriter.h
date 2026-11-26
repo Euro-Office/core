@@ -151,7 +151,7 @@ namespace PPT
 	public:
 
 		CShapeWriter();
-		~CShapeWriter()
+		virtual ~CShapeWriter()
 		{
             RELEASEOBJECT(m_pSimpleGraphicsConverter);
 		}
@@ -345,7 +345,7 @@ namespace PPT
 		}
 		void _SetFont()
 		{
-			if (NULL == m_pFontManager)
+			if (nullptr == m_pFontManager)
 			{
                 m_pFontManager = NSFonts::NSFontManager::Create();
 				m_pFontManager->Initialize();

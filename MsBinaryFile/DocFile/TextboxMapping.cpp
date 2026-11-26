@@ -96,7 +96,7 @@ namespace DocFileFormat
 
 		int cpStart = 0;
 		int cpEnd = 0;
-		Tbkd* bkd = NULL;
+		Tbkd* bkd = nullptr;
 
 		int txtbxSubdocStart =
 			m_document->FIB->m_RgLw97.ccpText +
@@ -143,7 +143,7 @@ namespace DocFileFormat
 		//convert the textbox text
 		_lastValidPapx = FormattedDiskPagePAPX::GetFirstPapx(m_document->AllPapxFkps);
 
-		ParagraphPropertyExceptions* papx_prev = NULL;
+		ParagraphPropertyExceptions* papx_prev = nullptr;
 		int cp = cpStart;
 		while (cp < cpEnd && cp >= cpStart && !bUsed)
 		{

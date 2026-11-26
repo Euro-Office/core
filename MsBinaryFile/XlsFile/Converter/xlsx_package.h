@@ -345,7 +345,7 @@ public:
     void set_sharedStrings	(element_ptr Element);
 	void set_connections	(element_ptr Element);
     void add_sheet			(int type, sheet_content_ptr sheet);
-    void set_media			(external_items & _Mediaitems);    
+    void set_media			(external_items & mediaitems);    
     void set_drawings		(element_ptr Element);
 	void set_vml_drawings	(element_ptr Element);
 	void set_comments		(element_ptr Element);

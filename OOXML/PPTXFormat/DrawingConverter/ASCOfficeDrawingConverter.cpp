@@ -4474,7 +4474,7 @@ void CDrawingConverter::CheckBrushShape(PPTX::Logic::SpTreeElem* oElem, XmlUtils
 		}
 		if (false == sRid.IsInit())
 		{
-			XmlMacroReadAttributeBase(oNodeFill, L"o:relid", sRid);
+			XmlMacroReadAttributeBase(oNodeFill, L"r:id", sRid);
 		}
 		if (sRid.is_init())
 		{

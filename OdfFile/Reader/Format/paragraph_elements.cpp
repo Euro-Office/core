@@ -828,6 +828,77 @@ void span::pptx_convert(oox::pptx_conversion_context & Context)
 	Context.get_text_context().get_styles_context().end_process_style();
 }
 //------------------------------------------------------------------------------------------------------------
+const wchar_t * meta::ns = L"text";
+const wchar_t * meta::name = L"meta";
+
+std::wostream & meta::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        content_[i]->text_to_stream(_Wostream, bXmlEncode);
+    }
+    return _Wostream;
+}
+
+void meta::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)
+{
+    CP_CREATE_ELEMENT(content_);
+}
+
+void meta::add_text(const std::wstring & Text)
+{
+    office_element_ptr elm = text::create(Text);
+    content_.push_back( elm );
+}
+
+void meta::add_space(const std::wstring & Text)
+{
+    office_element_ptr elm = text::create(Text);
+    content_.push_back( elm );
+}
+
+void meta::docx_convert(oox::docx_conversion_context & Context)
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        content_[i]->docx_convert(Context);
+    }
+}
+
+void meta::xlsx_convert(oox::xlsx_conversion_context & Context)
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        content_[i]->xlsx_convert(Context);
+    }
+}
+
+void meta::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context)
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        if (text *t = dynamic_cast<text*>(content_[i].get()))
+        {
+            t->text_to_stream(_Wostream, true);
+        }
+        else if (paragraph_content_element *element = dynamic_cast<paragraph_content_element*>(content_[i].get()))
+        {
+            element->xlsx_serialize(_Wostream, Context);
+        }
+    }
+}
+
+void meta::pptx_convert(oox::pptx_conversion_context & Context)
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        content_[i]->pptx_convert(Context);
+    }
+}
+//------------------------------------------------------------------------------------------------------------
+const wchar_t * meta_field::ns = L"text";
+const wchar_t * meta_field::name = L"meta-field";
+//------------------------------------------------------------------------------------------------------------
 const wchar_t * a::ns = L"text";
 const wchar_t * a::name = L"a";
 
@@ -1152,15 +1223,42 @@ void note::docx_convert(oox::docx_conversion_context & Context)
 const wchar_t * ruby::ns = L"text";
 const wchar_t * ruby::name = L"ruby";
 
+void ruby::docx_convert(oox::docx_conversion_context & Context)
+{
+    // The editor has no ruby model, so a w:ruby would lose the text again: write the base text as normal runs
+    // and drop the annotation.
+    if (text_ruby_base_)
+        text_ruby_base_->docx_convert(Context);
+}
+
+// The plain text is the base only, as in docx_convert: it feeds alphabetical index entries (XE) and the matching of
+// "#...|outline" links to headings, where the annotation would add text that is not in the document.
 std::wostream & ruby::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
 {
     if (text_ruby_base_)
         text_ruby_base_->text_to_stream(_Wostream, bXmlEncode);
 
-    if (text_ruby_text_)
-        text_ruby_text_->text_to_stream(_Wostream, bXmlEncode);
-
     return _Wostream;
+}
+
+const office_element_ptr_array * ruby::base_content() const
+{
+    const ruby_base * base = dynamic_cast<const ruby_base *>(text_ruby_base_.get());
+    return base ? &base->content() : NULL;
+}
+
+void ruby::xlsx_convert(oox::xlsx_conversion_context & Context)
+{
+    // A cell has no ruby: keep the base text and drop the annotation, as LibreOffice Calc does.
+    if (text_ruby_base_)
+        text_ruby_base_->xlsx_convert(Context);
+}
+
+void ruby::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conversion_context & Context)
+{
+    // Page headers and footers have no ruby either: write the base text only.
+    if (text_ruby_base_)
+        text_ruby_base_->text_to_stream(_Wostream, true);
 }
 
 void ruby::add_attributes( const xml::attributes_wc_ptr & Attributes )

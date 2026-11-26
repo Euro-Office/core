@@ -55,7 +55,7 @@ public:
 
 	virtual void loadFields(XLS::CFRecord& record);
 
-	// overriden
+	// overridden
 	const unsigned short GetInstanceToStore();
 
 	std::vector<OfficeArtBStoreContainerFileBlock*> rgfb;

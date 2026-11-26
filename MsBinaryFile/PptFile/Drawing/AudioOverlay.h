@@ -99,7 +99,7 @@ namespace PPT
 
         CAudioPart(CAudioElement* pAudioElem)
         {
-            if (NULL == pAudioElem)
+            if (nullptr == pAudioElem)
             {
                 m_strFile			= L"";
 

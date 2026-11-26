@@ -51,10 +51,10 @@ void CRecordTimePropertyList4TimeNodeContainer::ReadFromStream(SRecordHeader &oH
 
     while ( lCurLen < m_oHeader.RecLen )
     {
-        if (ReadHeader.ReadFromStream(pStream) == false)
+        if (!ReadHeader.ReadFromStream(pStream))
             break;
 
-        CRecordTimeVariant* pRecord = NULL;
+        CRecordTimeVariant* pRecord = nullptr;
 
         TimePropertyID4TimeNode VariableType = ( TimePropertyID4TimeNode ) ReadHeader.RecInstance;
 

@@ -61,10 +61,10 @@ std::wstring CUnknownRecord::ReadStringW(const XLS::CFStreamPtr &pStream, int lL
 {
     if (!pStream) return (L"");
 
-    unsigned char* pData = new unsigned char[2 * (lLen + 1)];
-    memset(pData, 0, 2 * (lLen + 1));
+    unsigned char* pData = new unsigned char[2 * static_cast<size_t>(lLen + 1)];
+    memset(pData, 0, 2 * static_cast<size_t>(lLen + 1));
 
-    pStream->read(pData, 2 * lLen);
+    pStream->read(pData, 2 * static_cast<size_t>(lLen));
 
     if (sizeof(wchar_t) == 4)
     {
@@ -128,10 +128,10 @@ void CRecordsContainer::Clear()
     size_t nCount = m_arRecords.size();
     while (0 != nCount)
     {
-        if (NULL != m_arRecords[nCount - 1])
+        if (nullptr != m_arRecords[nCount - 1])
         {
             delete m_arRecords[nCount - 1];
-            m_arRecords[nCount - 1] = NULL;
+            m_arRecords[nCount - 1] = nullptr;
         }
         m_arRecords.pop_back();
         --nCount;
@@ -143,7 +143,6 @@ void CRecordsContainer::ReadFromStream(SRecordHeader & oHeader, const XLS::CFStr
     m_oHeader = oHeader;
     m_arRecords.clear();
 
-    LONG lPosition = pStream->getStreamPointer();
 
     m_oHeader = oHeader;
 
@@ -488,7 +487,7 @@ std::string GetRecordName(PPT::RecordType dwType)
 
 IRecord* CreateByType(SRecordHeader oHeader, _commonInfo* commonInfo)
 {
-    IRecord* pRecord = NULL;
+    IRecord* pRecord = nullptr;
     switch (oHeader.RecType)
     {
     CREATE_BY_TYPE(RT_AnimationInfo, CRecordAnimationInfoContainer)
@@ -544,8 +543,8 @@ IRecord* CreateByType(SRecordHeader oHeader, _commonInfo* commonInfo)
             CREATE_BY_TYPE(RT_NotesAtom, CRecordNotesAtom)
             CREATE_BY_TYPE(RT_SlidePersistAtom, CRecordSlidePersistAtom)
             CREATE_BY_TYPE(RT_Environment, CRecordDocumentTextInfo)
-            CREATE_BY_TYPE(RT_FontCollection, CRecordFontCollection)
-            CREATE_BY_TYPE(RT_FontCollection10, CRecordFontCollection)
+            case RT_FontCollection:
+            case RT_FontCollection10: { pRecord = new CRecordFontCollection(); break; }
             //CREATE_BY_TYPE(RECORD_TYPE_UNKNOWN					, CRecordMasterPersistAtom)
             //CREATE_BY_TYPE(RECORD_TYPE_UNKNOWN					, CRecordNotesPersistAtom)
             CREATE_BY_TYPE(RT_SlideShowSlideInfoAtom, CSlideShowSlideInfoAtom)
@@ -601,9 +600,10 @@ IRecord* CreateByType(SRecordHeader oHeader, _commonInfo* commonInfo)
             CREATE_BY_TYPE(RT_MasterTextPropAtom, CRecordMasterTextPropAtom)
             CREATE_BY_TYPE(RT_TextMasterStyleAtom, CRecordTextMasterStyleAtom)
 
-            CREATE_BY_TYPE(RT_TextCharFormatExceptionAtom, CRecordTextCFExceptionAtom)
-            CREATE_BY_TYPE(RT_TextParagraphFormatExceptionAtom, CRecordTextPFExceptionAtom)
-            CREATE_BY_TYPE(RT_TextSpecialInfoDefaultAtom, CRecordTextSIExceptionAtom)
+            // the CREATE_BY_TYPE records below are stored in pRecord, not thrown
+            CREATE_BY_TYPE(RT_TextCharFormatExceptionAtom, CRecordTextCFExceptionAtom) // NOLINT(bugprone-throw-keyword-missing)
+            CREATE_BY_TYPE(RT_TextParagraphFormatExceptionAtom, CRecordTextPFExceptionAtom) // NOLINT(bugprone-throw-keyword-missing)
+            CREATE_BY_TYPE(RT_TextSpecialInfoDefaultAtom, CRecordTextSIExceptionAtom) // NOLINT(bugprone-throw-keyword-missing)
 
             CREATE_BY_TYPE(RT_TextRulerAtom, CRecordTextRulerAtom)
             //CREATE_BY_TYPE(RECORD_TYPE_TEXTBOOKMARK_ATOM			, CRecordTextBookmarkAtom)
@@ -658,9 +658,9 @@ IRecord* CreateByType(SRecordHeader oHeader, _commonInfo* commonInfo)
             CREATE_BY_TYPE(RTE_SP, CRecordShape)
             CREATE_BY_TYPE(RTE_CLIENTANCHOR, CRecordClientAnchor)
             CREATE_BY_TYPE(RTE_CHILDANCHOR, CRecordChildAnchor)
-            CREATE_BY_TYPE(RTE_OPT, CRecordShapeProperties)
-            CREATE_BY_TYPE(RTE_SECONDARY_OPT, CRecordShapeProperties)
-            CREATE_BY_TYPE(RTE_TETRIARY_OPT, CRecordShapeProperties)
+            case RTE_OPT:
+            case RTE_SECONDARY_OPT:
+            case RTE_TETRIARY_OPT: { pRecord = new CRecordShapeProperties(); break; }
             CREATE_BY_TYPE(RTE_REGROUPITEMS, CRecordRegGroupItems)
             CREATE_BY_TYPE(RTE_SPLITMENUCOLORS, CRecordSplitMenuColorRecord)
             CREATE_BY_TYPE(RTE_COLORMRU, CRecordMostRecentlyUserColors)
@@ -694,7 +694,7 @@ IRecord* CreateByType(SRecordHeader oHeader, _commonInfo* commonInfo)
     }break;
     };
 
-    if (NULL == pRecord)
+    if (nullptr == pRecord)
     {
 
         if (oHeader.IsContainer())
@@ -774,9 +774,9 @@ bool SRecordHeader::ReadFromStream(POLE::Stream *pStream)
     RecInstance = rec >> 4;
     RecVersion = rec - (RecInstance << 4);
 
-    nRd = pStream->read((unsigned char*)&(RecType), 2);
+    pStream->read((unsigned char*)&(RecType), 2);
 
-    nRd = pStream->read((unsigned char*)&(RecLen), 4);
+    pStream->read((unsigned char*)&(RecLen), 4);
 
     POLE::uint64 sz = pStream->size() - pStream->tell();
 

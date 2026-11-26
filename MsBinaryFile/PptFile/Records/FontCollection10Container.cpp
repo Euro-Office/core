@@ -46,7 +46,7 @@ void CRecordFontCollection10Container::ReadFromStream(SRecordHeader &oHeader, PO
 
     while ( lCurLen < m_oHeader.RecLen )
     {
-        if ( ReadHeader.ReadFromStream(pStream) == false)
+        if ( !ReadHeader.ReadFromStream(pStream))
             break;
 
         lCurLen += 8 + ReadHeader.RecLen;

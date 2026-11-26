@@ -63,6 +63,10 @@ void office_meta::add_child_element( xml::sax * Reader, const std::wstring & Ns,
 	{
 		CP_CREATE_ELEMENT(meta_initial_creator_);
 	}
+	else if (Ns == L"meta" && Name == L"keyword")
+	{
+		CP_CREATE_ELEMENT(meta_keyword_);
+	}
 	else if (Ns == L"meta" && Name == L"template")
 	{
 		CP_CREATE_ELEMENT(meta_template_);

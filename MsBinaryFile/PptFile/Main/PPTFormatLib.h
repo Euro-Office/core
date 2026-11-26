@@ -43,7 +43,7 @@ class COfficePPTFile
 public:
     COfficePPTFile()
 	{
-		m_pReader = NULL;
+		m_pReader = nullptr;
 		m_Status = 0;
 	}
     ~COfficePPTFile();

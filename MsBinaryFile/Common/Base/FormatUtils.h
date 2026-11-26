@@ -650,7 +650,7 @@ namespace DocFileFormat
 			return sstream.str();
 		}
 
-		static inline std::wstring DoubleToFormattedWideString( double value, wchar_t* format )
+		static inline std::wstring DoubleToFormattedWideString( double value, const wchar_t* format )
 		{
 			if ( format == NULL ) return L"";
 

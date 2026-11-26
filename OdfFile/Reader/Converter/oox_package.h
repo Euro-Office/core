@@ -214,6 +214,10 @@ public:
 	virtual content_types_file & get_content_types_file() = 0;
 	docProps_files	& get_docProps_files() { return docProps_files_; }
 	rels_files & get_rels_files() { return rels_files_; }
+
+	// Sets docProps/core.xml, and docProps/custom.xml with its content type and package relationship
+	// when Custom is not empty.
+	void set_doc_props(const std::wstring & Core, const std::wstring & Custom);
 private:
 	docProps_files docProps_files_;
 	rels_files rels_files_;
