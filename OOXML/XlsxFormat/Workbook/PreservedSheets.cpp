@@ -668,6 +668,38 @@ namespace
 			nIndex = (unsigned int)nEditorCount - 1;
 		return nIndex;
 	}
+
+	// Text written into package XML without escaping (content types, part names).
+	bool IsPlainAttrValue(const std::wstring& sValue)
+	{
+		for (wchar_t c : sValue)
+		{
+			if (c < 0x20 || c == L'"' || c == L'<' || c == L'>' || c == L'&')
+				return false;
+		}
+		return true;
+	}
+	// A part name in the form CollectParts gives it: relative, '/'-separated, with no
+	// empty, "." or ".." segments. Anything else would let the name leave the package folder.
+	bool IsValidPartName(const std::wstring& sName)
+	{
+		if (sName.empty() || !IsPlainAttrValue(sName) || std::wstring::npos != sName.find_first_of(L"\\:"))
+			return false;
+		return sName == JoinParts(SplitPath(sName));
+	}
+	// Editor.bin can be built by the client ("Download as"), so a preserved sheet is
+	// written only if it looks like one CollectPreservedSheets made.
+	bool IsValidPreservedSheet(const CPreservedSheet& oSheet)
+	{
+		if (oSheet.arParts.empty() || !IsPreservedSheetRelType(oSheet.sRelType))
+			return false;
+		for (const CPreservedPart& oPart : oSheet.arParts)
+		{
+			if (!IsValidPartName(oPart.sName) || !IsPlainAttrValue(oPart.sContentType))
+				return false;
+		}
+		return true;
+	}
 }
 
 bool IsPreservedSheetRelType(const std::wstring& sRelType)
@@ -809,6 +841,8 @@ void RestorePreservedSheets(CWorkbook& workbook)
 {
 	std::vector<CPreservedSheet> arSheets;
 	arSheets.swap(workbook.m_arPreservedSheets);
+	arSheets.erase(std::remove_if(arSheets.begin(), arSheets.end(), [](const CPreservedSheet& oSheet) { return !IsValidPreservedSheet(oSheet); }),
+				   arSheets.end());
 	if (arSheets.empty())
 		return;
 	if (!workbook.m_oSheets.IsInit())
