@@ -355,12 +355,14 @@ namespace
 	}
 
 	// A section owns its sign: the literal text before its first and after its last digit placeholder ('-', '+', '(' and ')',
-	// quoted text and characters escaped with '\', but not an escaped space) is shown as written, e.g. -#,##0, \(#,##0\) or
-	// "-"0. Returns false when the section has no digit placeholder (only text). "General" counts as a placeholder.
+	// quoted text and characters escaped with '\') is shown as written, e.g. -#,##0, \(#,##0\) or "-"0. A space (plain or
+	// escaped) goes with that text only when it sits between the text and the number, e.g. #,##0.00\ "EUR" or "ca." 0; other
+	// spaces stay with the number as before. Returns false when the section has no digit placeholder (only text). "General"
+	// counts as a placeholder.
 	bool split_sign_literals(const std::wstring & code, bool question_marks_are_digits,
 							 std::wstring & prefix, std::wstring & suffix, std::wstring & core)
 	{
-		enum kind { other, digit, literal };
+		enum kind { other, digit, literal, space };
 		struct token { std::wstring code; kind type; std::wstring text; };
 		std::vector<token> tokens;
 		for (size_t i = 0; i < code.size(); ++i)
@@ -384,8 +386,8 @@ namespace
 			else if ((c == L'\\' || c == L'_' || c == L'*') && i + 1 < code.size())
 			{
 				const wchar_t next = code[i + 1];
-				const bool is_literal = c == L'\\' && next != L' ';
-				tokens.push_back({code.substr(i, 2), is_literal ? literal : other, std::wstring(1, next)});
+				const kind type = c != L'\\' ? other : (next == L' ' ? space : literal);
+				tokens.push_back({code.substr(i, 2), type, std::wstring(1, next)});
 				++i;
 			}
 			else if ((c == L'E' || c == L'e') && i + 1 < code.size() && (code[i + 1] == L'+' || code[i + 1] == L'-'))
@@ -402,6 +404,8 @@ namespace
 				tokens.push_back({std::wstring(1, c), digit, L""});
 			else if (c == L'-' || c == L'+' || c == L'(' || c == L')')
 				tokens.push_back({std::wstring(1, c), literal, std::wstring(1, c)});
+			else if (c == L' ')
+				tokens.push_back({std::wstring(1, c), space, std::wstring(1, c)});
 			else
 				tokens.push_back({std::wstring(1, c), other, L""});
 		}
@@ -416,9 +420,18 @@ namespace
 		if (first == tokens.size())
 			return false;
 
+		// The nearest token that is not a space, looking outwards from the number: a space before the number belongs to the
+		// prefix when that token is literal text, a space after the number to the suffix.
+		auto outer_is_literal = [&tokens, first](size_t i)
+		{
+			while (i < tokens.size() && tokens[i].type == space)
+				i = (i < first) ? (i == 0 ? tokens.size() : i - 1) : i + 1;
+			return i < tokens.size() && tokens[i].type == literal;
+		};
 		for (size_t i = 0; i < tokens.size(); ++i)
 		{
-			if (tokens[i].type == literal && (i < first || i > last))
+			const bool outside = i < first || i > last;
+			if (outside && (tokens[i].type == literal || (tokens[i].type == space && outer_is_literal(i))))
 				(i < first ? prefix : suffix) += tokens[i].text;
 			else
 				core += tokens[i].code;

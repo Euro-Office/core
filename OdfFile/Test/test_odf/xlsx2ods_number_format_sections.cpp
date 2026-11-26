@@ -241,3 +241,39 @@ TEST(XlsxToOdsNumberFormatSections, SingleSectionAndMapTargets)
 	}
 	EXPECT_TRUE(single) << "0.000";
 }
+
+// 0\ "kg";-0\ "kg", #,##0.0 "EUR";[Red]-#,##0.0 "EUR" and "ca." 0.00000;"ca." -0.00000: the space between the number and
+// its text (escaped or plain, after or before the number) is kept in every section.
+TEST(XlsxToOdsNumberFormatSections, SpaceBetweenNumberAndText)
+{
+	const std::vector<DataStyle> styles = converted_styles();
+	ASSERT_FALSE(styles.empty()) << "XLSX -> ODS conversion failed";
+
+	struct Case
+	{
+		std::vector<std::wstring> negative;	// pieces of the negative (main) style, the first one is the text
+		std::wstring positive;				// the text of the positive sub-style
+		bool after;							// the text comes after the number
+	};
+	const Case cases[] = {
+		{{L"<number:text> kg</number:text>", kMinus}, L"<number:text> kg</number:text>", true},
+		{{L"<number:text> EUR</number:text>", kRed, kMinus}, L"<number:text> EUR</number:text>", true},
+		{{L"<number:text>ca. -</number:text>"}, L"<number:text>ca. </number:text>", false},
+	};
+	for (const Case& c : cases)
+	{
+		const DataStyle* main = find_mapped(styles, L"value()&gt;=0", c.negative);
+		ASSERT_NE(main, nullptr) << c.negative[0];
+		const size_t number = main->xml.find(L"<number:number ");
+		ASSERT_NE(number, std::wstring::npos) << main->xml;
+		if (c.after)
+			EXPECT_GT(main->xml.find(c.negative[0]), number) << main->xml;
+		else
+			EXPECT_LT(main->xml.find(c.negative[0]), number) << main->xml;
+
+		const DataStyle* positive = find_style(styles, map_target(*main, L"value()&gt;=0"));
+		ASSERT_NE(positive, nullptr) << main->xml;
+		EXPECT_NE(positive->xml.find(c.positive), std::wstring::npos) << positive->xml;
+		EXPECT_EQ(positive->xml.find(kMinus), std::wstring::npos) << positive->xml;
+	}
+}
