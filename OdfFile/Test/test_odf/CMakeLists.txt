@@ -138,9 +138,10 @@ add_core_gtest(
             odf_bitmap_fill_size.cpp
             xlsx2ods_fit_to_pages.cpp
             ods2xlsx_styles_auto_data_style.cpp
+            ods2xlsx_text_style_map.cpp
+            odt2docx_tracked_deleted_table.cpp
             odt2docx_svm_image.cpp
             odt2docx_svm_relative_map_mode.cpp
-            odt2docx_tracked_deleted_table.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
