@@ -508,6 +508,7 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 [[annotations]]
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/body_section_closest_header.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/body_section_continuous_after_header.docx",
     "OdfFile/Test/test_odf/ExampleFiles/body_section_duplicate_header.docx",
     "OdfFile/Test/test_odf/ExampleFiles/body_section_inherited_header_footer.docx",
     "OdfFile/Test/test_odf/ExampleFiles/body_section_own_header.docx",

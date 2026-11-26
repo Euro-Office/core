@@ -121,17 +121,18 @@ TEST(DocxToOdt, BodySectionTakesLastDuplicateHeader)
 	EXPECT_EQ(standard.find(L"First listed header"), std::wstring::npos);
 }
 
-// The body section is continuous and has no headers or footers of its own: it keeps the page, as the
-// earlier continuous section does. The references it borrows for the Standard page do not count.
-TEST(DocxToOdt, ContinuousBodySectionWithBorrowedHeaderKeepsPage)
+// Two continuous sections: the first has a header and no footer, the body section has neither. Its
+// paragraph has properties, so it gets a paragraph style that could carry a master page, and with no
+// footer in force a section that does not keep the page names one. The body section borrows the first
+// section's header for the Standard page; it still keeps the page.
+TEST(DocxToOdt, ContinuousBodySectionAfterHeaderSectionKeepsPage)
 {
-	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/body_section_inherited_header_footer.docx");
+	const std::wstring dir = convert_ooxml_to_odf_dir(L"ExampleFiles/body_section_continuous_after_header.docx");
 	ASSERT_FALSE(dir.empty()) << "DOCX -> ODT conversion failed";
 
 	const std::wstring content = read_part(dir, L"content.xml");
 	ASSERT_FALSE(content.empty()) << "content.xml is missing";
 	EXPECT_TRUE(is_well_formed(content));
 
-	EXPECT_EQ(master_page_of(content, L"SECOND"), L"") << "continuous section without own references";
-	EXPECT_EQ(master_page_of(content, L"THIRD"), L"") << "continuous body section without own references";
+	EXPECT_EQ(master_page_of(content, L"SECOND"), L"") << "continuous body section without own references";
 }
