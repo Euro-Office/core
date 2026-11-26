@@ -3,7 +3,7 @@
 	<settings>./</settings>
 	<inputDirectory>input_sheets_macro</inputDirectory>
 	<outputDirectory>out_sheets_macro</outputDirectory>
-	<x2tPath>../../../build/package/</x2tPath>
+	<x2tPath>../../../build/package/bin/</x2tPath>
 	<output>xlsm</output>
 	<troughConversion>1</troughConversion>
 	<cores>1</cores>
