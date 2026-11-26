@@ -95,6 +95,28 @@ Done:
       Studio project existed and the suite had never built as committed (a duplicate global
       in `Test57197.cpp`). Links the static format libraries in a group, like `test_odf`;
       own `main()`. Fixtures under `ExampleFiles/` are staged in the working directory.
+      `BUILD_X2T_AS_LIBRARY_DYLIB`. Conversion fixtures under `test/ExampleFiles/`
+      (`xlsb2xlsx/`, `xlsx2xlsb/`) are staged under a run root and the `WORKING_DIRECTORY`
+      is nested four levels deep so the suite's `absolute("../../../../") + OOXML/test/ExampleFiles`
+      lookup resolves to the staged copy. **Build-only / quarantined:** the target compiles and
+      links, but the 41 conversion cases fail at runtime in headless CI — `X2T_Convert` produces no
+      output file, so the post-conversion comparisons fail. The CTest run is disabled
+      (`set_tests_properties(ooxml_test PROPERTIES DISABLED TRUE)`) pending diagnosis of the headless
+      conversion by someone able to run X2T locally.
+- [x] `OOXML/PPTXFormat/test` — new suite (`pptx_comments_test`), not a `.pro` migration.
+      Regression coverage for modern PowerPoint comments (issue #143): each case drives a
+      full in-process pptx→bin→pptx round trip via `X2T_Convert` (same x2tlib +
+      dylib-entry-point wiring as `OOXML/test`, `GTEST_MAIN`; narrow UTF-8 paths on
+      non-Windows — see PR #166). Three committed fixtures under `ExampleFiles/` (derived
+      by the committed `make_fixtures.py` from the modern seed): modern GUID-author
+      comments, the same document downgraded to classic `p:cmAuthorLst`, and modern
+      authors with no id attribute at all. Asserts modernity is preserved in both
+      directions (no `p188` leakage into classic output), author GUID/name/initials and
+      per-comment `authorId` survive the round trip in document order, and — the
+      sdkjs-visible part of the fix — the binary intermediate carries the author `idx` /
+      comment `authorIdx` attribute (tag 0x00 after the record start byte 0xfa). The
+      missing-author-ids fixture exercises the guarded `CommentAuthor::toXmlWriter`
+      (pre-fix: null deref, suite aborts; post-fix: graceful write).
 - [x] `OfficeUtils/tests` — deps: kernel, UnicodeConverter. The committed `tests/zip/`
       fixtures are staged next to the binary: the suite resolves fixtures relative to the
       process directory (`<binary dir>/../zip`), and writes its `unzip`/`temp` output dirs

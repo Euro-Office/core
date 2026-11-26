@@ -56,9 +56,13 @@ namespace PPTX
 			{
 				pWriter->WriteAttribute(L"id", *idx);
 			}
-			else
+			else if (id.IsInit())
 			{
-				pWriter->WriteAttribute(L"id", id.IsInit() ? *id : std::to_wstring(*idx));
+				pWriter->WriteAttribute(L"id", *id);
+			}
+			else if (idx.IsInit())
+			{
+				pWriter->WriteAttribute(L"id", std::to_wstring(*idx));
 			}
 			pWriter->WriteAttribute2(L"name", name);
 			pWriter->WriteAttribute(L"initials", initials);
@@ -95,6 +99,11 @@ namespace PPTX
 				pWriter->WriteString2(5, id);
 				pWriter->WriteString2(6, userId);
 				pWriter->WriteString2(7, providerId);
+				// #175 (review): no extra attributes inside an author record:
+				// readers that do not know a tag skip it without consuming its
+				// value bytes and desync. The modern marker lives in a
+				// separate record at the authors-list level instead
+				// (see Authors::toPPTY).
 				pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
 		}
 		void CommentAuthor::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
@@ -142,8 +151,12 @@ namespace PPTX
 
 			pReader->Seek(_end_rec);
 			
-			if (false == idx.IsInit())
+			if (false == bModern && false == idx.IsInit())
 			{
+			// #175 (review): bin written before the modern marker record
+			// existed - an author with no idx is modern. This also
+				// keeps non-GUID modern ids (e.g. author1) modern, which the
+				// old GUID-shape ('-') heuristic flipped to classic.
 				bModern = true;
 			}
 		}
@@ -209,6 +222,18 @@ namespace PPTX
 	}
 	void Authors::toPPTY(NSBinPptxRW::CBinaryFileWriter* pWriter) const
 	{
+		// #175 (review): the modern marker is a standalone record
+		// (type 1) at the authors-list level, ahead of the author array.
+		// Unknown record types are skipped by record length by every
+		// PPTY reader, current sdkjs included; extra attributes inside
+		// an author record are not (their value bytes are only consumed
+		// by readers that know the tag).
+		if (bModern)
+		{
+			pWriter->StartRecord(1);
+			pWriter->WriteBYTE(1);
+			pWriter->EndRecord();
+		}
 		pWriter->WriteRecordArray(0, 0, m_arAuthors);
 	}
 	void Authors::toXmlWriter(NSBinPptxRW::CXmlWriter* pWriter) const
@@ -241,6 +266,15 @@ namespace PPTX
 
 			switch (_rec)
 			{
+				case 1:
+				{
+					// #175 (review): modern marker record at the
+					// authors-list level (see toPPTY); readers that do not
+					// know it skip it by record length.
+					LONG end_rec = pReader->GetPos() + pReader->GetRecordSize() + 4;
+					bModern = (0 != pReader->GetUChar());
+					pReader->Seek(end_rec);
+				}break;
 				case 0:
 				{
 					pReader->Skip(4); // len
@@ -266,38 +300,10 @@ namespace PPTX
 		}
 		pReader->Seek(end);
 
-		if (!bModern)
-		{
-			bool bNew = mapAuthors.empty();
-
-			for (auto &auth : m_arAuthors)
-			{
-				if (true == auth.idx.IsInit())
-					break;
-				if (false == auth.id.IsInit())
-					break;
-
-				if (bNew)
-				{
-					auth.idx = mapAuthors.size() + 1;
-					mapAuthors.insert(std::make_pair(*auth.id, *auth.idx));
-				}
-				else
-				{
-					std::map<std::wstring, int>::iterator pFind = mapAuthors.find(*auth.id);
-
-					if (pFind != mapAuthors.end())
-					{
-						auth.idx = pFind->second;
-					}
-					else
-					{
-						auth.idx = mapAuthors.size() + 1;
-						mapAuthors.insert(std::make_pair(*auth.id, *auth.idx));
-					}
-				}
-			}
-		}
+		// #175 (review): the legacy idx minting loop that lived here is
+		// unreachable: every author of a classic authors part carries an
+		// idx from the XML, and the !idx fallback in
+		// CommentAuthor::fromPPTY keeps that true for legacy bins as well.
 	}
 
 } // namespace PPTX
