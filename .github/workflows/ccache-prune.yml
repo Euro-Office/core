@@ -4,6 +4,8 @@
 # Every run saves its ccache under a new key, and only the newest one per build
 # leg is ever restored. Deletes the others of this ref, or the repository's
 # Actions caches outgrow their limit and GitHub evicts the ones still in use.
+# Also deletes this ref's caches that no run has used for a week: legs that
+# were renamed or removed are never pruned otherwise.
 name: Prune ccache
 
 on:
@@ -19,13 +21,29 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        # Workflows prune at the same time: a cache may be gone already
-        # Windows' vcpkg binary cache uses the same <prefix>-<run_id> keys
+        # Workflows prune at the same time: a cache may be gone already.
+        # Windows' vcpkg binary cache uses the same <prefix>-<run_id> keys.
+        # A leg is the key without its run id and without the Windows runner
+        # image version (yyyymmdd.n.n), so a new image doesn't keep the old
+        # image's cache as a second one.
         for prefix in ccache- vcpkg-windows-; do
           gh cache list --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF" --key "$prefix" \
               --sort created_at --order desc --limit 1000 --json id,key
         done |
-          jq -rs 'add // [] | group_by(.key | sub("-[0-9]+$"; "")) | map(.[1:]) | flatten | .[].id' |
+          jq -rs 'add // [] | group_by(.key | sub("-[0-9]+$"; "") | sub("-[0-9]{8}\\.[0-9]+\\.[0-9]+(?=-|$)"; ""))
+                  | map(.[1:]) | flatten | .[].id' |
+          while read -r id; do
+            gh cache delete "$id" --repo "$GITHUB_REPOSITORY" || true
+          done
+
+        # Caches of legs that no longer exist (e.g. rocky9 and ubuntu after the
+        # switch to rocky8) stay the newest of their leg forever
+        cutoff=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)
+        for prefix in ccache- vcpkg-; do
+          gh cache list --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF" --key "$prefix" \
+              --limit 1000 --json id,lastAccessedAt
+        done |
+          jq -rs --arg cutoff "$cutoff" 'add // [] | .[] | select(.lastAccessedAt < $cutoff) | .id' |
           while read -r id; do
             gh cache delete "$id" --repo "$GITHUB_REPOSITORY" || true
           done
