@@ -764,13 +764,16 @@ std::wstring CellNumFormat(oox::xlsx_conversion_context & Context, const std::ws
 }
 
 // Whether a cell keeps the number format of its data style when its value type differs from the type of that format.
-// As in LibreOffice, a float cell always keeps it, and a percentage, date or time cell keeps it unless it is the
-// standard format; then, and for a currency cell, the cell takes a format of its own value type.
+// Follows LibreOffice (ScXMLImport::SetType): a float or currency cell always keeps it, and a percentage, date or time
+// cell keeps it unless it is the standard format, approximated here by General. Otherwise the format is cleared and the
+// cell shows in General. LibreOffice also keeps a non-standard format on a boolean cell, but a boolean cell shows
+// TRUE or FALSE whatever its format.
 bool KeepsStyleNumFormat(office_value_type::type cell_type, const std::wstring & num_format)
 {
 	switch (cell_type)
 	{
 	case office_value_type::Float:
+	case office_value_type::Currency:
 		return true;
 	case office_value_type::Percentage:
 	case office_value_type::Date:
