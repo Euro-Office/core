@@ -296,8 +296,10 @@ namespace
 			if (token.compare(0, o.size(), o) != 0)
 				continue;
 
+			// The limit is written into the ODF condition as it is, so it must be a plain number (1, -5, 0.5, .5, 1E+3).
+			static const boost::wregex number(L"[+-]?([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+-]?[0-9]+)?");
 			const std::wstring limit = boost::algorithm::trim_copy(token.substr(o.size()));
-			if (limit.empty() || limit.find_first_not_of(L"0123456789.-+eE") != std::wstring::npos)
+			if (!boost::regex_match(limit, number))
 				return L"";
 			return L"value()" + (o == L"<>" ? std::wstring(L"!=") : o) + limit;
 		}

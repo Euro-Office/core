@@ -277,3 +277,21 @@ TEST(XlsxToOdsNumberFormatSections, SpaceBetweenNumberAndText)
 		EXPECT_EQ(positive->xml.find(kMinus), std::wstring::npos) << positive->xml;
 	}
 }
+
+// [>1-2]0.0000;-0.0000: a condition whose limit is no number is not written; the format keeps its default conditions.
+TEST(XlsxToOdsNumberFormatSections, ConditionLimitIsNoNumber)
+{
+	const std::vector<DataStyle> styles = converted_styles();
+	ASSERT_FALSE(styles.empty()) << "XLSX -> ODS conversion failed";
+
+	bool found = false;
+	for (const DataStyle& style : styles)
+	{
+		EXPECT_EQ(style.xml.find(L"value()&gt;1-2"), std::wstring::npos) << style.xml;
+		if (style.xml.find(L"number:decimal-places=\"4\"") == std::wstring::npos || map_target(style, L"value()&gt;=0").empty())
+			continue;
+		found = true;
+		EXPECT_NE(style.xml.find(kMinus), std::wstring::npos) << style.xml;
+	}
+	EXPECT_TRUE(found) << "[>1-2]0.0000;-0.0000";
+}
