@@ -240,9 +240,10 @@ namespace BinXlsxRW
 		// Euro-Office extension: kept far above the ids above so that a record added later in the
 		// same sequence cannot take it
 		SourceFileType = 100,
-		// Euro-Office: sheets the editor cannot show, carried through unchanged. A high value
-		// keeps it clear of ids added upstream; the payload is only parsed by core.
-		PreservedSheets = 100
+		// Euro-Office extension, next to SourceFileType: sheets the editor cannot show (Excel 4.0
+		// macro sheets), carried through unchanged; only core parses the payload. The next
+		// Euro-Office record takes 102, here and in sdkjs (cell/model/Serialize.js).
+		PreservedSheets = 101
 	};}
 	namespace c_oSerPreservedSheetTypes{enum c_oSerPreservedSheetTypes
 	{
