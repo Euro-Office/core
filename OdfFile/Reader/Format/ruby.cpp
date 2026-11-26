@@ -40,6 +40,14 @@ namespace text {
 const wchar_t * ruby_base::ns = L"text";
 const wchar_t * ruby_base::name = L"ruby-base";
 
+void ruby_base::docx_convert(oox::docx_conversion_context & Context)
+{
+    for (size_t i = 0; i < content_.size(); i++)
+    {
+        content_[i]->docx_convert(Context);
+    }
+}
+
 std::wostream & ruby_base::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
 {
     serialize_elements_text(_Wostream, content_, bXmlEncode);
@@ -66,6 +74,13 @@ void ruby_base::add_child_element( xml::sax * Reader, const std::wstring & Ns, c
 void ruby_base::add_text(const std::wstring & Text)
 {
     office_element_ptr elm = text::create(Text) ;
+    content_.push_back( elm );
+}
+
+// whitespace between child elements (<text:span>A</text:span> <text:span>B</text:span>) is text too, as in a span
+void ruby_base::add_space(const std::wstring & Text)
+{
+    office_element_ptr elm = text::create(Text);
     content_.push_back( elm );
 }
 
