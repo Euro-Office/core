@@ -28,6 +28,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/date_time.hpp>
 
+#include <cmath>
+
 #include "../../Formulas/formulasconvert.h"
 
 #include "ods_table_state.h"
@@ -100,18 +102,16 @@ namespace utils////////////////////////////////////////// GENERAL helpers .. pul
 	{
 		//12H15M42S - pt
 		int hours = 0, minutes = 0;
-		double sec = 0;
 
 		boost::posix_time::time_duration day(24, 0, 0);
 
-		double millisec = day.total_milliseconds() * dTime;
+		// rounded to whole seconds: serials are binary fractions, 15:05 is 0.62847222222222221 and was cut to 15:04:59
+		const long long total = std::llround(day.total_seconds() * dTime);
 
-		sec = millisec / 1000.;
-		hours = (int)(sec / 60. / 60.);
-		minutes = (int)((sec - (hours * (int)60 * (int)60)) / 60.);
-		sec = sec - (hours * (int)60 + minutes) * 60.;
+		hours = (int)(total / 3600);
+		minutes = (int)(total % 3600 / 60);
 
-		int sec1 = (int)sec;
+		int sec1 = (int)(total % 60);
 
 		std::wstring time_str =
 			(hours < 10 ? L"0" : L"") + boost::lexical_cast<std::wstring>(hours)
@@ -176,6 +176,9 @@ namespace utils////////////////////////////////////////// GENERAL helpers .. pul
 				odf_date_time = oox_date_time;
 				return false;
 			}
+			// round to the whole seconds convert_time writes before the split, so 23:59:59.7 becomes the next day
+			if (dDateTime > 0)
+				dDateTime = std::round(dDateTime * 86400.) / 86400.;
 			nDate = (int)dDateTime;
 			dTime = (dDateTime - nDate);
 		}

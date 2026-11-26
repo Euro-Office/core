@@ -42,6 +42,25 @@ TEST(XlsxToOds, IsoDateCell)
 	EXPECT_NE(xml.find(L"office:date-value=\"2023-03-15\""), std::wstring::npos);
 }
 
+// Serial date-times are rounded to whole seconds, not cut: 15:05 and 04:52:56 are
+// binary fractions a little below the exact value, and 23:59:59.9999 is midnight
+// of the next day.
+TEST(XlsxToOds, SerialDateTimeRoundedToWholeSeconds)
+{
+	const std::wstring xml = convert_xlsx_content(L"ExampleFiles/cell_datetime_serial_seconds.xlsx");
+	ASSERT_FALSE(xml.empty()) << "XLSX -> ODS conversion failed";
+	EXPECT_TRUE(is_well_formed(xml));
+
+	for (const wchar_t* expected : {L"2023-11-22T15:05:00\"", L"2014-01-01T04:52:56\"", L"2023-11-23\""})
+	{
+		EXPECT_NE(xml.find(std::wstring(L"office:date-value=\"") + expected), std::wstring::npos) << expected;
+	}
+	for (const wchar_t* cut : {L"15:04:59", L"04:52:55", L"23:59:59"})
+	{
+		EXPECT_EQ(xml.find(cut), std::wstring::npos) << cut;
+	}
+}
+
 // Date-time values, and t="d" values that are not valid dates: these are kept
 // as text in string cells (a date cell needs office:date-value).
 TEST(XlsxToOds, IsoDateTimeCellAndInvalidDateCells)
