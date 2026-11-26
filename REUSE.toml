@@ -478,6 +478,12 @@ path = [
     "OOXML/test/ExampleFiles/xlsx2bin/checkbox.xlsx",
     "OOXML/test/ExampleFiles/docx2bin/page_background_picture.docx",
     "OOXML/test/ExampleFiles/xlsx2bin/richvalue-fallback.xlsx",
+    "OOXML/test/ExampleFiles/docxflat/no_body.xml",
+    "OOXML/test/ExampleFiles/docxflat/no_styles.xml",
+    "OOXML/test/ExampleFiles/docxflat/version_with_compat.xml",
+    "OOXML/test/ExampleFiles/docxflat/version_with_compatibility_mode.xml",
+    "OOXML/test/ExampleFiles/docxflat/version_without_compat.xml",
+    "OOXML/test/ExampleFiles/docxflat/version_without_settings.xml",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

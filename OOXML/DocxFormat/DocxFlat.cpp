@@ -163,19 +163,33 @@ namespace OOX
 		if (!m_sCompatibilityMode.IsInit() && m_pCore.IsInit() && (m_pCore->m_sVersion.IsInit()))
 		{
 			if (!m_pSettings.IsInit()) m_pSettings = new CSettings(this);
-			if (m_pSettings->m_oCompat.IsInit()) m_pSettings->m_oCompat.Init();
+			if (!m_pSettings->m_oCompat.IsInit()) m_pSettings->m_oCompat.Init();
 
-			Settings::CCompatSetting* pSett = new Settings::CCompatSetting();
-			pSett->m_sName = L"compatibilityMode";
-			pSett->m_sUri = L"http://schemas.microsoft.com/office/word";
-			pSett->m_sVal = m_pCore->m_sVersion;
-			m_pSettings->m_oCompat->m_arrCompatSettings.push_back(pSett);
+			// Keep a compatibilityMode the document sets itself (m_sCompatibilityMode is not set while reading w:compat).
+			bool bHasCompatibilityMode = false;
+			for (const Settings::CCompatSetting* pOld : m_pSettings->m_oCompat->m_arrCompatSettings)
+			{
+				if (pOld && pOld->m_sName.IsInit() && *pOld->m_sName == L"compatibilityMode")
+					bHasCompatibilityMode = true;
+			}
+			if (!bHasCompatibilityMode)
+			{
+				Settings::CCompatSetting* pSett = new Settings::CCompatSetting();
+				pSett->m_sName = L"compatibilityMode";
+				pSett->m_sUri = L"http://schemas.microsoft.com/office/word";
+				pSett->m_sVal = m_pCore->m_sVersion;
+				m_pSettings->m_oCompat->m_arrCompatSettings.push_back(pSett);
+			}
 		}
 
 		if ((m_oDocSuppData.IsInit()) && (m_oDocSuppData->m_oBinData.IsInit()) && (m_pDocument.IsInit()))
 		{
 			m_pDocument->m_bMacroEnabled = true;
 		}
+		// w:styles is optional in a flat document; the readers expect a styles part with document defaults.
+		if (!m_pStyles.IsInit())
+			m_pStyles = new CStyles();
+
 		if (!m_pStyles->m_oDocDefaults.IsInit())
 			m_pStyles->m_oDocDefaults.Init();
 
@@ -190,6 +204,10 @@ namespace OOX
 			if (!m_pStyles->m_oDocDefaults->m_oRunPr->m_oRFonts.IsInit())
 				m_pStyles->m_oDocDefaults->m_oRunPr->m_oRFonts = m_pFontTable->m_oDefaultFonts;
 		}
+		// Without w:body there is no document to attach the parts to, as for an empty w:wordDocument.
+		if (!m_pDocument.IsInit())
+			return;
+
 		if (m_pStyles.IsInit())
 		{
 			NSCommon::smart_ptr<OOX::File> file = NSCommon::smart_ptr<OOX::File>(m_pStyles.GetPointer()); file.AddRef();
