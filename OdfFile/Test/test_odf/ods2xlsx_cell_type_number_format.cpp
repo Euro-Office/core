@@ -122,11 +122,13 @@ TEST(OdsToXlsxCellTypeNumberFormat, CurrencyCellKeepsNumberFormat)
 TEST(OdsToXlsxCellTypeNumberFormat, PercentageCellWithStandardStyleStaysGeneral)
 {
     ASSERT_FALSE(part(L"xl/styles.xml").empty()) << "ODS -> XLSX conversion failed";
+    ASSERT_TRUE(is_number_cell(L"A7")) << "A7 must stay a number cell";
     EXPECT_EQ(cell_numfmt_id(L"A7"), L"0");
 }
 
 TEST(OdsToXlsxCellTypeNumberFormat, DateCellWithStandardStyleStaysGeneral)
 {
     ASSERT_FALSE(part(L"xl/styles.xml").empty()) << "ODS -> XLSX conversion failed";
+    ASSERT_TRUE(is_number_cell(L"A8")) << "A8 must stay a number cell";
     EXPECT_EQ(cell_numfmt_id(L"A8"), L"0");
 }
