@@ -168,6 +168,7 @@ namespace Oox2Odf
             size_t start_para = 0;
             size_t end_para = 0;
 			bool bContinue = false;
+			bool bKeepPage = false;
 			bool bFirst = false;		// the first section of the document
 			bool bTurnsPage = false;	// its page orientation differs from the previous section's
 		} *current_section_properties;
@@ -178,6 +179,8 @@ namespace Oox2Odf
 		NSBinPptxRW::CDrawingConverter *drawingConverter;
 		odf_writer::odt_conversion_context *odt_context;
         OOX::Logic::CSectionProperty *last_section_properties;
+		OOX::Logic::CSectionProperty *page_section_properties = NULL; // the section whose margins the current page uses
+		bool bSectionIndents = false; // the current text section has left or right indents
 
 		void apply_HF_from(OOX::Logic::CSectionProperty *props, OOX::Logic::CSectionProperty *other);
 		

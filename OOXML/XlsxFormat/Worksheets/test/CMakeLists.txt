@@ -46,15 +46,3 @@ add_custom_command(TARGET xlsx_condfmt_test POST_BUILD
             "${CMAKE_CURRENT_SOURCE_DIR}/ExampleFiles" "${_condfmt_stage_dir}"
     COMMENT "Staging xlsx_condfmt_test ExampleFiles fixtures"
 )
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-# Same ICU libstdc++ interposition caveat as csv_reader_test (issue #173) and
-# pptx_comments_test: the third_party ICU shared libs embed libstdc++
-# statically with default visibility, and this binary resolves ICU before
-# the system runtime through x2tlib. Linking the system runtime as the FIRST
-# dependency wins the symbol race and keeps a single consistent C++ runtime.
-target_link_options(xlsx_condfmt_test PRIVATE
-    "-Wl,--no-as-needed"
-    "-lstdc++"
-)
-endif()

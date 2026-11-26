@@ -45,19 +45,3 @@ add_core_gtest(
 target_include_directories(csv_reader_test PRIVATE
     ${CORE_ROOT_DIR}
 )
-
-# The third_party ICU shared libraries embed libstdc++ statically
-# (Common/3dParty/icu/nc-build.sh passes -static-libstdc++) and export its
-# symbols, interposing the C++ runtime of any process that resolves ICU
-# before the system runtime -- as this binary's dependency order does via
-# x2tlib. The std::wregex construction in DigitReader then throws
-# std::bad_cast from a mixed-runtime use_facet lookup. Linking the system
-# runtime as the FIRST dependency of the executable wins the symbol race
-# and restores a single consistent C++ runtime. The root cause in the ICU
-# build is tracked in #173. Guarded to Linux: Apple's linker rejects
-# --no-as-needed, and only Linux needs the workaround (same as rtf_lex_test).
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_link_options(csv_reader_test PRIVATE
-        "-Wl,--no-as-needed" "-lstdc++"
-    )
-endif()
