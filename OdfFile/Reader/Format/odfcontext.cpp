@@ -86,6 +86,7 @@ namespace cpdoccore {
 				parent_name_ = L"Standard";
 			}
 			parent_ = Container->style_by_name(parent_name_, style_type_, false);
+			parent_refused_ = false;
 		}
 
 		style_instance* styles_container::hyperlink_style()
@@ -167,11 +168,28 @@ namespace cpdoccore {
 
 		style_instance* style_instance::parent() const
 		{
-			if (parent_)
+			if (parent_ || parent_refused_)
 				return parent_;
 			else if (container_)
-				parent_ = container_->style_by_name(parent_name_, type(), false);
+			{
+				style_instance* parent = container_->style_by_name(parent_name_, type(), false);
 
+				// A parent whose chain leads back to this style (A -> B -> A) would make every walk up the
+				// chain endless; keep no parent then and remember that, so it is not looked up again
+				// (LibreOffice's SfxStyleSheetBase::SetParent also refuses such a link). Only links resolved
+				// before are followed, and they form no cycle: the constructor links only to a style added
+				// earlier, which cannot point to the new one yet, and every later link is checked here.
+				for (const style_instance* ancestor = parent; ancestor; ancestor = ancestor->parent_)
+				{
+					if (ancestor == this)
+					{
+						parent = NULL;
+						parent_refused_ = true;
+						break;
+					}
+				}
+				parent_ = parent;
+			}
 			return parent_;
 		}
 
