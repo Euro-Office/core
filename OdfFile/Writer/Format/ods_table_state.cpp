@@ -193,6 +193,14 @@ namespace utils////////////////////////////////////////// GENERAL helpers .. pul
 			}
 		}
 
+		if (nDate == 0 && dTime >= 0)
+		{
+			// no date part: a time of day, or zero. office:time-value is an xsd:duration
+			odf_type = office_value_type::Time;
+			odf_date_time = L"PT" + convert_time(dTime, true);
+			return true;
+		}
+
 		std::wstring sDate, sTime;
 		if (dTime > 0)
 		{

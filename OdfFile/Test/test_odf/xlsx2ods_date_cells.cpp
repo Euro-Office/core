@@ -79,3 +79,44 @@ TEST(XlsxToOds, InvalidDateFormulaCellTextWrittenOnce)
 	ASSERT_NE(first, std::wstring::npos);
 	EXPECT_EQ(xml.find(text, first + text.size()), std::wstring::npos) << "the cell text is written twice";
 }
+
+// A serial number with no date part is a time of day. office:time-value is an
+// xsd:duration, so 0.5 must be written as PT12H00M00S, not as T12:00:00.
+TEST(XlsxToOds, TimeOnlySerialWrittenAsDuration)
+{
+	const std::wstring xml = convert_xlsx_content(L"ExampleFiles/cell_time_only_serials.xlsx");
+	ASSERT_FALSE(xml.empty()) << "XLSX -> ODS conversion failed";
+	EXPECT_TRUE(is_well_formed(xml));
+	EXPECT_NE(xml.find(L"office:time-value=\"PT12H00M00S\""), std::wstring::npos);
+	EXPECT_EQ(xml.find(L"office:time-value=\"T"), std::wstring::npos);
+}
+
+// A zero serial in a date or time formatted cell keeps its value: both cells get
+// office:time-value PT00H00M00S, and no time cell is left without a value.
+TEST(XlsxToOds, ZeroSerialKeepsTimeValue)
+{
+	const std::wstring xml = convert_xlsx_content(L"ExampleFiles/cell_time_only_serials.xlsx");
+	ASSERT_FALSE(xml.empty()) << "XLSX -> ODS conversion failed";
+
+	const std::wstring zero = L"office:time-value=\"PT00H00M00S\"";
+	size_t count = 0;
+	for (size_t pos = xml.find(zero); pos != std::wstring::npos; pos = xml.find(zero, pos + zero.size()))
+		++count;
+	EXPECT_EQ(count, 2u);
+
+	for (size_t pos = xml.find(L"office:value-type=\"time\""); pos != std::wstring::npos;
+		 pos = xml.find(L"office:value-type=\"time\"", pos + 1))
+	{
+		const size_t start = xml.rfind(L'<', pos);
+		const std::wstring tag = xml.substr(start, xml.find(L'>', pos) + 1 - start);
+		EXPECT_NE(tag.find(L"office:time-value="), std::wstring::npos) << tag;
+	}
+}
+
+// A serial number with a date part is still written as a date and time.
+TEST(XlsxToOds, DateTimeSerialStaysDateValue)
+{
+	const std::wstring xml = convert_xlsx_content(L"ExampleFiles/cell_time_only_serials.xlsx");
+	ASSERT_FALSE(xml.empty()) << "XLSX -> ODS conversion failed";
+	EXPECT_NE(xml.find(L"office:date-value=\"2023-03-15T12:00:00\""), std::wstring::npos);
+}
