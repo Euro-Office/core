@@ -83,22 +83,22 @@ TEST(OdsToXlsxCellStylePrecedence, CellStyleWithoutDataStyleReplacesColumnFormat
 TEST(OdsToXlsxCellStylePrecedence, CellWithoutStyleKeepsColumnFormat)
 {
     ASSERT_TRUE(is_number_cell(L"A2"));
-    EXPECT_NE(cell_format(L"A2"), L"General");
+    const std::wstring format = cell_format(L"A2");
+    EXPECT_TRUE(format == L"0.00" || format == L"built-in 2") << format;
 }
 
 // A3: own style with a data style -> its format (0.000), not the column's.
 TEST(OdsToXlsxCellStylePrecedence, CellStyleWithDataStyleWins)
 {
     ASSERT_TRUE(is_number_cell(L"A3"));
-    EXPECT_NE(cell_format(L"A3"), L"General");
-    EXPECT_NE(cell_format(L"A3"), cell_format(L"A2"));
+    EXPECT_EQ(cell_format(L"A3"), L"0.000");
 }
 
 // A4: own style whose parent (a common style) has the data style -> the parent's format (0.000, as A3).
 TEST(OdsToXlsxCellStylePrecedence, CellStyleParentDataStyleWins)
 {
     ASSERT_TRUE(is_number_cell(L"A4"));
-    EXPECT_EQ(cell_format(L"A4"), cell_format(L"A3"));
+    EXPECT_EQ(cell_format(L"A4"), L"0.000");
 }
 
 // A5: own style without a data style in a row whose default cell style has 0.000 -> the default format.
