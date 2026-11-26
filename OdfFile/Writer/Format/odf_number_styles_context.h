@@ -71,12 +71,17 @@ private:
 	void create(int oox_num_fmt, std::wstring formatCode = L""); 	
 	void create_default(int oox_num_fmt, std::wstring formatCode = L"");
 	void create_style(number_format_state & state);	
+	void create_section_styles(number_format_state & state, office_element_ptr & main_elm);
+	void create_section_part(number_format_state & part, odf_types::office_value_type::type type, office_element_ptr & elm,
+							 bool question_marks_are_digits);
 
 	void detect_format(number_format_state & state);
 
 ////////////////
 	odf_conversion_context *odf_context_;
 	std::vector<office_element_ptr>	styles_elments;
+	// the sub-styles (style:map targets) of the style created last, written before it
+	std::vector<office_element_ptr>	section_styles_;
 
 //////////////////
 	void create_number_style	(number_format_state & state, office_element_ptr & root_elm);

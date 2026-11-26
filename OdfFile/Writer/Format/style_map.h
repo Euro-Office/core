@@ -46,7 +46,7 @@ public:
     
 
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
-	virtual void serialize(std::wostream & strm){}
+	virtual void serialize(std::wostream & strm);
 
 	std::wstring	style_condition_;
     std::wstring	style_name_;

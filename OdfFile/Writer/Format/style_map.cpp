@@ -25,6 +25,7 @@
 
 #include "style_map.h"
 
+#include <xml/simple_xml_writer.h>
 #include <xml/xmlchar.h>
 #include <xml/attributes.h>
 
@@ -41,6 +42,19 @@ const wchar_t * style_map::name = L"map";
 void style_map::create_child_element(  const std::wstring & Ns, const std::wstring & Name)
 {
     CP_NOT_APPLICABLE_ELM();
+}
+void style_map::serialize(std::wostream & strm)
+{
+	CP_XML_WRITER(strm)
+	{
+		CP_XML_NODE_SIMPLE()
+		{
+			CP_XML_ATTR(L"style:condition", style_condition_);
+			CP_XML_ATTR(L"style:apply-style-name", style_apply_style_name_);
+			if (false == style_base_cell_address_.empty())
+				CP_XML_ATTR(L"style:base-cell-address", style_base_cell_address_);
+		}
+	}
 }
 
 }

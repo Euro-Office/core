@@ -34,6 +34,8 @@
 #include "ods_conversion_context.h"
 
 #include "number_style.h"
+#include "style_map.h"
+#include "style_text_properties.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -230,6 +232,241 @@ static const def_language_code LanguageCodeTable[] =
 	{L"",					L"IR", L"fa",	0x00160429}
 };
 
+namespace
+{
+	// The sections of a format code, split at ';' outside quoted text, escapes and [] tokens; empty sections are kept.
+	std::vector<std::wstring> split_format_sections(const std::wstring & code)
+	{
+		std::vector<std::wstring> sections(1);
+		bool quoted = false, bracket = false;
+		for (size_t i = 0; i < code.size(); ++i)
+		{
+			const wchar_t c = code[i];
+			if (!quoted && !bracket && c == L'\\' && i + 1 < code.size())
+			{
+				sections.back() += c;
+				sections.back() += code[++i];
+				continue;
+			}
+			if (c == L'"' && !bracket)		quoted = !quoted;
+			else if (!quoted && c == L'[')	bracket = true;
+			else if (!quoted && c == L']')	bracket = false;
+			else if (!quoted && !bracket && c == L';')
+			{
+				sections.emplace_back();
+				continue;
+			}
+			sections.back() += c;
+		}
+		return sections;
+	}
+
+	// [Red] etc. and [Color1] to [Color8] (the same colours in the default palette). Other [ColorN] are colours too, but unknown.
+	bool format_color(const std::wstring & token, std::wstring & color)
+	{
+		static const wchar_t* names[]	= {L"black", L"white", L"red", L"green", L"blue", L"yellow", L"magenta", L"cyan"};
+		static const wchar_t* colors[]	= {L"#000000", L"#ffffff", L"#ff0000", L"#00ff00", L"#0000ff", L"#ffff00", L"#ff00ff", L"#00ffff"};
+
+		const std::wstring name = boost::algorithm::to_lower_copy(token);
+		for (size_t i = 0; i < 8; ++i)
+		{
+			if (name == names[i])
+			{
+				color = colors[i];
+				return true;
+			}
+		}
+		if (name.size() > 5 && name.compare(0, 5, L"color") == 0 &&
+			name.find_first_not_of(L"0123456789", 5) == std::wstring::npos)
+		{
+			const int index = std::stoi(name.substr(5, 3));
+			color = (index >= 1 && index <= 8) ? colors[index - 1] : L"";
+			return true;
+		}
+		return false;
+	}
+
+	// [<0], [>=100], [<>0] -> the ODF condition value()<0, value()>=100, value()!=0; empty when the token is no condition.
+	std::wstring format_condition(const std::wstring & token)
+	{
+		static const wchar_t* ops[] = {L"<=", L">=", L"<>", L"<", L">", L"="};
+		for (const wchar_t* op : ops)
+		{
+			const std::wstring o(op);
+			if (token.compare(0, o.size(), o) != 0)
+				continue;
+
+			const std::wstring limit = boost::algorithm::trim_copy(token.substr(o.size()));
+			if (limit.empty() || limit.find_first_not_of(L"0123456789.-+eE") != std::wstring::npos)
+				return L"";
+			return L"value()" + (o == L"<>" ? std::wstring(L"!=") : o) + limit;
+		}
+		return L"";
+	}
+
+	struct format_section
+	{
+		std::wstring code;		// without colour and condition
+		std::wstring color;		// #rrggbb, empty when none
+		std::wstring condition;	// value()..., empty when none
+	};
+
+	format_section parse_format_section(const std::wstring & code)
+	{
+		format_section result;
+		bool quoted = false;
+		for (size_t i = 0; i < code.size(); ++i)
+		{
+			const wchar_t c = code[i];
+			if (!quoted && c == L'\\' && i + 1 < code.size())
+			{
+				result.code += c;
+				result.code += code[++i];
+				continue;
+			}
+			if (c == L'"')
+				quoted = !quoted;
+			if (!quoted && c == L'[')
+			{
+				const size_t end = code.find(L']', i);
+				if (end != std::wstring::npos)
+				{
+					const std::wstring token = code.substr(i + 1, end - i - 1);
+					std::wstring color;
+					if (format_color(token, color))
+					{
+						if (result.color.empty())
+							result.color = color;
+						i = end;
+						continue;
+					}
+					const std::wstring condition = format_condition(token);
+					if (false == condition.empty())
+					{
+						result.condition = condition;
+						i = end;
+						continue;
+					}
+				}
+			}
+			result.code += c;
+		}
+		return result;
+	}
+
+	// A section owns its sign: the literal text before its first and after its last digit placeholder ('-', '+', '(' and ')',
+	// quoted text and characters escaped with '\', but not an escaped space) is shown as written, e.g. -#,##0, \(#,##0\) or
+	// "-"0. Returns false when the section has no digit placeholder (only text). "General" counts as a placeholder.
+	bool split_sign_literals(const std::wstring & code, bool question_marks_are_digits,
+							 std::wstring & prefix, std::wstring & suffix, std::wstring & core)
+	{
+		enum kind { other, digit, literal };
+		struct token { std::wstring code; kind type; std::wstring text; };
+		std::vector<token> tokens;
+		for (size_t i = 0; i < code.size(); ++i)
+		{
+			const wchar_t c = code[i];
+			if (c == L'"')
+			{
+				size_t end = code.find(L'"', i + 1);
+				if (end == std::wstring::npos) end = code.size() - 1;
+				const std::wstring text = code.substr(i + 1, end - i - 1);
+				tokens.push_back({code.substr(i, end - i + 1), text.empty() ? other : literal, text});
+				i = end;
+			}
+			else if (c == L'[')
+			{
+				size_t end = code.find(L']', i);
+				if (end == std::wstring::npos) end = code.size() - 1;
+				tokens.push_back({code.substr(i, end - i + 1), other, L""});
+				i = end;
+			}
+			else if ((c == L'\\' || c == L'_' || c == L'*') && i + 1 < code.size())
+			{
+				const wchar_t next = code[i + 1];
+				const bool is_literal = c == L'\\' && next != L' ';
+				tokens.push_back({code.substr(i, 2), is_literal ? literal : other, std::wstring(1, next)});
+				++i;
+			}
+			else if ((c == L'E' || c == L'e') && i + 1 < code.size() && (code[i + 1] == L'+' || code[i + 1] == L'-'))
+			{
+				tokens.push_back({code.substr(i, 2), other, L""});
+				++i;
+			}
+			else if ((c == L'G' || c == L'g') && boost::algorithm::iequals(code.substr(i, 7), L"General"))
+			{
+				tokens.push_back({code.substr(i, 7), digit, L""});
+				i += 6;
+			}
+			else if (c == L'0' || c == L'#' || (c == L'?' && question_marks_are_digits))
+				tokens.push_back({std::wstring(1, c), digit, L""});
+			else if (c == L'-' || c == L'+' || c == L'(' || c == L')')
+				tokens.push_back({std::wstring(1, c), literal, std::wstring(1, c)});
+			else
+				tokens.push_back({std::wstring(1, c), other, L""});
+		}
+
+		size_t first = tokens.size(), last = 0;
+		for (size_t i = 0; i < tokens.size(); ++i)
+		{
+			if (tokens[i].type != digit) continue;
+			if (first == tokens.size()) first = i;
+			last = i;
+		}
+		if (first == tokens.size())
+			return false;
+
+		for (size_t i = 0; i < tokens.size(); ++i)
+		{
+			if (tokens[i].type == literal && (i < first || i > last))
+				(i < first ? prefix : suffix) += tokens[i].text;
+			else
+				core += tokens[i].code;
+		}
+		return true;
+	}
+
+	// The text a section without digits shows: quoted text and escaped characters as written; padding (_x), fill (*x) and
+	// [] tokens are left out.
+	std::wstring section_text(const std::wstring & code)
+	{
+		std::wstring text;
+		for (size_t i = 0; i < code.size(); ++i)
+		{
+			const wchar_t c = code[i];
+			if (c == L'"')
+			{
+				size_t end = code.find(L'"', i + 1);
+				if (end == std::wstring::npos) end = code.size();
+				text += code.substr(i + 1, end - i - 1);
+				i = end;
+			}
+			else if (c == L'[')
+			{
+				size_t end = code.find(L']', i);
+				i = (end == std::wstring::npos) ? code.size() : end;
+			}
+			else if (c == L'\\' && i + 1 < code.size())	text += code[++i];
+			else if ((c == L'_' || c == L'*') && i + 1 < code.size()) ++i;
+			else if (c != L'?' && c != L'@') text += c;
+		}
+		return text;
+	}
+
+	bool is_number_type(odf_types::office_value_type::type type)
+	{
+		switch (type)
+		{
+		case office_value_type::Float:
+		case office_value_type::Scientific:
+		case office_value_type::Fraction:
+		case office_value_type::Currency:
+		case office_value_type::Percentage:	return true;
+		default:							return false;
+		}
+	}
+}
+
 odf_number_styles_context::odf_number_styles_context()
 {
 }
@@ -250,9 +487,9 @@ void odf_number_styles_context::create(int oox_num_fmt, std::wstring formatCode)
 
 //////////////////////////////
 
-	boost::algorithm::split(state.format_code, formatCode, boost::algorithm::is_any_of(L";"), boost::algorithm::token_compress_on);
+	state.format_code = split_format_sections(formatCode);
 
-	if (state.format_code.size() > 1 && state.format_code[state.format_code.size() - 1].find(L"@") >= 0)
+	if (state.format_code.size() > 1 && state.format_code[state.format_code.size() - 1].find(L"@") != std::wstring::npos)
 	{
 		state.format_code.pop_back();
 	}
@@ -337,9 +574,9 @@ void odf_number_styles_context::create_default(int oox_num_fmt, std::wstring for
 		else if (oox_num_fmt >= 75 && oox_num_fmt <= 80)	state.ods_type =office_value_type::Time;
 		else if (oox_num_fmt == 81)							state.ods_type =office_value_type::Date;
 	}
-    boost::algorithm::split(state.format_code, formatCode, boost::algorithm::is_any_of(L";"), boost::algorithm::token_compress_on);
+    state.format_code = split_format_sections(formatCode);
 
-	if (state.format_code.size() > 1 && state.format_code[state.format_code.size()-1].find(L"@") >= 0)
+	if (state.format_code.size() > 1 && state.format_code[state.format_code.size()-1].find(L"@") != std::wstring::npos)
 	{
 		state.format_code.pop_back();
 	}
@@ -376,6 +613,10 @@ void odf_number_styles_context::process_styles(office_element_ptr root )
 	{
 		create_style(number_format_array_[i]);
 
+		for (size_t j = 0; j < section_styles_.size(); j++)
+			root->add_child_element(section_styles_[j]);
+		section_styles_.clear();
+
 		root->add_child_element(styles_elments.back());
 	}
 }	
@@ -384,7 +625,10 @@ void odf_number_styles_context::create_style(number_format_state & state)
 {
 	office_element_ptr elm;
 
-	switch(state.ods_type)
+	if (state.format_code.size() > 1 && is_number_type(state.ods_type))
+		create_section_styles(state, elm);
+
+	if (!elm) switch(state.ods_type)
 	{
 		case office_value_type::Float:		
 		case office_value_type::Scientific:	
@@ -407,6 +651,112 @@ void odf_number_styles_context::create_style(number_format_state & state)
 	}
 	
 	styles_elments.push_back(elm);		
+}
+
+// A format with sections (positive;negative;zero) is written as LibreOffice does: one sub-style <name>P<n> per section but the
+// last, and the last section as the style itself, with a style:map per sub-style. Each section keeps its colour and its sign.
+void odf_number_styles_context::create_section_styles(number_format_state & state, office_element_ptr & main_elm)
+{
+	std::vector<format_section> sections;
+	for (size_t i = 0; i < state.format_code.size() && i < 3; ++i)
+		sections.push_back(parse_format_section(state.format_code[i]));
+
+	const size_t last = sections.size() - 1;
+	const bool default_conditions = sections[0].condition.empty() && sections[last > 1 ? 1 : 0].condition.empty();
+
+	std::vector<office_element_ptr> parts;
+	std::vector<std::wstring> names;
+	for (size_t i = 0; i <= last; ++i)
+	{
+		number_format_state part = state;
+		part.format_code.assign(1, sections[i].code);
+
+		office_element_ptr elm;
+		// in the zero section of positive;negative;zero, '?' shows a blank (e.g. accounting formats show "-" for zero)
+		create_section_part(part, state.ods_type, elm, !(i == 2 && default_conditions));
+
+		number_style_base* style = dynamic_cast<number_style_base*>(elm.get());
+		if (!style)
+			return;
+
+		if (false == sections[i].color.empty())
+		{
+			create_element(L"style", L"text-properties", style->style_text_properties_, odf_context_);
+			if (style_text_properties* props = dynamic_cast<style_text_properties*>(style->style_text_properties_.get()))
+				props->content_.fo_color_ = odf_types::color(sections[i].color);
+		}
+		std::wstring name = (i < last) ? state.style_name + L"P" + std::to_wstring(i) : state.style_name;
+		style->set_style_name(name);
+
+		parts.push_back(elm);
+		names.push_back(name);
+	}
+
+	number_style_base* main_style = dynamic_cast<number_style_base*>(parts[last].get());
+	for (size_t i = 0; i < last; ++i)
+	{
+		std::wstring condition = sections[i].condition;
+		if (condition.empty())
+			condition = (last == 1) ? L"value()>=0" : (i == 0 ? L"value()>0" : L"value()<0");
+
+		office_element_ptr map_elm;
+		create_element(L"style", L"map", map_elm, odf_context_);
+		if (style_map* map = dynamic_cast<style_map*>(map_elm.get()))
+		{
+			map->style_condition_ = condition;
+			map->style_apply_style_name_ = names[i];
+			main_style->style_map_.push_back(map_elm);
+		}
+		section_styles_.push_back(parts[i]);
+	}
+	main_elm = parts[last];
+}
+
+void odf_number_styles_context::create_section_part(number_format_state & part, office_value_type::type type,
+													office_element_ptr & elm, bool question_marks_are_digits)
+{
+	std::wstring prefix, suffix, core;
+	if (!split_sign_literals(part.format_code[0], question_marks_are_digits, prefix, suffix, core))
+	{
+		const wchar_t* name = (type == office_value_type::Currency) ? L"currency-style"
+							: (type == office_value_type::Percentage) ? L"percentage-style" : L"number-style";
+		create_element(L"number", name, elm, odf_context_);
+
+		office_element_ptr elm_text;
+		create_element(L"number", L"text", elm_text, odf_context_);
+		if (number_text* text = dynamic_cast<number_text*>(elm_text.get()))
+			text->add_text(section_text(part.format_code[0]));
+		if (elm)
+			elm->add_child_element(elm_text);
+		return;
+	}
+
+	part.format_code[0] = core;
+	switch (type)
+	{
+	case office_value_type::Currency:	create_currency_style	(part, elm);	break;
+	case office_value_type::Percentage:	create_percentage_style	(part, elm);	break;
+	default:							create_number_style		(part, elm);	break;
+	}
+
+	number_style_base* style = dynamic_cast<number_style_base*>(elm.get());
+	if (!style)
+		return;
+
+	for (int i = 0; i < 2; ++i)
+	{
+		const std::wstring & literal = i == 0 ? prefix : suffix;
+		if (literal.empty())
+			continue;
+
+		office_element_ptr elm_text;
+		create_element(L"number", L"text", elm_text, odf_context_);
+		if (number_text* text = dynamic_cast<number_text*>(elm_text.get()))
+			text->add_text(literal);
+
+		if (i == 0)	style->content_.insert(style->content_.begin(), elm_text);
+		else		style->content_.push_back(elm_text);
+	}
 }
 
 void odf_number_styles_context::create_number_style(number_format_state & state, office_element_ptr & root_elm)

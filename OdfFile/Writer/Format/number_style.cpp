@@ -60,13 +60,13 @@ void number_style_base::serialize(std::wostream & strm)
  	if (style_text_properties_) 
 		style_text_properties_->serialize(strm);
  
-	for (size_t i = 0; i < style_map_.size(); i++)
-	{		
-		style_map_[i]->serialize(strm);
-    }
 	for (size_t i = 0; i < content_.size(); i++)
 	{
 		content_[i]->serialize(strm);
+	}
+	for (size_t i = 0; i < style_map_.size(); i++)
+	{
+		style_map_[i]->serialize(strm);
 	}
 }
 void number_style_base::serialize(CP_ATTR_NODE)
