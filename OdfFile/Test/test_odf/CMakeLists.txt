@@ -131,6 +131,7 @@ add_core_gtest(
             ods_formula_function_names.cpp
             ods2xlsx_optimal_row_height.cpp
             odf_font_family.cpp
+            odp2pptx_rotation.cpp
             docx2odt_line_break_after_text.cpp
             odt2docx_character_style_based_on.cpp
             odt2docx_ruby.cpp
