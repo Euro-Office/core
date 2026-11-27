@@ -140,6 +140,8 @@ add_core_gtest(
             ods2xlsx_styles_auto_data_style.cpp
             ods2xlsx_text_style_map.cpp
             odt2docx_tracked_deleted_table.cpp
+            docx2odt_endnote_page.cpp
+            odt2docx_endnote_page.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
