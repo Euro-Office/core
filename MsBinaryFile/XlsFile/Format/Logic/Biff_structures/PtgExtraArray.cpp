@@ -179,6 +179,19 @@ void PtgExtraArray::fromString(const std::wstring& str)
 
 	cols = 0;
     rows = 0;
+	size_t elementStart = 0; // index in array_ of the first value of the current element
+	// Every element must end up with exactly one constant, so that the values match the row and column count.
+	// An element with no value or more than one (e.g. "{1,,2}" or "{1 2}") is stored as #NAME?.
+	auto closeElement = [&]()
+	{
+		if(array_.size() != elementStart + 1)
+		{
+			array_.resize(elementStart);
+			array_.push_back(SerArPtr(new SerErr(L"#NAME?")));
+		}
+		elementStart = array_.size();
+	};
+	auto isBlank = [](wchar_t c) { return c == L' ' || c == L'\t' || c == L'\r' || c == L'\n'; };
 	while(first != last)
 	{
 		std::wstring operand_str;
@@ -200,19 +213,32 @@ void PtgExtraArray::fromString(const std::wstring& str)
 		}
 		else if(SyntaxPtg::extract_comma(first, last))
 		{
+			closeElement();
 			++cols;
 		}
 		else if(SyntaxPtg::extract_semicolon(first, last)) // extract semicolon
 		{
+			closeElement();
 			++rows;
 			cols = 0;
 		}
+		else if(isBlank(*first))
+		{
+			while(first != last && isBlank(*first))
+				++first;
+		}
 		else
 		{
-			// EXCEPT::LE::WhatIsTheFuck("Unknown operand format in PtgArray.", __FUNCTION__);
+			// Not a number, boolean, error or string (e.g. a name): an array may hold only constants. Skip the
+			// token and store #NAME? for the element, so that the loop always advances.
+			while(first != last && *first != L',' && *first != L';')
+				++first;
+			array_.resize(elementStart);
+			array_.push_back(SerArPtr(new SerErr(L"#NAME?")));
 		}
 
 	}
+	closeElement();
 
 }
 
