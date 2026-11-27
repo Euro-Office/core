@@ -125,12 +125,14 @@ namespace OOX
                     if(m_oSortBy ==  SimpleTypes::Spreadsheet::ESortBy::sortbyCellColor)
                     {
                         ptr->sortOn = 1;
-                        ptr->condDataValue.condDataValue = m_oDxfId->GetValue();
+                        if(m_oDxfId.IsInit())
+                            ptr->condDataValue.condDataValue = m_oDxfId->GetValue();
                     }
                     else if(m_oSortBy == SimpleTypes::Spreadsheet::ESortBy::sortbyFontColor)
                     {
                         ptr->sortOn = 2;
-                        ptr->condDataValue.condDataValue = m_oDxfId->GetValue();
+                        if(m_oDxfId.IsInit())
+                            ptr->condDataValue.condDataValue = m_oDxfId->GetValue();
                     }
                     else if(m_oSortBy == SimpleTypes::Spreadsheet::ESortBy::sortbyIcon)
                     {
@@ -160,12 +162,14 @@ namespace OOX
                             else if(m_oSortBy ==  SimpleTypes::Spreadsheet::ESortBy::sortbyCellColor)
                             {
                                 SETBITS(flags, 1, 4, 1)
-                                condDataValue.condDataValue = m_oDxfId->GetValue();
+                                if(m_oDxfId.IsInit())
+                                    condDataValue.condDataValue = m_oDxfId->GetValue();
                             }
                             else if(m_oSortBy == SimpleTypes::Spreadsheet::ESortBy::sortbyFontColor)
                             {
                                 SETBITS(flags, 1, 4, 2)
-                                condDataValue.condDataValue = m_oDxfId->GetValue();
+                                if(m_oDxfId.IsInit())
+                                    condDataValue.condDataValue = m_oDxfId->GetValue();
                             }
                             else if(m_oSortBy == SimpleTypes::Spreadsheet::ESortBy::sortbyIcon)
                             {

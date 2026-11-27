@@ -279,8 +279,8 @@ struct ExtSheetPair
 
 struct CondDataValue
 {
-	_UINT32 condDataValue;
-	_UINT32 reserved;
+	_UINT32 condDataValue = 0;
+	_UINT32 reserved = 0;
 };
 
 
