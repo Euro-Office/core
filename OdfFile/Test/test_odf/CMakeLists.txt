@@ -85,6 +85,7 @@ add_core_gtest(
             odp2pptx_transition_without_subtype.cpp
             odt2docx_default_tab_stop.cpp
             odt2docx_add_para_table_spacing.cpp
+            show_redline_changes.cpp
             ods2xlsx_cell_text_fields.cpp
             enhanced_path_quadratic_bezier.cpp
             pptx2odp_bullet_size.cpp
