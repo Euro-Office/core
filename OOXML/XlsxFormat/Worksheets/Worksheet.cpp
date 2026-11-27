@@ -959,6 +959,8 @@ namespace OOX
 				m_oSheetData->toXML(writer);
 			if(m_oSheetProtection.IsInit())
 				m_oSheetProtection->toXML(writer);
+			if(m_oProtectedRanges.IsInit())
+				m_oProtectedRanges->toXML(writer);
 			if(m_oAutofilter.IsInit())
 				m_oAutofilter->toXML(writer);
 			if(m_oSortState.IsInit())
