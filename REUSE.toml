@@ -95,6 +95,12 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_header_footer.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/style_parent_cycle_character.docx",
     "OdfFile/Test/test_odf/ExampleFiles/style_parent_cycle_paragraph.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/flat_paragraph_style.xml",
+    "OdfFile/Test/test_odf/ExampleFiles/flat_picture_bullet.xml",
+    "OdfFile/Test/test_odf/ExampleFiles/flat_theme_color.xml",
+    "OdfFile/Test/test_odf/ExampleFiles/flat_theme_font.xml",
+    "OdfFile/Test/test_odf/ExampleFiles/no_styles_part_paragraph_style.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/no_theme_part_theme_color.docx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_no_header_footer.xlsx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
@@ -158,6 +164,34 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = [
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_columns.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_continuous.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_inherited_header.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_line_numbers.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_missing_endnote.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_no_endnotes.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_no_type.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_numbered.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_numbering.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_numbering_continuous.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_section_end.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_section_end_in_section.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_section_with_text.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_spacer.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_spacer_centered.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_spacer_font.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_spacer_lines.docx",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/continuous_sections.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/continuous_sections_line_numbers.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/continuous_sections_margins.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/continuous_sections_page_numbers.docx",
     "OdfFile/Test/test_odf/ExampleFiles/deletion_around_note.docx",
     "OdfFile/Test/test_odf/ExampleFiles/deletion_over_paragraph_break.docx",
     "OdfFile/Test/test_odf/ExampleFiles/deletion_same_id_apart.docx",
@@ -186,6 +220,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/doc_props_typed.odt",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_footers_duplicate.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/section_starts_with_table.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_after_header_only.docx",
     "OdfFile/Test/test_odf/ExampleFiles/section_header_and_footer_continuous.docx",
@@ -309,6 +344,9 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/add_para_table_spacing_true.odt",
     "OdfFile/Test/test_odf/ExampleFiles/paragraph_spacing_compat_flag.docx",
     "OdfFile/Test/test_odf/ExampleFiles/paragraph_spacing_no_compat_flag.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/revision_view_ins_del_off.docx",
+    "OdfFile/Test/test_odf/ExampleFiles/show_redline_changes_false.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/show_redline_changes_true.odt",
     "OdfFile/Test/test_odf/ExampleFiles/paragraph_spacing_no_settings_part.docx",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
@@ -367,6 +405,9 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = [
     "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent.odt",
     "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_image.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_gradient.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_gradient_angle.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/page_background_transparent_gradient_no_start.odt",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
@@ -476,7 +517,43 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/number_text_style_map.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = "OdfFile/Test/test_odf/ExampleFiles/number_styles_auto_data_style.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_index.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_nested_index.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_table.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/tracked_deleted_text_box_table.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_continuous.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_duplicate_note_body.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_ends_in_section.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_footnote.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_heading.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_nested_section.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_plain_section.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_section.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_sibling_and_plain_sections.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_in_sibling_sections.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_list.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_no_configuration.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_no_page_style.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/endnote_page_table.odt",
+]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
@@ -488,6 +565,12 @@ path = [
     "OOXML/test/ExampleFiles/xlsx2bin/checkbox.xlsx",
     "OOXML/test/ExampleFiles/docx2bin/page_background_picture.docx",
     "OOXML/test/ExampleFiles/xlsx2bin/richvalue-fallback.xlsx",
+    "OOXML/test/ExampleFiles/docxflat/no_body.xml",
+    "OOXML/test/ExampleFiles/docxflat/no_styles.xml",
+    "OOXML/test/ExampleFiles/docxflat/version_with_compat.xml",
+    "OOXML/test/ExampleFiles/docxflat/version_with_compatibility_mode.xml",
+    "OOXML/test/ExampleFiles/docxflat/version_without_compat.xml",
+    "OOXML/test/ExampleFiles/docxflat/version_without_settings.xml",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
@@ -518,5 +601,10 @@ path = [
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_rules.xlsx",
     "OOXML/XlsxFormat/Worksheets/test/ExampleFiles/condfmt_x14.xlsx",
 ]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/ruby_base_text.odt"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

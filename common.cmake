@@ -109,6 +109,11 @@ if( EMSCRIPTEN )
         endif()
     endif()
 
+    # Third-party only (build.sh --third-party-only): stop after building them
+    if(EO_THIRD_PARTY_ONLY)
+        return()
+    endif()
+
     # Setup openssl
     set(OPENSSL_WASM_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash")
     get_filename_component(OPENSSL_WASM_INSTALL_DIR_ABS "${OPENSSL_WASM_INSTALL_DIR}" ABSOLUTE)
@@ -257,6 +262,11 @@ else()
         endif()
     endif()
 
+    # Third-party only (build.sh --third-party-only): stop after building them
+    if(EO_THIRD_PARTY_ONLY)
+        return()
+    endif()
+
     if(MSVC)
         set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" CACHE STRING "" FORCE)
     endif()
@@ -267,7 +277,7 @@ else()
             # GUI needs it, so skip fetching/requiring it on Apple entirely.
             # Setup qt
             # Priority: explicit QT6_ROOT override > path recorded by the fetch script >
-            # glob of aqt's <version>/<arch> layout.
+            # glob of the <version>/<arch> layout of qt/nc-build.py.
             if(DEFINED ENV{QT6_ROOT})
                 set(QT_ROOT "$ENV{QT6_ROOT}")
             else()
@@ -278,7 +288,7 @@ else()
                     string(STRIP "${QT_ROOT}" QT_ROOT)
                     message(STATUS "Found qt6 root: " ${QT_ROOT})
                 else()
-                    # Fallback: find the prefix aqt extracted (arch folder varies by platform)
+                    # Fallback: find the prefix (arch folder varies by platform)
                     file(GLOB _qt6_cfg "${_qt_install}/*/*/lib/cmake/Qt6/Qt6Config.cmake")
                     if(_qt6_cfg)
                         list(GET _qt6_cfg 0 _qt6_cfg)
@@ -378,7 +388,11 @@ else()
         set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a")
     else()
         set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib64/libssl.a")
-        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a")
+        # The static libcrypto calls dlopen() and pthread functions. Before
+        # glibc 2.34 (RHEL/Rocky 8) those are in libdl and libpthread, so
+        # linking an executable against it needs both.
+        find_package(Threads REQUIRED)
+        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a" ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
     endif()
 
     # Setup nlohmann_json
@@ -980,12 +994,22 @@ function(add_core_gtest)
         # gtest_main library, whose versioned soname is not reliably resolvable
         # on the runtime library path.
         set(_eo_gtest_main "${CMAKE_CURRENT_BINARY_DIR}/${T_NAME}_gtest_main.cpp")
-        file(WRITE "${_eo_gtest_main}"
+        string(CONCAT _eo_gtest_main_src
             "#include \"gtest/gtest.h\"\n"
             "int main(int argc, char** argv) {\n"
             "    ::testing::InitGoogleTest(&argc, argv);\n"
             "    return RUN_ALL_TESTS();\n"
             "}\n")
+        # Write only when the content differs: rewriting the file on every
+        # configure bumps its mtime, so the build recompiles it and relinks the
+        # test binary even when nothing changed.
+        set(_eo_gtest_main_old "")
+        if(EXISTS "${_eo_gtest_main}")
+            file(READ "${_eo_gtest_main}" _eo_gtest_main_old)
+        endif()
+        if(NOT "${_eo_gtest_main_old}" STREQUAL "${_eo_gtest_main_src}")
+            file(WRITE "${_eo_gtest_main}" "${_eo_gtest_main_src}")
+        endif()
         target_sources(${T_NAME} PRIVATE "${_eo_gtest_main}")
     endif()
 

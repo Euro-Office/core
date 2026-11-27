@@ -36,6 +36,7 @@ namespace OOX
 {
 	class CDocx;
 	class CDocxFlat;
+	class CDocument;
 	class CTheme;
 	class CDocDefaults;
 	class CStyle;
@@ -161,6 +162,7 @@ namespace Oox2Odf
 		std::wstring	dump_text	(OOX::WritingElement *oox_unknown);
     private:
 		bool current_bidi_set = false;
+		size_t converted_endnotes = 0;
 		bool paragraph_page_break_before_ = false;	// w:pageBreakBefore of the paragraph that is converted
 		struct _section
 		{
@@ -168,6 +170,7 @@ namespace Oox2Odf
             size_t start_para = 0;
             size_t end_para = 0;
 			bool bContinue = false;
+			bool bKeepPage = false;
 			bool bFirst = false;		// the first section of the document
 			bool bTurnsPage = false;	// its page orientation differs from the previous section's
 		} *current_section_properties;
@@ -178,10 +181,15 @@ namespace Oox2Odf
 		NSBinPptxRW::CDrawingConverter *drawingConverter;
 		odf_writer::odt_conversion_context *odt_context;
         OOX::Logic::CSectionProperty *last_section_properties;
+		OOX::Logic::CSectionProperty *page_section_properties = NULL; // the section whose margins the current page uses
+		bool bSectionIndents = false; // the current text section has left or right indents
 
 		void apply_HF_from(OOX::Logic::CSectionProperty *props, OOX::Logic::CSectionProperty *other);
 		
 		void convert_document		();
+		bool is_endnote_page_section(OOX::CDocument *doc, const _section & section);
+		bool is_endnote_page_spacer(OOX::WritingElement *item);
+		void add_endnote_configuration(const std::wstring & master_page_name);
 		void convert_styles			();
 		void convert_lists_styles	();
 		void convert_settings		();

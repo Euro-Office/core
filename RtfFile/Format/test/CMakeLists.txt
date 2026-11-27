@@ -34,15 +34,3 @@ add_core_gtest(
 target_include_directories(rtf_lex_test PRIVATE
     ${CORE_ROOT_DIR}
 )
-
-# The third_party ICU libraries embed libstdc++ statically and export it
-# (issue #173), interposing the C++ runtime of any consumer that resolves ICU
-# before the system runtime. Link the system runtime ahead of the converter
-# chain so a single consistent runtime is in play (same as csv_reader_test).
-# Guarded to Linux: only the Linux CI legs build the test suites today.
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    target_link_options(rtf_lex_test PRIVATE
-        "-Wl,--no-as-needed" "-lstdc++"
-    )
-endif()
-

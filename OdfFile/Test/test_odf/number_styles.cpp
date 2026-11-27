@@ -3,7 +3,7 @@
 
 // Covers odf_number_styles_context::detect_format(), which maps an OOXML number
 // format code onto the ODF data style written on the way out to ODS/ODT. The
-// currency token regex there is shared by every conversion into ODF, so the
+// currency token search there is shared by every conversion into ODF, so the
 // date, time, percentage and accounting rows below exist to pin down the
 // formats that must keep their current classification.
 
@@ -100,4 +100,21 @@ INSTANTIATE_TEST_SUITE_P(NonCurrency, NumberFormatDetection,
 						 ::testing::ValuesIn(kNonCurrency), CaseName);
 INSTANTIATE_TEST_SUITE_P(LocaleFreeCurrency, NumberFormatDetection,
 						 ::testing::ValuesIn(kLocaleFreeCurrency), CaseName);
+
+// A format code read from a file can be far longer than the 255 characters Excel allows. A long run of
+// "[$" with no closing bracket holds no currency token; finding that out must not depend on the length.
+TEST(NumberFormatDetectionLongCode, UnclosedCurrencyTokensAreNoCurrency)
+{
+	std::wstring format_code;
+	for (int i = 0; i < 50000; ++i)
+		format_code += L"[$";
+	format_code += L"0.00";
+
+	odf_number_styles_context context;
+	const number_format_state* state = nullptr;
+	EXPECT_NO_THROW(state = &context.add_or_find(164, format_code));
+	ASSERT_NE(nullptr, state);
+	EXPECT_EQ(office_value_type::Float, state->ods_type);
+	EXPECT_EQ(std::wstring(), state->currency_str);
+}
 }
