@@ -2356,7 +2356,7 @@ int BinaryWorkbookTableReader::ReadWorkbookTableContent(BYTE type, long length, 
     }
 	else if (c_oSerWorkbookTypes::PreservedSheets == type)
 	{
-		// a macro sheet is macro content: keep the workbook macro-enabled even without VBA
+		// macro and dialog sheets are macro content: keep the workbook macro-enabled even without VBA
 		m_bMacroRead = true;
 		READ1_DEF(length, res, this->ReadPreservedSheets, NULL);
 	}

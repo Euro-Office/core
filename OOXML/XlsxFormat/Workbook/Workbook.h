@@ -187,7 +187,7 @@ namespace OOX
 			CPersonList*									m_pPersonList;
 			bool											m_bMacroEnabled;
 
-			// sheets the editor cannot show (Excel 4.0 macro sheets), carried through Editor.bin
+			// sheets the editor cannot show (Excel 4.0 macro sheets, Excel 5.0 dialog sheets), carried through Editor.bin
 			std::vector<CPreservedSheet>					m_arPreservedSheets;
 		};
 

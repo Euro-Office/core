@@ -28,7 +28,7 @@ namespace Spreadsheet
 		std::wstring sScopeSheet; // otherwise, the editor sheet it is scoped to (by name: the editor renumbers sheets)
 	};
 
-	// A sheet the editor cannot represent (Excel 4.0 macro sheet). It is kept out of
+	// A sheet the editor cannot represent (Excel 4.0 macro sheet, Excel 5.0 dialog sheet). It is kept out of
 	// the editor's sheet list and carried through Editor.bin unchanged, so it can be
 	// written back on save.
 	struct CPreservedSheet

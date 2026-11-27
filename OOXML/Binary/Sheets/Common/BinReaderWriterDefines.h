@@ -241,7 +241,7 @@ namespace BinXlsxRW
 		// same sequence cannot take it
 		SourceFileType = 100,
 		// Euro-Office extension, next to SourceFileType: sheets the editor cannot show (Excel 4.0
-		// macro sheets), carried through unchanged; only core parses the payload. The next
+		// macro sheets, Excel 5.0 dialog sheets), carried through unchanged; only core parses the payload. The next
 		// Euro-Office record takes 102, here and in sdkjs (cell/model/Serialize.js).
 		PreservedSheets = 101
 	};}

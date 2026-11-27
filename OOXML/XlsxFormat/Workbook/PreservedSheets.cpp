@@ -624,6 +624,13 @@ namespace
 		return sFileName.substr(nPos + 1);
 	}
 
+	// Excel 5.0 dialog sheets: macro content like the macro sheets, which the editor drops the same way
+	bool IsDialogSheetRelType(const std::wstring& sRelType)
+	{
+		return sRelType == L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/dialogsheet" ||
+			   sRelType == L"http://purl.oclc.org/ooxml/officeDocument/relationships/dialogsheet";
+	}
+
 	// A sheet part written back exactly as read; related parts get prefixed names so
 	// they cannot collide with parts the regular writer creates.
 	class CPreservedSheetFile : public OOX::File
@@ -633,6 +640,7 @@ namespace
 			: OOX::File(pMain), m_oSheet(oSheet), m_nNumber(nNumber)
 		{
 			bool bIntl = std::wstring::npos != m_oSheet.sRelType.find(L"xlIntlMacrosheet");
+			m_sDirectory = IsDialogSheetRelType(m_oSheet.sRelType) ? L"dialogsheets" : L"macrosheets";
 			m_sFileName = (bIntl ? L"intlsheet" : L"sheet") + std::to_wstring(nNumber) + L".xml";
 		}
 		virtual void read(const CPath&) {}
@@ -693,11 +701,11 @@ namespace
 		}
 		virtual const OOX::FileType type() const
 		{
-			return OOX::FileType(L"macrosheets", m_sFileName, m_oSheet.arParts.empty() ? L"" : m_oSheet.arParts[0].sContentType, m_oSheet.sRelType);
+			return OOX::FileType(m_sDirectory, m_sFileName, m_oSheet.arParts.empty() ? L"" : m_oSheet.arParts[0].sContentType, m_oSheet.sRelType);
 		}
 		virtual const CPath DefaultDirectory() const
 		{
-			return CPath(std::wstring(L"macrosheets"));
+			return CPath(m_sDirectory);
 		}
 		virtual const CPath DefaultFileName() const
 		{
@@ -733,6 +741,7 @@ namespace
 		}
 
 		CPreservedSheet m_oSheet;
+		std::wstring m_sDirectory;
 		std::wstring m_sFileName;
 		int m_nNumber;
 	};
@@ -788,7 +797,8 @@ namespace
 bool IsPreservedSheetRelType(const std::wstring& sRelType)
 {
 	return sRelType == L"http://schemas.microsoft.com/office/2006/relationships/xlMacrosheet" ||
-		   sRelType == L"http://schemas.microsoft.com/office/2006/relationships/xlIntlMacrosheet";
+		   sRelType == L"http://schemas.microsoft.com/office/2006/relationships/xlIntlMacrosheet" ||
+		   IsDialogSheetRelType(sRelType);
 }
 
 void CollectPreservedSheets(CWorkbook& workbook, const std::wstring& sPackageDir)
