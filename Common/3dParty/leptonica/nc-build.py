@@ -20,7 +20,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "2"
+    version = "3"
 )
 
 leptonica_src = nc.work_dir / "leptonica"
@@ -89,7 +89,7 @@ def build_and_install():
             "-DENABLE_OPENJPEG=OFF",
             # Leptonica sets policies of CMake 3.10, before CMP0091 made the
             # runtime library setting work; force it like for libtiff
-            *( [ "-DCMAKE_POLICY_DEFAULT_CMP0091=NEW", "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded" ] if nc.is_windows() else [] ),
+            *( [ "-DCMAKE_POLICY_DEFAULT_CMP0091=NEW", "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL" ] if nc.is_windows() else [] ),
         ],
         "Configure leptonica",
     )
