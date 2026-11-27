@@ -1,0 +1,86 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+#
+# Posts the clang-tidy report of a pull request's Build run as one PR
+# comment, updated on every push. A separate workflow because the Build run of
+# a fork PR only gets a read-only token. This one runs from the base branch
+# with write access and never checks out or runs the PR's code: it reads
+# three small files from the report artifact and checks the PR number against
+# the commit the run built.
+#
+# The report is written by the PR's own run, which a fork's PR can change, so
+# its text is untrusted. The head commit check keeps it to that PR: at worst
+# a fork's author gets the bot to post arbitrary text on their own PR.
+#
+# No comment is created while there are no findings. An existing one is
+# updated, so it also says when the findings are gone.
+#
+# GitHub runs the workflow_run workflow from the default branch, so changes
+# here only take effect once merged.
+
+name: clang-tidy comment
+
+on:
+  workflow_run:
+    workflows: [Build]
+    types: [completed]
+
+permissions:
+  actions: read
+  pull-requests: write
+
+# Two runs finishing together for one branch could both find no comment and
+# post two
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+
+jobs:
+  comment:
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download report
+      id: download
+      continue-on-error: true
+      uses: actions/download-artifact@v4
+      with:
+        name: clang-tidy-report
+        path: report
+        run-id: ${{ github.event.workflow_run.id }}
+        github-token: ${{ github.token }}
+
+    - name: Post or update the comment
+      if: steps.download.outcome == 'success'
+      env:
+        GH_TOKEN: ${{ github.token }}
+        REPO: ${{ github.repository }}
+        HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+      run: |
+        set -euo pipefail
+        pr=$(cat report/pr-number 2>/dev/null || true)
+        count=$(cat report/count 2>/dev/null || true)
+        case "$pr" in ''|*[!0-9]*) echo "No valid PR number in the report"; exit 0 ;; esac
+        case "$count" in ''|*[!0-9]*) echo "No complete report (the clang-tidy step did not finish)"; exit 0 ;; esac
+        [ -f report/comment.md ] || exit 0
+
+        # The report comes from the PR's own run: only comment on the PR
+        # whose current head is the commit that run built
+        head=$(gh api "repos/$REPO/pulls/$pr" --jq .head.sha)
+        if [ "$head" != "$HEAD_SHA" ]; then
+          echo "PR #$pr is at $head, the report is for $HEAD_SHA: skipping"
+          exit 0
+        fi
+
+        # An API error fails the job here rather than posting a second comment
+        ids=$(gh api "repos/$REPO/issues/$pr/comments" --paginate \
+          --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("<!-- clang-tidy-report -->"))) | .id')
+        id=${ids%%$'\n'*}
+        if [ -n "$id" ]; then
+          gh api -X PATCH "repos/$REPO/issues/comments/$id" -F body=@report/comment.md > /dev/null
+          echo "Updated the comment on PR #$pr ($count finding(s))"
+        elif [ "$count" -gt 0 ]; then
+          gh api "repos/$REPO/issues/$pr/comments" -F body=@report/comment.md > /dev/null
+          echo "Commented on PR #$pr ($count finding(s))"
+        else
+          echo "No findings and no previous comment on PR #$pr"
+        fi
