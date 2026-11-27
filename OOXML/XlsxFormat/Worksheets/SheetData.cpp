@@ -23,9 +23,14 @@
  *
  */
 
+#include <algorithm>
 #include <cmath>
+#include <cstdint>
+#include <memory>
+#include <vector>
 
 #include "../Workbook/Workbook.h"
+#include "SharedFormula.h"
 
 #include "../Common.h"
 #include "../../XlsbFormat/Biff12_records/CommonRecords.h"
@@ -920,6 +925,255 @@ namespace OOX
 				m_oCustomHeight.FromBool(false);
 			}
 		}
+		void CRowXLSB::fromXMLAttributes(XmlUtils::CXmlLiteReader& oReader)
+		{
+			ReadAttributes(oReader);
+		}
+
+		// The xlsx -> Editor.bin fast path: writes the rows of a sheet and turns vertical runs of "the same formula
+		// shifted by one row" into shared formulas.
+		//
+		// Generators such as Google Sheets write every formula as text. Left like that, Editor.bin carries the same
+		// formula millions of times, and sdkjs has to decode each copy and compare it with the cell above to find the
+		// sharing again. Here the runs are found while the sheet is streamed, so the copies are never written.
+		//
+		// A master has to be written before the cells that follow it, but whether it has followers is only known when
+		// the next row has been read. So the rows are written one row late: the previous row waits until the current
+		// row has been compared with it. Rows without a candidate formula are written at once and nothing waits.
+		//
+		// Excel and sdkjs write shared formulas in blocks of 64 rows; this does the same. The master states the whole
+		// block as its range. The last block of a run can be shorter than its range, which is what Excel produces too
+		// when a cell inside a shared range is edited.
+		//
+		// sdkjs reads such a formula through the branch for native shared formulas (the master carries the text, the
+		// range and the id; the followers carry the id only), and ignores the range of any master it can merge into
+		// the block before it.
+		class CSharedFormulaRows
+		{
+		public:
+			explicit CSharedFormulaRows(NSBinPptxRW::CXlsbBinaryWriter& oStream) :
+				m_oStream(oStream), m_pCur(&m_oRows[0]), m_pPrev(&m_oRows[1]), m_bPrevPending(false),
+				m_bDisabled(false), m_nNextSi(SharedFormula::c_nFirstSi)
+			{
+			}
+
+			// Reads the <row> the reader is on. nDefaultRow is the 0-based row used when the element has no r attribute.
+			// Returns the 0-based row.
+			_UINT32 ReadRow(XmlUtils::CXmlLiteReader& oReader, _UINT32 nDefaultRow)
+			{
+				Row& oRow = *m_pCur;
+				oRow.Reset();
+				oRow.m_oRow.Clean();
+				oRow.m_oRow.m_nR = nDefaultRow;
+				oRow.m_oRow.fromXMLAttributes(oReader);
+				const bool bRowInRange = oRow.m_oRow.m_nR < SharedFormula::c_nMaxRow;
+				const _UINT32 nRow = oRow.m_oRow.m_nR;
+
+				if (!oReader.IsEmptyNode())
+				{
+					int nLastCol = -1;
+					int nCurDepth = oReader.GetDepth();
+					while (oReader.ReadNextSiblingNode(nCurDepth))
+					{
+						const char* sName = XmlUtils::GetNameNoNS(oReader.GetNameChar());
+						if (strcmp("c", sName) != 0)
+							continue;
+
+						Slot& oSlot = oRow.Next();
+						oSlot.m_oCell.Clean();
+						oSlot.m_oCell.m_nCol = nLastCol + 1;
+						oSlot.m_oCell.fromXML(oReader);
+						if (oRow.m_nCount > 1 && (int)oSlot.m_oCell.m_nCol <= nLastCol)
+							oRow.m_bUnordered = true;
+						nLastCol = (int)oSlot.m_oCell.m_nCol;
+
+						if (bRowInRange && !m_bDisabled && IsCandidate(oSlot.m_oCell) &&
+							m_oKeyBuilder.Build(oSlot.m_oCell.m_oFormula.m_oFormula.m_sBuffer, oSlot.m_oCell.m_oFormula.m_oFormula.m_nLen,
+												nRow + 1, oSlot.m_sKey))
+						{
+							oSlot.m_bCandidate = true;
+							oRow.m_bCandidates = true;
+						}
+					}
+				}
+				CompleteRow(oRow);
+				return nRow;
+			}
+			// Writes what is still waiting.
+			void Finish()
+			{
+				if (m_bPrevPending)
+				{
+					Flush(*m_pPrev);
+					m_bPrevPending = false;
+				}
+			}
+
+		private:
+			enum Role
+			{
+				roleNone,
+				roleMaster,
+				roleFollower
+			};
+			struct Slot
+			{
+				CCellXLSB m_oCell;
+				SharedFormula::Key m_sKey;
+				bool m_bCandidate = false;
+				Role m_eRole = roleNone;
+				_INT32 m_nSi = -1;
+				_UINT32 m_nBlockPos = 0; // 0 for the master, 1 for the cell below it, ...
+				_UINT32 m_nLastRow = 0;  // master only: last row of its block, 1-based
+				void Reset()
+				{
+					m_bCandidate = false;
+					m_eRole = roleNone;
+					m_nSi = -1;
+					m_nBlockPos = 0;
+					m_nLastRow = 0;
+				}
+			};
+			struct Row
+			{
+				CRowXLSB m_oRow;
+				std::vector<std::unique_ptr<Slot>> m_arSlots;
+				size_t m_nCount = 0;
+				bool m_bCandidates = false;
+				bool m_bUnordered = false;
+
+				void Reset()
+				{
+					m_nCount = 0;
+					m_bCandidates = false;
+					m_bUnordered = false;
+				}
+				Slot& Next()
+				{
+					if (m_nCount == m_arSlots.size())
+						m_arSlots.emplace_back(new Slot());
+					Slot& oSlot = *m_arSlots[m_nCount++];
+					oSlot.Reset();
+					return oSlot;
+				}
+			};
+
+			// Slots are kept for reuse; a sheet with one very wide row must not hold on to all of them.
+			static const size_t c_nKeptSlots = 256;
+
+			static bool IsCandidate(CCellXLSB& oCell)
+			{
+				CFormulaXLSB& oFormula = oCell.m_oFormula;
+				return oFormula.m_bIsInit && oFormula.m_oFormula.m_nLen > 0 && oCell.m_nCol < SharedFormula::c_nMaxCol &&
+					   SimpleTypes::Spreadsheet::cellformulatypeNormal == oFormula.m_oT.GetValue() && oFormula.m_nSi < 0 &&
+					   0 == oFormula.m_oRef.m_nLen && 0 == oFormula.m_oR1.m_nLen && 0 == oFormula.m_oR2.m_nLen &&
+					   !oFormula.m_oAca.ToBool() && !oFormula.m_oBx.ToBool() && !oFormula.m_oDel1.ToBool() &&
+					   !oFormula.m_oDel2.ToBool() && !oFormula.m_oDt2D.ToBool() && !oFormula.m_oDtr.ToBool() &&
+					   !oCell.m_oCellMetadata.IsInit() && !oCell.m_oValueMetadata.IsInit() && !oCell.m_oRichText.IsInit();
+			}
+
+			void CompleteRow(Row& oCur)
+			{
+				const bool bUsable = oCur.m_bCandidates && !oCur.m_bUnordered;
+				if (bUsable && m_bPrevPending && m_pPrev->m_oRow.m_nR + 1 == oCur.m_oRow.m_nR)
+					Group(*m_pPrev, oCur);
+				if (m_bPrevPending)
+				{
+					Flush(*m_pPrev);
+					m_bPrevPending = false;
+				}
+				if (bUsable)
+				{
+					std::swap(m_pCur, m_pPrev);
+					m_bPrevPending = true;
+				}
+				else
+				{
+					Flush(oCur);
+				}
+			}
+
+			// Marks the cells of oCur that continue a run of oPrev, and the cells of oPrev that start one.
+			void Group(Row& oPrev, Row& oCur)
+			{
+				size_t nPrev = 0;
+				for (size_t i = 0; i < oCur.m_nCount; ++i)
+				{
+					Slot& oSlot = *oCur.m_arSlots[i];
+					if (!oSlot.m_bCandidate)
+						continue;
+					while (nPrev < oPrev.m_nCount && oPrev.m_arSlots[nPrev]->m_oCell.m_nCol < oSlot.m_oCell.m_nCol)
+						++nPrev;
+					if (nPrev == oPrev.m_nCount)
+						break;
+					Slot& oAbove = *oPrev.m_arSlots[nPrev];
+					if (!oAbove.m_bCandidate || oAbove.m_oCell.m_nCol != oSlot.m_oCell.m_nCol)
+						continue;
+					if (oAbove.m_oCell.m_oFormula.m_oCa.ToBool() != oSlot.m_oCell.m_oFormula.m_oCa.ToBool() ||
+						oAbove.m_sKey != oSlot.m_sKey)
+						continue;
+
+					if (roleNone == oAbove.m_eRole)
+					{
+						if (m_nNextSi == INT32_MAX)
+						{
+							m_bDisabled = true;
+							continue;
+						}
+						oAbove.m_eRole = roleMaster;
+						oAbove.m_nSi = m_nNextSi++;
+						oAbove.m_nBlockPos = 0;
+						const _UINT32 nMasterRow = oPrev.m_oRow.m_nR + 1;
+						oAbove.m_nLastRow = std::min<_UINT32>(nMasterRow + SharedFormula::c_nBlockRows - 1, SharedFormula::c_nMaxRow);
+					}
+					else if (oAbove.m_nBlockPos + 1 >= SharedFormula::c_nBlockRows)
+					{
+						// The block is full: this cell can only start the next one.
+						continue;
+					}
+					oSlot.m_eRole = roleFollower;
+					oSlot.m_nSi = oAbove.m_nSi;
+					oSlot.m_nBlockPos = oAbove.m_nBlockPos + 1;
+				}
+			}
+
+			void Flush(Row& oRow)
+			{
+				oRow.m_oRow.toXLSB(m_oStream);
+				for (size_t i = 0; i < oRow.m_nCount; ++i)
+				{
+					Slot& oSlot = *oRow.m_arSlots[i];
+					if (roleNone != oSlot.m_eRole)
+					{
+						CFormulaXLSB& oFormula = oSlot.m_oCell.m_oFormula;
+						oFormula.m_oT.SetValue(SimpleTypes::Spreadsheet::cellformulatypeShared);
+						oFormula.m_nSi = oSlot.m_nSi;
+						if (roleMaster == oSlot.m_eRole)
+						{
+							oFormula.m_oRef.m_nLen = SharedFormula::WriteColumnRange(oSlot.m_oCell.m_nCol, oRow.m_oRow.m_nR + 1,
+																					 oSlot.m_nLastRow, oFormula.m_oRef.m_sBuffer);
+						}
+						else
+						{
+							oFormula.m_oFormula.Clean();
+						}
+					}
+					oSlot.m_oCell.toXLSB(m_oStream);
+				}
+				oRow.m_nCount = 0;
+				if (oRow.m_arSlots.size() > c_nKeptSlots)
+					oRow.m_arSlots.resize(c_nKeptSlots);
+			}
+
+			NSBinPptxRW::CXlsbBinaryWriter& m_oStream;
+			SharedFormula::CKeyBuilder m_oKeyBuilder;
+			Row m_oRows[2];
+			Row* m_pCur;
+			Row* m_pPrev;
+			bool m_bPrevPending;
+			bool m_bDisabled;
+			_INT32 m_nNextSi;
+		};
 
 		CFormula::CFormula()
 		{
@@ -4814,10 +5068,8 @@ namespace OOX
 			if (xlsx && xlsx->m_pXlsbWriter)
 			{
 				int nLastRow = -1;
-				CRowXLSB oRow;
-				oRow.m_nR = nLastRow;
-				CCellXLSB oCell;
 				NSBinPptxRW::CXlsbBinaryWriter& oStream = *xlsx->m_pXlsbWriter;
+				CSharedFormulaRows oRows(oStream);
 				m_oXlsbPos.Init();
 				m_oXlsbPos->SetValue(oStream.GetPositionAbsolute());
 
@@ -4831,12 +5083,10 @@ namespace OOX
 
 					if ( strcmp("row", sName) == 0 )
 					{
-						nLastRow = oRow.m_nR;
-						oRow.Clean();
-						oRow.m_nR = nLastRow + 1;
-						oRow.fromXMLToXLSB(oReader, *xlsx->m_pXlsbWriter, oCell);
+						nLastRow = (int)oRows.ReadRow(oReader, nLastRow + 1);
 					}
 				}
+				oRows.Finish();
 
                 oStream.XlsbStartRecord(XLSB::rt_EndSheetData, 0);
 				oStream.XlsbEndRecord();
