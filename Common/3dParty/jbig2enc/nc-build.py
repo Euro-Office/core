@@ -20,7 +20,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "3",
+    version = "4",
     deps = [ "leptonica-wasm" if nc.is_wasm() else "leptonica" ],)
 
 jbig2enc_src = nc.work_dir / "jbig2enc"
@@ -78,10 +78,6 @@ def build_and_install():
             "-DCMAKE_INSTALL_LIBDIR=lib",
             "-DBUILD_SHARED_LIBS=OFF",
             "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
-            # jbig2enc's upstream CMake does not override the MSVC runtime; without
-            # this it defaults to /MD while leptonica and the rest of the project
-            # use /MT — mixing runtimes causes linker errors on Windows.
-            *( [ "-DCMAKE_POLICY_DEFAULT_CMP0091=NEW", "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded" ] if nc.is_windows() else [] ),
         ],
         "Configure jbig2enc",
     )
