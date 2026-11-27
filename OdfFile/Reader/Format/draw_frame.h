@@ -311,11 +311,25 @@ public:
 	odf_document_ptr					odf_document_;
 
     office_element_ptr_array			content_; //for case group with object 
+
+	// Held while an odf document is converted. The outermost one keeps what the objects inside
+	// objects of that conversion share (converted documents, budget); see draw_frame.cpp.
+	class conversion_scope
+	{
+	public:
+		conversion_scope();
+		~conversion_scope();
+		conversion_scope(const conversion_scope &) = delete;
+		conversion_scope & operator=(const conversion_scope &) = delete;
+	private:
+		bool owner_;
+	};
 private:
     virtual void add_attributes		( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element	( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
 
 	std::wstring office_convert(odf_document_ptr odfDocument, int type);
+	static std::wstring object_document_path(const std::wstring & href, const std::wstring & root);
 	
 	office_element_ptr draw_frame_ptr; //openoffice xml 1.0
 };

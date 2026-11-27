@@ -444,13 +444,9 @@ void draw_object::pptx_convert(oox::pptx_conversion_context & Context)
 		{			
 			if (href[0] == L'#') href = href.substr(1);
 			
-			if (Context.get_mediaitems()->is_internal_path(href, odfPath))
-			{
-				std::wstring objectPath = odfPath + FILE_SEPARATOR_STR + href;
-				// normalize path ???? TODO
-				XmlUtils::replace_all(objectPath, FILE_SEPARATOR_STR + std::wstring(L"./"), FILE_SEPARATOR_STR);
+			const std::wstring objectPath = object_document_path(href, odfPath);
+			if (!objectPath.empty() && Context.get_mediaitems()->is_internal_path(href, odfPath))
 				odf_document_ = odf_document_ptr(new odf_document(objectPath, tempPath, L""));
-			}
 		}
 //---------------------------------------------------------------------------------------------------------------------
 		office_element *contentSubDoc = odf_document_ ? odf_document_->get_impl()->get_content() : NULL;

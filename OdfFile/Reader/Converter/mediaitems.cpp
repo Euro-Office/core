@@ -62,7 +62,16 @@ bool is_internal(const std::wstring & uri, const std::wstring & packetRoot)
 	std::wstring testRoot = pathRoot.GetPath();
 	std::wstring testFile = pathFile.GetPath();
 
-	return (NSFile::CFileBinary::Exists(testFile) || NSDirectory::Exists(testFile)) && (std::wstring::npos != testFile.find(testRoot));
+	if (!NSFile::CFileBinary::Exists(testFile) && !NSDirectory::Exists(testFile)) return false;
+	if (testRoot.empty()) return true;
+
+	// The path has to start with the root folder and a separator: "root/Object 10" also contains
+	// "root/Object 1". CPath resolves a last ".." only when a separator follows it, so add one.
+	if (testRoot[testRoot.size() - 1] != FILE_SEPARATOR_CHAR)
+		testRoot += FILE_SEPARATOR_STR;
+	const std::wstring testInside = OOX::CPath(resultPath + FILE_SEPARATOR_STR).GetPath();
+
+	return 0 == testInside.compare(0, testRoot.size(), testRoot);
 }
 
 mediaitems::item::item(std::wstring const & _href,_rels_type _type, std::wstring const & _outputName,
