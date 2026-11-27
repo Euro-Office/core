@@ -26,6 +26,7 @@ SOURCES += main.cpp\
            vml_fill_relationship_id.cpp\
            workbook_facts.cpp\
            xlsb_workbook_protection.cpp\
+           xlsb_protected_ranges.cpp\
 
 HEADERS += common.h workbook_facts.h
 
