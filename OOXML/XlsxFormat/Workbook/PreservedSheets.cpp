@@ -1085,6 +1085,22 @@ void RestorePreservedSheets(CWorkbook& workbook)
 				pName->m_oLocalSheetId.reset();
 			if (!workbook.m_oDefinedNames.IsInit())
 				workbook.m_oDefinedNames.Init();
+			// A name the user created in the editor with the same name and scope keeps it, as an
+			// editor sheet keeps a clashing sheet name; Excel rejects a file with both.
+			bool bTaken = false;
+			for (const CDefinedName* pOther : workbook.m_oDefinedNames->m_arrItems)
+			{
+				bTaken = pOther && pOther->m_oName.IsInit() && pName->m_oName.IsInit() && ToLower(*pOther->m_oName) == ToLower(*pName->m_oName) &&
+						 pOther->m_oLocalSheetId.IsInit() == pName->m_oLocalSheetId.IsInit() &&
+						 (!pName->m_oLocalSheetId.IsInit() || pOther->m_oLocalSheetId->GetValue() == pName->m_oLocalSheetId->GetValue());
+				if (bTaken)
+					break;
+			}
+			if (bTaken)
+			{
+				delete pName;
+				continue;
+			}
 			workbook.m_oDefinedNames->m_arrItems.push_back(pName);
 		}
 	}
