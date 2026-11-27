@@ -100,6 +100,8 @@ namespace OOX
                 ptr->fNoSaveSup = false;
 			if(m_oAutoCompressPictures.IsInit())
                 ptr->fAutoCompressPictures = m_oAutoCompressPictures->GetValue();
+            else
+                ptr->fAutoCompressPictures = true;
 			if(m_oBackupFile.IsInit())
                 ptr->fBackup = m_oBackupFile->GetValue();
             else
@@ -150,6 +152,8 @@ namespace OOX
                 ptr->fHideBorderUnselLists = false;
 			if(m_oShowInkAnnotation.IsInit())
                 ptr->fShowInkAnnotation = m_oShowInkAnnotation->GetValue();
+            else
+                ptr->fShowInkAnnotation = true;
 			if(m_oShowObjects.IsInit())
 			ptr->mdDspObj = m_oShowObjects->GetValue() ? 1 : 2;
             else

@@ -94,6 +94,8 @@ namespace OOX
                 ptr->fFullCalcOnLoad = false;
             if(m_oRefMode.IsInit())
                 ptr->fRefA1 = !m_oRefMode->GetValue();
+            else
+                ptr->fRefA1 = true;
             if(m_oIterate.IsInit())
                 ptr->fIter = m_oIterate->GetValue();
 			else
@@ -126,6 +128,7 @@ namespace OOX
                 ptr->cUserThreadCount = m_oConcurrentManualCount->GetValue();
 			else
 				ptr->cUserThreadCount = 1;
+            ptr->fUserSetThreadCount = m_oConcurrentManualCount.IsInit();
             if(m_oForceFullCalc.IsInit())
                 ptr->fNoDeps = m_oForceFullCalc->GetValue();
 			else
@@ -172,7 +175,9 @@ namespace OOX
 				m_oCalcCompleted            = ptr->fSomeUncalced;
 				m_oCalcOnSave               = ptr->fSaveRecalc;
 				m_oConcurrentCalc           = ptr->fMTREnabled;
-				m_oConcurrentManualCount    = ptr->cUserThreadCount;
+				// cUserThreadCount is always > 0; it is a user choice only when fUserSetThreadCount says so
+				if (ptr->fUserSetThreadCount)
+					m_oConcurrentManualCount = ptr->cUserThreadCount;
 				m_oForceFullCalc            = ptr->fNoDeps;
 
 			}
