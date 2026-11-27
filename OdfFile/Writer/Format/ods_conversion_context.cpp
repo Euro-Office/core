@@ -367,9 +367,10 @@ void ods_conversion_context::add_hyperlink(const std::wstring & ref, const std::
 		current_table()->add_hyperlink(ref, col, row, link, location);
 	}
 }
-void ods_conversion_context::start_pivot_table(const std::wstring &name)
+office_element_ptr ods_conversion_context::start_pivot_table(const std::wstring &name, const std::wstring &target_ref,
+													   const std::wstring &source_sheet, const std::wstring &source_ref)
 {
-	return table_context_.start_pivot_table(name);
+	return table_context_.start_pivot_table(name, target_ref, source_sheet, source_ref);
 }
 void ods_conversion_context::end_pivot_table()
 {

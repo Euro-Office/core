@@ -74,7 +74,8 @@ public:
 		void set_data_validation_promt(const std::wstring &title, const std::wstring &content, bool display);
 	void end_data_validation();
 
-	void start_pivot_table(const std::wstring &name);
+	office_element_ptr start_pivot_table(const std::wstring &name, const std::wstring &target_ref,
+									 const std::wstring &source_sheet, const std::wstring &source_ref);
 	void end_pivot_table();
 private:
 

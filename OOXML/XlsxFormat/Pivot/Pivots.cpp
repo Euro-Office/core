@@ -574,7 +574,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			else if (L"rowFields" == sName)				m_oRowFields = oReader;
 			else if (L"rowItems" == sName)				m_oRowItems = oReader;
             else if (L"pivotHierarchies" == sName)		m_oPivotHierarchies = oReader;
-			//else if (L"filters" == sName)				m_oFilters = oReader;
+			else if (L"filters" == sName)				m_bHasFilters = true;
 			//else if (L"chartFormats" == sName)		m_oChartFormats = oReader;
 
 			//else if (L"conditionalFormats" == sName)	m_oConditionalFormats = oReader;
@@ -3331,6 +3331,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"stdDevSubtotal", m_oStdDevSubtotal )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"subtotalCaption", m_oSubtotalCaption )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"subtotalTop", m_oSubtotalTop )
+			WritingElement_ReadAttributes_Read_else_if	( oReader, L"sumSubtotal", m_oSumSubtotal )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"topAutoShow", m_oTopAutoShow )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"uniqueMemberProperty", m_oUniqueMemberProperty )
 			WritingElement_ReadAttributes_Read_else_if	( oReader, L"varPSubtotal", m_oVarPSubtotal )
