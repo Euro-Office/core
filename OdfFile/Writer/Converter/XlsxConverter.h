@@ -232,7 +232,6 @@ namespace Oox2Odf
 		void convert(OOX::Spreadsheet::CConditionalFormattingRule	*oox_cond_rule,
 							std::map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt);
 		void convert(OOX::Spreadsheet::CAutofilter					*oox_filter);
-		void convert(OOX::Spreadsheet::CFilterColumn				*oox_filter_column);
 		void convert(OOX::Spreadsheet::CDataBar						*oox_cond_databar);
 		void convert(OOX::Spreadsheet::CColorScale					*oox_cond_colorscale);
 		void convert(OOX::Spreadsheet::CIconSet						*oox_cond_iconset);

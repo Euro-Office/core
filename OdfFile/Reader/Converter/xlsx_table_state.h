@@ -57,6 +57,9 @@ class xlsx_data_range
 		int type = 0;
 		std::wstring value;
 		int operator_ = 0;
+		std::vector<std::wstring> items; // table:filter-set-item values
+		int or_group = -1; // the outermost table:filter-or around the condition, -1 if there is none
+		bool and_in_or = false; // a table:filter-and lies between that filter-or and the condition
 	};
 public:
 	xlsx_data_range() : byRow(true), filter_button(false), bTablePart(true), withHeader(false), cell_start(0,0), cell_end(0,0) {}
@@ -73,15 +76,16 @@ public:
 	bool byRow = true;
 	bool filter_button = false;
 	bool withHeader = false;
+	bool bUnnamed = false; // table:database-range without table:name
+	bool bReplaced = false; // an unnamed range followed by another unnamed range on its sheet
 
 	std::vector<std::pair<size_t, bool>> bySort;  //field + order
 	
-	_CP_OPT(bool) bFilterAndOr;
 	std::vector<filter_condition> filter_conditions;
 	
 	void serialize_sort (std::wostream & _Wostream);
 	void serialize_autofilter (std::wostream & _Wostream);
-	void serialize_filterColumn(std::wostream& _Wostream, int indexCol);
+	void serialize_filterColumns(std::wostream& _Wostream, int colOffset);
 
 	std::vector<std::wstring> header_values;
 

@@ -55,6 +55,8 @@ add_core_gtest(
             xlsx2ods_date_cells.cpp
             xlsx2ods_inline_strings.cpp
             xlsx2ods_print_area.cpp
+            xlsx2ods_autofilter.cpp
+            xlsx2ods_sort.cpp
             docx2odt_outline_level.cpp
             xlsx2ods_header_footer.cpp
             odt2docx_fields.cpp
@@ -118,6 +120,10 @@ add_core_gtest(
             ods2xlsx_hidden_header_footer.cpp
             ods2xlsx_font_size_column_width.cpp
             ods2xlsx_database_range.cpp
+            ods2xlsx_autofilter.cpp
+            ods2xlsx_unnamed_database_range.cpp
+            ods2xlsx_autofilter_groups.cpp
+            xlsx2ods_sort_sheet_names.cpp
             docx2odt_list_number_suffix.cpp
             odt2docx_section_columns.cpp
             odt2docx_symbol_bullets.cpp

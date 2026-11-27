@@ -32,6 +32,8 @@
 #include "ods_conversion_context.h"
 #include "logging.h"
 
+#include <cwctype>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
@@ -80,6 +82,16 @@ ods_table_state_ptr & ods_table_context::state()
     return table_state_list_.back();
 }
 
+// sheet!ref for oox2odf_converter: the sheet name in quotes, with its quotes doubled, unless it is a plain word.
+static std::wstring quoted_sheet_ref(const std::wstring &sheet, const std::wstring &ref)
+{
+	for (size_t i = 0; i < sheet.size(); ++i)
+	{
+		if (!iswalnum(sheet[i]) && sheet[i] != L'_')
+			return L"'" + boost::algorithm::replace_all_copy(sheet, L"'", L"''") + L"'!" + ref;
+	}
+	return sheet + L"!" + ref;
+}
 void ods_table_context::start_table_part(const std::wstring &name, std::wstring ref)
 {
 	if (!table_database_ranges_.root) create_element(L"table", L"database-ranges", table_database_ranges_.root, &context_);
@@ -94,9 +106,7 @@ void ods_table_context::start_table_part(const std::wstring &name, std::wstring 
 
 	if (std::wstring::npos == ref.find(L"!") )
 	{
-		bool bQuotes = (std::wstring::npos != table_state_list_.back()->office_table_name_.find(L" "));
-
-		ref = (bQuotes ? L"'" : L"" ) + table_state_list_.back()->office_table_name_ + (bQuotes ? L"'" : L"" ) + L"!" + ref;
+		ref = quoted_sheet_ref(table_state_list_.back()->office_table_name_, ref);
 	}
 	std::wstring odf_range = formulas_converter.convert_named_ref(ref);
 
@@ -169,6 +179,142 @@ void ods_table_context::set_table_part_autofilter(bool val)
 void ods_table_context::end_table_part()
 {
 }
+void ods_table_context::set_database_range_filter(const std::vector<table_filter_column_state> & columns)
+{
+	if (columns.empty()) return;
+	if (table_database_ranges_.elements.empty()) return;
+
+	table_database_range * d_range = dynamic_cast<table_database_range*>(table_database_ranges_.elements.back().get());
+
+	if (!d_range) return;
+
+	d_range->filter_columns_ = columns;
+}
+void ods_table_context::set_database_range_sort(const table_sort_state & sort)
+{
+	if (sort.keys.empty()) return;
+	if (table_database_ranges_.elements.empty()) return;
+
+	table_database_range * d_range = dynamic_cast<table_database_range*>(table_database_ranges_.elements.back().get());
+
+	if (!d_range) return;
+
+	d_range->sort_ = sort;
+}
+static bool same_sort(const table_sort_state & a, const table_sort_state & b)
+{
+	if (a.case_sensitive != b.case_sensitive || a.by_column != b.by_column || a.keys.size() != b.keys.size())
+		return false;
+	for (size_t i = 0; i < a.keys.size(); i++)
+	{
+		if (a.keys[i].field_number != b.keys[i].field_number || a.keys[i].descending != b.keys[i].descending)
+			return false;
+	}
+	return true;
+}
+// The sheet part of an ODF range address, with its dot: "Sheet1." for "Sheet1.A1:Sheet1.C6".
+static std::wstring sheet_prefix(const std::wstring & odf_address)
+{
+	size_t pos = 0;
+	if (!odf_address.empty() && odf_address[0] == L'\'')
+	{
+		// the closing quote: a doubled quote ('') belongs to the name
+		for (pos = 1; ; pos += 2)
+		{
+			pos = odf_address.find(L'\'', pos);
+			if (pos == std::wstring::npos) return L"";
+			if (pos + 1 >= odf_address.size() || odf_address[pos + 1] != L'\'') break;
+		}
+	}
+	pos = odf_address.find(L'.', pos);
+	return pos == std::wstring::npos ? L"" : odf_address.substr(0, pos + 1);
+}
+void ods_table_context::set_sheet_sort(std::wstring ref, const table_sort_state & sort)
+{
+	if (ref.empty() || sort.keys.empty()) return;
+	// the sortState of a worksheet is on that sheet; a reference to another sheet is not
+	if (std::wstring::npos != ref.find(L"!")) return;
+
+	const std::wstring & sheet = table_state_list_.back()->office_table_name_;
+
+	formulasconvert::oox2odf_converter formulas_converter;
+
+	const std::wstring odf_range = formulas_converter.convert_named_ref(quoted_sheet_ref(sheet, ref));
+
+	// Excel writes the sortState of a range without its header row (ECMA-376 18.3.1.92): the
+	// database range that starts one row higher is the same range. Only for sorts of rows: the
+	// keys of a column sort count rows from the first row of the sortState.
+	std::wstring odf_range_header;
+	const size_t pos = ref.find(L":");
+	if (pos != std::wstring::npos && !sort.by_column)
+	{
+		_INT32 col_start = -1, row_start = -1, col_end = -1, row_end = -1;
+		utils::parsing_ref(ref.substr(0, pos), col_start, row_start);
+		utils::parsing_ref(ref.substr(pos + 1), col_end, row_end);
+		if (col_start > 0 && row_start > 1 && col_end >= col_start && row_end >= row_start)
+			odf_range_header = formulas_converter.convert_named_ref(quoted_sheet_ref(sheet,
+				utils::getColAddress(col_start - 1) + std::to_wstring(row_start - 1) + L":"
+				+ utils::getColAddress(col_end - 1) + std::to_wstring(row_end)));
+	}
+
+	table_database_range * header_range = NULL;
+	for (size_t i = 0; i < table_database_ranges_.elements.size(); i++)
+	{
+		table_database_range * d_range = dynamic_cast<table_database_range*>(table_database_ranges_.elements[i].get());
+
+		if (!d_range || !d_range->table_target_range_address_) continue;
+
+		const bool same_address = *d_range->table_target_range_address_ == odf_range;
+		const bool header_address = !odf_range_header.empty() && *d_range->table_target_range_address_ == odf_range_header;
+
+		if (!same_address && !header_address) continue;
+
+		// a range that already has its own sort (a table with a sortState) keeps it; the
+		// worksheet sort goes to another range at that address, or to a new one
+		if (!d_range->sort_.keys.empty())
+		{
+			if (same_sort(d_range->sort_, sort)) return;
+			continue;
+		}
+		if (same_address)
+		{
+			d_range->sort_ = sort;
+			return;
+		}
+		if (!header_range)
+			header_range = d_range;
+	}
+	if (header_range)
+	{
+		header_range->sort_ = sort;
+		return;
+	}
+	// LibreOffice keeps one anonymous database range per sheet, the last one it reads: a second
+	// one would replace the range of the sheet's autoFilter, and its filter would be lost. Then
+	// the worksheet sort is left out.
+	const std::wstring prefix = sheet_prefix(odf_range);
+	for (size_t i = 0; i < table_database_ranges_.elements.size(); i++)
+	{
+		table_database_range * d_range = dynamic_cast<table_database_range*>(table_database_ranges_.elements[i].get());
+
+		if (!d_range || !d_range->table_target_range_address_ || !d_range->table_name_) continue;
+
+		if (0 == d_range->table_name_->rfind(L"__Anonymous_Sheet_DB__", 0)
+			&& (prefix.empty() || 0 == d_range->table_target_range_address_->rfind(prefix, 0)))
+			return;
+	}
+	// no such range without a sort: a new one with the range of the sortState as it is (the
+	// ODS -> XLSX conversion writes the range with its header row)
+	add_autofilter(quoted_sheet_ref(sheet, ref));
+	if (table_database_ranges_.elements.empty()) return;
+
+	table_database_range * d_range = dynamic_cast<table_database_range*>(table_database_ranges_.elements.back().get());
+
+	if (!d_range) return;
+
+	d_range->table_display_filter_buttons_ = boost::none;
+	d_range->sort_ = sort;
+}
 void ods_table_context::add_autofilter(std::wstring ref)
 {
 	if (ref.empty()) return;
@@ -183,9 +329,7 @@ void ods_table_context::add_autofilter(std::wstring ref)
 
 	if (std::wstring::npos == ref.find(L"!") )
 	{
-		bool bQuotes = (std::wstring::npos != table_state_list_.back()->office_table_name_.find(L" "));
-
-		ref = (bQuotes ? L"'" : L"") + table_state_list_.back()->office_table_name_ + (bQuotes ? L"'" : L"") + L"!" + ref;
+		ref = quoted_sheet_ref(table_state_list_.back()->office_table_name_, ref);
 	}
 	formulasconvert::oox2odf_converter formulas_converter;
 

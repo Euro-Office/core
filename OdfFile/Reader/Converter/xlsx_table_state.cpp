@@ -22,6 +22,9 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
+#include <cwchar>
+#include <set>
+
 #include <xml/simple_xml_writer.h>
 #include "../../Common/logging.h"
 
@@ -33,6 +36,8 @@
 #include "../Format/odfcontext.h"
 #include "../Format/style_table_properties.h"
 #include "../../DataTypes/stylefamily.h"
+#include "../../DataTypes/tabledatatype.h"
+#include "../../DataTypes/tableoperator.h"
 
 #include "../../Formulas/formulasconvert.h"
 
@@ -51,7 +56,7 @@ void xlsx_data_range::serialize_autofilter(std::wostream& _Wostream)
 		{
 			CP_XML_ATTR(L"ref", ref);
 
-			serialize_filterColumn(CP_XML_STREAM(), 0);
+			serialize_filterColumns(CP_XML_STREAM(), 0);
 		}
 	}
 }
@@ -112,60 +117,204 @@ void xlsx_data_range::serialize_sort (std::wostream & _Wostream)
 		}	
 	}
 }
-void xlsx_data_range::serialize_filterColumn(std::wostream& _Wostream, int indexCol)
+namespace
 {
+	// ODF table:operator -> ST_FilterOperator of customFilter, with the wildcards that turn
+	// begins/ends/contains into a pattern (the same mapping LibreOffice uses for XLSX).
+	bool custom_filter(int operator_, const std::wstring& value, std::wstring& oox_operator, std::wstring& oox_value)
+	{
+		oox_value = value;
+		switch (operator_)
+		{
+		case odf_types::table_operator::Equal:				oox_operator = L"equal"; break;
+		case odf_types::table_operator::NotEqual:			oox_operator = L"notEqual"; break;
+		case odf_types::table_operator::LessThan:			oox_operator = L"lessThan"; break;
+		case odf_types::table_operator::GreaterThan:		oox_operator = L"greaterThan"; break;
+		case odf_types::table_operator::LessThanOrEqual:	oox_operator = L"lessThanOrEqual"; break;
+		case odf_types::table_operator::GreaterThanOrEqual:	oox_operator = L"greaterThanOrEqual"; break;
+		case odf_types::table_operator::BeginsWith:			oox_operator = L"equal"; oox_value = value + L"*"; break;
+		case odf_types::table_operator::EndsWith:			oox_operator = L"equal"; oox_value = L"*" + value; break;
+		case odf_types::table_operator::Contains:			oox_operator = L"equal"; oox_value = L"*" + value + L"*"; break;
+		case odf_types::table_operator::NotBeginsWith:		oox_operator = L"notEqual"; oox_value = value + L"*"; break;
+		case odf_types::table_operator::NotEndsWith:		oox_operator = L"notEqual"; oox_value = L"*" + value; break;
+		case odf_types::table_operator::NotContains:		oox_operator = L"notEqual"; oox_value = L"*" + value + L"*"; break;
+		case odf_types::table_operator::Empty:				oox_operator = L"equal"; oox_value = L""; break;
+		case odf_types::table_operator::NonEmpty:			oox_operator = L"notEqual"; oox_value = L" "; break;
+		default:
+			return false;
+		}
+		return true;
+	}
+	bool is_top10(int operator_)
+	{
+		return operator_ == odf_types::table_operator::TopValues || operator_ == odf_types::table_operator::BottomValues ||
+			operator_ == odf_types::table_operator::TopPercent || operator_ == odf_types::table_operator::BottomPercent;
+	}
+	// The N of top/bottom N: a number, limited to 0..500 like LibreOffice's XLSX export.
+	bool top10_val(const std::wstring& value, std::wstring& result)
+	{
+		if (value.empty()) return false;
+		wchar_t* end = NULL;
+		const double val = wcstod(value.c_str(), &end);
+		if (end == value.c_str() || *end != L'\0' || !(val == val)) return false;
+		if (val < 0)
+			result = L"0";
+		else if (val > 500)
+			result = L"500";
+		else
+			result = value;
+		return true;
+	}
+	bool is_color(int type)
+	{
+		return type == odf_types::table_data_type::background_color || type == odf_types::table_data_type::text_color;
+	}
+}
+
+void xlsx_data_range::serialize_filterColumns(std::wostream& _Wostream, int colOffset)
+{
+	// table:orientation="column" is not checked: LibreOffice writes it from the sort settings of the range,
+	// and its filters still hide rows by the values of the field's column.
+	// ODF field numbers count from the first column of the database range; OOXML wants one
+	// filterColumn per column, its colId counted from the first column of the autoFilter range.
+	std::map<int, std::vector<const filter_condition*>> fields;
+	std::map<int, std::set<int>> or_group_fields;
+	const int width = cell_end.first - cell_start.first;
+	for (size_t i = 0; i < filter_conditions.size(); ++i)
+	{
+		const int field = filter_conditions[i].field_number;
+		if (filter_conditions[i].or_group >= 0)
+			or_group_fields[filter_conditions[i].or_group].insert(field);
+		if (field < 0 || field > width) continue; // not a column of the range
+		fields[field].push_back(&filter_conditions[i]);
+	}
+	// The filterColumns of an autoFilter are ANDed: an OR of conditions on more than one field
+	// has no OOXML form, and LibreOffice does not export such a filter to XLSX either.
+	for (std::map<int, std::set<int>>::iterator it = or_group_fields.begin(); it != or_group_fields.end(); ++it)
+	{
+		if (it->second.size() > 1) return;
+	}
+
 	CP_XML_WRITER(_Wostream)
 	{
-		CP_XML_NODE(L"filterColumn")
+		for (std::map<int, std::vector<const filter_condition*>>::iterator it = fields.begin(); it != fields.end(); ++it)
 		{
-			CP_XML_ATTR(L"colId", indexCol);
-			if (bFilterAndOr && filter_conditions.size() > 1)
+			const std::vector<const filter_condition*>& conds = it->second;
+			const filter_condition& first = *conds[0];
+
+			// The conditions of a field are ANDed (no filter-or around them) or alternatives of one
+			// filter-or. A field that mixes both gets no filterColumn: the other fields are ANDed
+			// with it, so leaving it out shows more rows, never fewer.
+			const bool bAnd = first.or_group < 0;
+			bool bOneGroup = true;
+			for (size_t i = 0; i < conds.size(); ++i)
 			{
-				CP_XML_NODE(L"customFilters")
-				{
-					if (*bFilterAndOr)
-						CP_XML_ATTR(L"and", 1);
-					else
-						CP_XML_ATTR(L"and", 0);
-					for (size_t i = 0; i < filter_conditions.size(); ++i)
-					{
-						CP_XML_NODE(L"customFilter")
-						{
-							switch (filter_conditions[i].operator_)
-							{
-							case 15: // !empty
-							case 0: CP_XML_ATTR(L"operator", L"notEqual"); break;
-							case 14: // empty
-							case 1: CP_XML_ATTR(L"operator", L"equal"); break;
-							case 2: CP_XML_ATTR(L"operator", L"LessThan"); break;
-							case 3: CP_XML_ATTR(L"operator", L"greaterThan"); break;
-							case 13: // bottom values
-							case 4: CP_XML_ATTR(L"operator", L"lessThanOrEqual"); break;
-							case 17: // top values
-							case 5: CP_XML_ATTR(L"operator", L"greaterThanOrEqual"); break;
-							}
-							CP_XML_ATTR(L"val", filter_conditions[i].value);
-						}
-					}
-				}
+				if (conds[i]->or_group != first.or_group || conds[i]->and_in_or)
+					bOneGroup = false;
 			}
-			else if (1 == filter_conditions.size())
+			if (!bOneGroup) continue;
+
+			// Value list: every condition is "=" (or "empty") and they are alternatives.
+			bool bValues = conds.size() == 1 || !bAnd;
+			for (size_t i = 0; bValues && i < conds.size(); ++i)
 			{
-				if (filter_conditions[0].type == 3/*odf_types::table_data_type::background_color*/ ||
-					filter_conditions[0].type == 4/*odf_types::table_data_type::text_color*/)
+				bValues = (conds[i]->operator_ == odf_types::table_operator::Equal ||
+						   conds[i]->operator_ == odf_types::table_operator::Empty) && !is_color(conds[i]->type);
+			}
+			std::vector<std::pair<std::wstring, std::wstring>> customs;
+			for (size_t i = 0; !bValues && i < conds.size(); ++i)
+			{
+				std::wstring oox_operator, oox_value;
+				if (!is_color(conds[i]->type) && custom_filter(conds[i]->operator_, conds[i]->value, oox_operator, oox_value))
+					customs.push_back(std::make_pair(oox_operator, oox_value));
+			}
+			// Alternatives that XLSX cannot all express (a regular expression, a colour, top N): writing only the
+			// others would hide the rows that match the left-out ones, so the field gets no filterColumn. ANDed
+			// conditions keep the ones XLSX can express, which shows more rows, never fewer.
+			if (!bAnd && conds.size() > 1 && !bValues && customs.size() != conds.size()) continue;
+			// customFilters holds two conditions; dropping one would change which rows the filter shows.
+			if (customs.size() > 2) customs.clear();
+
+			const bool bColor = is_color(first.type) && !first.value.empty();
+			std::wstring top10_value;
+			const bool bTop10 = conds.size() == 1 && is_top10(first.operator_) && top10_val(first.value, top10_value);
+
+			if (!bColor && !bTop10 && !bValues && customs.empty()) continue;
+
+			CP_XML_NODE(L"filterColumn")
+			{
+				CP_XML_ATTR(L"colId", it->first + colOffset);
+				if (bColor)
 				{
 					CP_XML_NODE(L"colorFilter")
 					{
-						if (filter_conditions[0].type == 3)
-							CP_XML_ATTR(L"cellColor", L"1");
-						CP_XML_ATTR(L"dxfId", filter_conditions[0].value);
+						CP_XML_ATTR(L"dxfId", first.value);
+						CP_XML_ATTR(L"cellColor", first.type == odf_types::table_data_type::background_color ? 1 : 0);
 					}
 				}
-				else if (filter_conditions[0].operator_ == 17/*odf_types::table_operator::TopValues*/)
+				else if (bTop10)
 				{
 					CP_XML_NODE(L"top10")
 					{
-						CP_XML_ATTR(L"val", filter_conditions[0].value);
+						if (first.operator_ == odf_types::table_operator::BottomValues ||
+							first.operator_ == odf_types::table_operator::BottomPercent)
+							CP_XML_ATTR(L"top", 0);
+						if (first.operator_ == odf_types::table_operator::TopPercent ||
+							first.operator_ == odf_types::table_operator::BottomPercent)
+							CP_XML_ATTR(L"percent", 1);
+						CP_XML_ATTR(L"val", top10_value);
+					}
+				}
+				else if (bValues)
+				{
+					// The values of a value list are the filter-set-item elements; without them the condition value.
+					std::vector<std::wstring> values;
+					bool bBlank = false;
+					for (size_t i = 0; i < conds.size(); ++i)
+					{
+						if (conds[i]->operator_ == odf_types::table_operator::Empty)
+						{
+							bBlank = true;
+							continue;
+						}
+						const std::vector<std::wstring>& items = conds[i]->items;
+						if (items.empty())
+							values.push_back(conds[i]->value);
+						else
+							values.insert(values.end(), items.begin(), items.end());
+					}
+					CP_XML_NODE(L"filters")
+					{
+						for (size_t i = 0; i < values.size(); ++i)
+						{
+							if (values[i].empty()) bBlank = true;
+						}
+						if (bBlank)
+							CP_XML_ATTR(L"blank", 1);
+						for (size_t i = 0; i < values.size(); ++i)
+						{
+							if (values[i].empty()) continue;
+							CP_XML_NODE(L"filter")
+							{
+								CP_XML_ATTR_ENCODE_STRING(L"val", values[i]);
+							}
+						}
+					}
+				}
+				else
+				{
+					CP_XML_NODE(L"customFilters")
+					{
+						if (bAnd && customs.size() > 1)
+							CP_XML_ATTR(L"and", 1);
+						for (size_t i = 0; i < customs.size(); ++i)
+						{
+							CP_XML_NODE(L"customFilter")
+							{
+								CP_XML_ATTR(L"operator", customs[i].first);
+								CP_XML_ATTR_ENCODE_STRING(L"val", customs[i].second);
+							}
+						}
 					}
 				}
 			}

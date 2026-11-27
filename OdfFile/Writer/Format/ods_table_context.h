@@ -27,6 +27,8 @@
 #include <string>
 #include "ods_table_state.h"
 
+#include "table_database_ranges.h"
+
 namespace cpdoccore {
 namespace odf_writer {
 
@@ -60,6 +62,13 @@ public:
     void add_defined_expression(const std::wstring & name, const  std::wstring & value, int sheet_id, bool printable = false);
 
 	void add_autofilter(std::wstring ref);
+	// the filter of the last database range (sheet autofilter or table part)
+	void set_database_range_filter(const std::vector<table_filter_column_state> & columns);
+	// the sort of the last database range (sheet autofilter or table part)
+	void set_database_range_sort(const table_sort_state & sort);
+	// a sheet-level sort: the database range with the same range (or with the same range plus a header
+	// row above it), else a new one without filter buttons
+	void set_sheet_sort(std::wstring ref, const table_sort_state & sort);
 	
 	void start_table_part(const std::wstring &name, std::wstring ref);
 		void set_table_part_autofilter(bool val);
