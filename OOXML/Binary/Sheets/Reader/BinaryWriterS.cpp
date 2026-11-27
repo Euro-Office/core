@@ -9235,6 +9235,11 @@ NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXM
 	}
 	if (pXlsx)
 	{
+		// moves macro sheets out of the sheet list, before PrepareWorkbook: when no worksheet is
+		// left, it replaces the sheet list with an empty sheet for the editor
+		if (pXlsx->m_pWorkbook)
+			OOX::Spreadsheet::CollectPreservedSheets(*pXlsx->m_pWorkbook, sInputDir);
+
 		pXlsx->PrepareWorkbook();
 
 		if (nullptr == pXlsx->m_pWorkbook)
@@ -9242,8 +9247,6 @@ NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXM
 			RELEASEOBJECT(pXlsx);
 			return AVS_FILEUTILS_ERROR_CONVERT;
         }
-		// before the workbook table is written: moves macro sheets out of the sheet list
-		OOX::Spreadsheet::CollectPreservedSheets(*pXlsx->m_pWorkbook, sInputDir);
 
         if (fileType == BinXlsxRW::c_oFileTypes::XLSB)
         {
