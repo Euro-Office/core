@@ -53,6 +53,7 @@ add_core_gtest(
             docx2odt_contextual_spacing.cpp
             docx2odt_header_drawing_anchor.cpp
             xlsx2ods_date_cells.cpp
+            xlsx2ods_currency_literal_bracket.cpp
             xlsx2ods_inline_strings.cpp
             xlsx2ods_print_area.cpp
             docx2odt_outline_level.cpp

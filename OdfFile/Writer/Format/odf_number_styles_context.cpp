@@ -609,10 +609,12 @@ void odf_number_styles_context::create_currency_style(number_format_state & stat
 {
 	create_element(L"number", L"currency-style", root_elm, odf_context_);
 	{
-        int res1 = (int)state.format_code[0].rfind(L"[");
+		int res4 = (int)state.format_code[0].rfind(L"]");
+		// The '[' that opens the last bracketed token: a literal '[' after it
+		// (escaped or quoted text) would make the erase range below run backwards.
+		int res1 = (int)state.format_code[0].rfind(L"[", res4 >= 0 ? (size_t)res4 : std::wstring::npos);
         int res2 = (int)state.format_code[0].rfind(L"#");
         int res3 = (int)state.format_code[0].rfind(L"0");
-		int res4 = (int)state.format_code[0].rfind(L"]");
 
 		if (res1 >= 0 && res4 >= 0)
 		{

@@ -91,6 +91,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/list_label_followed_by.docx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_date.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_datetime.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/currency_literal_bracket.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_first_header.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_header_footer.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/style_parent_cycle_character.docx",
