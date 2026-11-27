@@ -19,6 +19,16 @@ SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/number_cell_style_precedence.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/number_cell_type_mismatch.ods"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
 path = "OdfFile/Test/number_formats/currency.ods"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
@@ -91,6 +101,7 @@ path = [
     "OdfFile/Test/test_odf/ExampleFiles/list_label_followed_by.docx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_date.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/cell_type_d_datetime.xlsx",
+    "OdfFile/Test/test_odf/ExampleFiles/cell_time_only_serials.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_first_header.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/sheet_margins_header_footer.xlsx",
     "OdfFile/Test/test_odf/ExampleFiles/style_parent_cycle_character.docx",
@@ -514,6 +525,11 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 [[annotations]]
 path = "OdfFile/Test/test_odf/ExampleFiles/xlsx_fit_to_pages.xlsx"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "OdfFile/Test/test_odf/ExampleFiles/cell_datetime_serial_seconds.xlsx"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 

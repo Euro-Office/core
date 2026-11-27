@@ -42,6 +42,25 @@ TEST(XlsxToOds, IsoDateCell)
 	EXPECT_NE(xml.find(L"office:date-value=\"2023-03-15\""), std::wstring::npos);
 }
 
+// Serial date-times are rounded to whole seconds, not cut: 15:05 and 04:52:56 are
+// binary fractions a little below the exact value, and 23:59:59.9999 is midnight
+// of the next day.
+TEST(XlsxToOds, SerialDateTimeRoundedToWholeSeconds)
+{
+	const std::wstring xml = convert_xlsx_content(L"ExampleFiles/cell_datetime_serial_seconds.xlsx");
+	ASSERT_FALSE(xml.empty()) << "XLSX -> ODS conversion failed";
+	EXPECT_TRUE(is_well_formed(xml));
+
+	for (const wchar_t* expected : {L"2023-11-22T15:05:00\"", L"2014-01-01T04:52:56\"", L"2023-11-23\""})
+	{
+		EXPECT_NE(xml.find(std::wstring(L"office:date-value=\"") + expected), std::wstring::npos) << expected;
+	}
+	for (const wchar_t* cut : {L"15:04:59", L"04:52:55", L"23:59:59"})
+	{
+		EXPECT_EQ(xml.find(cut), std::wstring::npos) << cut;
+	}
+}
+
 // Date-time values, and t="d" values that are not valid dates: these are kept
 // as text in string cells (a date cell needs office:date-value).
 TEST(XlsxToOds, IsoDateTimeCellAndInvalidDateCells)
@@ -78,4 +97,45 @@ TEST(XlsxToOds, InvalidDateFormulaCellTextWrittenOnce)
 	const size_t first = xml.find(text);
 	ASSERT_NE(first, std::wstring::npos);
 	EXPECT_EQ(xml.find(text, first + text.size()), std::wstring::npos) << "the cell text is written twice";
+}
+
+// A serial number with no date part is a time of day. office:time-value is an
+// xsd:duration, so 0.5 must be written as PT12H00M00S, not as T12:00:00.
+TEST(XlsxToOds, TimeOnlySerialWrittenAsDuration)
+{
+	const std::wstring xml = convert_xlsx_content(L"ExampleFiles/cell_time_only_serials.xlsx");
+	ASSERT_FALSE(xml.empty()) << "XLSX -> ODS conversion failed";
+	EXPECT_TRUE(is_well_formed(xml));
+	EXPECT_NE(xml.find(L"office:time-value=\"PT12H00M00S\""), std::wstring::npos);
+	EXPECT_EQ(xml.find(L"office:time-value=\"T"), std::wstring::npos);
+}
+
+// A zero serial in a date or time formatted cell keeps its value: both cells get
+// office:time-value PT00H00M00S, and no time cell is left without a value.
+TEST(XlsxToOds, ZeroSerialKeepsTimeValue)
+{
+	const std::wstring xml = convert_xlsx_content(L"ExampleFiles/cell_time_only_serials.xlsx");
+	ASSERT_FALSE(xml.empty()) << "XLSX -> ODS conversion failed";
+
+	const std::wstring zero = L"office:time-value=\"PT00H00M00S\"";
+	size_t count = 0;
+	for (size_t pos = xml.find(zero); pos != std::wstring::npos; pos = xml.find(zero, pos + zero.size()))
+		++count;
+	EXPECT_EQ(count, 2u);
+
+	for (size_t pos = xml.find(L"office:value-type=\"time\""); pos != std::wstring::npos;
+		 pos = xml.find(L"office:value-type=\"time\"", pos + 1))
+	{
+		const size_t start = xml.rfind(L'<', pos);
+		const std::wstring tag = xml.substr(start, xml.find(L'>', pos) + 1 - start);
+		EXPECT_NE(tag.find(L"office:time-value="), std::wstring::npos) << tag;
+	}
+}
+
+// A serial number with a date part is still written as a date and time.
+TEST(XlsxToOds, DateTimeSerialStaysDateValue)
+{
+	const std::wstring xml = convert_xlsx_content(L"ExampleFiles/cell_time_only_serials.xlsx");
+	ASSERT_FALSE(xml.empty()) << "XLSX -> ODS conversion failed";
+	EXPECT_NE(xml.find(L"office:date-value=\"2023-03-15T12:00:00\""), std::wstring::npos);
 }

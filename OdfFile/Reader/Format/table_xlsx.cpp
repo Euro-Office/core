@@ -712,6 +712,17 @@ std::wstring CalcCellDataStyle(oox::xlsx_conversion_context & Context,
     if (defaultCellStyle)
         data_style = SearchCellDataStyle(Context, defaultCellStyle);
 
+    // A cell's own style replaces the column and row default cell styles, as it does for the formatting properties:
+    // without a data style in its chain, the cell has the format of the default cell style, not the one of its column
+    // or row.
+    if (cellStyle)
+    {
+        std::wstring ds1 = SearchCellDataStyle(Context, cellStyle);
+        if (!ds1.empty())
+            data_style = ds1;
+        return data_style;
+    }
+
     {
         std::wstring ds1 = SearchCellDataStyle(Context, defaultColumnCellStyle);
         if (!ds1.empty())
@@ -720,12 +731,6 @@ std::wstring CalcCellDataStyle(oox::xlsx_conversion_context & Context,
 
     {
         std::wstring ds1 = SearchCellDataStyle(Context, defaultRowCellStyle);
-        if (!ds1.empty())
-            data_style = ds1;
-    }
-
-    {
-        std::wstring ds1 = SearchCellDataStyle(Context, cellStyle);
         if (!ds1.empty())
             data_style = ds1;
     }
@@ -756,6 +761,27 @@ std::wstring CellNumFormat(oox::xlsx_conversion_context & Context, const std::ws
 		}
 	}
 	return num_format;
+}
+
+// Whether a cell keeps the number format of its data style when its value type differs from the type of that format.
+// Follows LibreOffice (ScXMLImport::SetType): a float or currency cell always keeps it, and a percentage, date or time
+// cell keeps it unless it is the standard format, approximated here by General. Otherwise the format is cleared and the
+// cell shows in General. LibreOffice also keeps a non-standard format on a boolean cell, but a boolean cell shows
+// TRUE or FALSE whatever its format.
+bool KeepsStyleNumFormat(office_value_type::type cell_type, const std::wstring & num_format)
+{
+	switch (cell_type)
+	{
+	case office_value_type::Float:
+	case office_value_type::Currency:
+		return true;
+	case office_value_type::Percentage:
+	case office_value_type::Date:
+	case office_value_type::Time:
+		return num_format != L"General";
+	default:
+		return false;
+	}
 }
 
 // The xf of an empty cell (no value, formula or paragraphs) with a cell style, as table_table_cell::xlsx_convert
@@ -1186,7 +1212,8 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 			if (attr.office_value_type_)
 			{
-				if (attr.office_value_type_.get() != num_format_type && num_format_type != office_value_type::Custom)
+				if (attr.office_value_type_.get() != num_format_type && num_format_type != office_value_type::Custom &&
+					!KeepsStyleNumFormat(attr.office_value_type_->get_type(), num_format))
 				{// reset from cell
 					num_format_type = attr.office_value_type_->get_type();
 					num_format.clear();
