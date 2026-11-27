@@ -98,6 +98,7 @@ add_core_gtest(
             odf_text_meta.cpp
             math_property_values.cpp
             pptx2odp_table_styles.cpp
+            pptx2odp_master_layout_ids.cpp
             docx2odt_header_footer_margins.cpp
             entrance.cpp
             ooxml2odf_custom_props.cpp
