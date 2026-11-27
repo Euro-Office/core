@@ -242,12 +242,16 @@ namespace OOX
 	{
 		std::wstring sXml = L"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<Types xmlns=\"http://schemas.openxmlformats.org/package/2006/content-types\">";
 
-		for (std::unordered_map<std::wstring, ContentTypes::CDefault>::const_iterator it = m_mapDefaults.begin(); it != m_mapDefaults.end(); ++it)
+		// In key order: the unordered maps iterate in an order that depends on the standard library,
+		// so the same document gave a different file with each toolchain (Rocky 8, Ubuntu, macOS).
+		const std::map<std::wstring, ContentTypes::CDefault> mapDefaults(m_mapDefaults.begin(), m_mapDefaults.end());
+		for (std::map<std::wstring, ContentTypes::CDefault>::const_iterator it = mapDefaults.begin(); it != mapDefaults.end(); ++it)
 		{
 			sXml += it->second.toXML();
 		}
 
-		for (std::unordered_map<std::wstring, smart_ptr<ContentTypes::COverride>>::const_iterator it = m_mapOverrides.begin(); it != m_mapOverrides.end(); ++it)
+		const std::map<std::wstring, smart_ptr<ContentTypes::COverride>> mapOverrides(m_mapOverrides.begin(), m_mapOverrides.end());
+		for (std::map<std::wstring, smart_ptr<ContentTypes::COverride>>::const_iterator it = mapOverrides.begin(); it != mapOverrides.end(); ++it)
 		{
 			if (it->second.IsInit())
 			{

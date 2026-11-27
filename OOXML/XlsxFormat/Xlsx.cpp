@@ -450,11 +450,13 @@ void OOX::Spreadsheet::CXlsx::PrepareWorkbook()
 		pWorksheet->m_oPageMargins->m_oHeader->FromInches(0.3);
 		pWorksheet->m_oPageMargins->m_oFooter.Init();
 		pWorksheet->m_oPageMargins->m_oFooter->FromInches(0.3);
-		m_arWorksheets.push_back(pWorksheet);
-		
+		// the constructor has put it into m_arWorksheets already
+
 		smart_ptr<OOX::File> pWorksheetFile(pWorksheet);
-		OOX::RId oRId = this->Add(pWorksheetFile);		
-		
+		OOX::RId oRId = this->Add(pWorksheetFile);
+		// the Editor.bin writer finds worksheets by rId, as for the CSV reader's sheet
+		m_mapWorksheets.insert(std::make_pair(oRId.ToString(), pWorksheet));
+
 		m_pWorkbook->m_oSheets.Init();
 		
 		OOX::Spreadsheet::CSheet* pSheet = new OOX::Spreadsheet::CSheet();

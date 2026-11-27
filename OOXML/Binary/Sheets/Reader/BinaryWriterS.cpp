@@ -2262,6 +2262,13 @@ void BinaryWorkbookTableWriter::WriteWorkbook(OOX::Spreadsheet::CWorkbook& workb
 
         m_oBcw.WriteItemWithLengthEnd(nCurPos);
 	}
+//Write PreservedSheets
+	if (!workbook.m_arPreservedSheets.empty())
+	{
+		nCurPos = m_oBcw.WriteItemStart(c_oSerWorkbookTypes::PreservedSheets);
+		WritePreservedSheets(workbook.m_arPreservedSheets);
+		m_oBcw.WriteItemWithLengthEnd(nCurPos);
+	}
 //Write JsaProject
 	if (m_pXlsx && nullptr != m_pXlsx->m_pJsaProject)
 	{
@@ -3867,6 +3874,55 @@ void BinaryWorkbookTableWriter::WriteDefinedName(const OOX::Spreadsheet::CDefine
 	{
 		m_oBcw.m_oStream.WriteBYTE(c_oSerDefinedNameTypes::Comment);
 		m_oBcw.m_oStream.WriteStringW(*definedName.m_oComment);
+	}
+}
+void BinaryWorkbookTableWriter::WritePreservedSheets(const std::vector<OOX::Spreadsheet::CPreservedSheet>& arSheets)
+{
+	for (const OOX::Spreadsheet::CPreservedSheet& oSheet : arSheets)
+	{
+		int nSheetPos = m_oBcw.WriteItemStart(c_oSerPreservedSheetTypes::Sheet);
+
+		m_oBcw.m_oStream.WriteBYTE(c_oSerPreservedSheetTypes::Name);
+		m_oBcw.m_oStream.WriteStringW(oSheet.sName);
+		int nCurPos = m_oBcw.WriteItemStart(c_oSerPreservedSheetTypes::SheetId);
+		m_oBcw.m_oStream.WriteLONG(oSheet.nSheetId);
+		m_oBcw.WriteItemWithLengthEnd(nCurPos);
+		m_oBcw.m_oStream.WriteBYTE(c_oSerPreservedSheetTypes::State);
+		m_oBcw.m_oStream.WriteStringW(oSheet.sState);
+		nCurPos = m_oBcw.WriteItemStart(c_oSerPreservedSheetTypes::Index);
+		m_oBcw.m_oStream.WriteLONG(oSheet.nIndex);
+		m_oBcw.WriteItemWithLengthEnd(nCurPos);
+		m_oBcw.m_oStream.WriteBYTE(c_oSerPreservedSheetTypes::RelType);
+		m_oBcw.m_oStream.WriteStringW(oSheet.sRelType);
+
+		for (const OOX::Spreadsheet::CPreservedPart& oPart : oSheet.arParts)
+		{
+			int nPartPos = m_oBcw.WriteItemStart(c_oSerPreservedSheetTypes::Part);
+			m_oBcw.m_oStream.WriteBYTE(c_oSerPreservedSheetTypes::PartName);
+			m_oBcw.m_oStream.WriteStringW(oPart.sName);
+			m_oBcw.m_oStream.WriteBYTE(c_oSerPreservedSheetTypes::PartContentType);
+			m_oBcw.m_oStream.WriteStringW(oPart.sContentType);
+			nCurPos = m_oBcw.WriteItemStart(c_oSerPreservedSheetTypes::PartData);
+			m_oBcw.m_oStream.WriteBYTEArray((const BYTE*)oPart.sData.c_str(), oPart.sData.size());
+			m_oBcw.WriteItemWithLengthEnd(nCurPos);
+			m_oBcw.WriteItemWithLengthEnd(nPartPos);
+		}
+		for (const OOX::Spreadsheet::CPreservedDefinedName& oName : oSheet.arDefinedNames)
+		{
+			int nNamePos = m_oBcw.WriteItemStart(c_oSerPreservedSheetTypes::DefinedName);
+			m_oBcw.m_oStream.WriteBYTE(c_oSerPreservedSheetTypes::DefinedNameXml);
+			m_oBcw.m_oStream.WriteStringW(oName.sXml);
+			nCurPos = m_oBcw.WriteItemStart(c_oSerPreservedSheetTypes::DefinedNameLocal);
+			m_oBcw.m_oStream.WriteBOOL(oName.bLocal);
+			m_oBcw.WriteItemWithLengthEnd(nCurPos);
+			if (!oName.sScopeSheet.empty())
+			{
+				m_oBcw.m_oStream.WriteBYTE(c_oSerPreservedSheetTypes::DefinedNameScope);
+				m_oBcw.m_oStream.WriteStringW(oName.sScopeSheet);
+			}
+			m_oBcw.WriteItemWithLengthEnd(nNamePos);
+		}
+		m_oBcw.WriteItemWithLengthEnd(nSheetPos);
 	}
 }
 void BinaryWorkbookTableWriter::WriteTimelineCaches(OOX::Spreadsheet::CWorkbook& workbook, const OOX::Spreadsheet::CTimelineCacheRefs& oTimelineCacheRefs)
@@ -9179,6 +9235,11 @@ NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXM
 	}
 	if (pXlsx)
 	{
+		// moves macro sheets out of the sheet list, before PrepareWorkbook: when no worksheet is
+		// left, it replaces the sheet list with an empty sheet for the editor
+		if (pXlsx->m_pWorkbook)
+			OOX::Spreadsheet::CollectPreservedSheets(*pXlsx->m_pWorkbook, sInputDir);
+
 		pXlsx->PrepareWorkbook();
 
 		if (nullptr == pXlsx->m_pWorkbook)

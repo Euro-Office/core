@@ -239,7 +239,28 @@ namespace BinXlsxRW
 		RdRichValueTypes = 33,
 		// Euro-Office extension: kept far above the ids above so that a record added later in the
 		// same sequence cannot take it
-		SourceFileType = 100
+		SourceFileType = 100,
+		// Euro-Office extension, next to SourceFileType: sheets the editor cannot show (Excel 4.0
+		// macro sheets, Excel 5.0 dialog sheets), carried through unchanged; only core parses the payload. The next
+		// Euro-Office record takes 102, here and in sdkjs (cell/model/Serialize.js).
+		PreservedSheets = 101
+	};}
+	namespace c_oSerPreservedSheetTypes{enum c_oSerPreservedSheetTypes
+	{
+		Sheet = 0,
+		Name = 1,
+		SheetId = 2,
+		State = 3,
+		Index = 4,
+		RelType = 5,
+		Part = 6,
+		PartName = 7,
+		PartContentType = 8,
+		PartData = 9,
+		DefinedName = 10,
+		DefinedNameXml = 11,
+		DefinedNameLocal = 12,
+		DefinedNameScope = 13
 	};}
 	namespace c_oSerWorkbookProtection {enum c_oSerWorkbookProtection{
 		AlgorithmName = 0,
