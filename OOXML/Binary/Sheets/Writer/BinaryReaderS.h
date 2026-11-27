@@ -475,5 +475,9 @@ namespace BinXlsxRW
 		void initWorkbook(OOX::Spreadsheet::CWorkbook* pWorkbook);
 		
 		int Xml2Xlsx(const std::wstring& sSrcFileName, std::wstring sDstPath, NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXMLOptions, bool bMacro = false);
+
+		// File type (AVS_OFFICESTUDIO_FILE_*) the workbook was converted from, as ReadFile found it in the
+		// binary file (workbook record SourceFileType); 0 = not recorded
+		int m_nSourceFileType = 0;
 	};
 }

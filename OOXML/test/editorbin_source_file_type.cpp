@@ -237,6 +237,53 @@ namespace
 		ASSERT_EQ(without.size(), 1u);
 		ExpectSameFile(with[0], without[0], "the drawing part", false);
 	}
+
+	std::string ReadPart(const std::wstring& dir, const std::wstring& part)
+	{
+		std::vector<char> bytes;
+		if (!ReadBytes(dir + FILE_SEPARATOR_STR + part, bytes))
+			return "";
+		return std::string(bytes.begin(), bytes.end());
+	}
+
+	size_t CountOf(const std::string& text, const std::string& what)
+	{
+		size_t count = 0;
+		for (size_t pos = text.find(what); pos != std::string::npos; pos = text.find(what, pos + what.size()))
+			++count;
+		return count;
+	}
+
+	// styles.xml of a workbook saved from an Editor.bin from ODS, with what the record adds taken out again:
+	// first-page-number="continue", and the page layout properties written only to hold it
+	std::string WithoutContinue(const std::string& xml)
+	{
+		static const std::regex onlyContinue(
+			R"(<style:page-layout ([^>]*)><style:page-layout-properties style:first-page-number="continue"(/>|></style:page-layout-properties>)</style:page-layout>)");
+		static const std::regex attribute(R"( style:first-page-number="continue")");
+		return std::regex_replace(std::regex_replace(xml, onlyContinue, "<style:page-layout $1/>"), attribute, "");
+	}
+
+	// Opens ExampleFiles/ods2bin/<name> as the document server does (-> Editor.bin) and saves that Editor.bin
+	// to ODS, unpacked into the returned directory; empty on failure
+	std::wstring OpenAndSaveToOds(const std::wstring& name, std::string& error)
+	{
+		std::wstring source = L"ExampleFiles" FILE_SEPARATOR_STR L"ods2bin" FILE_SEPARATOR_STR + name;
+		if (!NSFile::CFileBinary::Exists(source))
+		{
+			error = "missing input " + U_TO_UTF8(source);
+			return L"";
+		}
+		std::wstring stem = std::filesystem::path(name).stem().wstring();
+		std::wstring bin = GetWorkDir() + FILE_SEPARATOR_STR + stem + L".bin";
+		std::wstring saved = GetWorkDir() + FILE_SEPARATOR_STR + stem + L"_saved.ods";
+		std::wstring dir = GetWorkDir() + FILE_SEPARATOR_STR + stem + L"_saved";
+		if (!Convert(source, bin, 0, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET, error) ||
+			!Convert(bin, saved, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET, AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS, error) ||
+			!Unpack(saved, dir, error))
+			return L"";
+		return dir;
+	}
 }
 
 TEST(EditorBinSourceFileType, OdsWorkbookRecordsItsSource)
@@ -289,10 +336,8 @@ TEST(EditorBinSourceFileType, OdsTemplateByFileNamesRecordsItsSource)
 	EXPECT_TRUE(Contains(bin, SourceFileTypeRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS)));
 }
 
-// The save direction: x2t's own reader skips the record, so saving a workbook whose Editor.bin
-// carries it gives the same file as saving one without it. The Editor.bin here is x2t's own, where
-// the record is the last workbook item; x2t has no code for the record and skips it by its length
-// like any unknown item.
+// The save direction: saving a workbook whose Editor.bin carries the record gives the same XLSX as
+// saving one without it. The Editor.bin here is x2t's own, where the record is the last workbook item.
 TEST(EditorBinSourceFileType, SaveToXlsxSkipsTheRecord)
 {
 	std::wstring withDir, withoutDir;
@@ -309,12 +354,40 @@ TEST(EditorBinSourceFileType, SaveToXlsxSkipsTheRecord)
 	ExpectSameDrawing(withDir, withoutDir);
 }
 
-TEST(EditorBinSourceFileType, SaveToOdsSkipsTheRecord)
+// Saving to ODS: the editor numbers the printed pages of a workbook from ODS on across the sheets, so the
+// page layout of each sheet gets first-page-number="continue"; without it LibreOffice would start every
+// sheet at 1. Apart from that the file is the one saved from an Editor.bin without the record (a workbook
+// from XLSX, numbered per sheet), which gets no first page number.
+TEST(EditorBinSourceFileType, SaveToOdsContinuesThePageNumbers)
 {
 	std::wstring withDir, withoutDir;
 	std::string error;
 	ASSERT_TRUE(SaveWithAndWithoutRecord(AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS, L".ods", withDir, withoutDir, error))
 		<< error;
 	ExpectSamePart(withDir, withoutDir, L"content.xml", true);
-	ExpectSamePart(withDir, withoutDir, L"styles.xml", true);
+
+	const std::string with = ReadPart(withDir, L"styles.xml");
+	const std::string without = ReadPart(withoutDir, L"styles.xml");
+	ASSERT_FALSE(with.empty());
+	ASSERT_FALSE(without.empty());
+	EXPECT_EQ(CountOf(with, "style:first-page-number=\"continue\""), 1u) << "the one sheet continues";
+	EXPECT_EQ(CountOf(without, "style:first-page-number"), 0u) << "a workbook from XLSX gets no first page number";
+	const std::string withAsWithout = WithoutContinue(with);
+	EXPECT_EQ(Renumber(std::vector<char>(withAsWithout.begin(), withAsWithout.end())),
+			  Renumber(std::vector<char>(without.begin(), without.end())))
+		<< "styles.xml differs in more than first-page-number=\"continue\"";
+}
+
+// A sheet with a first page number of its own keeps it; the sheets without one continue. Sheet 2 of
+// page_numbers.fods starts at 5, sheets 1 and 3 have first-page-number="continue".
+TEST(EditorBinSourceFileType, SaveToOdsKeepsAFirstPageNumber)
+{
+	std::string error;
+	std::wstring dir = OpenAndSaveToOds(L"page_numbers.fods", error);
+	ASSERT_FALSE(dir.empty()) << error;
+	const std::string styles = ReadPart(dir, L"styles.xml");
+	ASSERT_FALSE(styles.empty());
+	EXPECT_EQ(CountOf(styles, "style:first-page-number=\"5\""), 1u);
+	EXPECT_EQ(CountOf(styles, "style:first-page-number=\"continue\""), 2u);
+	EXPECT_EQ(CountOf(styles, "style:first-page-number="), 3u);
 }

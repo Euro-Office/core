@@ -276,16 +276,33 @@ void common_page_number_attlist::add_attributes( const xml::attributes_wc_ptr & 
 	{
 		style_first_page_number_ = XmlUtils::GetInteger(*str2);
 	}
+	else if (str2)
+	{
+		style_first_page_number_continue_ = true;
+	}
 }
 void common_page_number_attlist::apply_from(const common_page_number_attlist & Other)
 {
     _CP_APPLY_PROP(style_page_number_, Other.style_page_number_);
     _CP_APPLY_PROP(style_first_page_number_, Other.style_first_page_number_);
+	if (Other.style_first_page_number_)
+	{
+		style_first_page_number_continue_ = false;
+	}
+	else if (Other.style_first_page_number_continue_)
+	{
+		style_first_page_number_ = boost::none;
+		style_first_page_number_continue_ = true;
+	}
 }
 void common_page_number_attlist::serialize(CP_ATTR_NODE)
 {
     CP_XML_ATTR_OPT(L"style:page-number", style_page_number_);
     CP_XML_ATTR_OPT(L"style:first-page-number", style_first_page_number_);
+	if (!style_first_page_number_ && style_first_page_number_continue_)
+	{
+		CP_XML_ATTR(L"style:first-page-number", L"continue");
+	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////
 

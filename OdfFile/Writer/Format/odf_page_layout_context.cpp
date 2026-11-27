@@ -689,6 +689,17 @@ void odf_page_layout_context::set_page_first_page(int val)
 	if (!props)return;
 
 	props->attlist_.common_page_number_attlist_.style_first_page_number_ = val;
+	props->attlist_.common_page_number_attlist_.style_first_page_number_continue_ = false;
+}
+// The page numbers go on from the page before, unless the page layout has a first page number of its own.
+void odf_page_layout_context::set_page_first_page_continue()
+{
+	style_page_layout_properties * props = get_properties();
+	if (!props)return;
+
+	if (props->attlist_.common_page_number_attlist_.style_first_page_number_)return;
+
+	props->attlist_.common_page_number_attlist_.style_first_page_number_continue_ = true;
 }
 void odf_page_layout_context::set_page_centered(bool bHorizontal, bool bVertical)
 {

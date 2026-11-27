@@ -293,6 +293,7 @@ namespace NExtractTools
 
 			nRes = oCXlsxSerializer.loadFromFile(sTargetBin, convertParams.m_sTempResultOOXMLDirectory, sXmlOptions, sMediaPath, sEmbedPath);
 			params.m_bMacro = oCXlsxSerializer.getMacroEnabled();
+			convertParams.m_nEditorBinSourceFileType = oCXlsxSerializer.getSourceFileType();
 		}
 		// remove EditorWithChanges because it isn't in Temp
 		if (sFrom != sTargetBin)

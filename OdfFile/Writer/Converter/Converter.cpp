@@ -98,6 +98,13 @@ namespace Oox2Odf
 		if (impl_ )delete impl_ ;
 	}
 
+	void Converter::set_source_file_type(int nFileType)
+	{
+		XlsxConverter* xlsx = dynamic_cast<XlsxConverter*>(impl_);
+		if (xlsx)
+			xlsx->set_source_file_type(nFileType);
+	}
+
     bool Converter::convert()
     {
 		if (!impl_)return false;

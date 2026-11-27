@@ -417,6 +417,7 @@ path = [
     "OOXML/test/ExampleFiles/ods2bin/plain.ods",
     "OOXML/test/ExampleFiles/ods2bin/plain.fods",
     "OOXML/test/ExampleFiles/ods2bin/plain.ots",
+    "OOXML/test/ExampleFiles/ods2bin/page_numbers.fods",
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"

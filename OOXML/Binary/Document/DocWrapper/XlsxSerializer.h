@@ -67,6 +67,8 @@ namespace BinXlsxRW {
 		void setIsNoBase64		(bool val);
 		// File type (AVS_OFFICESTUDIO_FILE_*) the workbook is converted from, stored in the binary file
 		void setSourceFileType	(int nFileType);
+		// After loadFromFile: the file type the binary file records as its source; 0 = none
+		int getSourceFileType	();
 		
 		void setMacroEnabled	(bool val);
 		bool getMacroEnabled	();

@@ -37,6 +37,10 @@ namespace Oox2Odf
         virtual ~Converter();
 
 		bool convert();
+
+		// Spreadsheets: the file type (AVS_OFFICESTUDIO_FILE_*) the workbook was first opened from, when the
+		// XLSX was written from an Editor.bin that records it; 0 = not known. Call before convert().
+		void set_source_file_type(int nFileType);
      
         bool write(const std::wstring & out_path, const std::wstring & temp_path, const std::wstring & password, const std::wstring & documentID) const;
 

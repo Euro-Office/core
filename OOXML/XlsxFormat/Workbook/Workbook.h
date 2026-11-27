@@ -185,6 +185,9 @@ namespace OOX
 
 			CPersonList*									m_pPersonList;
 			bool											m_bMacroEnabled;
+			// File type (AVS_OFFICESTUDIO_FILE_*) the workbook was converted from, read from the binary file
+			// (Editor.bin workbook record SourceFileType); 0 = not known. Not part of the XLSX file.
+			int												m_nSourceFileType = 0;
 		};
 
 	} //Spreadsheet

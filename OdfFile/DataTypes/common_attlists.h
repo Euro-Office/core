@@ -187,6 +187,8 @@ public:
 
     _CP_OPT(unsigned int) style_page_number_;
     _CP_OPT(unsigned int) style_first_page_number_;
+    // style:first-page-number="continue": the page numbers go on from the page before
+    bool style_first_page_number_continue_ = false;
 
 };
 

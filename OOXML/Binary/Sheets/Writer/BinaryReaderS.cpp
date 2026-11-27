@@ -2318,6 +2318,10 @@ int BinaryWorkbookTableReader::ReadWorkbookTableContent(BYTE type, long length, 
 	{
 		m_oWorkbook.m_oOleSize = m_oBufferedStream.GetString4(length);
 	}
+	else if (c_oSerWorkbookTypes::SourceFileType == type && 4 == length)
+	{
+		m_oWorkbook.m_nSourceFileType = m_oBufferedStream.GetLong();
+	}
 	else if (c_oSerWorkbookTypes::FileSharing == type)
 	{
 		m_oWorkbook.m_oFileSharing.Init();
@@ -9734,6 +9738,7 @@ int BinaryFileReader::ReadFile(const std::wstring& sSrcFileName, std::wstring sD
 				oXlsx.Write(sDstPath, *oSaveParams.pContentTypes);
 
 				bMacro = oSaveParams.bMacroEnabled;
+				m_nSourceFileType = oXlsx.m_pWorkbook ? oXlsx.m_pWorkbook->m_nSourceFileType : 0;
 			}
 			else if (BinXlsxRW::c_oFileTypes::XLSB == fileType)
 			{

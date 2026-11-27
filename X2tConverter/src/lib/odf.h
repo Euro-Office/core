@@ -255,6 +255,7 @@ namespace NExtractTools
 		NSDirectory::CreateDirectory(sTempUnpackedODS);
 
 		Oox2Odf::Converter converter(sFrom, L"spreadsheet", params.getFontPath(), convertParams.m_bIsTemplate, convertParams.m_sTempDir);
+		converter.set_source_file_type(convertParams.m_nEditorBinSourceFileType);
 
 		_UINT32 nRes = 0;
 
