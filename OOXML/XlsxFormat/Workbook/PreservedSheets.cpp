@@ -541,35 +541,72 @@ namespace
 		sXml.swap(sResult);
 	}
 
-	// Whether a defined name's formula refers to the given sheet ("Name!..." or "'Na''me'!...").
+	std::wstring QuoteSheetName(const std::wstring& sName)
+	{
+		std::wstring sQuoted = L"'";
+		for (wchar_t c : sName)
+		{
+			sQuoted += c;
+			if (c == L'\'')
+				sQuoted += c;
+		}
+		return sQuoted + L"'";
+	}
+	// A reference to the sheet ("name!" or "'na''me'!") at nPos of a lower-cased formula:
+	// returns the position it starts at and its length, or 0 if there is none.
+	size_t SheetRefAt(const std::wstring& sRefLower, size_t nPos, const std::wstring& sNameLower, size_t& nStart)
+	{
+		std::wstring sQuoted = QuoteSheetName(sNameLower) + L"!";
+		nStart = nPos;
+		if (0 == sRefLower.compare(nPos, sQuoted.size(), sQuoted))
+			return sQuoted.size();
+		std::wstring sPlain = sNameLower + L"!";
+		if (0 != sRefLower.compare(nPos, sPlain.size(), sPlain))
+			return 0;
+		wchar_t cPrev = nPos > 0 ? sRefLower[nPos - 1] : L' ';
+		// "[1]Name!" is a sheet in another workbook; "[0]Name!" is this one
+		bool bThisBook = cPrev == L']' && nPos >= 3 && 0 == sRefLower.compare(nPos - 3, 3, L"[0]");
+		if (bThisBook)
+			nStart = nPos - 3;
+		else if (std::iswalnum(cPrev) || cPrev == L'_' || cPrev == L'.' || cPrev == L'\'' || cPrev == L']')
+			return 0;
+		return nPos + sPlain.size() - nStart;
+	}
+	// Whether a defined name's formula refers to the given sheet.
 	bool RefersToSheet(const std::wstring& sRef, const std::wstring& sSheetName)
 	{
 		if (sSheetName.empty())
 			return false;
 		std::wstring sRefLower = ToLower(sRef);
 		std::wstring sNameLower = ToLower(sSheetName);
-		std::wstring sQuoted = L"'";
-		for (wchar_t c : sNameLower)
+		size_t nStart;
+		for (size_t nPos = 0; nPos < sRefLower.size(); ++nPos)
 		{
-			sQuoted += c;
-			if (c == L'\'')
-				sQuoted += c;
-		}
-		sQuoted += L"'!";
-		if (std::wstring::npos != sRefLower.find(sQuoted))
-			return true;
-		std::wstring sPlain = sNameLower + L"!";
-		size_t nPos = 0;
-		while (std::wstring::npos != (nPos = sRefLower.find(sPlain, nPos)))
-		{
-			wchar_t cPrev = nPos > 0 ? sRefLower[nPos - 1] : L' ';
-			// "[1]Name!" is a sheet in another workbook; "[0]Name!" is this one
-			bool bExternal = cPrev == L']' && (nPos < 3 || 0 != sRefLower.compare(nPos - 3, 3, L"[0]"));
-			if (!std::iswalnum(cPrev) && cPrev != L'_' && cPrev != L'.' && cPrev != L'\'' && !bExternal)
+			if (SheetRefAt(sRefLower, nPos, sNameLower, nStart))
 				return true;
-			nPos += sPlain.size();
 		}
 		return false;
+	}
+	// Points the references RefersToSheet finds at the sheet's new name.
+	std::wstring RenameSheetInRef(const std::wstring& sRef, const std::wstring& sOldName, const std::wstring& sNewName)
+	{
+		std::wstring sRefLower = ToLower(sRef);
+		std::wstring sNameLower = ToLower(sOldName);
+		std::wstring sResult;
+		size_t nCopied = 0;
+		size_t nStart;
+		for (size_t nPos = 0; nPos < sRef.size(); ++nPos)
+		{
+			size_t nLength = SheetRefAt(sRefLower, nPos, sNameLower, nStart);
+			if (0 == nLength)
+				continue;
+			sResult.append(sRef, nCopied, nStart - nCopied);
+			sResult += QuoteSheetName(sNewName) + L"!";
+			nCopied = nStart + nLength;
+			nPos = nCopied - 1;
+		}
+		sResult.append(sRef, nCopied, std::wstring::npos);
+		return sResult;
 	}
 
 	// Drops a prefix added by an earlier save ("eoMacro2_drawing1.xml" -> "drawing1.xml"),
@@ -934,9 +971,18 @@ void RestorePreservedSheets(CWorkbook& workbook)
 			nMaxSheetId = std::max(nMaxSheetId, pSheet->m_oSheetId->GetValue());
 		}
 	}
+	std::set<std::wstring> setPreservedNames;
 	for (const CPreservedSheet& oSheet : arSheets)
+	{
 		nMaxSheetId = std::max(nMaxSheetId, oSheet.nSheetId);
+		setPreservedNames.insert(ToLower(oSheet.sName));
+	}
 
+	// The editor doesn't know the preserved sheets, so the user may have given one's name to
+	// an editor sheet. The user's sheet keeps it; the preserved one gets a free name, and the
+	// names travelling with it are pointed there. References from VBA code or from cells
+	// can't be followed and still find the user's sheet.
+	std::vector<std::pair<std::wstring, std::wstring>> arRenamed;
 	std::vector<CSheet*> arNewItems(arOrder.size(), NULL);
 	for (size_t f = 0; f < arOrder.size(); ++f)
 	{
@@ -949,8 +995,18 @@ void RestorePreservedSheets(CWorkbook& workbook)
 		const CPreservedSheet& oSheet = arSheets[k];
 
 		std::wstring sName = oSheet.sName;
-		for (int n = 2; setNames.end() != setNames.find(ToLower(sName)); ++n)
-			sName = oSheet.sName + L" (" + std::to_wstring(n) + L")";
+		if (setNames.end() != setNames.find(ToLower(sName)))
+		{
+			// "Name (2)", shortened to Excel's 31 characters, and not another preserved sheet's name
+			for (int n = 2; ; ++n)
+			{
+				std::wstring sSuffix = L" (" + std::to_wstring(n) + L")";
+				sName = oSheet.sName.substr(0, 31 - sSuffix.size()) + sSuffix;
+				if (setNames.end() == setNames.find(ToLower(sName)) && setPreservedNames.end() == setPreservedNames.find(ToLower(sName)))
+					break;
+			}
+			arRenamed.push_back(std::make_pair(oSheet.sName, sName));
+		}
 		setNames.insert(ToLower(sName));
 		unsigned int nSheetId = oSheet.nSheetId;
 		if (0 == nSheetId || setSheetIds.end() != setSheetIds.find(nSheetId))
@@ -993,6 +1049,11 @@ void RestorePreservedSheets(CWorkbook& workbook)
 				continue;
 			CDefinedName* pName = new CDefinedName(workbook.OOX::File::m_pMainDocument);
 			pName->fromXML(oReader);
+			if (pName->m_oRef.IsInit())
+			{
+				for (const std::pair<std::wstring, std::wstring>& oRenamed : arRenamed)
+					pName->m_oRef = RenameSheetInRef(*pName->m_oRef, oRenamed.first, oRenamed.second);
+			}
 			if (oName.bLocal)
 			{
 				pName->m_oLocalSheetId.Init();
