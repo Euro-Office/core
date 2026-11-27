@@ -42,6 +42,7 @@ set(_ooxml_test_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/xlsb_protected_ranges.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xlsb_protected_ranges_xlsx.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xlsb_mixed_protected_ranges.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/xlsx_protected_range_title.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/vml_shape_size.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/vml_fill_relationship_id.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xlsb_workbook_protection.cpp

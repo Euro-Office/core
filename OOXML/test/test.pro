@@ -29,6 +29,7 @@ SOURCES += main.cpp\
            xlsb_protected_ranges.cpp\
            xlsb_protected_ranges_xlsx.cpp\
            xlsb_mixed_protected_ranges.cpp\
+           xlsx_protected_range_title.cpp\
 
 HEADERS += common.h workbook_facts.h
 

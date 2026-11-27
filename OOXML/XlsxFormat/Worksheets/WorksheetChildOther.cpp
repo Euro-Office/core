@@ -129,7 +129,7 @@ namespace OOX
 		void CProtectedRange::toXML(NSStringUtils::CStringBuilder& writer) const
 		{
 			writer.WriteString(L"<protectedRange");
-			WritingStringNullableAttrString(L"name", m_oName, m_oName.get());
+			WritingStringNullableAttrEncodeXmlString(L"name", m_oName, m_oName.get());
 			WritingStringNullableAttrString(L"sqref", m_oSqref, m_oSqref.get());
 			WritingStringNullableAttrString(L"algorithmName", m_oAlgorithmName, m_oAlgorithmName->ToString());
 			WritingStringNullableAttrString(L"hashValue", m_oHashValue, m_oHashValue.get());
