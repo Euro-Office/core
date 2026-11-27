@@ -25,6 +25,9 @@
 
 #include "WorksheetChildOther.h"
 
+#include <deque>
+#include <unordered_map>
+
 #include "../../XlsbFormat/Biff12_records/WsDim.h"
 #include "../../XlsbFormat/Biff12_records/WsFmtInfo.h"
 #include "../../XlsbFormat/Biff12_unions/WSVIEWS2.h"
@@ -370,6 +373,46 @@ namespace OOX
 		{
 			for (auto &protRange : obj)
 				m_arrItems.push_back(new CProtectedRange(protRange));
+		}
+		void CProtectedRanges::fromBin(std::vector<XLS::BaseObjectPtr>& iso, std::vector<XLS::BaseObjectPtr>& plain)
+		{
+			// A range with a password has a BrtRangeProtectionIso followed by a BrtRangeProtection with the same cell
+			// reference and title (MS-XLSB 2.4.767); a range without a password has only the BrtRangeProtection.
+			// One range per BrtRangeProtection, taken from the BrtRangeProtectionIso of the same range if there is one.
+			// The BrtRangeProtectionIso records not used yet, by cell reference and title, in file order. A map keeps the
+			// pairing linear in the number of records.
+			std::vector<bool> used(iso.size(), false);
+			std::unordered_map<std::wstring, std::deque<size_t>> unusedIso;
+			for (size_t i = 0; i < iso.size(); ++i)
+			{
+				auto isoRange = static_cast<XLSB::RangeProtectionIso*>(iso[i].get());
+				if (isoRange != nullptr)
+					unusedIso[isoRange->sqRfX.strValue + L'\n' + isoRange->rangeProtectionTitleSDRel.rgchTitle.value()]
+						.push_back(i);
+			}
+			for (auto &protRange : plain)
+			{
+				XLS::BaseObjectPtr item = protRange;
+				auto range = static_cast<XLSB::RangeProtection*>(protRange.get());
+				if (range != nullptr)
+				{
+					auto found =
+						unusedIso.find(range->sqRfX.strValue + L'\n' + range->rangeProtectionTitleSDRel.rgchTitle.value());
+					if (found != unusedIso.end() && !found->second.empty())
+					{
+						const size_t i = found->second.front();
+						found->second.pop_front();
+						used[i] = true;
+						item = iso[i];
+					}
+				}
+				m_arrItems.push_back(new CProtectedRange(item));
+			}
+			for (size_t i = 0; i < iso.size(); ++i)
+			{
+				if (!used[i])
+					m_arrItems.push_back(new CProtectedRange(iso[i]));
+			}
 		}
 		EElementType CProtectedRanges::getType() const
 		{

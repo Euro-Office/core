@@ -105,6 +105,8 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
 
 			void fromBin(std::vector<XLS::BaseObjectPtr>& obj);
+			// The ranges of a sheet from its BrtRangeProtectionIso and BrtRangeProtection records
+			void fromBin(std::vector<XLS::BaseObjectPtr>& iso, std::vector<XLS::BaseObjectPtr>& plain);
 			std::vector<XLS::BaseObjectPtr> toBin();
             void toBin(XLS::StreamCacheWriterPtr& writer);
 			virtual EElementType getType() const;
