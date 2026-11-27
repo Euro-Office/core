@@ -147,6 +147,13 @@ void odf_settings_context::add_common_views_property(const std::wstring &name, c
 	office_element_ptr prop = create_property(name, type, value);
 	common_views_content_.push_back(prop);
 }
+void odf_settings_context::add_view_settings_item(const std::wstring &name, const std::wstring &type,
+	const std::wstring &value)
+{
+	if (name.empty() || type.empty()) return;
+
+	view_settings_content_.push_back(create_property(name, type, value));
+}
 void odf_settings_context::add_config_content_item(const std::wstring &name, const std::wstring &type, const std::wstring &value)
 {
 	if (name.empty() || type.empty()) return;
@@ -162,15 +169,21 @@ void odf_settings_context::process_office_settings(office_element_ptr root )
 	settings_config_item_map_indexed	*item_map_indexed	= NULL;
 	settings_config_item_map_entry		*item_map_entry		= NULL;
 
+	office_element_ptr ooo_view_elm;
+	if (!views_.empty() || !view_settings_content_.empty())
+	{
+		create_element (L"config", L"config-item-set", ooo_view_elm, odf_context_);
+		root->add_child_element(ooo_view_elm);
+		item_set = dynamic_cast<settings_config_item_set*>(ooo_view_elm.get());
+		if (item_set) item_set->config_name_ = L"ooo:view-settings";
+
+		for (size_t i = 0; i < view_settings_content_.size(); i++)
+		{
+			ooo_view_elm->add_child_element(view_settings_content_[i]);
+		}
+	}
 	if (!views_.empty())
 	{
-		office_element_ptr ooo_view_elm;
-		{
-			create_element (L"config", L"config-item-set", ooo_view_elm, odf_context_);
-			root->add_child_element(ooo_view_elm);
-			item_set = dynamic_cast<settings_config_item_set*>(ooo_view_elm.get());
-			if (item_set) item_set->config_name_ = L"ooo:view-settings";
-		}
 		office_element_ptr views_elm;
 		{
 			create_element (L"config", L"config-item-map-indexed" , views_elm, odf_context_);

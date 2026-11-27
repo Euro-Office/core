@@ -4093,6 +4093,12 @@ int Binary_SettingsTableReader::ReadSettings(BYTE type, long length, void* poRes
 		pSettings->m_oDoNotHyphenateCaps.Init();
 		pSettings->m_oDoNotHyphenateCaps->m_oVal.FromBool(m_oBufferedStream.GetBool());
 	}
+	else if (c_oSer_SettingsType::RevisionViewInsDel == type)
+	{
+		if (!pSettings->m_oRevisionView.IsInit())
+			pSettings->m_oRevisionView.Init();
+		pSettings->m_oRevisionView->m_oInsDel = m_oBufferedStream.GetBool();
+	}
 	else if (c_oSer_SettingsType::ConsecutiveHyphenLimit == type)
 	{
 		pSettings->m_oConsecutiveHyphenLimit.Init();

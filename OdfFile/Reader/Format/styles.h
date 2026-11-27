@@ -764,7 +764,10 @@ public:
     _CP_OPT(bool)								text_dont_balance_text_columns_;
     
     // 15.7.9
-    // TODO text-notes-configuration
+    office_element_ptr_array					text_notes_configuration_;
+
+    // the section prints its endnotes at its own end (LibreOffice writes the element only then)
+    bool collects_endnotes() const;
 
 };
 

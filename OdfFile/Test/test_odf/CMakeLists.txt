@@ -61,10 +61,12 @@ add_core_gtest(
             chart_series_name.cpp
             xlsx2ods_sheet_background.cpp
             docx2odt_style_parent_cycle.cpp
+            docx2odt_missing_parts.cpp
             xlsx2ods_header_footer_codes.cpp
             docx2odt_deletion_paragraphs.cpp
             docx2odt_page_background.cpp
             docx2odt_section_footers.cpp
+            docx2odt_continuous_sections.cpp
             docx2odt_add_para_table_spacing.cpp
             docx2odt_section_header_and_footer.cpp
             math_bar.cpp
@@ -83,6 +85,7 @@ add_core_gtest(
             odp2pptx_transition_without_subtype.cpp
             odt2docx_default_tab_stop.cpp
             odt2docx_add_para_table_spacing.cpp
+            show_redline_changes.cpp
             ods2xlsx_cell_text_fields.cpp
             enhanced_path_quadratic_bezier.cpp
             pptx2odp_bullet_size.cpp
@@ -137,8 +140,11 @@ add_core_gtest(
             odf_bitmap_fill_size.cpp
             xlsx2ods_fit_to_pages.cpp
             ods2xlsx_styles_auto_data_style.cpp
+            ods2xlsx_text_style_map.cpp
             odt2docx_tracked_deleted_table.cpp
             xlsx2ods_chart_many_series.cpp
+            docx2odt_endnote_page.cpp
+            odt2docx_endnote_page.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )

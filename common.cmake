@@ -994,12 +994,22 @@ function(add_core_gtest)
         # gtest_main library, whose versioned soname is not reliably resolvable
         # on the runtime library path.
         set(_eo_gtest_main "${CMAKE_CURRENT_BINARY_DIR}/${T_NAME}_gtest_main.cpp")
-        file(WRITE "${_eo_gtest_main}"
+        string(CONCAT _eo_gtest_main_src
             "#include \"gtest/gtest.h\"\n"
             "int main(int argc, char** argv) {\n"
             "    ::testing::InitGoogleTest(&argc, argv);\n"
             "    return RUN_ALL_TESTS();\n"
             "}\n")
+        # Write only when the content differs: rewriting the file on every
+        # configure bumps its mtime, so the build recompiles it and relinks the
+        # test binary even when nothing changed.
+        set(_eo_gtest_main_old "")
+        if(EXISTS "${_eo_gtest_main}")
+            file(READ "${_eo_gtest_main}" _eo_gtest_main_old)
+        endif()
+        if(NOT "${_eo_gtest_main_old}" STREQUAL "${_eo_gtest_main_src}")
+            file(WRITE "${_eo_gtest_main}" "${_eo_gtest_main_src}")
+        endif()
         target_sources(${T_NAME} PRIVATE "${_eo_gtest_main}")
     endif()
 

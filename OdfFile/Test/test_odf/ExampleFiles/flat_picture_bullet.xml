@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?mso-application progid="Word.Document"?>
+<w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml">
+<w:styles><w:style w:type="paragraph" w:default="on" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles><w:lists><w:listPicBullet w:listPicBulletId="0"/><w:listDef w:listDefId="0"><w:lvl w:ilvl="0"><w:start w:val="1"/><w:nfc w:val="23"/><w:lvlPicBulletId w:val="0"/><w:lvlText w:val="&#xB7;"/></w:lvl></w:listDef><w:list w:ilfo="1"><w:ilst w:val="0"/></w:list></w:lists>
+<w:body><w:p><w:pPr><w:listPr><w:ilvl w:val="0"/><w:ilfo w:val="1"/></w:listPr></w:pPr><w:r><w:t>Picture bullet item</w:t></w:r></w:p></w:body>
+</w:wordDocument>

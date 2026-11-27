@@ -942,14 +942,20 @@ void odf_number_styles_context::detect_format(number_format_state & state)
 	
 	std::wstring strFormatCode = boost::regex_replace(state.format_code[0], re_unwanted, &replace_unwanted,	boost::match_any | boost::format_all);
 
-	// The locale suffix is optional, e.g. [$€] and [$€-407].
-	boost::wregex re(L"(\\[\\$[^\\]]*\\])");
-	
+	// The locale suffix is optional, e.g. [$€] and [$€-407]. The token runs from the first "[$" to the next "]".
+	// Searched by hand: a regex rescans the rest of the code for every unclosed "[$" and gives up on long codes.
 	std::vector<std::wstring> result;
-	std::wstring tmp = strFormatCode;
-	bool b = boost::regex_split(std::back_inserter(result), tmp, re);
+	std::wstring tmp;
 
-	if (b && result.size() > 0)
+	size_t token_start = strFormatCode.find(L"[$");
+	if (token_start != std::wstring::npos)
+	{
+		size_t token_end = strFormatCode.find(L']', token_start + 2);
+		if (token_end != std::wstring::npos)
+			result.push_back(strFormatCode.substr(token_start, token_end - token_start + 1));
+	}
+
+	if (result.size() > 0)
 	{//split Currency String		
 		tmp = result[0].substr(1, result[0].size() - 2);
 		size_t sep = tmp.find(L"-");

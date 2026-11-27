@@ -24,6 +24,7 @@
  */
 #pragma once
 
+#include <set>
 #include <string>
 #include <vector>
 
@@ -46,6 +47,19 @@ public:
 
 	std::vector<office_element*> levels;
 	office_element* last_paragraph;
+
+	// every text:section of the document in reading order (section::add_attributes): the index of the
+	// section around it (-1 at the top, always lower than its own index) and its style name. Indexes,
+	// not pointers: a duplicate child element replaces and frees the subtree that was read before it.
+	struct section_entry
+	{
+		int parent;
+		std::wstring style_name;
+	};
+	std::vector<section_entry> sections;
+	// the innermost text:section around each endnote of the document as an index into sections, -1 for
+	// an endnote outside every section: one entry per section, not per endnote (office_text::docx_convert)
+	std::set<int> endnote_sections;
 };
 
 }
