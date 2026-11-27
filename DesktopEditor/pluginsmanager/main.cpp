@@ -265,12 +265,6 @@ public:
 
 		m_sSettingsDir = NSSystemUtils::GetAppDataDir() + L"/pluginsmanager";
 
-#ifdef LINUX
-		// GetAppDataDir creates folder with ONLYOFFICE on Linux
-		// as result - two folders in lower/upper case, working with the correct folder
-		NSStringUtils::string_replace(m_sSettingsDir, L"ONLYOFFICE", L"onlyoffice");
-#endif
-
 		m_sSettingsFile = m_sSettingsDir + L"/settings";
 	}
 
