@@ -45,7 +45,7 @@ namespace XLSB
 
     void BeginTableSlicerCache::readFields(XLS::CFRecord& record)
     {
-        BYTE flags;
+        BYTE flags = 0;
 
         record >> FRTheader >> dwColumn >> dwLstd >> flags;
 

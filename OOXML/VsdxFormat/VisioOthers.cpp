@@ -37,11 +37,11 @@ namespace Draw
 	}
 	CSolutionFile::CSolutionFile(OOX::Document* pMain, const CPath& uri) : OOX::File(pMain)
 	{
-		read(uri.GetDirectory(), uri);
+		CSolutionFile::read(uri.GetDirectory(), uri);
 	}
 	CSolutionFile::CSolutionFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 	{
-		read(oRootPath, oPath);
+		CSolutionFile::read(oRootPath, oPath);
 	}
 	CSolutionFile::~CSolutionFile()
 	{
@@ -51,16 +51,16 @@ namespace Draw
 		CPath oRootPath;
 		read(oRootPath, oFilePath);
 	}
-	void CSolutionFile::read(const CPath& oRootPath, const CPath& oFilePath)
+	void CSolutionFile::read(const CPath&  /*oRootPath*/, const CPath& oFilePath)
 	{
 		NSFile::CFileBinary::ReadAllTextUtf8A(oFilePath.GetPath(), m_sXmlA);
 	}
 	void CSolutionFile::write(const CPath& oFilePath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
 		NSFile::CFileBinary oFile;
-		if (true == oFile.CreateFileW(oFilePath.GetPath()))
+		if (oFile.CreateFileW(oFilePath.GetPath()))
 		{
-			if (false == m_sXmlA.empty())
+			if (!m_sXmlA.empty())
 				oFile.WriteFile((BYTE*)m_sXmlA.c_str(), m_sXmlA.length());
 			oFile.CloseFile();
 		}
@@ -115,13 +115,13 @@ namespace Draw
 	CSolutionsFile::CSolutionsFile(OOX::Document* pMain, const CPath& uri) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bVisioPages = true;
-		read(uri.GetDirectory(), uri);
+		CSolutionsFile::read(uri.GetDirectory(), uri);
 	}
 	CSolutionsFile::CSolutionsFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::IFileContainer(pMain), OOX::File(pMain)
 	{
 		m_bVisioPages = true;
 
-		read(oRootPath, oPath);
+		CSolutionsFile::read(oRootPath, oPath);
 	}
 	CSolutionsFile::~CSolutionsFile()
 	{
@@ -274,6 +274,7 @@ namespace Draw
 			{
 				Name = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -283,7 +284,7 @@ namespace Draw
 			{
 			case 0:
 			{
-				CSolutionFile* pSolution = new CSolutionFile(NULL);
+				CSolutionFile* pSolution = new CSolutionFile(nullptr);
 				pSolution->fromPPTY(pReader);
 				smart_ptr<OOX::File> oFile(pSolution);
 
@@ -384,11 +385,11 @@ namespace Draw
 	}
 	CValidationFile::CValidationFile(OOX::Document* pMain, const CPath& uri) : OOX::File(pMain)
 	{
-		read(uri.GetDirectory(), uri);
+		CValidationFile::read(uri.GetDirectory(), uri);
 	}
 	CValidationFile::CValidationFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 	{
-		read(oRootPath, oPath);
+		CValidationFile::read(oRootPath, oPath);
 	}
 	CValidationFile::~CValidationFile()
 	{
@@ -398,7 +399,7 @@ namespace Draw
 		CPath oRootPath;
 		read(oRootPath, oFilePath);
 	}
-	void CValidationFile::read(const CPath& oRootPath, const CPath& oFilePath)
+	void CValidationFile::read(const CPath&  /*oRootPath*/, const CPath& oFilePath)
 	{
 		XmlUtils::CXmlLiteReader oReader;
 
@@ -579,6 +580,7 @@ namespace Draw
 			{
 				Ignored = pReader->GetBool();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -765,6 +767,7 @@ namespace Draw
 			{
 				RuleTarget = pReader->GetLong();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -901,6 +904,7 @@ namespace Draw
 			{
 				Enabled = pReader->GetBool();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -1046,6 +1050,7 @@ namespace Draw
 			{
 				LastValidated = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1103,6 +1108,7 @@ namespace Draw
 				ShapeID = pReader->GetULong();
 			}break;
 
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1160,6 +1166,7 @@ namespace Draw
 				RuleSetID = pReader->GetULong();
 			}break;
 
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1210,6 +1217,7 @@ namespace Draw
 			{
 				Formula = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1260,6 +1268,7 @@ namespace Draw
 			{
 				Hidden = pReader->GetBool();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1278,11 +1287,11 @@ namespace Draw
 	}
 	CCommentsFile::CCommentsFile(OOX::Document* pMain, const CPath& uri) : OOX::File(pMain)
 	{
-		read(uri.GetDirectory(), uri);
+		CCommentsFile::read(uri.GetDirectory(), uri);
 	}
 	CCommentsFile::CCommentsFile(OOX::Document* pMain, const CPath& oRootPath, const CPath& oPath) : OOX::File(pMain)
 	{
-		read(oRootPath, oPath);
+		CCommentsFile::read(oRootPath, oPath);
 	}
 	CCommentsFile::~CCommentsFile()
 	{
@@ -1292,7 +1301,7 @@ namespace Draw
 		CPath oRootPath;
 		read(oRootPath, oFilePath);
 	}
-	void CCommentsFile::read(const CPath& oRootPath, const CPath& oFilePath)
+	void CCommentsFile::read(const CPath&  /*oRootPath*/, const CPath& oFilePath)
 	{
 		XmlUtils::CXmlLiteReader oReader;
 
@@ -1424,6 +1433,7 @@ namespace Draw
 			{
 				ShowCommentTags = pReader->GetBool();
 			}break;
+			default: break;
 			}
 		}
 		while (pReader->GetPos() < _end_rec)
@@ -1668,6 +1678,7 @@ namespace Draw
 			{
 				content = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);
@@ -1743,6 +1754,7 @@ namespace Draw
 			{
 				ResolutionID = pReader->GetString2();
 			}break;
+			default: break;
 			}
 		}
 		pReader->Seek(_end_rec);

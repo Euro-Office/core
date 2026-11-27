@@ -1231,7 +1231,7 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 		ReadAttributes(oReader);
 
 		std::wstring s = oReader.GetText3();
-		if (false == s.empty())
+		if (!s.empty())
 			m_content = XmlUtils::GetDouble(s);
 		
 		if ( oReader.IsEmptyNode() )

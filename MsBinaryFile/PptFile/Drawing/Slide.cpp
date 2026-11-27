@@ -103,7 +103,7 @@ void CSlide::SetUpPlaceholderStyles(CLayout *pLayout)
         {
             CShapeElement* pSlideElement = dynamic_cast<CShapeElement*>(m_arElements[nEl].get());
 
-            if (NULL != pSlideElement)
+            if (nullptr != pSlideElement)
             {
                 LONG lCountThisType = pLayout->GetCountPlaceholderWithType(pSlideElement->m_lPlaceholderType);
 
@@ -116,7 +116,7 @@ void CSlide::SetUpPlaceholderStyles(CLayout *pLayout)
                                 (pLayout->m_arElements[i]->m_etType				== etShape))
                         {
                             CShapeElement* pLayoutElement = dynamic_cast<CShapeElement*>(pLayout->m_arElements[i].get());
-                            if (NULL != pLayoutElement)
+                            if (nullptr != pLayoutElement)
                             {
                                 pSlideElement->m_pShape->m_oText.m_oLayoutStyles = pLayoutElement->m_pShape->m_oText.m_oStyles;
                             }
@@ -129,7 +129,7 @@ void CSlide::SetUpPlaceholderStyles(CLayout *pLayout)
                                 (pLayout->m_arElements[i]->m_etType				== etShape))
                         {
                             CShapeElement* pLayoutElement = dynamic_cast<CShapeElement*>(pLayout->m_arElements[i].get());
-                            if (NULL != pLayoutElement)
+                            if (nullptr != pLayoutElement)
                             {
                                 pSlideElement->m_pShape->m_oText.m_oLayoutStyles = pLayoutElement->m_pShape->m_oText.m_oStyles;
                             }

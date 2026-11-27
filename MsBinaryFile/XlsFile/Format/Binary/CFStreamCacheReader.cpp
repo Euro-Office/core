@@ -52,7 +52,6 @@ const bool StreamCacheReader::checkNextRecord(const CFRecordType::TypeId desirab
 	// ANY_TYPE is checked just to make the fake read from stream and get an error if the stream is ended
 	for(std::list<CFRecordPtr>::const_iterator it = records_cache.begin(), itEnd = records_cache.end(); it != itEnd; ++it)
 	{
-		size_t type = (*it)->getTypeId();
 		if(desirable_type == (*it)->getTypeId() || desirable_type == CFRecordType::ANY_TYPE)
 		{
 			return true;
@@ -201,8 +200,6 @@ CFRecordPtr CFStreamCacheReader::getNextRecord(const CFRecordType::TypeId desira
 	if(gen_except)
 	{
 		// tags are different
-		std::string inType = XLS::CFRecordType::getStringById(desirable_type);
-		std::string outType = CFRecordType::getStringById(what_we_actually_read);		
 
 		Log::warning("The extracted record is not of requested type.\nRequested: \"" + 
 			XLS::CFRecordType::getStringById(desirable_type) + "\" Extracted: \"" + CFRecordType::getStringById(what_we_actually_read) + "\"");		
@@ -238,7 +235,6 @@ void CFStreamCacheReader::checkAndAppendContinueData()
 	for(std::list<CFRecordPtr>::iterator good = records_cache.begin(), it = ++records_cache.begin();
 		it != records_cache.end(); ++it, ++good)
 	{
-		size_t typeRecord = (*it)->getTypeId();
 		while(it != records_cache.end() && (rt_Continue == (*it)->getTypeId()) )
 		{
 			(*good)->appendRawData(*it);
@@ -255,7 +251,7 @@ void CFStreamCacheReader::checkAndAppendContinueData()
 
 bool CFStreamCacheReader::isEOF()
 {
-	if (stream_ == NULL) return true;
+	if (stream_ == nullptr) return true;
 
 	return !records_cache.size() && stream_->isEOF();
 }
@@ -347,8 +343,6 @@ CFRecordPtr FileStreamCacheReader::getNextRecord(const CFRecordType::TypeId desi
 	if(gen_except)
 	{
 		// tags are different
-		std::string inType = XLS::CFRecordType::getStringById(desirable_type);
-		std::string outType = CFRecordType::getStringById(what_we_actually_read);		
 
 		Log::warning("The extracted record is not of requested type.\nRequested: \"" + 
 			XLS::CFRecordType::getStringById(desirable_type) + "\" Extracted: \"" + CFRecordType::getStringById(what_we_actually_read) + "\"");		
@@ -384,7 +378,6 @@ void FileStreamCacheReader::checkAndAppendContinueData()
 	for (std::list<CFRecordPtr>::iterator good = records_cache.begin(), it = ++records_cache.begin();
 		it != records_cache.end(); ++it, ++good)
 	{
-		size_t typeRecord = (*it)->getTypeId();
 		while (it != records_cache.end() && (rt_Continue == (*it)->getTypeId()) )
 		{
 			(*good)->appendRawData(*it);
@@ -426,7 +419,6 @@ CFRecordPtr BinaryStreamCacheReader::getNextRecord(const CFRecordType::TypeId de
 
     while(readFromStream(1))
     {
-        CFRecordType::TypeString rec_name = records_cache.front()->getTypeString();
 
         //Log::warning(rec_name);
 
@@ -488,8 +480,6 @@ CFRecordPtr BinaryStreamCacheReader::getNextRecord(const CFRecordType::TypeId de
     if(gen_except)
     {
         // tags are different
-        std::string inType = XLS::CFRecordType::getStringById(desirable_type);
-        std::string outType = CFRecordType::getStringById(what_we_actually_read);
 
         Log::warning("The extracted record is not of requested type.\nRequested: \"" +
             XLS::CFRecordType::getStringById(desirable_type) + "\" Extracted: \"" + CFRecordType::getStringById(what_we_actually_read) + "\"");
@@ -538,7 +528,6 @@ void BinaryStreamCacheReader::checkAndAppendContinueData()
     for (std::list<CFRecordPtr>::iterator good = records_cache.begin(), it = ++records_cache.begin();
         it != records_cache.end(); ++it, ++good)
     {
-        size_t typeRecord = (*it)->getTypeId();
         while (it != records_cache.end() && (rt_Continue == (*it)->getTypeId()) )
         {
             (*good)->appendRawData(*it);

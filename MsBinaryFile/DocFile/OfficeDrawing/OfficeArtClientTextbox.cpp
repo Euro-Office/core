@@ -33,6 +33,7 @@ namespace DocFileFormat
 	OfficeArtClientTextbox::OfficeArtClientTextbox (IBinaryReader* reader, unsigned int size, unsigned int typeCode, unsigned int version, unsigned int instance) : Record(reader, size, typeCode, version, instance), m_nIndex(0)
 	{
 		unsigned int number	=	Reader->ReadUInt16();
+		(void)number;
 		m_nIndex			=	Reader->ReadUInt16();
 	}
 	OfficeArtClientTextbox::~OfficeArtClientTextbox()

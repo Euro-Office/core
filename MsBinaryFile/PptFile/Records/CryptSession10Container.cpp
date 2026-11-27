@@ -55,10 +55,9 @@ void CEncryptionHeader::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pSt
 {
     m_oHeader = oHeader;
 
-    POLE::uint64 pos_start_record = pStream->tell();
 
     unsigned short vMajor = StreamUtils::ReadWORD(pStream);
-    unsigned short vMinor = StreamUtils::ReadWORD(pStream);
+    StreamUtils::ReadWORD(pStream);
 
     if(0x0001 == vMajor) // RC4 encryption header structure
     {
@@ -84,24 +83,20 @@ void CEncryptionHeader::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pSt
         bStandard				= false;
         crypt_data_aes.bAgile	= false;
 
-        _UINT32 flags = StreamUtils::ReadDWORD(pStream);
-        unsigned char *pDataRead = NULL;
+        StreamUtils::ReadDWORD(pStream);
+        unsigned char *pDataRead = nullptr;
 
-        bool fCryptoAPI	= GETBIT(flags, 1);
-        bool fDocProps	= GETBIT(flags, 2);
-        bool fExternal	= GETBIT(flags, 3);
-        bool fAES		= GETBIT(flags, 4);
 
         //EncryptionHeader
-        int HeaderSize	= StreamUtils::ReadDWORD(pStream);
-        int Flags		= StreamUtils::ReadDWORD(pStream);
-        int SizeExtra	= StreamUtils::ReadDWORD(pStream);
+        StreamUtils::ReadDWORD(pStream);
+        StreamUtils::ReadDWORD(pStream);
+        StreamUtils::ReadDWORD(pStream);
         int AlgID		= StreamUtils::ReadDWORD(pStream);
         int AlgIDHash	= StreamUtils::ReadDWORD(pStream);
         int KeySize		= StreamUtils::ReadDWORD(pStream);
         int ProviderType= StreamUtils::ReadDWORD(pStream);
-        int Reserved1	= StreamUtils::ReadDWORD(pStream);
-        int Reserved2	= StreamUtils::ReadDWORD(pStream);
+        StreamUtils::ReadDWORD(pStream);
+        StreamUtils::ReadDWORD(pStream);
 
         POLE::uint64 pos	= pStream->tell();
         POLE::uint64 size	= pStream->size();
@@ -128,7 +123,6 @@ void CEncryptionHeader::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pSt
         int szEncryptedVerifierHash = (ProviderType == 0x0001) ? 0x14 : 0x20;
         crypt_data_aes.encryptedVerifierValue = StreamUtils::ReadStringA(pStream, szEncryptedVerifierHash);
 
-        pos = pStream->tell();
 
         //------------------------------------------------------------------------------------------
         switch(AlgIDHash)
@@ -136,6 +130,8 @@ void CEncryptionHeader::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pSt
         case 0x8003: crypt_data_aes.hashAlgorithm = CRYPT_METHOD::MD5;	break;
         case 0x0000:
         case 0x8004: crypt_data_aes.hashAlgorithm = CRYPT_METHOD::SHA1;	break;
+        default:
+            break;
         }
         crypt_data_aes.spinCount = 0;
 
@@ -159,6 +155,8 @@ void CEncryptionHeader::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pSt
             crypt_data_aes.cipherAlgorithm = CRYPT_METHOD::AES_ECB;
             crypt_data_aes.keySize	= 256 /8;
             break;
+        default:
+            break;
         }
 
         //switch(ProviderType)
@@ -167,7 +165,6 @@ void CEncryptionHeader::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pSt
         //	case 0x0018:	crypt_data_aes.cipherAlgorithm = CRYPT_METHOD::AES_ECB; break;
         //}
     }
-    POLE::uint64 pos_end_record = pStream->tell();
 
     //int sz_header = (pos_end_record - pos_start_record);
 }

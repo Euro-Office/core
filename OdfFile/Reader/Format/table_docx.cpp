@@ -54,6 +54,15 @@ bool table_table_cell_content::docx_convert(oox::docx_conversion_context & Conte
 
 void table_table_row::docx_convert(oox::docx_conversion_context & Context)
 {
+	if (Context.get_table_text_only()) // row of a table inside a tracked deletion: cell text only
+	{
+		for (unsigned int r = 0; r < attlist_.table_number_rows_repeated_; ++r)
+		{
+			for (size_t i = 0; i < content_.size(); i++)
+				content_[i]->docx_convert(Context);
+		}
+		return;
+	}
     std::wostream & _Wostream = Context.output_stream();
 
     const std::wstring styleName = attlist_.table_style_name_.get_value_or(L"");
@@ -176,6 +185,20 @@ void table_rows_and_groups::docx_convert(oox::docx_conversion_context & Context)
 
 void table_table::docx_convert(oox::docx_conversion_context & Context)
 {
+	// A table inside a tracked deletion: the deleted content is written as deleted runs at the
+	// position of its change mark, inside a paragraph, where no table can stand. Write only the
+	// text of the cells, as deleted paragraphs are written. A table in a text box of deleted
+	// content starts outside a paragraph and stays a table. Rows and cells follow this decision.
+	const bool textOnly = Context.get_delete_text_state() && Context.get_paragraph_state();
+	const bool prevTextOnly = Context.get_table_text_only();
+	if (textOnly)
+	{
+		Context.set_table_text_only(true);
+		table_rows_and_groups_.docx_convert(Context);
+		Context.set_table_text_only(prevTextOnly);
+		return;
+	}
+	Context.set_table_text_only(false);
     std::wostream & _Wostream = Context.output_stream();
 
 	std::wstring sDumpPageProperties;
@@ -214,6 +237,7 @@ void table_table::docx_convert(oox::docx_conversion_context & Context)
 	_Wostream << L"</w:tblGrid>";
 
     table_rows_and_groups_.docx_convert(Context);
+	Context.set_table_text_only(prevTextOnly);
 
 	Context.get_table_context().end_table();
 	_Wostream << L"</w:tbl>";
@@ -316,6 +340,12 @@ const wchar_t * emptyPar = L"<w:p><w:pPr></w:pPr><w:r><w:rPr></w:rPr></w:r></w:p
 
 void table_table_cell::docx_convert(oox::docx_conversion_context & Context)
 {
+	if (Context.get_table_text_only()) // cell of a table inside a tracked deletion: its text only
+	{
+		for (unsigned int r = 0; r < attlist_.table_number_columns_repeated_; ++r)
+			content_.docx_convert(Context);
+		return;
+	}
     std::wostream & _Wostream = Context.output_stream();
 
     for (unsigned int r = 0; r < attlist_.table_number_columns_repeated_; ++r)
@@ -439,6 +469,9 @@ void table_table_cell::docx_convert(oox::docx_conversion_context & Context)
 
 void table_covered_table_cell::docx_convert(oox::docx_conversion_context & Context) 
 {
+	if (Context.get_table_text_only()) // covered cell of a table inside a tracked deletion: nothing to write
+		return;
+
     std::wostream & _Wostream = Context.output_stream();
 
     for (unsigned int i = 0; i < attlist_.table_number_columns_repeated_; ++i)

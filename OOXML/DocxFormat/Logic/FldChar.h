@@ -273,7 +273,7 @@ namespace OOX
 		class CFldChar : public WritingElement
 		{
 		public:
-			CFldChar(OOX::Document *pMain = NULL);			
+			CFldChar(OOX::Document *pMain = nullptr);			
 			virtual ~CFldChar();
 
 			const CFldChar &operator=(const XmlUtils::CXmlNode &oNode);

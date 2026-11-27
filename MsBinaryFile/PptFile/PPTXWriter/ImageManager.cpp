@@ -27,7 +27,7 @@
 #include "../../../OOXML/SystemUtility/SystemUtility.h"
 #include "../../../DesktopEditor/common/Directory.h"
 
-CMediaManager::CMediaManager() : m_lIndexNextImage(0), m_lIndexNextAudio(0), m_lIndexNextVideo(0), m_lIndexNextOleObject(0)
+CMediaManager::CMediaManager() : m_lIndexNextAudio(0), m_lIndexNextVideo(0), m_lIndexNextImage(0), m_lIndexNextOleObject(0)
 {
 }
 CMediaManager::~CMediaManager()
@@ -133,7 +133,7 @@ std::wstring CMediaManager::GenerateEmbedding(const std::wstring &strInput, cons
     {
         NSDirectory::CreateDirectory(m_strDstEmbeddings);
 
-        if (NSFile::CFileBinary::Copy(strInput, strOutput) == false)
+        if (!NSFile::CFileBinary::Copy(strInput, strOutput))
         {
             return L"";
         }
@@ -170,7 +170,6 @@ std::wstring CMediaManager::GenerateMedia(const std::wstring& strInput, const st
 
     if (strExts == L".video" || strExts == L".audio")
     {
-        std::wstring strInput1 = strInput.substr(0, nIndexExt);
         strExts.clear();
     }
     if (strExts == L".tmp" || strExts.empty()) strExts = strDefaultExt;
@@ -198,7 +197,7 @@ std::wstring CMediaManager::GenerateMedia(const std::wstring& strInput, const st
     {
         NSDirectory::CreateDirectory(m_strDstMedia);
         
-        if (NSFile::CFileBinary::Copy(strInput, strOutput) == false)
+        if (!NSFile::CFileBinary::Copy(strInput, strOutput))
         {
             return L"";
         }
@@ -213,7 +212,7 @@ void CMediaManager::WriteAudioCollection(const std::vector<PPT::CExFilesInfo> &a
 
     for (auto& audio : audioCont)
     {
-        auto pathAudio = GenerateAudio(audio.m_strFilePath, audio.m_strFileExt);
+        GenerateAudio(audio.m_strFilePath, audio.m_strFileExt);
     }
 }
 
@@ -223,9 +222,7 @@ bool CMediaManager::IsNeedDownload(const std::wstring &strFile)
     int n2 = strFile.find(L"http");
     int n3 = strFile.find(L"ftp");
 
-    if (((n1 >= 0) && (n1 < 10)) || ((n2 >= 0) && (n2 < 10)) || ((n3 >= 0) && (n3 < 10)))
-        return true;
-    return false;
+    return ((n1 >= 0) && (n1 < 10)) || ((n2 >= 0) && (n2 < 10)) || ((n3 >= 0) && (n3 < 10));
 }
 
 std::wstring CorrectXmlString3(const std::wstring &str)

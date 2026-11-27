@@ -101,7 +101,7 @@ namespace DocFileFormat
 
 	void TableCell::Convert(IMapping* mapping, TablePropertyExceptions* tapx, const std::vector<short>* grid, int& gridIndex, int nCellIndex)
 	{
-		if (NULL != mapping)
+		if (nullptr != mapping)
 		{
 			documentMapping = static_cast<DocumentMapping*>(mapping);
 		}
@@ -111,12 +111,13 @@ namespace DocFileFormat
 
 	//find cell end
 		int cpCellEnd = documentMapping->findCellEndCp(cp, depth);
+		(void)cpCellEnd;
 		
 	//convert the properties
 		XMLTools::CStringXmlWriter writerTcPr;
 		TableCellPropertiesMapping tcpMapping(&writerTcPr, grid, gridIndex, nCellIndex, depth);
 
-		if ( tapx != NULL )
+		if ( tapx != nullptr )
 		{
 			tapx->Convert( &tcpMapping );
 		}
@@ -195,12 +196,12 @@ namespace DocFileFormat
 
 	void TableRow::Convert(IMapping* mapping, const std::vector<short>* grid)
 	{
-		if ( mapping != NULL )
+		if ( mapping != nullptr )
 		{
 			documentMapping	=	static_cast<DocumentMapping*>(mapping);
 		}
 
-		if ( grid != NULL )
+		if ( grid != nullptr )
 		{
 			int gridIndex	=	0;
 			int nCellIndex	=	0;
@@ -292,7 +293,7 @@ namespace DocFileFormat
 
 	void DocParagraph::Convert( IMapping* mapping )
 	{
-		if ( mapping != NULL )
+		if ( mapping != nullptr )
 		{
 			documentMapping = static_cast<DocumentMapping*>(mapping);
 		}
@@ -350,7 +351,7 @@ namespace DocFileFormat
 		int fc = documentMapping->m_document->FindFileCharPos(_cp);
 		if (fc < 0) return false;
 
-		ParagraphPropertyExceptions* papx = NULL;
+		ParagraphPropertyExceptions* papx = nullptr;
 
 		papx = documentMapping->findValidPapx( fc );
 
@@ -360,9 +361,7 @@ namespace DocFileFormat
 		if (bRow) return true;
 
 		bRow = (documentMapping->m_document->Text->at( _cp ) == 0x000D) && ( tai.iTap > 1 ) && tai.fInnerTtp;
-		if (bRow) return true;
-		
-		return false;
+		return bRow;
 	}
 
 	bool Table::IsParagraphMarker( int _cp )
@@ -373,7 +372,7 @@ namespace DocFileFormat
 		
 		if (fc < 0) return false;
 
-		ParagraphPropertyExceptions* papx = NULL;
+		ParagraphPropertyExceptions* papx = nullptr;
 
 		papx = documentMapping->findValidPapx( fc );
 
@@ -387,7 +386,7 @@ namespace DocFileFormat
 	Table::Table( DocumentMapping* _documentMapping, int _cp, unsigned int _depth ):
 					cpStart(_cp), cpEnd(_cp), depth(_depth), documentMapping(_documentMapping)
 	{
-		if ( documentMapping != NULL )
+		if ( documentMapping != nullptr )
 		{
 			int paragraphBeginCP = _cp;
 			int lastCellCP = _cp;
@@ -398,7 +397,7 @@ namespace DocFileFormat
 			int fc = documentMapping->m_document->FindFileCharPos(_cp);
 			if (fc < 0) return;
 
-			ParagraphPropertyExceptions* papx = NULL;
+			ParagraphPropertyExceptions* papx = nullptr;
 
 			papx = documentMapping->findValidPapx( fc );
 

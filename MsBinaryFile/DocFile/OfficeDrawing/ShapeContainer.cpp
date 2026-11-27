@@ -28,16 +28,17 @@
 namespace DocFileFormat
 {
 	ShapeContainer::ShapeContainer():
-	RegularContainer(), m_nIndex(0), m_nShapeType(0), m_bSkip(false), m_bBackground(false), m_bOLE(false), m_bOleInPicture(false)
+	RegularContainer(), m_nIndex(0), m_nShapeType(0), m_bBackground(false), m_bOLE(false), m_bOleInPicture(false), m_bSkip(false)
 	{
 	}
 
 	ShapeContainer::ShapeContainer( IBinaryReader* _reader, unsigned int size, unsigned int typeCode, unsigned int version, unsigned int instance ) :
-	m_bSkip(false), m_bBackground(false), m_bOLE(false), m_nIndex(0), m_nShapeType(0), RegularContainer( _reader, size, typeCode, version, instance )
+	RegularContainer( _reader, size, typeCode, version, instance ), m_nIndex(0), m_nShapeType(0), m_bBackground(false), m_bOLE(false), m_bSkip(false)
 	{
 		for ( size_t i = 0; i < this->Children.size(); ++i )
 		{
 			ClientAnchor *clientAnchor = dynamic_cast<ClientAnchor*>( this->Children[i] );
+			(void)clientAnchor;
 			//if ( (clientAnchor) && (clientAnchor->value == 0x80000000))
 			//	m_bSkip = true; //О реорганизации территориальных органов ПФР с 01.11.2018.doc
 
@@ -87,7 +88,7 @@ namespace DocFileFormat
 		{
 			ShapeOptions* opt = dynamic_cast<ShapeOptions*>( this->Children[i] );
 
-			if ( opt == NULL ) continue;
+			if ( opt == nullptr ) continue;
 
 			std::map<ODRAW::ePropertyId, ODRAW::OfficeArtFOPTEPtr>::iterator pFind = opt->OptionsByID.find(prop);
 			if (pFind != opt->OptionsByID.end())
@@ -107,7 +108,7 @@ namespace DocFileFormat
 		{
 			ShapeOptions* opt = dynamic_cast<ShapeOptions*>( this->Children[i] );
 
-			if ( opt == NULL ) continue;
+			if ( opt == nullptr ) continue;
 
 			for ( size_t i = 0; i < opt->Options.size(); i++)
 			{

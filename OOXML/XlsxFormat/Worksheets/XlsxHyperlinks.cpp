@@ -175,8 +175,8 @@ namespace OOX
 		{
 			WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if		( oReader, (L"display"),	m_oDisplay)
-				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"r:id"),		m_oRid )
-				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"relationships:id"), m_oRid )
+				else if ( (L"r:id") == wsName || (L"relationships:id") == wsName )
+					m_oRid = oReader.GetText();
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"location"),	m_oLocation )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"ref"),		m_oRef )
 				WritingElement_ReadAttributes_Read_else_if	( oReader, (L"tooltip"),	m_oTooltip )

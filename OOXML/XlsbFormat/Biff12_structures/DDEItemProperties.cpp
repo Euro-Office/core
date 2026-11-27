@@ -36,7 +36,7 @@ namespace XLSB
 
     DDEItemProperties::DDEItemProperties(XLS::CFRecord& record)
     {
-        load(record);
+        DDEItemProperties::load(record);
     }
 
     DDEItemProperties::~DDEItemProperties()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void DDEItemProperties::load(XLS::CFRecord& record)
     {
-        _UINT16 flags;
+        _UINT16 flags = 0;
 
         record >> flags;
 

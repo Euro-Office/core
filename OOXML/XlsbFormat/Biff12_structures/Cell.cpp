@@ -36,7 +36,7 @@ namespace XLSB
 
     Cell::Cell(XLS::CFRecord& record)
     {
-        load(record);
+        Cell::load(record);
     }
 
     Cell::~Cell()
@@ -50,7 +50,7 @@ namespace XLSB
 
     void Cell::load(XLS::CFRecord& record)
     {
-        _UINT32 flags;
+        _UINT32 flags = 0;
         record >> column >> flags;
 
         iStyleRef   = GETBITS(flags, 0, 23);

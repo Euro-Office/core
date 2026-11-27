@@ -36,7 +36,7 @@ namespace XLS
 
 CFStream::CFStream(POLE::Stream* stream)
 {
-	if(NULL == stream)
+	if(nullptr == stream)
 	{
 		return; // Wrong IStream pointer (NULL)
 	}
@@ -47,14 +47,14 @@ CFStream::CFStream(POLE::Stream* stream)
 CFStream::~CFStream()
 {
 	if (stream_) delete stream_;
-	stream_ = NULL;
+	stream_ = nullptr;
 }
 
 
 // Read 'size' unsigned chars from the stream
 void CFStream::read(void* buf, const size_t size)
 {
-	if(NULL == buf || stream_ == NULL)
+	if(nullptr == buf || stream_ == nullptr)
 	{
 		return;// Wrong buffer pointer (NULL)
 	} 
@@ -112,7 +112,7 @@ void CFStream::copy( std::wstring streamNameCreate, POLE::Storage * storageOut)
 // Write 'size' unsigned chars to the stream
 void CFStream::write(const void* buf, const size_t size)
 {
-	if(NULL == buf || stream_ == NULL)
+	if(nullptr == buf || stream_ == nullptr)
 	{
 		throw;// EXCEPT::RT::CompoundFileFormatError("Wrong buffer pointer (NULL)");
 	}
@@ -223,7 +223,7 @@ void CFStream::applyDelayedItems()
 		SourceItems::iterator its = std::find_if(source_items.begin(), source_items.end(), boost::bind(&SourceItem::receiver_id, _1) == receiver_id || boost::bind(&SourceItem::receiver_id, _1) == rt_ANY_TYPE);
 		if(its != source_items.end())
 		{
-			if(NULL != it->fn)
+			if(nullptr != it->fn)
 			{
 				it->fn(*this, it->data_place, its->data); // receiver_items and source_items may be expanded here.
 			}

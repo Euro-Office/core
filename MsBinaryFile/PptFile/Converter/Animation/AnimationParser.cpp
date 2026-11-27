@@ -75,7 +75,7 @@ void AddElementMetadataToSlideAnim(SlideAnimation& anim, CElementPtr element)
 
 void ParseShapes(CSlide *pSlide, SlideAnimation& anim)
 {
-    CGroupElement *pGroupElement = !pSlide->m_arElements.empty() ? dynamic_cast<CGroupElement *>(pSlide->m_arElements[0].get()) : NULL;
+    CGroupElement *pGroupElement = !pSlide->m_arElements.empty() ? dynamic_cast<CGroupElement *>(pSlide->m_arElements[0].get()) : nullptr;
 
     size_t start_index = 0;
 

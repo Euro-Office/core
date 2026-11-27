@@ -38,7 +38,7 @@ namespace DocFileFormat
 	}
 	void CMetaHeader::ToWMFHeader(WmfPlaceableFileHeader* pHeader)
 	{
-		if (NULL == pHeader)
+		if (nullptr == pHeader)
 			return;
 
 		pHeader->Key				= 0x9AC6CDD7;
@@ -72,8 +72,8 @@ namespace DocFileFormat
 	{
 		m_bIsValid			= false;
 
-		m_pMetaHeader		= NULL;
-		m_pMetaFile			= NULL;
+		m_pMetaHeader		= nullptr;
+		m_pMetaFile			= nullptr;
 
 		m_lMetaHeaderSize	= 0;
 		m_lMetaFileSize		= 0;
@@ -117,14 +117,14 @@ namespace DocFileFormat
 			m_pMetaFile = new BYTE[lUncompressSize];
 
 			HRESULT res = S_OK;
-			COfficeUtils* pOfficeUtils = new COfficeUtils(NULL);
+			COfficeUtils* pOfficeUtils = new COfficeUtils(nullptr);
 
 			if (pOfficeUtils)
 			{
 				pOfficeUtils->Uncompress( m_pMetaFile, &lSize, pCompress, lCompressSize );
 
 				delete pOfficeUtils;
-				pOfficeUtils = NULL;
+				pOfficeUtils = nullptr;
 
 				m_lMetaFileSize = (LONG)lSize;
 			}
@@ -151,41 +151,41 @@ namespace DocFileFormat
 	{
 		int sz = 0;
 
-		if (NULL != m_pMetaHeader)	sz += m_lMetaHeaderSize;
-		if (NULL != m_pMetaFile)	sz += m_lMetaFileSize;
+		if (nullptr != m_pMetaHeader)	sz += m_lMetaHeaderSize;
+		if (nullptr != m_pMetaFile)	sz += m_lMetaFileSize;
 
 		Data = new BYTE[sz];
 		int pos = 0;
 
-		if (NULL != m_pMetaHeader)
+		if (nullptr != m_pMetaHeader)
 		{
-			memcpy(Data, (BYTE*)m_pMetaHeader, m_lMetaHeaderSize);
+			memcpy(Data, m_pMetaHeader, m_lMetaHeaderSize);
 			pos += m_lMetaHeaderSize;
 		}
-		if (NULL != m_pMetaFile)
+		if (nullptr != m_pMetaFile)
 		{
-			memcpy(Data + pos, (BYTE*)m_pMetaFile, m_lMetaFileSize);
+			memcpy(Data + pos, m_pMetaFile, m_lMetaFileSize);
 		}
 
 		return sz;
 	}
 	void CMetaFileBuffer::ToFile(NSFile::CFileBinary* pFile)
 	{
-		if (NULL != m_pMetaHeader)
+		if (nullptr != m_pMetaHeader)
 		{
-			pFile->WriteFile((BYTE*)m_pMetaHeader, m_lMetaHeaderSize);
+			pFile->WriteFile(m_pMetaHeader, m_lMetaHeaderSize);
 		}
 	}
 
 	MetafilePictBlip::MetafilePictBlip():
-	Record(), m_rgbUid(NULL), m_rgbUidPrimary(NULL), m_cb(0), m_cbSave(0), m_fCompression(BlipCompressionNone), m_fFilter(false),
-		m_pvBits(NULL)
+	Record(), m_rgbUid(nullptr), m_rgbUidPrimary(nullptr), m_cb(0), m_cbSave(0), m_fCompression(BlipCompressionNone), m_fFilter(false),
+		m_pvBits(nullptr)
 	{
 	}
 
 	MetafilePictBlip::MetafilePictBlip( IBinaryReader* _reader, unsigned int size, unsigned int typeCode, unsigned int version, unsigned int instance ):
-	Record( _reader, size, typeCode, version, instance ), m_rgbUid(NULL), m_rgbUidPrimary(NULL), m_cb(0), m_cbSave(0),
-		m_fCompression(BlipCompressionNone), m_fFilter(false), m_pvBits(NULL)
+	Record( _reader, size, typeCode, version, instance ), m_rgbUid(nullptr), m_rgbUidPrimary(nullptr), m_cb(0), m_cbSave(0),
+		m_fCompression(BlipCompressionNone), m_fFilter(false), m_pvBits(nullptr)
 	{
 		m_rgbUid = Reader->ReadBytes( 16, true );
 
@@ -281,14 +281,14 @@ namespace DocFileFormat
 			*buffer = new unsigned char[uncomprLen];
 
 			HRESULT res = S_OK;
-			COfficeUtils* pOfficeUtils = new COfficeUtils(NULL);
+			COfficeUtils* pOfficeUtils = new COfficeUtils(nullptr);
 
 			if (pOfficeUtils)
 			{
 				pOfficeUtils->Uncompress( *buffer, &uncomprLen, m_pvBits, m_cbSave );
 
 				delete pOfficeUtils;
-				pOfficeUtils = NULL;
+				pOfficeUtils = nullptr;
 			}
 		}
 		else if ( m_fCompression == BlipCompressionNone )

@@ -271,7 +271,6 @@ namespace NSGuidesVML
 
 			bool bFill = false;
 			bool bStroke = false;
-			std::wstring strValue;
 			FromXML(oArray[nIndex], bFill, bStroke);
 
 			m_oPathRes.StartNode(L"a:path");
@@ -430,7 +429,6 @@ namespace NSGuidesVML
 						//the angle must be stored in pptx format, so it has to be replaced everywhere
 						std::wstring strNewFmla = GetValue2(m_lIndexDst, ptFormula, true);
 						std::wstring strOldFmla = GetValue2(oHandle.gdRef.y, oHandle.gdRefType.y, false);
-						LONG nIndex = m_lIndexDst;
 
 						// TODO: !!! The code here is slow.
 						m_oGuidsRes.ReplaceString(strOldFmla, strNewFmla);
@@ -699,7 +697,6 @@ namespace NSGuidesVML
 		case ptValue:
 		{
 			strValue = std::to_wstring(lParam);
-			strValue = strValue;
 			break;
 		}
 		default:
@@ -838,7 +835,6 @@ namespace NSGuidesVML
 
 		for (size_t nIndex = 0; nIndex < oArray.size(); ++nIndex)
 		{
-			std::wstring str = oArray[nIndex];
 			lValue = NSGuidesVML::GetValue(oArray[nIndex], eParamType, bRes);
 			if (bRes)
 			{
@@ -877,7 +873,6 @@ namespace NSGuidesVML
 	}
 	void CFormulaConverter::CreateHandle ( SHandle oHnd )
 	{
-		std::wstring strRes = L"";
 		if (oHnd.bRefPolarExist.x || oHnd.bRefPolarExist.y)
 			m_oHandleRes.WriteString(L"<a:ahPolar");
 		else if (oHnd.bRefExist.x || oHnd.bRefExist.y)
@@ -1878,7 +1873,6 @@ namespace NSGuidesVML
 			m_arIndexDst.push_back(m_lIndexDst-1);
 
 			//wR and hR
-			nIndex = m_arIndexDst[m_lIndexSrc];
 
 			m_lIndexSrc++;
 			ConvertVal(pCurPoint.x, pCurPointType.x, false, m_oGuidsRes);//wr=a
@@ -1921,7 +1915,6 @@ namespace NSGuidesVML
 			pCurPoint1 = oSlice.m_arPoints[j];//center coordinate
 			pCurPointType1 = oSlice.m_arPointsType[j];
 
-			nIndex = m_arIndexDst[m_lIndexSrc-1]; //stang
 			nIndex1 = m_arIndexDst[m_lIndexSrc]; //r
 
 			m_lIndexSrc++;

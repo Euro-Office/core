@@ -13,6 +13,12 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
+# Only the third-party libraries (build.sh --third-party-only), which
+# common.cmake built and uploaded to the remote cache
+if(EO_THIRD_PARTY_ONLY)
+    return()
+endif()
+
 option(EO_BUILD_TESTS "Build C++ unit tests and register them with CTest" OFF)
 
 if(EMSCRIPTEN)
@@ -55,6 +61,7 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/OOXML/Binary/Sheets/Reader/test" csv_reader_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OfficeUtils/tests" officeutils_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OfficeCryptReader/tests" officecrypt_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OOXML/XlsxFormat/Worksheets/test" xlsx_condfmt_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Reader/Converter/SMCustomShape2OOXML/TestSMCustomShape" starmath_smcustomshape_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/test_odf" test_odf )
         add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/test/TestOOOXml2Odf" ooxml2odf_math_test )
@@ -84,6 +91,7 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test/jbig2" pdf_jbig2_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DjVuFile/test" djvu_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/osign/test" osign_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/Common/Network/tests" kernel_network_socketio_url_test )
     endif()
 
 endif()

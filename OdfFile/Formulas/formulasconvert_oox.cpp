@@ -238,7 +238,6 @@ size_t getColAddressInv(const std::wstring & a_)
 
 size_t getRowAdderssInv(const std::wstring & a_)
 {
-	int sz = a_.length();
 	if (a_.length()>0)
 	{
 	   return boost::lexical_cast<size_t>(a_)-1;
@@ -282,8 +281,7 @@ bool IsRefPresent(const std::wstring& ref_test)
 	int col = -1, row = -1;
 	getCellAddressInv(ref_test, col, row);
 
-	if (col >= 0 && row >=0) return true;
-	return false;
+	return col >= 0 && row >= 0;
 }
 std::wstring oox2odf_converter::Impl::replace_cells_range_formater1(boost::wsmatch const & what)
 {
@@ -395,11 +393,7 @@ bool oox2odf_converter::Impl::is_simple_ref(std::wstring const & expr)
 	if (expr.find(L";") != std::wstring::npos) return false;
 
 	boost::wsmatch match;
-	if (boost::regex_search(expr, match, boost::wregex(L"([\\w]+\\!)?\\$?[a-zA-Z]+\\$?\\d+(\\:\\$?[a-zA-Z]+\\$?\\d+)?")))
-	{
-		return true;
-	}
-	return false;
+	return boost::regex_search(expr, match, boost::wregex(L"([\\w]+\\!)?\\$?[a-zA-Z]+\\$?\\d+(\\:\\$?[a-zA-Z]+\\$?\\d+)?"));
 }
 
 void oox2odf_converter::Impl::replace_named_ref(std::wstring & expr)
@@ -438,7 +432,7 @@ void oox2odf_converter::Impl::replace_named_ref(std::wstring & expr)
 
 	isFindBaseCell_ = false;
 
-	if (table_name_.empty() == false)
+	if (!table_name_.empty())
 	{
 		oox_replace_tmp_back(table_name_);
 	}
@@ -517,8 +511,6 @@ std::wstring  oox2odf_converter::Impl::replace_arguments(boost::wsmatch const & 
 {
 	std::wstring out;
 
-	size_t sz = what.size();
-
     if (what[1].matched)
     {
         out = what[1].str();
@@ -570,6 +562,7 @@ std::wstring oox2odf_converter::Impl::convert_formula(const std::wstring & expr)
         workstr,    
 		boost::wregex(L"('.*?')|(\".*?\")"),
 		&oox2odf_converter::Impl::convert_scobci, boost::match_default | boost::format_all);
+	res1 = oox2odf_function_names(res1, &oox_replace_tmp);
 	
 	std::wstring res = boost::regex_replace(
 		res1,
@@ -596,7 +589,7 @@ std::wstring oox2odf_converter::Impl::convert_formula(const std::wstring & expr)
 	replace_vertical(res);   
 	replace_semicolons(res);
 
-	if (table_name_.empty() == false)
+	if (!table_name_.empty())
 	{
 		oox_replace_tmp_back(table_name_);
 	}
@@ -616,6 +609,7 @@ std::wstring oox2odf_converter::Impl::convert_conditional_formula(const std::wst
         workstr,
 		boost::wregex(L"('.*?')|(\".*?\")"),
 		&oox2odf_converter::Impl::convert_scobci, boost::match_default | boost::format_all);
+	res1 = oox2odf_function_names(res1, &oox_replace_tmp);
 	
 	std::wstring res = boost::regex_replace(
 		res1,
@@ -777,19 +771,19 @@ std::wstring oox2odf_converter::convert_spacechar(std::wstring expr)
 int oox2odf_converter::get_count_value_points(std::wstring expr)
 {
 	int count =0;
-	std::vector< std::wstring > splitted;
+	std::vector< std::wstring > split;
     
 	XmlUtils::replace_all( expr, L"(", L"");
 	XmlUtils::replace_all( expr, L")", L"");
-	boost::algorithm::split(splitted, expr, boost::algorithm::is_any_of(L","), boost::algorithm::token_compress_on);
+	boost::algorithm::split(split, expr, boost::algorithm::is_any_of(L","), boost::algorithm::token_compress_on);
 
-	for (size_t i=0; i < splitted.size(); i++)
+	for (size_t i=0; i < split.size(); i++)
 	{
-		int res = splitted[i].find(L"!");
-		if (res > 0) splitted[i] = splitted[i].substr(res+1, splitted[i].size()-res);
+		int res = split[i].find(L"!");
+		if (res > 0) split[i] = split[i].substr(res+1, split[i].size()-res);
 
 		std::vector< std::wstring >cells;
-		boost::algorithm::split(cells, splitted[i], boost::algorithm::is_any_of(L":"), boost::algorithm::token_compress_on);
+		boost::algorithm::split(cells, split[i], boost::algorithm::is_any_of(L":"), boost::algorithm::token_compress_on);
 		if (cells.size() >1)
 		{
 			int col_1, row_1, col_2, row_2;

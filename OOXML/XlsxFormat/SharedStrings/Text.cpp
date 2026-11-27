@@ -53,7 +53,7 @@ namespace OOX
 		}
 		void CStringXLSB::fromStringA(const char* sVal)
 		{
-			LONG nLen = strlen((const char*)sVal);
+			LONG nLen = strlen(sVal);
 			checkBufferSize(NSFile::CUtf8Converter::GetUnicodeStringFromUTF8BufferSize(nLen));
 			NSFile::CUtf8Converter::GetUnicodeStringFromUTF8WithHHHH((const BYTE*)sVal, nLen, m_sBuffer, m_nLen);
 		}
@@ -122,6 +122,7 @@ namespace OOX
 							catch(...)
 							{   //1.3912059045063478e-310
 								//Lighting Load Calculation.xls
+								(void)0;
 							}
 						}
 						else if(SimpleTypes::Spreadsheet::celltypeSharedString == eType)
@@ -132,6 +133,8 @@ namespace OOX
 							}
 							catch(...)
 							{
+								// not a number: keep the previous value
+								(void)0;
 							}
 						}
 						else if(SimpleTypes::Spreadsheet::celltypeError == eType)
@@ -241,7 +244,7 @@ namespace OOX
 					eNodeType == XmlUtils::XmlNodeType_CDATA)
 				{
 					std::string sTemp = oReader.GetTextA();
-					wchar_t* pUnicodes = NULL;
+					wchar_t* pUnicodes = nullptr;
 					LONG lOutputCount = 0;
 					NSFile::CUtf8Converter::GetUnicodeStringFromUTF8WithHHHH((BYTE*)sTemp.c_str(), (LONG)sTemp.length(), pUnicodes, lOutputCount);
 					m_sText.append(pUnicodes);

@@ -28,7 +28,7 @@
 
 namespace DocFileFormat
 {
-	TableRowPropertiesMapping::TableRowPropertiesMapping (XMLTools::CStringXmlWriter* pWriter, CharacterPropertyExceptions* rowEndChpx) : PropertiesMapping(pWriter), _trPr(NULL), _tblPrEx(NULL), _rowEndChpx(NULL)
+	TableRowPropertiesMapping::TableRowPropertiesMapping (XMLTools::CStringXmlWriter* pWriter, CharacterPropertyExceptions* rowEndChpx) : PropertiesMapping(pWriter), _trPr(nullptr), _tblPrEx(nullptr), _rowEndChpx(nullptr)
 	{
         _trPr			=	new XMLTools::XMLElement(L"w:trPr");
         _tblPrEx		=	new XMLTools::XMLElement(L"w:tblPrEx");
@@ -53,12 +53,12 @@ namespace DocFileFormat
 		std::shared_ptr<BorderCode> brcHorz;
 		std::shared_ptr<BorderCode> brcVert;
 
-		XMLTools::XMLElement* _tcMar = NULL;
+		XMLTools::XMLElement* _tcMar = nullptr;
 
 	//delete infos
 		RevisionData rev( _rowEndChpx );
 
-		if ( ( _rowEndChpx != NULL ) && ( rev.Type == Deleted ) )
+		if ( ( _rowEndChpx != nullptr ) && ( rev.Type == Deleted ) )
 		{
             XMLTools::XMLElement del( L"w:del" );
 			_trPr->AppendChild( del );
@@ -189,27 +189,30 @@ namespace DocFileFormat
 			case sprmTCellPaddingOuter:
 			{
 				unsigned char first = iter->Arguments[0];
+				(void)first;
 				unsigned char lim = iter->Arguments[1];
+				(void)lim;
 				unsigned char ftsMargin = iter->Arguments[3];
+				(void)ftsMargin;
 				short wMargin = FormatUtils::BytesToInt16(iter->Arguments, 4, iter->argumentsSize);
 
 				if (!_tcMar) _tcMar = new XMLTools::XMLElement(L"w:tblCellMar");
-				if (FormatUtils::GetBitFromInt(iter->Arguments[2], 0) == true)
+				if (FormatUtils::GetBitFromInt(iter->Arguments[2], 0))
 				{
 					appendDxaElement(_tcMar, L"top", FormatUtils::IntToWideString(wMargin), true);
 				}
 
-				if (FormatUtils::GetBitFromInt(iter->Arguments[2], 1) == true)
+				if (FormatUtils::GetBitFromInt(iter->Arguments[2], 1))
 				{
 					appendDxaElement(_tcMar, L"left", FormatUtils::IntToWideString(wMargin), true);
 				}
 
-				if (FormatUtils::GetBitFromInt(iter->Arguments[2], 2) == true)
+				if (FormatUtils::GetBitFromInt(iter->Arguments[2], 2))
 				{
 					appendDxaElement(_tcMar, L"bottom", FormatUtils::IntToWideString(wMargin), true);
 				}
 
-				if (FormatUtils::GetBitFromInt(iter->Arguments[2], 3) == true)
+				if (FormatUtils::GetBitFromInt(iter->Arguments[2], 3))
 				{
 					appendDxaElement(_tcMar, L"right", FormatUtils::IntToWideString(wMargin), true);
 				}

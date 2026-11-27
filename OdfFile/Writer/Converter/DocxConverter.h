@@ -161,12 +161,16 @@ namespace Oox2Odf
 		std::wstring	dump_text	(OOX::WritingElement *oox_unknown);
     private:
 		bool current_bidi_set = false;
+		bool paragraph_page_break_before_ = false;	// w:pageBreakBefore of the paragraph that is converted
 		struct _section
 		{
             OOX::Logic::CSectionProperty *props = NULL;
             size_t start_para = 0;
             size_t end_para = 0;
 			bool bContinue = false;
+			bool bKeepPage = false;
+			bool bFirst = false;		// the first section of the document
+			bool bTurnsPage = false;	// its page orientation differs from the previous section's
 		} *current_section_properties;
 
 		OOX::CDocx *docx_document;
@@ -175,6 +179,8 @@ namespace Oox2Odf
 		NSBinPptxRW::CDrawingConverter *drawingConverter;
 		odf_writer::odt_conversion_context *odt_context;
         OOX::Logic::CSectionProperty *last_section_properties;
+		OOX::Logic::CSectionProperty *page_section_properties = NULL; // the section whose margins the current page uses
+		bool bSectionIndents = false; // the current text section has left or right indents
 
 		void apply_HF_from(OOX::Logic::CSectionProperty *props, OOX::Logic::CSectionProperty *other);
 		
@@ -197,7 +203,8 @@ namespace Oox2Odf
 		void convert(OOX::Logic::CBackground			*oox_background, int type);
 		void convert(OOX::Logic::CBgPict				*oox_background, int type);
 		void convert(OOX::Logic::CSdt					*oox_sdt);
-		void convert(OOX::Logic::CSectionProperty		*oox_section_pr, bool bSection, const std::wstring & master_name = L"", bool bAlways = false);
+		void convert(OOX::Logic::CSectionProperty		*oox_section_pr, bool bSection,
+					 const std::wstring & master_name = L"", bool bAlways = false, bool bPageStart = false);
 		void convert(OOX::Logic::CParagraph				*oox_paragraph);
 		void convert(OOX::Logic::CRun					*oox_run);
 		void convert(OOX::Logic::CParagraphProperty		*oox_para_prop,	odf_writer::paragraph_format_properties	*paragraph_properties, odf_writer::text_format_properties* text_properties, bool is_default_style_par_props);

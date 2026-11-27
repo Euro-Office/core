@@ -27,9 +27,9 @@
 namespace DocFileFormat
 {
 #define WriteWCharPadding(STLCollection, padding) \
-for (int i = 0; i < padding; ++i)\
+for (int i = 0; i < (padding); ++i)\
 {\
-STLCollection->push_back((wchar_t)0);\
+(STLCollection)->push_back((wchar_t)0);\
 }
 	static void WriteUtf16ToWChar(int code, std::vector<wchar_t>* STLCollection, int padding)
 	{
@@ -52,7 +52,7 @@ STLCollection->push_back((wchar_t)0);\
 
 	static bool GetSTLCollectionFromUtf8(std::vector<wchar_t>* STLCollection, unsigned char* pBuffer, int lCount)
 	{
-		if ((STLCollection == NULL) || (pBuffer == NULL))
+		if ((STLCollection == nullptr) || (pBuffer == nullptr))
 		{
 			return false;
 		}
@@ -74,7 +74,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 1) < lCount)
 					{
-						val = (int)(((byteMain & 0x1F) << 6) |
+						val = (((byteMain & 0x1F) << 6) |
 							(pBuffer[lIndex + 1] & 0x3F));
 					}
 					STLCollection->push_back((wchar_t)val);
@@ -87,7 +87,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 2) < lCount)
 					{
-						val = (int)(((byteMain & 0x0F) << 12) |
+						val = (((byteMain & 0x0F) << 12) |
 							((pBuffer[lIndex + 1] & 0x3F) << 6) |
 							(pBuffer[lIndex + 2] & 0x3F));
 					}
@@ -100,7 +100,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 3) < lCount)
 					{
-						val = (int)(((byteMain & 0x07) << 18) |
+						val = (((byteMain & 0x07) << 18) |
 							((pBuffer[lIndex + 1] & 0x3F) << 12) |
 							((pBuffer[lIndex + 2] & 0x3F) << 6) |
 							(pBuffer[lIndex + 3] & 0x3F));
@@ -114,7 +114,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 3) < lCount)
 					{
-						val = (int)(((byteMain & 0x07) << 18) |
+						val = (((byteMain & 0x07) << 18) |
 							((pBuffer[lIndex + 1] & 0x3F) << 12) |
 							((pBuffer[lIndex + 2] & 0x3F) << 6) |
 							(pBuffer[lIndex + 3] & 0x3F));
@@ -128,7 +128,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 4) < lCount)
 					{
-						val = (int)(((byteMain & 0x03) << 24) |
+						val = (((byteMain & 0x03) << 24) |
 							((pBuffer[lIndex + 1] & 0x3F) << 18) |
 							((pBuffer[lIndex + 2] & 0x3F) << 12) |
 							((pBuffer[lIndex + 3] & 0x3F) << 6) |
@@ -143,7 +143,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 5) < lCount)
 					{
-						val = (int)(((byteMain & 0x01) << 30) |
+						val = (((byteMain & 0x01) << 30) |
 							((pBuffer[lIndex + 1] & 0x3F) << 24) |
 							((pBuffer[lIndex + 2] & 0x3F) << 18) |
 							((pBuffer[lIndex + 3] & 0x3F) << 12) |
@@ -172,7 +172,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 1) < lCount)
 					{
-						val = (int)(((byteMain & 0x1F) << 6) |
+						val = (((byteMain & 0x1F) << 6) |
 							(pBuffer[lIndex + 1] & 0x3F));
 					}
 
@@ -186,7 +186,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 2) < lCount)
 					{
-						val = (int)(((byteMain & 0x0F) << 12) |
+						val = (((byteMain & 0x0F) << 12) |
 							((pBuffer[lIndex + 1] & 0x3F) << 6) |
 							(pBuffer[lIndex + 2] & 0x3F));
 					}
@@ -200,7 +200,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 3) < lCount)
 					{
-						val = (int)(((byteMain & 0x07) << 18) |
+						val = (((byteMain & 0x07) << 18) |
 							((pBuffer[lIndex + 1] & 0x3F) << 12) |
 							((pBuffer[lIndex + 2] & 0x3F) << 6) |
 							(pBuffer[lIndex + 3] & 0x3F));
@@ -216,7 +216,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 3) < lCount)
 					{
-						val = (int)(((byteMain & 0x07) << 18) |
+						val = (((byteMain & 0x07) << 18) |
 							((pBuffer[lIndex + 1] & 0x3F) << 12) |
 							((pBuffer[lIndex + 2] & 0x3F) << 6) |
 							(pBuffer[lIndex + 3] & 0x3F));
@@ -231,7 +231,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 4) < lCount)
 					{
-						val = (int)(((byteMain & 0x03) << 24) |
+						val = (((byteMain & 0x03) << 24) |
 							((pBuffer[lIndex + 1] & 0x3F) << 18) |
 							((pBuffer[lIndex + 2] & 0x3F) << 12) |
 							((pBuffer[lIndex + 3] & 0x3F) << 6) |
@@ -247,7 +247,7 @@ STLCollection->push_back((wchar_t)0);\
 					int val = 0;
 					if ((lIndex + 5) < lCount)
 					{
-						val = (int)(((byteMain & 0x01) << 30) |
+						val = (((byteMain & 0x01) << 30) |
 							((pBuffer[lIndex + 1] & 0x3F) << 24) |
 							((pBuffer[lIndex + 2] & 0x3F) << 18) |
 							((pBuffer[lIndex + 3] & 0x3F) << 12) |
@@ -266,7 +266,7 @@ STLCollection->push_back((wchar_t)0);\
 
 bool DocFileFormat::FormatUtils::GetWStringFromBytes(std::wstring& string, unsigned char* bytes, int size, int code_page)
 {
-	if (bytes == NULL)
+	if (bytes == nullptr)
 	{
 		return false;
 	}
@@ -312,7 +312,7 @@ bool DocFileFormat::FormatUtils::GetWStringFromBytes(std::wstring& string, unsig
 
 bool DocFileFormat::FormatUtils::GetSTLCollectionFromBytes(std::vector<wchar_t>* STLCollection, unsigned char* bytes, int size, int code_page)
 {
-	if (bytes == NULL)
+	if (bytes == nullptr)
 	{
 		return false;
 	}

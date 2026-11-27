@@ -127,7 +127,7 @@ namespace OOX
 		public:
 			WritingElement_AdditionMethods(CColor)
 			WritingElement_XlsbConstructors(CColor)
-			CColor(OOX::Document *pMain = NULL);
+			CColor(OOX::Document *pMain = nullptr);
 			virtual ~CColor();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -188,7 +188,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CCharset)
-			CCharset(OOX::Document *pMain = NULL);
+			CCharset(OOX::Document *pMain = nullptr);
 			virtual ~CCharset();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -208,7 +208,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CVerticalAlign)
-			CVerticalAlign(OOX::Document *pMain = NULL);
+			CVerticalAlign(OOX::Document *pMain = nullptr);
 			virtual ~CVerticalAlign();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -228,7 +228,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CFontFamily)
-			CFontFamily(OOX::Document *pMain = NULL);
+			CFontFamily(OOX::Document *pMain = nullptr);
 			virtual ~CFontFamily();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -268,7 +268,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CUnderline)
-			CUnderline(OOX::Document *pMain = NULL);
+			CUnderline(OOX::Document *pMain = nullptr);
 			virtual ~CUnderline();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);
@@ -289,7 +289,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CRPr)
-			CRPr(OOX::Document *pMain = NULL);
+			CRPr(OOX::Document *pMain = nullptr);
 			virtual ~CRPr();
 
 			virtual void fromXML(XmlUtils::CXmlNode& node);

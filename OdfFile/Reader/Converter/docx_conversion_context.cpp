@@ -24,6 +24,7 @@
  */
 
 #include <algorithm>
+#include <map>
 #include <iostream>
 
 #include <xml/utils.h>
@@ -145,6 +146,7 @@ docx_conversion_context::docx_conversion_context(odf_reader::odf_document * _odf
 	current_outline_level_		(-1),
 	is_rtl_						(false),
 	is_delete_text_				(false),
+	table_text_only_			(false),
 	delayed_converting_			(false),
 	process_headers_footers_	(false),
 	current_process_comment_	(false),
@@ -349,6 +351,16 @@ void docx_conversion_context::end_math_formula()
 }
 void docx_conversion_context::start_sdt(int type)
 {
+	// An index inside a tracked deletion is written as deleted runs at the position of its change
+	// mark, inside a paragraph, where no sdt and no paragraph of its own can stand. Write only the
+	// entries' text, as deleted paragraphs are written: no sdt, no field paragraphs.
+	// Each start_sdt is paired with one end_sdt; an index can hold another one (in a text box of an
+	// entry), so the decision is kept per index.
+	const bool textOnly = is_delete_text_ && state_.in_paragraph_;
+	index_text_only_.push_back(textOnly);
+	if (textOnly)
+		return;
+
 	in_table_content_ = true;
 
 	table_content_context_.type_table_content = type;
@@ -511,6 +523,15 @@ void docx_conversion_context::end_field()
 }
 void docx_conversion_context::end_sdt()
 {
+	const bool textOnly = !index_text_only_.empty() && index_text_only_.back();
+	if (!index_text_only_.empty())
+		index_text_only_.pop_back();
+	if (textOnly)
+	{
+		if (!in_table_content_) // no enclosing index writes its sdt and field: drop what the source set
+			table_content_context_.clear_all();
+		return;
+	}
 	if (!in_table_content_) return;
 
 	if (table_content_context_.type_table_content < 4)
@@ -775,16 +796,7 @@ void docx_conversion_context::end_document()
 	output_document_->get_word_files().set_notes(notes_context_);
 
 	output_document_->get_docProps_files().set_app(package::simple_element::create(L"app.xml", dump_settings_app()));
-	output_document_->get_docProps_files().set_core(package::simple_element::create(L"core.xml", dump_settings_core()));
-
-	std::wstring settings_custom = dump_settings_custom();
-	if (false == settings_custom.empty())
-	{
-		output_document_->get_docProps_files().set_custom(package::simple_element::create(L"custom.xml", settings_custom));
-		output_document_->get_content_types_file().content()->add_override(L"/docProps/custom.xml", L"application/vnd.openxmlformats-officedocument.custom-properties+xml");
-		output_document_->get_rels_files().add(
-	relationship(L"rCstmId", L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/custom-properties", L"docProps/custom.xml"));
-	}
+	output_document_->set_doc_props(odf_document_->odf_context().DocProps().dump_core(), odf_document_->odf_context().DocProps().dump_custom());
 
 	for (size_t i = 0; i < charts_.size(); i++)
     {
@@ -934,118 +946,6 @@ std::wstring  docx_conversion_context::dump_settings_app()
 	}
 	return output.str();
 }
-std::wstring  docx_conversion_context::dump_settings_custom()
-{
-	std::wstring user_defined = odf_document_->odf_context().DocProps().dump_user_defined();
-	if (user_defined.empty()) return L"";
-
-	std::wstringstream output;
-	CP_XML_WRITER(output)
-	{
-		CP_XML_NODE(L"Properties")
-		{
-			CP_XML_ATTR(L"xmlns", L"http://schemas.openxmlformats.org/officeDocument/2006/custom-properties");
-			CP_XML_ATTR(L"xmlns:vt", L"http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes");
-
-			CP_XML_STREAM() << user_defined;
-		}
-	}
-	return output.str();
-}
-std::wstring  docx_conversion_context::dump_settings_core()
-{
-	std::wstringstream output;
-	
-	CP_XML_WRITER(output)
-	{
-		CP_XML_NODE(L"cp:coreProperties")
-		{
-			CP_XML_ATTR(L"xmlns:cp", L"http://schemas.openxmlformats.org/package/2006/metadata/core-properties");
-			CP_XML_ATTR(L"xmlns:xsi", L"http://www.w3.org/2001/XMLSchema-instance");
-			CP_XML_ATTR(L"xmlns:dc", L"http://purl.org/dc/elements/1.1/");
-			CP_XML_ATTR(L"xmlns:dcmitype", L"http://purl.org/dc/dcmitype/");
-			CP_XML_ATTR(L"xmlns:dcterms", L"http://purl.org/dc/terms/");
-			
-			if (!odf_document_->odf_context().DocProps().creation_date_.empty())
-			{
-				CP_XML_NODE(L"dcterms:created")
-				{
-					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().creation_date_;
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_date_.empty())
-			{
-				CP_XML_NODE(L"dcterms:modified")
-				{
-					CP_XML_ATTR(L"xsi:type", L"dcterms:W3CDTF");
-					CP_XML_STREAM() << odf_document_->odf_context().DocProps().dc_date_;
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_creator_.empty())
-			{
-				CP_XML_NODE(L"dc:creator")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_creator_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_title_.empty())
-			{
-				CP_XML_NODE(L"dc:title")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_title_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_subject_.empty())
-			{
-				CP_XML_NODE(L"dc:subject")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_subject_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_description_.empty())
-			{
-				CP_XML_NODE(L"dc:description")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_description_);
-				}
-			}
-			if (!odf_document_->odf_context().DocProps().dc_language_.empty())
-			{
-				CP_XML_NODE(L"dc:language")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().dc_language_);
-				}
-			}
-			CP_XML_NODE(L"cp:lastModifiedBy")
-			{
-				std::wstring sApplication = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
-				if (sApplication.empty())
-					sApplication = NSSystemUtils::gc_EnvApplicationNameDefault;
-				CP_XML_STREAM() << sApplication;
-#if defined(INTVER)
-				std::string s = VALUE2STR(INTVER);
-				CP_XML_STREAM() << L"/" << std::wstring(s.begin(), s.end());
-#endif	
-			}
-			if (!odf_document_->odf_context().DocProps().keyword_.empty())
-			{
-				CP_XML_NODE(L"cp:keywords")
-				{
-					CP_XML_STREAM() << XmlUtils::EncodeXmlString(odf_document_->odf_context().DocProps().keyword_);
-				}
-			}
-			if (odf_document_->odf_context().DocProps().revision_)
-			{
-				CP_XML_NODE(L"cp:revision")
-				{
-					CP_XML_STREAM() << *odf_document_->odf_context().DocProps().revision_;
-				}
-			}
-		}
-	}
-	return output.str();
-}
 std::wstring  docx_conversion_context::dump_settings_document()
 {
 	std::wstringstream output;
@@ -1145,8 +1045,18 @@ std::wstring  docx_conversion_context::dump_settings_document()
 				}
 			}
 			
+			// ODF AddParaTableSpacing (true or missing: space below + space above of adjacent
+			// paragraphs add up) is Word's doNotUseHTMLParagraphAutoSpacing. Like LibreOffice, take
+			// only the exact value "true" as true.
+			_CP_OPT(std::wstring) addParaTableSpacing = root()->odf_context().Settings().find_by_name(L"AddParaTableSpacing");
+			const bool bAddParaTableSpacing = !addParaTableSpacing || *addParaTableSpacing == L"true";
+
 			CP_XML_NODE(L"w:compat")
 			{
+				if (bAddParaTableSpacing)
+				{
+					CP_XML_NODE(L"w:doNotUseHTMLParagraphAutoSpacing");
+				}
 				CP_XML_NODE(L"w:compatSetting")
 				{
 					CP_XML_ATTR(L"w:name",  L"compatibilityMode" );
@@ -2592,6 +2502,12 @@ void docx_conversion_context::process_headers_footers()
 	{
 		set_settings_property(odf_reader::_property(L"evenAndOddHeaders", true));
 	}
+	// master pages per page layout: no section starts between master pages that share one
+	std::map<std::wstring, size_t> layout_users;
+	for (size_t i = 0; i < master_pages.size(); i++)
+	{
+		layout_users[pageLayouts.page_layout_name_by_style(master_pages[i]->attlist_.style_name_.get_value_or(L""))]++;
+	}
  	for (size_t i = 0; i < master_pages.size(); i++)
 	{
         const std::wstring & styleName = master_pages[i]->attlist_.style_name_.get_value_or( L"" );
@@ -2617,6 +2533,15 @@ void docx_conversion_context::process_headers_footers()
 			//disabled headers and footers
 			rels rels_;
 			get_headers_footers().add(styleName, L"", headers_footers::none, rels_);
+		}
+		// A master page that is followed by itself has no header or footer where it defines none. One that hands
+		// over to another master page, or shares its page layout with one, is left as it is: its section can also
+		// hold pages of the other one.
+		const _CP_OPT(std::wstring) & nextStyleName = master_pages[i]->attlist_.style_next_style_name_;
+		if ((!nextStyleName || nextStyleName->empty() || *nextStyleName == styleName) &&
+			layout_users[masterPageNameLayout] == 1)
+		{
+			get_headers_footers().set_no_inherit(styleName);
 		}
 		
 		remove_page_properties();

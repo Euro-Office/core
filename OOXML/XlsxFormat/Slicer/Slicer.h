@@ -113,7 +113,7 @@ namespace OOX
 			{
 				m_bSpreadsheets = true;
 
-				read( oRootPath, oPath );
+				CSlicerFile::read( oRootPath, oPath );
 			}
             void readBin(const CPath& oPath);
 			XLS::BaseObjectPtr WriteBin() const;

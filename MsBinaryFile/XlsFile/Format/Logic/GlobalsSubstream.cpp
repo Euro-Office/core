@@ -207,7 +207,7 @@ const bool GlobalsSubstream::loadContent(BinProcessor& proc)
 				if (proc.optional<FilePass>())
 				{					
 					if (( global_info_->decryptor)  &&
-						( global_info_->decryptor->IsVerify() == false))
+						( !global_info_->decryptor->IsVerify()))
 					{
 						if (!global_info_->decryptor->SetPassword(L"VelvetSweatshop"))
 							return false;
@@ -343,9 +343,6 @@ const bool GlobalsSubstream::loadContent(BinProcessor& proc)
 					Country *Country_ = dynamic_cast<Country*>(m_Country.get());
 					if (Country_)
 					{
-						int countryDef = Country_->iCountryDef;
-						int countryWinIni = Country_->iCountryWinIni;
-
 						global_info_->CodePage;
 					}
 				}	
@@ -362,16 +359,16 @@ const bool GlobalsSubstream::loadContent(BinProcessor& proc)
 					FORMATTING* fmts_new = dynamic_cast<FORMATTING*>(elements_.back().get());
 				
 					if (m_Formating ) //Zakaz_detalizatcii(08_fevralia_2014-21_fevralia_2014).XLS
-					{//check previus
+					{//check previous
 						FORMATTING* fmts = dynamic_cast<FORMATTING*>(m_Formating.get());
-						XFS *xfs = fmts ? dynamic_cast<XFS*>(fmts->m_XFS.get()) : NULL;
+						XFS *xfs = fmts ? dynamic_cast<XFS*>(fmts->m_XFS.get()) : nullptr;
 						
 						if (!xfs || (xfs->m_arCellXFs.empty()))
 						{
 							if (fmts->m_Palette && !fmts_new->m_Palette) // АИС_Налог_Сводная информация по ЗУ_ver2212r555.xls
 								fmts_new->m_Palette = fmts->m_Palette;
 
-							m_Formating = NULL;
+							m_Formating = nullptr;
 						}
 						else
 						{
@@ -410,7 +407,7 @@ const bool GlobalsSubstream::loadContent(BinProcessor& proc)
 			}break;
 			case rt_DocRoute:
 			{
-				count = proc.repeated<DOCROUTE>(0, 0);
+				proc.repeated<DOCROUTE>(0, 0);
 			}break;
 			case rt_UserBView:
 			{
@@ -857,13 +854,9 @@ void GlobalsSubstream::UpdateXti()
 					val_1.link = XMLSTUFF::xti_indexes2sheet_name(xti->itabFirst, xti->itabLast, info->rgst, val_1.link); 
 				}
 			}
-			else if (xti->itabFirst == -1)
+			else if (xti->itabFirst == -1 || xti->itabFirst == -2)
 			{
-				//sheet not found
-			}
-			else if (xti->itabFirst == -2)
-			{
-				//Workbook-level
+				//sheet not found / workbook-level
 			}
 			global_info_->arXti_External.push_back(val_1);
 		}
@@ -971,7 +964,7 @@ void GlobalsSubstream::UpdateExternalDefineNames()
 					SUPBOOK::_def_name def_name;
 					def_name.fmla		= docName->nameDefinition.getAssembledFormula();
 					
-					if (false == def_name.fmla.empty())
+					if (!def_name.fmla.empty())
 					{
 						SUPBOOK_->mapNamesExt.insert(std::make_pair(docName->extName.value(), def_name));
 					}
@@ -1003,7 +996,7 @@ int GlobalsSubstream::serialize_format(std::wostream & _stream)
 				{
 					CP_XML_ATTR(L"readOnlyRecommended", 0 != (*file_sharing->fReadOnlyRec.value()));
 				}
-				if (false == file_sharing->stUNUsername.value().empty())
+				if (!file_sharing->stUNUsername.value().empty())
 				{
 					CP_XML_ATTR(L"userName", file_sharing->stUNUsername.value());
 					CP_XML_ATTR(L"password", file_sharing->wResPass);

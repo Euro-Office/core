@@ -62,7 +62,7 @@ void CRecordOutlineTextProps9Container::ReadFromStream(SRecordHeader &oHeader, P
 
     while (lCurLen < m_oHeader.RecLen)
     {
-        if (ReadHeader.ReadFromStream(pStream) == false || ReadHeader.bBadHeader)
+        if (!ReadHeader.ReadFromStream(pStream) || ReadHeader.bBadHeader)
             break;
 
         lCurLen += 8 + ReadHeader.RecLen;

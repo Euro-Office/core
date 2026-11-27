@@ -34,7 +34,7 @@ class CPPTDocumentInfo
 public:
     friend class CPPTUserInfo;
 
-    _commonInfo*                    m_pCommonInfo = NULL;
+    _commonInfo*                    m_pCommonInfo = nullptr;
     
     CCurrentUser					m_oCurrentUser;
 	std::vector<CPPTUserInfo*>		m_arUsers;

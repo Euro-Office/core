@@ -48,8 +48,7 @@ static std::wstring get_mime_type(const std::wstring & extension)
 	else if (L"emf" == extension)	return  L"image/x-emf";
   	else if (L"gif" == extension)	return  L"image/x-gif";
    	else if (L"png" == extension)	return  L"image/x-png";
- 	else if (L"jpg" == extension)	return  L"image/x-jpeg";
-  	else if (L"jpeg" == extension)	return  L"image/x-jpeg";
+  	else if (L"jpg" == extension || L"jpeg" == extension)	return  L"image/x-jpeg";
   	else if (L"tiff" == extension)	return  L"image/x-tiff";
 	else if (L"bmp" == extension)	return  L"image/bmp";
 	else if (L"pdf" == extension)	return  L"application/pdf";
@@ -73,10 +72,9 @@ void content_types_file::write(const std::wstring & RootPath)
 {
     std::wstringstream resStream;
     content_type_.xml_to_stream(resStream);
-    std::wstring res = resStream.str(); 
 
     simple_element elm(filename_, resStream.str());
-    elm.write(RootPath);
+    elm.simple_element::write(RootPath);
 }
 
 bool content_types_file::add_or_find_default(const std::wstring & extension)
@@ -89,9 +87,9 @@ bool content_types_file::add_or_find_default(const std::wstring & extension)
 	content_type_.add_default(extension, get_mime_type(extension));
 	return true;
 }
-void content_types_file::set_media(external_items & _Mediaitems)
+void content_types_file::set_media(external_items & mediaitems)
 {
-    BOOST_FOREACH( external_items::item & item, _Mediaitems.items() )
+    BOOST_FOREACH( external_items::item & item, mediaitems.items() )
     {
 		if (!item.mediaInternal) continue;
 
@@ -126,7 +124,7 @@ simple_element_ptr simple_element::create(const std::wstring & FileName, const s
 {
     return boost::make_shared<simple_element>(FileName, Content);
 }
-simple_element::simple_element(const std::wstring & fileName, const std::wstring & content) : filename_(fileName), content_(content)
+simple_element::simple_element(const std::wstring & fileName, const std::wstring & content) : filename_(fileName), content_(content), content_utf8_()
 {
 }
 simple_element_ptr simple_element::create(const std::wstring & FileName, const std::string & contentUtf8)
@@ -141,7 +139,7 @@ void simple_element::write(const std::wstring & RootPath)
 	std::wstring name_ = RootPath + FILE_SEPARATOR_STR +  filename_;
 
 	NSFile::CFileBinary file;
-	if ( file.CreateFileW(name_) == true)
+	if ( file.CreateFileW(name_))
 	{
 		if (!content_utf8_.empty())
 		{
@@ -171,7 +169,7 @@ void rels_file::write(const std::wstring & RootPath)
     rels_.xml_to_stream(resStream);
 
     simple_element elm(filename_, resStream.str());
-    elm.write(RootPath);
+    elm.simple_element::write(RootPath);
 }
 
 void rels_files::write(const std::wstring & RootPath)

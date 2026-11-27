@@ -34,9 +34,9 @@ namespace SVG
 		SetFill(mAttributes, ushLevel, bHardMode);
 	}
 
-	bool CUse::Draw(IRenderer *pRenderer, const CSvgFile *pFile, CommandeMode oMode, const TSvgStyles* pOtherStyles, const CRenderedObject* pContexObject) const
+	bool CUse::Draw(IRenderer *pRenderer, const CSvgFile *pFile, CommandeMode oMode, const TSvgStyles* pOtherStyles, const CRenderedObject*  /*pContexObject*/) const
 	{
-		if (NULL == pRenderer || !m_oTransformation.m_bDraw)
+		if (nullptr == pRenderer || !m_oTransformation.m_bDraw)
 			return false;
 
 		Aggplus::CMatrix oOldTransform;
@@ -56,9 +56,9 @@ namespace SVG
 
 		bool bResult = false;
 
-		if (NULL != pFoundObj && this != pFoundObj)
+		if (nullptr != pFoundObj && this != pFoundObj)
 		{
-			if (NULL != pOtherStyles)
+			if (nullptr != pOtherStyles)
 			{
 				TSvgStyles oNewStyles(m_oStyles);
 				oNewStyles += *pOtherStyles;
@@ -73,7 +73,7 @@ namespace SVG
 		return bResult;
 	}
 
-	TBounds CUse::GetBounds(SvgMatrix* pTransform) const
+	TBounds CUse::GetBounds(SvgMatrix*  /*pTransform*/) const
 	{
 		return TBounds{0., 0., 0., 0.};
 	}

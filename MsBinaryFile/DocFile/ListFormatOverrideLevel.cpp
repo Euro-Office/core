@@ -28,7 +28,7 @@
 namespace DocFileFormat
 {  
 	ListFormatOverrideLevel::ListFormatOverrideLevel():
-		iStartAt(0), ilvl(0), fStartAt(false), fFormatting(false), grfhic(0), lvl(NULL)
+		iStartAt(0), ilvl(0), fStartAt(false), fFormatting(false), grfhic(0), lvl(nullptr)
 	{
 	}
 	ListFormatOverrideLevel::~ListFormatOverrideLevel()
@@ -38,7 +38,7 @@ namespace DocFileFormat
 
 	/// Parses the bytes to retrieve a ListFormatOverrideLevel
 	ListFormatOverrideLevel::ListFormatOverrideLevel( VirtualStreamReader* reader, int length ):
-		iStartAt(0), ilvl(0), fStartAt(false), fFormatting(false), grfhic(0), lvl(NULL)
+		iStartAt(0), ilvl(0), fStartAt(false), fFormatting(false), grfhic(0), lvl(nullptr)
 	{
 		this->iStartAt = reader->ReadInt32();
 		unsigned int flag = (int)reader->ReadUInt32();

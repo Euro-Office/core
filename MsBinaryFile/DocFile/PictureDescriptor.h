@@ -131,7 +131,7 @@ namespace DocFileFormat
 
 namespace ImageHelper
 {
-    struct __BITMAPINFOHEADER
+    struct DocBitmapInfoHeader
     {
         _UINT32     biSize;
         _INT32      biWidth;
@@ -146,7 +146,7 @@ namespace ImageHelper
         _UINT32     biClrImportant;
     };
 
-    struct __BITMAPCOREHEADER
+    struct DocBitmapCoreHeader
     {
         _UINT32     bcSize;                 /* used to get to color table */
         _UINT16     bcWidth;

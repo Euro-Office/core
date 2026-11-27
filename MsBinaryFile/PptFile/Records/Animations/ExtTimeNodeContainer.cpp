@@ -121,7 +121,7 @@ void CRecordExtTimeNodeContainer::ReadFromStream(SRecordHeader &oHeader, POLE::S
         LONG lPosExpected = 0;
         StreamUtils::StreamPosition ( lPosExpected, pStream );
 
-        if ( ReadHeader.ReadFromStream(pStream) == false)
+        if ( !ReadHeader.ReadFromStream(pStream))
             break;
 
         lCurLen +=	8 + ReadHeader.RecLen;

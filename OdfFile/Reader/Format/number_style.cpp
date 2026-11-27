@@ -30,12 +30,17 @@
 #include <xml/xmlchar.h>
 #include <xml/utils.h>
 
+#include <vector>
+
 #include "../../Common/CPColorUtils.h"
 
 #include "serialize_elements.h"
 #include "paragraph_elements.h"
 #include "style_text_properties.h"
 #include "style_map.h"
+
+#include <algorithm>
+#include <cwctype>
 
 namespace cpdoccore { 
 
@@ -99,10 +104,47 @@ void number_style_base::oox_convert_impl(oox::num_format_context & Context)
     Context.end_format();
 }
 
+namespace
+{
+// A style:map condition in lower case and without blanks, as num_format_context compares it.
+std::wstring plain_condition(std::wstring condition)
+{
+    condition.erase(std::remove_if(condition.begin(), condition.end(),
+                                   [](wchar_t c) { return c == L' ' || c == L'\t'; }),
+                    condition.end());
+    std::transform(condition.begin(), condition.end(), condition.begin(),
+                   [](wchar_t c) { return static_cast<wchar_t>(std::towlower(c)); });
+    return condition;
+}
+
+// True when the maps have a format for the positive numbers and one for the negative numbers.
+bool maps_cover_positive_and_negative(const office_element_ptr_array & maps)
+{
+    bool positive = false;
+    bool negative = false;
+    for (const office_element_ptr & map : maps)
+    {
+        if (const style_map * styleMap = dynamic_cast<const style_map *>(map.get()))
+        {
+            const std::wstring condition = plain_condition(styleMap->style_condition_);
+            positive = positive || condition == L"value()>0" || condition == L"value()>=0";
+            negative = negative || condition == L"value()<0" || condition == L"value()<=0";
+        }
+    }
+    return positive && negative;
+}
+}
+
 void number_style_base::oox_convert(oox::num_format_context & Context)
 {
     if (!style_map_.empty())
     {
+        // LibreOffice reads the last map of a text style as "all other numbers", whatever its condition says.
+        // When the maps cover the positive and the negative numbers, their conditions are kept: zero then goes to
+        // the first part, as in LibreOffice, which shows zero with the first part for maps "value()>0", "value()<0".
+        const bool lastMapForOtherNumbers =
+            get_type() == typeNumberTextStyle && !maps_cover_positive_and_negative(style_map_);
+
 		for (size_t i = 0; i < style_map_.size(); i++)
 		{
             if (const style_map * styleMap = dynamic_cast<const style_map *>(style_map_[i].get()))
@@ -116,8 +158,10 @@ void number_style_base::oox_convert(oox::num_format_context & Context)
                     {
                         concrete_num_style->oox_convert_impl(Context);
 
+                        const bool otherNumbers = lastMapForOtherNumbers && i + 1 == style_map_.size();
+
                         const std::wstring num_format = Context.get_last_format();
-                        Context.add_format(condition, num_format);
+                        Context.add_format(otherNumbers ? L"" : condition, num_format);
                     }
                 }
             }
@@ -126,8 +170,12 @@ void number_style_base::oox_convert(oox::num_format_context & Context)
 
     oox_convert_impl(Context);
     const std::wstring num_format = Context.get_last_format();
-    Context.add_format(L"", num_format);
 
+    // The content of a text style with maps is the text part; it must not replace the number part of the maps.
+    if (get_type() == typeNumberTextStyle && !style_map_.empty())
+        return;
+
+    Context.add_format(L"", num_format);
 }
 
 
@@ -461,6 +509,80 @@ void number_number::oox_convert(oox::num_format_context & Context)
         number_decimal_places_);
 }
 
+namespace
+{
+// Literal text of a percentage style goes into the XLSX format code as it is only where it is a
+// "%" sign or made of characters that Excel shows without quotes (spaces and $-+/():!^&'~{}<>=).
+// Any other run is quoted, so that its letters are not read as format tokens:
+// "Rendite " 0.00 "%" must give "Rendite "0.00%, not Rendite 0.00% (d and e are date tokens).
+// The text arrives XML-encoded (text_to_stream): an entity counts as the one character it stands
+// for and is written out unchanged; a quote inside quoted text is written as "\"" (close the
+// quote, an escaped quote, open again).
+std::wstring quote_percentage_text(const std::wstring & text)
+{
+	struct token
+	{
+		wchar_t c;          // the character the token stands for
+		std::wstring xml;   // how it is written
+	};
+	std::wstring result;
+	std::vector<token> run;
+	auto flush = [&]()
+	{
+		if (run.empty())
+			return;
+		bool plain = true;
+		for (const token & t : run)
+		{
+			if (std::wstring(L" \u00A0\u202F$-+/():!^&'~{}<>=").find(t.c) == std::wstring::npos)
+				plain = false;
+		}
+		if (!plain)
+			result += L'"';
+		for (const token & t : run)
+		{
+			if (!plain && t.c == L'"')
+				result += L"\"\\" + t.xml + L"\"";
+			else
+				result += t.xml;
+		}
+		if (!plain)
+			result += L'"';
+		run.clear();
+	};
+	for (size_t i = 0; i < text.size(); ++i)
+	{
+		token t{text[i], std::wstring(1, text[i])};
+		if (text[i] == L'&')
+		{
+			static const std::pair<const wchar_t *, wchar_t> entities[] = {
+				{L"&quot;", L'"'}, {L"&apos;", L'\''}, {L"&lt;", L'<'}, {L"&gt;", L'>'}, {L"&amp;", L'&'}};
+			for (const auto & e : entities)
+			{
+				const std::wstring name(e.first);
+				if (text.compare(i, name.size(), name) == 0)
+				{
+					t = token{e.second, name};
+					i += name.size() - 1;
+					break;
+				}
+			}
+		}
+		if (t.c == L'%')
+		{
+			flush();
+			result += t.xml;
+		}
+		else
+		{
+			run.push_back(t);
+		}
+	}
+	flush();
+	return result;
+}
+}
+
 void number_text::oox_convert(oox::num_format_context & Context)
 {
 	std::wstringstream strm;
@@ -472,10 +594,13 @@ void number_text::oox_convert(oox::num_format_context & Context)
 
 	std::wstring text_ = strm.str();
 
-	if (odf_types::office_value_type::Date == Context.type() || 
+	if (odf_types::office_value_type::Percentage == Context.type())
+	{
+		text_ = quote_percentage_text(text_);
+	}
+	else if (odf_types::office_value_type::Date == Context.type() ||
 		odf_types::office_value_type::Time == Context.type() ||
-		odf_types::office_value_type::Currency == Context.type() || 
-		odf_types::office_value_type::Percentage == Context.type())
+		odf_types::office_value_type::Currency == Context.type())
 	{
 	}
 	else

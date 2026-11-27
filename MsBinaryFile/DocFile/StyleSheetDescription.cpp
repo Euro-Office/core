@@ -28,7 +28,8 @@
 namespace DocFileFormat
 {
 	/// Creates an empty STD object
-	StyleSheetDescription::StyleSheetDescription():	papx(NULL), chpx(NULL), tapx(NULL), sti(User),
+	StyleSheetDescription::StyleSheetDescription():	sti(User),
+													stk(paragraph_style), istdBase(0xffffff), cupx (0), istdNext(0xffffff), bchUpe(0),
 													fAutoRedef(false),
 													fHidden(false),
 													f97LidsSet(false),
@@ -39,9 +40,9 @@ namespace DocFileFormat
 													fNoHtmlExport(false),
 													fSemiHidden(false),
 													fLocked(false),
-													fInternalUse(false), fUnhideWhenUsed(false),
-													stk(paragraph_style), uiPriority(0), fQFormat(false),
-													istdBase(0xffffff), cupx (0), istdNext(0xffffff), bchUpe(0)
+													fInternalUse(false),
+													papx(nullptr), chpx(nullptr), tapx(nullptr),
+													fQFormat(false), fUnhideWhenUsed(false), uiPriority(0)
 	{
 
 	}
@@ -55,7 +56,8 @@ namespace DocFileFormat
 
 	/// Parses the bytes to retrieve a StyleSheetDescription
 	StyleSheetDescription::StyleSheetDescription (unsigned char* bytes, int size, int cbStdBase, POLE::Stream* dataStream, int nWordVersion) :
-													papx(NULL), chpx(NULL), tapx(NULL), sti(User),
+													sti(User),
+													stk(paragraph_style), istdBase(0xffffff), cupx (0), istdNext(0xffffff), bchUpe(0),
 													fAutoRedef(false),
 													fHidden(false),
 													f97LidsSet(false),
@@ -67,8 +69,8 @@ namespace DocFileFormat
 													fSemiHidden(false),
 													fLocked(false),
 													fInternalUse(false),
-													stk(paragraph_style), uiPriority(0), fQFormat(false),
-													istdBase(0xffffff), cupx (0), istdNext(0xffffff), bchUpe(0)
+													papx(nullptr), chpx(nullptr), tapx(nullptr),
+													fQFormat(false), fUnhideWhenUsed(false), uiPriority(0)
 	{
 //parsing the base (fix part)
 
@@ -117,13 +119,14 @@ namespace DocFileFormat
 			istdLink =	FormatUtils::GetUIntFromBytesBits( bytes, size, 80, 12 );
 			fHasOriginalStyle =	FormatUtils::GetBitFromBytes( bytes, size, 92 );
 			short fSpare = FormatUtils::GetUIntFromBytesBits(bytes, size, 93, 3); //ignored
+			(void)fSpare;
 			rsid =	FormatUtils::GetUIntFromBytesBits( bytes, size, 96, 32 );
 			iftcHtml = FormatUtils::GetUIntFromBytesBits(bytes, size, 128, 3);
 			uiPriority = FormatUtils::GetUIntFromBytesBits(bytes, size, 132, 12);
 		}
 
 //parsing the variable part
-		unsigned char	*name = NULL;
+		unsigned char	*name = nullptr;
 		unsigned char	characterCount = bytes[cbStdBase];
 		int				upxOffset = 0;
 
@@ -136,8 +139,8 @@ namespace DocFileFormat
 		}
 		else
 		{
-			name = new unsigned char[characterCount * 2];//characters are zero-terminated, so 1 char has 2 bytes:
-			memcpy( name, ( bytes + cbStdBase + 2 ), ( characterCount * 2 ) );
+			name = new unsigned char[static_cast<size_t>(characterCount) * 2];//characters are zero-terminated, so 1 char has 2 bytes:
+			memcpy( name, ( bytes + cbStdBase + 2 ), ( static_cast<size_t>(characterCount) * 2 ) );
 			xstzName = NSFile::CUtf8Converter::GetWStringFromUTF16((unsigned short*)(name), characterCount);
 
 			//parse the UPX structs
@@ -182,6 +185,7 @@ namespace DocFileFormat
 							RELEASEOBJECT(chpx);
 							chpx = new CharacterPropertyExceptions(upxBytes, cbUPX, nWordVersion);
 						}break;
+						default: break;
 					}
 				}
 				else if ( stk == paragraph_style )
@@ -202,6 +206,7 @@ namespace DocFileFormat
 							chpx = new CharacterPropertyExceptions( upxBytes, cbUPX, nWordVersion); 
 						}
 						break;
+					default: break;
 					}
 				}
 				else if ( stk == numbering_style )
@@ -215,6 +220,7 @@ namespace DocFileFormat
 							papx = new ParagraphPropertyExceptions( upxBytes, cbUPX, dataStream, nWordVersion );
 						}
 						break;
+					default: break;
 					}
 				}
 				else if ( stk == character_style )
@@ -228,6 +234,7 @@ namespace DocFileFormat
 							chpx = new CharacterPropertyExceptions( upxBytes, cbUPX, nWordVersion); 
 						}
 						break;
+					default: break;
 					}
 				}
 
