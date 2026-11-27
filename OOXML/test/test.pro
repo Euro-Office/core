@@ -24,6 +24,7 @@ SOURCES += main.cpp\
            pivot_show_data_as.cpp\
            vml_shape_size.cpp\
            vml_fill_relationship_id.cpp\
+           xlsb_workbook_flags.cpp\
            workbook_facts.cpp\
 
 HEADERS += common.h workbook_facts.h
