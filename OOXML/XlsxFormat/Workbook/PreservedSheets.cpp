@@ -404,9 +404,53 @@ namespace
 		return true;
 	}
 
-	std::vector<std::string> ReadSharedStrings(const std::wstring& sPackageDir, const std::wstring& sPart)
+	// Gives the elements of an XML fragment that use prefix sFrom ("x:", or empty for none) the prefix sTo.
+	std::string ReplaceElementPrefix(const std::string& sXml, const std::string& sFrom, const std::string& sTo)
 	{
-		std::vector<std::string> arItems;
+		if (sFrom == sTo)
+			return sXml;
+		std::string sResult;
+		size_t nCopied = 0;
+		size_t nPos = 0;
+		while (std::string::npos != (nPos = sXml.find('<', nPos)))
+		{
+			if (0 == sXml.compare(nPos, 4, "<!--") || 0 == sXml.compare(nPos, 9, "<![CDATA[") || 0 == sXml.compare(nPos, 2, "<?"))
+			{
+				const char* sEnd = sXml[nPos + 1] == '?' ? "?>" : sXml[nPos + 2] == '-' ? "-->" : "]]>";
+				nPos = sXml.find(sEnd, nPos);
+				if (std::string::npos == nPos)
+					break;
+				continue;
+			}
+			size_t nName = nPos + 1;
+			if (nName < sXml.size() && sXml[nName] == '/')
+				++nName;
+			size_t nNameEnd = nName;
+			while (nNameEnd < sXml.size() && !isspace((unsigned char)sXml[nNameEnd]) && sXml[nNameEnd] != '>' && sXml[nNameEnd] != '/')
+				++nNameEnd;
+			size_t nColon = sXml.find(':', nName);
+			std::string sPrefix = nColon < nNameEnd ? sXml.substr(nName, nColon + 1 - nName) : "";
+			if (sPrefix == sFrom)
+			{
+				sResult.append(sXml, nCopied, nName - nCopied);
+				sResult += sTo;
+				nCopied = nName + sPrefix.size();
+			}
+			nPos = nNameEnd;
+		}
+		sResult.append(sXml, nCopied, std::string::npos);
+		return sResult;
+	}
+
+	// A shared string item as written in sharedStrings.xml, and the prefix its elements use there.
+	struct CSharedString
+	{
+		std::string sPrefix;
+		std::string sXml;
+	};
+	std::vector<CSharedString> ReadSharedStrings(const std::wstring& sPackageDir, const std::wstring& sPart)
+	{
+		std::vector<CSharedString> arItems;
 		std::string sXml;
 		if (sPart.empty() || !ReadPackageFile(sPackageDir, sPart, sXml))
 			return arItems;
@@ -419,14 +463,14 @@ namespace
 				continue;
 			if (oTag.bSelfClosing)
 			{
-				arItems.push_back("");
+				arItems.push_back(CSharedString());
 				continue;
 			}
 			std::string sClose = "</" + oTag.sPrefix + "si>";
 			size_t nClose = sXml.find(sClose, oTag.nEnd);
 			if (std::string::npos == nClose)
 				break;
-			arItems.push_back(sXml.substr(oTag.nEnd, nClose - oTag.nEnd));
+			arItems.push_back(CSharedString{oTag.sPrefix, sXml.substr(oTag.nEnd, nClose - oTag.nEnd)});
 			nPos = nClose + sClose.size();
 		}
 		return arItems;
@@ -436,7 +480,7 @@ namespace
 	// save: shared-string cells become inline strings, style indices are dropped (they
 	// would point at different or missing formats), and the tab is no longer selected
 	// (Excel would otherwise open with two sheets grouped).
-	void DetachSheetXml(std::string& sXml, const std::vector<std::string>& arSharedStrings)
+	void DetachSheetXml(std::string& sXml, const std::vector<CSharedString>& arSharedStrings)
 	{
 		std::string sResult;
 		sResult.reserve(sXml.size());
@@ -479,7 +523,9 @@ namespace
 						{
 							SetAttrValue(sTag, "t", "inlineStr");
 							sTag += sXml.substr(oTag.nEnd, nV - oTag.nEnd);
-							sTag += "<" + oTag.sPrefix + "is>" + arSharedStrings[nIndex] + "</" + oTag.sPrefix + "is>";
+							// the item's elements take the sheet's prefix: the sheet may not declare the shared strings' one
+							const CSharedString& oItem = arSharedStrings[nIndex];
+							sTag += "<" + oTag.sPrefix + "is>" + ReplaceElementPrefix(oItem.sXml, oItem.sPrefix, oTag.sPrefix) + "</" + oTag.sPrefix + "is>";
 							sTag += sXml.substr(nVEnd + sCloseV.size(), nClose - nVEnd - sCloseV.size());
 							nReplaceEnd = nClose;
 							nPos = nClose;
@@ -737,7 +783,7 @@ void CollectPreservedSheets(CWorkbook& workbook, const std::wstring& sPackageDir
 	}
 
 	CContentTypeMap oContentTypes(sPackageRoot);
-	std::vector<std::string> arSharedStrings;
+	std::vector<CSharedString> arSharedStrings;
 	bool bSharedStringsRead = false;
 
 	std::vector<CSheet*>& arItems = workbook.m_oSheets->m_arrItems;
