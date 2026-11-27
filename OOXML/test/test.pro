@@ -22,6 +22,7 @@ SOURCES += main.cpp\
            parameter_type.cpp\
            editorbin_source_file_type.cpp\
            pivot_show_data_as.cpp\
+           xlsb_sort_conditions.cpp\
            vml_shape_size.cpp\
            vml_fill_relationship_id.cpp\
            workbook_facts.cpp\
