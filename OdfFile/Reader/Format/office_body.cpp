@@ -127,9 +127,23 @@ void office_body::docx_convert(oox::docx_conversion_context & Context)
 	{
 		odf_reader::page_layout_container & pgContainer = Context.root()->odf_context().pageLayoutContainer();
 		page_layout_instance * backgroundLayout = pgContainer.page_layout_by_name(Context.get_page_properties());
-		
-		if (!backgroundLayout || !backgroundLayout->properties() ||
-			!backgroundLayout->properties()->attlist_.common_background_color_attlist_.fo_background_color_)
+
+		oox::_oox_fill fill;
+		bool hasBackground = false;
+		if (backgroundLayout && backgroundLayout->properties())
+		{
+			style_page_layout_properties * layout_properties = backgroundLayout->properties();
+			Compute_GraphicFill(layout_properties->attlist_.common_draw_fill_attlist_,
+								layout_properties->style_background_image_, Context.root(), fill);
+			// The DOCX page background carries a picture (2) or a gradient (3) fill, but no hatch,
+			// no solid fill without a page colour and no incomplete fill (-1).
+			hasBackground = layout_properties->attlist_.common_background_color_attlist_.fo_background_color_ ||
+							fill.type == 2 || fill.type == 3;
+		}
+
+		// Only a first page style without a colour and without a picture or gradient fill of its own
+		// takes the colour of another page style.
+		if (!hasBackground)
 		{
 			std::vector<style_master_page*> & masterPagesAll = pgContainer.master_pages();
 			for (size_t i = 0; i < masterPagesAll.size(); ++i)
@@ -143,6 +157,9 @@ void office_body::docx_convert(oox::docx_conversion_context & Context)
 					if (pl && pl->properties() && pl->properties()->attlist_.common_background_color_attlist_.fo_background_color_)
 					{
 						backgroundLayout = pl;
+						fill.clear();
+						Compute_GraphicFill(pl->properties()->attlist_.common_draw_fill_attlist_,
+											pl->properties()->style_background_image_, Context.root(), fill);
 						break;
 					}
 				}
@@ -152,11 +169,6 @@ void office_body::docx_convert(oox::docx_conversion_context & Context)
 		{
 			if (style_page_layout_properties * layout_properties = backgroundLayout->properties())
 			{
-				oox::_oox_fill fill;
-
-				Compute_GraphicFill(layout_properties->attlist_.common_draw_fill_attlist_,
-									layout_properties->style_background_image_, Context.root(), fill);
-
 				if (layout_properties->attlist_.common_background_color_attlist_.fo_background_color_ || fill.type != 0)
 				{
 					if ((fill.bitmap) && (fill.bitmap->rId.empty()))
