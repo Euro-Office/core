@@ -48,6 +48,9 @@ jobs:
       uses: actions/checkout@v4
       with:
         submodules: recursive
+        # A pull request's merge commit and its parents, for clang-tidy's
+        # HEAD^1..HEAD. Also sets the submodules' depth, so only there.
+        fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 1 }}
 
     # Build environment: the core-base stage of the release Dockerfile
     - name: Get core-base image
@@ -114,7 +117,56 @@ jobs:
     # V8, etc.) missing from the remote cache, without uploading them.
     - name: Build core (x2t, docbuilder, etc.)
       run: |
-        "$RUNNER_TEMP/in-build-image" 'ccache --zero-stats && scripts/build.sh --tests --ccache -- -DEO_NO_WARNINGS=ON'
+        "$RUNNER_TEMP/in-build-image" 'ccache --zero-stats && scripts/build.sh --tests --ccache -- -DEO_NO_WARNINGS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+
+    # Informational: clang-tidy on the lines this pull request changes only,
+    # so findings in untouched code never show up. Never fails the build: if
+    # clang-tidy can't run, this step shows as failed and the report says so.
+    # Findings show in the job summary, in a PR comment (posted by
+    # clang-tidy-comment.yml from the uploaded report) and as annotations on
+    # the diff, which GitHub caps at 10 per step. Annotation lines come from
+    # the merge commit, so they can be off where the base branch also changed
+    # the file. No timeout: a run cut short would check only part of the PR.
+    #
+    # clang-tidy is pinned so findings don't change with the image; bumping it
+    # is its own PR, showing the new findings. Installed here, not in the
+    # image, so a PyPI outage can't fail the build or slow the arm64 leg.
+    - name: clang-tidy on changed lines
+      id: clang-tidy
+      if: github.event_name == 'pull_request' && matrix.arch == 'amd64'
+      continue-on-error: true
+      env:
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      run: |
+        out=.cache/clang-tidy
+        mkdir -p "$out"
+        echo "$PR_NUMBER" > "$out/pr-number"
+        echo "$HEAD_SHA" > "$out/head-sha"
+        echo "$RUN_URL" > "$out/run-url"
+        rc=0
+        "$RUNNER_TEMP/in-build-image" '$CORE_PYTHON -m pip install --no-cache-dir -q --root-user-action=ignore clang-tidy==22.1.8 &&
+          .github/scripts/clang-tidy-diff.sh HEAD^1..HEAD build .cache/clang-tidy' || rc=$?
+        cat "$out/annotations.txt" 2> /dev/null || true
+        cat "$out/summary.md" >> "$GITHUB_STEP_SUMMARY" 2> /dev/null || true
+        exit "$rc"
+
+    # clang-tidy.log is there to debug a failed run; the comment workflow only
+    # reads the other three
+    - name: Upload clang-tidy report
+      if: ${{ !cancelled() && steps.clang-tidy.outcome != 'skipped' }}
+      continue-on-error: true
+      uses: actions/upload-artifact@v4
+      with:
+        name: clang-tidy-report
+        path: |
+          .cache/clang-tidy/pr-number
+          .cache/clang-tidy/count
+          .cache/clang-tidy/comment.md
+          .cache/clang-tidy/clang-tidy.log
+        if-no-files-found: ignore
+        retention-days: 7
 
     - name: ccache statistics
       if: always()

@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-narrowing-conversions,
+  -bugprone-macro-parentheses,
+  -bugprone-reserved-identifier,
+  clang-analyzer-*,
+  misc-unused-parameters,
+  modernize-use-nullptr,
+  readability-redundant-casting,
+  readability-simplify-boolean-expr
+WarningsAsErrors: ''
+# Headers are left out for now. Set explicitly: clang-tidy 22 changed the
+# default from '' (no headers) to '.*' (every header, third-party included).
+HeaderFilterRegex: ''
+FormatStyle: none
