@@ -51,5 +51,13 @@ namespace XLSB
         record >> ipdPasswordData;
     }
 
+    void FileSharingIso::writeFields(XLS::CFRecord& record)
+    {
+        record << dwSpinCount;
+        record << fReadOnlyRec;
+        record << stUserName;
+        record << ipdPasswordData;
+    }
+
 } // namespace XLSB
 

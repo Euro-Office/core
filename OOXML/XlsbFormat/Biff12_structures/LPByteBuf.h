@@ -46,7 +46,7 @@ namespace XLSB
 
 		std::wstring GetBase64();
 
-        _UINT32             cbLength;
+        _UINT32             cbLength = 0;
         std::vector<BYTE>   rgbData;
 
     };

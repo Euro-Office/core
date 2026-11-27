@@ -25,6 +25,9 @@
 
 #include "WorksheetChildOther.h"
 
+#include <deque>
+#include <unordered_map>
+
 #include "../../XlsbFormat/Biff12_records/WsDim.h"
 #include "../../XlsbFormat/Biff12_records/WsFmtInfo.h"
 #include "../../XlsbFormat/Biff12_unions/WSVIEWS2.h"
@@ -89,6 +92,23 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/DConName.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/DConRef.h"
 
+namespace
+{
+	// Decodes a base64 attribute value (hash or salt) into the length-prefixed byte buffer of an XLSB record.
+	void DecodeBase64(const std::wstring& value, XLSB::LPByteBuf& buffer)
+	{
+		const std::string data(value.begin(), value.end());
+		BYTE* bytes = nullptr;
+		int length = 0;
+		buffer.rgbData.clear();
+		if (NSFile::CBase64Converter::Decode(data.c_str(), static_cast<int>(data.size()), bytes, length) && bytes &&
+			length > 0)
+			buffer.rgbData.assign(bytes, bytes + length);
+		delete[] bytes;
+		buffer.cbLength = static_cast<_UINT32>(buffer.rgbData.size());
+	}
+}
+
 namespace OOX
 {
 	namespace Spreadsheet
@@ -109,7 +129,7 @@ namespace OOX
 		void CProtectedRange::toXML(NSStringUtils::CStringBuilder& writer) const
 		{
 			writer.WriteString(L"<protectedRange");
-			WritingStringNullableAttrString(L"name", m_oName, m_oName.get());
+			WritingStringNullableAttrEncodeXmlString(L"name", m_oName, m_oName.get());
 			WritingStringNullableAttrString(L"sqref", m_oSqref, m_oSqref.get());
 			WritingStringNullableAttrString(L"algorithmName", m_oAlgorithmName, m_oAlgorithmName->ToString());
 			WritingStringNullableAttrString(L"hashValue", m_oHashValue, m_oHashValue.get());
@@ -200,63 +220,35 @@ namespace OOX
 		}
         void CProtectedRange::toBin(XLS::StreamCacheWriterPtr& writer)
         {
-            XLS::CFRecordPtr rangeProtRecord;
-            std::vector<BYTE> dataBuffer;
-            if(m_oSpinCount.IsInit() || m_oSaltValue.IsInit())
+            XLSB::UncheckedSqRfX ref;
+            if(m_oSqref.IsInit())
+                ref.strValue = m_oSqref.get();
+            XLSB::RangeProtectionTitleSDRel rangeProtectionTitleSDRel;
+            if (m_oName.IsInit())
+                rangeProtectionTitleSDRel.rgchTitle = m_oName.get();
+
+            XLSB::IsoPasswordData ipdPasswordData;
+            if(m_oHashValue.IsInit() && m_oAlgorithmName.IsInit())
+                DecodeBase64(m_oHashValue.get(), ipdPasswordData.rgbHash);
+            // BrtRangeProtectionIso needs a hash and the name of its algorithm; it is followed by a BrtRangeProtection
+            // with the same range and title.
+            if(!ipdPasswordData.rgbHash.rgbData.empty())
             {
-                rangeProtRecord = writer->getNextRecord(XLSB::rt_RangeProtectionIso);
+                if(m_oSaltValue.IsInit())
+                    DecodeBase64(m_oSaltValue.get(), ipdPasswordData.rgbSalt);
+                ipdPasswordData.szAlgName = m_oAlgorithmName->ToString();
+
+                auto rangeProtIsoRecord = writer->getNextRecord(XLSB::rt_RangeProtectionIso);
                 _UINT32 dwSpinCount = 0;
                 if(m_oSpinCount.IsInit())
                     dwSpinCount = m_oSpinCount->GetValue();
-                *rangeProtRecord << dwSpinCount;
+                *rangeProtIsoRecord << dwSpinCount << ref << rangeProtectionTitleSDRel << ipdPasswordData;
+                writer->storeNextRecord(rangeProtIsoRecord);
             }
-            else
-            {
-                rangeProtRecord = writer->getNextRecord(XLSB::rt_RangeProtection);
-                _UINT16 protpwd = 0;
-                *rangeProtRecord << protpwd;
-            }
-            {
-                XLSB::UncheckedSqRfX ref;
-                if(m_oSqref.IsInit())
-                        ref.strValue = m_oSqref.get();
-                *rangeProtRecord << ref;
-            }
-            {
-                XLSB::RangeProtectionTitleSDRel rangeProtectionTitleSDRel;
-                if (m_oName.IsInit())
-                    rangeProtectionTitleSDRel.rgchTitle = m_oName.get();
-                *rangeProtRecord << rangeProtectionTitleSDRel;
-            }
-            if(rangeProtRecord->getTypeId() ==  XLSB::rt_RangeProtectionIso)
-            {
-                dataBuffer.reserve(rangeProtRecord->getDataSize() - 4);
-                std::memcpy(dataBuffer.data(), rangeProtRecord->getData() + 4, rangeProtRecord->getDataSize() - 4);
-                XLSB::IsoPasswordData ipdPasswordData;
-                BYTE * temp;
-                auto tempSize = 0;
-                NSFile::CBase64Converter::CBase64Converter::Decode(std::string{m_oHashValue.get().begin(),
-                    m_oHashValue.get().end()}.c_str(), m_oHashValue.get().size(), temp, tempSize);
-                ipdPasswordData.rgbHash.cbLength = tempSize;
-                ipdPasswordData.rgbHash.rgbData = std::vector<BYTE>(temp, temp + tempSize);
-                delete[] temp;
-
-                NSFile::CBase64Converter::Decode(std::string{m_oSaltValue.get().begin(),
-                    m_oSaltValue.get().end()}.c_str(), m_oSaltValue.get().size(), temp, tempSize);
-                ipdPasswordData.rgbSalt.cbLength = tempSize;
-                ipdPasswordData.rgbSalt.rgbData = std::vector<BYTE>(temp, temp + tempSize);
-                delete[] temp;
-            }
+            auto rangeProtRecord = writer->getNextRecord(XLSB::rt_RangeProtection);
+            _UINT16 protpwd = 0;
+            *rangeProtRecord << protpwd << ref << rangeProtectionTitleSDRel;
             writer->storeNextRecord(rangeProtRecord);
-            if(rangeProtRecord->getTypeId() ==  XLSB::rt_RangeProtectionIso)
-            {
-                rangeProtRecord.reset();
-                rangeProtRecord = writer->getNextRecord(XLSB::rt_RangeProtection);
-                _UINT16 protpwd = 0;
-                *rangeProtRecord << protpwd;
-                rangeProtRecord->appendRawDataToStatic(dataBuffer.data(), dataBuffer.size());
-                writer->storeNextRecord(rangeProtRecord);
-            }
         }
 		void CProtectedRange::fromBin(XLS::BaseObjectPtr& obj)
 		{
@@ -381,6 +373,46 @@ namespace OOX
 		{
 			for (auto &protRange : obj)
 				m_arrItems.push_back(new CProtectedRange(protRange));
+		}
+		void CProtectedRanges::fromBin(std::vector<XLS::BaseObjectPtr>& iso, std::vector<XLS::BaseObjectPtr>& plain)
+		{
+			// A range with a password has a BrtRangeProtectionIso followed by a BrtRangeProtection with the same cell
+			// reference and title (MS-XLSB 2.4.767); a range without a password has only the BrtRangeProtection.
+			// One range per BrtRangeProtection, taken from the BrtRangeProtectionIso of the same range if there is one.
+			// The BrtRangeProtectionIso records not used yet, by cell reference and title, in file order. A map keeps the
+			// pairing linear in the number of records.
+			std::vector<bool> used(iso.size(), false);
+			std::unordered_map<std::wstring, std::deque<size_t>> unusedIso;
+			for (size_t i = 0; i < iso.size(); ++i)
+			{
+				auto isoRange = static_cast<XLSB::RangeProtectionIso*>(iso[i].get());
+				if (isoRange != nullptr)
+					unusedIso[isoRange->sqRfX.strValue + L'\n' + isoRange->rangeProtectionTitleSDRel.rgchTitle.value()]
+						.push_back(i);
+			}
+			for (auto &protRange : plain)
+			{
+				XLS::BaseObjectPtr item = protRange;
+				auto range = static_cast<XLSB::RangeProtection*>(protRange.get());
+				if (range != nullptr)
+				{
+					auto found =
+						unusedIso.find(range->sqRfX.strValue + L'\n' + range->rangeProtectionTitleSDRel.rgchTitle.value());
+					if (found != unusedIso.end() && !found->second.empty())
+					{
+						const size_t i = found->second.front();
+						found->second.pop_front();
+						used[i] = true;
+						item = iso[i];
+					}
+				}
+				m_arrItems.push_back(new CProtectedRange(item));
+			}
+			for (size_t i = 0; i < iso.size(); ++i)
+			{
+				if (!used[i])
+					m_arrItems.push_back(new CProtectedRange(iso[i]));
+			}
 		}
 		EElementType CProtectedRanges::getType() const
 		{

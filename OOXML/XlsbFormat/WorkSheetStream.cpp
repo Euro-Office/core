@@ -363,9 +363,11 @@ const bool WorkSheetStream::loadContent(BinProcessor& proc)
 		case rt_RangeProtectionIso:
 		{
 			count = proc.repeated<RangeProtectionIso>(0, 0);
+			// After the records of earlier runs, so the ranges keep the order of the file
+			const size_t runStart = m_arBrtRangeProtectionIso.size();
 			while (count > 0)
 			{
-				m_arBrtRangeProtectionIso.insert(m_arBrtRangeProtectionIso.begin(), elements_.back());
+				m_arBrtRangeProtectionIso.insert(m_arBrtRangeProtectionIso.begin() + runStart, elements_.back());
 				elements_.pop_back();
 				count--;
 			}
@@ -374,9 +376,11 @@ const bool WorkSheetStream::loadContent(BinProcessor& proc)
 		case rt_RangeProtection:
 		{
 			count = proc.repeated<RangeProtection>(0, 0);
+			// After the records of earlier runs, so the ranges keep the order of the file
+			const size_t runStart = m_arBrtRangeProtection.size();
 			while (count > 0)
 			{
-				m_arBrtRangeProtection.insert(m_arBrtRangeProtection.begin(), elements_.back());
+				m_arBrtRangeProtection.insert(m_arBrtRangeProtection.begin() + runStart, elements_.back());
 				elements_.pop_back();
 				count--;
 			}

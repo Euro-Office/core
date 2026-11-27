@@ -39,8 +39,13 @@ set(_ooxml_test_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/pivot_show_data_as.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xls_export.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/workbook_facts.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/xlsb_protected_ranges.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/xlsb_protected_ranges_xlsx.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/xlsb_mixed_protected_ranges.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/xlsx_protected_range_title.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/vml_shape_size.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/vml_fill_relationship_id.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/xlsb_workbook_protection.cpp
     ${CORE_ROOT_DIR}/X2tConverter/src/dylib/x2t.cpp
 )
 

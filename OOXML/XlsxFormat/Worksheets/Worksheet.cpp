@@ -225,10 +225,13 @@ namespace OOX
                         if (workSheetStream->m_DCON != nullptr)
                             m_oDataConsolidate = workSheetStream->m_DCON;
 
-                        if (!workSheetStream->m_arBrtRangeProtectionIso.empty())
-                            m_oProtectedRanges = workSheetStream->m_arBrtRangeProtectionIso;
-                        else if(!workSheetStream->m_arBrtRangeProtection.empty())
-                            m_oProtectedRanges = workSheetStream->m_arBrtRangeProtection;
+                        if (!workSheetStream->m_arBrtRangeProtectionIso.empty() ||
+                            !workSheetStream->m_arBrtRangeProtection.empty())
+                        {
+                            m_oProtectedRanges.Init();
+                            m_oProtectedRanges->fromBin(workSheetStream->m_arBrtRangeProtectionIso,
+                                                        workSheetStream->m_arBrtRangeProtection);
+                        }
 
                         if (workSheetStream->m_FRTWORKSHEET != nullptr)
                             m_oExtLst = workSheetStream->m_FRTWORKSHEET;
@@ -959,6 +962,8 @@ namespace OOX
 				m_oSheetData->toXML(writer);
 			if(m_oSheetProtection.IsInit())
 				m_oSheetProtection->toXML(writer);
+			if(m_oProtectedRanges.IsInit())
+				m_oProtectedRanges->toXML(writer);
 			if(m_oAutofilter.IsInit())
 				m_oAutofilter->toXML(writer);
 			if(m_oSortState.IsInit())

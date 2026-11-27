@@ -42,6 +42,23 @@
 #include "../../Common/SimpleTypes_Shared.h"
 #include "../../Common/SimpleTypes_Spreadsheet.h"
 
+namespace
+{
+	// Decodes a base64 attribute value (hash or salt) into the length-prefixed byte buffer of an XLSB record.
+	void DecodeBase64(const std::wstring& value, XLSB::LPByteBuf& buffer)
+	{
+		const std::string data(value.begin(), value.end());
+		BYTE* bytes = nullptr;
+		int length = 0;
+		buffer.rgbData.clear();
+		if (NSFile::CBase64Converter::Decode(data.c_str(), static_cast<int>(data.size()), bytes, length) && bytes &&
+			length > 0)
+			buffer.rgbData.assign(bytes, bytes + length);
+		delete[] bytes;
+		buffer.cbLength = static_cast<_UINT32>(buffer.rgbData.size());
+	}
+}
+
 namespace OOX
 {
 	namespace Spreadsheet
@@ -274,7 +291,7 @@ namespace OOX
 				else
 					ptr->wFlags.fLockWindow = false;
 				if(m_oWorkbookAlgorithmName.IsInit())
-					ptr->ipdBookPasswordData.szAlgName = m_oWorkbookAlgorithmName->GetValue();
+					ptr->ipdBookPasswordData.szAlgName = m_oWorkbookAlgorithmName->ToString();
 				else
 					ptr->ipdBookPasswordData.szAlgName.setSize(0xFFFFFFFF);
 				if(m_oWorkbookSpinCount.IsInit())
@@ -283,26 +300,12 @@ namespace OOX
 					ptr->dwBookSpinCount = 100000;
 
 				if(m_oWorkbookHashValue.IsInit())
-				{
-					auto len = 0;
-					auto bytes = ptr->ipdBookPasswordData.rgbHash.rgbData.data();
-					std::string strData = {m_oWorkbookHashValue.get().begin(), m_oWorkbookHashValue.get().end()};
-					NSFile::CBase64Converter::Decode(strData.c_str(), strData.size(),
-						bytes, len);
-					ptr->ipdBookPasswordData.rgbHash.cbLength = len;
-				}
+					DecodeBase64(m_oWorkbookHashValue.get(), ptr->ipdBookPasswordData.rgbHash);
 
 				if(m_oWorkbookSaltValue.IsInit())
-				{
-					auto len1 = 0;
-					auto bytes1 = ptr->ipdBookPasswordData.rgbHash.rgbData.data();
-					std::string strData1 = {m_oWorkbookSaltValue.get().begin(), m_oWorkbookSaltValue.get().end()};
-					NSFile::CBase64Converter::Decode(strData1.c_str(), strData1.size(),
-						bytes1, len1);
-					ptr->ipdBookPasswordData.rgbSalt.cbLength = len1;
-				}
+					DecodeBase64(m_oWorkbookSaltValue.get(), ptr->ipdBookPasswordData.rgbSalt);
 				if(m_oRevisionsAlgorithmName.IsInit())
-					ptr->ipdRevPasswordData.szAlgName = m_oRevisionsAlgorithmName->GetValue();
+					ptr->ipdRevPasswordData.szAlgName = m_oRevisionsAlgorithmName->ToString();
 				else
 					ptr->ipdRevPasswordData.szAlgName.setSize(0xFFFFFFFF);
 				if(m_oRevisionsSpinCount.IsInit())
@@ -311,23 +314,9 @@ namespace OOX
 					ptr->dwRevSpinCount = 100000;
 
 				if(m_oRevisionsHashValue.IsInit())
-				{
-					auto len2 = 0;
-					auto bytes2 = ptr->ipdRevPasswordData.rgbHash.rgbData.data();
-					std::string strData2 = {m_oRevisionsHashValue.get().begin(), m_oRevisionsHashValue.get().end()};
-					NSFile::CBase64Converter::Decode(strData2.c_str(), strData2.size(),
-						bytes2, len2);
-					ptr->ipdRevPasswordData.rgbHash.cbLength = len2;
-				}
+					DecodeBase64(m_oRevisionsHashValue.get(), ptr->ipdRevPasswordData.rgbHash);
 				if(m_oRevisionsSaltValue.IsInit())
-				{
-					auto len3 = 0;
-					auto bytes3 = ptr->ipdRevPasswordData.rgbSalt.rgbData.data();
-					std::string strData3 = {m_oRevisionsSaltValue.get().begin(), m_oRevisionsSaltValue.get().end()};
-					NSFile::CBase64Converter::Decode(strData3.c_str(), strData3.size(),
-						bytes3, len3);
-					ptr->ipdRevPasswordData.rgbSalt.cbLength = len3;
-				}
+					DecodeBase64(m_oRevisionsSaltValue.get(), ptr->ipdRevPasswordData.rgbSalt);
 			}
 			else
 			{
@@ -477,7 +466,7 @@ namespace OOX
                 else
                     ptr->stUserName = L"";
                 if(m_oAlgorithmName.IsInit())
-                    ptr->ipdPasswordData.szAlgName = m_oAlgorithmName->GetValue();
+                    ptr->ipdPasswordData.szAlgName = m_oAlgorithmName->ToString();
                 else
                     ptr->ipdPasswordData.szAlgName = L"";
                 if(m_oSpinCount.IsInit())
@@ -485,25 +474,10 @@ namespace OOX
                 else
                     ptr->dwSpinCount = 0;
 
-				auto len = 0;
                 if(m_oHashValue.IsInit())
-                {
-                    auto bytes = ptr->ipdPasswordData.rgbHash.rgbData.data();
-                    std::string strData = {m_oHashValue.get().begin(), m_oHashValue.get().end()};
-                    NSFile::CBase64Converter::Decode(strData.c_str(), strData.size(),
-                        bytes, len);
-                }
-				ptr->ipdPasswordData.rgbHash.cbLength = len;
-
-				auto len1 = 0;
+                    DecodeBase64(m_oHashValue.get(), ptr->ipdPasswordData.rgbHash);
                 if(m_oSaltValue.IsInit())
-                {
-                    auto bytes1 = ptr->ipdPasswordData.rgbSalt.rgbData.data();
-                    std::string strData1 = {m_oSaltValue.get().begin(), m_oSaltValue.get().end()};
-                    NSFile::CBase64Converter::Decode(strData1.c_str(), strData1.size(),
-                        bytes1, len1);
-                }
-				ptr->ipdPasswordData.rgbSalt.cbLength = len1;
+                    DecodeBase64(m_oSaltValue.get(), ptr->ipdPasswordData.rgbSalt);
                 auto ptr1(new XLSB::FileSharing);
                 ptr1->wResPass = L"";
                 ptr1->fReadOnlyRec = ptr->fReadOnlyRec;
