@@ -562,6 +562,10 @@ void paragraph::docx_convert(oox::docx_conversion_context & Context, _CP_OPT(std
 	Context.end_paragraph_style();
 	Context.finish_paragraph();
 
+	if (!Context.process_headers_footers_ && !in_drawing &&
+		Context.get_process_note() == oox::docx_conversion_context::noNote)
+		Context.body_started_ = true;
+
 	if (next_masterPageName)
 	{
 		if (true == Context.set_master_page_name(*next_masterPageName))
@@ -921,6 +925,7 @@ void section::add_child_element( xml::sax * Reader, const std::wstring & Ns, con
 void section::docx_convert(oox::docx_conversion_context & Context)
 {
 	bool bAddSection = false;
+	const bool bHidden = section_attr_.display_ && section_attr_.display_->get_type() == odf_types::text_display::None;
 	if ( false == Context.get_drawing_state_content())
 	{
 		std::wstring current_page_properties = Context.get_page_properties();
@@ -979,6 +984,8 @@ void section::docx_convert(oox::docx_conversion_context & Context)
         {
             Context.set_implicit_end(true);
         }
+		if (!bHidden && bAddSection)
+			break_before_master_page(Context, content_[i]);
         content_[i]->docx_convert(Context);
     }
 	if (bAddSection)
@@ -1037,6 +1044,38 @@ void index_body::add_child_element( xml::sax * Reader, const std::wstring & Ns, 
 		CP_CREATE_ELEMENT(content_);
 }
 
+void break_before_master_page(oox::docx_conversion_context & Context, const office_element_ptr & elm)
+{
+	// style:master-page-name always starts a new page, also when the page style stays the same.
+	// It is ignored inside tables.
+	if (!elm || !elm->element_style_name || !Context.body_started_ || Context.process_headers_footers_
+		|| Context.get_table_context().in_table())
+		return;
+
+	const bool is_table = elm->get_type() == typeTableTable;
+	const odf_types::style_family::type family = is_table ?
+		odf_types::style_family::Table : odf_types::style_family::Paragraph;
+
+	odf_reader::odf_read_context & odf_context = Context.root()->odf_context();
+	_CP_OPT(std::wstring) master_page =
+		odf_context.styleContainer().master_page_name_inherited(*elm->element_style_name, family);
+
+	// Like LibreOffice, ignore the name of a master page that does not exist
+	if (!master_page || !odf_context.pageLayoutContainer().master_page_by_name(*master_page))
+		return;
+
+	if (!is_table)
+	{
+		// A paragraph style that breaks the page already writes w:pageBreakBefore; a second break adds a page
+		const style_instance * style =
+			odf_context.styleContainer().style_by_name(*elm->element_style_name, family, false);
+		const paragraph_format_properties properties = calc_paragraph_properties_content(style);
+		if (properties.fo_break_before_ && properties.fo_break_before_->get_type() == odf_types::fo_break::Page)
+			return;
+	}
+	Context.set_page_break_before(2);
+}
+
 void index_body::docx_convert(oox::docx_conversion_context & Context) 
 {
 	if (index_title_)
@@ -1047,6 +1086,7 @@ void index_body::docx_convert(oox::docx_conversion_context & Context)
    	for (size_t i = 0; i < content_.size(); i++)
 	{
 		Context.start_index_element();
+			break_before_master_page(Context, content_[i]);
 			content_[i]->docx_convert(Context);
 		Context.end_index_element();
     }
@@ -1068,6 +1108,7 @@ void index_title::docx_convert(oox::docx_conversion_context & Context)
 {
 	for (size_t i = 0; i < content_.size(); i++)
     {
+		break_before_master_page(Context, content_[i]);
         content_[i]->docx_convert(Context);
     }
 }

@@ -637,14 +637,6 @@ void style::add_attributes( const xml::attributes_wc_ptr & Attributes )
 		else
 			style_default_outline_level_= XmlUtils::GetInteger(*sTest);
 	}
-
-	if (style_master_page_name_)
-	{
-		if (style_master_page_name_->empty())
-		{
-			style_master_page_name_.reset();
-		}
-	}
 }
 
 void style::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)

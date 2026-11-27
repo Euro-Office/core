@@ -35,6 +35,7 @@
 
 #include "serialize_elements.h"
 #include "odfcontext.h"
+#include "text_elements.h"
 #include "style_paragraph_properties.h"
 #include "styles.h"
 #include "text_elements.h"
@@ -482,6 +483,7 @@ void office_text::docx_convert(oox::docx_conversion_context & Context)
 				}
 			}
 		}
+		text::break_before_master_page(Context, content_[i]);
 		content_[i]->docx_convert(Context);
     }
 	// An empty paragraph of minimal height (the endnote page section and the save in DocxConverter
