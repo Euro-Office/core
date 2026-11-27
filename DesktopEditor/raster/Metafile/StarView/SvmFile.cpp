@@ -105,6 +105,15 @@ static const struct ActionNamesSmv
     { META_COMMENT_ACTION,               L"META_COMMENT_ACTION" }
 };
 
+// The bytes left in the current record (a size read from a record cannot reach beyond it).
+unsigned int CSvmFile::BytesLeftInRecord() const
+{
+	const unsigned long long ullEnd = (unsigned long long)m_unRecordPos + m_unRecordSize;
+	const unsigned int unPos = m_oStream.Tell();
+	const unsigned long long ullLeft = ullEnd > unPos ? ullEnd - unPos : 0;
+	return ullLeft < m_oStream.CanRead() ? (unsigned int)ullLeft : m_oStream.CanRead();
+}
+
 void CSvmFile::PlayMetaFile()
 {
 	m_oStream.SeekToStart();
@@ -128,6 +137,10 @@ void CSvmFile::PlayMetaFile()
 
 	for (unsigned int action = 0; action < m_oHeader.actionCount; ++action)
 	{
+		// The count comes from the file: stop where the records end, as LibreOffice does.
+		if (m_oStream.CanRead() < 8) // less than a record header (type, version, size)
+			break;
+
         unsigned short  actionType;
 
 		m_oStream >> actionType;
@@ -136,6 +149,9 @@ void CSvmFile::PlayMetaFile()
 		m_oStream >> m_unRecordSize;
 
         m_unRecordPos = m_oStream.Tell();
+
+		// The record's reader sees only the record: a size read from it cannot reach the next records.
+		m_oStream.SetCurrentBlockSize(m_unRecordSize);
 
         switch (actionType) 
 		{
@@ -211,8 +227,19 @@ void CSvmFile::PlayMetaFile()
 
 		m_currentActionType = actionType;
 
-		int need_skip = m_unRecordSize - (m_oStream.Tell() - m_unRecordPos);
-		m_oStream.Skip(need_skip);
+		m_oStream.ClearCurrentBlockSize();
+
+		// Go on at the end of the record (LibreOffice also skips to the end of each record).
+		const unsigned long long ullRecordEnd = (unsigned long long)m_unRecordPos + m_unRecordSize;
+		const unsigned int unPos = m_oStream.Tell();
+		int need_skip = 0;
+		if (ullRecordEnd < unPos)
+			m_oStream.SeekBack(unPos - (unsigned int)ullRecordEnd);
+		else
+		{
+			need_skip = (int)(std::min)(ullRecordEnd - unPos, (unsigned long long)m_oStream.CanRead());
+			m_oStream.Skip((unsigned int)need_skip);
+		}
 
 #ifdef _DEBUG
 		if (100 <= actionType && actionType <= META_LAST_ACTION && need_skip > 0 && !m_pOutput)
@@ -379,6 +406,10 @@ void CSvmFile::Read_META_POLYPOLYGON(std::vector<TSvmPolygon> & polygons, std::v
 	if (ushNumberOfPolygons <= 0)
 		return;
 
+	// The count comes from the file: every polygon needs at least its 2-byte point count.
+	if (ushNumberOfPolygons > m_oStream.CanRead() / 2)
+		ushNumberOfPolygons = (unsigned short)(m_oStream.CanRead() / 2);
+
 	for (unsigned short ushIndex = 0; ushIndex < ushNumberOfPolygons; ushIndex++)
 	{
 		TSvmPolygon poligon;
@@ -391,6 +422,10 @@ void CSvmFile::Read_META_POLYPOLYGON(std::vector<TSvmPolygon> & polygons, std::v
 	{
 		unsigned short complexPolygonCount;
 		m_oStream >> complexPolygonCount;
+
+		// Every entry needs at least its 2-byte index and 2-byte point count.
+		if (complexPolygonCount > m_oStream.CanRead() / 4)
+			complexPolygonCount = (unsigned short)(m_oStream.CanRead() / 4);
 
 		complexPolygons.resize(complexPolygonCount);
 
@@ -453,14 +488,35 @@ void CSvmFile::Read_META_POLYPOLYGON()
 	}
 }
 
+// An offset for a map mode, kept in the range of the coordinates (a file sets origin and scale).
+static int ClampOffset(double dValue)
+{
+	return dValue > 1e9 ? 1000000000 : (dValue > -1e9 ? (int)dValue : -1000000000);
+}
 void CSvmFile::Read_META_SETMAPMODE()
 {
 	TSvmMapMode mapMode;
 	m_oStream >> mapMode;
-	
-	m_pDC->SetMapMode(mapMode);
 
-	m_oCurrnetOffset = mapMode.origin;
+	// LibreOffice drops a map mode with a negative scale (the fractions are signed in the file).
+	if ((int)mapMode.scaleX.numerator < 0 || (int)mapMode.scaleX.denominator < 0 ||
+		(int)mapMode.scaleY.numerator < 0 || (int)mapMode.scaleY.denominator < 0)
+		return;
+	
+	if (mapMode.unit == MAP_RELATIVE)
+	{
+		// Relative to the current map mode, as in LibreOffice's OutputDevice::SetMapMode: the scale
+		// multiplies the current one and the origin adds to the current offset, which is now in
+		// the new, scaled units.
+		const double dScaleX = FractionToScale(mapMode.scaleX);
+		const double dScaleY = FractionToScale(mapMode.scaleY);
+		m_oCurrnetOffset.x = ClampOffset(mapMode.origin.x + m_oCurrnetOffset.x / dScaleX);
+		m_oCurrnetOffset.y = ClampOffset(mapMode.origin.y + m_oCurrnetOffset.y / dScaleY);
+	}
+	else
+		m_oCurrnetOffset = mapMode.origin;
+
+	m_pDC->SetMapMode(mapMode);
 
 	UpdateOutputDC();
 }
@@ -551,6 +607,10 @@ void CSvmFile::Read_META_ARRAYTEXT()
 	m_oStream >> nLen;
 
 	m_oStream >> nArrayLen;
+
+	// The length comes from the file: no more entries than 4-byte values are left in the record.
+	if (nArrayLen > BytesLeftInRecord() / 4)
+		nArrayLen = BytesLeftInRecord() / 4;
 
 	int *mpDXAry = NULL;
 	if( nArrayLen > 0 )
@@ -940,14 +1000,43 @@ bool CSvmFile::ReadImage(unsigned short ushColorUsage, BYTE** ppBgraBuffer, unsi
 }
 void CSvmFile::Read_META_POP()
 {
+	if (m_unSkippedPushes)
+	{
+		--m_unSkippedPushes;
+		return;
+	}
 	m_oPlayer.Pop();
+
+	// Back to the state of the matching PUSH. LibreOffice restores only the parts the PUSH named;
+	// this restores all of them. For the PUSH records LibreOffice's charts and shapes write (the map
+	// mode, colours, font, or all) the drawing is the same. A POP without a PUSH changes nothing.
+	if (!m_vOffsetStack.empty())
+	{
+		m_pDC = m_oPlayer.RestoreDC();
+		m_oCurrnetOffset = m_vOffsetStack.back();
+		m_vOffsetStack.pop_back();
+		UpdateOutputDC();
+	}
 }
 void CSvmFile::Read_META_PUSH()
 {
 	unsigned short nFlags;
 	m_oStream >> nFlags; 
-	
+
+	// Each PUSH keeps a copy of the drawing state until its POP; real files nest a dozen deep.
+	if (m_vOffsetStack.size() >= 1024)
+	{
+		++m_unSkippedPushes;
+		return;
+	}
 	m_oPlayer.Push(nFlags);
+
+	CSvmDC* pDC = m_oPlayer.SaveDC();
+	if (pDC)
+	{
+		m_pDC = pDC;
+		m_vOffsetStack.push_back(m_oCurrnetOffset);
+	}
 }
 void CSvmFile::Read_META_RASTEROP()
 {
@@ -1029,7 +1118,17 @@ void CSvmFile::Read_META_BMP(TSvmBitmap & bitmap_info, BYTE** ppDstBuffer, unsig
     unsigned short	nColors;
     BYTE*		pData = NULL;
 
+    bitmap_info = TSvmBitmap();
+    const unsigned long long ullHeaderPos = m_oStream.Tell();
     m_oStream >> bitmap_info; //size = 40
+
+    // The header size comes from the file. TSvmBitmap keeps the first 40 bytes of the header;
+    // operator>> skipped the rest of a larger one (BITMAPV4HEADER, BITMAPV5HEADER).
+    const unsigned int nKnownSize = (std::min)(bitmap_info.nSize, (unsigned int)sizeof(TSvmBitmap));
+
+    // A header that runs past the end of the record: drop the bitmap.
+    if (ullHeaderPos + bitmap_info.nSize > (unsigned long long)m_unRecordPos + m_unRecordSize)
+        return;
 
     int nBitCount = discretizeBitcount(bitmap_info.nBitCount);
 
@@ -1052,6 +1151,24 @@ void CSvmFile::Read_META_BMP(TSvmBitmap & bitmap_info, BYTE** ppDstBuffer, unsig
         ULONG destSize, srcSize;
         m_oStream >> srcSize >> destSize >> bitmap_info.nCompression;
 
+        // Both sizes come from the file: read no more than is left in the record, and allocate
+        // no more than deflate can produce from that (at most 1032:1) and than ReadImage can use:
+        // it takes the size as an int and reads no more than the palette and the rows the header
+        // describes (uncompressed rows; run-length rows have no fixed size).
+        unsigned long long ullUsable = 0x7FFFFFFF;
+        if (BI_RGB == bitmap_info.nCompression)
+        {
+            const unsigned long long ullRow = (((unsigned long long)bitmap_info.nWidth * bitmap_info.nBitCount + 31) & ~31ULL) / 8;
+            const unsigned long long ullRows = (bitmap_info.nHeight & 0x80000000) ? 0x100000000ULL - bitmap_info.nHeight : bitmap_info.nHeight;
+            ullUsable = (std::min)(ullUsable, 4ULL * nColors + ullRow * ullRows);
+        }
+        if (srcSize > BytesLeftInRecord())
+            srcSize = BytesLeftInRecord();
+        if (destSize > (unsigned long long)srcSize * 1032)
+            destSize = (ULONG)((unsigned long long)srcSize * 1032);
+        if (destSize > ullUsable)
+            destSize = (ULONG)ullUsable;
+
         BYTE*	srcBuf	= m_oStream.GetCurPtr();
         BYTE*	destBuf = new BYTE[destSize];
 
@@ -1065,17 +1182,23 @@ void CSvmFile::Read_META_BMP(TSvmBitmap & bitmap_info, BYTE** ppDstBuffer, unsig
         }
         m_oStream.Skip(srcSize);
 
-        MetaFile::ReadImage((BYTE*)&bitmap_info, bitmap_info.nSize, destBuf, destSize, ppDstBuffer, pulWidth, pulHeight, unColorUsed);
+        MetaFile::ReadImage((BYTE*)&bitmap_info, nKnownSize, destBuf, destSize, ppDstBuffer, pulWidth, pulHeight, unColorUsed);
         delete []destBuf;
     }
-    else if (nHeaderSize >= bitmap_info.nSize)
+    else if (nHeaderSize >= bitmap_info.nSize && nHeaderSize - bitmap_info.nSize <= BytesLeftInRecord())
     {
-        BYTE *Header = new BYTE [ nHeaderSize];
-        memcpy(Header, &bitmap_info, bitmap_info.nSize);
+        // The known part of the header, then what follows the whole header (the palette), as
+        // ReadImage reads the palette right after the first 40 bytes.
+        const unsigned int nRestSize = nHeaderSize - bitmap_info.nSize;
+        BYTE *Header = new BYTE [ nKnownSize + nRestSize ];
+        memcpy(Header, &bitmap_info, nKnownSize);
 
-        m_oStream.ReadBytes(Header + bitmap_info.nSize, nHeaderSize - bitmap_info.nSize);
+        m_oStream.ReadBytes(Header + nKnownSize, nRestSize);
 
-        MetaFile::ReadImage(Header , nHeaderSize,  m_oStream.GetCurPtr(), bitmap_info.nSizeImage, ppDstBuffer, pulWidth, pulHeight, unColorUsed);
+        if (bitmap_info.nSizeImage > BytesLeftInRecord())
+            bitmap_info.nSizeImage = BytesLeftInRecord();
+
+        MetaFile::ReadImage(Header , nKnownSize + nRestSize,  m_oStream.GetCurPtr(), bitmap_info.nSizeImage, ppDstBuffer, pulWidth, pulHeight, unColorUsed);
         m_oStream.Skip(bitmap_info.nSizeImage);
         delete[] Header;
     }
