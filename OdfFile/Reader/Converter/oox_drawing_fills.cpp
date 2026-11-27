@@ -27,6 +27,8 @@
 
 #include <xml/simple_xml_writer.h>
 
+#include <cmath>
+
 namespace cpdoccore {
 namespace oox {
 
@@ -290,7 +292,12 @@ void vml_serialize_gradient_fill(std::wostream & strm, const _oox_fill & val)
 					CP_XML_ATTR(L"colors", colors_value.substr(0, colors_value.length() - 1));
 				}
 			}
-			double angle =/*360 - */val.gradient->angle/* * 180./3.14159265358979323846*/;
+			// gradient->angle is a DrawingML angle (clockwise from the left, 90 = top to bottom). A VML
+			// angle counts counterclockwise from the vertical, 0 = top to bottom here (focus 100%), so
+			// it is 90 minus the DrawingML angle, which is the ODF draw:angle again.
+			double angle = std::fmod(90. - val.gradient->angle, 360.);
+			if (angle < 0)
+				angle += 360.;
 			
 			CP_XML_ATTR(L"focus", L"100%");
 			switch(val.gradient->style)
@@ -408,13 +415,21 @@ void oox_serialize_hatch_fill(std::wostream & strm, const _oox_fill & val, const
 void vml_serialize_background (std::wostream & strm, const _oox_fill & val, const std::wstring & color, int id)
 {
 	if (val.type == 0) return;
+
+	// A VML gradient runs from fillcolor to color2. In ODF a page fill replaces the page colour, so a
+	// gradient starts with its own first colour, not with fo:background-color (or white when that is
+	// transparent). A first stop without a colour keeps the page colour.
+	std::wstring fill_color = color;
+	if (val.type == 3 && val.gradient && !val.gradient->colors.empty() && !val.gradient->colors[0].color_ref.empty())
+		fill_color = val.gradient->colors[0].color_ref;
+
 	CP_XML_WRITER(strm)
 	{
 		CP_XML_NODE(L"v:background")
 		{
 			CP_XML_ATTR(L"id",			L"_x0000_s" + std::to_wstring(1024 + id));
 			CP_XML_ATTR(L"o:bwmode",	L"white");
-			CP_XML_ATTR(L"fillcolor",	L"#" + color);
+			CP_XML_ATTR(L"fillcolor",	L"#" + fill_color);
 			CP_XML_ATTR(L"o:targetscreensize", L"1024,768");
 			switch (val.type)
 			{

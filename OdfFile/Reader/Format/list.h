@@ -75,7 +75,7 @@ public:
     virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
     list_item() {} 
 
-    const office_element_ptr_array & get_content() const { return content_; }
+    const office_element_ptr_array & content() const { return content_; }
 
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );

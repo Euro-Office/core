@@ -8940,6 +8940,12 @@ void BinarySettingsTableWriter::WriteSettingsContent(OOX::CSettings& oSettings, 
 		m_oBcw.m_oStream.WriteBOOL(oSettings.m_oTrackRevisions->m_oVal.ToBool());
 		m_oBcw.WriteItemEnd(nCurPos);
 	}
+	if (oSettings.m_oRevisionView.IsInit() && oSettings.m_oRevisionView->m_oInsDel.IsInit())
+	{
+		nCurPos = m_oBcw.WriteItemStart(c_oSer_SettingsType::RevisionViewInsDel);
+		m_oBcw.m_oStream.WriteBOOL(*oSettings.m_oRevisionView->m_oInsDel);
+		m_oBcw.WriteItemEnd(nCurPos);
+	}
 	if (oSettings.m_oFootnotePr.IsInit())
 	{
 		nCurPos = m_oBcw.WriteItemStart(c_oSer_SettingsType::FootnotePr);

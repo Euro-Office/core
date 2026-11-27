@@ -1,0 +1,34 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+
+# Whether a push run's commit is still the head of its branch. Runs of quick
+# successive merges all finish, and if each saved its caches the repo's 10 GB
+# of Actions caches would hold several copies per build leg and evict others.
+# Only the newest commit's run saves. Other events and a failed lookup count
+# as the head, so they save as before.
+name: Branch head
+description: Whether this push run's commit is still the head of its branch
+
+outputs:
+  head:
+    description: "'true' unless a newer commit was pushed to the branch"
+    value: ${{ steps.check.outputs.head }}
+
+runs:
+  using: composite
+  steps:
+  - id: check
+    shell: bash
+    env:
+      EVENT: ${{ github.event_name }}
+      URL: ${{ github.server_url }}/${{ github.repository }}
+    run: |
+      head=true
+      if [ "$EVENT" = push ]; then
+        sha=$(git ls-remote "$URL" "$GITHUB_REF" | cut -f1) || sha=
+        if [ -n "$sha" ] && [ "$sha" != "$GITHUB_SHA" ]; then
+          head=false
+          echo "$GITHUB_REF is at $sha now, not saving caches of $GITHUB_SHA"
+        fi
+      fi
+      echo "head=$head" >> "$GITHUB_OUTPUT"
