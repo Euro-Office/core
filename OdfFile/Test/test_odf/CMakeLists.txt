@@ -72,6 +72,7 @@ add_core_gtest(
             docx2odt_list_label_followed_by.cpp
             chart_title.cpp
             odt2docx_underline.cpp
+            odt2docx_outline_level.cpp
             odt2docx_keep_next.cpp
             odt2docx_page_style_after_table.cpp
             odt2docx_contextual_spacing.cpp
