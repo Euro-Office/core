@@ -103,6 +103,7 @@ private:
     std::wstring					parent_name_;
     std::wstring					next_name_;
     mutable style_instance			* parent_;
+    mutable bool					parent_refused_;
     mutable style_instance			* next_;   
     std::wstring					data_style_name_;
 	std::wstring					percentage_data_style_name_;
