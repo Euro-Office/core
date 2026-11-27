@@ -379,7 +379,7 @@ jobs:
     name: build
     needs: build
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.repository.private && 'self-hosted' || 'ubuntu-latest' }}
     steps:
       - name: Check build result
         run: |

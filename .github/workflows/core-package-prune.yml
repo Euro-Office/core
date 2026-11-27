@@ -12,8 +12,9 @@ on:
 
 jobs:
   prune:
-    if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
+    # Not in a private copy: its pull request numbers match packages of ours.
+    if: github.event.pull_request.head.repo.full_name == github.repository && !github.event.repository.private
+    runs-on: ${{ github.event.repository.private && 'self-hosted' || 'ubuntu-latest' }}
     environment: build-cache
     steps:
     - name: Checkout scripts
@@ -31,7 +32,7 @@ jobs:
   # Nothing can restore a closed pull request's Actions caches any more
   prune-caches:
     if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.repository.private && 'self-hosted' || 'ubuntu-latest' }}
     permissions:
       actions: write
     steps:

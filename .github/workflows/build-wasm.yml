@@ -158,7 +158,7 @@ jobs:
     # Aggregate job, kept so branch protection that requires it still works
     needs: build-wasm
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.repository.private && 'self-hosted' || 'ubuntu-latest' }}
     steps:
       - name: Check build result
         run: |
