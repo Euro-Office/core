@@ -106,6 +106,8 @@ namespace OOX
 			CRowXLSB();
 			void Clean();
 			void fromXMLToXLSB(XmlUtils::CXmlLiteReader& oReader, NSBinPptxRW::CXlsbBinaryWriter& oStream, CCellXLSB& oCell);
+			// Reads the attributes of the current <row> without writing anything.
+			void fromXMLAttributes(XmlUtils::CXmlLiteReader& oReader);
 			void toXLSB(NSBinPptxRW::CXlsbBinaryWriter& oStream);
 		public:
 			_UINT32 m_nR;

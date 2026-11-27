@@ -38,6 +38,7 @@ set(_ooxml_test_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/editorbin_source_file_type.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pivot_show_data_as.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xls_export.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/shared_formulas.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/workbook_facts.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/vml_shape_size.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/vml_fill_relationship_id.cpp
