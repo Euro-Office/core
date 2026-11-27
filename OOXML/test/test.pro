@@ -25,6 +25,7 @@ SOURCES += main.cpp\
            vml_shape_size.cpp\
            vml_fill_relationship_id.cpp\
            workbook_facts.cpp\
+           xlsb_workbook_protection.cpp\
 
 HEADERS += common.h workbook_facts.h
 

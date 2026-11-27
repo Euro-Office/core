@@ -42,7 +42,8 @@ namespace XLSB
 
 			XLS::BaseObjectPtr clone();
 
-            void readFields(XLS::CFRecord& record);
+            void readFields(XLS::CFRecord& record) override;
+            void writeFields(XLS::CFRecord& record) override;
 
             _UINT32							dwSpinCount;
             XLS::Boolean<unsigned short>	fReadOnlyRec;
