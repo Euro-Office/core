@@ -224,12 +224,19 @@ namespace OOX
 			
 			if (ref.empty()) return; // ???
 			
-			m_oComment = ptr->comment.value();
+			// the record has every field; keep only what differs from the XML defaults, so that
+			// toXML doesn't write comment="" function="0" and the like for every name
+			if (!ptr->comment.value().empty())
+				m_oComment = ptr->comment.value();
 		   // m_oCustomMenu = ptr->.value();
-			m_oDescription = ptr->description.value();
-			m_oFunction = ptr->fFunc;
-			m_oFunctionGroupId = ptr->fGrp;
-			m_oHelp = ptr->helpTopic.value();
+			if (!ptr->description.value().empty())
+				m_oDescription = ptr->description.value();
+			if (ptr->fFunc)
+				m_oFunction = ptr->fFunc;
+			if (ptr->fGrp)
+				m_oFunctionGroupId = ptr->fGrp;
+			if (!ptr->helpTopic.value().empty())
+				m_oHelp = ptr->helpTopic.value();
 
 			if (ptr->fHidden)
 				m_oHidden = ptr->fHidden;
@@ -238,13 +245,17 @@ namespace OOX
 				m_oLocalSheetId         = ptr->itab;
 
 			m_oName = ptr->name.value();
-			m_oPublishToServer = ptr->fPublished;
+			if (ptr->fPublished)
+				m_oPublishToServer = ptr->fPublished;
 			if (ptr->chKey)
 				m_oShortcutKey = std::wstring(1, (wchar_t)ptr->chKey);
 			//m_oStatusBar = ;
-			m_oVbProcedure = ptr->fOB;
-			m_oWorkbookParameter = ptr->fWorkbookParam;
-			m_oXlm = ptr->fFutureFunction;
+			if (ptr->fOB)
+				m_oVbProcedure = ptr->fOB;
+			if (ptr->fWorkbookParam)
+				m_oWorkbookParameter = ptr->fWorkbookParam;
+			if (ptr->fFutureFunction)
+				m_oXlm = ptr->fFutureFunction;
 			m_oRef = ref;
 		}
 
