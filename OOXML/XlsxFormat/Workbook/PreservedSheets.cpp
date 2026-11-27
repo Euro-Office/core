@@ -649,23 +649,17 @@ namespace
 			if (m_oSheet.arParts.empty())
 				return;
 
+			// oPath is <package>/<oDirectory>/<file>: the package root is the file's folder, as many
+			// levels up as oDirectory has. The file name comes from oPath, in case the container
+			// numbered it differently.
 			std::wstring sDirectory = JoinParts(SplitPath(NormalizeSlashes(oDirectory.GetPath())));
-			std::wstring sRootNew = sDirectory + L"/" + m_sFileName;
 			std::wstring sOutPath = NormalizeSlashes(oPath.GetPath());
-			std::wstring sOutRoot = sOutPath.size() > sRootNew.size() + 1 ? sOutPath.substr(0, sOutPath.size() - sRootNew.size() - 1) : L"";
-			if (sOutRoot.empty() || 0 != sOutPath.compare(sOutRoot.size() + 1, std::wstring::npos, sRootNew))
-			{
-				// Unexpected layout: still write the sheet part so the workbook relationship stays valid.
-				const CPreservedPart& oRoot = m_oSheet.arParts[0];
-				NSFile::CFileBinary oFile;
-				if (oFile.CreateFileW(oPath.GetPath()))
-				{
-					oFile.WriteFile((const BYTE*)oRoot.sData.c_str(), (DWORD)oRoot.sData.size());
-					oFile.CloseFile();
-					oContent.Registration(oRoot.sContentType, oDirectory, oPath.GetFilename());
-				}
+			std::wstring sRootNew = sDirectory + L"/" + FileName(sOutPath);
+			std::wstring sOutRoot = DirName(sOutPath);
+			for (size_t i = SplitPath(sDirectory).size(); i > 0; --i)
+				sOutRoot = DirName(sOutRoot);
+			if (sOutRoot.empty())
 				return;
-			}
 
 			// original part name -> written part name
 			std::map<std::wstring, std::wstring> mapNames;
