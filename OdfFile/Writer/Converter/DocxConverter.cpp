@@ -83,6 +83,33 @@ using namespace cpdoccore;
 namespace Oox2Odf
 {
 
+	// Adds to refs a copy of each reference in from whose type (default, even or first page) refs does not have yet.
+	// A section may list a type twice; the last one counts (as in set_hdr_ftr_ref), so walk from the end.
+	void add_missing_hf_refs(std::vector<nullable<ComplexTypes::Word::CHdrFtrRef>>& refs,
+		const std::vector<nullable<ComplexTypes::Word::CHdrFtrRef>>& from)
+	{
+		for (size_t i = from.size(); i-- > 0;)
+		{
+			if (false == from[i].IsInit()) continue;
+
+			const int type = from[i]->m_oType.IsInit() ? from[i]->m_oType->GetValue() : 0;
+
+			bool present = false;
+			for (size_t j = 0; j < refs.size() && !present; j++)
+			{
+				present = refs[j].IsInit() && (refs[j]->m_oType.IsInit() ? refs[j]->m_oType->GetValue() : 0) == type;
+			}
+			if (present) continue;
+
+			nullable<ComplexTypes::Word::CHdrFtrRef> ref; ref.Init();
+
+			ref->m_oId = from[i]->m_oId;
+			ref->m_oType = from[i]->m_oType;
+
+			refs.push_back(ref);
+		}
+	}
+
 	bool compare (OOX::Logic::CSectionProperty* props1, OOX::Logic::CSectionProperty* props2)
 	{
 		size_t cols_1 = 1, cols_2 = 1;
@@ -330,6 +357,26 @@ void DocxConverter::convert_document()
 
 		sections.push_back(section);
 	}					
+	// Decide which continuous sections keep the page before the body section borrows headers and footers below:
+	// keeps_page() looks at the section's own references, and borrowed ones must not start a new page.
+	for (size_t i = 1; i < sections.size(); ++i)
+	{
+		sections[i].bKeepPage = sections[i].bContinue && keeps_page(sections[i - 1].props, sections[i].props);
+	}
+	// The body section is converted first, as the Standard page. Where it has no header or footer of a type, Word
+	// uses the one of the closest earlier section that has it (ECMA-376 17.10.5). Add those for this conversion only,
+	// so the sections keep their own references for the rest of the document.
+	OOX::Logic::CSectionProperty* body_props = doc->m_oSectPr.GetPointer();
+	const size_t body_headers = body_props ? body_props->m_arrHeaderReference.size() : 0;
+	const size_t body_footers = body_props ? body_props->m_arrFooterReference.size() : 0;
+
+	for (size_t sect = sections.size(); body_props && sect-- > 0;)
+	{
+		if (sections[sect].props == NULL || sections[sect].props == body_props) continue;
+
+		add_missing_hf_refs(body_props->m_arrHeaderReference, sections[sect].props->m_arrHeaderReference);
+		add_missing_hf_refs(body_props->m_arrFooterReference, sections[sect].props->m_arrFooterReference);
+	}
 //----------------------------------------------------------------------------------------------------------
 
 	for (size_t i = 0; i < sections.size(); ++i)
@@ -337,10 +384,17 @@ void DocxConverter::convert_document()
 		sections[i].bFirst = (i == 0);
 		sections[i].bTurnsPage = i > 0 && sections[i - 1].props && sections[i].props
 			&& is_landscape(sections[i - 1].props) != is_landscape(sections[i].props);
-		sections[i].bKeepPage = i > 0 && sections[i].bContinue && keeps_page(sections[i - 1].props, sections[i].props);
 	}
 
 	convert(doc->m_oSectPr.GetPointer(), false, L"Standard", true);
+
+	if (body_props)
+	{
+		body_props->m_arrHeaderReference.erase(body_props->m_arrHeaderReference.begin() + body_headers,
+			body_props->m_arrHeaderReference.end());
+		body_props->m_arrFooterReference.erase(body_props->m_arrFooterReference.begin() + body_footers,
+			body_props->m_arrFooterReference.end());
+	}
 	
 	odt_context->text_context()->clear_params();
 
