@@ -798,7 +798,7 @@ public:
     static const ElementType type = typeTextNotesConfiguration;    
 
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
-	virtual void serialize(std::wostream & strm){}
+	virtual void serialize(std::wostream & strm);
 
     odf_types::noteclass noteclass_;
     _CP_OPT(std::wstring) text_citation_style_name_;

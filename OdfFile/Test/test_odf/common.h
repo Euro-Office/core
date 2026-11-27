@@ -56,7 +56,7 @@ HRESULT GetTestEnvConvertResult();
 // ConvertODF2OOXml(). Returns the directory, or an empty string on failure.
 std::wstring convert_odf_to_ooxml_dir(const std::wstring& srcFileName);
 
-// OOXML (.docx/.xlsx/.pptx) -> unpacked ODF directory, via
+// OOXML (.docx/.xlsx/.pptx, or a flat Word 2003 XML document) -> unpacked ODF directory, via
 // Oox2Odf::Converter::convert() + write(), the calls x2t makes. Returns the
 // directory, or an empty string on failure.
 std::wstring convert_ooxml_to_odf_dir(const std::wstring& srcFileName);

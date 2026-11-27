@@ -137,6 +137,7 @@ public:
 	void	add_section					(bool continuous);
 	void	add_section_columns			(int count, double space_pt, bool separator, bool flag );
 	void	add_section_column			(std::vector<std::pair<double,double>> width_space);
+	void	set_section_margins			(double left_pt, double right_pt);
 	int		get_current_section_columns	();
 	void	flush_section				();
 

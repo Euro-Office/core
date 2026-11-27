@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?mso-application progid="Word.Document"?>
+<w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<o:DocumentProperties><o:Version>11.5606</o:Version></o:DocumentProperties>
+<w:styles><w:style w:type="paragraph" w:default="on" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>
+<w:docPr><w:compat><w:breakWrappedTables/></w:compat></w:docPr>
+<w:body><w:p><w:r><w:t>Version with compat</w:t></w:r></w:p></w:body>
+</w:wordDocument>

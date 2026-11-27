@@ -146,6 +146,7 @@ docx_conversion_context::docx_conversion_context(odf_reader::odf_document * _odf
 	current_outline_level_		(-1),
 	is_rtl_						(false),
 	is_delete_text_				(false),
+	table_text_only_			(false),
 	delayed_converting_			(false),
 	process_headers_footers_	(false),
 	current_process_comment_	(false),
@@ -350,6 +351,16 @@ void docx_conversion_context::end_math_formula()
 }
 void docx_conversion_context::start_sdt(int type)
 {
+	// An index inside a tracked deletion is written as deleted runs at the position of its change
+	// mark, inside a paragraph, where no sdt and no paragraph of its own can stand. Write only the
+	// entries' text, as deleted paragraphs are written: no sdt, no field paragraphs.
+	// Each start_sdt is paired with one end_sdt; an index can hold another one (in a text box of an
+	// entry), so the decision is kept per index.
+	const bool textOnly = is_delete_text_ && state_.in_paragraph_;
+	index_text_only_.push_back(textOnly);
+	if (textOnly)
+		return;
+
 	in_table_content_ = true;
 
 	table_content_context_.type_table_content = type;
@@ -512,6 +523,15 @@ void docx_conversion_context::end_field()
 }
 void docx_conversion_context::end_sdt()
 {
+	const bool textOnly = !index_text_only_.empty() && index_text_only_.back();
+	if (!index_text_only_.empty())
+		index_text_only_.pop_back();
+	if (textOnly)
+	{
+		if (!in_table_content_) // no enclosing index writes its sdt and field: drop what the source set
+			table_content_context_.clear_all();
+		return;
+	}
 	if (!in_table_content_) return;
 
 	if (table_content_context_.type_table_content < 4)
@@ -1012,6 +1032,19 @@ std::wstring  docx_conversion_context::dump_settings_document()
 			if (odf_reader::GetProperty(settings_properties_,L"mirrorMargins", boolVal))
 			{
 				CP_XML_NODE(L"w:mirrorMargins");
+			}
+			// ODF ShowRedlineChanges false (ooo:view-settings): the document is shown without the
+			// markup of its tracked changes = Word's w:revisionView w:insDel="0" w:formatting="0",
+			// as LibreOffice writes it (CT_Settings order: after w:mirrorMargins, before w:defaultTabStop).
+			_CP_OPT(std::wstring) showRedlineChanges =
+				root()->odf_context().Settings().find_view_by_name(L"ShowRedlineChanges", -1);
+			if (showRedlineChanges && *showRedlineChanges == L"false")
+			{
+				CP_XML_NODE(L"w:revisionView")
+				{
+					CP_XML_ATTR(L"w:insDel", L"0");
+					CP_XML_ATTR(L"w:formatting", L"0");
+				}
 			}
 
 			_CP_OPT(double) tabDistance = root()->odf_context().Settings().get_tab_distance();

@@ -40,6 +40,8 @@
 #include "styles.h"
 #include "note.h"
 #include "ruby.h"
+#include "text_elements.h"
+#include "documentcontext.h"
 #include "office_elements_create.h"
 
 #include "serialize_elements.h"
@@ -1150,6 +1152,23 @@ void note::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     CP_APPLY_ATTR(L"text:id", text_id_, std::wstring(L""));
     CP_APPLY_ATTR(L"text:note-class", text_note_class_, noteclass(noteclass::Footnote));
+
+    document_context * context = getContext();
+    if (context && text_note_class_.get_type() == noteclass::Endnote)
+    {
+        // the sections around the endnote decide where it is printed (office_text::docx_convert):
+        // the innermost one is enough, each section knows the section around it
+        int innermost = -1;
+        for (size_t i = context->levels.size(); i > 0; i--)
+        {
+            if (const section * around = dynamic_cast<const section *>(context->levels[i - 1]))
+            {
+                innermost = around->index();
+                break;
+            }
+        }
+        context->endnote_sections.insert(innermost);
+    }
 }
 
 void note::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)
@@ -1223,15 +1242,28 @@ void note::docx_convert(oox::docx_conversion_context & Context)
 const wchar_t * ruby::ns = L"text";
 const wchar_t * ruby::name = L"ruby";
 
+void ruby::docx_convert(oox::docx_conversion_context & Context)
+{
+    // The editor has no ruby model, so a w:ruby would lose the text again: write the base text as normal runs
+    // and drop the annotation.
+    if (text_ruby_base_)
+        text_ruby_base_->docx_convert(Context);
+}
+
+// The plain text is the base only, as in docx_convert: it feeds alphabetical index entries (XE) and the matching of
+// "#...|outline" links to headings, where the annotation would add text that is not in the document.
 std::wostream & ruby::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
 {
     if (text_ruby_base_)
         text_ruby_base_->text_to_stream(_Wostream, bXmlEncode);
 
-    if (text_ruby_text_)
-        text_ruby_text_->text_to_stream(_Wostream, bXmlEncode);
-
     return _Wostream;
+}
+
+const office_element_ptr_array * ruby::base_content() const
+{
+    const ruby_base * base = dynamic_cast<const ruby_base *>(text_ruby_base_.get());
+    return base ? &base->content() : NULL;
 }
 
 void ruby::xlsx_convert(oox::xlsx_conversion_context & Context)

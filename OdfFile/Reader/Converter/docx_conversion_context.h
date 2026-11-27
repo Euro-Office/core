@@ -815,6 +815,9 @@ public:
 
 	bool get_delete_text_state	()					{ return is_delete_text_;	}
 	void set_delete_text_state	(bool Val)			{ is_delete_text_ = Val;	}
+	// true while a table inside deleted content writes only the text of its cells (see table_table::docx_convert)
+	bool get_table_text_only	()					{ return table_text_only_;	}
+	void set_table_text_only	(bool Val)			{ table_text_only_ = Val;	}
 
 	bool get_drawing_state_content()			{ return in_drawing_content_;	}
 	void set_drawing_state_content(bool val)	{ in_drawing_content_ = val;	}
@@ -1027,6 +1030,11 @@ public:
 	bool		process_headers_footers_;
 	bool		body_started_ = false; // a body paragraph has been written
 	bool		delayed_converting_;
+
+	// the endnote page of the document (office_text::docx_convert): the paragraph that ends the
+	// body before it, and whether the section properties written next are those of that page
+	const void*	endnote_page_paragraph_ = NULL;
+	bool		endnote_page_section_ = false;
 	bool		convert_delayed_enabled_;
 
 	void		start_changes(bool in_para);
@@ -1128,9 +1136,12 @@ private:
 	bool in_automatic_style_; 
 	bool in_drawing_content_;
 	bool in_table_content_;
+	// one entry per open index (start_sdt .. end_sdt): true = inside deleted content, entries only, no sdt and no field paragraphs
+	std::vector<bool> index_text_only_;
 
 	bool in_header_;
 	bool is_delete_text_;
+	bool table_text_only_;
     bool is_rtl_; // right-to-left
  
 	NoteType			current_process_note_;
