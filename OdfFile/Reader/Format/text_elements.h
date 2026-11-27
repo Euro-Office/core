@@ -171,6 +171,11 @@ public:
     void docx_convert(oox::docx_conversion_context & Context);
 	void pptx_convert(oox::pptx_conversion_context & Context) ;
 
+    // the list header if there is one, else the first list item
+    const office_element * get_first_item() const
+    {
+        return list_header_ ? list_header_.get() : (list_items_.empty() ? NULL : list_items_.front().get());
+    }
 	const office_element_ptr_array & items() const { return list_items_; }
 
 private:
@@ -224,6 +229,7 @@ public:
 	virtual void afterCreate();
     virtual void afterReadContent();
 
+    const office_element_ptr_array & get_content() const { return content_; }
 	std::wstring style_name() const { return section_attr_.style_name_.get_value_or(L""); }
     // the index of this section in document_context::sections, -1 without a context
     int index() const { return index_; }

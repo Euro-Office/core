@@ -56,6 +56,80 @@ const office_element * element_after(const office_element_ptr_array & content, s
 	}
 	return NULL;
 }
+
+// The first block of the text flow. Forms, shapes, change marks and soft page breaks are no part of it.
+const office_element * first_flow_block(const office_element_ptr_array & blocks)
+{
+	for (size_t i = 0; i < blocks.size(); i++)
+	{
+		if (!blocks[i])
+			continue;
+
+		switch (blocks[i]->get_type())
+		{
+		case typeTextP:
+		case typeTextH:
+		case typeTextList:
+		case typeTextListItem:
+		case typeTextListHeader:
+		case typeTextSection:
+		case typeTextTableOfContent:
+		case typeTextIllustrationIndex:
+		case typeTextTableIndex:
+		case typeTextObjectIndex:
+		case typeTextUserIndex:
+		case typeTextAlphabeticalIndex:
+		case typeTextBibliography:
+		case typeTableTable:
+			return blocks[i].get();
+		default:
+			break;
+		}
+	}
+	return NULL;
+}
+
+// The paragraph the body starts with when a list holds it, also a list at the start of a section.
+// NULL when the body starts with anything else.
+const office_element * first_paragraph_in_list(const office_element_ptr_array & body)
+{
+	bool in_list = false;
+	const office_element * elm = first_flow_block(body);
+
+	while (elm) // one level down per step
+	{
+		switch (elm->get_type())
+		{
+		case typeTextP:
+		case typeTextH:
+			return in_list ? elm : NULL;
+		case typeTextList:
+		{
+			const text::list * list_elm = dynamic_cast<const text::list *>(elm);
+			in_list = true;
+			elm = list_elm ? list_elm->get_first_item() : NULL;
+		}break;
+		case typeTextListItem:
+		{
+			const text::list_item * item = dynamic_cast<const text::list_item *>(elm);
+			elm = item ? first_flow_block(item->content()) : NULL;
+		}break;
+		case typeTextListHeader:
+		{
+			const text::list_header * header = dynamic_cast<const text::list_header *>(elm);
+			elm = header ? first_flow_block(header->get_content()) : NULL;
+		}break;
+		case typeTextSection:
+		{
+			const text::section * section_elm = dynamic_cast<const text::section *>(elm);
+			elm = section_elm ? first_flow_block(section_elm->get_content()) : NULL;
+		}break;
+		default:
+			return NULL;
+		}
+	}
+	return NULL;
+}
 }
 
 // office:text
@@ -265,10 +339,23 @@ void office_text::docx_convert(oox::docx_conversion_context & Context)
 	Context.endnote_page_paragraph_ = last_paragraph;
 
 	_CP_OPT(std::wstring) masterPageName_first;
+	_CP_OPT(std::wstring) first_style_name = first_element_style_name;
 
-	if ((first_element_style_name) && (!first_element_style_name->empty()))
+	// The paragraph the body starts with names the page style of the first page, also from inside a list
+	const office_element * first_in_list = first_paragraph_in_list(content_);
+	if (first_in_list && first_in_list->element_style_name)
 	{
-		std::wstring style_name = *first_element_style_name;
+		odf_read_context & odf_context = Context.root()->odf_context();
+		const _CP_OPT(std::wstring) master_page =
+			odf_context.styleContainer().master_page_name_by_name(*first_in_list->element_style_name);
+
+		if (master_page && false == odf_context.pageLayoutContainer().page_layout_name_by_style(*master_page).empty())
+			first_style_name = first_in_list->element_style_name;
+	}
+
+	if ((first_style_name) && (!first_style_name->empty()))
+	{
+		std::wstring style_name = *first_style_name;
 
 		masterPageName_first = Context.root()->odf_context().styleContainer().master_page_name_by_name(style_name);
 	   
