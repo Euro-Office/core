@@ -10,10 +10,13 @@ script, so they get the same binaries. Linux, macOS and Android: build.sh.
 .DESCRIPTION
 Run it from a Developer PowerShell, or let it load the MSVC environment of
 Visual Studio 2022 itself (or, with -VcToolsVersion, of the newest Visual
-Studio that has that toolset). Needs VCPKG_ROOT. CORE_PYTHON sets the Python for
-the third-party builds (default: the one CMake finds). -Ccache compiles through
-ccache, which it installs (install-ccache.ps1); otherwise sccache is used when
-it is on PATH.
+Studio that has that toolset). Needs VCPKG_ROOT, except with -ThirdPartyOnly.
+CORE_PYTHON sets the Python for the third-party builds (default: the one CMake
+finds). -Ccache compiles through ccache, which it installs
+(install-ccache.ps1); otherwise sccache is used when it is on PATH.
+-ThirdPartyOnly only builds the third-party libraries (and uploads the ones
+missing from the remote cache, given its credentials), not core; add
+-DBUILD_DESKTOP=ON for the desktop app's (Qt, CEF).
 
 Output, a core package (see cmake\prebuilt-core.cmake): the libraries and
 x2t in <OutputDir>\bin, the tools in <OutputDir>\tools, the static and
@@ -32,7 +35,8 @@ param(
     [string]$OutputDir = '',
     [switch]$Tests,
     [switch]$Ccache,
-    [string]$SdkVersion = '10.0.19041.0',
+    [switch]$ThirdPartyOnly,
+    [string]$SdkVersion = '10.0.22621.0',
     [string]$VcToolsVersion = '',   # e.g. 14.44; empty = newest in Visual Studio 2022
     [Parameter(ValueFromRemainingArguments)]
     [string[]]$CMakeArgs = @()
@@ -47,7 +51,8 @@ function Assert-LastExit([string]$What) {
 
 . "$PSScriptRoot\msvc-env.ps1"
 
-if (-not $env:VCPKG_ROOT) { throw 'VCPKG_ROOT must point at vcpkg' }
+# The third-party libraries don't use vcpkg's
+if (-not $env:VCPKG_ROOT -and -not $ThirdPartyOnly) { throw 'VCPKG_ROOT must point at vcpkg' }
 if (-not $env:VCINSTALLDIR) { Import-VcVars -Arch $Arch -SdkVersion $SdkVersion -VcToolsVersion $VcToolsVersion }
 
 $BuildDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($BuildDir)
@@ -57,16 +62,21 @@ $OutputDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPS
 $configureArgs = @(
     '-G', 'Ninja', '-S', $Core, '-B', $BuildDir,
     '-DCMAKE_BUILD_TYPE=Release',
-    "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake",
-    '-DVCPKG_MANIFEST_MODE=ON',
-    "-DVCPKG_MANIFEST_DIR=$Core",
     "-DEO_CORE_OUTPUT_DIR=$OutputDir\bin",
     "-DEO_CORE_TOOLS_DIR=$OutputDir\tools",
     "-DEO_CORE_LIB_DIR=$OutputDir\lib",
     "-DEO_BUILD_TESTS=$(if ($Tests) { 'ON' } else { 'OFF' })"
 )
+if (-not $ThirdPartyOnly) {
+    $configureArgs += @(
+        "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake",
+        '-DVCPKG_MANIFEST_MODE=ON',
+        "-DVCPKG_MANIFEST_DIR=$Core"
+    )
+}
 if ($Tests) { $configureArgs += '-DVCPKG_MANIFEST_FEATURES=tests' }
 if ($env:CORE_PYTHON) { $configureArgs += "-DPYTHON_BIN=$env:CORE_PYTHON" }
+if ($ThirdPartyOnly) { $configureArgs += '-DEO_THIRD_PARTY_ONLY=ON' }
 if ($Ccache) {
     & "$PSScriptRoot\install-ccache.ps1"
     ccache --zero-stats
@@ -94,5 +104,7 @@ elseif (Get-Command sccache -ErrorAction SilentlyContinue) {
 
 cmake @configureArgs @CMakeArgs
 Assert-LastExit 'CMake configure'
+# Configuring built the third-party libraries
+if ($ThirdPartyOnly) { return }
 cmake --build $BuildDir --parallel
 Assert-LastExit 'CMake build'
